@@ -1,236 +1,157 @@
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ماورای ذهن | PlanLife</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <title>PlanLife | ماورای ذهن</title>
     <style>
-        @font-face {
-            font-family: 'Vazir';
-            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir.woff2');
-        }
-
         :root {
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.1);
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.15);
             --accent: #00d2ff;
-            --purple: #a855f7;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background: #030014;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #050505;
             color: white;
-            font-family: 'Vazir', sans-serif;
-            line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* انیمیشن پس‌زمینه */
-        .bg-glow {
+        /* پس‌زمینه متحرک */
+        .bg-animate {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #050505 100%);
             z-index: -1;
-            background: radial-gradient(circle at 50% -20%, #1e1b4b, #030014);
         }
 
-        .orb {
+        .blob {
             position: absolute;
-            width: 400px; height: 400px;
+            width: 300px; height: 300px;
             background: var(--accent);
-            filter: blur(120px);
+            filter: blur(80px);
             border-radius: 50%;
-            opacity: 0.1;
-            animation: float 15s infinite alternate;
+            opacity: 0.2;
+            animation: move 20s infinite alternate;
         }
 
-        @keyframes float {
-            from { transform: translate(-10%, 20%); }
-            to { transform: translate(80%, 60%); }
+        @keyframes move {
+            from { transform: translate(-10%, -10%); }
+            to { transform: translate(100%, 80%); }
         }
 
-        /* هدر و منو */
+        /* ناوبری */
         nav {
-            position: fixed;
-            top: 0; width: 100%;
-            padding: 20px 10%;
+            padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
-            z-index: 1000;
+            position: sticky; top: 0; z-index: 100;
         }
 
-        .nav-links a {
-            color: #ccc;
-            text-decoration: none;
-            margin-right: 25px;
-            font-size: 0.9rem;
-            transition: 0.3s;
-        }
+        .logo { font-weight: bold; font-size: 1.5rem; letter-spacing: 2px; }
 
-        .nav-links a:hover { color: var(--accent); }
-
-        /* بخش Hero */
+        /* بخش اصلی (Hero) */
         .hero {
-            height: 100vh;
+            height: 80vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 0 20px;
+            padding: 20px;
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 8vw, 4.5rem);
-            font-weight: 900;
-            background: linear-gradient(to bottom, #fff 30%, #666);
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, #666);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
         }
 
-        .hero p {
-            font-size: 1.2rem;
-            color: #94a3b8;
-            max-width: 600px;
-            margin-bottom: 30px;
-        }
-
-        /* کارت‌های خدمات */
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            margin: 50px 0;
-        }
-
-        .services-grid {
+        /* کارت شیشه‌ای خدمات */
+        .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            padding: 0 10% 100px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 50px 10%;
         }
 
-        .card {
+        .glass-card {
             background: var(--glass);
+            backdrop-filter: blur(15px);
             border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 40px;
-            text-align: center;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            background: rgba(255, 255, 255, 0.07);
-            border-color: var(--accent);
-        }
-
-        .card i {
-            font-size: 2.5rem;
-            color: var(--accent);
-            margin-bottom: 20px;
-        }
-
-        .card h3 { margin-bottom: 15px; font-size: 1.5rem; }
-
-        /* دکمه‌ها */
-        .btn {
-            padding: 14px 40px;
-            border-radius: 100px;
-            text-decoration: none;
-            font-weight: bold;
+            border-radius: 20px;
+            padding: 30px;
             transition: 0.3s;
-            display: inline-block;
+            cursor: pointer;
         }
 
-        .btn-primary {
+        .glass-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn {
             background: white;
             color: black;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: 0.3s;
         }
 
-        .btn-primary:hover {
-            background: var(--accent);
-            color: white;
-            box-shadow: 0 0 30px rgba(0, 210, 255, 0.4);
-        }
-
-        /* فوتر */
-        footer {
-            padding: 50px 10%;
-            border-top: 1px solid var(--border);
-            text-align: center;
-            color: #64748b;
-        }
+        .btn:hover { background: var(--accent); color: white; }
 
         @media (max-width: 768px) {
-            nav { padding: 15px 5%; }
-            .nav-links { display: none; }
+            .hero h1 { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
 
-<div class="bg-glow">
-    <div class="orb"></div>
+<div class="bg-animate">
+    <div class="blob"></div>
 </div>
 
 <nav>
-    <div style="font-weight: 900; font-size: 1.4rem;">PLANLIFE</div>
-    <div class="nav-links">
-        <a href="#services">خدمات</a>
-        <a href="#about">ماورای ذهن</a>
-        <a href="https://instagram.com/mrravankav">اینستاگرام</a>
-    </div>
+    <div class="logo">PLANLIFE</div>
+    <div class="menu">✨</div>
 </nav>
 
 <section class="hero">
-    <h1>دنیایی فراتر از ذهن</h1>
-    <p>ما با تلفیق هنر طراحی وب و استراتژی‌های رشد ذهنی، برند شما را در فضای دیجیتال به پرواز در می‌آوریم.</p>
-    <div style="display: flex; gap: 15px;">
-        <a href="#services" class="btn btn-primary">شروع پروژه</a>
-    </div>
+    <h1>به ماورای ذهن خوش آمدید</h1>
+    <p>طراحی آینده، از همین امروز شروع می‌شود.</p>
+    <a href="#services" class="btn">مشاهده خدمات</a>
 </section>
 
-<h2 class="section-title" id="services">تخصص‌های ما</h2>
-<div class="services-grid">
-    <div class="card">
-        <i class="fas fa-code"></i>
+<section id="services" class="grid">
+    <div class="glass-card">
         <h3>طراحی وب‌سایت</h3>
-        <p>تخصص در وردپرس و المنتور با تمرکز بر سرعت و طراحی مدرن شیشه‌ای.</p>
+        <p>اجرای سایت‌های حرفه‌ای با وردپرس و المنتور با متد شیشه‌ای.</p>
     </div>
-    <div class="card">
-        <i class="fas fa-bullhorn"></i>
+    <div class="glass-card">
         <h3>مدیریت سوشال مدیا</h3>
-        <p>رشد ارگانیک و حرفه‌ای پیج اینستاگرام بر پایه برندینگ شخصی.</p>
+        <p>استراتژی محتوا و رشد پیج‌های اینستاگرام به سبک PlanLife.</p>
     </div>
-    <div class="card">
-        <i class="fas fa-brain"></i>
-        <h3>ماورای ذهن</h3>
-        <p>ارائه محتوا و پادکست‌های تخصصی در زمینه تغییر باورها و موفقیت.</p>
+    <div class="glass-card">
+        <h3>تغییر باورها</h3>
+        <p>پادکست‌ها و محتوای آموزشی برای تحول دنیای درونی شما.</p>
     </div>
-</div>
-
-<section id="about" style="padding: 100px 10%; text-align: center; background: rgba(255,255,255,0.02);">
-    <h2 style="font-size: 2rem; margin-bottom: 20px;">درباره PlanLife</h2>
-    <p style="max-width: 800px; margin: 0 auto; color: #cbd5e1;">
-        پلن‌لایف فقط یک سایت نیست؛ یک سبک زندگی است. ما به شما کمک می‌کنیم تا هم‌زمان با ارتقای بیزنس خود در فضای آنلاین، ذهنیت خود را نیز برای دریافت نتایج بزرگتر آماده کنید.
-    </p>
 </section>
 
-<footer>
-    <div style="margin-bottom: 20px;">
-        <a href="#" style="color: white; margin: 0 10px; font-size: 1.5rem;"><i class="fab fa-instagram"></i></a>
-        <a href="#" style="color: white; margin: 0 10px; font-size: 1.5rem;"><i class="fab fa-telegram"></i></a>
-    </div>
-    <p>© ۲۰۲۶ تمامی حقوق محفوظ است | طراحی شده توسط سهیل (PlanLife)</p>
-</footer>
+<div style="text-align: center; padding: 50px;">
+    <p>© 2026 PlanLife | قدرت گرفته از ماورای ذهن</p>
+</div>
 
 </body>
 </html>
