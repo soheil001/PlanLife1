@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PlanLife AI | ماورای ذهن</title>
+    <title>PlanLife AI | قدرت گرفته از Grok</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body, html {
@@ -27,10 +27,12 @@
             display: flex; flex-direction: column; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
         #chat-flow {
-            flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; padding: 10px;
+            flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; padding: 10px; scrollbar-width: none;
         }
+        #chat-flow::-webkit-scrollbar { display: none; }
         .bubble {
-            max-width: 80%; padding: 12px 18px; border-radius: 20px; font-size: 0.95rem; line-height: 1.6; color: white;
+            max-width: 80%; padding: 12px 18px; border-radius: 22px; font-size: 0.95rem; line-height: 1.6; color: white;
+            animation: fadeIn 0.3s ease;
         }
         .user-bubble { align-self: flex-start; background: rgba(255, 255, 255, 0.3); border-bottom-right-radius: 4px; }
         .ai-bubble { align-self: flex-end; background: rgba(0, 0, 0, 0.2); border-bottom-left-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
@@ -38,28 +40,29 @@
         textarea {
             width: 100%; min-height: 120px; background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 25px;
-            padding: 15px; color: white; font-size: 1rem; resize: none; outline: none;
+            padding: 15px; color: white; font-size: 1rem; resize: none; outline: none; font-family: inherit;
         }
         button {
-            background: white; color: #e73c7e; border: none; padding: 12px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.3s;
+            background: white; color: #e73c7e; border: none; padding: 14px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.3s;
         }
-        button:hover { transform: scale(1.02); }
+        button:hover { transform: scale(1.02); background: #f8f8f8; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div class="chat-container">
         <div id="chat-flow">
-            <div class="bubble ai-bubble">سلام سهیل عزیز! دستیار "ماورای ذهن" آماده است. سوالت رو بپرس... ✨</div>
+            <div class="bubble ai-bubble">سلام سهیل عزیز! من هوش مصنوعی Grok هستم. چطور می‌تونم در مسیر "ماورای ذهن" کمکت کنم؟ 🚀</div>
         </div>
         <div class="input-area">
-            <textarea id="userInput" placeholder="چیزی بنویس..."></textarea>
-            <button id="sendBtn" onclick="handleChat()">ارسال پیام</button>
+            <textarea id="userInput" placeholder="سوالت رو اینجا بنویس..."></textarea>
+            <button id="sendBtn" onclick="handleChat()">ارسال به xAI</button>
         </div>
     </div>
 
     <script>
-        const API_KEY = "AIzaSyCkwqbU9oerrcyEn2wtcIoD_y1O0sp39Zw";
+        const API_KEY = "xai-HBP2sZIOEXMAlSz8Pl9Do36KufJw07EvhmG5mo9Se0lbrsNl0oTavbHTL4a0VtWMytSw4uN54B0tM9Ro";
 
         async function handleChat() {
             const inputField = document.getElementById('userInput');
@@ -73,25 +76,38 @@
             inputField.value = "";
             sendBtn.disabled = true;
 
-            const loadingBubble = addBubble("در حال دریافت پاسخ...", 'ai-bubble');
+            const loadingBubble = addBubble("در حال پردازش توسط Grok...", 'ai-bubble');
 
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+                const response = await fetch("https://api.x.ai/v1/chat/completions", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${API_KEY}`
+                    },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: "تو دستیار هوشمند سهیل هستی. مثبت و انگیزشی پاسخ بده به: " + text }] }]
+                        model: "grok-beta",
+                        messages: [
+                            { "role": "system", "content": "تو دستیار هوشمند سایت PlanLife و برند ماورای ذهن هستی. مدیر تو سهیل است. لحن تو باید مثبت، انگیزشی و عمیق باشد." },
+                            { "role": "user", "content": text }
+                        ],
+                        stream: false
                     })
                 });
 
                 const data = await response.json();
-                if (data.candidates && data.candidates[0].content) {
-                    loadingBubble.innerText = data.candidates[0].content.parts[0].text;
+                
+                if (data.choices && data.choices.length > 0) {
+                    loadingBubble.innerText = data.choices[0].message.content;
+                } else if (data.error) {
+                    loadingBubble.innerText = "خطای xAI: " + data.error.message;
                 } else {
-                    loadingBubble.innerText = "خطایی رخ داد. دوباره امتحان کن.";
+                    loadingBubble.innerText = "پاسخی دریافت نشد. وضعیت حساب xAI رو چک کن.";
                 }
+
             } catch (error) {
-                loadingBubble.innerText = "ارتباط برقرار نشد. VPN رو چک کن سهیل جان.";
+                loadingBubble.innerText = "ارتباط برقرار نشد. سهیل جان، مطمئن شو VPN روشنه.";
+                console.error(error);
             } finally {
                 sendBtn.disabled = false;
                 chatFlow.scrollTop = chatFlow.scrollHeight;
