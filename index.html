@@ -1,34 +1,77 @@
-<script src="data.js"></script>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ماورای ذهن | PlanLife</title>
+    <style>
+        body { background: #0b0b0b; color: white; font-family: Tahoma, Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { width: 90%; max-width: 400px; background: #161616; padding: 20px; border-radius: 20px; border: 1px solid #333; text-align: center; }
+        #chat { height: 300px; overflow-y: auto; margin-bottom: 15px; padding: 10px; display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid #222; }
+        .msg { padding: 10px; border-radius: 12px; font-size: 14px; line-height: 1.5; max-width: 80%; }
+        .u { background: #ff2d55; align-self: flex-start; text-align: right; }
+        .a { background: #2c2c2e; align-self: flex-end; text-align: right; color: #32d74b; }
+        .input-box { display: flex; gap: 5px; }
+        input { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #333; background: #000; color: white; outline: none; }
+        button { padding: 10px 20px; border-radius: 10px; border: none; background: #32d74b; color: #000; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="color: #32d74b;">ماورای ذهن ✨</h2>
+    <div id="chat">
+        <div class="msg a">سلام سهیل عزیز. چه سوالی داری؟</div>
+    </div>
+    <div class="input-box">
+        <input type="text" id="userInput" placeholder="بنویس...">
+        <button onclick="send()">ارسال</button>
+    </div>
+</div>
 
 <script>
+    // دیتابیس مستقیم داخل کد (برای جلوگیری از خطای سافاری)
+    const db = {
+        "ثروت": "ثروت یک جریان انرژی است. برای جذب آن، ابتدا باید احساس غنا را در درون خود ایجاد کنی.",
+        "پول": "پول به دنبال ارزش می‌آید. وقتی روی رشد شخصی‌ات سرمایه‌گذاری کنی، پول سرازیر می‌شود.",
+        "عشق": "عشق قوی‌ترین نیروی جهان است. هر جا عشق جاری باشد، ترس راهی برای ورود ندارد.",
+        "ایمان": "ایمان یعنی دیدن نادیدنی‌ها و باور داشتن به قدرت بی‌پایان جهان هستی.",
+        "تجسم": "تجسم خلاق یعنی آینده را طوری در ذهن ببینی که انگار همین الان در آن حضور داری.",
+        "اراده": "اراده با برداشتن قدم‌های مستمر ساخته می‌شود. استمرار معجزه می‌کند.",
+        "ماورای ذهن": "جایی است که تو از محدودیت‌های مادی عبور می‌کنی و با قدرت خالق یکی می‌شوی.",
+        "شکرگزاری": "شکرگزاری قوی‌ترین آهنربای جذب نعمات است. بابت داشته‌هایت شاد باش.",
+        "قانون جذب": "فرکانس‌های مشابه هم را جذب می‌کنند؛ تو همان چیزی را جذب می‌کنی که هستی.",
+        "باور": "باورها فیلترهای ذهن تو هستند. اگر آن‌ها را عوض کنی، دنیایت تغییر می‌کند."
+    };
+
     function send() {
         const input = document.getElementById('userInput');
         const box = document.getElementById('chat');
-        const text = input.value.trim();
-        if (!text) return;
+        const val = input.value.trim();
+        
+        if (!val) return;
 
-        box.innerHTML += `<div class="msg u">${text}</div>`;
+        // نمایش پیام کاربر
+        box.innerHTML += `<div class="msg u">${val}</div>`;
         input.value = "";
 
-        // مستقیم از متغیر myData که در فایل قبلی ساختیم استفاده می‌کنیم
-        let reply = "فرکانس دریافت شد. در ماورای ذهن همه‌چیز ممکن است. ✨";
+        let reply = "فرکانس دریافت شد. روی باورهات تمرکز کن. ✨";
         
-        for (let key in myData) {
-            if (text.includes(key)) {
-                reply = myData[key];
+        // جستجو در دیتابیس
+        for (let key in db) {
+            if (val.includes(key)) {
+                reply = db[key];
                 break;
             }
         }
 
+        // پاسخ چت‌بات
         setTimeout(() => {
             box.innerHTML += `<div class="msg a">${reply}</div>`;
             box.scrollTop = box.scrollHeight;
-        }, 600);
+        }, 500);
     }
-    
-    // پیام خوش‌آمدگویی
-    window.onload = () => {
-        const box = document.getElementById('chat');
-        box.innerHTML = '<div class="msg a">اتصال با ماورای ذهن برقرار شد. بپرس...</div>';
-    };
 </script>
+
+</body>
+</html>
