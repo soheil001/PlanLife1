@@ -7,36 +7,37 @@
     <style>
         body { margin: 0; height: 100vh; background: linear-gradient(135deg, #00f2fe, #4facfe, #764ba2, #ff758c); display: flex; flex-direction: column; align-items: center; font-family: sans-serif; overflow: hidden; }
 
-        /* آیکون منو همبرگری با قاب شیشه‌ای */
-        .menu-btn { position: fixed; top: 20px; width: 50px; height: 50px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 25px; z-index: 1000; }
+        /* آیکون منو */
+        .menu-btn { position: fixed; top: 20px; width: 50px; height: 50px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 25px; z-index: 2000; }
         .left-icon { left: 20px; }
         .right-icon { right: 20px; }
 
-        /* پنل‌های منو */
-        .menu-panel { position: fixed; top: 0; width: 220px; height: 100%; background: rgba(0,0,0,0.2); backdrop-filter: blur(20px); transition: 0.5s; padding-top: 80px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        /* پنل‌های منو - Z-index بالا برای قرار گرفتن روی همه چیز */
+        .menu-panel { position: fixed; top: 0; width: 220px; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(20px); transition: 0.5s; padding-top: 80px; z-index: 1500; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         #leftPanel { left: -250px; }
         #rightPanel { right: -250px; }
-        .menu-panel.active { left: 0; right: auto; } /* فعال شدن منوی چپ */
-        #rightPanel.active { right: 0; left: auto; } /* فعال شدن منوی راست */
+        .menu-panel.active-left { left: 0; }
+        .menu-panel.active-right { right: 0; }
 
-        /* دکمه‌های داخل منو */
-        .menu-item { width: 80%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; color: white; text-align: center; cursor: pointer; transition: 0.3s; }
-        .menu-item:hover { background: rgba(255,255,255,0.3); }
+        .menu-item { width: 80%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; color: white; text-align: center; cursor: pointer; }
 
-        /* گوی نبض‌دار */
-        .pulse { width: 40px; height: 40px; background: #fff; border-radius: 50%; margin-top: 60px; box-shadow: 0 0 15px white; animation: pulse 2s infinite; }
+        /* گوی */
+        .pulse { width: 40px; height: 40px; background: #fff; border-radius: 50%; margin-top: 60px; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(0.9); } 50% { transform: scale(1.1); box-shadow: 0 0 25px #ff758c; } 100% { transform: scale(0.9); } }
 
-        /* چت باکس */
-        .chat-box { width: 340px; height: 350px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; margin-top: 50px; display: flex; flex-direction: column; padding: 20px; }
-        input { width: 100%; padding: 12px; border-radius: 15px; border: none; background: rgba(255,255,255,0.2); color: white; box-sizing: border-box; }
-        button { border-radius: 50%; border: none; width: 40px; height: 40px; background: #764ba2; color: white; cursor: pointer; margin-top: 10px; align-self: flex-end; }
+        /* چت باکس - ارتفاع بیشتر و عرض کمتر از لبه‌ها */
+        .chat-box { width: calc(100% - 30px); max-width: 380px; height: 400px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; margin-top: 50px; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; }
+        
+        /* کادر ورود متن و دکمه داخل آن */
+        .input-wrapper { position: relative; width: 100%; margin-top: auto; }
+        input { width: 100%; padding: 15px; padding-left: 50px; border-radius: 20px; border: none; background: rgba(255,255,255,0.2); color: white; box-sizing: border-box; }
+        .send-btn { position: absolute; left: 10px; top: 5px; width: 40px; height: 40px; border-radius: 50%; border: none; background: white; color: #764ba2; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="menu-btn left-icon" onclick="toggle('leftPanel')">☰</div>
-    <div class="menu-btn right-icon" onclick="toggle('rightPanel')">☰</div>
+    <div class="menu-btn left-icon" onclick="toggleMenu('left')">☰</div>
+    <div class="menu-btn right-icon" onclick="toggleMenu('right')">☰</div>
 
     <div id="leftPanel" class="menu-panel">
         <div class="menu-item">خانه</div><div class="menu-item">پروفایل</div><div class="menu-item">تنظیمات</div><div class="menu-item">خروج</div>
@@ -50,21 +51,22 @@
 
     <div class="chat-box">
         <div style="flex: 1; color: white; opacity: 0.8;">در حال گوش دادن...</div>
-        <input type="text" placeholder="پیام خود را بنویسید...">
-        <button>➤</button>
+        <div class="input-wrapper">
+            <input type="text" placeholder="پیام...">
+            <button class="send-btn">➤</button>
+        </div>
     </div>
 
     <script>
-        function toggle(id) {
+        function toggleMenu(side) {
             const left = document.getElementById('leftPanel');
             const right = document.getElementById('rightPanel');
-            
-            if(id === 'leftPanel') {
-                right.classList.remove('active');
-                left.classList.toggle('active');
+            if(side === 'left') {
+                right.classList.remove('active-right');
+                left.classList.toggle('active-left');
             } else {
-                left.classList.remove('active');
-                right.classList.toggle('active');
+                left.classList.remove('active-left');
+                right.classList.toggle('active-right');
             }
         }
     </script>
