@@ -1,128 +1,62 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PlanLife AI | قدرت گرفته از Grok</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body, html {
-            height: 100%; width: 100%; font-family: 'Tahoma', sans-serif;
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-            display: flex; justify-content: center; align-items: center;
-        }
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .chat-container {
-            width: 90%; max-width: 600px; height: 85vh;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 40px; padding: 20px;
-            display: flex; flex-direction: column; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-        #chat-flow {
-            flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; padding: 10px; scrollbar-width: none;
-        }
-        #chat-flow::-webkit-scrollbar { display: none; }
-        .bubble {
-            max-width: 80%; padding: 12px 18px; border-radius: 22px; font-size: 0.95rem; line-height: 1.6; color: white;
-            animation: fadeIn 0.3s ease;
-        }
-        .user-bubble { align-self: flex-start; background: rgba(255, 255, 255, 0.3); border-bottom-right-radius: 4px; }
-        .ai-bubble { align-self: flex-end; background: rgba(0, 0, 0, 0.2); border-bottom-left-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
-        .input-area { margin-top: 15px; display: flex; flex-direction: column; gap: 10px; }
-        textarea {
-            width: 100%; min-height: 120px; background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 25px;
-            padding: 15px; color: white; font-size: 1rem; resize: none; outline: none; font-family: inherit;
-        }
-        button {
-            background: white; color: #e73c7e; border: none; padding: 14px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.3s;
-        }
-        button:hover { transform: scale(1.02); background: #f8f8f8; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
-</head>
-<body>
+<script>
+    const API_KEY = "xai-HBP2sZIOEXMAlSz8Pl9Do36KufJw07EvhmG5mo9Se0lbrsNl0oTavbHTL4a0VtWMytSw4uN54B0tM9Ro";
 
-    <div class="chat-container">
-        <div id="chat-flow">
-            <div class="bubble ai-bubble">سلام سهیل عزیز! من هوش مصنوعی Grok هستم. چطور می‌تونم در مسیر "ماورای ذهن" کمکت کنم؟ 🚀</div>
-        </div>
-        <div class="input-area">
-            <textarea id="userInput" placeholder="سوالت رو اینجا بنویس..."></textarea>
-            <button id="sendBtn" onclick="handleChat()">ارسال به xAI</button>
-        </div>
-    </div>
+    async function handleChat() {
+        const inputField = document.getElementById('userInput');
+        const chatFlow = document.getElementById('chat-flow');
+        const sendBtn = document.getElementById('sendBtn');
+        const text = inputField.value.trim();
 
-    <script>
-        const API_KEY = "xai-HBP2sZIOEXMAlSz8Pl9Do36KufJw07EvhmG5mo9Se0lbrsNl0oTavbHTL4a0VtWMytSw4uN54B0tM9Ro";
+        if (text === "") return;
 
-        async function handleChat() {
-            const inputField = document.getElementById('userInput');
-            const chatFlow = document.getElementById('chat-flow');
-            const sendBtn = document.getElementById('sendBtn');
-            const text = inputField.value.trim();
+        addBubble(text, 'user-bubble');
+        inputField.value = "";
+        sendBtn.disabled = true;
 
-            if (text === "") return;
+        const loadingBubble = addBubble("در حال پردازش...", 'ai-bubble');
 
-            addBubble(text, 'user-bubble');
-            inputField.value = "";
-            sendBtn.disabled = true;
+        try {
+            const response = await fetch("https://api.x.ai/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: "grok-beta",
+                    messages: [
+                        { "role": "system", "content": "تو دستیار هوشمند سهیل در سایت PlanLife هستی." },
+                        { "role": "user", "content": text }
+                    ]
+                })
+            });
 
-            const loadingBubble = addBubble("در حال پردازش توسط Grok...", 'ai-bubble');
-
-            try {
-                const response = await fetch("https://api.x.ai/v1/chat/completions", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        model: "grok-beta",
-                        messages: [
-                            { "role": "system", "content": "تو دستیار هوشمند سایت PlanLife و برند ماورای ذهن هستی. مدیر تو سهیل است. لحن تو باید مثبت، انگیزشی و عمیق باشد." },
-                            { "role": "user", "content": text }
-                        ],
-                        stream: false
-                    })
-                });
-
-                const data = await response.json();
-                
-                if (data.choices && data.choices.length > 0) {
-                    loadingBubble.innerText = data.choices[0].message.content;
-                } else if (data.error) {
-                    loadingBubble.innerText = "خطای xAI: " + data.error.message;
-                } else {
-                    loadingBubble.innerText = "پاسخی دریافت نشد. وضعیت حساب xAI رو چک کن.";
-                }
-
-            } catch (error) {
-                loadingBubble.innerText = "ارتباط برقرار نشد. سهیل جان، مطمئن شو VPN روشنه.";
-                console.error(error);
-            } finally {
-                sendBtn.disabled = false;
-                chatFlow.scrollTop = chatFlow.scrollHeight;
+            const data = await response.json();
+            
+            // بررسی دقیق پاسخ
+            if (data && data.choices && data.choices[0]) {
+                loadingBubble.innerText = data.choices[0].message.content;
+            } else {
+                // اگر API جواب نداد، این پاسخ معنوی و انگیزشی را بده
+                loadingBubble.innerText = "سهیل جان، فرکانس ارسالی دریافت شد. در حال حاضر ارتباط مستقیم با سرور Grok به دلیل محدودیت اعتبار برقرار نیست، اما به یاد داشته باش که قدرت ذهن تو فراتر از هر کدی است. (لطفاً اعتبار حساب xAI را چک کن)";
             }
-        }
 
-        function addBubble(text, className) {
-            const chatFlow = document.getElementById('chat-flow');
-            const div = document.createElement('div');
-            div.className = `bubble ${className}`;
-            div.innerText = text;
-            chatFlow.appendChild(div);
+        } catch (error) {
+            loadingBubble.innerText = "ارتباط با ماورای ذهن موقتاً قطع شده. لطفاً VPN رو چک کن یا بعداً تلاش کن.";
+            console.error("Error details:", error);
+        } finally {
+            sendBtn.disabled = false;
             chatFlow.scrollTop = chatFlow.scrollHeight;
-            return div;
         }
-    </script>
-</body>
-</html>
+    }
+
+    function addBubble(text, className) {
+        const chatFlow = document.getElementById('chat-flow');
+        const div = document.createElement('div');
+        div.className = `bubble ${className}`;
+        div.innerText = text;
+        chatFlow.appendChild(div);
+        chatFlow.scrollTop = chatFlow.scrollHeight;
+        return div;
+    }
+</script>
