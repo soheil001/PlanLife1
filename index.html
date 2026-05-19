@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PlanLife | پلتفرم تحول</title>
+    <title>PlanLife | هوش ماورایی</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;800&family=League+Spartan:wght@800&display=swap');
 
-        * { box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        * { box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         
         body { 
             margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center;
@@ -18,59 +18,74 @@
 
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        /* منوهای همبرگری شیشه‌ای */
+        body.menu-open .main-container { filter: blur(15px); pointer-events: none; }
+
+        /* منوهای همبرگری */
         .menu-btn {
             position: fixed; top: 25px; z-index: 1001;
             background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3);
             padding: 10px; border-radius: 12px; cursor: pointer; backdrop-filter: blur(10px);
         }
-        .btn-right { right: 20px; } .btn-left { left: 20px; }
+        .btn-right { right: 20px; } 
+        .btn-left { left: 20px; }
         .menu-btn div { width: 22px; height: 2px; background: white; margin: 5px 0; border-radius: 2px; }
 
         .side-menu {
-            position: fixed; top: 0; width: 260px; height: 100%;
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(40px);
+            position: fixed; top: 0; width: 270px; height: 100%;
+            background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(45px);
             z-index: 1000; padding: 80px 20px; border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: 0.6s ease;
         }
         #rightMenu { right: -300px; }
         #leftMenu { left: -300px; }
-        .side-menu.active { right: 0 !important; left: 0 !important; }
+        #rightMenu.active { right: 0; }
+        #leftMenu.active { left: 0; }
 
         .nav-item {
-            display: block; padding: 15px; background: rgba(255, 255, 255, 0.1); border-radius: 15px;
+            display: block; padding: 15px; background: rgba(255, 255, 255, 0.12); border-radius: 18px;
             color: white; text-align: center; text-decoration: none; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer; font-weight: 500;
         }
 
-        /* المان‌های اصلی صفحه */
         .page { display: none; width: 100%; flex-direction: column; align-items: center; }
-        .page.active { display: flex; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .page.active { display: flex; animation: fadeIn 0.8s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
-        .orb { border-radius: 50%; background: radial-gradient(circle, #fff 0%, #a2d2ff 100%); animation: pulse 3s infinite ease-in-out; border: 1px solid rgba(255, 255, 255, 0.4); }
-        .main-orb { width: 50px; height: 50px; margin-bottom: 5px; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        .brand { color: white; font-family: 'League Spartan', sans-serif; font-size: 2.2rem; font-weight: 800; margin-bottom: 30px; }
-
-        /* چت باکس راست‌چین */
-        .chat-card { width: 100%; max-width: 450px; height: 50vh; background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(30px); border-radius: 35px; border: 1px solid rgba(255, 255, 255, 0.3); display: flex; flex-direction: column; padding: 15px; }
+        /* باکس چت */
+        .chat-card { 
+            width: 100%; max-width: 450px; height: calc(50vh + 80px);
+            background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(35px); 
+            border-radius: 35px; border: 1px solid rgba(255, 255, 255, 0.3); 
+            display: flex; flex-direction: column; padding: 18px; 
+        }
         #chat-window { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
         .msg { padding: 12px 18px; border-radius: 20px; font-size: 14px; max-width: 85%; text-align: right; }
         .a { align-self: flex-start; background: rgba(0, 0, 0, 0.2); color: white; border-bottom-right-radius: 5px; }
+
+        /* پلیر پیشرفته پادکست */
+        .player-card { 
+            width: 100%; max-width: 400px; background: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(40px); border-radius: 45px; padding: 35px; 
+            border: 1px solid rgba(255, 255, 255, 0.3); text-align: center; 
+        }
         
-        .input-area { margin-top: 15px; display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.1); padding: 12px; border-radius: 25px; }
-        input { flex: 1; background: transparent; border: none; color: white; outline: none; text-align: right; }
+        .controls-row { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 20px 0; }
+        .play-circle { width: 75px; height: 75px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+        .skip-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 45px; height: 45px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; }
 
-        /* گرید باکس‌ها */
-        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; margin-top: 25px; }
-        .content-box { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.2); padding: 15px; text-align: center; color: white; cursor: pointer; }
-        .box-img { width: 100%; height: 110px; background: rgba(255,255,255,0.05); border-radius: 18px; margin-bottom: 10px; }
+        /* تایم لاین شیشه‌ای */
+        .timeline-container { width: 100%; margin: 15px 0; }
+        #progress-bar { 
+            width: 100%; height: 6px; background: rgba(255,255,255,0.2); 
+            border-radius: 10px; cursor: pointer; appearance: none; outline: none;
+        }
+        #progress-bar::-webkit-slider-thumb { appearance: none; width: 14px; height: 14px; background: white; border-radius: 50%; box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        .time-info { display: flex; justify-content: space-between; color: white; font-size: 11px; opacity: 0.7; margin-top: 5px; }
 
-        /* پلیر شیک پادکست */
-        .player-card { width: 100%; max-width: 400px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(30px); border-radius: 40px; padding: 30px; border: 1px solid rgba(255, 255, 255, 0.3); text-align: center; }
-        .play-circle { width: 80px; height: 80px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 20px auto; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .podcast-item { width: 100%; background: rgba(255,255,255,0.1); margin-top: 15px; padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; cursor: pointer; }
+        .podcast-scroll { width: 100%; max-width: 400px; height: 300px; overflow-y: auto; margin-top: 20px; padding: 0 5px; }
+        .podcast-item { background: rgba(255,255,255,0.08); margin-bottom: 10px; padding: 14px; border-radius: 20px; display: flex; align-items: center; gap: 15px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
 
-        #overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); display:none; z-index:999; }
+        #overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); display:none; z-index:999; backdrop-filter: blur(4px); }
     </style>
 </head>
 <body>
@@ -81,21 +96,20 @@
 <div class="menu-btn btn-left" onclick="openMenu('leftMenu')"><div></div><div></div><div></div></div>
 
 <div id="rightMenu" class="side-menu">
-    <div class="nav-item">پروفایل من</div>
-    <div class="nav-item">اشتراک ویژه</div>
+    <div class="nav-item">پروفایل کاربری</div>
+    <div class="nav-item">تنظیمات</div>
     <div class="nav-item" onclick="location.reload()">خروج</div>
 </div>
 
 <div id="leftMenu" class="side-menu">
     <div class="nav-item" onclick="showPage('homePage')">صفحه اصلی</div>
     <div class="nav-item" onclick="showPage('podcastPage')">پادکست‌ها</div>
-    <div class="nav-item">تمرینات ذهنی</div>
-    <div class="nav-item">کتابخانه</div>
+    <div class="nav-item">تمرینات</div>
+    <div class="nav-item">کتاب‌ها</div>
 </div>
 
-<div style="width:100%; display:flex; flex-direction:column; align-items:center; margin-top: 40px;">
-    <div class="orb main-orb"></div>
-    <h1 class="brand">PlanLife</h1>
+<div class="main-container" style="width:100%; display:flex; flex-direction:column; align-items:center; margin-top: 50px;">
+    <h1 style="color:white; font-family:'League Spartan'; font-weight:800; font-size:2.5rem; margin-bottom:30px;">PlanLife</h1>
 
     <div id="homePage" class="page active">
         <div class="chat-card">
@@ -103,41 +117,68 @@
                 <div class="msg a">سوال ذهنی خودتان را بپرسید... ✨</div>
             </div>
             <div class="input-area">
-                <input type="text" placeholder="چیزی بنویسید...">
-                <div class="orb" style="width:20px; height:20px;"></div>
+                <input type="text" placeholder="بنویسید...">
+                <div style="width:20px; height:20px; background:white; border-radius:50%;"></div>
             </div>
         </div>
-        <div class="content-grid">
-            <div class="content-box" onclick="showPage('podcastPage')">
-                <div class="box-img"></div><span>پادکست‌ها</span>
-            </div>
-            <div class="content-box"><div class="box-img"></div><span>تمرینات</span></div>
-            <div class="content-box"><div class="box-img"></div><span>کتاب‌ها</span></div>
-            <div class="content-box"><div class="box-img"></div><span>باورها</span></div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; margin-top: 25px;">
+            <div class="nav-item" onclick="showPage('podcastPage')">پادکست‌ها</div>
+            <div class="nav-item">تمرینات</div>
+            <div class="nav-item">کتاب‌ها</div>
+            <div class="nav-item">باورها</div>
         </div>
     </div>
 
     <div id="podcastPage" class="page">
         <div class="player-card">
-            <div style="width:120px; height:120px; background:rgba(255,255,255,0.1); border-radius:25px; margin: 0 auto 20px;"></div>
-            <h2 id="p-title" style="margin:0; color:white;">آماده پخش</h2>
-            <p style="opacity:0.6; font-size:14px;">PlanLife Mindset</p>
-            
-            <div class="play-circle" onclick="togglePlay()">
-                <svg id="playIcon" width="40" height="40" fill="#7d2ae8" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <h2 id="p-title" style="color:white; margin:0; font-size:1.3rem;">انتخاب پادکست</h2>
+            <p style="color:white; opacity:0.5; font-size:12px; margin:5px 0 20px;">آماده پخش فرکانس تحول</p>
+
+            <div class="timeline-container">
+                <input type="range" id="progress-bar" value="0" step="1">
+                <div class="time-info">
+                    <span id="curr-time">0:00</span>
+                    <span id="total-time">0:00</span>
+                </div>
+            </div>
+
+            <div class="controls-row">
+                <button class="skip-btn" onclick="skip(-10)">-10s</button>
+                <div class="play-circle" onclick="togglePlay()">
+                    <svg id="playIcon" width="35" height="35" fill="#7d2ae8" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <button class="skip-btn" onclick="skip(10)">+10s</button>
             </div>
         </div>
 
-        <div style="width:100%; max-width:400px; margin-top:20px;">
-            <div class="podcast-item" onclick="loadTrack('https://res.cloudinary.com/dshielkdt/video/upload/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3', 'قدرت ذهن - قسمت ۱')">
-                <div style="width:45px; height:45px; background:white; border-radius:10px; display:flex; align-items:center; justify-content:center; color:#7d2ae8; font-weight:800;">۱</div>
-                <div style="flex:1; color:white; text-align:right;">
-                    <div style="font-weight:800; font-size:14px;">قسمت ۱: قدرت ذهن</div>
-                    <div style="font-size:11px; opacity:0.6;">پخش از Cloudinary</div>
-                </div>
-            </div>
+        <div class="podcast-scroll">
+            <script>
+                const podcasts = [
+                    { id: 1, title: "قدرت ذهن", url: "https://res.cloudinary.com/dshielkdt/video/upload/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+                    { id: 2, title: "پادکست شماره ۲", url: "لینک موزیک را اینجا قرار دهید" },
+                    { id: 3, title: "پادکست شماره ۳", url: "لینک موزیک را اینجا قرار دهید" },
+                    { id: 4, title: "پادکست شماره ۴", url: "لینک موزیک را اینجا قرار دهید" },
+                    { id: 5, title: "پادکست شماره ۵", url: "لینک موزیک را اینجا قرار دهید" },
+                    { id: 6, title: "پادکست شماره ۶", url: "لینک موزیک را اینجا قرار دهید" },
+                    { id: 7, title: "پادکست شماره ۷", url: "لینک موزیک را اینجا قرار دهید" },
+                    { id: 8, title: "پادکست شماره ۸", url: "لینک موزیک را اینجا قرار دهید" },
+                    { id: 9, title: "پادکست شماره ۹", url: "لینک موزیک را اینجا قرار دهید" },
+                    { id: 10, title: "پادکست شماره ۱۰", url: "لینک موزیک را اینجا قرار دهید" }
+                ];
+
+                podcasts.forEach(p => {
+                    document.write(`
+                        <div class="podcast-item" onclick="loadTrack('${p.url}', '${p.title}')">
+                            <div style="color:white; font-weight:800; opacity:0.3;">0${p.id}</div>
+                            <div style="flex:1; color:white; text-align:right; font-size:14px;">${p.title}</div>
+                            <div style="width:30px; height:30px; background:rgba(255,255,255,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:10px;">▶</div>
+                        </div>
+                    `);
+                });
+            </script>
         </div>
-        <div class="nav-item" style="margin-top:30px; width:150px; cursor:pointer;" onclick="showPage('homePage')">برگشت</div>
+        <div class="nav-item" style="margin-top:20px; width:120px;" onclick="showPage('homePage')">بازگشت</div>
     </div>
 </div>
 
@@ -146,26 +187,33 @@
 <script>
     const audio = document.getElementById('mainAudio');
     const playIcon = document.getElementById('playIcon');
+    const progBar = document.getElementById('progress-bar');
+    const currTimeText = document.getElementById('curr-time');
+    const totalTimeText = document.getElementById('total-time');
     let isPlaying = false;
 
+    // مدیریت منوها
     function openMenu(id) {
         closeMenus();
         document.getElementById(id).classList.add('active');
         document.getElementById('overlay').style.display = 'block';
+        document.body.classList.add('menu-open');
     }
     function closeMenus() {
         document.querySelectorAll('.side-menu').forEach(m => m.classList.remove('active'));
         document.getElementById('overlay').style.display = 'none';
+        document.body.classList.remove('menu-open');
     }
 
     function showPage(id) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         closeMenus();
-        window.scrollTo(0,0);
     }
 
+    // پلیر
     function loadTrack(url, title) {
+        if(url.includes("لینک")) return alert("ابتدا لینک را در کد قرار دهید");
         audio.src = url;
         document.getElementById('p-title').innerText = title;
         audio.play();
@@ -174,16 +222,39 @@
     }
 
     function togglePlay() {
-        if (!audio.src) return alert("ابتدا یک پادکست انتخاب کنید");
+        if (!audio.src) return;
         if (audio.paused) { audio.play(); isPlaying = true; }
         else { audio.pause(); isPlaying = false; }
         updateIcon();
+    }
+
+    function skip(sec) {
+        audio.currentTime += sec;
     }
 
     function updateIcon() {
         playIcon.innerHTML = isPlaying ? 
             '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' : 
             '<path d="M8 5v14l11-7z"/>';
+    }
+
+    // آپدیت تایم‌لاین
+    audio.ontimeupdate = () => {
+        progBar.max = audio.duration;
+        progBar.value = audio.currentTime;
+        currTimeText.innerText = formatTime(audio.currentTime);
+        totalTimeText.innerText = formatTime(audio.duration);
+    };
+
+    progBar.oninput = () => {
+        audio.currentTime = progBar.value;
+    };
+
+    function formatTime(sec) {
+        if (isNaN(sec)) return "0:00";
+        let m = Math.floor(sec / 60);
+        let s = Math.floor(sec % 60);
+        return m + ":" + (s < 10 ? "0" + s : s);
     }
 </script>
 
