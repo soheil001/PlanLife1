@@ -3,54 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
     <style>
         body { margin: 0; height: 100vh; background: linear-gradient(135deg, #00f2fe, #4facfe, #764ba2, #ff758c); display: flex; flex-direction: column; align-items: center; font-family: sans-serif; overflow: hidden; }
 
-        /* استایل منو همبرگری */
-        .hamburger { cursor: pointer; padding: 15px; z-index: 100; color: white; font-size: 24px; position: fixed; top: 10px; }
-        .left-menu { left: 10px; }
-        .right-menu { right: 10px; }
-        
-        .menu-panel { position: fixed; top: 0; width: 200px; height: 100%; background: rgba(255,255,255,0.15); backdrop-filter: blur(20px); transition: 0.4s; padding-top: 60px; }
-        #leftPanel { left: -200px; }
-        #rightPanel { right: -200px; }
-        .menu-panel.active { left: 0; right: 0; }
+        /* آیکون منو همبرگری با قاب شیشه‌ای */
+        .menu-btn { position: fixed; top: 20px; width: 50px; height: 50px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 25px; z-index: 1000; }
+        .left-icon { left: 20px; }
+        .right-icon { right: 20px; }
+
+        /* پنل‌های منو */
+        .menu-panel { position: fixed; top: 0; width: 220px; height: 100%; background: rgba(0,0,0,0.2); backdrop-filter: blur(20px); transition: 0.5s; padding-top: 80px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        #leftPanel { left: -250px; }
+        #rightPanel { right: -250px; }
+        .menu-panel.active { left: 0; right: auto; } /* فعال شدن منوی چپ */
+        #rightPanel.active { right: 0; left: auto; } /* فعال شدن منوی راست */
+
+        /* دکمه‌های داخل منو */
+        .menu-item { width: 80%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; color: white; text-align: center; cursor: pointer; transition: 0.3s; }
+        .menu-item:hover { background: rgba(255,255,255,0.3); }
 
         /* گوی نبض‌دار */
-        .pulse { width: 40px; height: 40px; background: #fff; border-radius: 50%; margin-top: 50px; box-shadow: 0 0 15px white; animation: pulse 2s infinite; }
+        .pulse { width: 40px; height: 40px; background: #fff; border-radius: 50%; margin-top: 60px; box-shadow: 0 0 15px white; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(0.9); } 50% { transform: scale(1.1); box-shadow: 0 0 25px #ff758c; } 100% { transform: scale(0.9); } }
 
-        /* چت باکس مربعی کوچک */
-        .chat-box { width: 300px; height: 300px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; margin-top: 30px; display: flex; flex-direction: column; padding: 15px; }
-        .input-area { margin-top: auto; display: flex; gap: 5px; }
-        input { flex: 1; padding: 10px; border-radius: 15px; border: none; background: rgba(255,255,255,0.3); color: white; }
-        button { border-radius: 50%; border: none; width: 40px; height: 40px; background: #764ba2; color: white; cursor: pointer; }
+        /* چت باکس */
+        .chat-box { width: 340px; height: 350px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; margin-top: 50px; display: flex; flex-direction: column; padding: 20px; }
+        input { width: 100%; padding: 12px; border-radius: 15px; border: none; background: rgba(255,255,255,0.2); color: white; box-sizing: border-box; }
+        button { border-radius: 50%; border: none; width: 40px; height: 40px; background: #764ba2; color: white; cursor: pointer; margin-top: 10px; align-self: flex-end; }
     </style>
 </head>
 <body>
 
-    <div class="hamburger left-menu" onclick="toggle('leftPanel')">☰</div>
-    <div class="hamburger right-menu" onclick="toggle('rightPanel')">☰</div>
+    <div class="menu-btn left-icon" onclick="toggle('leftPanel')">☰</div>
+    <div class="menu-btn right-icon" onclick="toggle('rightPanel')">☰</div>
 
-    <div id="leftPanel" class="menu-panel"><ul><li>گزینه ۱</li><li>گزینه ۲</li><li>گزینه ۳</li><li>گزینه ۴</li></ul></div>
-    <div id="rightPanel" class="menu-panel"><ul><li>تست ۱</li><li>تست ۲</li><li>تست ۳</li><li>تست ۴</li></ul></div>
+    <div id="leftPanel" class="menu-panel">
+        <div class="menu-item">خانه</div><div class="menu-item">پروفایل</div><div class="menu-item">تنظیمات</div><div class="menu-item">خروج</div>
+    </div>
+    <div id="rightPanel" class="menu-panel">
+        <div class="menu-item">پروژه‌ها</div><div class="menu-item">اشتراک</div><div class="menu-item">تیم‌ها</div><div class="menu-item">پشتیبانی</div>
+    </div>
 
     <div class="pulse"></div>
-    <h1 style="color: white; font-size: 24px;">PlanLife</h1>
+    <h1 style="color: white; font-family: 'Lobster', cursive; font-size: 40px; margin: 10px;">PlanLife</h1>
 
     <div class="chat-box">
-        <div style="flex: 1; color: white; font-size: 14px;">چت با هوش مصنوعی...</div>
-        <div class="input-area">
-            <input type="text" placeholder="پیام...">
-            <button>➤</button>
-        </div>
+        <div style="flex: 1; color: white; opacity: 0.8;">در حال گوش دادن...</div>
+        <input type="text" placeholder="پیام خود را بنویسید...">
+        <button>➤</button>
     </div>
 
     <script>
         function toggle(id) {
-            const panels = ['leftPanel', 'rightPanel'];
-            panels.forEach(p => { if(p !== id) document.getElementById(p).classList.remove('active'); });
-            document.getElementById(id).classList.toggle('active');
+            const left = document.getElementById('leftPanel');
+            const right = document.getElementById('rightPanel');
+            
+            if(id === 'leftPanel') {
+                right.classList.remove('active');
+                left.classList.toggle('active');
+            } else {
+                left.classList.remove('active');
+                right.classList.toggle('active');
+            }
         }
     </script>
 </body>
