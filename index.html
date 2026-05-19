@@ -1,65 +1,33 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>PlanLife | ماورای ذهن</title>
-    <style>
-        body { background: #1a1a1a; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { width: 90%; max-width: 500px; background: #2a2a2a; padding: 20px; border-radius: 20px; text-align: center; }
-        #chat-flow { height: 300px; overflow-y: auto; margin-bottom: 15px; border-bottom: 1px solid #444; padding: 10px; text-align: right; }
-        textarea { width: 100%; height: 80px; border-radius: 10px; padding: 10px; margin-bottom: 10px; }
-        button { width: 100%; padding: 10px; border-radius: 10px; border: none; background: #e73c7e; color: white; cursor: pointer; }
-        .user-msg { color: #23d5ab; margin-bottom: 10px; }
-        .ai-msg { color: #fff; margin-bottom: 10px; font-weight: bold; }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <div id="chat-flow">
-        <div class="ai-msg">سلام سهیل عزیز! آماده‌ای؟</div>
-    </div>
-    <textarea id="userInput" placeholder="چیزی بپرس..."></textarea>
-    <button onclick="askAI()">ارسال</button>
-</div>
-
 <script>
-    const _p1 = "github_pat_11BVAWD6Q0cJF1uyT2nWxf_";
-    const _p2 = "70WDvLiV6DYADLJAlkm5ODryeEibUXZF1CqAXquiR8y5M2WSG3FoYQ8v70p";
-    const TOKEN = _p1 + _p2;
-
     async function askAI() {
         const input = document.getElementById('userInput');
         const flow = document.getElementById('chat-flow');
-        if (!input.value.trim()) return;
-
-        flow.innerHTML += `<div class="user-msg">شما: ${input.value}</div>`;
-        const loading = document.createElement('div');
-        loading.className = "ai-msg";
-        loading.innerText = "...";
-        flow.appendChild(loading);
+        const text = input.value.trim();
         
-        const text = input.value;
+        if (!text) return;
+
+        // نمایش پیام کاربر
+        flow.innerHTML += `<div style="color: #23d5ab; margin-bottom: 10px;">شما: ${text}</div>`;
+        const loading = document.createElement('div');
+        loading.innerText = "... در حال فکر کردن";
+        flow.appendChild(loading);
         input.value = "";
 
         try {
-            const response = await fetch("https://models.inference.ai.azure.com/chat/completions", {
+            // استفاده از یک API عمومی و رایگان برای تست (بدون نیاز به کلید سخت‌گیرانه)
+            const response = await fetch("https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill", {
                 method: "POST",
-                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + TOKEN },
-                body: JSON.stringify({
-                    model: "gpt-4o-mini",
-                    messages: [{ role: "user", content: text }]
-                })
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ inputs: text })
             });
 
             const data = await response.json();
-            loading.innerText = "هوش مصنوعی: " + data.choices[0].message.content;
+            
+            // نمایش پاسخ هوش مصنوعی
+            loading.innerText = "هوش مصنوعی: " + (data.generated_text || "سهیل جان، متوجه نشدم، دوباره بپرس.");
         } catch (e) {
-            loading.innerText = "خطا! احتمالاً توکن غیرفعال شده یا VPN وصل نیست.";
+            loading.innerText = "خطا در اتصال! لطفاً فیلترشکن رو چک کن.";
         }
         flow.scrollTop = flow.scrollHeight;
     }
 </script>
-
-</body>
-</html>
