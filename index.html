@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PlanLife | پلتفرم ماورای ذهن</title>
+    <title>PlanLife | هوش برتر</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;800&family=Montserrat:wght@800&display=swap');
 
         * { box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; }
         
@@ -15,163 +15,129 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* گرادینت الهام گرفته از تصویر Canva شما */
             background: linear-gradient(135deg, #00c4cc 0%, #7d2ae8 100%);
             overflow: hidden;
-            padding: 15px;
+            padding: 10px;
+            transition: 0.5s;
         }
 
-        /* استایل منوی همبرگری */
+        /* افکت تار شدن بگراند هنگام باز شدن منو */
+        body.menu-open .chat-card { filter: blur(10px); pointer-events: none; }
+
+        /* منوی همبرگری تمام شیشه‌ای */
         .menu-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            padding: 10px;
-            border-radius: 12px;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
+            position: fixed; top: 20px; right: 20px; z-index: 1001;
+            background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px; border-radius: 15px; cursor: pointer; backdrop-filter: blur(10px);
         }
 
         .side-menu {
-            position: fixed;
-            top: 0;
-            right: -300px;
-            width: 280px;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(20px);
-            z-index: 999;
-            padding: 60px 20px;
-            transition: 0.4s ease;
-            border-left: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            position: fixed; top: 0; right: -100%; width: 280px; height: 100%;
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(40px);
+            z-index: 1000; padding: 80px 25px; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex; flex-direction: column; gap: 20px;
         }
 
         .side-menu.active { right: 0; }
 
         .nav-item {
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            font-weight: bold;
+            padding: 16px; background: rgba(255, 255, 255, 0.1); border-radius: 18px;
+            color: white; text-align: center; text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.2); font-weight: 500; transition: 0.3s;
         }
+        .nav-item:hover { background: rgba(255, 255, 255, 0.2); }
 
-        /* ظرف چت باکس تمام شیشه‌ای */
+        /* باکس چت جمع‌وجور و شیک */
         .chat-card {
-            width: 100%;
-            max-width: 450px;
-            height: 85vh;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-radius: 35px;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-            position: relative;
+            width: 100%; max-width: 380px; height: 82vh;
+            background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px); border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex; flex-direction: column; padding: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2); position: relative; transition: 0.5s;
         }
 
-        .header {
-            text-align: center;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        /* کره زمین طبیعی و ۳۶۰ درجه */
+        .earth-container {
+            width: 70px; height: 70px; margin: 0 auto 10px;
+            border-radius: 50%; overflow: hidden;
+            box-shadow: 0 0 25px rgba(0, 196, 204, 0.6);
+            background: #000; position: relative;
         }
-
-        .earth-logo {
-            width: 50px; height: 50px; border-radius: 50%;
-            background: url('https://img.freepik.com/free-vector/blue-earth-glowing-light_1017-14243.jpg') center/cover;
-            animation: rotateEarth 10s infinite linear;
-            margin-bottom: 10px;
-            box-shadow: 0 0 20px rgba(0, 196, 204, 0.5);
+        .earth-sphere {
+            width: 200%; height: 100%;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/4/4d/Whole_world_-_land_and_oceans.jpg') repeat-x;
+            background-size: 50% 100%;
+            animation: rotateEarth 15s linear infinite;
         }
+        @keyframes rotateEarth { from { background-position: 0 0; } to { background-position: -200% 0; } }
 
-        @keyframes rotateEarth { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        .brand-name { color: white; font-size: 1.8rem; font-weight: 800; margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .brand-name { 
+            color: white; font-family: 'Montserrat', sans-serif; font-size: 2rem; 
+            font-weight: 800; margin: 0; letter-spacing: -1px; text-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
 
         #chat-window {
-            flex: 1;
-            overflow-y: auto;
-            padding: 15px 5px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            flex: 1; overflow-y: auto; padding: 15px 5px;
+            display: flex; flex-direction: column; gap: 10px;
         }
 
-        .msg { padding: 12px 18px; border-radius: 22px; font-size: 15px; line-height: 1.6; max-width: 85%; font-weight: 700; }
-        .u { align-self: flex-start; background: #000; color: white; border-bottom-left-radius: 4px; }
-        .a { align-self: flex-end; background: white; color: #7d2ae8; border-bottom-right-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        /* حباب‌های چت تمام شیشه‌ای */
+        .msg { padding: 10px 16px; border-radius: 20px; font-size: 14px; line-height: 1.6; max-width: 80%; font-weight: 500; backdrop-filter: blur(5px); }
+        .u { align-self: flex-start; background: rgba(0, 0, 0, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-bottom-left-radius: 2px; }
+        .a { align-self: flex-end; background: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255, 255, 255, 0.2); border-bottom-right-radius: 2px; }
 
-        /* باکس تایپ ثابت در پایین */
+        /* باکس تایپ و دکمه ارسال فلش */
         .input-area {
-            display: flex;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 8px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(255, 255, 255, 0.1); padding: 5px 15px;
+            border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        input {
-            flex: 1; background: transparent; border: none; color: white;
-            padding: 10px; outline: none; font-size: 16px; font-weight: bold;
-        }
-        input::placeholder { color: rgba(255, 255, 255, 0.6); }
+        input { flex: 1; background: transparent; border: none; color: white; padding: 12px 0; outline: none; font-size: 15px; font-weight: bold; }
+        input::placeholder { color: rgba(255, 255, 255, 0.5); }
 
         .send-btn {
-            background: #fff; border: none; padding: 10px 20px;
-            border-radius: 15px; color: #7d2ae8; font-weight: 800; cursor: pointer;
+            background: white; border: none; width: 35px; height: 35px;
+            border-radius: 50%; color: #7d2ae8; font-size: 20px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.3s;
         }
+        .send-btn:active { transform: scale(0.9); }
 
-        /* استایل اسکرول بار مخفی */
         #chat-window::-webkit-scrollbar { width: 0px; }
     </style>
 </head>
 <body>
 
 <div class="menu-btn" onclick="toggleMenu()">
-    <div style="width:25px; height:3px; background:white; margin: 4px 0;"></div>
-    <div style="width:25px; height:3px; background:white; margin: 4px 0;"></div>
-    <div style="width:25px; height:3px; background:white; margin: 4px 0;"></div>
+    <div style="width:20px; height:2px; background:white; margin: 4px 0;"></div>
+    <div style="width:20px; height:2px; background:white; margin: 4px 0;"></div>
 </div>
 
 <div class="side-menu" id="sideMenu">
-    <div style="color:#00c4cc; font-weight:900; text-align:center; margin-bottom:20px;">PLAN LIFE MENU</div>
-    <a href="#" class="nav-item">دوره قانون جذب</a>
-    <a href="#" class="nav-item">مدیتیشن و فرکانس</a>
-    <a href="#" class="nav-item">فروشگاه محصولات</a>
-    <a href="#" class="nav-item">سوالات متداول</a>
-    <a href="#" class="nav-item">ارتباط با ما</a>
-    <button onclick="toggleMenu()" style="margin-top:auto; background: #ff2d55; border:none; padding:12px; border-radius:12px; color:white; font-weight:bold;">بستن منو</button>
+    <div style="color:white; font-weight:800; text-align:center; margin-bottom:30px; letter-spacing: 2px;">MENU</div>
+    <a href="#" class="nav-item">آموزش‌ها</a>
+    <a href="#" class="nav-item">درباره ما</a>
+    <a href="#" class="nav-item">فروشگاه</a>
+    <a href="#" class="nav-item">پشتیبانی</a>
+    <button onclick="toggleMenu()" style="margin-top:auto; background: none; border:1px solid white; padding:10px; border-radius:15px; color:white; cursor:pointer;">بستن</button>
 </div>
 
 <div class="chat-card">
-    <div class="header">
-        <div class="earth-logo"></div>
+    <div style="text-align:center; padding-bottom:15px;">
+        <div class="earth-container"><div class="earth-sphere"></div></div>
         <h1 class="brand-name">PlanLife</h1>
     </div>
     
     <div id="chat-window">
-        <div class="msg a">خوش آمدی. فرکانس PlanLife آماده پاسخگویی است. ✨</div>
+        <div class="msg a">در مدار آگاهی هستید. بپرسید...</div>
     </div>
 
     <div class="input-area">
-        <input type="text" id="userInput" placeholder="تایپ کنید..." onkeypress="if(event.keyCode===13)send()">
-        <button class="send-btn" onclick="send()">ارسال</button>
+        <input type="text" id="userInput" placeholder="چیزی بنویس..." onkeypress="if(event.keyCode===13)send()">
+        <button class="send-btn" onclick="send()">↑</button>
     </div>
 </div>
 
@@ -179,7 +145,10 @@
     let brain = {};
 
     function toggleMenu() {
-        document.getElementById('sideMenu').classList.toggle('active');
+        const menu = document.getElementById('sideMenu');
+        const body = document.body;
+        menu.classList.toggle('active');
+        body.classList.toggle('menu-open');
     }
 
     async function loadBrain() {
@@ -190,7 +159,7 @@
                 const parts = line.split('|');
                 if (parts.length === 2) brain[parts[0].trim()] = parts[1].trim();
             });
-        } catch (e) { console.log("Database loading..."); }
+        } catch (e) { console.log("System Ready..."); }
     }
 
     loadBrain();
@@ -209,12 +178,12 @@
         for (let key in brain) {
             if (val.includes(key)) { reply = brain[key]; break; }
         }
-        if (!reply) reply = "این پیام در مدار آگاهی کنونی نیست. ✨";
+        if (!reply) reply = "فرکانس دریافت نشد. دوباره امتحان کنید. ✨";
 
         setTimeout(() => {
             window.innerHTML += `<div class="msg a">${reply}</div>`;
             window.scrollTop = window.scrollHeight;
-        }, 600);
+        }, 500);
     }
 </script>
 
