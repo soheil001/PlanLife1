@@ -1,84 +1,46 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ماورای ذهن | PlanLife</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #0a0a0c; height: 100vh; display: flex; justify-content: center; align-items: center; font-family: 'Tahoma', sans-serif; color: white; }
-        .card { width: 90%; max-width: 450px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border-radius: 30px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
-        #chat-box { height: 350px; overflow-y: auto; margin-bottom: 20px; display: flex; flex-direction: column; gap: 12px; padding: 10px; }
-        .msg { padding: 12px 18px; border-radius: 20px; font-size: 14px; line-height: 1.6; max-width: 85%; animation: fadeIn 0.3s ease; }
-        .user { background: linear-gradient(135deg, #e73c7e, #ee7752); align-self: flex-start; border-bottom-right-radius: 4px; }
-        .ai { background: rgba(255,255,255,0.08); align-self: flex-end; border-bottom-left-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
-        .input-group { display: flex; gap: 10px; }
-        input { flex: 1; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; padding: 15px; color: white; outline: none; }
-        button { background: #23d5ab; color: #000; border: none; padding: 0 20px; border-radius: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button:hover { transform: scale(1.05); background: #1fb38e; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
-</head>
-<body>
-
-<div class="card">
-    <h2 style="margin-bottom: 20px; text-align: center; font-size: 1.2rem; color: #23d5ab;">مرکز پردازش ماورای ذهن ✨</h2>
-    <div id="chat-box">
-        <div class="msg ai">سهیل عزیز، خوش آمدی. من آماده‌ام تا فرکانس‌های ذهنی‌ت رو به واقعیت تبدیل کنیم. چیزی بنویس...</div>
-    </div>
-    <div class="input-group">
-        <input type="text" id="userInput" placeholder="سوالت رو بپرس..." onkeypress="if(event.key==='Enter') sendMessage()">
-        <button onclick="sendMessage()">ارسال</button>
-    </div>
-</div>
-
 <script>
-    // این یک توکن عمومی رایگان است که گیت‌هاب به آن حساس نیست
-    const HF_TOKEN = "hf_Vv" + "uO" + "N" + "fW" + "Y" + "v" + "L" + "I" + "l" + "C" + "Z" + "v" + "S" + "y" + "E" + "k" + "R" + "F" + "a" + "u" + "J" + "S" + "F" + "Y" + "w" + "e" + "R" + "s" + "S" + "t" + "e" + "v";
-
-    async function sendMessage() {
+    function sendMessage() {
         const input = document.getElementById('userInput');
         const box = document.getElementById('chat-box');
         const text = input.value.trim();
 
         if(!text) return;
 
+        // نمایش پیام کاربر
         box.innerHTML += `<div class="msg user">${text}</div>`;
         input.value = "";
         
-        const loading = document.createElement('div');
-        loading.className = "msg ai";
-        loading.innerText = "... در حال تحلیل";
-        box.appendChild(loading);
-        box.scrollTop = box.scrollHeight;
+        // ایجاد حباب پاسخ هوش مصنوعی
+        const aiMsg = document.createElement('div');
+        aiMsg.className = "msg ai";
+        box.appendChild(aiMsg);
 
-        try {
-            // اتصال به مدل قدرتمند و رایگان Mistral
-            const response = await fetch("https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + HF_TOKEN
-                },
-                body: JSON.stringify({ inputs: "<s>[INST] پاسخ کوتاه و فارسی به: " + text + " [/INST]" })
-            });
+        // منطق پاسخ‌های طراحی شده توسط سهیل
+        let response = "";
 
-            const data = await response.json();
-            let aiResponse = "";
-            
-            if (Array.isArray(data)) {
-                aiResponse = data[0].generated_text.split("[/INST]").pop().trim();
-            } else {
-                aiResponse = "سهیل جان، سرور کمی شلوغه. چند لحظه دیگه دوباره امتحان کن.";
-            }
-            
-            loading.innerText = aiResponse || "پاسخی دریافت نشد.";
-        } catch (e) {
-            loading.innerText = "خطا! مطمئن شو VPN روشنه.";
+        if (text.includes("سلام") || text.includes("درود")) {
+            response = "سلام سهیل عزیز! آماده‌ای امروز فرکانس ذهنی‌ت رو روی موفقیت تنظیم کنیم؟";
+        } 
+        else if (text.includes("پول") || text.includes("ثروت")) {
+            response = "ثروت یک جریان انرژی هست. تو با باورهای درست در ماورای ذهن، می‌تونی این جریان رو به سمت خودت هدایت کنی. ✨";
         }
+        else if (text.includes("خسته") || text.includes("ناامید")) {
+            response = "هر تضادی در زندگی، نشان‌دهنده اینه که خواسته بزرگتری در راهه. نفس عمیق بکش، تو قدرت خلق زندگیت رو داری.";
+        }
+        else if (text.includes("کی هستی") || text.includes("چیکار میکنی")) {
+            response = "من دستیار اختصاصی تو در برند ماورای ذهن هستم تا یادت بندازم چقدر قدرتمندی.";
+        }
+        else {
+            // پاسخ پیش‌فرض برای بقیه موارد
+            response = "این پیام تو فرکانس جالبی داشت! به زودی در جلسات عمیق‌تر ماورای ذهن درباره‌اش صحبت می‌کنیم. فعلاً روی اهدافت تمرکز کن.";
+        }
+
+        // نمایش پاسخ با یک تاخیر کوچک برای حس واقعی بودن
+        setTimeout(() => {
+            aiMsg.innerText = response;
+            box.scrollTop = box.scrollHeight;
+        }, 600);
+
         box.scrollTop = box.scrollHeight;
     }
 </script>
-
-</body>
-</html>
