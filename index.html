@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PlanLife | آگاهی برتر</title>
+    <title>PlanLife | هوش ماورایی</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;800&family=Montserrat:wght@800&display=swap');
 
@@ -11,13 +11,21 @@
         
         body { 
             margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center;
-            background: linear-gradient(135deg, #00c4cc 0%, #7d2ae8 100%);
+            /* بگراند با نوسان رنگی */
+            background: linear-gradient(135deg, #00c4cc, #7d2ae8, #00c4cc);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             background-attachment: fixed; overflow-x: hidden; padding: 20px 10px;
-            transition: filter 0.4s ease;
         }
 
-        /* افکت تار شدن صفحه هنگام باز بودن منو */
-        body.menu-open .main-layout { filter: blur(12px); pointer-events: none; }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* لایه تار کننده بگراند هنگام باز بودن منو */
+        body.menu-open .main-layout { filter: blur(15px); pointer-events: none; }
 
         .menu-btn {
             position: fixed; top: 25px; right: 25px; z-index: 1001;
@@ -28,72 +36,92 @@
 
         .side-menu {
             position: fixed; top: 0; right: -300px; width: 280px; height: 100%;
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(35px);
-            z-index: 1000; padding: 80px 20px; transition: 0.5s ease;
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(40px);
+            z-index: 1000; padding: 60px 20px; transition: 0.5s ease;
             border-left: 1px solid rgba(255, 255, 255, 0.2);
-            display: flex; flex-direction: column; gap: 12px;
+            display: flex; flex-direction: column; justify-content: space-between;
         }
         .side-menu.active { right: 0; }
 
+        .nav-items { display: flex; flex-direction: column; gap: 10px; }
         .nav-item {
-            padding: 14px; background: rgba(255, 255, 255, 0.1); border-radius: 12px;
-            color: white; text-align: center; text-decoration: none; border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px; background: rgba(255, 255, 255, 0.1); border-radius: 12px;
+            color: white; text-align: center; text-decoration: none; border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .social-icons { display: flex; justify-content: center; gap: 15px; padding: 20px 0; }
+        .social-icons img { width: 20px; height: 20px; opacity: 0.8; }
+
+        /* گوی عصبی ماورایی با افکت نفس کشیدن */
+        .neural-orb {
+            width: 90px; height: 90px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 242, 173, 0.4) 0%, rgba(125, 42, 232, 0.6) 100%);
+            box-shadow: 0 0 30px rgba(125, 42, 232, 0.5), inset 0 0 20px rgba(0, 242, 173, 0.3);
+            margin-bottom: 20px; position: relative;
+            animation: breath 4s infinite ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        /* رگه‌های عصبی داخل گوی */
+        .neural-orb::after {
+            content: ''; position: absolute; top: 10%; left: 10%; right: 10%; bottom: 10%;
+            border: 1px dashed rgba(255, 255, 255, 0.3); border-radius: 50%;
+            animation: rotateOrb 10s linear infinite;
+        }
+        @keyframes breath {
+            0%, 100% { transform: scale(1); opacity: 0.7; box-shadow: 0 0 25px rgba(125, 42, 232, 0.4); }
+            50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 45px rgba(0, 242, 173, 0.6); }
+        }
+        @keyframes rotateOrb { to { transform: rotate(360deg); } }
+
+        /* تایتل خارج شده از باکس */
+        .external-title { 
+            color: white; font-family: 'Montserrat', sans-serif; font-size: 2rem; 
+            font-weight: 800; margin-bottom: 15px; text-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        /* گوی نبض‌زن هم‌رنگ بگراند */
-        .pulsing-orb {
-            width: 80px; height: 80px; border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), inset 0 0 15px rgba(255, 255, 255, 0.3);
-            margin-bottom: 25px;
-            animation: pulse 3s infinite ease-in-out;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.6; box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
-            50% { transform: scale(1.15); opacity: 0.9; box-shadow: 0 0 40px rgba(255, 255, 255, 0.4); }
-        }
-
-        /* باکس چت با ارتفاع اصلاح شده */
+        /* باکس چت با تنظیمات جدید */
         .chat-card {
-            width: 98%; max-width: 460px; height: calc(55vh + 10px);
-            background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(25px);
+            width: 98%; max-width: 480px; height: calc(55vh + 10px);
+            background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(30px);
             border-radius: 35px; border: 1px solid rgba(255, 255, 255, 0.3);
-            display: flex; flex-direction: column; padding: 20px;
+            display: flex; flex-direction: column; padding: 25px 10px 15px 10px; /* از بالا ۲ سانت فاصله */
             box-shadow: 0 25px 50px rgba(0,0,0,0.15); margin-bottom: 40px;
         }
 
-        .brand-name { color: white; font-family: 'Montserrat', sans-serif; font-size: 2rem; font-weight: 800; text-align: center; margin-bottom: 15px; }
-
-        #chat-window { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 12px; }
-        .msg { padding: 12px 16px; border-radius: 18px; font-size: 14px; max-width: 85%; }
-        .u { align-self: flex-start; background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.15); }
-        .a { align-self: flex-end; background: rgba(0, 0, 0, 0.15); color: white; border: 1px solid rgba(255, 255, 255, 0.1); }
+        #chat-window { flex: 1; overflow-y: auto; padding: 5px; display: flex; flex-direction: column; gap: 10px; }
+        /* عرض پیام‌ها با فاصله ۱ سانت از طرفین */
+        .msg { 
+            padding: 10px 15px; border-radius: 18px; 
+            font-size: 13px; /* ۲ درجه کوچکتر */
+            max-width: calc(100% - 20px); width: fit-content;
+            margin: 0 10px; 
+        }
+        .u { align-self: flex-start; background: rgba(255, 255, 255, 0.1); color: white; }
+        .a { align-self: flex-end; background: rgba(0, 0, 0, 0.15); color: white; }
 
         .input-area {
-            display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.08);
-            padding: 5px 15px; border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 10px; display: flex; align-items: center; gap: 10px; 
+            background: rgba(255, 255, 255, 0.08); padding: 5px 15px;
+            border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        input { flex: 1; background: transparent; border: none; color: white; padding: 12px 0; outline: none; font-weight: bold; }
+        input { flex: 1; background: transparent; border: none; color: white; padding: 10px 0; outline: none; font-size: 13px; }
+        .gemini-send svg { width: 22px; height: 22px; fill: white; filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7)); }
 
-        /* دکمه ارسال با نور خفیف */
-        .gemini-send { background: none; border: none; cursor: pointer; display: flex; align-items: center; }
-        .gemini-icon { 
-            width: 24px; height: 24px; fill: white; 
-            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6)); /* نور خفیف ستاره */
-        }
-
-        /* باکس‌های دوره مستطیلی */
+        /* باکس‌های دوره با ارتفاع و کادر تصویر بزرگتر */
         .course-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 460px; padding-bottom: 50px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 480px; padding-bottom: 50px;
         }
         .course-box {
             background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px);
             border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 15px; text-align: center; color: white;
-            min-height: calc(180px + 15px); /* افزایش ۱.۵ سانتی ارتفاع */
+            display: flex; flex-direction: column; justify-content: space-between;
+            min-height: 210px;
         }
-        .box-img { width: 100%; aspect-ratio: 4/3; background: rgba(255,255,255,0.05); border-radius: 18px; margin-bottom: 10px; }
+        .box-img { 
+            width: 100%; height: 130px; /* افزایش ۱ سانتی کادر تصویر */
+            background: rgba(255,255,255,0.05); border-radius: 18px; 
+        }
+        .course-box strong { margin-top: auto; padding-bottom: 5px; font-size: 14px; }
 
         #chat-window::-webkit-scrollbar { width: 0; }
         #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; display: none; }
@@ -108,34 +136,42 @@
 </div>
 
 <div class="side-menu" id="sideMenu">
-    <div style="color:white; font-weight:800; text-align:center; margin-bottom:20px;">PlanLife</div>
-    <a href="#" class="nav-item">دوره جذب ثروت</a>
-    <a href="#" class="nav-item">مدیتیشن عمیق</a>
-    <a href="#" class="nav-item">ارتباط با استاد</a>
-    <a href="#" class="nav-item">تنظیمات کاربری</a>
+    <div class="nav-items">
+        <div style="color:white; font-weight:800; text-align:center; margin-bottom:20px;">PlanLife</div>
+        <a href="#" class="nav-item">ورود</a>
+        <a href="#" class="nav-item">ثبت‌نام</a>
+        <a href="#" class="nav-item">دوره‌های آموزشی</a>
+        <a href="#" class="nav-item">پشتیبانی</a>
+    </div>
+    <div class="social-icons">
+        <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram"></a>
+        <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram"></a>
+        <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
+    </div>
 </div>
 
 <div class="main-layout" style="width:100%; display:flex; flex-direction:column; align-items:center;">
-    <div class="pulsing-orb"></div>
+    <div class="neural-orb"></div>
+    
+    <h1 class="external-title">PlanLife</h1>
 
     <div class="chat-card">
-        <h1 class="brand-name">PlanLife</h1>
         <div id="chat-window">
             <div class="msg a">سوالات ذهنی خودتان را بپرسید تا راهنمایی کنم ✨</div>
         </div>
         <div class="input-area">
             <input type="text" id="userInput" placeholder="بپرس..." onkeypress="if(event.keyCode===13)send()">
-            <button class="gemini-send" onclick="send()">
-                <svg class="gemini-icon" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"></path></svg>
+            <button class="gemini-send" onclick="send()" style="background:none; border:none; cursor:pointer;">
+                <svg viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"></path></svg>
             </button>
         </div>
     </div>
 
     <div class="course-grid">
-        <div class="course-box"><div class="box-img"></div><strong>دوره ۱</strong></div>
-        <div class="course-box"><div class="box-img"></div><strong>دوره ۲</strong></div>
-        <div class="course-box"><div class="box-img"></div><strong>دوره ۳</strong></div>
-        <div class="course-box"><div class="box-img"></div><strong>دوره ۴</strong></div>
+        <div class="course-box"><div class="box-img"></div><strong>دوره موفقیت</strong></div>
+        <div class="course-box"><div class="box-img"></div><strong>دوره فرکانس</strong></div>
+        <div class="course-box"><div class="box-img"></div><strong>پاکسازی ذهن</strong></div>
+        <div class="course-box"><div class="box-img"></div><strong>جذب ثروت</strong></div>
     </div>
 </div>
 
@@ -175,7 +211,7 @@
         setTimeout(() => {
             w.innerHTML += `<div class="msg a">${r}</div>`;
             w.scrollTop = w.scrollHeight;
-        }, 500);
+        }, 600);
     }
 </script>
 
