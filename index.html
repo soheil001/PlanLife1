@@ -1,279 +1,61 @@
+<!-- Chat UI Start -->
+<div id="chat-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; font-family: 'Tahoma', sans-serif;">
+    <!-- Chat Toggle Button -->
+    <button onclick="toggleChat()" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; width: 60px; height: 60px; cursor: pointer; box-shadow: 0 8px 32px rgba(0,0,0,0.2); transition: 0.3s;">
+        ✨
+    </button>
 
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PlanLife | دفترچه شکرگزاری</title>
-    <style>
-        :root {
-            --glass: rgba(255, 255, 255, 0.1);
-            --border: rgba(255, 255, 255, 0.2);
-            --text: #ffffff;
-            --accent: #4ade80;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: #0f172a;
-‎            /* پس‌زمینه رنگی متحرک */
-            background-image: 
-                radial-gradient(at 0% 0%, #3b82f6 0px, transparent 50%),
-                radial-gradient(at 100% 100%, #a855f7 0px, transparent 50%),
-                radial-gradient(at 50% 50%, #ec4899 0px, transparent 50%);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            color: var(--text);
-            overflow-x: hidden;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 450px;
-            padding: 20px;
-        }
-
-‎        /* کارت شیشه‌ای اصلی */
-        .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 30px;
-            padding: 25px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        header h1 {
-            font-size: 1.5rem;
-            margin: 0;
-            background: linear-gradient(to right, #4ade80, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .date-picker {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            padding: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            border: 1px solid var(--border);
-        }
-
-        input[type="date"] {
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-            font-family: inherit;
-        }
-
-        .question-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-            color: #cbd5e1;
-            padding-right: 5px;
-        }
-
-        textarea {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            padding: 12px;
-            color: white;
-            font-size: 0.95rem;
-            resize: none;
-            height: 70px;
-            box-sizing: border-box;
-            transition: 0.3s;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-            background: rgba(0, 0, 0, 0.4);
-        }
-
-        .actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        button {
-            padding: 15px;
-            border-radius: 18px;
-            border: none;
-            font-weight: bold;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn-save {
-            background: #4ade80;
-            color: #064e3b;
-        }
-
-        .btn-archive {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid var(--border);
-        }
-
-        button:active {
-            transform: scale(0.95);
-        }
-
-‎        /* استایل مدال آرشیو */
-        #modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 20px;
-        }
-
-        .modal-content {
-            background: #1e293b;
-            border-radius: 25px;
-            padding: 20px;
-            max-height: 70vh;
-            overflow-y: auto;
-            margin-top: 50px;
-            border: 1px solid var(--border);
-        }
-
-        .archive-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            margin-bottom: 10px;
-            border-radius: 15px;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <div class="glass-card">
-        <header>
-            <h1>PlanLife ✨</h1>
-            <p style="font-size: 0.8rem; color: #94a3b8;">شکرگزاری و برنامه‌ریزی روزانه</p>
-        </header>
-
-        <div class="date-picker">
-            <input type="date" id="dateInput" onchange="loadData()">
+    <!-- Chat Window -->
+    <div id="chat-window" style="display: none; width: 320px; height: 450px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; flex-direction: column; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.3); margin-bottom: 15px;">
+        <!-- Header -->
+        <div style="padding: 15px; background: rgba(255, 255, 255, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.1); color: white; text-align: center; font-weight: bold;">
+            دستیار هوشمند PlanLife
+        </div>
+        
+        <!-- Messages Area -->
+        <div id="chat-messages" style="flex: 1; padding: 15px; overflow-y: auto; color: white; display: flex; flex-direction: column; gap: 10px; font-size: 14px;">
+            <div style="background: rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 10px 10px 10px 0; align-self: flex-start;">
+                سلام! چطور میتونم در مسیر موفقیت بهت کمک کنم؟
+            </div>
         </div>
 
-        <div class="question-group">
-            <label>۱. به‌خاطر چه چیزی سپاسگزارم؟</label>
-            <textarea id="q1" placeholder="بنویس..."></textarea>
+        <!-- Input Area -->
+        <div style="padding: 10px; display: flex; gap: 5px; background: rgba(0,0,0,0.1);">
+            <input type="text" id="user-input" placeholder="چیزی بنویس..." style="flex: 1; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 8px; color: white; outline: none;">
+            <button onclick="sendMessage()" style="background: white; border: none; border-radius: 10px; padding: 5px 12px; cursor: pointer; font-weight: bold;">></button>
         </div>
-        <div class="question-group">
-            <label>۲. به‌خاطر چه کسی سپاسگزارم؟</label>
-            <textarea id="q2" placeholder="بنویس..."></textarea>
-        </div>
-        <div class="question-group">
-            <label>۳. هدف اصلی و قدم امروز؟</label>
-            <textarea id="q3" placeholder="بنویس..."></textarea>
-        </div>
-        <div class="question-group">
-            <label>۴. اتفاقات دلخواه امروز؟</label>
-            <textarea id="q4" placeholder="بنویس..."></textarea>
-        </div>
-        <div class="question-group">
-            <label>۵. ۳ کار مهم امروز؟</label>
-            <textarea id="q5" placeholder="۱. ۲. ۳."></textarea>
-        </div>
-        <div class="question-group">
-            <label>۶. درخواست از خدا؟</label>
-            <textarea id="q6" placeholder="بنویس..."></textarea>
-        </div>
-
-        <div class="actions">
-            <button class="btn-save" onclick="saveData()">ذخیره امروز</button>
-            <button class="btn-archive" onclick="toggleArchive()">آرشیو</button>
-        </div>
-    </div>
-</div>
-
-<div id="modal">
-    <div class="modal-content">
-        <h2 style="text-align: center; margin-bottom: 20px;">تاریخچه پاسخ‌ها</h2>
-        <div id="archiveList"></div>
-        <button onclick="toggleArchive()" style="width: 100%; margin-top: 15px; background: #ef4444; color: white;">بستن</button>
     </div>
 </div>
 
 <script>
-    const dInp = document.getElementById('dateInput');
-    dInp.valueAsDate = new Date();
-
-    function saveData() {
-        const data = {};
-        for(let i=1; i<=6; i++) data['q'+i] = document.getElementById('q'+i).value;
-        localStorage.setItem('plan_' + dInp.value, JSON.stringify(data));
-        alert("✨ با موفقیت ذخیره شد!");
+    function toggleChat() {
+        const chatWindow = document.getElementById('chat-window');
+        chatWindow.style.display = chatWindow.style.display === 'none' ? 'flex' : 'none';
     }
 
-    function loadData() {
-        const saved = localStorage.getItem('plan_' + dInp.value);
-        for(let i=1; i<=6; i++) {
-            document.getElementById('q'+i).value = saved ? JSON.parse(saved)['q'+i] : '';
-        }
-    }
-
-    function toggleArchive() {
-        const modal = document.getElementById('modal');
-        const list = document.getElementById('archiveList');
-        modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
+    function sendMessage() {
+        const input = document.getElementById('user-input');
+        const messageContainer = document.getElementById('chat-messages');
         
-        if(modal.style.display === 'block') {
-            list.innerHTML = '';
-            Object.keys(localStorage).forEach(key => {
-                if(key.startsWith('plan_')) {
-                    const date = key.replace('plan_', '');
-                    list.innerHTML += `
-                        <div class="archive-item">
-                            <span>📅 ${date}</span>
-                            <button onclick="viewDate('${date}')" style="background:#3b82f6; color:white; padding:5px 10px; border-radius:10px;">بازکردن</button>
-                        </div>`;
-                }
-            });
+        if (input.value.trim() !== "") {
+            // User Message
+            const userMsg = document.createElement('div');
+            userMsg.style = "background: rgba(255,255,255,0.3); padding: 8px 12px; border-radius: 10px 10px 0 10px; align-self: flex-end; text-align: right;";
+            userMsg.innerText = input.value;
+            messageContainer.appendChild(userMsg);
+
+            // Fake AI Response (بعداً این بخش را به هوش مصنوعی وصل می‌کنیم)
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.style = "background: rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 10px 10px 10px 0; align-self: flex-start;";
+                aiMsg.innerText = "فکر جالبیه! من دارم یاد میگیرم چطور دقیق‌تر جوابت رو بدم. ✨";
+                messageContainer.appendChild(aiMsg);
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            }, 1000);
+
+            input.value = "";
+            messageContainer.scrollTop = messageContainer.scrollHeight;
         }
     }
-
-    function viewDate(date) {
-        dInp.value = date;
-        loadData();
-        toggleArchive();
-    }
-
-    loadData();
 </script>
-
-</body>
-</html>
+<!-- Chat UI End -->
