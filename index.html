@@ -1,46 +1,63 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ماورای ذهن | PlanLife</title>
+    <style>
+        body { background: #0f0f0f; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { width: 90%; max-width: 400px; background: #1a1a1a; padding: 25px; border-radius: 25px; border: 1px solid #333; text-align: center; }
+        #chat { height: 300px; overflow-y: auto; margin-bottom: 15px; padding: 10px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 10px; border-radius: 10px; font-size: 14px; line-height: 1.5; }
+        .u { background: #e73c7e; align-self: flex-start; }
+        .a { background: #333; align-self: flex-end; }
+        input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #444; background: #000; color: white; outline: none; margin-bottom: 10px; }
+        button { width: 100%; padding: 12px; border-radius: 10px; border: none; background: #23d5ab; color: #000; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="color: #23d5ab; margin-bottom: 20px;">ماورای ذهن ✨</h2>
+    <div id="chat">
+        <div class="msg a">سلام سهیل عزیز. فرکانس امروزت چطوره؟</div>
+    </div>
+    <input type="text" id="userInput" placeholder="چیزی بنویس...">
+    <button onclick="send()">ارسال به ذهن</button>
+</div>
+
 <script>
-    function sendMessage() {
+    function send() {
         const input = document.getElementById('userInput');
-        const box = document.getElementById('chat-box');
+        const box = document.getElementById('chat');
         const text = input.value.trim();
 
-        if(!text) return;
+        if (text === "") return;
 
         // نمایش پیام کاربر
-        box.innerHTML += `<div class="msg user">${text}</div>`;
+        box.innerHTML += `<div class="msg u">${text}</div>`;
         input.value = "";
-        
-        // ایجاد حباب پاسخ هوش مصنوعی
-        const aiMsg = document.createElement('div');
-        aiMsg.className = "msg ai";
-        box.appendChild(aiMsg);
 
-        // منطق پاسخ‌های طراحی شده توسط سهیل
-        let response = "";
+        // پاسخ‌های از قبل طراحی شده
+        let reply = "این پیام فرکانس جالبی داشت. روی اهدافت تمرکز کن. ✨";
 
-        if (text.includes("سلام") || text.includes("درود")) {
-            response = "سلام سهیل عزیز! آماده‌ای امروز فرکانس ذهنی‌ت رو روی موفقیت تنظیم کنیم؟";
-        } 
-        else if (text.includes("پول") || text.includes("ثروت")) {
-            response = "ثروت یک جریان انرژی هست. تو با باورهای درست در ماورای ذهن، می‌تونی این جریان رو به سمت خودت هدایت کنی. ✨";
-        }
-        else if (text.includes("خسته") || text.includes("ناامید")) {
-            response = "هر تضادی در زندگی، نشان‌دهنده اینه که خواسته بزرگتری در راهه. نفس عمیق بکش، تو قدرت خلق زندگیت رو داری.";
-        }
-        else if (text.includes("کی هستی") || text.includes("چیکار میکنی")) {
-            response = "من دستیار اختصاصی تو در برند ماورای ذهن هستم تا یادت بندازم چقدر قدرتمندی.";
-        }
-        else {
-            // پاسخ پیش‌فرض برای بقیه موارد
-            response = "این پیام تو فرکانس جالبی داشت! به زودی در جلسات عمیق‌تر ماورای ذهن درباره‌اش صحبت می‌کنیم. فعلاً روی اهدافت تمرکز کن.";
+        if (text.includes("سلام")) {
+            reply = "درود! آماده‌ای برای یک تغییر بزرگ؟";
+        } else if (text.includes("ثروت") || text.includes("پول")) {
+            reply = "ثروت ابتدا در ذهن ساخته می‌شود و سپس در واقعیت ظاهر می‌گردد.";
+        } else if (text.includes("خسته") || text.includes("ناامید")) {
+            reply = "نفس عمیق بکش. تو خالق دنیای خودت هستی، نه قربانی شرایط.";
         }
 
-        // نمایش پاسخ با یک تاخیر کوچک برای حس واقعی بودن
+        // نمایش پاسخ با کمی تاخیر
         setTimeout(() => {
-            aiMsg.innerText = response;
+            box.innerHTML += `<div class="msg a">${reply}</div>`;
             box.scrollTop = box.scrollHeight;
-        }, 600);
-
+        }, 700);
+        
         box.scrollTop = box.scrollHeight;
     }
 </script>
+
+</body>
+</html>
