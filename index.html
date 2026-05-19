@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PlanLife | هوش ماورایی</title>
+    <title>PlanLife | صفحه اصلی</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;800&family=League+Spartan:wght@800&display=swap');
 
-        * { box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; }
+        * { box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; transition: 0.3s ease; }
         
         body { 
             margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center;
             background: linear-gradient(135deg, #00c4cc, #7d2ae8, #00c4cc);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            background-size: 400% 400%; animation: gradientBG 15s ease infinite;
             background-attachment: fixed; overflow-x: hidden; padding: 10px;
         }
 
@@ -30,7 +29,7 @@
         .btn-right { right: 25px; } .btn-left { left: 25px; }
         .menu-btn div { width: 20px; height: 2px; background: white; margin: 4px 0; }
 
-        /* منوهای دوجانبه با جهت درست */
+        /* منوهای دوجانبه */
         .side-menu {
             position: fixed; top: 0; width: 260px; height: 100%;
             background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(40px);
@@ -53,18 +52,18 @@
             animation: pulse 3s infinite ease-in-out; border: 1px solid rgba(255, 255, 255, 0.4);
         }
         .main-orb { width: 50px; height: 50px; margin-bottom: 5px; box-shadow: 0 0 20px rgba(162, 210, 255, 0.6); }
-        .small-orb { width: 20px; height: 20px; cursor: pointer; box-shadow: 0 0 10px rgba(162, 210, 255, 0.8); }
+        .small-orb { width: 22px; height: 22px; cursor: pointer; box-shadow: 0 0 10px rgba(162, 210, 255, 0.8); }
         
         @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.15); opacity: 1; } }
 
-        .brand-canva { color: white; font-family: 'League Spartan', sans-serif; font-size: 2.2rem; font-weight: 800; margin-bottom: 30px; }
+        .brand-canva { color: white; font-family: 'League Spartan', sans-serif; font-size: 2.2rem; font-weight: 800; margin-bottom: 30px; cursor: pointer; }
 
-        /* چت باکس با ابعاد جدید */
+        /* چت باکس */
         .chat-card {
             width: calc(100% - 25px); max-width: 450px; height: 55vh;
             background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(30px);
             border-radius: 35px; border: 1px solid rgba(255, 255, 255, 0.3);
-            display: flex; flex-direction: column; padding: 15px 5px; box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column; padding: 20px 5px 10px 5px; box-shadow: 0 25px 50px rgba(0,0,0,0.1);
         }
 
         #chat-window { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 10px; }
@@ -72,25 +71,25 @@
         .u { align-self: flex-start; background: rgba(255, 255, 255, 0.12); color: white; }
         .a { align-self: flex-end; background: rgba(0, 0, 0, 0.15); color: white; }
 
-        /* کادر ورودی بزرگتر از پایین */
+        /* کادر ورودی (بپرسید) */
         .input-area {
-            margin: 5px 10px 15px 10px; /* افزایش فاصله از پایین برای بزرگتر شدن کادر */
+            margin: 5px 10px 15px 10px;
             display: flex; align-items: center; gap: 10px; 
             background: rgba(255, 255, 255, 0.08); padding: 12px 15px;
             border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.2);
         }
         input { flex: 1; background: transparent; border: none; color: white; outline: none; font-size: 14px; }
 
-        /* گرید باکس‌های محتوایی ۲ در ۲ */
+        /* گرید باکس‌های محتوایی */
         .content-grid {
             display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; margin-top: 30px; padding-bottom: 40px;
         }
         .content-box {
             background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border-radius: 25px;
             border: 1px solid rgba(255, 255, 255, 0.2); padding: 12px; text-align: center; color: white;
-            min-height: 180px; display: flex; flex-direction: column;
+            min-height: 190px; display: flex; flex-direction: column; cursor: pointer;
         }
-        .box-img-placeholder { width: 100%; height: 110px; background: rgba(255,255,255,0.05); border-radius: 18px; margin-bottom: 10px; }
+        .box-img { width: 100%; height: 120px; background: rgba(255,255,255,0.05); border-radius: 18px; margin-bottom: 10px; }
         .content-box span { font-weight: 500; font-size: 14px; margin-top: auto; }
 
         #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; display: none; }
@@ -103,16 +102,16 @@
 
 <div class="menu-btn btn-right" onclick="toggleMenu('rightMenu')"><div></div><div></div><div></div></div>
 <div class="side-menu" id="rightMenu">
-    <div style="color:white; font-weight:800; text-align:center; margin-bottom:20px;">تنظیمات</div>
-    <a href="#" class="nav-item">پروفایل</a>
-    <a href="#" class="nav-item">اشتراک</a>
+    <div style="color:white; font-weight:800; text-align:center; margin-bottom:20px;">حساب کاربری</div>
+    <a href="#" class="nav-item">ورود</a>
+    <a href="#" class="nav-item">ثبت‌نام</a>
 </div>
 
 <div class="menu-btn btn-left" onclick="toggleMenu('leftMenu')"><div></div><div></div><div></div></div>
 <div class="side-menu" id="leftMenu">
-    <div style="color:white; font-weight:800; text-align:center; margin-bottom:20px;">دسترسی سریع</div>
-    <a href="#" class="nav-item">آمار من</a>
-    <a href="#" class="nav-item">خروج</a>
+    <div style="color:white; font-weight:800; text-align:center; margin-bottom:20px;">ابزارها</div>
+    <a href="#" class="nav-item">تنظیمات</a>
+    <a href="#" class="nav-item">پشتیبانی</a>
 </div>
 
 <div class="main-layout" style="width:100%; display:flex; flex-direction:column; align-items:center; margin-top: 30px;">
@@ -130,15 +129,16 @@
     </div>
 
     <div class="content-grid">
-        <div class="content-box"><div class="box-img-placeholder"></div><span>پادکست‌ها</span></div>
-        <div class="content-box"><div class="box-img-placeholder"></div><span>تمرینات</span></div>
-        <div class="content-box"><div class="box-img-placeholder"></div><span>کتاب‌ها</span></div>
-        <div class="content-box"><div class="box-img-placeholder"></div><span>باورها</span></div>
+        <div class="content-box" onclick="location.href='podcasts.html'">
+            <div class="box-img"></div><span>پادکست‌ها</span>
+        </div>
+        <div class="content-box"><div class="box-img"></div><span>تمرینات</span></div>
+        <div class="content-box"><div class="box-img"></div><span>کتاب‌ها</span></div>
+        <div class="content-box"><div class="box-img"></div><span>باورها</span></div>
     </div>
 </div>
 
 <script>
-    let brain = {};
     function toggleMenu(id) {
         closeAllMenus();
         document.getElementById(id).classList.add('active');
@@ -150,17 +150,7 @@
         document.getElementById('overlay').style.display = 'none';
         document.body.classList.remove('menu-open');
     }
-    async function loadBrain() {
-        try {
-            const r = await fetch('database.txt?v=' + Math.random());
-            const d = await r.text();
-            d.split('\n').forEach(l => {
-                const p = l.split('|');
-                if (p.length === 2) brain[p[0].trim()] = p[1].trim();
-            });
-        } catch (e) {}
-    }
-    loadBrain();
+
     function send() {
         const i = document.getElementById('userInput');
         const w = document.getElementById('chat-window');
@@ -168,13 +158,10 @@
         if (!v) return;
         w.innerHTML += `<div class="msg u">${v}</div>`;
         i.value = "";
-        let r = "";
-        for (let k in brain) { if (v.includes(k)) { r = brain[k]; break; } }
-        if (!r) r = "در حال پردازش فرکانس... ✨";
         setTimeout(() => {
-            w.innerHTML += `<div class="msg a">${r}</div>`;
+            w.innerHTML += `<div class="msg a">در حال پردازش آگاهی شما... ✨</div>`;
             w.scrollTop = w.scrollHeight;
-        }, 500);
+        }, 600);
     }
 </script>
 
