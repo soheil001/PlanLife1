@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PlanLife | هوش برتر</title>
+    <title>PlanLife | ماورای آگاهی</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;800&family=Montserrat:wght@800&display=swap');
 
@@ -13,18 +13,17 @@
             margin: 0;
             height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #00c4cc 0%, #7d2ae8 100%);
             overflow: hidden;
             padding: 10px;
-            transition: 0.5s;
         }
 
-        /* افکت تار شدن بگراند هنگام باز شدن منو */
-        body.menu-open .chat-card { filter: blur(10px); pointer-events: none; }
+        body.menu-open .main-content { filter: blur(15px); }
 
-        /* منوی همبرگری تمام شیشه‌ای */
+        /* منوی همبرگری با بگراند غلیظ‌تر */
         .menu-btn {
             position: fixed; top: 20px; right: 20px; z-index: 1001;
             background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3);
@@ -33,78 +32,80 @@
 
         .side-menu {
             position: fixed; top: 0; right: -100%; width: 280px; height: 100%;
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(40px);
-            z-index: 1000; padding: 80px 25px; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(15, 5, 40, 0.85); backdrop-filter: blur(30px); /* رنگ پررنگ‌تر و متمایز */
+            z-index: 1000; padding: 80px 25px; transition: 0.5s ease;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
             display: flex; flex-direction: column; gap: 20px;
         }
 
         .side-menu.active { right: 0; }
 
-        .nav-item {
-            padding: 16px; background: rgba(255, 255, 255, 0.1); border-radius: 18px;
-            color: white; text-align: center; text-decoration: none;
-            border: 1px solid rgba(255, 255, 255, 0.2); font-weight: 500; transition: 0.3s;
+        /* گوی ماورایی شناور (جدا از باکس) */
+        .magic-orb {
+            width: 80px; height: 80px;
+            background: radial-gradient(circle at 30% 30%, #fff, #00f2ad, #7d2ae8);
+            border-radius: 50%;
+            margin-bottom: 25px; /* فاصله از باکس چت */
+            box-shadow: 0 0 40px rgba(0, 242, 173, 0.6), inset -10px -10px 20px rgba(0,0,0,0.3);
+            animation: floatOrb 4s infinite ease-in-out;
+            position: relative;
         }
-        .nav-item:hover { background: rgba(255, 255, 255, 0.2); }
+        .magic-orb::after {
+            content: ''; position: absolute; top: -10%; left: -10%; right: -10%; bottom: -10%;
+            border-radius: 50%; background: rgba(125, 42, 232, 0.2); filter: blur(15px);
+        }
+        @keyframes floatOrb { 
+            0%, 100% { transform: translateY(0) scale(1); } 
+            50% { transform: translateY(-15px) scale(1.05); } 
+        }
 
-        /* باکس چت جمع‌وجور و شیک */
+        /* کادر چت با ابعاد جدید */
         .chat-card {
-            width: 100%; max-width: 380px; height: 82vh;
-            background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px); border-radius: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 100%; max-width: 380px; 
+            height: 60vh; /* کوتاه‌تر شدن از پایین */
+            margin-top: 10px; /* پایین آمدن از بالا */
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px);
+            border-radius: 40px; border: 1px solid rgba(255, 255, 255, 0.25);
             display: flex; flex-direction: column; padding: 20px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.2); position: relative; transition: 0.5s;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2); position: relative;
         }
-
-        /* کره زمین طبیعی و ۳۶۰ درجه */
-        .earth-container {
-            width: 70px; height: 70px; margin: 0 auto 10px;
-            border-radius: 50%; overflow: hidden;
-            box-shadow: 0 0 25px rgba(0, 196, 204, 0.6);
-            background: #000; position: relative;
-        }
-        .earth-sphere {
-            width: 200%; height: 100%;
-            background: url('https://upload.wikimedia.org/wikipedia/commons/4/4d/Whole_world_-_land_and_oceans.jpg') repeat-x;
-            background-size: 50% 100%;
-            animation: rotateEarth 15s linear infinite;
-        }
-        @keyframes rotateEarth { from { background-position: 0 0; } to { background-position: -200% 0; } }
 
         .brand-name { 
-            color: white; font-family: 'Montserrat', sans-serif; font-size: 2rem; 
-            font-weight: 800; margin: 0; letter-spacing: -1px; text-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            color: white; font-family: 'Montserrat', sans-serif; font-size: 1.8rem; 
+            font-weight: 800; text-align: center; margin-bottom: 10px;
         }
 
         #chat-window {
-            flex: 1; overflow-y: auto; padding: 15px 5px;
+            flex: 1; overflow-y: auto; padding: 10px 5px;
             display: flex; flex-direction: column; gap: 10px;
         }
 
-        /* حباب‌های چت تمام شیشه‌ای */
-        .msg { padding: 10px 16px; border-radius: 20px; font-size: 14px; line-height: 1.6; max-width: 80%; font-weight: 500; backdrop-filter: blur(5px); }
-        .u { align-self: flex-start; background: rgba(0, 0, 0, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-bottom-left-radius: 2px; }
-        .a { align-self: flex-end; background: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255, 255, 255, 0.2); border-bottom-right-radius: 2px; }
+        .msg { padding: 10px 16px; border-radius: 18px; font-size: 14px; line-height: 1.6; max-width: 80%; font-weight: 500; }
+        .u { align-self: flex-start; background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .a { align-self: flex-end; background: rgba(0, 0, 0, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.1); }
 
-        /* باکس تایپ و دکمه ارسال فلش */
         .input-area {
-            display: flex; align-items: center; gap: 8px;
-            background: rgba(255, 255, 255, 0.1); padding: 5px 15px;
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255, 255, 255, 0.08); padding: 5px 15px;
             border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        input { flex: 1; background: transparent; border: none; color: white; padding: 12px 0; outline: none; font-size: 15px; font-weight: bold; }
-        input::placeholder { color: rgba(255, 255, 255, 0.5); }
+        input { flex: 1; background: transparent; border: none; color: white; padding: 12px 0; outline: none; font-weight: bold; }
 
-        .send-btn {
-            background: white; border: none; width: 35px; height: 35px;
-            border-radius: 50%; color: #7d2ae8; font-size: 20px;
+        /* دکمه ارسال طرح جمنای */
+        .gemini-send {
+            background: none; border: none; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.3s;
+            transition: 0.3s;
         }
-        .send-btn:active { transform: scale(0.9); }
+        .gemini-icon {
+            width: 24px; height: 24px; fill: white;
+            filter: drop-shadow(0 0 5px #00c4cc);
+        }
+        .gemini-send:hover { transform: scale(1.2) rotate(-10deg); }
+
+        /* فضای خالی پایین برای دوره‌ها */
+        .course-space { height: 60px; width: 100%; }
 
         #chat-window::-webkit-scrollbar { width: 0px; }
     </style>
@@ -117,38 +118,39 @@
 </div>
 
 <div class="side-menu" id="sideMenu">
-    <div style="color:white; font-weight:800; text-align:center; margin-bottom:30px; letter-spacing: 2px;">MENU</div>
-    <a href="#" class="nav-item">آموزش‌ها</a>
-    <a href="#" class="nav-item">درباره ما</a>
-    <a href="#" class="nav-item">فروشگاه</a>
-    <a href="#" class="nav-item">پشتیبانی</a>
-    <button onclick="toggleMenu()" style="margin-top:auto; background: none; border:1px solid white; padding:10px; border-radius:15px; color:white; cursor:pointer;">بستن</button>
+    <div style="color:#00c4cc; font-weight:800; text-align:center; margin-bottom:30px;">PlanLife MENU</div>
+    <a href="#" style="color:white; text-decoration:none; padding:15px; background:rgba(255,255,255,0.05); border-radius:15px; text-align:center;">آموزش‌ها</a>
+    <a href="#" style="color:white; text-decoration:none; padding:15px; background:rgba(255,255,255,0.05); border-radius:15px; text-align:center;">ارتباط با ما</a>
 </div>
 
-<div class="chat-card">
-    <div style="text-align:center; padding-bottom:15px;">
-        <div class="earth-container"><div class="earth-sphere"></div></div>
+<div class="main-content" style="display:flex; flex-direction:column; align-items:center;">
+    <div class="magic-orb"></div>
+
+    <div class="chat-card">
         <h1 class="brand-name">PlanLife</h1>
+        <div id="chat-window">
+            <div class="msg a">سیستم در وضعیت ماورایی آماده است. ✨</div>
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="بپرس..." onkeypress="if(event.keyCode===13)send()">
+            <button class="gemini-send" onclick="send()">
+                <svg class="gemini-icon" viewBox="0 0 24 24">
+                    <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"></path>
+                </svg>
+            </button>
+        </div>
     </div>
     
-    <div id="chat-window">
-        <div class="msg a">در مدار آگاهی هستید. بپرسید...</div>
-    </div>
-
-    <div class="input-area">
-        <input type="text" id="userInput" placeholder="چیزی بنویس..." onkeypress="if(event.keyCode===13)send()">
-        <button class="send-btn" onclick="send()">↑</button>
-    </div>
+    <div class="course-space"></div>
 </div>
 
 <script>
     let brain = {};
 
     function toggleMenu() {
-        const menu = document.getElementById('sideMenu');
-        const body = document.body;
-        menu.classList.toggle('active');
-        body.classList.toggle('menu-open');
+        document.getElementById('sideMenu').classList.toggle('active');
+        document.body.classList.toggle('menu-open');
     }
 
     async function loadBrain() {
@@ -159,9 +161,8 @@
                 const parts = line.split('|');
                 if (parts.length === 2) brain[parts[0].trim()] = parts[1].trim();
             });
-        } catch (e) { console.log("System Ready..."); }
+        } catch (e) {}
     }
-
     loadBrain();
 
     function send() {
@@ -175,10 +176,8 @@
         window.scrollTop = window.scrollHeight;
 
         let reply = "";
-        for (let key in brain) {
-            if (val.includes(key)) { reply = brain[key]; break; }
-        }
-        if (!reply) reply = "فرکانس دریافت نشد. دوباره امتحان کنید. ✨";
+        for (let key in brain) { if (val.includes(key)) { reply = brain[key]; break; } }
+        if (!reply) reply = "فرکانس فعلاً در دسترس نیست. ✨";
 
         setTimeout(() => {
             window.innerHTML += `<div class="msg a">${reply}</div>`;
