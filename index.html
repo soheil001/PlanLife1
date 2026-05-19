@@ -3,32 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ماورای ذهن | PlanLife</title>
+    <title>ماورای ذهن | Glass Edition</title>
     <style>
         * { box-sizing: border-box; }
-        body { background: #0a0a0a; color: white; font-family: Tahoma, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
-        .container { width: 95%; max-width: 420px; background: #161616; padding: 20px; border-radius: 25px; border: 1px solid #333; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
-        h2 { color: #32d74b; text-align: center; margin: 0 0 20px 0; font-size: 1.4rem; }
-        #chat { height: 350px; overflow-y: auto; margin-bottom: 15px; padding: 10px; display: flex; flex-direction: column; gap: 12px; border-bottom: 1px solid #222; scroll-behavior: smooth; }
-        .msg { padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.6; max-width: 85%; word-wrap: break-word; }
-        .u { background: #ff2d55; align-self: flex-start; border-bottom-left-radius: 2px; }
-        .a { background: #2c2c2e; align-self: flex-end; color: #32d74b; border-bottom-right-radius: 2px; }
-        .input-box { display: flex; gap: 8px; background: #000; padding: 5px; border-radius: 15px; border: 1px solid #333; }
+        
+        /* بگراند کهکشانی متحرک */
+        body { 
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Tahoma, sans-serif;
+            overflow: hidden;
+            background: linear-gradient(-45deg, #02051a, #1b0335, #4b0082, #810551);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* باکس شیشه‌ای (Glassmorphism) */
+        .container { 
+            width: 95%; 
+            max-width: 420px; 
+            background: rgba(255, 255, 255, 0.03); /* شفافیت بالا */
+            backdrop-filter: blur(25px); /* بلور شدید برای حس شیشه */
+            -webkit-backdrop-filter: blur(25px);
+            padding: 25px; 
+            border-radius: 35px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            position: relative; 
+        }
+        
+        /* گوی بنفش */
+        .orb-container { display: flex; justify-content: center; margin-bottom: 20px; }
+        .orb { 
+            width: 55px; height: 55px; border-radius: 50%; 
+            background: radial-gradient(circle at 30% 30%, #a255ff, #6a00f4); 
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.6);
+            animation: rotateOrb 4s infinite linear, pulseOrb 3s infinite ease-in-out;
+            position: relative;
+        }
+        @keyframes rotateOrb { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulseOrb { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); box-shadow: 0 0 60px #8a2be2; } }
+
+        h2 { color: #32d74b; text-align: center; margin: 0 0 20px 0; font-size: 1.4rem; text-shadow: 0 0 10px rgba(50, 215, 75, 0.4); }
+        
+        /* محیط چت شیشه‌ای */
+        #chat { 
+            height: 330px; 
+            overflow-y: auto; 
+            margin-bottom: 15px; 
+            padding: 10px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            border-bottom: 1px solid rgba(255,255,255,0.05); 
+        }
+        
+        /* استایل پیام‌های شیشه‌ای */
+        .msg { padding: 12px 16px; border-radius: 20px; font-size: 14px; line-height: 1.6; max-width: 85%; word-wrap: break-word; }
+        .u { 
+            background: rgba(255, 45, 85, 0.2); 
+            align-self: flex-start; 
+            color: white; 
+            border: 1px solid rgba(255, 45, 85, 0.3);
+            border-bottom-left-radius: 4px; 
+        }
+        .a { 
+            background: rgba(255, 255, 255, 0.05); 
+            align-self: flex-end; 
+            color: #32d74b; 
+            border: 1px solid rgba(50, 215, 75, 0.3);
+            border-bottom-right-radius: 4px; 
+        }
+
+        /* ورودی شیشه‌ای */
+        .input-box { 
+            display: flex; 
+            gap: 8px; 
+            background: rgba(255, 255, 255, 0.05); 
+            padding: 6px; 
+            border-radius: 18px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+        }
         input { flex: 1; padding: 12px; border: none; background: transparent; color: white; outline: none; font-size: 16px; }
-        button { padding: 10px 22px; border-radius: 12px; border: none; background: #32d74b; color: #000; font-weight: bold; cursor: pointer; }
-        #chat::-webkit-scrollbar { width: 4px; }
-        #chat::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        input::placeholder { color: rgba(255,255,255,0.4); }
+        
+        button { 
+            padding: 10px 22px; 
+            border-radius: 14px; 
+            border: none; 
+            background: #32d74b; 
+            color: #000; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.3s; 
+        }
+        button:active { transform: scale(0.9); }
+        
+        /* اسکرول‌بار ظریف */
+        #chat::-webkit-scrollbar { width: 3px; }
+        #chat::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <div class="orb-container">
+        <div class="orb"></div>
+    </div>
     <h2>ماورای ذهن ✨</h2>
     <div id="chat">
-        <div class="msg a">در حال اتصال به شبکه ماورایی...</div>
+        <div class="msg a">در حال فراخوانی ارتعاشات شیشه‌ای...</div>
     </div>
     <div class="input-box">
-        <input type="text" id="userInput" placeholder="کلمه‌ای بنویس..." onkeypress="if(event.keyCode===13)send()">
+        <input type="text" id="userInput" placeholder="سوالی بپرس..." onkeypress="if(event.keyCode===13)send()">
         <button onclick="send()">ارسال</button>
     </div>
 </div>
@@ -40,19 +136,15 @@
         const chatBox = document.getElementById('chat');
         try {
             const response = await fetch('database.txt?v=' + Math.random());
-            if (!response.ok) throw new Error();
             const data = await response.text();
-            
             const lines = data.split('\n');
             lines.forEach(line => {
                 const parts = line.split('|');
-                if (parts.length === 2) {
-                    brain[parts[0].trim()] = parts[1].trim();
-                }
+                if (parts.length === 2) brain[parts[0].trim()] = parts[1].trim();
             });
-            chatBox.innerHTML = '<div class="msg a">اتصال برقرار شد. بپرس...</div>';
-        } catch (error) {
-            chatBox.innerHTML = '<div class="msg a" style="color:#ff3b30">خطا در بارگذاری دیتابیس!</div>';
+            chatBox.innerHTML = '<div class="msg a">ارتباط با آگاهی برتر برقرار شد.</div>';
+        } catch (e) {
+            chatBox.innerHTML = '<div class="msg a">خطا در بارگذاری دانش.</div>';
         }
     }
 
@@ -62,7 +154,6 @@
         const input = document.getElementById('userInput');
         const box = document.getElementById('chat');
         const val = input.value.trim();
-        
         if (!val) return;
 
         box.innerHTML += `<div class="msg u">${val}</div>`;
@@ -70,16 +161,13 @@
         box.scrollTop = box.scrollHeight;
 
         let reply = "";
-        
-        // اولویت اول: جملات طولانی و خاص
+        // جستجوی هوشمند (جمله بلند -> کلمه کوتاه)
         for (let key in brain) {
             if (key.length > 5 && val.includes(key)) {
                 reply = brain[key];
                 break;
             }
         }
-
-        // اولویت دوم: کلمات کلیدی کوتاه
         if (!reply) {
             for (let key in brain) {
                 if (val.includes(key)) {
@@ -88,16 +176,13 @@
                 }
             }
         }
-
-        if (!reply) {
-            reply = "فرکانس این سوال نیاز به تامل دارد. کلمه دیگری بگو. ✨";
-        }
+        if (!reply) reply = "این سوال در مدار کنونی شما نیست. فرکانس دیگری را امتحان کنید. ✨";
 
         setTimeout(() => {
-            const replyDiv = document.createElement('div');
-            replyDiv.className = 'msg a';
-            replyDiv.innerText = reply;
-            box.appendChild(replyDiv);
+            const d = document.createElement('div');
+            d.className = 'msg a';
+            d.innerText = reply;
+            box.appendChild(d);
             box.scrollTop = box.scrollHeight;
         }, 600);
     }
