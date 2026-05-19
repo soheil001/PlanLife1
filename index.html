@@ -7,7 +7,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;800&family=League+Spartan:wght@800&display=swap');
 
-        * { box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; transition: 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        * { box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         
         body { 
             margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center;
@@ -18,47 +18,61 @@
 
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        /* منوها */
+        body.menu-open .main-container { filter: blur(10px); pointer-events: none; }
+
+        .nav-item, .podcast-item, .menu-btn, .play-circle { box-shadow: 0 0 15px rgba(255, 145, 0, 0.25); }
+
         .menu-btn { position: fixed; top: 25px; z-index: 1001; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 10px; border-radius: 12px; cursor: pointer; backdrop-filter: blur(10px); }
         .btn-right { right: 20px; } 
         .btn-left { left: 20px; }
         .menu-btn div { width: 22px; height: 2px; background: white; margin: 5px 0; border-radius: 2px; }
 
-        .side-menu { 
-            position: fixed; top: 0; width: 260px; height: 100%; background: rgba(255, 255, 255, 0.2); 
-            backdrop-filter: blur(40px); z-index: 1000; padding: 80px 20px; border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
+        .side-menu { position: fixed; top: 0; width: 260px; height: 100%; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(40px); z-index: 1000; padding: 80px 20px; border: 1px solid rgba(255, 255, 255, 0.2); transition: 0.6s ease; }
         #rightMenu { right: -300px; }
         #leftMenu { left: -300px; }
         #rightMenu.active { right: 0; }
         #leftMenu.active { left: 0; }
 
-        .nav-item { display: block; padding: 15px; background: rgba(255, 255, 255, 0.1); border-radius: 15px; color: white; text-align: center; cursor: pointer; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.1); }
-        .nav-item:hover { background: rgba(255, 255, 255, 0.2); }
+        .nav-item { display: block; padding: 15px; background: rgba(255, 255, 255, 0.1); border-radius: 15px; color: white; text-align: center; text-decoration: none; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; }
 
         .page { display: none; width: 100%; flex-direction: column; align-items: center; }
-        .page.active { display: flex; animation: fadeIn 0.5s ease; }
+        .page.active { display: flex; animation: fadeIn 0.7s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        #overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); display:none; z-index:999; backdrop-filter: blur(2px); }
+        .orb { border-radius: 50%; background: radial-gradient(circle, #fff 0%, #a2d2ff 100%); animation: pulse 3s infinite ease-in-out; }
+        .main-orb { width: 50px; height: 50px; margin-bottom: 5px; }
+        
+        .chat-card { width: 100%; max-width: 450px; height: calc(50vh + 80px); background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(30px); border-radius: 35px; border: 1px solid rgba(255, 255, 255, 0.3); display: flex; flex-direction: column; padding: 15px; margin-top: -60px; }
+        #chat-window { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 5px; }
+        .msg { padding: 12px 18px; border-radius: 20px; font-size: 14px; max-width: 85%; line-height: 1.6; }
+        .a { align-self: flex-start; background: rgba(0, 0, 0, 0.3); color: white; border-bottom-right-radius: 5px; text-align: right; }
+        .u { align-self: flex-end; background: #ff9100; color: white; border-bottom-left-radius: 5px; text-align: right; }
+        
+        .input-area { margin-top: 15px; display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.15); padding: 12px; border-radius: 25px; }
+        input { flex: 1; background: transparent; border: none; color: white; outline: none; text-align: right; }
 
-        /* پلیر */
-        .player-card { width: 100%; max-width: 400px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); border-radius: 40px; padding: 25px; text-align: center; color: white; }
-        .podcast-scroll { width: 100%; max-width: 400px; height: 300px; overflow-y: auto; margin-top: 15px; padding: 5px; }
-        .podcast-item { background: rgba(255,255,255,0.1); margin-bottom: 10px; padding: 15px; border-radius: 18px; color: white; cursor: pointer; text-align: right; }
+        .player-card { width: 100%; max-width: 400px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(30px); border-radius: 40px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.3); text-align: center; }
+        #progressBar { width: 100%; cursor: pointer; accent-color: #ff9100; }
+        .time-labels { display: flex; justify-content: space-between; color: white; font-size: 11px; margin-top: 5px; }
+        .controls { display: flex; align-items: center; justify-content: center; gap: 25px; }
+        .skip-btn { background: none; border: none; color: white; cursor: pointer; }
+        .play-circle { width: 75px; height: 75px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        
+        .podcast-scroll { width: 100%; max-width: 400px; height: 320px; overflow-y: auto; margin-top: 15px; padding: 5px; }
+        .podcast-item { background: rgba(255,255,255,0.1); margin-bottom: 10px; padding: 12px; border-radius: 18px; display: flex; align-items: center; gap: 12px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
+        #overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); display:none; z-index:999; backdrop-filter: blur(2px); }
     </style>
 </head>
 <body>
 
 <div id="overlay" onclick="closeMenus()"></div>
 
-<div class="menu-btn btn-right" onclick="toggleMenu('rightMenu')"><div></div><div></div><div></div></div>
-<div class="menu-btn btn-left" onclick="toggleMenu('leftMenu')"><div></div><div></div><div></div></div>
+<div class="menu-btn btn-right" onclick="openMenu('rightMenu')"><div></div><div></div><div></div></div>
+<div class="menu-btn btn-left" onclick="openMenu('leftMenu')"><div></div><div></div><div></div></div>
 
 <div id="rightMenu" class="side-menu">
-    <div class="nav-item" onclick="closeMenus()">پروفایل</div>
-    <div class="nav-item" onclick="closeMenus()">تنظیمات</div>
+    <div class="nav-item">پروفایل کاربری</div>
+    <div class="nav-item">تنظیمات</div>
     <div class="nav-item" onclick="location.reload()">خروج</div>
 </div>
 
@@ -67,18 +81,33 @@
     <div class="nav-item" onclick="showPage('podcastPage')">پادکست‌ها</div>
 </div>
 
-<div style="width:100%; display:flex; flex-direction:column; align-items:center; margin-top: 80px;">
-    <h1 style="color:white; font-family:'League Spartan';">PlanLife</h1>
+<div class="main-container" style="width:100%; display:flex; flex-direction:column; align-items:center; margin-top: 40px;">
+    <div class="orb main-orb"></div>
+    <h1 style="color:white; font-family:'League Spartan'; font-weight:800; margin-bottom:70px;">PlanLife</h1>
 
-    <div id="homePage" class="page active" style="color:white;">خوش آمدید</div>
+    <div id="homePage" class="page active">
+        <div class="chat-card">
+            <div id="chat-window"><div class="msg a">سلام! چطور می‌توانم کمکتان کنم؟ ✨</div></div>
+            <div class="input-area">
+                <input type="text" id="chatInput" placeholder="سوال خود را بپرسید..." onkeypress="if(event.key==='Enter') sendMessage()">
+                <div class="orb" onclick="sendMessage()" style="width:30px; height:30px; cursor:pointer; background:#ff9100;"></div>
+            </div>
+        </div>
+    </div>
 
     <div id="podcastPage" class="page">
         <div class="player-card">
-            <h3 id="p-title">پادکست را انتخاب کنید</h3>
-            <button onclick="togglePlay()" style="background:white; border:none; border-radius:50%; width:60px; height:60px; cursor:pointer;">▶</button>
+            <h3 id="p-title" style="color:white; margin:0;">انتخاب پادکست</h3>
+            <input type="range" id="progressBar" value="0">
+            <div class="time-labels"><span id="currentTime">0:00</span><span id="duration">0:00</span></div>
+            <div class="controls">
+                <button class="skip-btn" onclick="skip(-10)">عقب</button>
+                <div class="play-circle" onclick="togglePlay()"><svg id="playIcon" width="40" height="40" fill="#7d2ae8" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+                <button class="skip-btn" onclick="skip(10)">جلو</button>
+            </div>
         </div>
         <div class="podcast-scroll" id="p-list"></div>
-        <div class="nav-item" style="width:120px; margin-top:10px;" onclick="showPage('homePage')">بازگشت</div>
+        <div class="nav-item" style="margin-top:20px; width:120px;" onclick="showPage('homePage')">بازگشت</div>
     </div>
 </div>
 
@@ -86,50 +115,52 @@
 
 <script>
     const audio = document.getElementById('mainAudio');
+    const playIcon = document.getElementById('playIcon');
     const pList = document.getElementById('p-list');
-    const menus = ['rightMenu', 'leftMenu'];
+    const progressBar = document.getElementById('progressBar');
 
     const podcasts = [
-        { id: 1, title: "پادکست ۱", url: "" }, { id: 2, title: "پادکست ۲", url: "" },
-        { id: 3, title: "پادکست ۳", url: "" }, { id: 4, title: "پادکست ۴", url: "" },
-        { id: 5, title: "پادکست ۵", url: "" }, { id: 6, title: "پادکست ۶", url: "" },
-        { id: 7, title: "پادکست ۷", url: "" }, { id: 8, title: "پادکست ۸", url: "" },
-        { id: 9, title: "پادکست ۹", url: "" }, { id: 10, title: "پادکست ۱۰", url: "" }
+        { id: 1, title: "پادکست ۱", url: "اینجا لینک فایل ۱ را بگذارید" },
+        { id: 2, title: "پادکست ۲", url: "اینجا لینک فایل ۲ را بگذارید" },
+        { id: 3, title: "پادکست ۳", url: "اینجا لینک فایل ۳ را بگذارید" },
+        { id: 4, title: "پادکست ۴", url: "اینجا لینک فایل ۴ را بگذارید" },
+        { id: 5, title: "پادکست ۵", url: "اینجا لینک فایل ۵ را بگذارید" },
+        { id: 6, title: "پادکست ۶", url: "اینجا لینک فایل ۶ را بگذارید" },
+        { id: 7, title: "پادکست ۷", url: "اینجا لینک فایل ۷ را بگذارید" },
+        { id: 8, title: "پادکست ۸", url: "اینجا لینک فایل ۸ را بگذارید" },
+        { id: 9, title: "پادکست ۹", url: "اینجا لینک فایل ۹ را بگذارید" },
+        { id: 10, title: "پادکست ۱۰", url: "اینجا لینک فایل ۱۰ را بگذارید" }
     ];
 
     podcasts.forEach(p => {
-        pList.innerHTML += `<div class="podcast-item" onclick="loadTrack('${p.url}', '${p.title}')">${p.title}</div>`;
+        pList.innerHTML += `
+            <div class="podcast-item" onclick="loadTrack('${p.url}', '${p.title}')">
+                <div style="flex:1; color:white; text-align:right;">${p.title}</div>
+            </div>`;
     });
 
-    function toggleMenu(id) {
-        const el = document.getElementById(id);
-        const isActive = el.classList.contains('active');
-        closeMenus(); // همه را می‌بندد
-        if (!isActive) {
-            el.classList.add('active');
-            document.getElementById('overlay').style.display = 'block';
-        }
-    }
-
-    function closeMenus() {
-        menus.forEach(m => document.getElementById(m).classList.remove('active'));
-        document.getElementById('overlay').style.display = 'none';
-    }
-
-    function showPage(id) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        closeMenus();
-    }
-
     function loadTrack(url, title) {
-        if(!url) return alert("لطفاً لینک فایل را در آرایه پادکست‌ها قرار دهید.");
+        if(url.includes("اینجا")) return alert("لطفاً لینک واقعی را در کد جایگزین کنید");
         audio.src = url;
         document.getElementById('p-title').innerText = title;
         audio.play();
+        updateIcon(true);
     }
 
-    function togglePlay() { audio.paused ? audio.play() : audio.pause(); }
+    function togglePlay() {
+        audio.paused ? audio.play() : audio.pause();
+        updateIcon(!audio.paused);
+    }
+
+    audio.onended = () => updateIcon(false);
+    function updateIcon(isPlaying) { playIcon.innerHTML = isPlaying ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' : '<path d="M8 5v14l11-7z"/>'; }
+    function skip(t) { audio.currentTime += t; }
+    audio.ontimeupdate = () => { progressBar.value = (audio.currentTime / audio.duration) * 100 || 0; };
+    
+    function openMenu(id) { document.getElementById(id).classList.add('active'); document.getElementById('overlay').style.display = 'block'; document.body.classList.add('menu-open'); }
+    function closeMenus() { document.querySelectorAll('.side-menu').forEach(m => m.classList.remove('active')); document.getElementById('overlay').style.display = 'none'; document.body.classList.remove('menu-open'); }
+    function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); closeMenus(); }
+    async function sendMessage() { /* منطق چت‌بات شما */ }
 </script>
 </body>
 </html>
