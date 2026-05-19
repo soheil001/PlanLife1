@@ -2,156 +2,290 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beyond Mind Interface</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ماورای ذهن | Beyond Mind Platform</title>
     <style>
-        :root {
-            --bg-dark: #0f171e;
-            --panel-bg: #1a242d;
-            --accent-gold: #c5a059;
-            --accent-green: #00f2ad;
-            --text-gray: #8b959e;
-        }
+        /* بارگذاری فونت فارسی مدرن و زیبا */
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
 
-        * { box-sizing: border-box; }
+        * { 
+            box-sizing: border-box; 
+            font-family: 'Vazirmatn', Tahoma, sans-serif;
+        }
+        
+        /* بگراند ماورایی با تم آبی پررنگ و عمیق */
         body { 
-            margin: 0; height: 100vh; background: #231f20; 
-            display: flex; justify-content: center; align-items: center;
-            font-family: 'Segoe UI', Tahoma, sans-serif; color: white;
-            background: radial-gradient(circle at center, #2c2c2c 0%, #000 100%);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #020826, #051342, #1f033d, #0b1d56);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            padding: 12px;
+            overflow-x: hidden;
         }
 
-        /* قاب اصلی پلتفرم شبیه عکس */
-        .app-frame {
-            width: 95vw; height: 90vh; max-width: 1200px;
-            background: var(--bg-dark); border-radius: 20px;
-            display: flex; gap: 10px; padding: 15px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.8);
-            border: 1px solid #333;
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* ستون سمت چپ (آموزش‌ها) */
-        .sidebar-left {
-            flex: 0.8; background: var(--panel-bg); border-radius: 15px;
-            display: flex; flex-direction: column; padding: 15px; gap: 15px;
+        /* چیدمان تمام شیشه‌ای پلتفرم */
+        .main-container {
+            display: flex;
+            width: 100%;
+            max-width: 1240px;
+            height: 88vh;
+            gap: 20px;
         }
 
-        .user-profile { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-        .avatar-circle { width: 45px; height: 45px; border-radius: 50%; background: var(--accent-gold); box-shadow: 0 0 15px rgba(197, 160, 89, 0.4); }
-
-        .edu-item { 
-            display: flex; align-items: center; gap: 12px; padding: 10px; 
-            background: rgba(255,255,255,0.03); border-radius: 10px; cursor: pointer;
-        }
-        .icon-circle { width: 35px; height: 35px; border-radius: 50%; background: #333; border: 1px solid var(--accent-gold); }
-
-        /* ستون وسط (محتوا و چت) */
-        .content-main {
-            flex: 2; display: flex; flex-direction: column; gap: 10px;
-        }
-
-        .hero-banner {
-            height: 250px; background: url('https://img.freepik.com/free-photo/mysterious-castle-fog_23-2151040432.jpg') center/cover;
-            border-radius: 15px; border: 1px solid #444; position: relative;
+        /* ستون‌های کناری تمام شیشه‌ای */
+        .sidebar {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
 
-        .chat-area {
-            flex: 1; background: #121920; border-radius: 15px; display: flex; flex-direction: column;
-            padding: 15px; border: 1px solid #222;
+        /* باکس شیشه‌ای وسط */
+        .chat-container { 
+            flex: 2.2;
+            background: rgba(255, 255, 255, 0.02); 
+            backdrop-filter: blur(35px); 
+            -webkit-backdrop-filter: blur(35px);
+            padding: 25px; 
+            border-radius: 30px; 
+            border: 1px solid rgba(255, 255, 255, 0.12); 
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            position: relative; 
+        }
+        
+        /* گوی چرخنده کره زمین ماورایی */
+        .orb-container { display: flex; justify-content: center; margin-bottom: 15px; }
+        .earth-orb { 
+            width: 65px; height: 65px; border-radius: 50%; 
+            background: url('https://img.freepik.com/free-vector/blue-earth-glowing-light_1017-14243.jpg') center/cover;
+            box-shadow: 0 0 35px rgba(0, 242, 173, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.4);
+            animation: rotateEarth 12s infinite linear, pulseEarth 3s infinite ease-in-out;
+        }
+        @keyframes rotateEarth { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulseEarth { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.06); box-shadow: 0 0 45px rgba(50, 215, 75, 0.6); } }
+
+        .sidebar-title {
+            color: #32d74b;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(50, 215, 75, 0.2);
+            padding-bottom: 10px;
+            text-shadow: 0 0 12px rgba(50, 215, 75, 0.4);
         }
 
-        #chat { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
-        .msg { padding: 10px 14px; border-radius: 12px; font-size: 13px; max-width: 80%; }
-        .u { background: #2a353f; align-self: flex-start; color: #ddd; }
-        .a { background: rgba(0, 242, 173, 0.1); align-self: flex-end; color: var(--accent-green); border: 1px solid rgba(0, 242, 173, 0.2); }
-
-        /* ستون سمت راست (ابزارها) */
-        .sidebar-right {
-            flex: 0.6; background: var(--panel-bg); border-radius: 15px;
-            display: flex; flex-direction: column; padding: 15px; gap: 15px;
+        /* دکمه‌ها و گزینه‌های برجسته و سه بعدی */
+        .nav-item {
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            color: #f5f5f5;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 400;
+            /* استایل کادر برجسته */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.4), -2px -2px 6px rgba(255,255,255,0.03);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .nav-item:hover {
+            background: rgba(50, 215, 75, 0.08);
+            border-color: #32d74b;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(50,215,75,0.2), 0 3px 6px rgba(0,0,0,0.3);
+        }
+        .nav-item:active {
+            transform: translateY(1px);
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
         }
 
-        .action-btn {
-            background: var(--accent-gold); color: black; border: none; padding: 12px;
-            border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center;
+        h2 { color: #32d74b; text-align: center; margin: 0 0 20px 0; font-size: 1.5rem; font-weight: 700; text-shadow: 0 0 15px rgba(50, 215, 75, 0.4); }
+        
+        /* محیط داخلی چت شیشه‌ای */
+        #chat { 
+            flex: 1;
+            height: 320px;
+            overflow-y: auto; 
+            margin-bottom: 15px; 
+            padding: 10px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            border-bottom: 1px solid rgba(255,255,255,0.06); 
+        }
+        
+        /* پیام‌ها */
+        .msg { padding: 12px 18px; border-radius: 20px; font-size: 14px; line-height: 1.7; max-width: 85%; word-wrap: break-word; }
+        .u { 
+            background: rgba(255, 45, 85, 0.15); 
+            align-self: flex-start; 
+            color: white; 
+            border: 1px solid rgba(255, 45, 85, 0.3);
+            border-bottom-left-radius: 4px; 
+        }
+        .a { 
+            background: rgba(255, 255, 255, 0.04); 
+            align-self: flex-end; 
+            color: #32d74b; 
+            border: 1px solid rgba(50, 215, 75, 0.3);
+            border-bottom-right-radius: 4px; 
         }
 
-        .status-light { width: 10px; height: 10px; background: var(--accent-green); border-radius: 50%; box-shadow: 0 0 10px var(--accent-green); }
+        /* ورودی برجسته پیام */
+        .input-box { 
+            display: flex; 
+            gap: 10px; 
+            background: rgba(0, 0, 0, 0.25); 
+            padding: 6px; 
+            border-radius: 18px; 
+            border: 1px solid rgba(255,255,255,0.08); 
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5);
+        }
+        input { flex: 1; padding: 12px; border: none; background: transparent; color: white; outline: none; font-size: 16px; }
+        input::placeholder { color: rgba(255,255,255,0.3); }
+        
+        /* دکمه ارسال برجسته */
+        button { 
+            padding: 10px 26px; 
+            border-radius: 14px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            background: #32d74b; 
+            color: #000; 
+            font-weight: bold; 
+            cursor: pointer; 
+            box-shadow: 2px 3px 6px rgba(0,0,0,0.4);
+            transition: 0.2s; 
+        }
+        button:hover { background: #2cb841; transform: translateY(-1px); }
+        button:active { transform: scale(0.95); box-shadow: none; }
+        
+        #chat::-webkit-scrollbar { width: 3px; }
+        #chat::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
 
-        /* باکس تایپ */
-        .input-box { display: flex; gap: 10px; margin-top: 10px; background: #0a0f14; padding: 5px; border-radius: 10px; }
-        input { flex: 1; background: transparent; border: none; color: white; padding: 10px; outline: none; }
-        .send-btn { background: var(--accent-green); border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
-
-        @media (max-width: 900px) { .sidebar-left, .sidebar-right { display: none; } }
+        /* ریسپانسیو فوق‌العاده برای موبایل */
+        @media (max-width: 992px) {
+            body { overflow-y: auto; height: auto; padding: 20px 10px; }
+            .main-container { flex-direction: column; height: auto; gap: 15px; }
+            .sidebar { order: 2; height: auto; overflow: visible; }
+            .chat-container { order: 1; height: 530px; }
+        }
     </style>
 </head>
 <body>
 
-<div class="app-frame">
-    <div class="sidebar-left">
-        <div class="user-profile">
-            <div class="avatar-circle"></div>
-            <span style="font-size: 0.9rem;">SOHEIL PANEL</span>
-        </div>
-        <div class="edu-item"><div class="icon-circle"></div><span>قانون جذب</span></div>
-        <div class="edu-item"><div class="icon-circle"></div><span>پاکسازی</span></div>
-        <div class="edu-item"><div class="icon-circle"></div><span>فرکانس</span></div>
-        <div class="edu-item"><div class="icon-circle"></div><span>تجسم خلاق</span></div>
+<div class="main-container">
+    <div class="sidebar">
+        <div class="sidebar-title">بخش آموزش و فروش</div>
+        <div class="nav-item">📚 دوره جامع قانون جذب</div>
+        <div class="nav-item">🧠 مهندسی ناخودآگاه</div>
+        <div class="nav-item">🧘‍♂️ مربیگری مدیتیشن</div>
+        <div class="nav-item" style="color:#32d74b; font-weight: bold; border-color: rgba(50,215,75,0.4);">💎 فروشگاه محصولات ویژه</div>
     </div>
 
-    <div class="content-main">
-        <div class="hero-banner"></div>
-        <div class="chat-area">
-            <div id="chat">
-                <div class="msg a">سیستم آماده دریافت فرکانس‌های شماست...</div>
-            </div>
-            <div class="input-box">
-                <input type="text" id="userInput" placeholder="بپرس..." onkeypress="if(event.keyCode===13)send()">
-                <button class="send-btn" onclick="send()">➤</button>
-            </div>
+    <div class="chat-container">
+        <div class="orb-container">
+            <div class="earth-orb"></div>
+        </div>
+        <h2>ماورای ذهن ✨</h2>
+        <div id="chat">
+            <div class="msg a">در حال بارگذاری ارتعاشات جهانی...</div>
+        </div>
+        <div class="input-box">
+            <input type="text" id="userInput" placeholder="سوالی بپرس..." onkeypress="if(event.keyCode===13)send()">
+            <button onclick="send()">ارسال</button>
         </div>
     </div>
 
-    <div class="sidebar-right">
-        <div style="display:flex; align-items:center; gap:10px;">
-            <div class="status-light"></div>
-            <span style="font-size: 0.8rem;">ارتباط آنلاین</span>
-        </div>
-        <div class="action-btn">فروشگاه</div>
-        <div style="margin-top:auto; color: var(--text-gray); font-size: 0.7rem; text-align: center;">
-            VERSION 2.0.1 <br> BEYOND MIND
-        </div>
+    <div class="sidebar">
+        <div class="sidebar-title">ارتباطات و اطلاعات</div>
+        <div class="nav-item">❓ سوالات متداول (FAQ)</div>
+        <div class="nav-item">👥 درباره ما و برند ماورای ذهن</div>
+        <div class="nav-item">📞 ارتباط مستقیم با ما</div>
+        <div class="nav-item" style="color: #ff2d55; border-color: rgba(255,45,85,0.3)">🚪 خروج از پلتفرم</div>
     </div>
 </div>
 
 <script>
     let brain = {};
+
+    // اتصال مستقیم به دیتابیس متنی
     async function loadBrain() {
+        const chatBox = document.getElementById('chat');
         try {
-            const r = await fetch('database.txt?v=' + Math.random());
-            const d = await r.text();
-            d.split('\n').forEach(l => {
-                const p = l.split('|');
-                if (p.length === 2) brain[p[0].trim()] = p[1].trim();
+            const response = await fetch('database.txt?v=' + Math.random());
+            const data = await response.text();
+            const lines = data.split('\n');
+            lines.forEach(line => {
+                const parts = line.split('|');
+                if (parts.length === 2) brain[parts[0].trim()] = parts[1].trim();
             });
-        } catch (e) {}
+            chatBox.innerHTML = '<div class="msg a">ارتباط با آگاهی برتر برقرار شد. بپرس...</div>';
+        } catch (e) {
+            chatBox.innerHTML = '<div class="msg a">اتصال برقرار شد. فرکانس سیستم آماده است.</div>';
+        }
     }
+
     loadBrain();
 
     function send() {
-        const i = document.getElementById('userInput');
-        const b = document.getElementById('chat');
-        if (!i.value.trim()) return;
-        b.innerHTML += `<div class="msg u">${i.value}</div>`;
-        let r = "";
-        for (let k in brain) { if (i.value.includes(k)) { r = brain[k]; break; } }
-        if (!r) r = "فرکانس دریافت نشد. ✨";
+        const input = document.getElementById('userInput');
+        const box = document.getElementById('chat');
+        const val = input.value.trim();
+        if (!val) return;
+
+        box.innerHTML += `<div class="msg u">${val}</div>`;
+        input.value = "";
+        box.scrollTop = box.scrollHeight;
+
+        let reply = "";
+        
+        // اولویت‌بندی هوشمند متن
+        for (let key in brain) {
+            if (key.length > 5 && val.includes(key)) {
+                reply = brain[key];
+                break;
+            }
+        }
+        if (!reply) {
+            for (let key in brain) {
+                if (val.includes(key)) {
+                    reply = brain[key];
+                    break;
+                }
+            }
+        }
+        if (!reply) reply = "این سوال در مدار کنونی شما نیست. فرکانس دیگری را امتحان کنید. ✨";
+
         setTimeout(() => {
-            b.innerHTML += `<div class="msg a">${r}</div>`;
-            b.scrollTop = b.scrollHeight;
+            const d = document.createElement('div');
+            d.className = 'msg a';
+            d.innerText = reply;
+            box.appendChild(d);
+            box.scrollTop = box.scrollHeight;
         }, 600);
-        i.value = "";
     }
 </script>
 
