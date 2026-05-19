@@ -4,43 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { margin: 0; height: 100vh; background: linear-gradient(135deg, #00f2fe, #4facfe, #764ba2, #ff758c); display: flex; flex-direction: column; align-items: center; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; overflow: hidden; }
+        body { margin: 0; height: 100vh; background: linear-gradient(135deg, #00f2fe, #4facfe, #764ba2, #ff758c); display: flex; flex-direction: column; align-items: center; font-family: -apple-system, sans-serif; overflow: hidden; }
 
-        /* لایه تار شونده */
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); z-index: 1000; display: none; }
+        /* لایه تاری */
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); z-index: 1000; display: none; transition: 0.4s; }
         #overlay.active { display: block; }
 
         .menu-btn { position: fixed; top: 20px; width: 55px; height: 55px; background: rgba(255,255,255,0.25); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 28px; z-index: 3000; }
         .left-icon { left: 20px; }
         .right-icon { right: 20px; }
 
-        .menu-panel { position: fixed; top: 0; width: 220px; height: 100%; background: rgba(255,255,255,0.1); backdrop-filter: blur(25px); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); padding-top: 80px; z-index: 2500; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        #leftPanel { left: 0; transform: translateX(-100%); }
-        #rightPanel { right: 0; transform: translateX(100%); }
-        .show-left { transform: translateX(0) !important; }
-        .show-right { transform: translateX(0) !important; }
-
-        .menu-item { width: 80%; padding: 15px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); border-radius: 18px; color: white; text-align: center; cursor: pointer; }
-
-        /* گوی و تیتر */
-        .pulse { width: 45px; height: 45px; background: radial-gradient(circle, #ffffff, #00f2fe); border-radius: 50%; margin-top: 60px; box-shadow: 0 10px 30px rgba(255, 255, 0, 0.6); animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); box-shadow: 0 15px 40px rgba(255, 255, 0, 0.8); } 100% { transform: scale(1); } }
-        
-        .title { color: white; font-size: 40px; margin-top: 15px; }
+        /* منوها */
+        .menu-panel { position: fixed; top: 0; width: 220px; height: 100%; background: rgba(255,255,255,0.1); backdrop-filter: blur(25px); transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); padding-top: 80px; z-index: 2500; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        #leftPanel { left: -220px; }
+        #rightPanel { right: -220px; }
+        .active-left { left: 0 !important; }
+        .active-right { right: 0 !important; }
 
         /* چت باکس */
-        .chat-box { width: calc(100% - 30px); max-width: 380px; height: 400px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; margin-top: 10px; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; }
+        .chat-box { width: calc(100% - 30px); max-width: 380px; height: 420px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px); border-radius: 30px; margin-top: 10px; display: flex; flex-direction: column; padding: 15px; box-sizing: border-box; }
         
-        #chat-output { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
-        
-        /* حباب پیام‌های شیشه‌ای */
-        .msg { padding: 10px 15px; border-radius: 18px; max-width: 80%; backdrop-filter: blur(10px); font-size: 14px; line-height: 1.5; }
-        .system { align-self: flex-start; background: rgba(255,255,255,0.2); color: white; border-bottom-left-radius: 5px; }
-        .user { align-self: flex-end; background: rgba(255,255,255,0.4); color: white; border-bottom-right-radius: 5px; }
+        /* دکمه‌های پایین چت‌باکس */
+        .grid-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+        .btn-small { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; color: white; padding: 8px; font-size: 12px; cursor: pointer; text-align: center; backdrop-filter: blur(5px); }
 
-        .input-wrapper { position: relative; width: 100%; display: flex; align-items: center; }
-        input { width: 100%; padding: 15px 20px; border-radius: 20px; border: none; background: rgba(255,255,255,0.25); color: white; font-size: 16px; outline: none; }
-        .send-btn { position: absolute; left: 5px; width: 40px; height: 40px; border-radius: 50%; border: none; background: rgba(255,255,255,0.4); backdrop-filter: blur(10px); color: white; cursor: pointer; font-size: 18px; }
+        #chat-output { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 10px; border-radius: 15px; max-width: 80%; background: rgba(255,255,255,0.2); color: white; }
     </style>
 </head>
 <body>
@@ -56,54 +45,43 @@
         <div class="menu-item">پروژه‌ها</div><div class="menu-item">اشتراک</div><div class="menu-item">تیم‌ها</div><div class="menu-item">پشتیبانی</div>
     </div>
 
-    <div class="pulse"></div>
-    <h1 class="title">PlanLife</h1>
+    <div class="pulse" style="margin-top:60px;"></div>
+    <h1 style="color:white; font-size:40px; margin:10px;">PlanLife</h1>
 
     <div class="chat-box">
-        <div id="chat-output">
-            <div class="msg system">سلام! چطور می‌تونم در مسیر رشد فردی کمکت کنم؟</div>
-        </div>
-        <div class="input-wrapper">
-            <input type="text" id="user-input" placeholder="پیام...">
-            <button class="send-btn" onclick="sendMessage()">▲</button>
+        <div id="chat-output"></div>
+        <div class="grid-buttons">
+            <div class="btn-small">قانون جذب</div>
+            <div class="btn-small">پول‌سازی</div>
+            <div class="btn-small">باورها</div>
+            <div class="btn-small">رشد فردی</div>
+            <div class="btn-small">انگیزه</div>
+            <div class="btn-small">هدف</div>
         </div>
     </div>
 
     <script>
-        async function sendMessage() {
-            const input = document.getElementById('user-input');
-            const output = document.getElementById('chat-output');
-            if (!input.value) return;
-
-            // نمایش پیام کاربر
-            output.innerHTML += `<div class="msg user">${input.value}</div>`;
-            const userQuery = input.value;
-            input.value = '';
-
-            // جستجو در دیتابیس (شبیه‌سازی)
-            try {
-                const response = await fetch('database.txt');
-                const data = await response.text();
-                const lines = data.split('\n');
-                let found = false;
-
-                for (let line of lines) {
-                    const [q, a] = line.split(':');
-                    if (q && userQuery.includes(q.trim())) {
-                        output.innerHTML += `<div class="msg system">${a}</div>`;
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) output.innerHTML += `<div class="msg system">درباره این موضوع فعلاً اطلاعاتی ندارم.</div>`;
-            } catch(e) { output.innerHTML += `<div class="msg system">خطای اتصال!</div>`; }
+        function toggleMenu(side) {
+            const left = document.getElementById('leftPanel');
+            const right = document.getElementById('rightPanel');
+            const overlay = document.getElementById('overlay');
             
-            output.scrollTop = output.scrollHeight;
+            if(side === 'left') {
+                right.classList.remove('active-right');
+                left.classList.toggle('active-left');
+                overlay.classList.toggle('active');
+            } else {
+                left.classList.remove('active-left');
+                right.classList.toggle('active-right');
+                overlay.classList.toggle('active');
+            }
         }
 
-        // توابع منو همانند قبل...
-        function toggleMenu(side) { /* ... */ }
-        function closeAll() { /* ... */ }
+        function closeAll() {
+            document.getElementById('leftPanel').classList.remove('active-left');
+            document.getElementById('rightPanel').classList.remove('active-right');
+            document.getElementById('overlay').classList.remove('active');
+        }
     </script>
 </body>
 </html>
