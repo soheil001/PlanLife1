@@ -3,173 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PlanLife | دستیار هوشمند</title>
+    <title>PlanLife AI | دستیار ماورای ذهن</title>
     <style>
+        * { box-sizing: border-box; }
         body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
-        }
-
-        /* بک‌گراند متحرک و ترکیبی */
-        body {
-            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #a1c4fd, #fbc2eb);
+            margin: 0; padding: 0; height: 100%; width: 100%;
+            font-family: 'Tahoma', sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            animation: gradient 15s ease infinite;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        @keyframes gradientBG {
+        @keyframes gradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        /* کانتینر اصلی شبیه ChatGPT */
-        .main-container {
+        /* کانتینر اصلی */
+        .chat-container {
             width: 90%;
-            max-width: 800px;
-            text-align: center;
-            padding: 20px;
-        }
-
-        h1 {
-            color: white;
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            font-weight: bold;
-        }
-
-        /* باکس ورودی بزرگ و شیشه‌ای */
-        .input-wrapper {
-            position: relative;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 24px;
-            padding: 15px 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 600px;
+            height: 80vh;
             display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
         }
 
-        .input-wrapper:focus-within {
+        /* محل نمایش پیام‌ها */
+        #chat-flow {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* حباب‌های گفتگو */
+        .bubble {
+            max-width: 85%;
+            padding: 12px 18px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: white;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .user-bubble {
+            align-self: flex-start;
             background: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-            transform: translateY(-2px);
+            border-bottom-right-radius: 5px;
+        }
+
+        .ai-bubble {
+            align-self: flex-end;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom-left-radius: 5px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* تکست باکس عمودی و دور گرد */
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         textarea {
             width: 100%;
-            background: transparent;
-            border: none;
-            outline: none;
-            color: #333;
-            font-size: 1.1rem;
+            min-height: 120px; /* عمودی‌تر شدن */
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 25px; /* دور گرد */
+            padding: 20px;
+            color: white;
+            font-size: 1rem;
             resize: none;
-            padding: 10px;
-            line-height: 1.5;
-            min-height: 60px;
+            outline: none;
             font-family: inherit;
         }
 
-        textarea::placeholder {
-            color: rgba(0,0,0,0.4);
-        }
+        textarea::placeholder { color: rgba(255,255,255,0.7); }
 
-        .send-btn {
-            background: #fff;
+        button {
+            background: white;
+            color: #e73c7e;
             border: none;
-            border-radius: 15px;
-            width: 45px;
-            height: 45px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: 0.2s;
-            margin-right: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-
-        .send-btn:hover {
-            transform: scale(1.1);
-            background: #f0f0f0;
-        }
-
-        /* بخش نمایش پاسخ هوش مصنوعی */
-        #response-area {
-            margin-top: 30px;
-            color: #444;
-            background: rgba(255, 255, 255, 0.4);
+            padding: 12px;
             border-radius: 20px;
-            padding: 20px;
-            display: none; /* در ابتدا مخفی */
-            text-align: right;
-            max-height: 300px;
-            overflow-y: auto;
-            line-height: 1.8;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
+        button:hover { transform: scale(1.02); background: #f0f0f0; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* مخفی کردن اسکرول‌بار */
+        #chat-flow::-webkit-scrollbar { width: 0px; }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <h1>چطور می‌تونم کمکت کنم؟</h1>
-        
-        <div class="input-wrapper">
-            <textarea id="userInput" placeholder="سوال یا باورت رو اینجا بنویس..." rows="1"></textarea>
-            <button class="send-btn" onclick="askAI()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7 11L12 6L17 11M12 18V7" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
+    <div class="chat-container">
+        <div id="chat-flow">
+            <div class="bubble ai-bubble">سلام سهراب! خوش اومدی به پلن‌لایف. امروز چه باوری رو می‌خوایم با هم تغییر بدیم؟</div>
         </div>
-
-        <div id="response-area">
-            <!-- پاسخ هوش مصنوعی اینجا ظاهر می‌شود -->
+        
+        <div class="input-area">
+            <textarea id="userInput" placeholder="سوالت رو اینجا بنویس..."></textarea>
+            <button onclick="handleChat()">ارسال به ماورای ذهن</button>
         </div>
     </div>
 
     <script>
-        // تنظیم ارتفاع خودکار برای textarea
-        const tx = document.getElementById('userInput');
-        tx.addEventListener("input", OnInput, false);
+        function handleChat() {
+            const inputField = document.getElementById('userInput');
+            const chatFlow = document.getElementById('chat-flow');
+            const text = inputField.value.trim();
 
-        function OnInput() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-        }
+            if (text === "") return;
 
-        function askAI() {
-            const input = document.getElementById('userInput').value;
-            const responseArea = document.getElementById('response-area');
-            
-            if (input.trim() === "") return;
+            // اضافه کردن پیام کاربر
+            const userDiv = document.createElement('div');
+            userDiv.className = 'bubble user-bubble';
+            userDiv.innerText = text;
+            chatFlow.appendChild(userDiv);
 
-            // نمایش افکت لودینگ ساده
-            responseArea.style.display = "block";
-            responseArea.innerHTML = "در حال پردازش در ماورای ذهن...";
+            // پاک کردن ورودی
+            inputField.value = "";
 
-            // شبیه‌سازی پاسخ (در مرحله بعد به API وصل می‌کنیم)
+            // اسکرول به پایین
+            chatFlow.scrollTop = chatFlow.scrollHeight;
+
+            // پاسخ هوش مصنوعی (موقت)
             setTimeout(() => {
-                responseArea.innerHTML = `<strong>پاسخ:</strong> <br> فکر شما یعنی "${input}" دریافت شد. به یاد داشته باش که قدرت ذهن تو بی‌انتهاست. ما در حال اتصال به شبکه هوشمند هستیم تا دقیق‌ترین راهنمایی رو بهت بدیم. ✨`;
-            }, 1500);
-
-            document.getElementById('userInput').value = "";
-            tx.style.height = 'auto';
+                const aiDiv = document.createElement('div');
+                aiDiv.className = 'bubble ai-bubble';
+                aiDiv.innerHTML = "<b>پاسخ هوشمند:</b><br>من پیام تو رو دریافت کردم. در حال تحلیل فرکانس ذهنی تو هستم تا بهترین راهکار رو از 'ماورای ذهن' برات پیدا کنم. ✨";
+                chatFlow.appendChild(aiDiv);
+                chatFlow.scrollTop = chatFlow.scrollHeight;
+            }, 1000);
         }
     </script>
-
 </body>
 </html>
