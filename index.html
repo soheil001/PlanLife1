@@ -3,288 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ماورای ذهن | Beyond Mind Platform</title>
+    <title>PlanLife | پلتفرم ماورای ذهن</title>
     <style>
-        /* بارگذاری فونت فارسی مدرن و زیبا */
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
 
-        * { 
-            box-sizing: border-box; 
-            font-family: 'Vazirmatn', Tahoma, sans-serif;
-        }
+        * { box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; }
         
-        /* بگراند ماورایی با تم آبی پررنگ و عمیق */
         body { 
             margin: 0;
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(-45deg, #020826, #051342, #1f033d, #0b1d56);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            padding: 12px;
-            overflow-x: hidden;
+            /* گرادینت الهام گرفته از تصویر Canva شما */
+            background: linear-gradient(135deg, #00c4cc 0%, #7d2ae8 100%);
+            overflow: hidden;
+            padding: 15px;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* استایل منوی همبرگری */
+        .menu-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
         }
 
-        /* چیدمان تمام شیشه‌ای پلتفرم */
-        .main-container {
-            display: flex;
-            width: 100%;
-            max-width: 1240px;
-            height: 88vh;
-            gap: 20px;
-        }
-
-        /* ستون‌های کناری تمام شیشه‌ای */
-        .sidebar {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-radius: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 22px;
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            z-index: 999;
+            padding: 60px 20px;
+            transition: 0.4s ease;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             flex-direction: column;
             gap: 15px;
-            overflow-y: auto;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
 
-        /* باکس شیشه‌ای وسط */
-        .chat-container { 
-            flex: 2.2;
-            background: rgba(255, 255, 255, 0.02); 
-            backdrop-filter: blur(35px); 
-            -webkit-backdrop-filter: blur(35px);
-            padding: 25px; 
-            border-radius: 30px; 
-            border: 1px solid rgba(255, 255, 255, 0.12); 
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+        .side-menu.active { right: 0; }
+
+        .nav-item {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: bold;
+        }
+
+        /* ظرف چت باکس تمام شیشه‌ای */
+        .chat-card {
+            width: 100%;
+            max-width: 450px;
+            height: 85vh;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
             display: flex;
             flex-direction: column;
-            position: relative; 
+            padding: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            position: relative;
         }
-        
-        /* گوی چرخنده کره زمین ماورایی */
-        .orb-container { display: flex; justify-content: center; margin-bottom: 15px; }
-        .earth-orb { 
-            width: 65px; height: 65px; border-radius: 50%; 
+
+        .header {
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .earth-logo {
+            width: 50px; height: 50px; border-radius: 50%;
             background: url('https://img.freepik.com/free-vector/blue-earth-glowing-light_1017-14243.jpg') center/cover;
-            box-shadow: 0 0 35px rgba(0, 242, 173, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.4);
-            animation: rotateEarth 12s infinite linear, pulseEarth 3s infinite ease-in-out;
-        }
-        @keyframes rotateEarth { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes pulseEarth { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.06); box-shadow: 0 0 45px rgba(50, 215, 75, 0.6); } }
-
-        .sidebar-title {
-            color: #32d74b;
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-align: center;
+            animation: rotateEarth 10s infinite linear;
             margin-bottom: 10px;
-            border-bottom: 1px solid rgba(50, 215, 75, 0.2);
-            padding-bottom: 10px;
-            text-shadow: 0 0 12px rgba(50, 215, 75, 0.4);
+            box-shadow: 0 0 20px rgba(0, 196, 204, 0.5);
         }
 
-        /* دکمه‌ها و گزینه‌های برجسته و سه بعدی */
-        .nav-item {
-            padding: 14px;
-            background: rgba(255, 255, 255, 0.03);
-            color: #f5f5f5;
-            text-align: center;
-            cursor: pointer;
-            border-radius: 16px;
-            font-size: 14px;
-            font-weight: 400;
-            /* استایل کادر برجسته */
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 3px 3px 8px rgba(0,0,0,0.4), -2px -2px 6px rgba(255,255,255,0.03);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        .nav-item:hover {
-            background: rgba(50, 215, 75, 0.08);
-            border-color: #32d74b;
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 7px 14px rgba(50,215,75,0.2), 0 3px 6px rgba(0,0,0,0.3);
-        }
-        .nav-item:active {
-            transform: translateY(1px);
-            box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-        }
+        @keyframes rotateEarth { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        h2 { color: #32d74b; text-align: center; margin: 0 0 20px 0; font-size: 1.5rem; font-weight: 700; text-shadow: 0 0 15px rgba(50, 215, 75, 0.4); }
-        
-        /* محیط داخلی چت شیشه‌ای */
-        #chat { 
+        .brand-name { color: white; font-size: 1.8rem; font-weight: 800; margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+
+        #chat-window {
             flex: 1;
-            height: 320px;
-            overflow-y: auto; 
-            margin-bottom: 15px; 
-            padding: 10px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
-            border-bottom: 1px solid rgba(255,255,255,0.06); 
-        }
-        
-        /* پیام‌ها */
-        .msg { padding: 12px 18px; border-radius: 20px; font-size: 14px; line-height: 1.7; max-width: 85%; word-wrap: break-word; }
-        .u { 
-            background: rgba(255, 45, 85, 0.15); 
-            align-self: flex-start; 
-            color: white; 
-            border: 1px solid rgba(255, 45, 85, 0.3);
-            border-bottom-left-radius: 4px; 
-        }
-        .a { 
-            background: rgba(255, 255, 255, 0.04); 
-            align-self: flex-end; 
-            color: #32d74b; 
-            border: 1px solid rgba(50, 215, 75, 0.3);
-            border-bottom-right-radius: 4px; 
+            overflow-y: auto;
+            padding: 15px 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        /* ورودی برجسته پیام */
-        .input-box { 
-            display: flex; 
-            gap: 10px; 
-            background: rgba(0, 0, 0, 0.25); 
-            padding: 6px; 
-            border-radius: 18px; 
-            border: 1px solid rgba(255,255,255,0.08); 
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5);
-        }
-        input { flex: 1; padding: 12px; border: none; background: transparent; color: white; outline: none; font-size: 16px; }
-        input::placeholder { color: rgba(255,255,255,0.3); }
-        
-        /* دکمه ارسال برجسته */
-        button { 
-            padding: 10px 26px; 
-            border-radius: 14px; 
-            border: 1px solid rgba(255,255,255,0.1); 
-            background: #32d74b; 
-            color: #000; 
-            font-weight: bold; 
-            cursor: pointer; 
-            box-shadow: 2px 3px 6px rgba(0,0,0,0.4);
-            transition: 0.2s; 
-        }
-        button:hover { background: #2cb841; transform: translateY(-1px); }
-        button:active { transform: scale(0.95); box-shadow: none; }
-        
-        #chat::-webkit-scrollbar { width: 3px; }
-        #chat::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        .msg { padding: 12px 18px; border-radius: 22px; font-size: 15px; line-height: 1.6; max-width: 85%; font-weight: 700; }
+        .u { align-self: flex-start; background: #000; color: white; border-bottom-left-radius: 4px; }
+        .a { align-self: flex-end; background: white; color: #7d2ae8; border-bottom-right-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
 
-        /* ریسپانسیو فوق‌العاده برای موبایل */
-        @media (max-width: 992px) {
-            body { overflow-y: auto; height: auto; padding: 20px 10px; }
-            .main-container { flex-direction: column; height: auto; gap: 15px; }
-            .sidebar { order: 2; height: auto; overflow: visible; }
-            .chat-container { order: 1; height: 530px; }
+        /* باکس تایپ ثابت در پایین */
+        .input-area {
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
+
+        input {
+            flex: 1; background: transparent; border: none; color: white;
+            padding: 10px; outline: none; font-size: 16px; font-weight: bold;
+        }
+        input::placeholder { color: rgba(255, 255, 255, 0.6); }
+
+        .send-btn {
+            background: #fff; border: none; padding: 10px 20px;
+            border-radius: 15px; color: #7d2ae8; font-weight: 800; cursor: pointer;
+        }
+
+        /* استایل اسکرول بار مخفی */
+        #chat-window::-webkit-scrollbar { width: 0px; }
     </style>
 </head>
 <body>
 
-<div class="main-container">
-    <div class="sidebar">
-        <div class="sidebar-title">بخش آموزش و فروش</div>
-        <div class="nav-item">📚 دوره جامع قانون جذب</div>
-        <div class="nav-item">🧠 مهندسی ناخودآگاه</div>
-        <div class="nav-item">🧘‍♂️ مربیگری مدیتیشن</div>
-        <div class="nav-item" style="color:#32d74b; font-weight: bold; border-color: rgba(50,215,75,0.4);">💎 فروشگاه محصولات ویژه</div>
+<div class="menu-btn" onclick="toggleMenu()">
+    <div style="width:25px; height:3px; background:white; margin: 4px 0;"></div>
+    <div style="width:25px; height:3px; background:white; margin: 4px 0;"></div>
+    <div style="width:25px; height:3px; background:white; margin: 4px 0;"></div>
+</div>
+
+<div class="side-menu" id="sideMenu">
+    <div style="color:#00c4cc; font-weight:900; text-align:center; margin-bottom:20px;">PLAN LIFE MENU</div>
+    <a href="#" class="nav-item">دوره قانون جذب</a>
+    <a href="#" class="nav-item">مدیتیشن و فرکانس</a>
+    <a href="#" class="nav-item">فروشگاه محصولات</a>
+    <a href="#" class="nav-item">سوالات متداول</a>
+    <a href="#" class="nav-item">ارتباط با ما</a>
+    <button onclick="toggleMenu()" style="margin-top:auto; background: #ff2d55; border:none; padding:12px; border-radius:12px; color:white; font-weight:bold;">بستن منو</button>
+</div>
+
+<div class="chat-card">
+    <div class="header">
+        <div class="earth-logo"></div>
+        <h1 class="brand-name">PlanLife</h1>
+    </div>
+    
+    <div id="chat-window">
+        <div class="msg a">خوش آمدی. فرکانس PlanLife آماده پاسخگویی است. ✨</div>
     </div>
 
-    <div class="chat-container">
-        <div class="orb-container">
-            <div class="earth-orb"></div>
-        </div>
-        <h2>ماورای ذهن ✨</h2>
-        <div id="chat">
-            <div class="msg a">در حال بارگذاری ارتعاشات جهانی...</div>
-        </div>
-        <div class="input-box">
-            <input type="text" id="userInput" placeholder="سوالی بپرس..." onkeypress="if(event.keyCode===13)send()">
-            <button onclick="send()">ارسال</button>
-        </div>
-    </div>
-
-    <div class="sidebar">
-        <div class="sidebar-title">ارتباطات و اطلاعات</div>
-        <div class="nav-item">❓ سوالات متداول (FAQ)</div>
-        <div class="nav-item">👥 درباره ما و برند ماورای ذهن</div>
-        <div class="nav-item">📞 ارتباط مستقیم با ما</div>
-        <div class="nav-item" style="color: #ff2d55; border-color: rgba(255,45,85,0.3)">🚪 خروج از پلتفرم</div>
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="تایپ کنید..." onkeypress="if(event.keyCode===13)send()">
+        <button class="send-btn" onclick="send()">ارسال</button>
     </div>
 </div>
 
 <script>
     let brain = {};
 
-    // اتصال مستقیم به دیتابیس متنی
+    function toggleMenu() {
+        document.getElementById('sideMenu').classList.toggle('active');
+    }
+
     async function loadBrain() {
-        const chatBox = document.getElementById('chat');
         try {
             const response = await fetch('database.txt?v=' + Math.random());
             const data = await response.text();
-            const lines = data.split('\n');
-            lines.forEach(line => {
+            data.split('\n').forEach(line => {
                 const parts = line.split('|');
                 if (parts.length === 2) brain[parts[0].trim()] = parts[1].trim();
             });
-            chatBox.innerHTML = '<div class="msg a">ارتباط با آگاهی برتر برقرار شد. بپرس...</div>';
-        } catch (e) {
-            chatBox.innerHTML = '<div class="msg a">اتصال برقرار شد. فرکانس سیستم آماده است.</div>';
-        }
+        } catch (e) { console.log("Database loading..."); }
     }
 
     loadBrain();
 
     function send() {
         const input = document.getElementById('userInput');
-        const box = document.getElementById('chat');
+        const window = document.getElementById('chat-window');
         const val = input.value.trim();
         if (!val) return;
 
-        box.innerHTML += `<div class="msg u">${val}</div>`;
+        window.innerHTML += `<div class="msg u">${val}</div>`;
         input.value = "";
-        box.scrollTop = box.scrollHeight;
+        window.scrollTop = window.scrollHeight;
 
         let reply = "";
-        
-        // اولویت‌بندی هوشمند متن
         for (let key in brain) {
-            if (key.length > 5 && val.includes(key)) {
-                reply = brain[key];
-                break;
-            }
+            if (val.includes(key)) { reply = brain[key]; break; }
         }
-        if (!reply) {
-            for (let key in brain) {
-                if (val.includes(key)) {
-                    reply = brain[key];
-                    break;
-                }
-            }
-        }
-        if (!reply) reply = "این سوال در مدار کنونی شما نیست. فرکانس دیگری را امتحان کنید. ✨";
+        if (!reply) reply = "این پیام در مدار آگاهی کنونی نیست. ✨";
 
         setTimeout(() => {
-            const d = document.createElement('div');
-            d.className = 'msg a';
-            d.innerText = reply;
-            box.appendChild(d);
-            box.scrollTop = box.scrollHeight;
+            window.innerHTML += `<div class="msg a">${reply}</div>`;
+            window.scrollTop = window.scrollHeight;
         }, 600);
     }
 </script>
