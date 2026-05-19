@@ -2,59 +2,55 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body {
-            margin: 0;
-            height: 100vh;
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 30%, #764ba2 70%, #ff758c 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-family: sans-serif;
-            overflow: hidden;
-        }
+        body { margin: 0; height: 100vh; background: linear-gradient(135deg, #00f2fe, #4facfe, #764ba2, #ff758c); display: flex; flex-direction: column; align-items: center; font-family: sans-serif; overflow: hidden; }
 
-        /* منوها */
-        .menu { position: fixed; top: 20px; width: 200px; height: 100vh; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); transition: 0.5s; padding: 20px; }
-        #leftMenu { left: -250px; }
-        #rightMenu { right: -250px; }
-        .open { left: 0 !important; right: 0 !important; }
+        /* استایل منو همبرگری */
+        .hamburger { cursor: pointer; padding: 15px; z-index: 100; color: white; font-size: 24px; position: fixed; top: 10px; }
+        .left-menu { left: 10px; }
+        .right-menu { right: 10px; }
+        
+        .menu-panel { position: fixed; top: 0; width: 200px; height: 100%; background: rgba(255,255,255,0.15); backdrop-filter: blur(20px); transition: 0.4s; padding-top: 60px; }
+        #leftPanel { left: -200px; }
+        #rightPanel { right: -200px; }
+        .menu-panel.active { left: 0; right: 0; }
 
         /* گوی نبض‌دار */
-        .pulse { width: 50px; height: 50px; background: radial-gradient(circle, #ff9a9e, #fad0c4, #a18cd1); border-radius: 50%; margin-top: 20px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 105, 135, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(255, 105, 135, 0); } 100% { transform: scale(0.95); } }
+        .pulse { width: 40px; height: 40px; background: #fff; border-radius: 50%; margin-top: 50px; box-shadow: 0 0 15px white; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(0.9); } 50% { transform: scale(1.1); box-shadow: 0 0 25px #ff758c; } 100% { transform: scale(0.9); } }
 
-        /* باکس چت شیشه‌ای */
-        .chat-container { width: 80%; height: 60vh; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; margin-top: 20px; display: flex; flex-direction: column; }
-        .input-area { margin-top: auto; padding: 20px; display: flex; }
-        input { flex: 1; padding: 10px; border-radius: 10px; border: none; outline: none; }
+        /* چت باکس مربعی کوچک */
+        .chat-box { width: 300px; height: 300px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; margin-top: 30px; display: flex; flex-direction: column; padding: 15px; }
+        .input-area { margin-top: auto; display: flex; gap: 5px; }
+        input { flex: 1; padding: 10px; border-radius: 15px; border: none; background: rgba(255,255,255,0.3); color: white; }
+        button { border-radius: 50%; border: none; width: 40px; height: 40px; background: #764ba2; color: white; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <button onclick="toggleMenu('leftMenu')">منو چپ</button>
-    <button onclick="toggleMenu('rightMenu')" style="position:fixed; right:10px;">منو راست</button>
+    <div class="hamburger left-menu" onclick="toggle('leftPanel')">☰</div>
+    <div class="hamburger right-menu" onclick="toggle('rightPanel')">☰</div>
 
-    <div id="leftMenu" class="menu"><ul><li>تست ۱</li><li>تست ۲</li><li>تست ۳</li><li>تست ۴</li></ul></div>
-    <div id="rightMenu" class="menu"><ul><li>گزینه ۱</li><li>گزینه ۲</li><li>گزینه ۳</li><li>گزینه ۴</li></ul></div>
+    <div id="leftPanel" class="menu-panel"><ul><li>گزینه ۱</li><li>گزینه ۲</li><li>گزینه ۳</li><li>گزینه ۴</li></ul></div>
+    <div id="rightPanel" class="menu-panel"><ul><li>تست ۱</li><li>تست ۲</li><li>تست ۳</li><li>تست ۴</li></ul></div>
 
     <div class="pulse"></div>
-    <h1>PlanLife</h1>
+    <h1 style="color: white; font-size: 24px;">PlanLife</h1>
 
-    <div class="chat-container">
+    <div class="chat-box">
+        <div style="flex: 1; color: white; font-size: 14px;">چت با هوش مصنوعی...</div>
         <div class="input-area">
-            <input type="text" placeholder="پیام خود را بنویسید...">
+            <input type="text" placeholder="پیام...">
             <button>➤</button>
         </div>
     </div>
 
     <script>
-        function toggleMenu(id) {
-            const menus = ['leftMenu', 'rightMenu'];
-            menus.forEach(m => {
-                if (m !== id) document.getElementById(m).classList.remove('open');
-            });
-            document.getElementById(id).classList.toggle('open');
+        function toggle(id) {
+            const panels = ['leftPanel', 'rightPanel'];
+            panels.forEach(p => { if(p !== id) document.getElementById(p).classList.remove('active'); });
+            document.getElementById(id).classList.toggle('active');
         }
     </script>
 </body>
