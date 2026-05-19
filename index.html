@@ -1,14 +1,60 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ماورای ذهن | PlanLife</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { background: #0a0a0a; color: white; font-family: Tahoma, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        
+        .container { width: 95%; max-width: 420px; background: #161616; padding: 20px; border-radius: 25px; border: 1px solid #333; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        
+        h2 { color: #32d74b; text-align: center; margin: 0 0 20px 0; font-size: 1.4rem; letter-spacing: 1px; }
+        
+        #chat { height: 350px; overflow-y: auto; margin-bottom: 15px; padding: 10px; display: flex; flex-direction: column; gap: 12px; border-bottom: 1px solid #222; scroll-behavior: smooth; }
+        
+        /* استایل پیام‌ها */
+        .msg { padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.6; max-width: 85%; word-wrap: break-word; position: relative; }
+        .u { background: #ff2d55; align-self: flex-start; color: white; border-bottom-left-radius: 2px; box-shadow: 2px 2px 10px rgba(255, 45, 85, 0.2); }
+        .a { background: #2c2c2e; align-self: flex-end; color: #32d74b; border-bottom-right-radius: 2px; box-shadow: -2px 2px 10px rgba(0, 0, 0, 0.3); }
+
+        /* بخش ورودی */
+        .input-box { display: flex; gap: 8px; background: #000; padding: 5px; border-radius: 15px; border: 1px solid #333; }
+        input { flex: 1; padding: 12px; border: none; background: transparent; color: white; outline: none; font-size: 16px; }
+        button { padding: 10px 22px; border-radius: 12px; border: none; background: #32d74b; color: #000; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button:active { transform: scale(0.95); background: #28b33f; }
+
+        /* شخصی‌سازی اسکرول‌بار */
+        #chat::-webkit-scrollbar { width: 4px; }
+        #chat::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>ماورای ذهن ✨</h2>
+    <div id="chat">
+        <div class="msg a">در حال فراخوانی دانش از فایل متنی...</div>
+    </div>
+    <div class="input-box">
+        <input type="text" id="userInput" placeholder="کلمه‌ای بنویس..." onkeypress="if(event.keyCode===13)send()">
+        <button onclick="send()">ارسال</button>
+    </div>
+</div>
+
 <script>
     let brain = {};
 
-    // خواندن فایل متنی database.txt
+    // لود کردن دیتابیس از فایل خارجی database.txt
     async function loadBrain() {
+        const chatBox = document.getElementById('chat');
         try {
-            // استفاده از عدد تصادفی برای جلوگیری از کش شدن در تبلت و سافاری
+            // جلوگیری از کش با عدد تصادفی
             const response = await fetch('database.txt?v=' + Math.random());
+            if (!response.ok) throw new Error();
             const data = await response.text();
             
-            // تبدیل متن به فرمت قابل فهم برای چت‌باکس
             const lines = data.split('\n');
             lines.forEach(line => {
                 const parts = line.split('|');
@@ -16,26 +62,29 @@
                     brain[parts[0].trim()] = parts[1].trim();
                 }
             });
-            console.log("بانک اطلاعاتی txt با موفقیت فعال شد.");
+            chatBox.innerHTML = '<div class="msg a">سلام سهیل عزیز. بانک اطلاعاتی با موفقیت متصل شد. بپرس...</div>';
         } catch (error) {
-            console.error("خطا در بارگذاری فایل متنی:", error);
+            chatBox.innerHTML = '<div class="msg a" style="color:#ff3b30">خطا: فایل database.txt پیدا نشد یا خالی است.</div>';
         }
     }
 
+    // اجرای تابع لود در ابتدای باز شدن صفحه
     loadBrain();
 
     function send() {
         const input = document.getElementById('userInput');
         const box = document.getElementById('chat');
         const val = input.value.trim();
+        
         if (!val) return;
 
+        // نمایش پیام کاربر در سمت چپ (صورتی)
         box.innerHTML += `<div class="msg u">${val}</div>`;
         input.value = "";
 
-        let reply = "در ماورای ذهن برای این سوال پاسخی هست... ✨";
+        let reply = "فرکانس شما دریافت شد. پاسخ در ماورای ذهن شماست... ✨";
         
-        // جستجو در کلمات کلیدی که از فایل txt خوانده شده
+        // جستجو در کلمات کلیدی
         for (let key in brain) {
             if (val.includes(key)) {
                 reply = brain[key];
@@ -43,9 +92,18 @@
             }
         }
 
+        // نمایش پاسخ بات با کمی تاخیر برای طبیعی‌تر شدن
         setTimeout(() => {
-            box.innerHTML += `<div class="msg a">${reply}</div>`;
+            const replyDiv = document.createElement('div');
+            replyDiv.className = 'msg a';
+            replyDiv.innerText = reply;
+            box.appendChild(replyDiv);
             box.scrollTop = box.scrollHeight;
         }, 500);
+
+        box.scrollTop = box.scrollHeight;
     }
 </script>
+
+</body>
+</html>
