@@ -18,16 +18,15 @@
 
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        body.menu-open .main-container { filter: blur(15px); pointer-events: none; }
+        body.menu-open .main-container { filter: blur(15px); }
 
-        /* منوهای همبرگری */
+        /* منوها */
         .menu-btn {
             position: fixed; top: 25px; z-index: 1001;
             background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3);
             padding: 10px; border-radius: 12px; cursor: pointer; backdrop-filter: blur(10px);
         }
-        .btn-right { right: 20px; } 
-        .btn-left { left: 20px; }
+        .btn-right { right: 20px; } .btn-left { left: 20px; }
         .menu-btn div { width: 22px; height: 2px; background: white; margin: 5px 0; border-radius: 2px; }
 
         .side-menu {
@@ -36,54 +35,47 @@
             z-index: 1000; padding: 80px 20px; border: 1px solid rgba(255, 255, 255, 0.2);
             transition: 0.6s ease;
         }
-        #rightMenu { right: -300px; }
-        #leftMenu { left: -300px; }
-        #rightMenu.active { right: 0; }
-        #leftMenu.active { left: 0; }
+        #rightMenu { right: -300px; } #leftMenu { left: -300px; }
+        #rightMenu.active { right: 0; } #leftMenu.active { left: 0; }
 
-        .nav-item {
-            display: block; padding: 15px; background: rgba(255, 255, 255, 0.12); border-radius: 18px;
-            color: white; text-align: center; text-decoration: none; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer; font-weight: 500;
+        /* باکس چت اصلی */
+        .chat-card { 
+            width: 100%; max-width: 450px; height: calc(55vh + 20px);
+            background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(35px); 
+            border-radius: 40px; border: 1px solid rgba(255, 255, 255, 0.3); 
+            display: flex; flex-direction: column; padding: 20px; margin-top: 60px;
+        }
+        #chat-window { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .msg { padding: 12px 18px; border-radius: 22px; font-size: 14px; max-width: 85%; text-align: right; }
+        .a { align-self: flex-start; background: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255,255,255,0.1); }
+
+        /* بخش ورودی چت اصلاح شده */
+        .input-container {
+            margin-top: 15px; display: flex; align-items: center; gap: 10px;
+            background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 15px; border-radius: 30px; backdrop-filter: blur(10px);
+        }
+        input { flex: 1; background: transparent; border: none; color: white; outline: none; padding: 10px; font-size: 14px; }
+        .send-btn { 
+            width: 35px; height: 35px; background: none; border: none; 
+            font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            text-shadow: 0 0 10px #ffd700;
         }
 
+        /* دکمه‌های نارنجی گرادینت پایین */
+        .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; margin-top: 25px; }
+        .nav-btn {
+            padding: 20px; text-align: center; color: white; font-weight: 800; text-decoration: none;
+            border-radius: 25px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
+            background: linear-gradient(135deg, #ff9a00, #ff5100); /* نارنجی گرادینت شیک */
+            box-shadow: 0 10px 20px rgba(255, 81, 0, 0.3);
+        }
+        .nav-btn:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(255, 81, 0, 0.5); }
+
+        /* صفحه پادکست */
         .page { display: none; width: 100%; flex-direction: column; align-items: center; }
         .page.active { display: flex; animation: fadeIn 0.8s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
-
-        /* باکس چت */
-        .chat-card { 
-            width: 100%; max-width: 450px; height: calc(50vh + 80px);
-            background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(35px); 
-            border-radius: 35px; border: 1px solid rgba(255, 255, 255, 0.3); 
-            display: flex; flex-direction: column; padding: 18px; 
-        }
-        #chat-window { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 12px 18px; border-radius: 20px; font-size: 14px; max-width: 85%; text-align: right; }
-        .a { align-self: flex-start; background: rgba(0, 0, 0, 0.2); color: white; border-bottom-right-radius: 5px; }
-
-        /* پلیر پیشرفته پادکست */
-        .player-card { 
-            width: 100%; max-width: 400px; background: rgba(255, 255, 255, 0.15); 
-            backdrop-filter: blur(40px); border-radius: 45px; padding: 35px; 
-            border: 1px solid rgba(255, 255, 255, 0.3); text-align: center; 
-        }
-        
-        .controls-row { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 20px 0; }
-        .play-circle { width: 75px; height: 75px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
-        .skip-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 45px; height: 45px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; }
-
-        /* تایم لاین شیشه‌ای */
-        .timeline-container { width: 100%; margin: 15px 0; }
-        #progress-bar { 
-            width: 100%; height: 6px; background: rgba(255,255,255,0.2); 
-            border-radius: 10px; cursor: pointer; appearance: none; outline: none;
-        }
-        #progress-bar::-webkit-slider-thumb { appearance: none; width: 14px; height: 14px; background: white; border-radius: 50%; box-shadow: 0 0 10px rgba(255,255,255,0.5); }
-        .time-info { display: flex; justify-content: space-between; color: white; font-size: 11px; opacity: 0.7; margin-top: 5px; }
-
-        .podcast-scroll { width: 100%; max-width: 400px; height: 300px; overflow-y: auto; margin-top: 20px; padding: 0 5px; }
-        .podcast-item { background: rgba(255,255,255,0.08); margin-bottom: 10px; padding: 14px; border-radius: 20px; display: flex; align-items: center; gap: 15px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; } }
 
         #overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); display:none; z-index:999; backdrop-filter: blur(4px); }
     </style>
@@ -96,103 +88,43 @@
 <div class="menu-btn btn-left" onclick="openMenu('leftMenu')"><div></div><div></div><div></div></div>
 
 <div id="rightMenu" class="side-menu">
-    <div class="nav-item">پروفایل کاربری</div>
-    <div class="nav-item">تنظیمات</div>
-    <div class="nav-item" onclick="location.reload()">خروج</div>
+    <div class="nav-btn" style="background:none; margin-bottom:10px;">پروفایل</div>
+    <div class="nav-btn" style="background:none;" onclick="location.reload()">خروج</div>
 </div>
 
 <div id="leftMenu" class="side-menu">
-    <div class="nav-item" onclick="showPage('homePage')">صفحه اصلی</div>
-    <div class="nav-item" onclick="showPage('podcastPage')">پادکست‌ها</div>
-    <div class="nav-item">تمرینات</div>
-    <div class="nav-item">کتاب‌ها</div>
+    <div class="nav-btn" style="background:none; margin-bottom:10px;" onclick="showPage('homePage')">صفحه اصلی</div>
+    <div class="nav-btn" style="background:none;" onclick="showPage('podcastPage')">پادکست‌ها</div>
 </div>
 
-<div class="main-container" style="width:100%; display:flex; flex-direction:column; align-items:center; margin-top: 50px;">
-    <h1 style="color:white; font-family:'League Spartan'; font-weight:800; font-size:2.5rem; margin-bottom:30px;">PlanLife</h1>
-
+<div class="main-container" style="width:100%; display:flex; flex-direction:column; align-items:center;">
+    
     <div id="homePage" class="page active">
         <div class="chat-card">
             <div id="chat-window">
                 <div class="msg a">سوال ذهنی خودتان را بپرسید... ✨</div>
             </div>
-            <div class="input-area">
+            <div class="input-container">
                 <input type="text" placeholder="بنویسید...">
-                <div style="width:20px; height:20px; background:white; border-radius:50%;"></div>
+                <button class="send-btn">✨</button>
             </div>
         </div>
         
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; margin-top: 25px;">
-            <div class="nav-item" onclick="showPage('podcastPage')">پادکست‌ها</div>
-            <div class="nav-item">تمرینات</div>
-            <div class="nav-item">کتاب‌ها</div>
-            <div class="nav-item">باورها</div>
+        <div class="grid-buttons">
+            <div class="nav-btn" onclick="showPage('podcastPage')">پادکست‌ها</div>
+            <div class="nav-btn">تمرینات</div>
+            <div class="nav-btn">کتاب‌ها</div>
+            <div class="nav-btn">باورها</div>
         </div>
     </div>
 
     <div id="podcastPage" class="page">
-        <div class="player-card">
-            <h2 id="p-title" style="color:white; margin:0; font-size:1.3rem;">انتخاب پادکست</h2>
-            <p style="color:white; opacity:0.5; font-size:12px; margin:5px 0 20px;">آماده پخش فرکانس تحول</p>
-
-            <div class="timeline-container">
-                <input type="range" id="progress-bar" value="0" step="1">
-                <div class="time-info">
-                    <span id="curr-time">0:00</span>
-                    <span id="total-time">0:00</span>
-                </div>
-            </div>
-
-            <div class="controls-row">
-                <button class="skip-btn" onclick="skip(-10)">-10s</button>
-                <div class="play-circle" onclick="togglePlay()">
-                    <svg id="playIcon" width="35" height="35" fill="#7d2ae8" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                </div>
-                <button class="skip-btn" onclick="skip(10)">+10s</button>
-            </div>
-        </div>
-
-        <div class="podcast-scroll">
-            <script>
-                const podcasts = [
-                    { id: 1, title: "قدرت ذهن", url: "https://res.cloudinary.com/dshielkdt/video/upload/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
-                    { id: 2, title: "پادکست شماره ۲", url: "لینک موزیک را اینجا قرار دهید" },
-                    { id: 3, title: "پادکست شماره ۳", url: "لینک موزیک را اینجا قرار دهید" },
-                    { id: 4, title: "پادکست شماره ۴", url: "لینک موزیک را اینجا قرار دهید" },
-                    { id: 5, title: "پادکست شماره ۵", url: "لینک موزیک را اینجا قرار دهید" },
-                    { id: 6, title: "پادکست شماره ۶", url: "لینک موزیک را اینجا قرار دهید" },
-                    { id: 7, title: "پادکست شماره ۷", url: "لینک موزیک را اینجا قرار دهید" },
-                    { id: 8, title: "پادکست شماره ۸", url: "لینک موزیک را اینجا قرار دهید" },
-                    { id: 9, title: "پادکست شماره ۹", url: "لینک موزیک را اینجا قرار دهید" },
-                    { id: 10, title: "پادکست شماره ۱۰", url: "لینک موزیک را اینجا قرار دهید" }
-                ];
-
-                podcasts.forEach(p => {
-                    document.write(`
-                        <div class="podcast-item" onclick="loadTrack('${p.url}', '${p.title}')">
-                            <div style="color:white; font-weight:800; opacity:0.3;">0${p.id}</div>
-                            <div style="flex:1; color:white; text-align:right; font-size:14px;">${p.title}</div>
-                            <div style="width:30px; height:30px; background:rgba(255,255,255,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:10px;">▶</div>
-                        </div>
-                    `);
-                });
-            </script>
-        </div>
-        <div class="nav-item" style="margin-top:20px; width:120px;" onclick="showPage('homePage')">بازگشت</div>
+        <h2 style="color:white; margin-top:100px;">لیست پادکست‌ها</h2>
+        <div class="nav-btn" style="width:150px; margin-top:20px;" onclick="showPage('homePage')">بازگشت</div>
     </div>
 </div>
 
-<audio id="mainAudio"></audio>
-
 <script>
-    const audio = document.getElementById('mainAudio');
-    const playIcon = document.getElementById('playIcon');
-    const progBar = document.getElementById('progress-bar');
-    const currTimeText = document.getElementById('curr-time');
-    const totalTimeText = document.getElementById('total-time');
-    let isPlaying = false;
-
-    // مدیریت منوها
     function openMenu(id) {
         closeMenus();
         document.getElementById(id).classList.add('active');
@@ -204,57 +136,10 @@
         document.getElementById('overlay').style.display = 'none';
         document.body.classList.remove('menu-open');
     }
-
     function showPage(id) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         closeMenus();
-    }
-
-    // پلیر
-    function loadTrack(url, title) {
-        if(url.includes("لینک")) return alert("ابتدا لینک را در کد قرار دهید");
-        audio.src = url;
-        document.getElementById('p-title').innerText = title;
-        audio.play();
-        isPlaying = true;
-        updateIcon();
-    }
-
-    function togglePlay() {
-        if (!audio.src) return;
-        if (audio.paused) { audio.play(); isPlaying = true; }
-        else { audio.pause(); isPlaying = false; }
-        updateIcon();
-    }
-
-    function skip(sec) {
-        audio.currentTime += sec;
-    }
-
-    function updateIcon() {
-        playIcon.innerHTML = isPlaying ? 
-            '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' : 
-            '<path d="M8 5v14l11-7z"/>';
-    }
-
-    // آپدیت تایم‌لاین
-    audio.ontimeupdate = () => {
-        progBar.max = audio.duration;
-        progBar.value = audio.currentTime;
-        currTimeText.innerText = formatTime(audio.currentTime);
-        totalTimeText.innerText = formatTime(audio.duration);
-    };
-
-    progBar.oninput = () => {
-        audio.currentTime = progBar.value;
-    };
-
-    function formatTime(sec) {
-        if (isNaN(sec)) return "0:00";
-        let m = Math.floor(sec / 60);
-        let s = Math.floor(sec % 60);
-        return m + ":" + (s < 10 ? "0" + s : s);
     }
 </script>
 
