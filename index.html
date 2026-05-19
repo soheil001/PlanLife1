@@ -1,55 +1,6 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ماورای ذهن | PlanLife</title>
-    <style>
-        * { box-sizing: border-box; }
-        body { background: #0f0f0f; color: white; font-family: Tahoma, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
-        .container { width: 95%; max-width: 450px; background: #1a1a1a; padding: 20px; border-radius: 30px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        #chat { height: 350px; overflow-y: auto; margin-bottom: 15px; padding: 15px; display: flex; flex-direction: column; gap: 12px; border-radius: 15px; background: #111; }
-        .msg { padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.6; max-width: 85%; word-wrap: break-word; }
-        .u { background: #e73c7e; align-self: flex-start; color: white; border-bottom-left-radius: 2px; }
-        .a { background: #333; align-self: flex-end; color: #23d5ab; border-bottom-right-radius: 2px; }
-        .input-area { display: flex; gap: 8px; }
-        input { flex: 1; padding: 14px; border-radius: 15px; border: 1px solid #444; background: #000; color: white; font-size: 16px; outline: none; }
-        button { padding: 0 20px; border-radius: 15px; border: none; background: #23d5ab; color: #000; font-weight: bold; cursor: pointer; }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h2 style="color: #23d5ab; margin: 0 0 15px 0; font-size: 1.2rem; text-align: center;">ماورای ذهن ✨</h2>
-    <div id="chat" box-scroll>
-        <div class="msg a">سلام سهیل عزیز. سیستم در حال بارگذاری دیتابیس است...</div>
-    </div>
-    <div class="input-area">
-        <input type="text" id="userInput" placeholder="چیزی بپرس..." onkeypress="if(event.keyCode===13)send()">
-        <button onclick="send()">ارسال</button>
-    </div>
-</div>
+<script src="data.js"></script>
 
 <script>
-    let knowledgeBase = {};
-
-    // لود کردن دیتابیس از فایل خارجی data.json
-    async function loadData() {
-        const chatBox = document.getElementById('chat');
-        try {
-            // اضافه کردن یک عدد تصادفی برای جلوگیری از کش شدن فایل در سافاری
-            const response = await fetch('data.json?v=' + Math.random());
-            if (!response.ok) throw new Error('خطا در لود فایل');
-            knowledgeBase = await response.json();
-            chatBox.innerHTML += `<div class="msg a">دیتابیس متصل شد. آماده پاسخگویی هستم!</div>`;
-        } catch (error) {
-            console.error("Error:", error);
-            chatBox.innerHTML += `<div class="msg a">خطا در اتصال به دیتابیس. لطفا فایل data.json را چک کنید.</div>`;
-        }
-    }
-
-    loadData();
-
     function send() {
         const input = document.getElementById('userInput');
         const box = document.getElementById('chat');
@@ -59,26 +10,25 @@
         box.innerHTML += `<div class="msg u">${text}</div>`;
         input.value = "";
 
-        let reply = "فرکانس دریافت شد. پاسخ در ماورای ذهن توست. ✨";
+        // مستقیم از متغیر myData که در فایل قبلی ساختیم استفاده می‌کنیم
+        let reply = "فرکانس دریافت شد. در ماورای ذهن همه‌چیز ممکن است. ✨";
         
-        for (let key in knowledgeBase) {
+        for (let key in myData) {
             if (text.includes(key)) {
-                reply = knowledgeBase[key];
+                reply = myData[key];
                 break;
             }
         }
 
         setTimeout(() => {
-            const div = document.createElement('div');
-            div.className = 'msg a';
-            div.innerText = reply;
-            box.appendChild(div);
+            box.innerHTML += `<div class="msg a">${reply}</div>`;
             box.scrollTop = box.scrollHeight;
         }, 600);
-        
-        box.scrollTop = box.scrollHeight;
     }
+    
+    // پیام خوش‌آمدگویی
+    window.onload = () => {
+        const box = document.getElementById('chat');
+        box.innerHTML = '<div class="msg a">اتصال با ماورای ذهن برقرار شد. بپرس...</div>';
+    };
 </script>
-
-</body>
-</html>
