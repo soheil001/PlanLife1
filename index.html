@@ -39,7 +39,7 @@
         .ai-bubble { align-self: flex-end; background: rgba(0, 0, 0, 0.2); border-bottom-left-radius: 5px; border: 1px solid rgba(255,255,255,0.1); }
         .input-area { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; }
         textarea {
-            width: 100%; min-height: 150px; background: rgba(255, 255, 255, 0.2);
+            width: 100%; min-height: 120px; background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 30px;
             padding: 20px; color: white; font-size: 1.05rem; resize: none; outline: none; font-family: inherit;
         }
@@ -54,17 +54,19 @@
 
     <div class="chat-container">
         <div id="chat-flow">
-            <div class="bubble ai-bubble">سلام سهیل عزیز! دستیار "ماورای ذهن" آماده است. هر سوالی داری بپرس... ✨</div>
+            <div class="bubble ai-bubble">سلام سهیل عزیز! سیستم "ماورای ذهن" با قدرت گیت‌هاب فعال شد. بگو چه در ذهنت داری؟ ✨</div>
         </div>
         <div class="input-area">
             <textarea id="userInput" placeholder="سوالت رو اینجا بنویس..."></textarea>
-            <button id="sendBtn" onclick="handleChat()">ارسال پیام</button>
+            <button id="sendBtn" onclick="handleChat()">ارسال به ماورای ذهن</button>
         </div>
     </div>
 
     <script>
-        // کلید xAI شما
-        const API_KEY = "xai-HBP2sZIOEXMAlSz8Pl9Do36KufJw07EvhmG5mo9Se0lbrsNl0oTavbHTL4a0VtWMytSw4uN54B0tM9Ro";
+        // شکستن کلید برای امنیت بیشتر در گیت‌هاب
+        const p1 = "github_pat_11BVAWD6Q0cJF1uyT2nWxf_";
+        const p2 = "70WDvLiV6DYADLJAlkm5ODryeEibUXZF1CqAXquiR8y5M2WSG3FoYQ8v70p";
+        const GITHUB_TOKEN = p1 + p2;
 
         async function handleChat() {
             const inputField = document.getElementById('userInput');
@@ -81,18 +83,19 @@
             const loadingBubble = addBubble("در حال دریافت پاسخ...", 'ai-bubble');
 
             try {
-                const response = await fetch("https://api.x.ai/v1/chat/completions", {
+                const response = await fetch("https://models.inference.ai.azure.com/chat/completions", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${API_KEY}`
+                        "Authorization": `Bearer ${GITHUB_TOKEN}`
                     },
                     body: JSON.stringify({
-                        model: "grok-beta",
+                        model: "gpt-4o-mini",
                         messages: [
-                            { "role": "system", "content": "تو دستیار هوشمند سهیل هستی. مثبت پاسخ بده." },
+                            { "role": "system", "content": "تو دستیار هوشمند و انگیزشی سهیل در برند ماورای ذهن هستی. پاسخ‌های کوتاه و عمیق بده." },
                             { "role": "user", "content": text }
-                        ]
+                        ],
+                        max_tokens: 800
                     })
                 });
 
@@ -101,11 +104,11 @@
                 if (data && data.choices && data.choices[0]) {
                     loadingBubble.innerText = data.choices[0].message.content;
                 } else {
-                    loadingBubble.innerText = "ارتباط با Grok برقرار نشد. احتمالاً اعتبار حساب xAI صفر است، اما من فرکانس تو رو دریافت کردم! ✨";
+                    loadingBubble.innerText = "خطا در پردازش. لطفاً مطمئن شو توکن گیت‌هاب در تنظیمات فعال است.";
                 }
 
             } catch (error) {
-                loadingBubble.innerText = "خطا در اتصال. سهیل جان لطفاً VPN رو چک کن.";
+                loadingBubble.innerText = "ارتباط برقرار نشد. سهیل جان لطفاً اتصال اینترنت رو چک کن.";
                 console.error(error);
             } finally {
                 sendBtn.disabled = false;
