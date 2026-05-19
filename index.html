@@ -18,91 +18,78 @@
 
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        body.menu-open .main-container { filter: blur(15px); }
-
-        /* منوها */
-        .menu-btn {
-            position: fixed; top: 25px; z-index: 1001;
-            background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 10px; border-radius: 12px; cursor: pointer; backdrop-filter: blur(10px);
+        /* گوی درخشان بالای صفحه */
+        .orb { 
+            width: 60px; height: 60px; border-radius: 50%; 
+            background: radial-gradient(circle, #fff 0%, #a2d2ff 100%); 
+            animation: pulse 3s infinite ease-in-out; 
+            box-shadow: 0 0 30px rgba(255,255,255,0.4); margin-top: 40px;
         }
-        .btn-right { right: 20px; } .btn-left { left: 20px; }
-        .menu-btn div { width: 22px; height: 2px; background: white; margin: 5px 0; border-radius: 2px; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
 
-        .side-menu {
-            position: fixed; top: 0; width: 270px; height: 100%;
-            background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(45px);
-            z-index: 1000; padding: 80px 20px; border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: 0.6s ease;
+        /* فونت برند به سبک Canva */
+        .brand-text {
+            font-family: 'League Spartan', sans-serif; font-size: 3rem; color: white;
+            font-weight: 800; margin: 10px 0 30px 0; letter-spacing: -1px;
         }
-        #rightMenu { right: -300px; } #leftMenu { left: -300px; }
-        #rightMenu.active { right: 0; } #leftMenu.active { left: 0; }
 
-        /* باکس چت اصلی */
+        /* چت باکس پایین‌تر */
         .chat-card { 
-            width: 100%; max-width: 450px; height: calc(55vh + 20px);
+            width: 100%; max-width: 450px; height: 50vh;
             background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(35px); 
             border-radius: 40px; border: 1px solid rgba(255, 255, 255, 0.3); 
-            display: flex; flex-direction: column; padding: 20px; margin-top: 60px;
+            display: flex; flex-direction: column; padding: 20px;
         }
         #chat-window { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-        .msg { padding: 12px 18px; border-radius: 22px; font-size: 14px; max-width: 85%; text-align: right; }
-        .a { align-self: flex-start; background: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255,255,255,0.1); }
+        .msg { padding: 12px 18px; border-radius: 22px; font-size: 14px; max-width: 85%; text-align: right; background: rgba(0,0,0,0.15); color: white; }
 
-        /* بخش ورودی چت اصلاح شده */
+        /* اینپوت شیشه‌ای سفیدتر */
         .input-container {
             margin-top: 15px; display: flex; align-items: center; gap: 10px;
-            background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.25); border: 1px solid rgba(255, 255, 255, 0.4);
             padding: 8px 15px; border-radius: 30px; backdrop-filter: blur(10px);
         }
         input { flex: 1; background: transparent; border: none; color: white; outline: none; padding: 10px; font-size: 14px; }
-        .send-btn { 
-            width: 35px; height: 35px; background: none; border: none; 
-            font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            text-shadow: 0 0 10px #ffd700;
-        }
+        input::placeholder { color: rgba(255, 255, 255, 0.9); } /* سفیدتر کردن placeholder */
+        .send-btn { font-size: 24px; cursor: pointer; text-shadow: 0 0 10px gold; border:none; background:none; }
 
-        /* دکمه‌های نارنجی گرادینت پایین */
+        /* دکمه‌های نارنجی شیشه‌ای پایین */
         .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; margin-top: 25px; }
         .nav-btn {
-            padding: 20px; text-align: center; color: white; font-weight: 800; text-decoration: none;
-            border-radius: 25px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
-            background: linear-gradient(135deg, #ff9a00, #ff5100); /* نارنجی گرادینت شیک */
-            box-shadow: 0 10px 20px rgba(255, 81, 0, 0.3);
+            padding: 18px; text-align: center; color: white; font-weight: 800; border-radius: 22px;
+            cursor: pointer; border: 1px solid rgba(255,255,255,0.3);
+            background: linear-gradient(135deg, rgba(255, 154, 0, 0.6), rgba(255, 81, 0, 0.6));
+            backdrop-filter: blur(15px);
         }
-        .nav-btn:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(255, 81, 0, 0.5); }
 
-        /* صفحه پادکست */
+        /* پادکست‌ها */
         .page { display: none; width: 100%; flex-direction: column; align-items: center; }
-        .page.active { display: flex; animation: fadeIn 0.8s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; } }
+        .page.active { display: flex; }
+        .podcast-item { 
+            width: 100%; max-width: 400px; background: rgba(255,255,255,0.15); 
+            padding: 15px; border-radius: 20px; margin-bottom: 10px; 
+            display: flex; align-items: center; gap: 15px; color: white; cursor: pointer;
+        }
 
-        #overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); display:none; z-index:999; backdrop-filter: blur(4px); }
+        .menu-btn { position: fixed; top: 25px; z-index: 1001; background: rgba(255,255,255,0.2); padding: 10px; border-radius: 12px; cursor: pointer; }
+        .btn-right { right: 20px; } .btn-left { left: 20px; }
+        .menu-btn div { width: 22px; height: 2px; background: white; margin: 5px 0; }
     </style>
 </head>
 <body>
 
-<div id="overlay" onclick="closeMenus()"></div>
+<div class="orb"></div>
+<h1 class="brand-text">PlanLife</h1>
 
-<div class="menu-btn btn-right" onclick="openMenu('rightMenu')"><div></div><div></div><div></div></div>
-<div class="menu-btn btn-left" onclick="openMenu('leftMenu')"><div></div><div></div><div></div></div>
-
-<div id="rightMenu" class="side-menu">
-    <div class="nav-btn" style="background:none; margin-bottom:10px;">پروفایل</div>
-    <div class="nav-btn" style="background:none;" onclick="location.reload()">خروج</div>
-</div>
-
-<div id="leftMenu" class="side-menu">
-    <div class="nav-btn" style="background:none; margin-bottom:10px;" onclick="showPage('homePage')">صفحه اصلی</div>
-    <div class="nav-btn" style="background:none;" onclick="showPage('podcastPage')">پادکست‌ها</div>
-</div>
+<div class="menu-btn btn-right"><div></div><div></div><div></div></div>
+<div class="menu-btn btn-left"><div></div><div></div><div></div></div>
 
 <div class="main-container" style="width:100%; display:flex; flex-direction:column; align-items:center;">
     
     <div id="homePage" class="page active">
         <div class="chat-card">
             <div id="chat-window">
-                <div class="msg a">سوال ذهنی خودتان را بپرسید... ✨</div>
+                <div class="msg">سوال ذهنی خودتان را بپرسید... ✨</div>
             </div>
             <div class="input-container">
                 <input type="text" placeholder="بنویسید...">
@@ -119,27 +106,39 @@
     </div>
 
     <div id="podcastPage" class="page">
-        <h2 style="color:white; margin-top:100px;">لیست پادکست‌ها</h2>
-        <div class="nav-btn" style="width:150px; margin-top:20px;" onclick="showPage('homePage')">بازگشت</div>
+        <h2 style="color:white; margin: 20px 0;">لیست پادکست‌ها</h2>
+        
+        <div class="podcast-item" onclick="playTrack('https://res.cloudinary.com/dshielkdt/video/upload/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3', 'قدرت ذهن')">
+            <div style="width:40px; height:40px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#7d2ae8;">۱</div>
+            <div style="flex:1; text-align:right;">قسمت اول: قدرت ذهن</div>
+            <span>▶</span>
+        </div>
+
+        <div class="podcast-item">
+            <div style="width:40px; height:40px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center;">۲</div>
+            <div style="flex:1; text-align:right;">قسمت دوم: باورهای ثروت</div>
+            <span>▶</span>
+        </div>
+
+        <div class="nav-btn" style="width:120px; background: rgba(255,255,255,0.2); margin-top:20px;" onclick="showPage('homePage')">برگشت</div>
     </div>
 </div>
 
+<audio id="mainAudio"></audio>
+
 <script>
-    function openMenu(id) {
-        closeMenus();
-        document.getElementById(id).classList.add('active');
-        document.getElementById('overlay').style.display = 'block';
-        document.body.classList.add('menu-open');
-    }
-    function closeMenus() {
-        document.querySelectorAll('.side-menu').forEach(m => m.classList.remove('active'));
-        document.getElementById('overlay').style.display = 'none';
-        document.body.classList.remove('menu-open');
-    }
+    const audio = document.getElementById('mainAudio');
+
     function showPage(id) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        closeMenus();
+        window.scrollTo(0,0);
+    }
+
+    function playTrack(url, title) {
+        audio.src = url;
+        audio.play();
+        alert("در حال پخش: " + title);
     }
 </script>
 
