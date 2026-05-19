@@ -3,104 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PlanLife | پادکست‌ها</title>
+    <title>PlanLife | پادکست</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;800&family=League+Spartan:wght@800&display=swap');
-
-        * { box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; transition: 0.3s ease; }
-        
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;800&display=swap');
         body { 
             margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center;
-            background: linear-gradient(135deg, #00c4cc, #7d2ae8, #00c4cc);
-            background-size: 400% 400%; animation: gradientBG 15s ease infinite;
-            background-attachment: fixed; padding: 20px; color: white;
+            background: #7d2ae8; color: white; font-family: 'Vazirmatn', sans-serif; padding: 20px;
         }
-
-        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-        /* پلیر اصلی */
-        .main-player {
-            width: 100%; max-width: 400px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(25px);
-            border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.3); padding: 30px;
-            display: flex; flex-direction: column; align-items: center; margin-bottom: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        .player-card {
+            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
+            padding: 30px; border-radius: 30px; text-align: center; width: 100%; max-width: 350px;
         }
-
         .play-btn {
-            width: 70px; height: 70px; background: white; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-            box-shadow: 0 0 20px rgba(255,255,255,0.4); border: none;
+            width: 80px; height: 80px; background: white; border-radius: 50%; border: none;
+            cursor: pointer; font-size: 30px; display: flex; align-items: center; justify-content: center;
+            margin: 20px auto;
         }
-
-        /* لیست پادکست‌ها */
-        .podcast-list { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; }
-        .podcast-item {
-            display: flex; align-items: center; gap: 15px; padding: 15px;
-            background: rgba(255, 255, 255, 0.1); border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer;
+        .item {
+            background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 15px;
+            margin-top: 20px; cursor: pointer; width: 100%; max-width: 350px; text-align: center;
         }
-        .podcast-item:hover { background: rgba(255, 255, 255, 0.2); }
-
-        .back-link { align-self: flex-start; color: white; text-decoration: none; margin-bottom: 20px; font-size: 14px; opacity: 0.8; }
     </style>
 </head>
 <body>
 
-    <a href="index.html" class="back-link">← بازگشت به خانه</a>
+    <h2>پخش پادکست</h2>
 
-    <div class="main-player">
-        <div style="width:100px; height:100px; background:rgba(255,255,255,0.2); border-radius:20px; margin-bottom:20px;"></div>
-        <h2 id="current-title" style="margin:0 0 10px 0;">آماده پخش...</h2>
-        <p style="opacity:0.6; margin-bottom:20px;">پادکست‌های اختصاصی PlanLife</p>
-        
-        <button class="play-btn" id="masterPlayBtn" onclick="togglePlay()">
-            <svg id="playIcon" width="35" height="35" fill="#7d2ae8" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        </button>
+    <div class="player-card">
+        <h3 id="status">ابتدا انتخاب کنید</h3>
+        <button class="play-btn" id="btn" onclick="pressPlay()">▶</button>
     </div>
 
-    <div class="podcast-list">
-        <div class="podcast-item" onclick="loadAndPlay('https://res.cloudinary.com/dshielkdt/video/upload/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3', 'قدرت ذهن - قسمت ۱')">
-            <div style="width:50px; height:50px; background:rgba(255,255,255,0.2); border-radius:12px;"></div>
-            <div style="flex:1; text-align:right;">
-                <h4 style="margin:0; font-size:14px;">قسمت ۱: قدرت ذهن</h4>
-                <p style="margin:5px 0 0; font-size:11px; opacity:0.5;">لینک مستقیم از کلودینری</p>
-            </div>
-            <span>▶</span>
-        </div>
+    <div class="item" onclick="start('https://res.cloudinary.com/dshielkdt/video/upload/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3', 'قسمت اول')">
+        کلیک کنید: پخش پادکست شماره ۱
     </div>
 
-    <audio id="audioPlayer"></audio>
+    <audio id="myAudio"></audio>
 
     <script>
-        const audio = document.getElementById('audioPlayer');
-        const playIcon = document.getElementById('playIcon');
-        const titleDisplay = document.getElementById('current-title');
-        let isPlaying = false;
+        var track = document.getElementById("myAudio");
+        var btn = document.getElementById("btn");
+        var statusText = document.getElementById("status");
 
-        function loadAndPlay(url, title) {
-            audio.src = url;
-            titleDisplay.innerText = title;
-            audio.play();
-            isPlaying = true;
-            updateIcon();
+        function start(url, title) {
+            track.src = url;
+            track.play();
+            statusText.innerText = "در حال پخش: " + title;
+            btn.innerText = "⏸";
         }
 
-        function togglePlay() {
-            if (!audio.src) return alert("ابتدا یک پادکست انتخاب کنید");
-            if (isPlaying) {
-                audio.pause();
-            } else {
-                audio.play();
+        function pressPlay() {
+            if (!track.src) {
+                alert("لطفاً اول از لیست پایین انتخاب کنید");
+                return;
             }
-            isPlaying = !isPlaying;
-            updateIcon();
-        }
-
-        function updateIcon() {
-            if (isPlaying) {
-                playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; // آیکون توقف
+            if (track.paused) {
+                track.play();
+                btn.innerText = "⏸";
             } else {
-                playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; // آیکون پخش
+                track.pause();
+                btn.innerText = "▶";
             }
         }
     </script>
