@@ -20,9 +20,8 @@
 
         body.menu-open .main-container { filter: blur(10px); pointer-events: none; }
 
-        /* استایل دکمه‌ها با هاله نارنجی ملایم */
         .nav-item, .podcast-item, .menu-btn {
-            box-shadow: 0 0 15px rgba(255, 145, 0, 0.2); /* هاله نارنجی ملایم */
+            box-shadow: 0 0 15px rgba(255, 145, 0, 0.2);
         }
 
         .menu-btn {
@@ -50,7 +49,6 @@
             color: white; text-align: center; text-decoration: none; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.1);
             cursor: pointer;
         }
-        .nav-item:hover { background: rgba(255, 145, 0, 0.2); box-shadow: 0 0 25px rgba(255, 145, 0, 0.4); }
 
         .page { display: none; width: 100%; flex-direction: column; align-items: center; }
         .page.active { display: flex; animation: fadeIn 0.7s ease; }
@@ -60,35 +58,34 @@
         .main-orb { width: 50px; height: 50px; margin-bottom: 5px; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         
+        /* جابجایی چت‌باکس به بالا */
         .chat-card { 
             width: 100%; max-width: 450px; 
             height: calc(50vh + 75px); 
             background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(30px); 
             border-radius: 35px; border: 1px solid rgba(255, 255, 255, 0.3); 
             display: flex; flex-direction: column; padding: 15px; 
+            margin-top: -60px; /* ۱.۵ سانت انتقال به بالا */
         }
-        #chat-window { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 12px 18px; border-radius: 20px; font-size: 14px; max-width: 85%; text-align: right; }
-        .a { align-self: flex-start; background: rgba(0, 0, 0, 0.2); color: white; }
+        #chat-window { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 5px; }
+        .msg { padding: 12px 18px; border-radius: 20px; font-size: 14px; max-width: 85%; line-height: 1.6; }
+        .a { align-self: flex-start; background: rgba(0, 0, 0, 0.2); color: white; border-bottom-right-radius: 5px; text-align: right; }
+        .u { align-self: flex-end; background: #ff9100; color: white; border-bottom-left-radius: 5px; text-align: right; box-shadow: 0 4px 15px rgba(255,145,0,0.3); }
         
         .input-area { margin-top: 15px; display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.1); padding: 12px; border-radius: 25px; }
         input { flex: 1; background: transparent; border: none; color: white; outline: none; text-align: right; }
 
-        /* استایل پلیر پادکست */
         .player-card { width: 100%; max-width: 400px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(30px); border-radius: 40px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.3); text-align: center; }
-        
-        /* تایم لاین (Seekbar) */
         .timeline-container { width: 100%; margin: 15px 0 10px 0; }
-        #progressBar { width: 100%; cursor: pointer; accent-color: #ff9100; height: 5px; border-radius: 5px; }
+        #progressBar { width: 100%; cursor: pointer; accent-color: #ff9100; }
         .time-labels { display: flex; justify-content: space-between; color: white; font-size: 11px; margin-top: 5px; }
 
-        .controls { display: flex; align-items: center; justify-content: center; gap: 20px; }
-        .skip-btn { background: none; border: none; color: white; cursor: pointer; font-size: 18px; display: flex; align-items: center; }
-        .play-circle { width: 70px; height: 70px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+        .controls { display: flex; align-items: center; justify-content: center; gap: 20px; flex-direction: row-reverse; } /* جهت دکمه‌ها اصلاح شد */
+        .skip-btn { background: none; border: none; color: white; cursor: pointer; display: flex; align-items: center; }
+        .play-circle { width: 70px; height: 70px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         
-        .podcast-scroll { width: 100%; max-width: 400px; height: 320px; overflow-y: auto; margin-top: 15px; padding-right: 5px; }
-        .podcast-item { background: rgba(255,255,255,0.1); margin-bottom: 10px; padding: 12px; border-radius: 18px; display: flex; align-items: center; gap: 12px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
-        .podcast-item:hover { background: rgba(255, 145, 0, 0.15); }
+        .podcast-scroll { width: 100%; max-width: 400px; height: 320px; overflow-y: auto; margin-top: 15px; }
+        .podcast-item { background: rgba(255,255,255,0.1); margin-bottom: 10px; padding: 12px; border-radius: 18px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
 
         #overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); display:none; z-index:999; backdrop-filter: blur(2px); }
     </style>
@@ -115,7 +112,7 @@
 
 <div class="main-container" style="width:100%; display:flex; flex-direction:column; align-items:center; margin-top: 40px;">
     <div class="orb main-orb"></div>
-    <h1 style="color:white; font-family:'League Spartan'; font-weight:800; margin-bottom:30px;">PlanLife</h1>
+    <h1 style="color:white; font-family:'League Spartan'; font-weight:800; margin-bottom:70px;">PlanLife</h1>
 
     <div id="homePage" class="page active">
         <div class="chat-card">
@@ -123,8 +120,8 @@
                 <div class="msg a">سوال ذهنی خودتان را بپرسید... ✨</div>
             </div>
             <div class="input-area">
-                <input type="text" placeholder="بنویسید...">
-                <div class="orb" style="width:20px; height:20px;"></div>
+                <input type="text" id="chatInput" placeholder="بنویسید..." onkeypress="handleKey(event)">
+                <div class="orb" onclick="sendMessage()" style="width:25px; height:25px; cursor:pointer; background: #ff9100;"></div>
             </div>
         </div>
         
@@ -138,8 +135,7 @@
 
     <div id="podcastPage" class="page">
         <div class="player-card">
-            <h3 id="p-title" style="color:white; margin:0; font-size: 18px;">انتخاب پادکست</h3>
-            
+            <h3 id="p-title" style="color:white; margin:0;">انتخاب پادکست</h3>
             <div class="timeline-container">
                 <input type="range" id="progressBar" value="0" step="1">
                 <div class="time-labels">
@@ -147,44 +143,23 @@
                     <span id="duration">0:00</span>
                 </div>
             </div>
-
             <div class="controls">
-                <button class="skip-btn" onclick="skip(-10)">
-                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M12.5 8c-2.65 0-5.05 1-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg>
+                <!-- دکمه جلو بردن در سمت راست (به دلیل row-reverse) -->
+                <button class="skip-btn" onclick="skip(10)">
+                    <svg width="28" height="28" fill="white" viewBox="0 0 24 24"><path d="M11.5 8c2.65 0 5.05 1 6.9 2.6L22 7v9h-9l3.62-3.62c-1.39-1.16-3.16-1.88-5.12-1.88-3.54 0-6.55 2.31-7.6 5.5l-2.37-.78C2.92 11.03 6.85 8 11.5 8z"/></svg>
                 </button>
-
                 <div class="play-circle" onclick="togglePlay()">
                     <svg id="playIcon" width="35" height="35" fill="#7d2ae8" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                 </div>
-
-                <button class="skip-btn" onclick="skip(10)">
-                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M11.5 8c2.65 0 5.05 1 6.9 2.6L22 7v9h-9l3.62-3.62c-1.39-1.16-3.16-1.88-5.12-1.88-3.54 0-6.55 2.31-7.6 5.5l-2.37-.78C2.92 11.03 6.85 8 11.5 8z"/></svg>
+                <!-- دکمه عقب بردن در سمت چپ -->
+                <button class="skip-btn" onclick="skip(-10)">
+                    <svg width="28" height="28" fill="white" viewBox="0 0 24 24"><path d="M12.5 8c-2.65 0-5.05 1-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg>
                 </button>
             </div>
         </div>
 
-        <div class="podcast-scroll">
-            <script>
-                const podcasts = [
-                    { id: 1, title: "قدرت ذهن", url: "https://res.cloudinary.com/dshielkdt/video/upload/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
-                    { id: 2, title: "مدیریت زمان", url: "#" },
-                    { id: 3, title: "اراده پولادین", url: "#" },
-                    { id: 4, title: "جذب ثروت", url: "#" },
-                    { id: 5, title: "آرامش درون", url: "#" }
-                ];
-
-                podcasts.forEach(p => {
-                    document.write(`
-                        <div class="podcast-item" onclick="loadTrack('${p.url}', '${p.title}')">
-                            <div style="background:white; border-radius:50%; width:25px; height:25px; display:flex; align-items:center; justify-content:center;">
-                                <svg width="12" height="12" fill="#7d2ae8" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            </div>
-                            <div style="flex:1; color:white; text-align:right; font-size:14px;">${p.title}</div>
-                            <span style="color:white; font-size:10px; opacity:0.5;">قسمت ${p.id}</span>
-                        </div>
-                    `);
-                });
-            </script>
+        <div class="podcast-scroll" id="p-list">
+            <!-- لیست پادکست‌ها توسط اسکریپت پر می‌شود -->
         </div>
         <div class="nav-item" style="margin-top:20px; width:120px;" onclick="showPage('homePage')">بازگشت</div>
     </div>
@@ -195,34 +170,58 @@
 <script>
     const audio = document.getElementById('mainAudio');
     const playIcon = document.getElementById('playIcon');
+    const chatWindow = document.getElementById('chat-window');
+    const chatInput = document.getElementById('chatInput');
     const progressBar = document.getElementById('progressBar');
-    const currentTimeEl = document.getElementById('currentTime');
-    const durationEl = document.getElementById('duration');
     let isPlaying = false;
 
-    // توابع منو
-    function openMenu(id) {
-        closeMenus();
-        document.getElementById(id).classList.add('active');
-        document.getElementById('overlay').style.display = 'block';
-        document.body.classList.add('menu-open');
-    }
-    function closeMenus() {
-        document.querySelectorAll('.side-menu').forEach(m => m.classList.remove('active'));
-        document.getElementById('overlay').style.display = 'none';
-        document.body.classList.remove('menu-open');
+    // سیستم چت
+    function handleKey(e) { if(e.key === 'Enter') sendMessage(); }
+    function sendMessage() {
+        const text = chatInput.value.trim();
+        if(!text) return;
+
+        // پیام کاربر
+        const uMsg = document.createElement('div');
+        uMsg.className = 'msg u';
+        uMsg.innerText = text;
+        chatWindow.appendChild(uMsg);
+        chatInput.value = '';
+
+        // پاسخ بات
+        setTimeout(() => {
+            const aMsg = document.createElement('div');
+            aMsg.className = 'msg a';
+            aMsg.innerText = "پیام شما دریافت شد. من در حال یادگیری هستم تا بهترین پاسخ را به شما بدهم. ✨";
+            chatWindow.appendChild(aMsg);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }, 800);
+        
+        chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 
-    // تغییر صفحات
-    function showPage(id) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        closeMenus();
-    }
+    // پلیر و لیست پادکست
+    const podcasts = [
+        { id: 1, title: "قدرت ذهن", url: "https://res.cloudinary.com/dshielkdt/video/upload/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+        { id: 2, title: "تحول باورها", url: "#" },
+        { id: 3, title: "ثروت پایدار", url: "#" }
+    ];
 
-    // پخش پادکست
+    const pList = document.getElementById('p-list');
+    podcasts.forEach(p => {
+        pList.innerHTML += `
+            <div class="podcast-item" onclick="loadTrack('${p.url}', '${p.title}')">
+                <div style="background:white; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center;">
+                    <svg width="14" height="14" fill="#7d2ae8" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <div style="flex:1; color:white; text-align:right; font-size:14px;">${p.title}</div>
+                <span style="color:white; font-size:10px; opacity:0.6;">قسمت ${p.id}</span>
+            </div>
+        `;
+    });
+
     function loadTrack(url, title) {
-        if(url === "#") { alert("فایل این قسمت هنوز آپلود نشده است."); return; }
+        if(url === "#") { alert("فایل صوتی موجود نیست."); return; }
         audio.src = url;
         document.getElementById('p-title').innerText = title;
         audio.play();
@@ -232,41 +231,29 @@
 
     function togglePlay() {
         if (!audio.src) return;
-        if (audio.paused) { audio.play(); isPlaying = true; }
-        else { audio.pause(); isPlaying = false; }
+        audio.paused ? audio.play() : audio.pause();
+        isPlaying = !audio.paused;
         updateIcon();
     }
 
-    function skip(seconds) {
-        audio.currentTime += seconds;
-    }
+    function skip(time) { audio.currentTime += time; }
 
-    // بروزرسانی نوار پیشرفت
     audio.ontimeupdate = () => {
         if (!isNaN(audio.duration)) {
-            const percent = (audio.currentTime / audio.duration) * 100;
-            progressBar.value = percent;
-            currentTimeEl.innerText = formatTime(audio.currentTime);
-            durationEl.innerText = formatTime(audio.duration);
+            progressBar.value = (audio.currentTime / audio.duration) * 100;
+            document.getElementById('currentTime').innerText = formatTime(audio.currentTime);
+            document.getElementById('duration').innerText = formatTime(audio.duration);
         }
     };
 
-    progressBar.oninput = () => {
-        const time = (progressBar.value / 100) * audio.duration;
-        audio.currentTime = time;
-    };
+    progressBar.oninput = () => audio.currentTime = (progressBar.value / 100) * audio.duration;
+    function formatTime(s) { return Math.floor(s/60) + ":" + (Math.floor(s%60)).toString().padStart(2,'0'); }
+    function updateIcon() { playIcon.innerHTML = isPlaying ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' : '<path d="M8 5v14l11-7z"/>'; }
 
-    function formatTime(secs) {
-        const min = Math.floor(secs / 60);
-        const sec = Math.floor(secs % 60);
-        return `${min}:${sec < 10 ? '0' + sec : sec}`;
-    }
-
-    function updateIcon() {
-        playIcon.innerHTML = isPlaying ? 
-            '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' : 
-            '<path d="M8 5v14l11-7z"/>';
-    }
+    // توابع منو
+    function openMenu(id) { closeMenus(); document.getElementById(id).classList.add('active'); document.getElementById('overlay').style.display = 'block'; document.body.classList.add('menu-open'); }
+    function closeMenus() { document.querySelectorAll('.side-menu').forEach(m => m.classList.remove('active')); document.getElementById('overlay').style.display = 'none'; document.body.classList.remove('menu-open'); }
+    function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); closeMenus(); }
 </script>
 
 </body>
