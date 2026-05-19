@@ -6,47 +6,38 @@
     <title>PlanLife | پلتفرم تحول</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;800&family=League+Spartan:wght@800&display=swap');
-
-        * { box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; transition: 0.3s; }
-        
-        body { 
-            margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center;
-            background: linear-gradient(135deg, #00c4cc, #7d2ae8, #00c4cc);
-            background-size: 400% 400%; animation: gradientBG 15s ease infinite;
-            background-attachment: fixed; overflow-x: hidden; padding: 10px;
-        }
-
+        * { box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; background: linear-gradient(135deg, #00c4cc, #7d2ae8, #00c4cc); background-size: 400% 400%; animation: gradientBG 15s ease infinite; background-attachment: fixed; overflow-x: hidden; padding: 10px; }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-        /* استایل منوها و دکمه‌ها */
-        .menu-btn { position: fixed; top: 25px; z-index: 1001; background: rgba(255, 255, 255, 0.15); padding: 10px; border-radius: 12px; cursor: pointer; backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(255, 145, 0, 0.25); }
+        
+        /* منوها */
+        .menu-btn { position: fixed; top: 25px; z-index: 1001; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 10px; border-radius: 12px; cursor: pointer; backdrop-filter: blur(10px); }
         .btn-right { right: 20px; } .btn-left { left: 20px; }
-        .side-menu { position: fixed; top: 0; width: 260px; height: 100%; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(40px); z-index: 1000; padding: 80px 20px; transition: 0.6s ease; }
+        .menu-btn div { width: 22px; height: 2px; background: white; margin: 5px 0; border-radius: 2px; }
+        .side-menu { position: fixed; top: 0; width: 260px; height: 100%; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(40px); z-index: 1000; padding: 80px 20px; border: 1px solid rgba(255, 255, 255, 0.2); transition: 0.6s ease; }
         #rightMenu { right: -300px; } #leftMenu { left: -300px; }
         #rightMenu.active { right: 0; } #leftMenu.active { left: 0; }
-
-        .nav-item { display: block; padding: 15px; background: rgba(255, 255, 255, 0.1); border-radius: 15px; color: white; text-align: center; margin-bottom: 12px; cursor: pointer; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .nav-item { display: block; padding: 15px; background: rgba(255, 255, 255, 0.1); border-radius: 15px; color: white; text-align: center; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; }
         .page { display: none; width: 100%; flex-direction: column; align-items: center; }
-        .page.active { display: flex; animation: fadeIn 0.5s ease; }
+        .page.active { display: flex; animation: fadeIn 0.7s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* چت باکس */
-        .chat-card { width: 100%; max-width: 450px; height: 60vh; background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(30px); border-radius: 35px; border: 1px solid rgba(255, 255, 255, 0.3); display: flex; flex-direction: column; padding: 15px; margin-top: 20px; }
-        #chat-window { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 5px; }
-        .msg { padding: 12px 18px; border-radius: 20px; font-size: 14px; max-width: 80%; animation: popUp 0.4s ease; }
+        /* چت‌باکس اصلاح شده */
+        .chat-card { width: 100%; max-width: 450px; height: calc(50vh + 80px); background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(30px); border-radius: 35px; border: 1px solid rgba(255, 255, 255, 0.3); display: flex; flex-direction: column; padding: 15px; margin-top: -60px; }
+        #chat-window { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 5px; }
+        
+        .msg { padding: 12px 18px; border-radius: 20px; font-size: 14px; max-width: 85%; animation: msgSlide 0.4s ease; position: relative; }
+        @keyframes msgSlide { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        /* پیام سیستم (چپ) و پیام کاربر (راست) */
         .a { align-self: flex-start; background: rgba(0, 0, 0, 0.3); color: white; border-bottom-right-radius: 5px; }
         .u { align-self: flex-end; background: #ff9100; color: white; border-bottom-left-radius: 5px; }
-        .tick { font-size: 10px; margin-right: 5px; opacity: 0.8; }
-        .typing { align-self: flex-start; color: rgba(255,255,255,0.7); font-size: 12px; padding: 5px 15px; font-style: italic; }
-        @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
-        .input-area { margin-top: 15px; display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.15); padding: 10px; border-radius: 25px; }
-        input { flex: 1; background: transparent; border: none; color: white; outline: none; text-align: right; }
+        .tick { font-size: 10px; margin-right: 5px; opacity: 0.7; }
+        .typing { align-self: flex-start; color: rgba(255,255,255,0.6); font-size: 12px; padding: 5px 15px; font-style: italic; }
 
-        /* پلیر پادکست */
-        .player-card { width: 100%; max-width: 400px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(30px); border-radius: 40px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.3); text-align: center; }
-        .play-circle { width: 70px; height: 70px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; margin: 15px auto; }
-        .podcast-item { background: rgba(255,255,255,0.1); margin-bottom: 10px; padding: 12px; border-radius: 18px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .input-area { margin-top: 15px; display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.15); padding: 12px; border-radius: 25px; }
+        input { flex: 1; background: transparent; border: none; color: white; outline: none; text-align: right; }
     </style>
 </head>
 <body>
@@ -55,8 +46,8 @@
 <div class="menu-btn btn-left" onclick="document.getElementById('leftMenu').classList.add('active')"><div></div><div></div><div></div></div>
 
 <div id="rightMenu" class="side-menu" onclick="this.classList.remove('active')">
-    <div class="nav-item">پروفایل</div>
-    <div class="nav-item">تنظیمات</div>
+    <div class="nav-item">پروفایل کاربری</div>
+    <div class="nav-item">خروج</div>
 </div>
 
 <div id="leftMenu" class="side-menu" onclick="this.classList.remove('active')">
@@ -64,24 +55,18 @@
     <div class="nav-item" onclick="showPage('podcastPage')">پادکست‌ها</div>
 </div>
 
-<div id="homePage" class="page active">
-    <div class="chat-card">
-        <div id="chat-window">
-            <div class="msg a">سلام! چطور می‌توانم کمک کنم؟</div>
-        </div>
-        <div class="input-area">
-            <input type="text" id="chatInput" placeholder="بپرسید...">
-            <div onclick="sendMessage()" style="cursor:pointer; padding: 5px;">➤</div>
+<div class="main-container" style="width:100%; display:flex; flex-direction:column; align-items:center; margin-top: 40px;">
+    <div id="homePage" class="page active">
+        <div class="chat-card">
+            <div id="chat-window">
+                <div class="msg a">چطور می‌توانم کمکتان کنم؟</div>
+            </div>
+            <div class="input-area">
+                <input type="text" id="chatInput" placeholder="سوال خود را بپرسید..." onkeypress="if(event.key==='Enter') sendMessage()">
+                <div onclick="sendMessage()" style="cursor:pointer; color:white; font-size:20px;">➤</div>
+            </div>
         </div>
     </div>
-</div>
-
-<div id="podcastPage" class="page">
-    <div class="player-card">
-        <h3 id="p-title" style="color:white;">انتخاب پادکست</h3>
-        <div class="play-circle" onclick="alert('پخش شد')">▶</div>
-    </div>
-    <div id="p-list" style="width:100%; max-width:400px;"></div>
 </div>
 
 <script>
@@ -89,12 +74,14 @@
     const chatInput = document.getElementById('chatInput');
 
     async function sendMessage() {
-        const text = chatInput.value.trim();
-        if(!text) return;
+        const userText = chatInput.value.trim();
+        if(!userText) return;
 
-        appendMessage(text + ' <span class="tick">✔✔</span>', 'u');
+        // نمایش پیام کاربر با تیک
+        appendMessage(userText + ' <span class="tick">✔✔</span>', 'u');
         chatInput.value = '';
 
+        // انیمیشن تایپینگ
         const typing = document.createElement('div');
         typing.className = 'typing';
         typing.innerText = "... در حال نوشتن";
@@ -102,19 +89,23 @@
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
         try {
-            const res = await fetch('database.txt');
-            const data = await res.text();
+            const response = await fetch('database.txt');
+            const data = await response.text();
             await new Promise(r => setTimeout(r, 1000));
             
             const lines = data.split('\n');
-            let ans = "پاسخی یافت نشد.";
-            for(let l of lines) if(l.includes(text)) ans = l.includes('=') ? l.split('=')[1] : l;
-            
+            let foundAnswer = "پاسخی در دیتابیس یافت نشد.";
+            for (let line of lines) {
+                if (line.toLowerCase().includes(userText.toLowerCase())) {
+                    foundAnswer = line.includes('=') ? line.split('=')[1] : line;
+                    break;
+                }
+            }
             chatWindow.removeChild(typing);
-            appendMessage(ans, 'a');
+            appendMessage(foundAnswer, 'a');
         } catch(e) {
             chatWindow.removeChild(typing);
-            appendMessage("خطای دیتابیس.", 'a');
+            appendMessage("خطای دیتابیس", 'a');
         }
     }
 
@@ -129,8 +120,8 @@
     function showPage(id) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
+        document.getElementById('leftMenu').classList.remove('active');
     }
 </script>
-
 </body>
 </html>
