@@ -6,30 +6,30 @@
     <style>
         body { margin: 0; height: 100vh; background: linear-gradient(135deg, #00f2fe, #4facfe, #764ba2, #ff758c); display: flex; flex-direction: column; align-items: center; font-family: -apple-system, sans-serif; overflow: hidden; }
 
-        /* لایه تاری */
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); z-index: 1000; display: none; transition: 0.4s; }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); backdrop-filter: blur(5px); z-index: 1000; display: none; }
         #overlay.active { display: block; }
 
-        .menu-btn { position: fixed; top: 20px; width: 55px; height: 55px; background: rgba(255,255,255,0.25); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 28px; z-index: 3000; }
+        .menu-btn { position: fixed; top: 20px; width: 55px; height: 55px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 25px; z-index: 3000; }
         .left-icon { left: 20px; }
         .right-icon { right: 20px; }
 
-        /* منوها */
-        .menu-panel { position: fixed; top: 0; width: 220px; height: 100%; background: rgba(255,255,255,0.1); backdrop-filter: blur(25px); transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); padding-top: 80px; z-index: 2500; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .menu-panel { position: fixed; top: 0; width: 220px; height: 100%; background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); transition: 0.5s; padding-top: 80px; z-index: 2500; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         #leftPanel { left: -220px; }
         #rightPanel { right: -220px; }
         .active-left { left: 0 !important; }
         .active-right { right: 0 !important; }
 
-        /* چت باکس */
-        .chat-box { width: calc(100% - 30px); max-width: 380px; height: 420px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px); border-radius: 30px; margin-top: 10px; display: flex; flex-direction: column; padding: 15px; box-sizing: border-box; }
-        
-        /* دکمه‌های پایین چت‌باکس */
-        .grid-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
-        .btn-small { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; color: white; padding: 8px; font-size: 12px; cursor: pointer; text-align: center; backdrop-filter: blur(5px); }
+        .menu-item { width: 85%; padding: 15px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; color: white; text-align: center; }
 
-        #chat-output { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 10px; border-radius: 15px; max-width: 80%; background: rgba(255,255,255,0.2); color: white; }
+        /* چت‌باکس اصلی */
+        .chat-container { width: calc(100% - 30px); max-width: 380px; height: 450px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px); border-radius: 30px; margin-top: 20px; display: flex; flex-direction: column; padding: 15px; overflow-y: auto; }
+
+        /* دکمه‌های پایین (اسکرولی) */
+        .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; padding-bottom: 20px; }
+        .btn-small { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; color: white; padding: 10px; font-size: 13px; text-align: center; backdrop-filter: blur(5px); }
+
+        .input-area { margin-top: auto; display: flex; align-items: center; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 5px; }
+        input { flex: 1; border: none; background: transparent; padding: 10px; color: white; }
     </style>
 </head>
 <body>
@@ -39,24 +39,30 @@
     <div class="menu-btn right-icon" onclick="toggleMenu('right')">☰</div>
 
     <div id="leftPanel" class="menu-panel">
-        <div class="menu-item">خانه</div><div class="menu-item">پروفایل</div><div class="menu-item">تنظیمات</div><div class="menu-item">خروج</div>
+        <div class="menu-item">خانه</div><div class="menu-item">پروفایل</div><div class="menu-item">تنظیمات</div>
     </div>
     <div id="rightPanel" class="menu-panel">
-        <div class="menu-item">پروژه‌ها</div><div class="menu-item">اشتراک</div><div class="menu-item">تیم‌ها</div><div class="menu-item">پشتیبانی</div>
+        <div class="menu-item">پروژه‌ها</div><div class="menu-item">اشتراک</div><div class="menu-item">پشتیبانی</div>
     </div>
 
-    <div class="pulse" style="margin-top:60px;"></div>
-    <h1 style="color:white; font-size:40px; margin:10px;">PlanLife</h1>
+    <div class="pulse" style="width:40px; height:40px; background:white; border-radius:50%; margin-top:80px;"></div>
+    <h1 style="color:white; margin:10px;">PlanLife</h1>
 
-    <div class="chat-box">
-        <div id="chat-output"></div>
+    <div class="chat-container">
+        <div id="chat-output" style="flex:1; color:white; padding:10px;">پیام‌های چت اینجا نمایش داده می‌شود...</div>
+        
+        <div class="input-area">
+            <input type="text" placeholder="پرسش...">
+            <button style="border-radius:50%; border:none; width:35px; height:35px;">➤</button>
+        </div>
+
         <div class="grid-buttons">
             <div class="btn-small">قانون جذب</div>
             <div class="btn-small">پول‌سازی</div>
             <div class="btn-small">باورها</div>
             <div class="btn-small">رشد فردی</div>
             <div class="btn-small">انگیزه</div>
-            <div class="btn-small">هدف</div>
+            <div class="btn-small">هدف‌گذاری</div>
         </div>
     </div>
 
@@ -65,7 +71,6 @@
             const left = document.getElementById('leftPanel');
             const right = document.getElementById('rightPanel');
             const overlay = document.getElementById('overlay');
-            
             if(side === 'left') {
                 right.classList.remove('active-right');
                 left.classList.toggle('active-left');
@@ -76,7 +81,6 @@
                 overlay.classList.toggle('active');
             }
         }
-
         function closeAll() {
             document.getElementById('leftPanel').classList.remove('active-left');
             document.getElementById('rightPanel').classList.remove('active-right');
