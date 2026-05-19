@@ -1,95 +1,189 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PlanLife | پلتفرم تحول</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;800&family=League+Spartan:wght@800&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat UI</title>
 
-        * { box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; transition: 0.3s; }
-        body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; background: linear-gradient(135deg, #00c4cc, #7d2ae8, #00c4cc); background-attachment: fixed; overflow-x: hidden; padding: 10px; }
+<style>
+* {
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
 
-        .chat-card { 
-            width: 100%; max-width: 450px; height: calc(50vh + 80px); 
-            background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(30px); 
-            border-radius: 35px; border: 1px solid rgba(255, 255, 255, 0.3); 
-            display: flex; flex-direction: column; padding: 15px; margin-top: -60px;
-        }
+body {
+    margin: 0;
+    background: linear-gradient(135deg,#00c4cc,#7d2ae8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
-        #chat-window { 
-            flex: 1; overflow-y: auto; display: flex; flex-direction: column; 
-            justify-content: flex-end; gap: 10px; padding: 5px;
-        }
+/* چت باکس */
+.chat-card {
+    width: 100%;
+    max-width: 400px;
+    height: 80vh;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+}
 
-        .msg { padding: 12px 18px; border-radius: 20px; font-size: 14px; max-width: 85%; }
-        
-        /* پیام سیستم (چپ) */
-        .a { align-self: flex-start; background: rgba(0, 0, 0, 0.3); color: white; border-bottom-right-radius: 5px; }
-        
-        /* پیام کاربر (راست) */
-        .u { align-self: flex-end; background: #ff9100; color: white; border-bottom-left-radius: 5px; }
+/* پیام‌ها */
+#chat-window {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
-        .input-area { margin-top: 15px; display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.15); padding: 12px; border-radius: 25px; }
-        input { flex: 1; background: transparent; border: none; color: white; outline: none; text-align: right; }
-        
-        /* سایر المان‌ها مشابه قبل */
-        .nav-item { display: block; padding: 15px; background: rgba(255, 255, 255, 0.1); border-radius: 15px; color: white; text-align: center; cursor: pointer; border: 1px solid rgba(255, 255, 255, 0.1); }
-        .page { display: none; width: 100%; flex-direction: column; align-items: center; }
-        .page.active { display: flex; }
-    </style>
+/* استایل پیام */
+.msg {
+    padding: 12px 16px;
+    border-radius: 18px;
+    max-width: 75%;
+    font-size: 14px;
+    animation: fade 0.3s ease;
+}
+
+/* پیام سیستم (چپ) */
+.a {
+    align-self: flex-start;
+    background: rgba(0,0,0,0.4);
+    color: white;
+    border-bottom-left-radius: 5px;
+    text-align: left;
+}
+
+/* پیام کاربر (راست) */
+.u {
+    align-self: flex-end;
+    background: #ff9100;
+    color: white;
+    border-bottom-right-radius: 5px;
+    text-align: right;
+}
+
+/* تایپینگ */
+.typing {
+    align-self: flex-start;
+    background: rgba(0,0,0,0.4);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+@keyframes fade {
+    from {opacity:0; transform: translateY(10px);}
+    to {opacity:1;}
+}
+
+/* ورودی */
+.input-area {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+input {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 15px;
+    outline: none;
+}
+
+button {
+    border: none;
+    background: #ff9100;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+</style>
 </head>
+
 <body>
 
-    <div id="homePage" class="page active">
-        <div class="chat-card">
-            <div id="chat-window">
-                <div class="msg a">سلام! چطور می‌توانم در مسیر تحول به شما کمک کنم؟</div>
-            </div>
-            <div class="input-area">
-                <input type="text" id="chatInput" placeholder="بنویسید..." onkeypress="if(event.key==='Enter') sendMessage()">
-                <div onclick="sendMessage()" style="width:30px; height:30px; cursor:pointer; background:#ff9100; border-radius:50%;"></div>
-            </div>
-        </div>
+<div class="chat-card">
+    <div id="chat-window">
+        <div class="msg a">سلام 👋 چطور میتونم کمکت کنم؟</div>
     </div>
 
-    <script>
-        const chatWindow = document.getElementById('chat-window');
-        const chatInput = document.getElementById('chatInput');
+    <div class="input-area">
+        <input id="input" placeholder="پیام بنویس..." 
+        onkeypress="if(event.key==='Enter') send()">
+        <button onclick="send()">ارسال</button>
+    </div>
+</div>
 
-        async function sendMessage() {
-            const userText = chatInput.value.trim();
-            if(!userText) return;
+<script>
+const chat = document.getElementById("chat-window");
+const input = document.getElementById("input");
 
-            appendMessage(userText, 'u');
-            chatInput.value = '';
+/* اضافه کردن پیام */
+function addMessage(text, type){
+    const div = document.createElement("div");
+    div.className = "msg " + type;
+    div.innerText = text;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+}
 
-            try {
-                const response = await fetch('database.txt');
-                const data = await response.text();
-                const lines = data.split('\n');
-                let foundAnswer = "پاسخی در دیتابیس یافت نشد.";
+/* تایپینگ */
+function showTyping(){
+    const t = document.createElement("div");
+    t.className = "typing";
+    t.id = "typing";
+    t.innerText = "در حال تایپ...";
+    chat.appendChild(t);
+    chat.scrollTop = chat.scrollHeight;
+}
 
-                for (let line of lines) {
-                    if (line.toLowerCase().includes(userText.toLowerCase())) {
-                        foundAnswer = line.includes('=') ? line.split('=')[1] : line;
-                        break;
-                    }
-                }
-                setTimeout(() => appendMessage(foundAnswer, 'a'), 500);
-            } catch(e) {
-                appendMessage("خطا در اتصال به دیتابیس.", 'a');
-            }
-        }
+function removeTyping(){
+    const t = document.getElementById("typing");
+    if(t) t.remove();
+}
 
-        function appendMessage(txt, type) {
-            const m = document.createElement('div');
-            m.className = `msg ${type}`;
-            m.innerText = txt;
-            chatWindow.appendChild(m);
-            // اسکرول به پایین به صورت خودکار
-            chatWindow.scrollTop = chatWindow.scrollHeight;
-        }
-    </script>
+/* ارسال */
+function send(){
+    const text = input.value.trim();
+    if(!text) return;
+
+    addMessage(text,"u");
+    input.value = "";
+
+    showTyping();
+
+    setTimeout(()=>{
+        removeTyping();
+        reply(text);
+    },1000);
+}
+
+/* جواب ساده */
+function reply(text){
+    let answer = "متوجه نشدم 🤔";
+
+    if(text.includes("سلام")){
+        answer = "سلام رفیق 😎";
+    } else if(text.includes("پول")){
+        answer = "روی ذهنت کار کن، پول خودش میاد 💰";
+    } else if(text.includes("موفقیت")){
+        answer = "تمرکز + استمرار = موفقیت 🚀";
+    }
+
+    addMessage(answer,"a");
+}
+</script>
+
 </body>
 </html>
