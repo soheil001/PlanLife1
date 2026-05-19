@@ -3,39 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <style>
         body { margin: 0; height: 100vh; background: linear-gradient(135deg, #00f2fe, #4facfe, #764ba2, #ff758c); display: flex; flex-direction: column; align-items: center; font-family: sans-serif; overflow: hidden; }
 
-        /* آیکون منو */
-        .menu-btn { position: fixed; top: 20px; width: 50px; height: 50px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 25px; z-index: 3000; }
+        .menu-btn { position: fixed; top: 20px; width: 55px; height: 55px; background: rgba(255,255,255,0.25); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 28px; z-index: 3000; }
         .left-icon { left: 20px; }
         .right-icon { right: 20px; }
 
-        /* اصلاح پنل‌ها */
-        .menu-panel { position: fixed; top: 0; width: 220px; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); transition: 0.5s; padding-top: 80px; z-index: 2500; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        #leftPanel { left: -250px; }
-        #rightPanel { right: -250px; }
+        /* منوی نرم و دلنشین */
+        .menu-panel { position: fixed; top: 0; width: 220px; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(25px); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); padding-top: 80px; z-index: 2500; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        #leftPanel { left: 0; transform: translateX(-100%); }
+        #rightPanel { right: 0; transform: translateX(100%); }
         
-        /* کلاس‌های فعال */
-        .show-left { left: 0 !important; }
-        .show-right { right: 0 !important; }
+        .show-left { transform: translateX(0) !important; }
+        .show-right { transform: translateX(0) !important; }
 
-        .menu-item { width: 80%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; color: white; text-align: center; cursor: pointer; }
+        .menu-item { width: 80%; padding: 15px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); border-radius: 18px; color: white; text-align: center; cursor: pointer; transition: 0.3s; }
+        .menu-item:hover { background: rgba(255,255,255,0.3); }
 
-        /* موقعیت جدید گوی و متن (۱ سانت پایین‌تر) */
-        .pulse { width: 40px; height: 40px; background: #fff; border-radius: 50%; margin-top: 90px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(0.9); } 50% { transform: scale(1.1); box-shadow: 0 0 25px #ff758c; } 100% { transform: scale(0.9); } }
-        .title { color: white; font-family: 'Lobster', cursive; font-size: 40px; margin-top: 20px; }
+        /* جابجایی پایین‌تر */
+        .pulse { width: 45px; height: 45px; background: #fff; border-radius: 50%; margin-top: 130px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(0.9); } 50% { transform: scale(1.15); box-shadow: 0 0 30px #ff758c; } 100% { transform: scale(0.9); } }
+        
+        .title { color: white; font-family: 'Dancing Script', cursive; font-size: 50px; margin-top: 25px; }
 
-        /* چت باکس - ابعاد اصلاح شده */
         .chat-box { width: calc(100% - 30px); max-width: 380px; height: 400px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; margin-top: 30px; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; }
         
         .input-wrapper { position: relative; width: 100%; margin-top: auto; display: flex; align-items: center; }
-        input { width: 100%; padding: 15px 20px; border-radius: 20px; border: none; background: rgba(255,255,255,0.2); color: white; box-sizing: border-box; }
+        input { width: 100%; padding: 18px 20px; border-radius: 20px; border: none; background: rgba(255,255,255,0.25); color: white; box-sizing: border-box; }
         
-        /* دکمه ارسال چسبیده به دیواره راست */
-        .send-btn { position: absolute; right: 5px; width: 40px; height: 40px; border-radius: 50%; border: none; background: white; color: #764ba2; cursor: pointer; font-weight: bold; }
+        /* دکمه ارسال به سمت چپ و فلش رو به بالا */
+        .send-btn { position: absolute; left: 5px; width: 45px; height: 45px; border-radius: 50%; border: none; background: white; color: #764ba2; cursor: pointer; font-size: 22px; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
@@ -57,7 +56,7 @@
         <div style="flex: 1; color: white; opacity: 0.8;">در حال گوش دادن...</div>
         <div class="input-wrapper">
             <input type="text" placeholder="پیام...">
-            <button class="send-btn">➤</button>
+            <button class="send-btn">▲</button>
         </div>
     </div>
 
@@ -65,7 +64,6 @@
         function toggleMenu(side) {
             const left = document.getElementById('leftPanel');
             const right = document.getElementById('rightPanel');
-            
             if(side === 'left') {
                 right.classList.remove('show-right');
                 left.classList.toggle('show-left');
