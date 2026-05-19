@@ -7,8 +7,7 @@
     <style>
         body { margin: 0; height: 100vh; background: linear-gradient(135deg, #00f2fe, #4facfe, #764ba2, #ff758c); display: flex; flex-direction: column; align-items: center; font-family: 'Nunito', sans-serif; overflow: hidden; }
 
-        /* لایه تار شونده (Overlay) */
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); backdrop-filter: blur(5px); z-index: 1000; display: none; }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); z-index: 1000; display: none; }
         #overlay.active { display: block; }
 
         .menu-btn { position: fixed; top: 20px; width: 55px; height: 55px; background: rgba(255,255,255,0.25); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 28px; z-index: 3000; }
@@ -23,16 +22,19 @@
 
         .menu-item { width: 80%; padding: 15px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); border-radius: 18px; color: white; text-align: center; cursor: pointer; }
 
-        .pulse { width: 45px; height: 45px; background: #fff; border-radius: 50%; margin-top: 130px; animation: pulse 2s infinite; }
+        /* گوی آبی و سفید با نور زرد زیرین */
+        .pulse { width: 45px; height: 45px; background: radial-gradient(circle, #ffffff, #00f2fe); border-radius: 50%; margin-top: 130px; 
+                 box-shadow: 0 10px 30px rgba(255, 255, 0, 0.6); /* نور زرد زیرین */
+                 animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); box-shadow: 0 15px 40px rgba(255, 255, 0, 0.8); } 100% { transform: scale(1); } }
+        
         .title { color: white; font-family: 'Nunito', sans-serif; font-size: 50px; margin-top: 25px; }
 
-        /* چت باکس بالا رفته (margin-top کمتر) */
-        .chat-box { width: calc(100% - 30px); max-width: 380px; height: 400px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; margin-top: 15px; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; }
+        /* چت باکس بالاتر */
+        .chat-box { width: calc(100% - 30px); max-width: 380px; height: 400px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; margin-top: 5px; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; }
         
         .input-wrapper { position: relative; width: 100%; margin-top: auto; display: flex; align-items: center; }
         input { width: 100%; padding: 18px 20px; border-radius: 20px; border: none; background: rgba(255,255,255,0.25); color: white; box-sizing: border-box; }
-        
-        /* دکمه ارسال شیشه‌ای */
         .send-btn { position: absolute; left: 5px; width: 45px; height: 45px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); color: white; cursor: pointer; font-size: 22px; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
@@ -67,13 +69,12 @@
             const overlay = document.getElementById('overlay');
             
             if(side === 'left') {
-                right.classList.remove('show-right');
-                left.classList.toggle('show-left');
+                if(left.classList.contains('show-left')) { closeAll(); }
+                else { right.classList.remove('show-right'); left.classList.add('show-left'); overlay.classList.add('active'); }
             } else {
-                left.classList.remove('show-left');
-                right.classList.toggle('show-right');
+                if(right.classList.contains('show-right')) { closeAll(); }
+                else { left.classList.remove('show-left'); right.classList.add('show-right'); overlay.classList.add('active'); }
             }
-            overlay.classList.add('active');
         }
 
         function closeAll() {
