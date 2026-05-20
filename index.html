@@ -64,27 +64,32 @@
         backdrop-filter: blur(10px);
     }
     .hamburger {
-        font-size: 30px;
+        font-size: 28px;
         cursor: pointer;
-        padding: 8px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
         background: rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
+    /* منو از سمت راست */
     .menu-panel {
         position: fixed;
         top: 65px;
-        left: -280px;
+        right: -280px;
         width: 260px;
         height: calc(100% - 65px);
         background: rgba(255,255,255,0.12);
         backdrop-filter: blur(20px);
-        border-radius: 0 20px 20px 0;
+        border-radius: 20px 0 0 20px;
         padding: 25px 20px;
         transition: 0.4s ease;
         z-index: 200;
     }
-    .menu-panel.active { left: 0; }
+    .menu-panel.active { right: 0; }
 
     .menu-item {
         padding: 16px 20px;
@@ -144,7 +149,7 @@
     input { flex: 1; background: transparent; border: none; color: white; font-size: 16.5px; padding: 12px 15px; outline: none; }
 
     /* دکمه ارسال فقط گوی */
-    button {
+    button.send-btn {
         width: 52px; height: 52px; border: none; background: transparent;
         display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
@@ -174,31 +179,21 @@
 
     /* صفحه پادکست */
     .podcast-page { width: 100%; max-width: 360px; }
-    .horizontal-scroll {
-        display: flex; gap: 15px; overflow-x: auto; padding: 15px 0; scrollbar-width: none;
-    }
-    .horizontal-scroll::-webkit-scrollbar { display: none; }
-    .slide-item {
-        min-width: 140px; text-align: center; cursor: pointer;
-    }
-    .slide-item img {
-        width: 140px; height: 140px; object-fit: cover; border-radius: 20px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    }
-
-    .section-title {
-        font-size: 22px; margin: 25px 0 12px; padding: 0 5px;
-    }
+    .section-title { font-size: 22px; margin: 25px 0 12px; padding: 0 5px; }
 
     .podcast-item {
         background: rgba(255,255,255,0.1); backdrop-filter: blur(12px);
         border: 1px solid rgba(255,255,255,0.15); border-radius: 18px;
-        padding: 12px 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px;
+        padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px;
         cursor: pointer;
     }
     .podcast-item:hover { background: rgba(255,255,255,0.22); }
+    .play-icon {
+        font-size: 24px;
+        color: #ff8c00;
+    }
 
-    /* Now Playing با پلیر شیک */
+    /* Now Playing */
     .now-playing {
         position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 300;
         display: none; flex-direction: column; align-items: center; padding: 40px 20px 30px;
@@ -210,23 +205,48 @@
     }
     .big-cover img { width: 100%; height: 100%; object-fit: cover; }
 
-    .custom-player {
-        width: 100%; max-width: 320px; margin-top: 20px;
-    }
+    .custom-player { width: 100%; max-width: 320px; margin-top: 10px; text-align: center; }
     .progress-container {
         height: 6px; background: rgba(255,255,255,0.2); border-radius: 10px;
-        margin: 20px 0; position: relative; overflow: hidden;
+        margin: 25px 0; position: relative; overflow: hidden;
     }
     .progress-bar {
-        height: 100%; width: 45%; background: linear-gradient(90deg, #ff8c00, #ff5500);
-        border-radius: 10px; box-shadow: 0 0 12px #ff8c00;
+        height: 100%; width: 35%; background: linear-gradient(90deg, #ff8c00, #ff5500);
+        border-radius: 10px; box-shadow: 0 0 15px #ff8c00;
     }
-    .play-button {
-        width: 70px; height: 70px; background: linear-gradient(135deg, #ff8c00, #ff5500);
+    .controls {
+        display: flex; align-items: center; justify-content: center; gap: 25px; margin: 15px 0;
+    }
+    .control-btn {
+        background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
+        width: 48px; height: 48px; border-radius: 50%; display: flex;
+        align-items: center; justify-content: center; font-size: 20px;
+        cursor: pointer;
+    }
+    .play-main {
+        width: 75px; height: 75px; background: linear-gradient(135deg, #ff8c00, #ff5500);
         border-radius: 50%; display: flex; align-items: center; justify-content: center;
-        font-size: 32px; box-shadow: 0 0 25px #ff8c00; cursor: pointer;
-        margin: 15px 0;
+        font-size: 36px; box-shadow: 0 0 30px #ff8c00; cursor: pointer;
     }
+
+    /* دکمه بازگشت */
+    .return-btn {
+        padding: 14px 40px;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 50px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 30px;
+    }
+
+    #overlay { 
+        position: fixed; inset: 0; background: rgba(0,0,0,0.6); 
+        backdrop-filter: blur(8px); display: none; z-index: 150; 
+    }
+    #overlay.active { display: block; }
 </style>
 </head>
 <body>
@@ -237,13 +257,13 @@
     <div class="hamburger" onclick="toggleMenu()">☰</div>
 </header>
 
-<!-- منو -->
+<!-- منو از راست -->
 <div id="sideMenu" class="menu-panel">
-    <div class="menu-item" onclick="goToHome()">🏠 خانه</div>
-    <div class="menu-item">👤 پروفایل</div>
-    <div class="menu-item">📊 آمار پیشرفت</div>
-    <div class="menu-item">⭐ مورد علاقه‌ها</div>
-    <div class="menu-item">⚙️ تنظیمات</div>
+    <div class="menu-item" onclick="goToHome()">خانه</div>
+    <div class="menu-item">پروفایل</div>
+    <div class="menu-item">آمار پیشرفت</div>
+    <div class="menu-item">مورد علاقه‌ها</div>
+    <div class="menu-item">تنظیمات</div>
 </div>
 
 <div id="overlay" onclick="toggleMenu()"></div>
@@ -255,7 +275,7 @@
         <div id="chat-output"></div>
         <div class="input-box">
             <input id="user-input" placeholder="پیام بده...">
-            <button onclick="sendMessage()">
+            <button class="send-btn" onclick="sendMessage()">
                 <div class="orb-send"></div>
             </button>
         </div>
@@ -290,20 +310,22 @@
     </div>
     
     <h2 id="npTitle" style="margin-bottom:8px; text-align:center;">عنوان پادکست</h2>
-    <p id="npSubtitle" style="opacity:0.7; margin-bottom:20px;">PlanLife</p>
+    <p id="npSubtitle" style="opacity:0.7; margin-bottom:25px;">PlanLife</p>
 
     <div class="custom-player">
         <div class="progress-container">
-            <div class="progress-bar"></div>
+            <div class="progress-bar" id="progressBar"></div>
         </div>
-        <div style="display:flex; justify-content:center;">
-            <div onclick="togglePlay()" class="play-button" id="playBtn">▶</div>
+        <div class="controls">
+            <div class="control-btn" onclick="seek(-10)">⤆</div>
+            <div onclick="togglePlay()" class="play-main" id="playBtn">▶</div>
+            <div class="control-btn" onclick="seek(10)">⤇</div>
         </div>
     </div>
 
     <audio id="mainAudio" style="display:none;"></audio>
     
-    <button onclick="closeNowPlaying()" style="margin-top:30px; padding:12px 40px; background:rgba(255,255,255,0.2); border:none; border-radius:50px; color:white;">بستن</button>
+    <button onclick="closeNowPlaying()" class="return-btn">بستن</button>
 </div>
 
 <script>
@@ -347,12 +369,15 @@ function scrollDown() {
 
 input.addEventListener("keypress", e => { if (e.key === "Enter") sendMessage(); });
 
+// منو از راست
 function toggleMenu() {
-    document.getElementById('sideMenu').classList.toggle('active');
-    document.getElementById('overlay').classList.toggle('active');
+    const menu = document.getElementById('sideMenu');
+    const overlay = document.getElementById('overlay');
+    menu.classList.toggle('active');
+    overlay.classList.toggle('active');
 }
 
-// نمایش بخش‌ها
+// صفحه پادکست
 function showSection(section) {
     const main = document.getElementById('mainContent');
 
@@ -361,11 +386,10 @@ function showSection(section) {
             <h2 style="font-size:32px; margin-bottom:15px; text-align:center;">پادکست‌های PlanLife</h2>
             
             <div class="podcast-page">
-                <div class="section-title">همه دسته‌ها</div>
                 <div id="categoriesContainer"></div>
             </div>
 
-            <button onclick="goToHome()" style="margin-top:30px; padding:12px 32px; background:rgba(255,255,255,0.15); border:none; border-radius:50px; color:white; font-size:16px;">بازگشت به خانه</button>
+            <button onclick="goToHome()" class="return-btn">بازگشت به خانه</button>
         `;
         loadCategories();
     } else {
@@ -373,30 +397,26 @@ function showSection(section) {
             <div style="text-align:center; padding:80px 20px;">
                 <h2 style="font-size:28px; margin-bottom:20px;">${getSectionTitle(section)}</h2>
                 <p style="opacity:0.9;">این بخش به‌زودی تکمیل می‌شود...</p>
-                <button onclick="goToHome()" style="margin-top:40px; padding:14px 32px; background:rgba(255,255,255,0.2); border:none; border-radius:50px; color:white;">بازگشت به خانه</button>
+                <button onclick="goToHome()" class="return-btn">بازگشت به خانه</button>
             </div>
         `;
     }
 }
 
 function loadCategories() {
-    const categories = [
-        "باورهای ثروت", "عشق و روابط", "تحول حال و احساس",
-        "اعتماد به نفس", "احساس لیاقت"
-    ];
-
+    const categories = ["باورهای ثروت", "عشق و روابط", "تحول حال و احساس", "اعتماد به نفس", "احساس لیاقت"];
     let html = '';
     categories.forEach(cat => {
         html += `
-            <div style="margin-bottom:20px;">
+            <div style="margin-bottom:22px;">
                 <div class="category-header" onclick="toggleCategory(this)" style="background:rgba(255,255,255,0.15);padding:16px 20px;border-radius:18px;margin-bottom:8px;font-size:18px;font-weight:500;cursor:pointer;">
                     ${cat}
                     <span style="float:left;">›</span>
                 </div>
-                <div class="category-content" style="display:none; padding:0 10px;">
+                <div class="category-content" style="display:none; padding:0 8px;">
                     ${Array(5).fill(0).map((_, i) => `
                         <div class="podcast-item" onclick="playPodcast('${cat}', ${i+1})">
-                            <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:12px;"></div>
+                            <span class="play-icon">▶</span>
                             <div>
                                 <div style="font-weight:500;">${cat}</div>
                                 <div style="font-size:14px;opacity:0.7;">قسمت ${i+1}</div>
@@ -419,10 +439,8 @@ function playPodcast(title, episode) {
     const fullTitle = `${title} - قسمت ${episode}`;
     document.getElementById('npTitle').textContent = fullTitle;
     document.getElementById('nowPlayingScreen').classList.add('active');
-    
-    const audio = document.getElementById('mainAudio');
-    audio.src = "#"; // لینک صدا را اینجا بگذار
-    audio.play();
+    document.getElementById('mainAudio').src = "#";
+    document.getElementById('mainAudio').play();
 }
 
 function togglePlay() {
@@ -435,6 +453,11 @@ function togglePlay() {
         audio.pause();
         btn.textContent = '▶';
     }
+}
+
+function seek(seconds) {
+    const audio = document.getElementById('mainAudio');
+    audio.currentTime += seconds;
 }
 
 function closeNowPlaying() {
