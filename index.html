@@ -80,15 +80,19 @@
     .intro-video-box {
         width: 100%; max-width: 360px; background: rgba(255,255,255,0.12);
         backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.25);
-        border-radius: 24px; padding: 15px; margin-bottom: 25px; text-align: center;
+        border-radius: 24px; padding: 12px; margin-bottom: 25px; text-align: center;
+    }
+    .intro-video-box video {
+        width: 100%; border-radius: 16px; margin-top: 10px;
     }
 
     .horizontal-scroll {
-        display: flex; gap: 15px; overflow-x: auto; padding: 10px 0 20px; scrollbar-width: none;
+        display: flex; gap: 15px; overflow-x: auto; padding: 10px 0 20px; 
+        scrollbar-width: none; -webkit-overflow-scrolling: touch;
     }
     .horizontal-scroll::-webkit-scrollbar { display: none; }
     .slide-item {
-        min-width: 130px; text-align: center; cursor: pointer;
+        min-width: 130px; text-align: center; cursor: pointer; flex-shrink: 0;
     }
     .slide-item img {
         width: 130px; height: 130px; object-fit: cover; border-radius: 18px;
@@ -105,9 +109,7 @@
         cursor: pointer; margin-left: 8px; margin-right: 8px;
     }
     .podcast-item:hover { background: rgba(255,255,255,0.22); }
-    .podcast-item img {
-        width: 55px; height: 55px; object-fit: cover; border-radius: 12px;
-    }
+    .podcast-item img { width: 55px; height: 55px; object-fit: cover; border-radius: 12px; }
     .music-info { flex: 1; }
     .music-title { font-weight: 500; font-size: 16px; }
     .music-artist { font-size: 14px; opacity: 0.7; }
@@ -216,7 +218,7 @@
     </div>
     
     <h2 id="npTitle" style="margin-bottom:8px; text-align:center;">عنوان پادکست</h2>
-    <p id="npSubtitle" style="opacity:0.7; margin-bottom:10px;">PlanLife</p>
+    <p id="npSubtitle" style="opacity:0.7; margin-bottom:25px;">PlanLife</p>
 
     <div class="custom-player">
         <div class="progress-container" id="progressContainer">
@@ -239,7 +241,7 @@
 </div>
 
 <script>
-// ستاره‌باران + چت + منو
+// ستاره‌باران + چت
 function createShootingStar() {
     const star = document.createElement('div');
     star.className = 'shooting-star';
@@ -290,9 +292,9 @@ function showSection(section) {
             
             <div class="intro-video-box">
                 <h3 style="margin-bottom:12px;">🎥 معرفی PlanLife</h3>
-                <div style="background:#000; border-radius:16px; height:180px; display:flex; align-items:center; justify-content:center; color:#aaa;">
-                    ویدیو معرفی اینجا قرار می‌گیرد
-                </div>
+                <video controls width="100%" style="border-radius:16px;">
+                    <source src="https://persian22.cdn.asset.aparat.com/aparat-video/90c2d8178a340bb05508eb4f8efadac867925565-720p.mp4" type="video/mp4">
+                </video>
             </div>
 
             <div class="section-title">دسته‌بندی‌ها</div>
@@ -305,7 +307,7 @@ function showSection(section) {
         `;
         loadPodcastPage();
     } else if (section === 'exercise') {
-        main.innerHTML = `<iframe srcdoc='${exerciseHTML}' style="width:100%; max-width:450px; height:100vh; border:none;"></iframe>`;
+        main.innerHTML = `<iframe srcdoc='${exerciseHTML}' style="width:100%; max-width:450px; height:100vh; border:none; border-radius:20px;"></iframe>`;
     } else {
         main.innerHTML = `
             <div style="text-align:center; padding:80px 20px;">
@@ -317,14 +319,19 @@ function showSection(section) {
     }
 }
 
-// محتوای تمرینات (دفترچه شکرگزاری)
-const exerciseHTML = `<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>PlanLife | دفترچه شکرگزاری</title><style>:root{--glass:rgba(255,255,255,0.1);--border:rgba(255,255,255,0.2);--accent:#4ade80;}body{margin:0;padding:20px;background:#0f172a;font-family:'Vazirmatn',sans-serif;color:white;} .glass-card{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:30px;padding:25px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);}.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px;}button{padding:15px;border-radius:18px;border:none;font-weight:bold;cursor:pointer;transition:0.3s;}.btn-save{background:#4ade80;color:#064e3b;}</style></head><body><div class="glass-card"><header style="text-align:center;margin-bottom:25px;"><h1 style="background:linear-gradient(to right,#4ade80,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">PlanLife ✨</h1></header><div style="background:rgba(0,0,0,0.2);border-radius:15px;padding:10px;margin-bottom:20px;text-align:center;"><input type="date" id="dateInput" style="background:transparent;border:none;color:white;font-size:1rem;outline:none;"></div><div style="margin-bottom:15px;"><label>۱. به‌خاطر چه چیزی سپاسگزارم؟</label><textarea id="q1" placeholder="بنویس..." style="width:100%;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:15px;padding:12px;color:white;resize:none;height:70px;"></textarea></div><div style="margin-bottom:15px;"><label>۲. به‌خاطر چه کسی سپاسگزارم؟</label><textarea id="q2" placeholder="بنویس..." style="width:100%;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:15px;padding:12px;color:white;resize:none;height:70px;"></textarea></div><div style="margin-bottom:15px;"><label>۳. هدف اصلی و قدم امروز؟</label><textarea id="q3" placeholder="بنویس..." style="width:100%;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:15px;padding:12px;color:white;resize:none;height:70px;"></textarea></div><div class="actions"><button class="btn-save" onclick="saveData()">ذخیره امروز</button><button onclick="alert('آرشیو به‌زودی فعال می‌شود')" style="background:rgba(255,255,255,0.1);color:white;">آرشیو</button></div></div><script>const dInp=document.getElementById('dateInput');dInp.valueAsDate=new Date();function saveData(){alert("✨ با موفقیت ذخیره شد!");}<\/script></body></html>`;
+// دفترچه شکرگزاری
+const exerciseHTML = `<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>PlanLife | شکرگزاری</title><style>body{margin:0;padding:20px;background:#0f172a;font-family:'Vazirmatn',sans-serif;color:white;}.glass-card{background:rgba(255,255,255,0.1);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.2);border-radius:30px;padding:25px;}</style></head><body><div class="glass-card"><h1 style="text-align:center;margin-bottom:20px;">دفترچه شکرگزاری</h1><input type="date" id="date" style="width:100%;padding:10px;background:rgba(0,0,0,0.3);border:none;border-radius:15px;color:white;"><textarea placeholder="به خاطر چه چیزی سپاسگزارم؟" style="width:100%;height:100px;margin:15px 0;background:rgba(0,0,0,0.3);border:none;border-radius:15px;color:white;padding:12px;"></textarea><button onclick="alert('ذخیره شد ✨')" style="width:100%;padding:15px;background:#4ade80;color:#064e3b;border:none;border-radius:18px;font-weight:bold;">ذخیره امروز</button></div></body></html>`;
 
+// صفحه پادکست
 function loadPodcastPage() {
     const categories = ["باورهای ثروت", "عشق و روابط", "تحول حال و احساس", "اعتماد به نفس", "احساس لیاقت"];
     let slidesHTML = '';
     categories.forEach(cat => {
-        slidesHTML += `<div class="slide-item" onclick="selectCategory('${cat}')"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"><p style="margin-top:8px;">${cat}</p></div>`;
+        slidesHTML += `
+            <div class="slide-item" onclick="selectCategory('${cat}')">
+                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg">
+                <p style="margin-top:8px;">${cat}</p>
+            </div>`;
     });
     document.getElementById('categorySlides').innerHTML = slidesHTML;
     loadAllMusic();
@@ -367,13 +374,13 @@ function playPodcast(title, episode, src) {
     document.getElementById('npTitle').textContent = fullTitle;
     document.getElementById('nowPlayingScreen').classList.add('active');
     
-    const audioEl = document.getElementById('mainAudio');
-    audioEl.src = src;
-    audioEl.play();
+    const audio = document.getElementById('mainAudio');
+    audio.src = src;
+    audio.play();
     updateProgress();
 }
 
-// Progress & Time
+// Progress
 const audio = document.getElementById('mainAudio');
 const progressBar = document.getElementById('progressBar');
 const currentTimeEl = document.getElementById('currentTime');
@@ -383,7 +390,6 @@ audio.addEventListener('timeupdate', () => {
     if (audio.duration) {
         const progress = (audio.currentTime / audio.duration) * 100;
         progressBar.style.width = progress + '%';
-        
         currentTimeEl.textContent = formatTime(audio.currentTime);
         durationEl.textContent = formatTime(audio.duration);
     }
