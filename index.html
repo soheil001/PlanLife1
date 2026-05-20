@@ -53,7 +53,7 @@
         100% { transform: translateX(1000px) translateY(800px); opacity: 0; }
     }
 
-    /* هدر فقط همبرگر */
+    /* هدر */
     header {
         position: fixed;
         top: 0;
@@ -75,7 +75,7 @@
         background: rgba(255,255,255,0.1);
     }
 
-    /* منوی شیشه‌ای */
+    /* منو شیشه‌ای */
     .menu-panel {
         position: fixed;
         top: 65px;
@@ -105,43 +105,24 @@
         position: relative;
         z-index: 5;
         min-height: 100vh;
-        padding: 80px 20px 100px;
+        padding: 75px 20px 100px;
         display: flex;
         flex-direction: column;
         align-items: center;
     }
 
-    /* گوی و عنوان */
-    .mystic-orb-container {
-        width: 105px;
-        height: 105px;
-        margin: 10px auto 8px;
-    }
-    .mystic-orb {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        background: radial-gradient(circle at 40% 30%, #ffffff, #a0f0ff 25%, #7b5eff 55%, #c026d3);
-        box-shadow: 0 0 50px #a0f0ff, 0 0 100px #c026d3, inset 0 0 35px rgba(255,255,255,0.8);
-        animation: pulseOrb 4s ease-in-out infinite;
-    }
-    @keyframes pulseOrb {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.09); }
-    }
-
     .title {
-        font-size: 36px;
+        font-size: 38px;
         font-weight: 700;
         text-shadow: 0 0 25px rgba(160, 240, 255, 0.9);
-        margin-bottom: 20px;
+        margin-bottom: 18px;
     }
 
     /* چت باکس */
     .chat-container {
         width: 100%;
         max-width: 360px;
-        height: 380px;
+        height: 390px;
         background: rgba(255,255,255,0.13);
         backdrop-filter: blur(16px);
         border: 1px solid rgba(255,255,255,0.2);
@@ -193,39 +174,58 @@
         padding: 12px 15px;
         outline: none;
     }
+
+    /* دکمه ارسال با گوی نبض‌دار */
     button {
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
         border: none;
         background: linear-gradient(135deg, #a0f0ff, #c026d3);
         border-radius: 50%;
-        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
         cursor: pointer;
+        box-shadow: 0 0 15px rgba(192, 38, 211, 0.6);
+    }
+    .orb-send {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 40% 30%, #ffffff, #a0f0ff 40%, #c026d3);
+        box-shadow: 0 0 12px #fff, inset 0 0 8px rgba(255,255,255,0.8);
+        animation: pulseOrb 2.5s ease-in-out infinite;
+    }
+    @keyframes pulseOrb {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.15); }
     }
 
-    /* ۴ دکمه پایین صفحه */
+    /* ۴ دکمه پایین با حاشیه نارنجی نوری */
     .services-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 14px;
         width: 100%;
         max-width: 360px;
-        margin-top: 20px;
     }
     .service-box {
         background: rgba(255,255,255,0.13);
         backdrop-filter: blur(12px);
-        border: 1px solid rgba(255,255,255,0.15);
+        border: 1.5px solid #ff8c00;
         border-radius: 20px;
         padding: 22px 10px;
         text-align: center;
         font-size: 17px;
         cursor: pointer;
         transition: all 0.3s;
+        box-shadow: 0 0 15px rgba(255, 140, 0, 0.5);
     }
     .service-box:hover {
         transform: translateY(-6px);
-        background: rgba(255,255,255,0.25);
+        box-shadow: 0 0 22px rgba(255, 140, 0, 0.8);
+        background: rgba(255,255,255,0.22);
     }
 
     #overlay { 
@@ -249,36 +249,34 @@
 
 <!-- منو -->
 <div id="sideMenu" class="menu-panel">
-    <div class="menu-item" onclick="goToHome()">🏠 خانه</div>
-    <div class="menu-item">👤 پروفایل</div>
-    <div class="menu-item">📊 آمار پیشرفت</div>
-    <div class="menu-item">⭐️ مورد علاقه‌ها</div>
-    <div class="menu-item">⚙️ تنظیمات</div>
+    <div class="menu-item" onclick="goToHome()">خانه</div>
+    <div class="menu-item">پروفایل</div>
+    <div class="menu-item">آمار پیشرفت</div>
+    <div class="menu-item">مورد علاقه‌ها</div>
+    <div class="menu-item">تنظیمات</div>
 </div>
 
 <div id="overlay" onclick="toggleMenu()"></div>
 
 <div class="main-center" id="mainContent">
-    <!-- گوی + عنوان + چت -->
-    <div class="mystic-orb-container">
-        <div class="mystic-orb"></div>
-    </div>
     <div class="title">PlanLife</div>
 
     <div class="chat-container" id="chatBox">
         <div id="chat-output"></div>
         <div class="input-box">
             <input id="user-input" placeholder="پیام بده...">
-            <button onclick="sendMessage()">➤</button>
+            <button onclick="sendMessage()">
+                <div class="orb-send"></div>
+            </button>
         </div>
     </div>
 
-    <!-- ۴ دکمه در پایین -->
+    <!-- ۴ دکمه پایین -->
     <div class="services-grid">
-        <div class="service-box" onclick="showSection('podcast')">🎙️ پادکست</div>
-        <div class="service-box" onclick="showSection('success')">🏆 موفقیت</div>
-        <div class="service-box" onclick="showSection('belief')">🧠 باور</div>
-        <div class="service-box" onclick="showSection('exercise')">🏋️ تمرینات</div>
+        <div class="service-box" onclick="showSection('podcast')">پادکست</div>
+        <div class="service-box" onclick="showSection('success')">موفقیت</div>
+        <div class="service-box" onclick="showSection('belief')">باور</div>
+        <div class="service-box" onclick="showSection('exercise')">تمرینات</div>
     </div>
 </div>
 
@@ -300,7 +298,7 @@ const input = document.getElementById("user-input");
 const output = document.getElementById("chat-output");
 
 window.onload = () => {
-    output.innerHTML += `<div class="msg-bot">سلام 👋 به PlanLife خوش اومدی 🌌</div>`;
+    output.innerHTML += `<div class="msg-bot">سلام خوش اومدی به PlanLife</div>`;
     scrollDown();
 };
 
@@ -312,7 +310,7 @@ function sendMessage() {
     scrollDown();
 
     setTimeout(() => {
-        output.innerHTML += `<div class="msg-bot">دارم از دل کهکشان برات انرژی می‌فرستم ✨</div>`;
+        output.innerHTML += `<div class="msg-bot">دارم از دل کهکشان برات انرژی می‌فرستم</div>`;
         scrollDown();
     }, 700);
 }
@@ -342,10 +340,10 @@ function showSection(section) {
 }
 
 function getSectionTitle(section) {
-    if (section === 'podcast') return '🎙️ پادکست‌های انگیزشی';
-    if (section === 'success') return '🏆 داستان‌های موفقیت';
-    if (section === 'belief') return '🧠 تقویت باور';
-    if (section === 'exercise') return '🏋️ تمرینات';
+    if (section === 'podcast') return 'پادکست‌های انگیزشی';
+    if (section === 'success') return 'داستان‌های موفقیت';
+    if (section === 'belief') return 'تقویت باور';
+    if (section === 'exercise') return 'تمرینات';
 }
 
 function goToHome() {
