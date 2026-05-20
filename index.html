@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
 <title>PlanLife</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -15,7 +15,7 @@
         background: radial-gradient(circle at center, #1a0033 0%, #000011 70%);
     }
 
-    /* ستاره‌ها و ستاره‌باران */
+    /* ستاره‌ها */
     .stars {
         position: fixed;
         inset: 0;
@@ -53,12 +53,9 @@
         100% { transform: translateX(1000px) translateY(800px); opacity: 0; }
     }
 
-    /* هدر */
     header {
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
+        top: 0; left: 0; right: 0;
         height: 65px;
         display: flex;
         align-items: center;
@@ -75,7 +72,6 @@
         background: rgba(255,255,255,0.1);
     }
 
-    /* منو شیشه‌ای */
     .menu-panel {
         position: fixed;
         top: 65px;
@@ -100,7 +96,6 @@
     }
     .menu-item:hover { background: rgba(255,255,255,0.25); }
 
-    /* محتوای اصلی */
     .main-center {
         position: relative;
         z-index: 5;
@@ -140,22 +135,26 @@
         padding: 10px;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
+    }
+
+    /* پیام‌ها - پیام سیستم چپ، پیام کاربر راست */
+    .msg-bot {
+        align-self: flex-start;
+        background: rgba(255,255,255,0.22);
+        padding: 11px 15px;
+        border-radius: 18px 18px 18px 5px;
+        max-width: 88%;           /* متن طولانی‌تر قبل از شکستن خط */
+        line-height: 1.55;
     }
 
     .msg-user {
         align-self: flex-end;
-        background: rgba(100, 60, 255, 0.75);
-        padding: 10px 14px;
+        background: rgba(100, 60, 255, 0.78);
+        padding: 11px 15px;
         border-radius: 18px 18px 5px 18px;
-        max-width: 78%;
-    }
-    .msg-bot {
-        align-self: flex-start;
-        background: rgba(255,255,255,0.22);
-        padding: 10px 14px;
-        border-radius: 18px 18px 18px 5px;
-        max-width: 78%;
+        max-width: 88%;           /* متن طولانی‌تر */
+        line-height: 1.55;
     }
 
     .input-box {
@@ -170,12 +169,11 @@
         background: transparent;
         border: none;
         color: white;
-        font-size: 16px;
+        font-size: 16.5px;
         padding: 12px 15px;
         outline: none;
     }
 
-    /* دکمه ارسال با گوی نبض‌دار */
     button {
         width: 48px;
         height: 48px;
@@ -185,7 +183,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        position: relative;
         cursor: pointer;
         box-shadow: 0 0 15px rgba(192, 38, 211, 0.6);
     }
@@ -199,10 +196,10 @@
     }
     @keyframes pulseOrb {
         0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.15); }
+        50% { transform: scale(1.18); }
     }
 
-    /* ۴ دکمه پایین با حاشیه نارنجی نوری */
+    /* دکمه‌های پایین */
     .services-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -247,7 +244,6 @@
     <div class="hamburger" onclick="toggleMenu()">☰</div>
 </header>
 
-<!-- منو -->
 <div id="sideMenu" class="menu-panel">
     <div class="menu-item" onclick="goToHome()">خانه</div>
     <div class="menu-item">پروفایل</div>
@@ -271,7 +267,6 @@
         </div>
     </div>
 
-    <!-- ۴ دکمه پایین -->
     <div class="services-grid">
         <div class="service-box" onclick="showSection('podcast')">پادکست</div>
         <div class="service-box" onclick="showSection('success')">موفقیت</div>
@@ -281,7 +276,7 @@
 </div>
 
 <script>
-// ستاره‌باران
+// ستاره‌باران (همان قبلی)
 function createShootingStar() {
     const star = document.createElement('div');
     star.className = 'shooting-star';
@@ -321,13 +316,11 @@ function scrollDown() {
 
 input.addEventListener("keypress", e => { if (e.key === "Enter") sendMessage(); });
 
-// منو
 function toggleMenu() {
     document.getElementById('sideMenu').classList.toggle('active');
     document.getElementById('overlay').classList.toggle('active');
 }
 
-// صفحات
 function showSection(section) {
     const main = document.getElementById('mainContent');
     main.innerHTML = `
