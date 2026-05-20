@@ -82,17 +82,25 @@
         backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.25);
         border-radius: 24px; padding: 12px; margin-bottom: 25px; text-align: center;
     }
-    .intro-video-box video {
-        width: 100%; border-radius: 16px; margin-top: 10px;
-    }
+    .intro-video-box video { width: 100%; border-radius: 16px; margin-top: 10px; }
 
+    /* اسلاید افقی بهبود یافته */
     .horizontal-scroll {
-        display: flex; gap: 15px; overflow-x: auto; padding: 10px 0 20px; 
-        scrollbar-width: none; -webkit-overflow-scrolling: touch;
+        display: flex; 
+        gap: 15px; 
+        overflow-x: auto; 
+        padding: 10px 0 20px; 
+        scrollbar-width: none; 
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
     }
     .horizontal-scroll::-webkit-scrollbar { display: none; }
+
     .slide-item {
-        min-width: 130px; text-align: center; cursor: pointer; flex-shrink: 0;
+        min-width: 130px; 
+        text-align: center; 
+        cursor: pointer; 
+        flex-shrink: 0;
     }
     .slide-item img {
         width: 130px; height: 130px; object-fit: cover; border-radius: 18px;
@@ -282,7 +290,7 @@ function toggleMenu() {
     document.getElementById('overlay').classList.toggle('active');
 }
 
-// نمایش بخش‌ها
+// صفحه پادکست
 function showSection(section) {
     const main = document.getElementById('mainContent');
 
@@ -306,8 +314,6 @@ function showSection(section) {
             <button onclick="goToHome()" class="return-btn">بازگشت به خانه</button>
         `;
         loadPodcastPage();
-    } else if (section === 'exercise') {
-        main.innerHTML = `<iframe srcdoc='${exerciseHTML}' style="width:100%; max-width:450px; height:100vh; border:none; border-radius:20px;"></iframe>`;
     } else {
         main.innerHTML = `
             <div style="text-align:center; padding:80px 20px;">
@@ -319,10 +325,6 @@ function showSection(section) {
     }
 }
 
-// دفترچه شکرگزاری
-const exerciseHTML = `<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>PlanLife | شکرگزاری</title><style>body{margin:0;padding:20px;background:#0f172a;font-family:'Vazirmatn',sans-serif;color:white;}.glass-card{background:rgba(255,255,255,0.1);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.2);border-radius:30px;padding:25px;}</style></head><body><div class="glass-card"><h1 style="text-align:center;margin-bottom:20px;">دفترچه شکرگزاری</h1><input type="date" id="date" style="width:100%;padding:10px;background:rgba(0,0,0,0.3);border:none;border-radius:15px;color:white;"><textarea placeholder="به خاطر چه چیزی سپاسگزارم؟" style="width:100%;height:100px;margin:15px 0;background:rgba(0,0,0,0.3);border:none;border-radius:15px;color:white;padding:12px;"></textarea><button onclick="alert('ذخیره شد ✨')" style="width:100%;padding:15px;background:#4ade80;color:#064e3b;border:none;border-radius:18px;font-weight:bold;">ذخیره امروز</button></div></body></html>`;
-
-// صفحه پادکست
 function loadPodcastPage() {
     const categories = ["باورهای ثروت", "عشق و روابط", "تحول حال و احساس", "اعتماد به نفس", "احساس لیاقت"];
     let slidesHTML = '';
