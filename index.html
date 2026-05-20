@@ -75,8 +75,6 @@
     .service-box span { font-size: 16.5px; font-weight: 500; }
 
     /* صفحه پادکست */
-    .podcast-page { width: 100%; max-width: 360px; }
-
     .intro-video-box {
         width: 100%; max-width: 360px; background: rgba(255,255,255,0.12);
         backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.25);
@@ -84,20 +82,44 @@
     }
 
     .horizontal-scroll {
-        display: flex; gap: 15px; overflow-x: auto; padding: 10px 0 20px; scrollbar-width: none;
+        display: flex; 
+        gap: 15px; 
+        overflow-x: auto; 
+        padding: 12px 0 25px; 
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+        max-width: 360px;
     }
     .horizontal-scroll::-webkit-scrollbar { display: none; }
+
     .slide-item {
-        min-width: 130px; text-align: center; cursor: pointer;
+        min-width: 140px;
+        flex-shrink: 0;           /* خیلی مهم برای اسکرول افقی خوب */
+        text-align: center; 
+        cursor: pointer;
+        background: rgba(255,255,255,0.12);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.25);
+        border-radius: 18px;
+        padding: 10px 8px;
     }
     .slide-item img {
-        width: 130px; height: 130px; object-fit: cover; border-radius: 18px;
+        width: 130px; 
+        height: 130px; 
+        object-fit: cover; 
+        border-radius: 18px;
         box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        margin-bottom: 8px;
+    }
+    .slide-item p {
+        font-size: 15px;
+        font-weight: 500;
     }
 
     .section-title { font-size: 22px; margin: 20px 0 12px; padding: 0 5px; }
 
-    /* لیست موزیک‌ها به سبک Spotify */
+    /* لیست موزیک‌ها (بدون تغییر - عمودی باقی می‌ماند) */
     .podcast-item {
         background: rgba(255,255,255,0.1); backdrop-filter: blur(12px);
         border: 1px solid rgba(255,255,255,0.15); border-radius: 18px;
@@ -317,7 +339,7 @@ function loadPodcastPage() {
         slidesHTML += `
             <div class="slide-item" onclick="selectCategory('${cat}')">
                 <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg">
-                <p style="margin-top:8px;">${cat}</p>
+                <p>${cat}</p>
             </div>`;
     });
     document.getElementById('categorySlides').innerHTML = slidesHTML;
