@@ -6,152 +6,168 @@
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
 <title>PlanLife</title>
 <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
-        margin: 0;
         height: 100%;
         font-family: 'Vazirmatn', sans-serif;
         overflow: hidden;
         color: white;
-    }
-
-    /* === پس‌زمینه کهکشانی === */
-    body {
         background: radial-gradient(circle at center, #1a0033 0%, #000011 70%);
-        position: relative;
     }
 
-    /* ستاره‌های ثابت */
+    /* ستاره‌ها */
     .stars {
         position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
+        inset: 0;
         background: transparent;
         z-index: 1;
         pointer-events: none;
     }
-
-    .stars::before,
-    .stars::after {
+    .stars::before, .stars::after {
         content: '';
         position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: transparent;
-        animation: twinkle 8s infinite alternate;
-    }
-
-    .stars::before {
+        inset: 0;
         background-image: radial-gradient(white 1px, transparent 1px);
         background-size: 80px 80px;
-        opacity: 0.6;
+        opacity: 0.5;
+        animation: twinkle 10s infinite alternate;
+    }
+    .stars::after {
+        background-size: 140px 140px;
+        opacity: 0.3;
+        animation-duration: 15s;
     }
 
-    .stars::after {
-        background-image: radial-gradient(white 1px, transparent 1px);
-        background-size: 120px 120px;
-        opacity: 0.4;
-        animation-duration: 12s;
-    }
+    @keyframes twinkle { 0% { opacity: 0.4; } 100% { opacity: 0.7; } }
 
     /* ستاره‌باران ملایم */
     .shooting-star {
         position: absolute;
         width: 3px;
-        height: 3px;
+        height: 2px;
         background: white;
-        border-radius: 50%;
-        box-shadow: 0 0 8px white;
-        animation: shoot 4s linear infinite;
+        box-shadow: 0 0 10px white;
+        animation: shoot 5s linear infinite;
         z-index: 1;
     }
-
     @keyframes shoot {
-        0% { transform: translateX(-100px) translateY(-100px); opacity: 1; }
-        100% { transform: translateX(800px) translateY(800px); opacity: 0; }
+        0% { transform: translateX(-200px) translateY(-200px); opacity: 1; }
+        100% { transform: translateX(1000px) translateY(800px); opacity: 0; }
     }
 
-    /* گوی ماورایی چرخان */
+    /* هدر با منو همبرگری */
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        z-index: 100;
+        background: rgba(0,0,0,0.2);
+        backdrop-filter: blur(10px);
+    }
+    .hamburger {
+        font-size: 28px;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+    }
+
+    /* منوی شیشه‌ای */
+    .menu-panel {
+        position: fixed;
+        top: 70px;
+        left: -280px;
+        width: 260px;
+        height: calc(100% - 70px);
+        background: rgba(255,255,255,0.12);
+        backdrop-filter: blur(20px);
+        border-radius: 0 20px 20px 0;
+        padding: 20px;
+        transition: 0.4s ease;
+        z-index: 200;
+        box-shadow: 5px 0 20px rgba(0,0,0,0.3);
+    }
+    .menu-panel.active { left: 0; }
+
+    .menu-item {
+        padding: 16px 20px;
+        margin: 10px 0;
+        border-radius: 15px;
+        background: rgba(255,255,255,0.1);
+        font-size: 17px;
+        transition: 0.3s;
+    }
+    .menu-item:hover { background: rgba(255,255,255,0.25); }
+
+    /* گوی ماورایی کوچکتر + نبض */
     .mystic-orb-container {
-        position: relative;
-        width: 140px;
-        height: 140px;
-        margin: 30px auto 10px;
+        width: 110px;
+        height: 110px;
+        margin: 25px auto 10px;
         z-index: 10;
     }
-
     .mystic-orb {
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        background: radial-gradient(circle at 40% 30%, #ffffff, #a0f0ff 20%, #6b4eff 50%, #c026d3 80%, #4b0082);
+        background: radial-gradient(circle at 40% 30%, #ffffff, #a0f0ff 25%, #7b5eff 55%, #c026d3);
         box-shadow: 
-            0 0 60px #a0f0ff,
-            0 0 120px #c026d3,
-            inset 0 0 40px rgba(255,255,255,0.9),
-            inset 0 30px 40px rgba(255,255,255,0.4);
-        animation: rotateOrb 25s linear infinite;
+            0 0 50px #a0f0ff,
+            0 0 100px #c026d3,
+            inset 0 0 35px rgba(255,255,255,0.8);
+        animation: pulseOrb 4s ease-in-out infinite;
         position: relative;
     }
-
-    .mystic-orb::after {
-        content: '';
-        position: absolute;
-        top: 15%;
-        left: 25%;
-        width: 25px;
-        height: 25px;
-        background: rgba(255,255,255,0.7);
-        border-radius: 50%;
-        filter: blur(8px);
-    }
-
-    @keyframes rotateOrb {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
+    @keyframes pulseOrb {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.08); }
     }
 
     .title {
-        color: white;
-        font-size: 42px;
+        font-size: 38px;
         font-weight: 700;
-        text-shadow: 0 0 30px rgba(160, 240, 255, 0.8);
-        margin-bottom: 20px;
+        text-shadow: 0 0 25px rgba(160, 240, 255, 0.9);
+        margin-bottom: 15px;
         z-index: 10;
     }
 
-    /* بقیه استایل‌ها مشابه قبل (کمی تمیزتر) */
     .main-center {
         position: relative;
         z-index: 5;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        padding-top: 90px;
         min-height: 100vh;
-        padding: 20px;
+        padding-bottom: 30px;
+        overflow-y: auto;
     }
 
+    /* چت */
     .chat-container {
         width: calc(100% - 40px);
         max-width: 360px;
-        height: 420px;
-        background: rgba(255,255,255,0.12);
+        height: 380px;
+        background: rgba(255,255,255,0.13);
         backdrop-filter: blur(16px);
-        border: 1px solid rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.2);
         border-radius: 28px;
         display: flex;
         flex-direction: column;
         padding: 12px;
         box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-        transition: 0.4s;
-    }
-
-    .chat-container.active {
-        height: 65vh;
     }
 
     #chat-output {
         flex: 1;
         overflow-y: auto;
-        padding: 10px;
+        padding: 8px;
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -159,20 +175,17 @@
 
     .msg-user {
         align-self: flex-end;
-        background: rgba(100, 50, 255, 0.7);
-        color: white;
+        background: rgba(100, 60, 255, 0.75);
         padding: 10px 14px;
-        border-radius: 18px 18px 4px 18px;
-        max-width: 75%;
+        border-radius: 18px 18px 5px 18px;
+        max-width: 78%;
     }
-
     .msg-bot {
         align-self: flex-start;
-        background: rgba(255,255,255,0.2);
-        color: white;
+        background: rgba(255,255,255,0.22);
         padding: 10px 14px;
-        border-radius: 18px 18px 18px 4px;
-        max-width: 75%;
+        border-radius: 18px 18px 18px 5px;
+        max-width: 78%;
     }
 
     .input-box {
@@ -182,51 +195,58 @@
         padding: 6px;
         margin-top: 8px;
     }
-
     input {
         flex: 1;
-        border: none;
         background: transparent;
+        border: none;
         color: white;
         font-size: 16px;
-        padding: 12px;
+        padding: 12px 15px;
         outline: none;
     }
-
     button {
-        width: 42px;
-        height: 42px;
+        width: 44px;
+        height: 44px;
         border: none;
         background: linear-gradient(135deg, #a0f0ff, #c026d3);
-        color: white;
         border-radius: 50%;
-        font-size: 18px;
+        font-size: 20px;
         cursor: pointer;
     }
 
-    .grid-buttons {
+    /* باکس‌های پایین */
+    .services-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 12px;
         width: calc(100% - 40px);
         max-width: 360px;
-        margin-top: 20px;
+        margin-top: 25px;
     }
-
-    .btn-square {
-        aspect-ratio: 1;
+    .service-box {
+        background: rgba(255,255,255,0.13);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.15);
         border-radius: 20px;
-        background: rgba(255,255,255,0.12);
-        backdrop-filter: blur(10px);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 18px;
-        border: 1px solid rgba(255,255,255,0.1);
+        padding: 18px 10px;
+        text-align: center;
+        font-size: 17px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .service-box:hover {
+        transform: translateY(-5px);
+        background: rgba(255,255,255,0.22);
     }
 
-    /* منو و overlay همان قبلی */
-    #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(6px); display: none; z-index: 1000; }
+    #overlay { 
+        position: fixed; 
+        inset: 0; 
+        background: rgba(0,0,0,0.5); 
+        backdrop-filter: blur(8px); 
+        display: none; 
+        z-index: 150; 
+    }
     #overlay.active { display: block; }
 </style>
 </head>
@@ -234,9 +254,25 @@
 
 <div class="stars" id="stars"></div>
 
-<div id="overlay" onclick="closeAll()"></div>
+<header>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <div class="title" style="font-size:24px; margin:0;">PlanLife</div>
+    <div></div>
+</header>
 
-<div class="main-center">
+<!-- منوی شیشه‌ای -->
+<div id="sideMenu" class="menu-panel">
+    <div class="menu-item" onclick="goToHome()">🏠 خانه</div>
+    <div class="menu-item">👤 پروفایل</div>
+    <div class="menu-item">📊 آمار پیشرفت</div>
+    <div class="menu-item">⭐️ مورد علاقه‌ها</div>
+    <div class="menu-item">⚙️ تنظیمات</div>
+    <div class="menu-item">📞 پشتیبانی</div>
+</div>
+
+<div id="overlay" onclick="toggleMenu()"></div>
+
+<div class="main-center" id="mainContent">
     <div class="mystic-orb-container">
         <div class="mystic-orb"></div>
     </div>
@@ -250,11 +286,11 @@
         </div>
     </div>
 
-    <div class="grid-buttons">
-        <div class="btn-square" onclick="quickMsg('انگیزه')">انگیزه</div>
-        <div class="btn-square" onclick="quickMsg('هدف')">هدف</div>
-        <div class="btn-square" onclick="quickMsg('پول')">پول</div>
-        <div class="btn-square" onclick="quickMsg('رشد')">رشد</div>
+    <div class="services-grid">
+        <div class="service-box" onclick="showSection('podcast')">🎙️ پادکست</div>
+        <div class="service-box" onclick="showSection('success')">🏆 موفقیت</div>
+        <div class="service-box" onclick="showSection('belief')">🧠 باور</div>
+        <div class="service-box" onclick="showSection('exercise')">🏋️ تمرینات</div>
     </div>
 </div>
 
@@ -263,26 +299,17 @@
 function createShootingStar() {
     const star = document.createElement('div');
     star.className = 'shooting-star';
-    
-    const left = Math.random() * 70 + '%';
-    star.style.left = left;
-    star.style.top = Math.random() * 40 + '%';
-    star.style.animationDuration = (Math.random() * 3 + 3) + 's';
-    star.style.opacity = Math.random() * 0.7 + 0.5;
-    
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 50 + '%';
+    star.style.animationDuration = (Math.random() * 4 + 4) + 's';
     document.body.appendChild(star);
-    
-    setTimeout(() => star.remove(), 8000);
+    setTimeout(() => star.remove(), 10000);
 }
+setInterval(() => { if (Math.random() > 0.35) createShootingStar(); }, 900);
 
-setInterval(() => {
-    if (Math.random() > 0.4) createShootingStar();
-}, 800);
-
-// بقیه کدهای قبلی
+// چت
 const input = document.getElementById("user-input");
 const output = document.getElementById("chat-output");
-const chatBox = document.getElementById("chatBox");
 
 window.onload = () => {
     output.innerHTML += `<div class="msg-bot">سلام 👋 به کهکشان PlanLife خوش اومدی 🌌</div>`;
@@ -292,21 +319,14 @@ window.onload = () => {
 function sendMessage() {
     const text = input.value.trim();
     if (!text) return;
-
     output.innerHTML += `<div class="msg-user">${text}</div>`;
     input.value = "";
+    scrollDown();
 
     setTimeout(() => {
-        output.innerHTML += `<div class="msg-bot">دارم از دل کهکشان برات جواب می‌گیرم ✨</div>`;
+        output.innerHTML += `<div class="msg-bot">در حال دریافت انرژی از کهکشان... ✨</div>`;
         scrollDown();
-    }, 700);
-
-    scrollDown();
-}
-
-function quickMsg(t) {
-    input.value = t;
-    sendMessage();
+    }, 600);
 }
 
 function scrollDown() {
@@ -314,12 +334,37 @@ function scrollDown() {
 }
 
 input.addEventListener("keypress", e => { if (e.key === "Enter") sendMessage(); });
-input.addEventListener("focus", () => chatBox.classList.add("active"));
-input.addEventListener("blur", () => chatBox.classList.remove("active"));
 
-// منوها
-function toggleMenu(side) { /* همان کد قبلی */ }
-function closeAll() { /* همان کد قبلی */ }
+// منو
+function toggleMenu() {
+    const menu = document.getElementById('sideMenu');
+    const overlay = document.getElementById('overlay');
+    menu.classList.toggle('active');
+    overlay.classList.toggle('active');
+}
+
+// سوییچ بین صفحات (در حال حاضر فقط پیام نمایش می‌دهد)
+function showSection(section) {
+    const main = document.getElementById('mainContent');
+    main.innerHTML = `
+        <div style="text-align:center; padding:40px 20px; color:white; font-size:22px;">
+            <h2>${getSectionTitle(section)}</h2>
+            <p style="margin-top:20px; opacity:0.9;">این بخش در حال توسعه است...<br>به زودی محتوای کامل اینجا قرار می‌گیرد ✨</p>
+            <button onclick="goToHome()" style="margin-top:30px; padding:12px 30px; background:rgba(255,255,255,0.2); border:none; border-radius:15px; color:white; font-size:17px;">بازگشت به خانه</button>
+        </div>
+    `;
+}
+
+function getSectionTitle(section) {
+    if (section === 'podcast') return '🎙️ پادکست‌های انگیزشی';
+    if (section === 'success') return '🏆 داستان‌های موفقیت';
+    if (section === 'belief') return '🧠 تقویت باورها';
+    if (section === 'exercise') return '🏋️ تمرینات ذهنی و بدنی';
+}
+
+function goToHome() {
+    location.reload(); // بازگشت به صفحه اصلی
+}
 </script>
 </body>
 </html>
