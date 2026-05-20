@@ -5,60 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800&display=swap" rel="stylesheet">
     <style>
-        body { margin: 0; height: 100vh; background: linear-gradient(135deg, #00f2fe, #4facfe, #764ba2, #ff758c); display: flex; flex-direction: column; align-items: center; font-family: -apple-system, sans-serif; overflow-y: auto; }
-
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); backdrop-filter: blur(5px); z-index: 1000; display: none; }
-        #overlay.active { display: block; }
-
-        .menu-btn { position: fixed; top: 20px; width: 55px; height: 55px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 25px; z-index: 3000; }
-        .left-icon { left: 20px; }
-        .right-icon { right: 20px; }
-
-        .menu-panel { position: fixed; top: 0; width: 220px; height: 100%; background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); transition: 0.5s; padding-top: 80px; z-index: 2500; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        #leftPanel { left: -220px; }
-        #rightPanel { right: -220px; }
-        .active-left { left: 0 !important; }
-        .active-right { right: 0 !important; }
-
-        .menu-item { width: 85%; padding: 15px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; color: white; text-align: center; }
+        body { margin: 0; padding: 20px; min-height: 100vh; background: #1a0b2e; display: flex; flex-direction: column; align-items: center; font-family: 'Nunito', sans-serif; color: white; }
 
         /* گوی نبض‌زن */
-        .pulse { width: 50px; height: 50px; background: radial-gradient(circle, #ffffff, #00f2fe); border-radius: 50%; margin-top: 85px; 
-                 box-shadow: 0 0 20px rgba(255,255,255,0.8); animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); box-shadow: 0 0 30px #00f2fe; } 100% { transform: scale(1); } }
+        .pulse { width: 100px; height: 100px; background: radial-gradient(circle, #a1c4fd, #c2e9fb); border-radius: 50%; margin-top: 20px; box-shadow: 0 0 30px #764ba2; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 20px #764ba2; } 50% { transform: scale(1.1); box-shadow: 0 0 50px #00f2fe; } 100% { transform: scale(1); } }
         
-        .title { color: white; margin: 15px 0 0 0; font-family: 'Nunito', sans-serif; font-size: 45px; }
+        .title { font-size: 40px; margin: 10px 0; }
 
-        /* چت باکس ۱۰ پیکسل جمع‌تر شده */
-        .chat-container { width: calc(100% - 50px); max-width: 360px; height: 400px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px); border-radius: 30px; margin-top: 15px; display: flex; flex-direction: column; padding: 15px; }
+        /* باکس اصلی چت */
+        .main-box { width: 100%; max-width: 360px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 30px; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+
+        /* اینپوت شیشه‌ای مدرن */
+        .input-area { background: rgba(30, 30, 45, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 10px 15px; display: flex; align-items: center; gap: 10px; }
+        input { flex: 1; background: transparent; border: none; color: white; font-size: 16px; outline: none; }
+        .send-btn { width: 35px; height: 35px; border-radius: 50%; background: #4facfe; border: none; color: white; cursor: pointer; }
 
         /* دکمه‌های مربعی ۲ ستونه */
-        .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: calc(100% - 50px); max-width: 360px; margin-top: 15px; padding-bottom: 30px; }
-        .btn-square { aspect-ratio: 1 / 1; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; color: white; display: flex; align-items: center; justify-content: center; font-size: 13px; text-align: center; backdrop-filter: blur(5px); cursor: pointer; }
+        .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 360px; margin-top: 10px; }
+        .btn-square { aspect-ratio: 1 / 1; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
+        .btn-square:hover { background: rgba(255, 255, 255, 0.1); }
     </style>
 </head>
 <body>
 
-    <div id="overlay" onclick="closeAll()"></div>
-    <div class="menu-btn left-icon" onclick="toggleMenu('left')">☰</div>
-    <div class="menu-btn right-icon" onclick="toggleMenu('right')">☰</div>
-
-    <div id="leftPanel" class="menu-panel">
-        <div class="menu-item">خانه</div><div class="menu-item">پروفایل</div><div class="menu-item">تنظیمات</div>
-    </div>
-    <div id="rightPanel" class="menu-panel">
-        <div class="menu-item">پروژه‌ها</div><div class="menu-item">اشتراک</div><div class="menu-item">پشتیبانی</div>
-    </div>
-
     <div class="pulse"></div>
-    <h1 class="title">PlanLife</h1>
+    <h1 class="title">پلن لایف</h1>
 
-    <div class="chat-container">
-        <div id="chat-output" style="flex:1; color:white; padding:10px;">پیام‌های چت...</div>
-        <div style="display:flex; align-items:center; background:rgba(255,255,255,0.2); border-radius:20px; padding:5px;">
-            <input type="text" placeholder="پرسش..." style="flex:1; border:none; background:transparent; padding:10px; color:white;">
-            <button style="border-radius:50%; border:none; width:35px; height:35px;">➤</button>
+    <div class="main-box">
+        <div class="input-area">
+            <span style="font-size: 20px;">🌐</span>
+            <input type="text" placeholder="چیزی بنویسید...">
+            <button class="send-btn">➤</button>
         </div>
+        <div style="font-size: 12px; opacity: 0.6; text-align: center;">planlife.ir</div>
     </div>
 
     <div class="grid-buttons">
@@ -70,26 +50,5 @@
         <div class="btn-square">هدف</div>
     </div>
 
-    <script>
-        function toggleMenu(side) {
-            const left = document.getElementById('leftPanel');
-            const right = document.getElementById('rightPanel');
-            const overlay = document.getElementById('overlay');
-            if(side === 'left') {
-                right.classList.remove('active-right');
-                left.classList.toggle('active-left');
-                overlay.classList.toggle('active');
-            } else {
-                left.classList.remove('active-left');
-                right.classList.toggle('active-right');
-                overlay.classList.toggle('active');
-            }
-        }
-        function closeAll() {
-            document.getElementById('leftPanel').classList.remove('active-left');
-            document.getElementById('rightPanel').classList.remove('active-right');
-            document.getElementById('overlay').classList.remove('active');
-        }
-    </script>
 </body>
 </html>
