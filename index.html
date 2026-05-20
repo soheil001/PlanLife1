@@ -10,12 +10,12 @@
     html, body {
         height: 100%;
         font-family: 'Vazirmatn', sans-serif;
-        overflow: hidden;
+        overflow-x: hidden;
         color: white;
         background: radial-gradient(circle at center, #1a0033 0%, #000011 70%);
     }
 
-    /* ستاره‌ها */
+    /* ستاره‌ها و ستاره‌باران */
     .stars {
         position: fixed;
         inset: 0;
@@ -34,13 +34,11 @@
     }
     .stars::after {
         background-size: 140px 140px;
-        opacity: 0.3;
-        animation-duration: 15s;
+        opacity: 0.35;
+        animation-duration: 16s;
     }
+    @keyframes twinkle { 0% { opacity: 0.4; } 100% { opacity: 0.75; } }
 
-    @keyframes twinkle { 0% { opacity: 0.4; } 100% { opacity: 0.7; } }
-
-    /* ستاره‌باران ملایم */
     .shooting-star {
         position: absolute;
         width: 3px;
@@ -55,23 +53,22 @@
         100% { transform: translateX(1000px) translateY(800px); opacity: 0; }
     }
 
-    /* هدر با منو همبرگری */
+    /* هدر فقط همبرگر */
     header {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
-        height: 70px;
+        height: 65px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
         padding: 0 20px;
         z-index: 100;
-        background: rgba(0,0,0,0.2);
+        background: rgba(0,0,0,0.15);
         backdrop-filter: blur(10px);
     }
     .hamburger {
-        font-size: 28px;
+        font-size: 30px;
         cursor: pointer;
         padding: 8px;
         border-radius: 50%;
@@ -81,77 +78,68 @@
     /* منوی شیشه‌ای */
     .menu-panel {
         position: fixed;
-        top: 70px;
+        top: 65px;
         left: -280px;
         width: 260px;
-        height: calc(100% - 70px);
+        height: calc(100% - 65px);
         background: rgba(255,255,255,0.12);
         backdrop-filter: blur(20px);
         border-radius: 0 20px 20px 0;
-        padding: 20px;
+        padding: 25px 20px;
         transition: 0.4s ease;
         z-index: 200;
-        box-shadow: 5px 0 20px rgba(0,0,0,0.3);
     }
     .menu-panel.active { left: 0; }
 
     .menu-item {
         padding: 16px 20px;
-        margin: 10px 0;
+        margin: 12px 0;
         border-radius: 15px;
         background: rgba(255,255,255,0.1);
         font-size: 17px;
-        transition: 0.3s;
     }
     .menu-item:hover { background: rgba(255,255,255,0.25); }
 
-    /* گوی ماورایی کوچکتر + نبض */
+    /* محتوای اصلی */
+    .main-center {
+        position: relative;
+        z-index: 5;
+        min-height: 100vh;
+        padding: 80px 20px 100px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* گوی و عنوان */
     .mystic-orb-container {
-        width: 110px;
-        height: 110px;
-        margin: 25px auto 10px;
-        z-index: 10;
+        width: 105px;
+        height: 105px;
+        margin: 10px auto 8px;
     }
     .mystic-orb {
         width: 100%;
         height: 100%;
         border-radius: 50%;
         background: radial-gradient(circle at 40% 30%, #ffffff, #a0f0ff 25%, #7b5eff 55%, #c026d3);
-        box-shadow: 
-            0 0 50px #a0f0ff,
-            0 0 100px #c026d3,
-            inset 0 0 35px rgba(255,255,255,0.8);
+        box-shadow: 0 0 50px #a0f0ff, 0 0 100px #c026d3, inset 0 0 35px rgba(255,255,255,0.8);
         animation: pulseOrb 4s ease-in-out infinite;
-        position: relative;
     }
     @keyframes pulseOrb {
         0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.08); }
+        50% { transform: scale(1.09); }
     }
 
     .title {
-        font-size: 38px;
+        font-size: 36px;
         font-weight: 700;
         text-shadow: 0 0 25px rgba(160, 240, 255, 0.9);
-        margin-bottom: 15px;
-        z-index: 10;
+        margin-bottom: 20px;
     }
 
-    .main-center {
-        position: relative;
-        z-index: 5;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-top: 90px;
-        min-height: 100vh;
-        padding-bottom: 30px;
-        overflow-y: auto;
-    }
-
-    /* چت */
+    /* چت باکس */
     .chat-container {
-        width: calc(100% - 40px);
+        width: 100%;
         max-width: 360px;
         height: 380px;
         background: rgba(255,255,255,0.13);
@@ -162,12 +150,13 @@
         flex-direction: column;
         padding: 12px;
         box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        margin-bottom: 30px;
     }
 
     #chat-output {
         flex: 1;
         overflow-y: auto;
-        padding: 8px;
+        padding: 10px;
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -214,29 +203,29 @@
         cursor: pointer;
     }
 
-    /* باکس‌های پایین */
+    /* ۴ دکمه پایین صفحه */
     .services-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        width: calc(100% - 40px);
+        gap: 14px;
+        width: 100%;
         max-width: 360px;
-        margin-top: 25px;
+        margin-top: 20px;
     }
     .service-box {
         background: rgba(255,255,255,0.13);
         backdrop-filter: blur(12px);
         border: 1px solid rgba(255,255,255,0.15);
         border-radius: 20px;
-        padding: 18px 10px;
+        padding: 22px 10px;
         text-align: center;
         font-size: 17px;
         cursor: pointer;
-        transition: 0.3s;
+        transition: all 0.3s;
     }
     .service-box:hover {
-        transform: translateY(-5px);
-        background: rgba(255,255,255,0.22);
+        transform: translateY(-6px);
+        background: rgba(255,255,255,0.25);
     }
 
     #overlay { 
@@ -252,27 +241,25 @@
 </head>
 <body>
 
-<div class="stars" id="stars"></div>
+<div class="stars"></div>
 
 <header>
     <div class="hamburger" onclick="toggleMenu()">☰</div>
-    <div class="title" style="font-size:24px; margin:0;">PlanLife</div>
-    <div></div>
 </header>
 
-<!-- منوی شیشه‌ای -->
+<!-- منو -->
 <div id="sideMenu" class="menu-panel">
     <div class="menu-item" onclick="goToHome()">🏠 خانه</div>
     <div class="menu-item">👤 پروفایل</div>
     <div class="menu-item">📊 آمار پیشرفت</div>
     <div class="menu-item">⭐️ مورد علاقه‌ها</div>
     <div class="menu-item">⚙️ تنظیمات</div>
-    <div class="menu-item">📞 پشتیبانی</div>
 </div>
 
 <div id="overlay" onclick="toggleMenu()"></div>
 
 <div class="main-center" id="mainContent">
+    <!-- گوی + عنوان + چت -->
     <div class="mystic-orb-container">
         <div class="mystic-orb"></div>
     </div>
@@ -286,6 +273,7 @@
         </div>
     </div>
 
+    <!-- ۴ دکمه در پایین -->
     <div class="services-grid">
         <div class="service-box" onclick="showSection('podcast')">🎙️ پادکست</div>
         <div class="service-box" onclick="showSection('success')">🏆 موفقیت</div>
@@ -300,19 +288,19 @@ function createShootingStar() {
     const star = document.createElement('div');
     star.className = 'shooting-star';
     star.style.left = Math.random() * 100 + '%';
-    star.style.top = Math.random() * 50 + '%';
+    star.style.top = Math.random() * 60 + '%';
     star.style.animationDuration = (Math.random() * 4 + 4) + 's';
     document.body.appendChild(star);
     setTimeout(() => star.remove(), 10000);
 }
-setInterval(() => { if (Math.random() > 0.35) createShootingStar(); }, 900);
+setInterval(() => { if (Math.random() > 0.4) createShootingStar(); }, 1000);
 
 // چت
 const input = document.getElementById("user-input");
 const output = document.getElementById("chat-output");
 
 window.onload = () => {
-    output.innerHTML += `<div class="msg-bot">سلام 👋 به کهکشان PlanLife خوش اومدی 🌌</div>`;
+    output.innerHTML += `<div class="msg-bot">سلام 👋 به PlanLife خوش اومدی 🌌</div>`;
     scrollDown();
 };
 
@@ -324,9 +312,9 @@ function sendMessage() {
     scrollDown();
 
     setTimeout(() => {
-        output.innerHTML += `<div class="msg-bot">در حال دریافت انرژی از کهکشان... ✨</div>`;
+        output.innerHTML += `<div class="msg-bot">دارم از دل کهکشان برات انرژی می‌فرستم ✨</div>`;
         scrollDown();
-    }, 600);
+    }, 700);
 }
 
 function scrollDown() {
@@ -337,20 +325,18 @@ input.addEventListener("keypress", e => { if (e.key === "Enter") sendMessage(); 
 
 // منو
 function toggleMenu() {
-    const menu = document.getElementById('sideMenu');
-    const overlay = document.getElementById('overlay');
-    menu.classList.toggle('active');
-    overlay.classList.toggle('active');
+    document.getElementById('sideMenu').classList.toggle('active');
+    document.getElementById('overlay').classList.toggle('active');
 }
 
-// سوییچ بین صفحات (در حال حاضر فقط پیام نمایش می‌دهد)
+// صفحات
 function showSection(section) {
     const main = document.getElementById('mainContent');
     main.innerHTML = `
-        <div style="text-align:center; padding:40px 20px; color:white; font-size:22px;">
-            <h2>${getSectionTitle(section)}</h2>
-            <p style="margin-top:20px; opacity:0.9;">این بخش در حال توسعه است...<br>به زودی محتوای کامل اینجا قرار می‌گیرد ✨</p>
-            <button onclick="goToHome()" style="margin-top:30px; padding:12px 30px; background:rgba(255,255,255,0.2); border:none; border-radius:15px; color:white; font-size:17px;">بازگشت به خانه</button>
+        <div style="text-align:center; padding:60px 20px; color:white;">
+            <h2 style="font-size:28px; margin-bottom:20px;">${getSectionTitle(section)}</h2>
+            <p style="opacity:0.9; line-height:1.8;">این بخش به‌زودی با محتوای کامل پر می‌شود...</p>
+            <button onclick="goToHome()" style="margin-top:40px; padding:14px 32px; background:rgba(255,255,255,0.2); border:none; border-radius:50px; color:white; font-size:17px;">بازگشت به خانه</button>
         </div>
     `;
 }
@@ -358,12 +344,12 @@ function showSection(section) {
 function getSectionTitle(section) {
     if (section === 'podcast') return '🎙️ پادکست‌های انگیزشی';
     if (section === 'success') return '🏆 داستان‌های موفقیت';
-    if (section === 'belief') return '🧠 تقویت باورها';
-    if (section === 'exercise') return '🏋️ تمرینات ذهنی و بدنی';
+    if (section === 'belief') return '🧠 تقویت باور';
+    if (section === 'exercise') return '🏋️ تمرینات';
 }
 
 function goToHome() {
-    location.reload(); // بازگشت به صفحه اصلی
+    location.reload();
 }
 </script>
 </body>
