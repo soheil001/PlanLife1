@@ -1,202 +1,202 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- فونت فارسی حرفه‌ای -->
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-            margin: 0;
-            height: 100vh;
-            background: linear-gradient(135deg, #00f2fe, #4facfe, #764ba2, #ff758c);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-family: 'Vazirmatn', sans-serif;
-            overflow-y: auto;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
 
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.2);
-            backdrop-filter: blur(5px);
-            z-index: 1000;
-            display: none;
-        }
+<style>
+html {
+    background: linear-gradient(135deg, #00f2fe, #4facfe, #764ba2, #ff758c);
+}
 
-        #overlay.active {
-            display: block;
-        }
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #00f2fe, #4facfe, #764ba2, #ff758c);
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Vazirmatn', sans-serif;
+}
 
-        .menu-btn {
-            position: fixed;
-            top: 20px;
-            width: 55px;
-            height: 55px;
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: white;
-            font-size: 25px;
-            z-index: 3000;
-        }
+/* overlay */
+#overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.2);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    display: none;
+}
+#overlay.active { display: block; }
 
-        .left-icon { left: 20px; }
-        .right-icon { right: 20px; }
+/* menu btn */
+.menu-btn {
+    position: fixed;
+    top: 20px;
+    width: 55px;
+    height: 55px;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    font-size: 25px;
+    z-index: 3000;
+}
+.left-icon { left: 20px; }
+.right-icon { right: 20px; }
 
-        .menu-panel {
-            position: fixed;
-            top: 0;
-            width: 220px;
-            height: 100%;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(20px);
-            transition: 0.4s;
-            padding-top: 80px;
-            z-index: 2500;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
+/* menu */
+.menu-panel {
+    position: fixed;
+    top: 0;
+    width: 220px;
+    height: 100%;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    transition: 0.4s;
+    padding-top: 80px;
+    z-index: 2500;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+#leftPanel { left: -220px; }
+#rightPanel { right: -220px; }
 
-        #leftPanel { left: -220px; }
-        #rightPanel { right: -220px; }
+.active-left { left: 0 !important; }
+.active-right { right: 0 !important; }
 
-        .active-left { left: 0 !important; }
-        .active-right { right: 0 !important; }
+.menu-item {
+    width: 85%;
+    padding: 15px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    color: white;
+    text-align: center;
+}
 
-        .menu-item {
-            width: 85%;
-            padding: 15px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 15px;
-            color: white;
-            text-align: center;
-        }
+/* 🔮 گوی */
+.mystic-orb {
+    width: 70px;
+    height: 70px;
+    margin-top: 85px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #fff, #00f2fe, #764ba2);
+    animation: pulse 2s infinite;
+}
 
-        .pulse {
-            width: 50px;
-            height: 50px;
-            background: radial-gradient(circle, #ffffff, #00f2fe);
-            border-radius: 50%;
-            margin-top: 85px;
-            box-shadow: 0 0 20px rgba(255,255,255,0.8);
-            animation: pulse 2s infinite;
-        }
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 20px #00f2fe; }
+    50% { transform: scale(1.1); box-shadow: 0 0 60px #764ba2; }
+    100% { transform: scale(1); box-shadow: 0 0 20px #00f2fe; }
+}
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.15); box-shadow: 0 0 30px #00f2fe; }
-            100% { transform: scale(1); }
-        }
+/* title */
+.title {
+    color: white;
+    margin-top: 15px;
+    font-size: 40px;
+}
 
-        .title {
-            color: white;
-            margin: 15px 0 0 0;
-            font-size: 40px;
-        }
+/* 🔥 چت */
+.chat-container {
+    width: calc(100% - 50px);
+    max-width: 360px;
+    height: 400px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(15px);
+    border-radius: 30px;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    transition: 0.3s;
+}
 
-        .chat-container {
-            width: calc(100% - 50px);
-            max-width: 360px;
-            height: 400px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
-            border-radius: 30px;
-            margin-top: 15px;
-            display: flex;
-            flex-direction: column;
-            padding: 15px;
-        }
+/* وقتی تایپ میکنی */
+.chat-container.active {
+    height: 65vh;
+}
 
-        #chat-output {
-            flex: 1;
-            color: white;
-            padding: 10px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+/* messages */
+#chat-output {
+    flex: 1;
+    color: white;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
 
-        .msg-user {
-            align-self: flex-end;
-            background: rgba(0,0,0,0.3);
-            padding: 8px 12px;
-            border-radius: 12px;
-        }
+.msg-user {
+    align-self: flex-end;
+    background: rgba(0,0,0,0.3);
+    padding: 8px 12px;
+    border-radius: 12px;
+}
 
-        .msg-bot {
-            align-self: flex-start;
-            background: rgba(255,255,255,0.2);
-            padding: 8px 12px;
-            border-radius: 12px;
-        }
+.msg-bot {
+    align-self: flex-start;
+    background: rgba(255,255,255,0.2);
+    padding: 8px 12px;
+    border-radius: 12px;
+}
 
-        .input-box {
-            display: flex;
-            align-items: center;
-            background: rgba(255,255,255,0.2);
-            border-radius: 20px;
-            padding: 5px;
-        }
+/* input */
+.input-box {
+    display: flex;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 5px;
+}
 
-        input {
-            flex: 1;
-            border: none;
-            background: transparent;
-            padding: 10px;
-            color: white;
-            outline: none;
-        }
+input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 10px;
+    color: white;
+    outline: none;
+    font-size: 16px; /* جلوگیری از زوم */
+}
 
-        button {
-            border-radius: 50%;
-            border: none;
-            width: 35px;
-            height: 35px;
-            cursor: pointer;
-        }
+button {
+    border-radius: 50%;
+    border: none;
+    width: 35px;
+    height: 35px;
+}
 
-        .grid-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            width: calc(100% - 50px);
-            max-width: 360px;
-            margin-top: 15px;
-            padding-bottom: 30px;
-        }
+/* buttons */
+.grid-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: calc(100% - 50px);
+    max-width: 360px;
+    margin-top: 15px;
+    padding-bottom: 40px;
+}
 
-        .btn-square {
-            aspect-ratio: 1 / 1;
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 15px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            text-align: center;
-            backdrop-filter: blur(5px);
-            cursor: pointer;
-        }
-    </style>
+.btn-square {
+    aspect-ratio: 1;
+    background: rgba(255,255,255,0.15);
+    border-radius: 15px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
 </head>
 
 <body>
@@ -207,63 +207,69 @@
 <div class="menu-btn right-icon" onclick="toggleMenu('right')">☰</div>
 
 <div id="leftPanel" class="menu-panel">
-    <div class="menu-item">خانه</div>
-    <div class="menu-item">پروفایل</div>
-    <div class="menu-item">تنظیمات</div>
+<div class="menu-item">خانه</div>
+<div class="menu-item">پروفایل</div>
+<div class="menu-item">تنظیمات</div>
 </div>
 
 <div id="rightPanel" class="menu-panel">
-    <div class="menu-item">پروژه‌ها</div>
-    <div class="menu-item">اشتراک</div>
-    <div class="menu-item">پشتیبانی</div>
+<div class="menu-item">پروژه‌ها</div>
+<div class="menu-item">اشتراک</div>
+<div class="menu-item">پشتیبانی</div>
 </div>
 
-<div class="pulse"></div>
+<div class="mystic-orb"></div>
 <h1 class="title">PlanLife</h1>
 
 <div class="chat-container">
-    <div id="chat-output"></div>
+<div id="chat-output"></div>
 
-    <div class="input-box">
-        <input id="user-input" type="text" placeholder="پرسش...">
-        <button onclick="sendMessage()">➤</button>
-    </div>
+<div class="input-box">
+<input id="user-input" placeholder="پرسش...">
+<button onclick="sendMessage()">➤</button>
+</div>
 </div>
 
 <div class="grid-buttons">
-    <div class="btn-square" onclick="quickMsg('قانون جذب')">قانون جذب</div>
-    <div class="btn-square" onclick="quickMsg('پول‌سازی')">پول‌سازی</div>
-    <div class="btn-square" onclick="quickMsg('باورها')">باورها</div>
-    <div class="btn-square" onclick="quickMsg('رشد فردی')">رشد فردی</div>
-    <div class="btn-square" onclick="quickMsg('انگیزه')">انگیزه</div>
-    <div class="btn-square" onclick="quickMsg('هدف')">هدف</div>
+<div class="btn-square" onclick="quickMsg('قانون جذب')">قانون جذب</div>
+<div class="btn-square" onclick="quickMsg('پول‌سازی')">پول‌سازی</div>
+<div class="btn-square" onclick="quickMsg('باورها')">باورها</div>
+<div class="btn-square" onclick="quickMsg('رشد فردی')">رشد فردی</div>
+<div class="btn-square" onclick="quickMsg('انگیزه')">انگیزه</div>
+<div class="btn-square" onclick="quickMsg('هدف')">هدف</div>
 </div>
 
 <script>
 function toggleMenu(side) {
-    const left = document.getElementById('leftPanel');
-    const right = document.getElementById('rightPanel');
-    const overlay = document.getElementById('overlay');
-
     overlay.classList.add('active');
 
     if (side === 'left') {
-        right.classList.remove('active-right');
-        left.classList.add('active-left');
+        rightPanel.classList.remove('active-right');
+        leftPanel.classList.add('active-left');
     } else {
-        left.classList.remove('active-left');
-        right.classList.add('active-right');
+        leftPanel.classList.remove('active-left');
+        rightPanel.classList.add('active-right');
     }
 }
 
 function closeAll() {
-    document.getElementById('leftPanel').classList.remove('active-left');
-    document.getElementById('rightPanel').classList.remove('active-right');
-    document.getElementById('overlay').classList.remove('active');
+    leftPanel.classList.remove('active-left');
+    rightPanel.classList.remove('active-right');
+    overlay.classList.remove('active');
 }
 
 const input = document.getElementById("user-input");
 const output = document.getElementById("chat-output");
+const chatContainer = document.querySelector(".chat-container");
+
+/* 🔥 فوکوس = بزرگ شدن چت */
+input.addEventListener("focus", () => {
+    chatContainer.classList.add("active");
+});
+
+input.addEventListener("blur", () => {
+    chatContainer.classList.remove("active");
+});
 
 function sendMessage() {
     const text = input.value.trim();
@@ -271,9 +277,8 @@ function sendMessage() {
 
     output.innerHTML += `<div class="msg-user">${text}</div>`;
 
-    // پاسخ ساده موقتی (بعدا وصلش می‌کنیم به AI)
     setTimeout(() => {
-        output.innerHTML += `<div class="msg-bot">در حال یادگیریم... بزودی هوشمند میشم 🚀</div>`;
+        output.innerHTML += `<div class="msg-bot">دارم تبدیل به یه هوش واقعی میشم 😏</div>`;
         scrollToBottom();
     }, 500);
 
@@ -290,11 +295,8 @@ function scrollToBottom() {
     output.scrollTop = output.scrollHeight;
 }
 
-// ارسال با Enter
 input.addEventListener("keypress", function(e) {
-    if (e.key === "Enter") {
-        sendMessage();
-    }
+    if (e.key === "Enter") sendMessage();
 });
 </script>
 
