@@ -6,29 +6,55 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
 
-html, body {
+/* RESET */
 
-    margin: 0;
+* {
 
-    height: 100%;
-
-    font-family: 'Vazirmatn', sans-serif;
-
-    background: linear-gradient(135deg, #00f2fe, #4facfe, #764ba2, #ff758c);
-
-    background-attachment: fixed;
+    box-sizing: border-box;
 
 }
 
-/* وسط‌چین کامل */
+body {
 
-.main-center {
+    margin: 0;
+
+    font-family: 'Vazirmatn', sans-serif;
+
+    background: linear-gradient(135deg,#00f2fe,#4facfe,#764ba2,#ff758c);
+
+    background-attachment: fixed;
+
+    color: white;
+
+}
+
+/* صفحات */
+
+.page {
+
+    display: none;
+
+    min-height: 100vh;
+
+    padding-bottom: 40px;
+
+}
+
+.page.active {
+
+    display: block;
+
+}
+
+/* CENTER WRAPPER */
+
+.container {
 
     display: flex;
 
@@ -36,33 +62,9 @@ html, body {
 
     align-items: center;
 
-    justify-content: center;
-
 }
 
-/* overlay */
-
-#overlay {
-
-    position: fixed;
-
-    width: 100%;
-
-    height: 100%;
-
-    background: rgba(0,0,0,0.3);
-
-    backdrop-filter: blur(5px);
-
-    display: none;
-
-    z-index: 1000;
-
-}
-
-#overlay.active { display: block; }
-
-/* menu btn */
+/* MENU */
 
 .menu-btn {
 
@@ -70,9 +72,9 @@ html, body {
 
     top: 20px;
 
-    width: 55px;
+    width: 50px;
 
-    height: 55px;
+    height: 50px;
 
     border-radius: 50%;
 
@@ -82,27 +84,19 @@ html, body {
 
     display: flex;
 
-    align-items: center;
-
     justify-content: center;
 
-    color: white;
+    align-items: center;
 
-    font-size: 24px;
-
-    cursor: pointer;
-
-    z-index: 3000;
+    z-index: 2000;
 
 }
 
-.left-icon { left: 20px; }
+.left { left: 15px; }
 
-.right-icon { right: 20px; }
+.right { right: 15px; }
 
-/* panels */
-
-.menu-panel {
+.panel {
 
     position: fixed;
 
@@ -112,15 +106,13 @@ html, body {
 
     height: 100%;
 
-    backdrop-filter: blur(20px);
-
     background: rgba(255,255,255,0.1);
+
+    backdrop-filter: blur(20px);
 
     padding-top: 80px;
 
-    transition: 0.4s;
-
-    z-index: 2500;
+    transition: .3s;
 
 }
 
@@ -128,39 +120,39 @@ html, body {
 
 #rightPanel { right: -220px; }
 
-.active-left { left: 0 !important; }
+.openL { left: 0; }
 
-.active-right { right: 0 !important; }
+.openR { right: 0; }
 
-.menu-item {
+.item {
 
     margin: 10px;
 
     padding: 15px;
 
-    border-radius: 15px;
+    border-radius: 12px;
+
+    background: rgba(255,255,255,0.15);
 
     text-align: center;
 
-    color: white;
-
-    background: rgba(255,255,255,0.1);
-
 }
 
-/* 🔮 orb */
+/* ORB */
 
-.mystic-orb {
+.orb {
 
-    width: 90px;
+    width: 60px;
 
-    height: 90px;
+    height: 60px;
+
+    margin-top: 90px;
 
     border-radius: 50%;
 
-    background: radial-gradient(circle, #fff, #00f2fe, #764ba2);
+    background: radial-gradient(circle,#fff,#e6faff);
 
-    box-shadow: 0 0 25px #00f2fe, 0 0 60px #764ba2;
+    box-shadow: 0 0 20px #fff, 0 0 40px #bdf3ff;
 
     animation: pulse 2s infinite;
 
@@ -168,39 +160,29 @@ html, body {
 
 @keyframes pulse {
 
-    0% { transform: scale(1); }
-
-    50% { transform: scale(1.12); }
-
-    100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
 
 }
 
-/* title */
+/* TITLE */
 
 .title {
 
-    color: white;
+    font-size: 38px;
 
-    font-size: 40px;
-
-    margin-top: 15px;
-
-    font-weight: 700;
+    margin: 10px 0 5px;
 
 }
 
-/* chat */
+/* CHAT */
 
-.chat-container {
+.chat {
 
-    width: calc(100% - 40px);
+    width: 90%;
 
-    max-width: 360px;
+    max-width: 380px;
 
-    height: 420px;
-
-    margin-top: 20px;
+    height: 380px;
 
     background: rgba(255,255,255,0.15);
 
@@ -212,21 +194,11 @@ html, body {
 
     flex-direction: column;
 
-    padding: 10px;
-
-    transition: 0.3s;
+    padding: 12px;
 
 }
 
-.chat-container.active {
-
-    height: 65vh;
-
-}
-
-/* messages */
-
-#chat-output {
+#out {
 
     flex: 1;
 
@@ -236,7 +208,7 @@ html, body {
 
     flex-direction: column;
 
-    gap: 8px;
+    gap: 6px;
 
 }
 
@@ -244,9 +216,7 @@ html, body {
 
     align-self: flex-end;
 
-    background: rgba(0,0,0,0.4);
-
-    color: white;
+    background: rgba(0,0,0,0.3);
 
     padding: 8px 12px;
 
@@ -258,9 +228,7 @@ html, body {
 
     align-self: flex-start;
 
-    background: rgba(255,255,255,0.3);
-
-    color: white;
+    background: rgba(255,255,255,0.25);
 
     padding: 8px 12px;
 
@@ -268,11 +236,13 @@ html, body {
 
 }
 
-/* input */
+/* INPUT */
 
 .input-box {
 
     display: flex;
+
+    margin-top: 8px;
 
     background: rgba(255,255,255,0.2);
 
@@ -298,21 +268,13 @@ input {
 
 }
 
-button {
+/* GRID */
 
-    border: none;
+.grid {
 
-    width: 35px;
+    width: 90%;
 
-    height: 35px;
-
-    border-radius: 50%;
-
-}
-
-/* grid */
-
-.grid-buttons {
+    max-width: 380px;
 
     display: grid;
 
@@ -320,31 +282,79 @@ button {
 
     gap: 10px;
 
-    width: calc(100% - 40px);
-
-    max-width: 360px;
-
     margin-top: 15px;
-
-    padding-bottom: 30px;
 
 }
 
-.btn-square {
+.btn {
 
     aspect-ratio: 1;
 
-    border-radius: 15px;
+    border-radius: 18px;
 
     background: rgba(255,255,255,0.15);
-
-    color: white;
 
     display: flex;
 
     justify-content: center;
 
     align-items: center;
+
+    font-size: 14px;
+
+}
+
+/* HEADER */
+
+.header {
+
+    text-align: center;
+
+    padding: 20px;
+
+    font-size: 22px;
+
+}
+
+/* PLAYER */
+
+.player {
+
+    width: 90%;
+
+    max-width: 400px;
+
+    margin: 20px auto;
+
+    padding: 15px;
+
+    border-radius: 20px;
+
+    background: rgba(255,255,255,0.2);
+
+}
+
+.pod-item {
+
+    width: 90%;
+
+    max-width: 400px;
+
+    margin: 10px auto;
+
+    padding: 12px;
+
+    border-radius: 12px;
+
+    background: rgba(255,255,255,0.15);
+
+}
+
+.back {
+
+    text-align: center;
+
+    margin-top: 20px;
 
 }
 
@@ -354,165 +364,165 @@ button {
 
 <body>
 
-<div id="overlay" onclick="closeAll()"></div>
+<!-- MENU -->
 
-<div class="menu-btn left-icon" onclick="toggleMenu('left')">☰</div>
+<div class="menu-btn left" onclick="toggle('L')">☰</div>
 
-<div class="menu-btn right-icon" onclick="toggleMenu('right')">☰</div>
+<div class="menu-btn right" onclick="toggle('R')">☰</div>
 
-<div id="leftPanel" class="menu-panel">
+<div id="leftPanel" class="panel">
 
-<div class="menu-item">خانه</div>
+<div class="item">خانه</div>
 
-<div class="menu-item">پروفایل</div>
-
-</div>
-
-<div id="rightPanel" class="menu-panel">
-
-<div class="menu-item">پروژه‌ها</div>
-
-<div class="menu-item">پشتیبانی</div>
+<div class="item">پروفایل</div>
 
 </div>
 
-<!-- 🔥 بخش وسط -->
+<div id="rightPanel" class="panel">
 
-<div class="main-center">
+<div class="item">پروژه‌ها</div>
 
-<div class="mystic-orb"></div>
+<div class="item">پشتیبانی</div>
+
+</div>
+
+<!-- HOME -->
+
+<div id="home" class="page active">
+
+<div class="container">
+
+<div class="orb"></div>
 
 <div class="title">PlanLife</div>
 
-<div class="chat-container" id="chatBox">
+<div class="chat">
 
-<div id="chat-output"></div>
+<div id="out"></div>
 
 <div class="input-box">
 
-<input id="user-input" placeholder="پیام بده...">
+<input id="inp" placeholder="پیام بده...">
 
-<button onclick="sendMessage()">➤</button>
+<button onclick="send()">➤</button>
+
+</div>
+
+</div>
+
+<div class="grid">
+
+<div class="btn" onclick="go('podcast')">پادکست</div>
+
+<div class="btn" onclick="go('motivation')">انگیزه</div>
+
+<div class="btn" onclick="go('goal')">هدف</div>
+
+<div class="btn" onclick="go('money')">پول</div>
 
 </div>
 
 </div>
 
-<div class="grid-buttons">
+</div>
 
-<div class="btn-square" onclick="quickMsg('انگیزه')">انگیزه</div>
+<!-- PODCAST -->
 
-<div class="btn-square" onclick="quickMsg('هدف')">هدف</div>
+<div id="podcast" class="page">
 
-<div class="btn-square" onclick="quickMsg('پول')">پول</div>
+<div class="header">🎧 پادکست</div>
 
-<div class="btn-square" onclick="quickMsg('رشد')">رشد</div>
+<div class="player">
+
+<audio id="audio" controls style="width:100%"></audio>
 
 </div>
 
+<div id="podList"></div>
+
+<div class="back"><button onclick="go('home')">برگشت</button></div>
+
 </div>
+
+<!-- OTHER PAGES -->
+
+<div id="motivation" class="page"><div class="header">انگیزه</div></div>
+
+<div id="goal" class="page"><div class="header">هدف</div></div>
+
+<div id="money" class="page"><div class="header">پول</div></div>
 
 <script>
 
-const input = document.getElementById("user-input");
-
-const output = document.getElementById("chat-output");
-
-const chatBox = document.getElementById("chatBox");
+/* CHAT */
 
 window.onload = () => {
 
-    output.innerHTML += `<div class="msg-bot">سلام 👋 خوش اومدی به PlanLife 🌱</div>`;
+    out.innerHTML += `<div class="msg-bot">سلام 👋 خوش اومدی</div>`;
 
 };
 
-function sendMessage() {
+function send() {
 
-    const text = input.value.trim();
+    if(!inp.value) return;
 
-    if (!text) return;
+    out.innerHTML += `<div class="msg-user">${inp.value}</div>`;
 
-    output.innerHTML += `<div class="msg-user">${text}</div>`;
+    setTimeout(()=>{
 
-    setTimeout(() => {
+        out.innerHTML += `<div class="msg-bot">دارم بهتر میشم 😏</div>`;
 
-        output.innerHTML += `<div class="msg-bot">دارم باهات هوشمندتر میشم 😏</div>`;
+        out.scrollTop = out.scrollHeight;
 
-        scrollDown();
+    },500);
 
-    }, 500);
-
-    input.value = "";
-
-    scrollDown();
+    inp.value="";
 
 }
 
-function quickMsg(t) {
+/* NAV */
 
-    input.value = t;
+function go(id){
 
-    sendMessage();
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
 
-}
-
-function scrollDown() {
-
-    output.scrollTop = output.scrollHeight;
+    document.getElementById(id).classList.add('active');
 
 }
 
-input.addEventListener("keypress", e => {
+/* MENU */
 
-    if (e.key === "Enter") sendMessage();
+function toggle(s){
 
-});
+    if(s==='L'){
 
-input.addEventListener("focus", () => {
+        leftPanel.classList.toggle('openL');
 
-    chatBox.classList.add("active");
+        rightPanel.classList.remove('openR');
 
-});
+    }else{
 
-input.addEventListener("blur", () => {
+        rightPanel.classList.toggle('openR');
 
-    chatBox.classList.remove("active");
-
-});
-
-function toggleMenu(side) {
-
-    const left = document.getElementById('leftPanel');
-
-    const right = document.getElementById('rightPanel');
-
-    const overlay = document.getElementById('overlay');
-
-    overlay.classList.add('active');
-
-    if (side === 'left') {
-
-        left.classList.toggle('active-left');
-
-        right.classList.remove('active-right');
-
-    } else {
-
-        right.classList.toggle('active-right');
-
-        left.classList.remove('active-left');
+        leftPanel.classList.remove('openL');
 
     }
 
 }
 
-function closeAll() {
+/* PODCAST LIST */
 
-    document.getElementById('leftPanel').classList.remove('active-left');
+for(let i=1;i<=10;i++){
 
-    document.getElementById('rightPanel').classList.remove('active-right');
+    podList.innerHTML += `<div class="pod-item" onclick="play()">پادکست ${i}</div>`;
 
-    document.getElementById('overlay').classList.remove('active');
+}
+
+function play(){
+
+    audio.src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+
+    audio.play();
 
 }
 
