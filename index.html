@@ -13,7 +13,6 @@
         font-family: 'Vazirmatn', sans-serif;
         overflow-x: hidden;
         color: white;
-                
         background: radial-gradient(circle at center, #1a0033 0%, #000011 90%);
     }
  
@@ -239,8 +238,7 @@
 </style>
           </head>
           <body>
-            <div class="stars">
-            </div>
+            <div class="stars"></div>
             <header>
               <div class="hamburger" onclick="toggleMenu()">☰</div>
             </header>
@@ -254,13 +252,11 @@
             <div class="main-center" id="mainContent">
               <div class="title">PlanLife</div>
               <div class="chat-container" id="chatBox">
-                <div id="chat-output">
-                </div>
+                <div id="chat-output"></div>
                 <div class="input-box">
                   <input id="user-input" placeholder="پیام بده...">
                     <button class="send-btn" onclick="sendMessage()">
-                      <div class="orb-send">
-                      </div>
+                      <div class="orb-send"></div>
                     </button>
                   </div>
                 </div>
@@ -283,6 +279,7 @@
                           </div>
                         </div>
                       </div>
+
                       <!-- Modal اشتراک -->
                       <div id="subscriptionModal">
                         <div class="modal-content">
@@ -300,6 +297,7 @@
                             <button onclick="closeModal()" style="margin-top:12px; background:transparent; border:none; color:#ccc;">بستن</button>
                           </div>
                         </div>
+
                         <!-- Now Playing -->
                         <div id="nowPlayingScreen" class="now-playing">
                           <button onclick="closeNowPlaying()" style="align-self:flex-start; background:none; border:none; color:white; font-size:28px;">←</button>
@@ -314,39 +312,40 @@
                                 <span id="totalTime">0:00</span>
                               </div>
                               <div class="progress-container" id="progressContainer">
-                                <div class="progress-bar" id="progressBar">
-                                </div>
+                                <div class="progress-bar" id="progressBar"></div>
                               </div>
                               <div class="controls">
                                 <div class="control-btn" onclick="seek(-10)">⤆</div>
                                 <div onclick="togglePlay()" class="play-main" id="playBtn">
-                                  <div class="play-triangle" id="playIcon" style="margin-left:6px;">
-                                  </div>
+                                  <div class="play-triangle" id="playIcon" style="margin-left:6px;"></div>
                                 </div>
                                 <div class="control-btn" onclick="seek(10)">⤇</div>
                               </div>
                             </div>
-                            <audio id="mainAudio" style="display:none;">
-                            </audio>
+                            <audio id="mainAudio" style="display:none;"></audio>
                             <button onclick="closeNowPlaying()" style="margin-top:50px; background:rgba(255,255,255,0.1); color:white; border:none; padding:12px 40px; border-radius:30px;">بستن</button>
                           </div>
+
                           <script>
-// ==================== داده‌های پادکست (کاملاً جدا) ====================
+// ==================== داده‌های پادکست ====================
 const podcastData = [
     {title: "باورهای ثروت", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779277963/phonto_bqthr2.jpg"},
     {title: "عشق و روابط", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
-    {title: "تحول حال و احساس", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"}
+    {title: "تحول حال و احساس", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "اعتماد به نفس", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "اعتماد به نفس", episode: 2, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"}
 ];
 
-// ==================== داده‌های دوره‌ها (کاملاً جدا) ====================
+// ==================== داده‌های دوره‌ها ====================
 const courseData = [
     {title: "باورهای ثروت", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
     {title: "عشق و روابط", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
     {title: "تحول حال و احساس", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
-    {title: "اعتماد به نفس", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"}
+    {title: "اعتماد به نفس", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "اعتماد به نفس", episode: 2, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"}
 ];
 
-// ==================== چت هوشمند ====================
+// ==================== بقیه کد بدون تغییر ====================
 const input = document.getElementById("user-input");
 const output = document.getElementById("chat-output");
 
@@ -386,12 +385,10 @@ function sendMessage() {
 
 input.addEventListener("keypress", e => { if (e.key === "Enter") sendMessage(); });
 
-// ==================== منو ====================
 function toggleMenu() {
     document.getElementById('sideMenu').classList.toggle('active');
 }
 
-// ==================== صفحات ====================
 function showSection(section) {
     const main = document.getElementById('mainContent');
     if (section === 'podcast' || section === 'courses') {
