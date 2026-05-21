@@ -71,9 +71,6 @@
     .service-box img { width: 78px; height: 78px; object-fit: cover; border-radius: 18px; border: 2px solid rgba(255,255,255,0.3); }
     .service-box span { font-size: 16.5px; font-weight: 500; }
 
-    /* صفحه محتوا */
-    .intro-video-box, .horizontal-scroll, .section-title, .podcast-item { /* همان استایل‌های قبلی */ }
-
     .horizontal-scroll {
         display: flex; gap: 15px; overflow-x: auto; padding: 12px 0 25px; 
         scrollbar-width: none; -webkit-overflow-scrolling: touch;
@@ -343,6 +340,30 @@
 </div>
 
 <script>
+// ==================== لیست مرتب موزیک‌ها (هر کدام در خط جدا) ====================
+const musicList = [
+    // باورهای ثروت
+    {title: "باورهای ثروت", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "باورهای ثروت", episode: 2, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "باورهای ثروت", episode: 3, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    
+    // عشق و روابط
+    {title: "عشق و روابط", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "عشق و روابط", episode: 2, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    
+    // تحول حال و احساس
+    {title: "تحول حال و احساس", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "تحول حال و احساس", episode: 2, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    
+    // اعتماد به نفس
+    {title: "اعتماد به نفس", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "اعتماد به نفس", episode: 2, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    
+    // احساس لیاقت
+    {title: "احساس لیاقت", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "احساس لیاقت", episode: 2, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"}
+];
+
 // ==================== چت هوشمند ====================
 const input = document.getElementById("user-input");
 const output = document.getElementById("chat-output");
@@ -433,40 +454,41 @@ function loadItems(cat, type) {
     const cats = cat ? [cat] : ["باورهای ثروت", "عشق و روابط", "تحول حال و احساس", "اعتماد به نفس", "احساس لیاقت"];
 
     cats.forEach(c => {
-        for (let i = 1; i <= 5; i++) {
-            const src = "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3";
-            const duration = ["3:45", "4:12", "2:58", "5:05", "3:30"][i-1];
+        const filtered = musicList.filter(item => item.title === c);
+        
+        filtered.forEach(item => {
             const func = type === 'courses' ? 'playCourse' : 'playPodcast';
+            const duration = ["3:45", "4:12", "2:58", "5:05", "3:30"][(item.episode-1) % 5];
             
             html += `
-                <div class="podcast-item" onclick="${func}('${c}', ${i}, '${src}', this)">
-                    <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="">
+                <div class="podcast-item" onclick="${func}('${item.title}', ${item.episode}, '${item.src}', '${item.cover}', this)">
+                    <img src="${item.cover}" alt="">
                     <div class="music-info">
-                        <div class="music-title">${c}</div>
-                        <div class="music-artist">قسمت ${i}</div>
+                        <div class="music-title">${item.title}</div>
+                        <div class="music-artist">قسمت ${item.episode}</div>
                     </div>
                     <div class="music-duration">${duration}</div>
                     <div class="play-circle"><div class="play-triangle"></div></div>
-                    <div class="mini-player" id="mini-${c.replace(/\s+/g,'')}${i}">
+                    <div class="mini-player" id="mini-${c.replace(/\s+/g,'')}${item.episode}">
                         <button onclick="toggleMiniPlay(this)" style="background:#c026d3; color:white; border:none; border-radius:50%; width:38px; height:38px; font-size:18px;">▶</button>
                         <span style="font-size:13px; opacity:0.8;">در حال پخش...</span>
                     </div>
                 </div>`;
-        }
+        });
     });
     document.getElementById('podcastList').innerHTML = html;
 }
 
-function playPodcast(title, episode, src, element) {
-    playAudio(title, episode, src, element);
+function playPodcast(title, episode, src, cover, element) {
+    playAudio(title, episode, src, cover, element);
 }
 
-function playCourse(title, episode, src, element) {
-    if (isUnlocked) playAudio(title, episode, src, element);
+function playCourse(title, episode, src, cover, element) {
+    if (isUnlocked) playAudio(title, episode, src, cover, element);
     else document.getElementById('subscriptionModal').style.display = 'flex';
 }
 
-function playAudio(title, episode, src, element) {
+function playAudio(title, episode, src, cover, element) {
     document.querySelectorAll('.mini-player').forEach(mp => mp.classList.remove('active'));
     
     const miniId = `mini-${title.replace(/\s+/g,'')}${episode}`;
@@ -474,6 +496,7 @@ function playAudio(title, episode, src, element) {
     if (miniPlayer) miniPlayer.classList.add('active');
 
     document.getElementById('npTitle').textContent = `${title} - قسمت ${episode}`;
+    document.getElementById('npCover').src = cover;
     document.getElementById('nowPlayingScreen').classList.add('active');
     
     const audio = document.getElementById('mainAudio');
