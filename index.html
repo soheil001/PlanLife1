@@ -268,6 +268,46 @@
         margin-left: 3px;
     }
 
+    /* مجله */
+    .magazine-icon {
+        width: 48px;
+        height: 48px;
+        background: #c026d3;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        font-size: 26px;
+        box-shadow: 0 4px 15px rgba(192, 38, 211, 0.6);
+    }
+
+    #articleModal {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 500;
+        display: none; align-items: center; justify-content: center; padding: 20px;
+    }
+    .article-content {
+        background: rgba(255,255,255,0.11); backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 30px 25px; width: 100%; max-width: 360px; max-height: 85vh;
+        overflow-y: auto;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+        position: relative;
+    }
+    .article-content h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #ffd700;
+    }
+    .article-content .article-body {
+        line-height: 1.8;
+        font-size: 16px;
+        opacity: 0.95;
+        text-align: justify;
+    }
+
     #subscriptionModal, #supportModal {
         position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 400;
         display: none; align-items: center; justify-content: center;
@@ -480,6 +520,18 @@
         <div class="service-box" onclick="showSection('courses')"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt=""><span>دوره ها</span></div>
         <div class="service-box" onclick="showSection('music')"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt=""><span>موزیک ها</span></div>
         <div class="service-box" onclick="showSection('exercise')"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt=""><span> تمرینات مجازی</span></div>
+        <!-- بخش جدید مجله -->
+        <div class="service-box" onclick="showSection('magazine')"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt=""><span>مجله ماورایی 📰</span></div>
+    </div>
+</div>
+
+<!-- Modal مقاله مجله -->
+<div id="articleModal">
+    <div class="article-content">
+        <button onclick="closeArticleModal()" style="position:absolute; top:15px; left:15px; background:none; border:none; color:white; font-size:28px;">✕</button>
+        <h2 id="articleTitle"></h2>
+        <div class="article-body" id="articleBody"></div>
+        <button onclick="closeArticleModal()" class="glass-btn" style="margin-top:25px;">بستن</button>
     </div>
 </div>
 
@@ -620,6 +672,70 @@ const musicData = [
     {id:10,title:"موزیک آرامش ۱۰",src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449504/IMG_1045_lgkcd4.jpg"}
 ];
 
+// ==================== داده‌های مجله ماورایی ====================
+const magazineData = [
+    {
+        id: 1,
+        title: "رازهای ذهن ناخودآگاه",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
+        content: "متن مقاله شماره ۱ اینجا قرار می‌گیرد. شما می‌توانید این متن را با محتوای دلخواه خود جایگزین کنید."
+    },
+    {
+        id: 2,
+        title: "قدرت باورهای پنهان",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449538/IMG_1059_eqlr5g.jpg",
+        content: "متن مقاله شماره ۲ اینجا قرار می‌گیرد. شما می‌توانید این متن را با محتوای دلخواه خود جایگزین کنید."
+    },
+    {
+        id: 3,
+        title: "سفر به درون روح",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449514/IMG_1060_bemgha.jpg",
+        content: "متن مقاله شماره ۳ اینجا قرار می‌گیرد. شما می‌توانید این متن را با محتوای دلخواه خود جایگزین کنید."
+    },
+    {
+        id: 4,
+        title: "انرژی کیهانی و انسان",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449504/IMG_1045_lgkcd4.jpg",
+        content: "متن مقاله شماره ۴ اینجا قرار می‌گیرد. شما می‌توانید این متن را با محتوای دلخواه خود جایگزین کنید."
+    },
+    {
+        id: 5,
+        title: "قانون جذب در زندگی واقعی",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449481/IMG_1048_wrc4iq.jpg",
+        content: "متن مقاله شماره ۵ اینجا قرار می‌گیرد. شما می‌توانید این متن را با محتوای دلخواه خود جایگزین کنید."
+    },
+    {
+        id: 6,
+        title: "مدیتیشن و آرامش درونی",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449479/IMG_1047_mzxexo.jpg",
+        content: "متن مقاله شماره ۶ اینجا قرار می‌گیرد. شما می‌توانید این متن را با محتوای دلخواه خود جایگزین کنید."
+    },
+    {
+        id: 7,
+        title: "معنای زندگی از دیدگاه ماورایی",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
+        content: "متن مقاله شماره ۷ اینجا قرار می‌گیرد. شما می‌توانید این متن را با محتوای دلخواه خود جایگزین کنید."
+    },
+    {
+        id: 8,
+        title: "خواب و دنیای رویاها",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449538/IMG_1059_eqlr5g.jpg",
+        content: "متن مقاله شماره ۸ اینجا قرار می‌گیرد. شما می‌توانید این متن را با محتوای دلخواه خود جایگزین کنید."
+    },
+    {
+        id: 9,
+        title: "هوش شهودی و تصمیم‌گیری",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449514/IMG_1060_bemgha.jpg",
+        content: "متن مقاله شماره ۹ اینجا قرار می‌گیرد. شما می‌توانید این متن را با محتوای دلخواه خود جایگزین کنید."
+    },
+    {
+        id: 10,
+        title: "اتصال به منبع الهی",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449504/IMG_1045_lgkcd4.jpg",
+        content: "متن مقاله شماره ۱۰ اینجا قرار می‌گیرد. شما می‌توانید این متن را با محتوای دلخواه خود جایگزین کنید."
+    }
+];
+
 // ==================== بقیه کد ====================
 window.onload = () => {
     document.getElementById("chat-output").innerHTML += `<div class="msg-bot">به بخش ماورای ذهن خوش اومدی 🧠<br>چطور می‌تونم کمکت کنم؟</div>`;
@@ -681,6 +797,18 @@ function showSection(section) {
             <button onclick="goToHome()" style="margin-top:30px; background:rgba(255,255,255,0.1); color:white; border:none; padding:12px 40px; border-radius:30px;">بازگشت به خانه</button>
         `;
         loadPage(section);
+        return;
+    }
+
+    // بخش جدید مجله
+    if (section === 'magazine') {
+        main.innerHTML = `
+            <h2 style="font-size:32px; margin-bottom:20px; text-align:center;">مجله ماورایی 📰</h2>
+            <div class="music-grid" id="magazineGrid"></div>
+            <button onclick="goToHome()" style="margin-top:30px; background:rgba(255,255,255,0.1); color:white; border:none; padding:12px 40px; border-radius:30px;">بازگشت به خانه</button>
+        `;
+        loadMagazinePage();
+        return;
     }
 }
 
@@ -736,14 +864,32 @@ function loadPodcastItems(cat) {
     document.getElementById('podcastGrid').innerHTML = html || '<p style="text-align:center; padding:40px; opacity:0.7;">موردی یافت نشد</p>';
 }
 
-function playAudio(title, src, cover) {
-    document.getElementById('npTitle').textContent = title;
-    document.getElementById('npCover').src = cover;
-    document.getElementById('nowPlayingScreen').classList.add('active');
-    
-    const audio = document.getElementById('mainAudio');
-    audio.src = src;
-    audio.play().catch(() => {});
+// ==================== توابع مجله ====================
+function loadMagazinePage() {
+    let html = '';
+    magazineData.forEach(article => {
+        html += `
+            <div class="music-box" onclick="showArticle(${article.id})">
+                <img src="${article.cover}" class="music-cover" alt="${article.title}">
+                <div class="music-name">${article.title}</div>
+                <div class="magazine-icon">📰</div>
+            </div>
+        `;
+    });
+    document.getElementById('magazineGrid').innerHTML = html;
+}
+
+function showArticle(id) {
+    const article = magazineData.find(a => a.id === id);
+    if (!article) return;
+
+    document.getElementById('articleTitle').textContent = article.title;
+    document.getElementById('articleBody').innerHTML = `<p>${article.content}</p>`;
+    document.getElementById('articleModal').style.display = 'flex';
+}
+
+function closeArticleModal() {
+    document.getElementById('articleModal').style.display = 'none';
 }
 
 function loadPage(type) {
@@ -890,6 +1036,16 @@ function seek(seconds) {
 function closeNowPlaying() {
     document.getElementById('nowPlayingScreen').classList.remove('active');
     audio.pause();
+}
+
+function playAudio(title, src, cover) {
+    document.getElementById('npTitle').textContent = title;
+    document.getElementById('npCover').src = cover;
+    document.getElementById('nowPlayingScreen').classList.add('active');
+    
+    const audioEl = document.getElementById('mainAudio');
+    audioEl.src = src;
+    audioEl.play().catch(() => {});
 }
 </script>
 </body>
