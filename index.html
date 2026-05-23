@@ -521,6 +521,10 @@
         <div class="service-box" onclick="showSection('music')"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt=""><span>موزیک ها</span></div>
         <div class="service-box" onclick="showSection('exercise')"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt=""><span> تمرینات مجازی</span></div>
         <div class="service-box" onclick="showSection('magazine')"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt=""><span>مجله ماورایی 📰</span></div>
+        <div class="service-box" onclick="showSection('library')">
+            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449504/IMG_1045_lgkcd4.jpg" alt="">
+            <span>کتابخانه 📚</span>
+        </div>
     </div>
 </div>
 
@@ -677,13 +681,13 @@ const magazineData = [
         id: 1,
         title: "رازهای ذهن ناخودآگاه",
         cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779569485/IMG_1110_p0sbb6.jpg",
-        url: "https://raw.githubusercontent.com/soheil001/PlanLife1/refs/heads/main/Maghale/Raze_zehne_nakhodagah"   // ← اینجا لینک HTML مقاله را قرار دهید
+        url: "https://raw.githubusercontent.com/soheil001/PlanLife1/refs/heads/main/Maghale/Raze_zehne_nakhodagah"
     },
-      {
+    {
         id: 1,
         title: "تست",
         cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779569485/IMG_1110_p0sbb6.jpg",
-        url: "https://raw.githubusercontent.com/soheil001/PlanLife1/refs/heads/main/Maghale/Raze_zehne_nakhodagah"   // ← اینجا لینک HTML مقاله را قرار دهید
+        url: "https://raw.githubusercontent.com/soheil001/PlanLife1/refs/heads/main/Maghale/Raze_zehne_nakhodagah"
     },
     {
         id: 2,
@@ -739,6 +743,23 @@ const magazineData = [
         cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449504/IMG_1045_lgkcd4.jpg",
         url: ""
     }
+];
+
+// ==================== داده‌های کتابخانه ====================
+const libraryData = [
+    {
+        id: 1,
+        title: "کتاب ۱",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449504/IMG_1045_lgkcd4.jpg",
+        pdfUrl: ""   // ← لینک PDF را اینجا قرار دهید
+    },
+    {
+        id: 2,
+        title: "کتاب ۲",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449481/IMG_1048_wrc4iq.jpg",
+        pdfUrl: ""   // ← لینک PDF را اینجا قرار دهید
+    }
+    // کتاب‌های بیشتر را به همین شکل اضافه کنید
 ];
 
 // ==================== بقیه کد ====================
@@ -814,8 +835,42 @@ function showSection(section) {
         loadMagazinePage();
         return;
     }
+
+    if (section === 'library') {
+        main.innerHTML = `
+            <h2 style="font-size:32px; margin-bottom:20px; text-align:center;">کتابخانه PlanLife 📚</h2>
+            <div class="music-grid" id="libraryGrid"></div>
+            <button onclick="goToHome()" style="margin-top:30px; background:rgba(255,255,255,0.1); color:white; border:none; padding:12px 40px; border-radius:30px;">بازگشت به خانه</button>
+        `;
+        loadLibraryPage();
+        return;
+    }
 }
 
+// ==================== توابع کتابخانه ====================
+function loadLibraryPage() {
+    let html = '';
+    libraryData.forEach(book => {
+        html += `
+            <div class="music-box" onclick="openPDF('${book.pdfUrl}', '${book.title}')">
+                <img src="${book.cover}" class="music-cover" alt="${book.title}">
+                <div class="music-name">${book.title}</div>
+                <div class="magazine-icon">📖</div>
+            </div>
+        `;
+    });
+    document.getElementById('libraryGrid').innerHTML = html || '<p style="text-align:center; padding:40px; opacity:0.7;">کتابی یافت نشد</p>';
+}
+
+function openPDF(url, title) {
+    if (url && url.trim() !== "") {
+        window.open(url, '_blank');
+    } else {
+        alert(`لینک PDF کتاب "${title}" هنوز تنظیم نشده است.`);
+    }
+}
+
+// ==================== توابع قبلی (عیناً کپی شده) ====================
 function loadMusicPage() {
     let html = '';
     musicData.forEach(m => {
@@ -868,7 +923,6 @@ function loadPodcastItems(cat) {
     document.getElementById('podcastGrid').innerHTML = html || '<p style="text-align:center; padding:40px; opacity:0.7;">موردی یافت نشد</p>';
 }
 
-// ==================== توابع مجله ====================
 function loadMagazinePage() {
     let html = '';
     magazineData.forEach(article => {
