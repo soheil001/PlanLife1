@@ -3,270 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مهندسی آگاهی: تحلیل جامع کتاب Liber Null | PlanLife.ir</title>
+    <title>مهندسی آگاهی: پروتکل‌های عملی Liber Null | PlanLife.ir</title>
     <style>
+        /* 
+           پالت رنگی: زرد درخشان (#FFD700) برای عناوین و سفید خالص برای متن 
+           استایلینگ: مینیمال، شیک و حرفه‌ای (Consulting Style)
+        */
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap');
 
         body {
             font-family: 'Vazirmatn', sans-serif;
-            background-color: black;
-            color: white;
-            line-height: 1.9; /* فاصله خطوط بهینه */
+            background-color: transparent; /* پس‌زمینه شفاف طبق درخواست */
+            color: #ffffff;
+            line-height: 1.6;
             margin: 0;
-            padding: 10px;
-            font-size: 12px; /* فونت کمی کوچک‌تر و شیک‌تر */
+            padding: 0;
+            font-size: 14px; /* سایز فونت شیک و ریزتر */
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 30px;
+        .article-wrapper {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
         }
 
-        /* بخش هدر و عنوان کتاب */
-        .book-header {
+        /* بخش عنوان کتاب */
+        .book-meta {
             text-align: center;
-            margin-bottom: 60px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 30px;
-        }
-
-        .book-title-en {
-            font-family: 'Georgia', serif;
-            font-size: 1.2rem;
-            color: #33BA60;
-            letter-spacing: 3px;
+            margin-bottom: 10px;
+            color: #FFD700;
+            font-weight: 700;
+            letter-spacing: 2px;
+            font-size: 12px;
             text-transform: uppercase;
         }
 
         h1 {
+            color: #FFD700;
+            text-align: center;
             font-size: 2.2rem;
-            color: white;
-            margin: 10px 0;
-            font-weight: 700;
+            margin-bottom: 40px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 20px;
         }
 
-        .meta-info {
-            font-size: 0.9rem;
-            color: #b8860b;
-            font-weight: bold;
-        }
-
-        /* بخش جذاب مقدمه */
-        .intro-section {
-            background: rgba(255, 215, 0, 0.03);
-            padding: 20px;
-            border-radius: 25px;
-            margin-bottom: 20px;
-           
-            position: relative;
-        }
-
-        .intro-section::before {
-            content: "“";
-            position: absolute;
-            top: -20px;
-            right: 20px;
-            font-size: 80px;
-            color: rgba(255, 215, 0, 0.2);
-        }
-
-        /* باکس‌های کد گرافیکی و کوچک */
-        .terminal-window {
-            background: #121212;
+        /* مقدمه جذب‌کننده */
+        .intro-lead {
+            font-size: 1.1rem;
+            text-align: center;
+            color: #e0e0e0;
+            margin-bottom: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
             border-radius: 10px;
-            margin: 25px auto;
-            direction: ltr;
-            max-width: 460px; /* سایز بهینه‌شده */
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            border: 1px solid #333;
-            overflow: hidden;
+            border: 1px solid rgba(255, 215, 0, 0.1);
         }
 
-        .terminal-bar {
-            background: #252525;
-            padding: 10px 15px;
+        h2 {
+            color: #FFD700;
+            font-size: 1.6rem;
+            margin-top: 50px;
+            border-right: 4px solid #FFD700;
+            padding-right: 15px;
+        }
+
+        p {
+            text-align: justify;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        /* باکس ترمینال گرافیکی کوچک */
+        .terminal-container {
+            background: #000000;
+            border: 1px solid #333;
+            border-radius: 8px;
+            margin: 30px auto;
+            max-width: 420px; /* سایز مرتب و کوچک */
+            direction: ltr;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+
+        .terminal-header {
+            background: #222;
+            padding: 8px 12px;
             display: flex;
             gap: 6px;
         }
 
-        .dot { width: 10px; height: 10px; border-radius: 50%; }
-        .d-r { background: #ff5f56; } .d-y { background: #ffbd2e; } .d-g { background: #27c93f; }
+        .t-dot { width: 9px; height: 9px; border-radius: 50%; }
+        .red { background: #ff5f56; }
+        .yellow { background: #ffbd2e; }
+        .green { background: #27c93f; }
 
         .terminal-body {
-            padding: 20px;
-            font-family: 'Consolas', 'Courier New', monospace;
-            color: #33BA60;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        .code-explanation {
-            background: #fff;
-            border-right: 3px solid #FFD700;
             padding: 15px 20px;
-            margin: -10px auto 40px;
-            max-width: 460px;
-            font-size: 13px;
-            color: #555;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+            font-family: 'Consolas', 'Courier New', monospace;
+            color: #00ff41;
+            font-size: 12px;
+            line-height: 1.4;
         }
 
-        /* کارت‌های مثال */
-        .case-study {
-            background: black;
-            border: 1px solid #eee;
-            padding: 25px;
-            margin: 40px 0;
-            border-radius: 8px;
-            border-left: 5px solid #4682B4;
+        /* تحلیل فارسی زیر کد */
+        .code-analysis {
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px dashed rgba(255, 215, 0, 0.4);
+            padding: 15px;
+            margin: -20px auto 40px;
+            max-width: 420px;
+            font-size: 12px;
+            color: #FFD700;
+            border-radius: 0 0 8px 8px;
         }
 
-        .case-title {
+        .case-study-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #333;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 6px;
+        }
+
+        .case-tag {
+            color: #FFD700;
             font-weight: bold;
-            color: #4682B4;
-            display: block;
+            font-size: 11px;
+            background: rgba(255, 215, 0, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
             margin-bottom: 10px;
-            font-size: 1.1rem;
         }
-
-        h2 { font-size: 1.6rem; color: #F3BA17; margin-top: 60px; }
-        h3 { font-size: 1.2rem; color: #444; margin-top: 30px; }
-        p { margin-bottom: 20px; text-align: justify; }
-        
-        .highlight { color: #b8860b; font-weight: bold; }
 
         footer {
             text-align: center;
-            margin-top: 100px;
+            margin-top: 80px;
             padding: 40px;
-            border-top: 1px solid #eee;
-            font-size: 12px;
-            color: #999;
+            font-size: 11px;
+            color: #777;
+            border-top: 1px solid #333;
         }
 
+        .highlight-bold { color: #FFD700; font-weight: 700; }
+
+        /* ریسپانسیو برای موبایل */
         @media (max-width: 600px) {
-            .terminal-window, .code-explanation { max-width: 100%; }
             h1 { font-size: 1.6rem; }
+            .terminal-container, .code-analysis { max-width: 100%; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header class="book-header">
-        <div class="book-title-en">LIBER NULL & PSYCHONAUT</div>
-        <h1>سایبرنتیک ذهن: پروتکل‌های پنهان تغییر واقعیت</h1>
-        <div class="meta-info">نویسنده: پیتر جی. کارول | مرجع اختصاصی PlanLife.ir</div>
-    </header>
+<div class="article-wrapper">
+    <div class="book-meta">LIBER NULL & PSYCHONAUT | MANUAL V1.0</div>
+    <h1>مهندسی آگاهی: بازنویسی فایلهای ریشه واقعیت</h1>
 
-    <div class="intro-section">
-        <p>
-            آیا تا به حال احساس کرده‌اید که علی‌رغم تمام تلاش‌هایتان، در یک "لوپ" تکراری از شکست، بی‌پولی یا روابط سمی گیر افتاده‌اید؟ حقیقت این است که شما در حال اجرای یک نرم‌افزار قدیمی هستید. کتاب <strong>Liber Null</strong> به ما می‌گوید که جهان یک ماده سخت نیست، بلکه یک ساختار اطلاعاتی است. 
-        </p>
-        <p>
-            در این مقاله، ما از مرزهای روانشناسی زرد عبور می‌کنیم و وارد دنیای <strong>"مهندسی آگاهی"</strong> می‌شویم. اینجا جایی است که یاد می‌گیرید چگونه مثل یک هکر، به هسته مرکزی ناخودآگاه خود نفوذ کرده و کدهایی که آینده شما را می‌سازند، بازنویسی کنید. خوش آمدید به عصر جدید <strong>PlanLife</strong>.
-        </p>
+    <div class="intro-lead">
+        اگر زندگی شما باگ دارد، به جای شکایت از دنیا، کدهای منبع خود را ویرایش کنید. در این مقاله، ما به اعماق فلسفه "جادوی آشوب" نفوذ می‌کنیم تا بیاموزیم چگونه مثل یک هکر، باورهایی که مانع رشد ما هستند را دی‌باگ (Debug) و بازنویسی کنیم. خوش آمدید به <strong>PlanLife.ir</strong>؛ جایی که علم و ماورا به هم می‌رسند.
     </div>
 
-    <h2>بخش اول: معماری بیوکامپیوتر انسانی</h2>
+    <h2>۱. باگ مالی: ترس از استحقاق و ثروت</h2>
     <p>
-        پیتر کارول معتقد است مغز انسان دقیقاً مثل یک کامپیوتر عمل می‌کند. حواس پنج‌گانه ما "ورودی" (Input) هستند و باورهای ما "پردازشگر" (Processor). مشکل اینجاست که اکثر ما دسترسی به "کدهای منبع" (Source Code) خود نداریم و فقط "خروجی" (Output) را می‌بینیم.
+        بسیاری از متخصصان، حتی در پروژه‌های بزرگ مثل <strong>Givibazar</strong>، از بالا بردن قیمت خدمات خود می‌ترسند. این ترس یک احساس نیست؛ بلکه یک "الگوریتم شرطی" است که در دوران کودکی نصب شده است. ذهن شما تصور می‌کند که ثروت مساوی با طرد شدن از جامعه است.
     </p>
 
-    <div class="terminal-window">
-        <div class="terminal-bar"><div class="dot d-r"></div><div class="dot d-y"></div><div class="dot d-g"></div></div>
+    <div class="terminal-container">
+        <div class="terminal-header"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
         <div class="terminal-body">
-            # Checking System Core...<br>
-            [LOG]: Found Legacy_Code in /Childhood/Memories<br>
-            [ERROR]: Belief "I_am_not_worthy" is running.<br>
-            [STATUS]: Blocking all Financial_Success packets.
+            function Financial_Logic() {<br>
+            &nbsp;&nbsp;if (Service_Price > 5000$) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;System.Alarm("No_Customer_Will_Buy");<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;Execute(Panic_V1.exe);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;Return: Poverty_Mode;<br>
+            &nbsp;&nbsp;}<br>
+            }
         </div>
     </div>
-    <div class="code-explanation">
-        <b>آنالیز فنی:</b> سیستم در حال اسکن لایه‌های حافظه کودکی است. باگ شناسایی شده: «من لایق نیستم». نتیجه: سیستم تمام فرصت‌های مالی (Packet) را مسدود می‌کند.
+    <div class="code-analysis">
+        <b>آنالیز لاین به لاین:</b> ذهن چک می‌کند اگر قیمت بالای ۵۰۰۰ دلار برود، بلافاصله سیستم "هشدار" داده و فایل "پانیک" را اجرا می‌کند. خروجی نهایی این کد، باقی ماندن در وضعیت فقر است.
     </div>
 
-    <h2>بخش دوم: تکنیک Gnosis؛ خاموش کردن آنتی‌ویروس ذهنی</h2>
-    <p>
-        ذهن منطقی شما مثل یک فایروال قدرتمند عمل می‌کند. هر زمان که بخواهید باور جدیدی (مثلاً ثروتمند بودن) را نصب کنید، این فایروال آن را به عنوان یک "دیتای نامعتبر" رد می‌کند چون با تجربیات قبلی شما همخوانی ندارد. تنها راه نفوذ، رسیدن به وضعیت <strong>Gnosis</strong> یا خلسه است.
-    </p>
-
-    <div class="terminal-window">
-        <div class="terminal-bar"><div class="dot d-r"></div><div class="dot d-y"></div><div class="dot d-g"></div></div>
-        <div class="terminal-body">
-            // Bypassing Logic_Firewall<br>
-            while (Analytical_Mind == ACTIVE) {<br>
-            &nbsp;&nbsp;Apply_Technique(Intense_Staring);<br>
-            &nbsp;&nbsp;if (Thought_Count == 0) break;<br>
-            }<br>
-            Access_Level = "ROOT_USER";
-        </div>
-    </div>
-    <div class="code-explanation">
-        <b>آنالیز فنی:</b> یک حلقه (Loop) که تا زمان صفر نشدن افکار ادامه می‌یابد. وقتی «گفتگوی ذهنی» متوقف شد، دسترسی به سطح Root (ریشه) آزاد می‌شود.
-    </div>
-
-    <div class="case-study">
-        <span class="case-title">مثال واضح: روابط عاطفی</span>
+    <div class="case-study-box">
+        <span class="case-tag">اصلاحیه عملی (Fix)</span>
         <p>
-            فردی که همیشه در روابطش شکست می‌خورد، در واقع کدی با این محتوا دارد: <code>IF (Care == True) THEN (Abandonment = True)</code>. یعنی اگر کسی به من اهمیت داد، پس حتماً مرا رها خواهد کرد. او در حالت گنوسیس، این خط کد را با یک "سیژیل" (نماد) جدید جایگزین می‌کند تا مدار عصبی‌اش تغییر کند.
+            طبق متد <strong>Liber Null</strong>، شما نباید با این فکر بحث کنید. باید در حالت خلسه (Gnosis)، سیژیلِ «ارزش من بی‌نهایت است» را در ذهن رایت کنید. وقتی کد جدید نصب شود، قیمت‌گذاری بالا برای شما به اندازه نفس کشیدن طبیعی خواهد بود.
         </p>
     </div>
 
-    <h2>بخش سوم: آناتومی سیژیل (کدنویسی تصویری)</h2>
+    <h2>۲. باگ کمال‌گرایی: لوپ بی‌نهایتِ انتظار</h2>
     <p>
-        در کتاب Liber Null، "سیژیل" زبان ماشینِ ناخودآگاه است. ناخودآگاه کلمات را نمی‌فهمد، اما با نمادها و تصاویر انتزاعی به شدت تحریک می‌شود. شما باید خواسته خود را از فرمت متنی به فرمت گرافیکی "کامپایل" کنید.
+        کمال‌گرایی سمی بزرگترین قاتل استارتاپ‌ها و پروژه‌های شخصی است. این یک "لوپ بی‌نهایت" (Infinite Loop) است که اجازه نمی‌دهد پروژه هرگز به مرحله "انتشار" (Publish) برسد.
     </p>
 
-    <div class="terminal-window">
-        <div class="terminal-bar"><div class="dot d-r"></div><div class="dot d-y"></div><div class="dot d-g"></div></div>
+    <div class="terminal-container">
+        <div class="terminal-header"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
         <div class="terminal-body">
-            string Raw_Request = "I_WILL_LEAD_THE_MARKET";<br>
-            string Compressed = Remove_Duplicates(Raw_Request);<br>
-            Symbol MySigil = Convert_To_Graphic(Compressed);<br>
-            Inject_To_Deep_Memory(MySigil);
+            while (Project.Status != "Perfect") {<br>
+            &nbsp;&nbsp;Wait_For_Launch();<br>
+            &nbsp;&nbsp;Search_For_More_Flaws();<br>
+            &nbsp;&nbsp;// Warning: "Perfect" never exists.<br>
+            &nbsp;&nbsp;Memory_Usage: 100% (Anxiety);<br>
+            }
         </div>
     </div>
-    <div class="code-explanation">
-        <b>آنالیز فنی:</b> تبدیل یک جمله طولانی به یک نماد فشرده. این نماد به عنوان یک "فایل اجرایی" به حافظه عمیق تزریق می‌شود تا ناخودآگاه آن را به عنوان یک دستور بپذیرد.
+    <div class="code-analysis">
+        <b>آنالیز لاین به لاین:</b> تا زمانی که وضعیت پروژه "عالی" نیست، سیستم در حالت انتظار می‌ماند. چون "عالی" هرگز تعریف نشده، سیستم دچار مصرف ۱۰۰ درصدی منابع ذهنی (اضطراب) می‌شود.
     </div>
 
-    <h2>بخش چهارم: پارادایم شیفتینگ (Paradigm Shifting)</h2>
     <p>
-        یکی از عجیب‌ترین مفاهیم کتاب این است: <strong>«باور فقط یک ابزار است.»</strong> شما مجبور نیستید تا ابد به یک چیز معتقد بمانید. یک هکر ذهن در <b>PlanLife</b>، برای یک هفته باور می‌کند که یک نابغه است تا یک پروژه را تمام کند، و هفته بعد این باور را Uninstall می‌کند تا دچار غرور نشود.
+        <strong>راهکار آشوب:</strong> کتاب پیشنهاد می‌دهد عمداً با یک اشتباه کوچک پروژه را لانچ کنید تا اقتدارِ این لوپ در ذهن شما بشکند. این یعنی "تبعیدِ" (Banishing) کمال‌گرایی از طریق عملِ ناقص اما جسورانه.
     </p>
 
-    <div class="terminal-window">
-        <div class="terminal-bar"><div class="dot d-r"></div><div class="dot d-y"></div><div class="dot d-g"></div></div>
+    <h2>۳. باگ تأییدطلبی: ادمین‌های خارجی ذهن</h2>
+    <p>
+        بسیاری از ما "دسترسی ادمین" (Admin Access) ذهنمان را به دیگران داده‌ایم. اگر فلان فامیل یا همکار تاییدمان نکند، کل سیستمِ اعتماد‌به‌نفس ما Crash می‌کند. این یعنی کدهای ارزشمندیِ ما در یک سرور خارجی (افکار دیگران) میزبانی می‌شود.
+    </p>
+
+    <div class="terminal-container">
+        <div class="terminal-header"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
         <div class="terminal-body">
-            // Installation of Temporary Belief<br>
-            Install_Package("Confidence_Boost_v2.0");<br>
-            Run_App("High_Performance_Mode");<br><br>
-            // Post-Project Action<br>
-            Uninstall("Confidence_Boost_v2.0");<br>
-            System_Reset();
+            request.GET("External_Approval");<br>
+            if (response == "Rejected") {<br>
+            &nbsp;&nbsp;Self_Worth.Value = NULL;<br>
+            &nbsp;&nbsp;ShutDown_Aspiration();<br>
+            &nbsp;&nbsp;Log: "System compromised by society."<br>
+            }
         </div>
     </div>
-    <div class="code-explanation">
-        <b>آنالیز فنی:</b> نصب موقت یک "بسته شخصیتی" برای انجام یک ماموریت خاص و سپس پاکسازی سیستم برای حفظ تعادل روان‌شناختی.
+    <div class="code-analysis">
+        <b>آنالیز لاین به لاین:</b> سیستم مدام درخواست "تایید خارجی" می‌دهد. اگر پاسخ منفی باشد، ارزش خود را صفر کرده و تمام آرزوها را خاموش (Shutdown) می‌کند.
     </div>
 
-    <h2>بخش پنجم: رهاسازی (The Execution)</h2>
-    <p>
-        آخرین مرحله، فراموشی است. در برنامه‌نویسی، وقتی کدی را Run می‌کنید، دیگر نباید در کدهای منبع دست ببرید. اگر مدام به آرزویتان فکر کنید، یعنی به سیستم اعتماد ندارید و فرآیند را متوقف می‌کنید.
-    </p>
-
-    <div class="case-study" style="border-left-color: #27c93f;">
-        <span class="case-title">نکته نهایی برای کاربران PlanLife</span>
+    <div class="case-study-box">
+        <span class="case-tag">استراتژی رهایی (Gnosis Method)</span>
         <p>
-            وقتی تمرینات Liber Null را انجام دادید، باید موضوع را کاملاً از ذهن آگاهتان پاک کنید. مشغول کارهای روزمره شوید. ناخودآگاه شما مثل یک پردازشگر در پس‌زمینه (Background Task) کار می‌کند تا شرایط و آدم‌های لازم برای موفقیت شما را وارد واقعیتتان کند.
+            پیتر کارول می‌گوید باور داشته باش که هیچ‌کس وجود ندارد! یعنی در وضعیت خلسه، تمام پیوندهای انرژیایی با دیگران را قطع کن. وقتی احساسِ استقلالِ کامل کردی، سیژیلِ «من منبع تایید خودم هستم» را جایگزین کن.
         </p>
     </div>
+
+    <h2>خلاصه پروتکل بازنویسی در PlanLife</h2>
+    <p>
+        برای هک کردن زندگی، این ۵ مرحله را تکرار کنید:
+        <ul>
+            <li><span class="highlight-bold">شناسایی:</span> مچ باگ ذهنی را بگیرید.</li>
+            <li><span class="highlight-bold">گنوسیس:</span> ذهن منطقی را خاموش کنید.</li>
+            <li><span class="highlight-bold">تزریق:</span> نماد (سیژیل) جدید را رایت کنید.</li>
+            <li><span class="highlight-bold">تبعید:</span> باور قدیمی را با خنده یا بی‌تفاوتی بشکنید.</li>
+            <li><span class="highlight-bold">رهاسازی:</span> موضوع را فراموش کنید تا در پس‌زمینه اجرا شود.</li>
+        </ul>
+    </p>
 
     <footer>
-        این مقاله بر اساس آموزه‌های پیتر جی. کارول برای پلتفرم PlanLife.ir تدوین شده است.<br>
-        عصر جدید تغییر واقعیت | © ۲۰۲۶
+        مقاله اختصاصی تحلیل کتاب Liber Null | تدوین شده برای عصر جدید PlanLife.ir<br>
+        © ۲۰۲۶ - تمام کدهای واقعیت در دستان شماست.
     </footer>
 </div>
 
