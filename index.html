@@ -524,7 +524,7 @@
         <div class="service-box" onclick="showSection('library')">
             <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449504/IMG_1045_lgkcd4.jpg" alt="">
             <span>کتابخانه 📚</span>
-          
+        </div>
     </div>
 </div>
 
@@ -601,8 +601,6 @@
 </div>
 
 <script>
-
-
 // ==================== داده‌ها ====================
 const podcastData = [
     {title: "باورهای ثروت", episode: "(نشانه های ثروت)", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779519463/Neshane_-_servat_-_Free_ec5tcj.m4a", cover: "https://api.cloudinary.com/v1_1/dshielkdt/image/download?api_key=884443113314115&attachment=true&audit_context=eyJhY3Rvcl90eXBlIjoidXNlciIsImFjdG9yX2lkIjoiNWI1NTI2ZmJlYTkxOTg3ZDcxOTlkODcwNWJlN2M0YmYiLCJ1c2VyX2V4dGVybmFsX2lkIjoiMThlMzU3MzE1ZDU3YjQ0OTFhMDIzOGQ5NzEyYzJiIiwidXNlcl9jdXN0b21faWQiOiJzb2hlaWwuYmcxQGdtYWlsLmNvbSIsImNvbXBvbmVudCI6ImNvbnNvbGUifQ%3D%3D&public_id=IMG_1065_ecrmn4&signature=1954d7fb684087a91faa577bd1c25b650ca56bc7&source=ml&target_filename=IMG_1065_ecrmn4&timestamp=1779449689&type=upload"},  
@@ -841,52 +839,6 @@ function showSection(section) {
         loadLibraryPage();
         return;
     }
-}
-
-// ==================== توابع ویدیوها ====================
-function loadVideoPage() {
-    const categories = ["باورهای ثروت", "عشق و روابط", "تحول حال و احساس"];
-    let html = '';
-    categories.forEach(cat => {
-        html += `<div class="slide-item" onclick="selectVideoCat('${cat}')"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"><p>${cat}</p></div>`;
-    });
-    document.getElementById('videoCategorySlides').innerHTML = html;
-    loadVideoItems(null);
-}
-
-function selectVideoCat(cat) {
-    document.getElementById('currentVideoCategoryTitle').textContent = cat;
-    loadVideoItems(cat);
-}
-
-function loadVideoItems(cat) {
-    let html = '';
-    const cats = cat ? [cat] : ["باورهای ثروت", "عشق و روابط", "تحول حال و احساس"];
-    
-    cats.forEach(c => {
-        const filtered = videoData.filter(item => item.category === c);
-        filtered.forEach(item => {
-            html += `
-                <div class="video-box" onclick="playVideo('${item.videoUrl}', '${item.title}')">
-                    <div class="video-thumbnail-container">
-                        <img src="${item.thumbnail}" class="video-thumbnail" alt="${item.title}">
-                        <div class="play-overlay">
-                            <div class="play-triangle"></div>
-                        </div>
-                    </div>
-                    <div class="video-info">
-                        <div class="music-name">${item.title}</div>
-                        <div style="font-size:14.5px; opacity:0.85; line-height:1.5;">${item.description}</div>
-                    </div>
-                </div>
-            `;
-        });
-    });
-    document.getElementById('videoList').innerHTML = html || '<p style="text-align:center; padding:40px; opacity:0.7;">ویدیویی یافت نشد</p>';
-}
-
-function playVideo(videoUrl, title) {
-    window.open(videoUrl, '_blank');
 }
 
 // ==================== توابع کتابخانه ====================
