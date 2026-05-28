@@ -8,80 +8,47 @@
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-        height: 100%;
-        font-family: 'Vazirmatn', sans-serif;
-        overflow-x: hidden;
-        color: white;
-        background: #030303;
-    }
-
+    html, body { height: 100%; font-family: 'Vazirmatn', sans-serif; overflow-x: hidden; color: white; background: #030303; }
     .stars { position: fixed; inset: 0; background: transparent; z-index: 1; pointer-events: none; }
-    .stars::before, .stars::after {
-        content: ''; position: absolute; inset: 0;
-        background-image: radial-gradient(white 1px, transparent 1px);
-        background-size: 80px 80px; opacity: 0.45; animation: twinkle 10s infinite alternate;
-    }
+    .stars::before, .stars::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(white 1px, transparent 1px); background-size: 80px 80px; opacity: 0.45; animation: twinkle 10s infinite alternate; }
     .stars::after { background-size: 140px 140px; opacity: 0.3; animation-duration: 16s; }
     @keyframes twinkle { 0% { opacity: 0.35; } 100% { opacity: 0.65; } }
 
     header { position: fixed; top: 0; left: 0; right: 0; height: 65px; display: flex; align-items: center; padding: 0 20px; z-index: 100; background: rgba(0,0,0,0.25); backdrop-filter: blur(10px); }
-
     .main-center { position: relative; z-index: 5; min-height: 100vh; padding: 75px 20px 120px; }
-
     h2 { font-size: 32px; margin-bottom: 15px; text-align: center; font-weight: 900; }
-
     .section-title { font-size: 22px; margin: 20px 0 12px; padding: 0 5px; }
-
-    .horizontal-scroll {
-        display: flex; gap: 15px; overflow-x: auto; padding: 12px 0 25px; 
-        scrollbar-width: none; -webkit-overflow-scrolling: touch;
-    }
+    .horizontal-scroll { display: flex; gap: 15px; overflow-x: auto; padding: 12px 0 25px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
     .horizontal-scroll::-webkit-scrollbar { display: none; }
-
-    .slide-item {
-        min-width: 140px; flex-shrink: 0; text-align: center; cursor: pointer;
-        background: rgba(255,255,255,0.11); backdrop-filter: blur(12px);
-        border-radius: 18px; padding: 10px 8px;
-    }
+    .slide-item { min-width: 140px; flex-shrink: 0; text-align: center; cursor: pointer; background: rgba(255,255,255,0.11); backdrop-filter: blur(12px); border-radius: 18px; padding: 10px 8px; }
     .slide-item img { width: 130px; height: 130px; object-fit: cover; border-radius: 18px; margin-bottom: 8px; }
-
-    .podcast-item {
-        background: rgba(255,255,255,0.1); backdrop-filter: blur(12px);
-        border-radius: 18px; padding: 12px 15px; margin-bottom: 20px;
-        display: flex; align-items: center; gap: 15px; cursor: pointer;
-    }
+    .podcast-item { background: rgba(255,255,255,0.1); backdrop-filter: blur(12px); border-radius: 18px; padding: 12px 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; cursor: pointer; }
     .podcast-item img { width: 55px; height: 55px; object-fit: cover; border-radius: 12px; }
     .music-info { flex: 1; }
     .music-title { font-weight: 600; font-size: 16px; }
     .music-artist { font-size: 14px; opacity: 0.8; }
     .music-duration { font-size: 14px; opacity: 0.7; align-self: center; }
+    .play-circle { width: 42px; height: 42px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-    .play-circle {
-        width: 42px; height: 42px;
-        background: rgba(255,255,255,0.15);
-        border: 2px solid rgba(255,255,255,0.6);
-        border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-    }
-
-    .now-playing {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 300;
-        display: none; flex-direction: column; align-items: center; padding: 40px 20px 30px;
-    }
+    .now-playing { position: fixed; inset: 0; background: rgba(10, 10, 25, 0.96); backdrop-filter: blur(30px); z-index: 300; display: none; flex-direction: column; align-items: center; padding: 20px 20px 40px; overflow: hidden; }
     .now-playing.active { display: flex; }
-
-    .big-cover img {
-        width: 280px; height: 280px; object-fit: cover; border-radius: 20px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-    }
-
-    .custom-player { width: 100%; max-width: 340px; }
-    .progress-container {
-        height: 7px; background: rgba(255,255,255,0.2); border-radius: 10px;
-        margin: 15px 0; cursor: pointer;
-    }
-    .progress-bar { height: 100%; width: 0%; background: linear-gradient(to right, #c026d3, #ff8800); }
+    .player-topbar { width: 100%; max-width: 380px; display: flex; justify-content: space-between; align-items: center; padding: 8px 0 16px; }
+    .player-status { font-size: 15px; font-weight: 600; opacity: 0.85; }
+    .big-cover { width: 100%; max-width: 310px; margin: 10px 0 20px; }
+    .big-cover img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 24px; box-shadow: 0 25px 70px rgba(192, 38, 211, 0.55); }
+    .track-info { text-align: center; width: 100%; max-width: 360px; margin-bottom: 16px; }
+    .np-title { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+    .np-subtitle { font-size: 16.5px; opacity: 0.7; }
+    .progress-section { width: 100%; max-width: 360px; margin-bottom: 28px; }
+    .progress-container { width: 100%; height: 5px; background: rgba(255,255,255,0.18); border-radius: 999px; cursor: pointer; margin-bottom: 8px; }
+    .progress-bar { height: 100%; background: linear-gradient(to right, #ff9500, #ff6b00); border-radius: 999px; box-shadow: 0 0 12px #ff9500; }
+    .time-display { display: flex; justify-content: space-between; font-size: 13.5px; opacity: 0.75; }
+    .main-controls { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 360px; padding: 0 10px; margin-bottom: 30px; }
+    .control-btn { width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .control-btn svg { width: 30px; height: 30px; fill: #ddd; transition: all 0.2s; }
+    .control-btn:active svg { fill: #ff9500; transform: scale(0.9); }
+    .play-main { width: 82px; height: 82px; background: #ff9500; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(255, 149, 0, 0.65); cursor: pointer; }
+    .play-main svg { width: 36px; height: 36px; fill: #1a0033; }
 </style>
 </head>
 <body>
@@ -94,57 +61,78 @@
 
 <div class="main-center">
     <h2>دوره‌های PlanLife</h2>
-    
     <div class="section-title">دسته‌بندی‌ها</div>
     <div class="horizontal-scroll" id="categorySlides"></div>
-    
     <div class="section-title" id="currentCategoryTitle">همه دوره‌ها</div>
     <div id="podcastList"></div>
 </div>
 
 <!-- Modal اشتراک -->
 <div id="subscriptionModal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 400; display: none; align-items: center; justify-content: center;">
-    <div class="modal-content" id="modalContent" style="background: rgba(255,255,255,0.11); backdrop-filter: blur(20px); border-radius: 24px; padding: 30px 25px; width: 90%; max-width: 360px; text-align: center;">
-        <!-- محتوا توسط جاوااسکریپت پر می‌شود -->
-    </div>
+    <div class="modal-content" id="modalContent" style="background: rgba(255,255,255,0.11); backdrop-filter: blur(20px); border-radius: 24px; padding: 30px 25px; width: 90%; max-width: 360px; text-align: center;"></div>
 </div>
 
-<!-- Now Playing -->
+<!-- پلیر مدرن بزرگ -->
 <div id="nowPlayingScreen" class="now-playing">
-    <button onclick="closeNowPlaying()" style="align-self:flex-start; background:none; border:none; color:white; font-size:32px;">←</button>
+    <div class="player-topbar">
+        <button onclick="closeNowPlaying()" style="font-size:26px;background:none;border:none;color:white;">←</button>
+        <span id="playerStatus" class="player-status">در حال پخش</span>
+        <button onclick="showMenu()" style="font-size:26px;background:none;border:none;color:white;">⋯</button>
+    </div>
     
     <div class="big-cover">
         <img id="npCover" src="" alt="">
     </div>
     
-    <h2 id="npTitle" style="margin-bottom:8px; text-align:center;">عنوان</h2>
-    <p id="npSubtitle" style="opacity:0.7; margin-bottom:30px;">PlanLife</p>
+    <div class="track-info">
+        <h2 id="npTitle" class="np-title">عنوان دوره</h2>
+        <p id="npSubtitle" class="np-subtitle">PlanLife</p>
+    </div>
 
-    <div class="custom-player">
+    <div class="progress-section">
         <div class="progress-container" id="progressContainer">
             <div class="progress-bar" id="progressBar"></div>
         </div>
-        <button onclick="togglePlay()" id="playBtn" style="background:#ffd700; color:#1a0033; border:none; padding:15px 50px; border-radius:50px; font-weight:bold; font-size:18px;">▶ پخش</button>
+        <div class="time-display">
+            <span id="currentTime">0:00</span>
+            <span id="totalTime">0:00</span>
+        </div>
     </div>
 
+    <div class="main-controls">
+        <div class="control-btn" onclick="prevTrack()">
+            <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z"/></svg>
+        </div>
+        <div class="control-btn" onclick="seek(-10)">
+            <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+        </div>
+        <div onclick="togglePlay()" class="play-main" id="playBtn">
+            <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <div class="control-btn" onclick="seek(10)">
+            <svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg>
+        </div>
+        <div class="control-btn" onclick="nextTrack()">
+            <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+        </div>
+    </div>
     <audio id="mainAudio" style="display:none;"></audio>
-    <button onclick="closeNowPlaying()" style="margin-top:40px; background:rgba(255,255,255,0.1); color:white; border:none; padding:12px 40px; border-radius:30px;">بستن</button>
 </div>
 
 <script>
-// ==================== داده‌های دوره‌ها ====================
+// ==================== داده‌های کامل ====================
 const courseData = [
-    {title: "دوره کارگاه ثروتسازی", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779651755/Servat_-_dore_-_1_eu9z9o.m4a", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},  
-    {title: "دوره کارگاه ثروتسازی", episode: 2, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},  
-    {title: "دوره کارگاه ثروتسازی", episode: 3, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},  
-    {title: "دوره کارگاه ثروتسازی", episode: 4, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},  
-    {title: "دوره کارگاه ثروتسازی", episode: 5, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},  
-    {title: "دوره کارگاه ثروتسازی", episode: 6, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},  
-    {title: "دوره کارگاه ثروتسازی", episode: 7, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},  
-    {title: "دوره کارگاه ثروتسازی", episode: 8, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},  
-    {title: "دوره کارگاه ثروتسازی", episode: 9, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},  
-    {title: "دوره کارگاه ثروتسازی", episode: 10, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},  
-    {title: "دوره کارگاه ثروتسازی", episode: 11, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},  
+    {title: "دوره کارگاه ثروتسازی", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779651755/Servat_-_dore_-_1_eu9z9o.m4a", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "دوره کارگاه ثروتسازی", episode: 2, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "دوره کارگاه ثروتسازی", episode: 3, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "دوره کارگاه ثروتسازی", episode: 4, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "دوره کارگاه ثروتسازی", episode: 5, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "دوره کارگاه ثروتسازی", episode: 6, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "دوره کارگاه ثروتسازی", episode: 7, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "دوره کارگاه ثروتسازی", episode: 8, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "دوره کارگاه ثروتسازی", episode: 9, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "دوره کارگاه ثروتسازی", episode: 10, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
+    {title: "دوره کارگاه ثروتسازی", episode: 11, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
 
     {title: "دوره عشق و روابط", episode: 1, src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
     {title: "دوره عشق و روابط", episode: 2, src: "https://tools.irbots.com/uploads/1779408669file_17524.mpeg", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
@@ -156,7 +144,7 @@ const courseData = [
     {title: "دوره عشق و روابط", episode: 8, src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
     {title: "دوره عشق و روابط", episode: 9, src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
 
-    {title: "دوره تحول حال و احساس", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"}, 
+    {title: "دوره تحول حال و احساس", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
     {title: "دوره اعتماد به نفس", episode: 1, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
     {title: "دوره اعتماد به نفس", episode: 2, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
     {title: "دوره اعتماد به نفس", episode: 3, src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
@@ -177,7 +165,6 @@ const courseData = [
     {title: "دوره احساس لیاقت", episode: 12, src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"},
 ];
 
-// متغیرهای اشتراک
 let unlockedCategories = {};
 const subscriptionCodes = {
     "دوره کارگاه ثروتسازی": ["77777", "BA777", "TH777", "Servat"],
@@ -187,7 +174,8 @@ const subscriptionCodes = {
     "دوره احساس لیاقت": ["22222", "EL222", "Liyaghat"]
 };
 
-// توابع صفحه
+let currentTrackIndex = 0;
+
 function loadPage() {
     const categories = ["دوره کارگاه ثروتسازی", "دوره عشق و روابط", "دوره تحول حال و احساس", "دوره اعتماد به نفس", "دوره احساس لیاقت"];
     let html = '';
@@ -206,7 +194,6 @@ function selectCat(cat) {
 function loadItems(cat) {
     let html = '';
     const cats = cat ? [cat] : ["دوره کارگاه ثروتسازی", "دوره عشق و روابط", "دوره تحول حال و احساس", "دوره اعتماد به نفس", "دوره احساس لیاقت"];
-
     cats.forEach(c => {
         const filtered = courseData.filter(item => item.title === c);
         filtered.forEach(item => {
@@ -241,8 +228,7 @@ function showSubscriptionModal(category) {
         <h3 style="margin-bottom:15px;">🔐 نیاز به اشتراک دارید</h3>
         <p style="margin-bottom:20px; opacity:0.9;">دسته‌بندی: <strong>${category}</strong></p>
         <p style="margin:20px 0 10px;">کد اشتراک را وارد کنید :</p>
-        <input id="unlockCode" type="text" maxlength="10" placeholder="*****" 
-               style="width:100%; padding:14px; border-radius:12px; border:none; text-align:center; font-size:34px; margin-bottom:14px; background:rgba(255,255,255,0.1); color:white;">
+        <input id="unlockCode" type="text" maxlength="10" placeholder="*****" style="width:100%; padding:14px; border-radius:12px; border:none; text-align:center; font-size:34px; margin-bottom:14px; background:rgba(255,255,255,0.1); color:white;">
         <button onclick="checkUnlockCode()" style="width:100%; padding:14px; background:#00ff88; color:black; border:none; border-radius:12px; font-weight:bold;">فعال‌سازی</button>
         <button onclick="showSupportModal()" style="width:100%; padding:14px; background:rgba(255,255,255,0.2); color:white; border:none; border-radius:12px; margin-top:10px;">ارتباط با پشتیبانی 🔓</button>
         <button onclick="closeModal()" style="width:100%; padding:14px; background:rgba(255,255,255,0.15); color:white; border:none; border-radius:12px; margin-top:10px;">بستن</button>
@@ -254,7 +240,6 @@ function checkUnlockCode() {
     const code = document.getElementById('unlockCode').value.trim();
     const category = window.currentUnlockCategory;
     const content = document.getElementById('modalContent');
-
     if (subscriptionCodes[category] && subscriptionCodes[category].includes(code)) {
         unlockedCategories[category] = true;
         content.innerHTML = `<div style="font-size:70px; color:#00ff88;">✅</div><h3 style="color:#00ff88;">اشتراک فعال شد!</h3><p>حالا می‌توانید به این دوره دسترسی داشته باشید.</p><button onclick="closeModal()" style="width:100%; padding:14px; background:#00ff88; color:black; border:none; border-radius:12px;">بستن</button>`;
@@ -263,44 +248,88 @@ function checkUnlockCode() {
     }
 }
 
-function closeModal() { 
-    document.getElementById('subscriptionModal').style.display = 'none'; 
-}
+function closeModal() { document.getElementById('subscriptionModal').style.display = 'none'; }
 
+// ==================== پشتیبانی با آیکون‌های واقعی (لینک‌های عمومی) ====================
 function showSupportModal() {
     closeModal();
-    alert("لینک پشتیبانی: https://t.me/planlifeir");
+    const content = document.getElementById('modalContent');
+    content.innerHTML = `
+        <div style="text-align:center;">
+            <h3 style="margin-bottom:22px; font-size:22px;">ارتباط با پشتیبانی</h3>
+            
+            <div onclick="window.open('https://t.me/Planlifeir', '_blank')" style="display:flex; align-items:center; gap:15px; background:rgba(255,255,255,0.08); padding:14px 18px; border-radius:16px; margin-bottom:12px; cursor:pointer;">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" style="width:42px; height:42px; border-radius:50%; object-fit:cover;">
+                <div style="text-align:right; flex:1;">
+                    <div style="font-weight:600;">تلگرام</div>
+                    <div style="font-size:15px; opacity:0.85;">@Planlifeir</div>
+                </div>
+            </div>
+            
+            <div onclick="window.open('https://instagram.com/mrravankav', '_blank')" style="display:flex; align-items:center; gap:15px; background:rgba(255,255,255,0.08); padding:14px 18px; border-radius:16px; margin-bottom:12px; cursor:pointer;">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" style="width:42px; height:42px; border-radius:12px; object-fit:cover;">
+                <div style="text-align:right; flex:1;">
+                    <div style="font-weight:600;">اینستاگرام</div>
+                    <div style="font-size:15px; opacity:0.85;">mrravankav</div>
+                </div>
+            </div>
+            
+            <div onclick="window.open('https://wa.me/905437333582', '_blank')" style="display:flex; align-items:center; gap:15px; background:rgba(255,255,255,0.08); padding:14px 18px; border-radius:16px; margin-bottom:12px; cursor:pointer;">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111705.png" style="width:42px; height:42px; border-radius:50%; object-fit:cover;">
+                <div style="text-align:right; flex:1;">
+                    <div style="font-weight:600;">واتس‌اپ</div>
+                    <div style="font-size:15px; opacity:0.85;">00905437333582</div>
+                </div>
+            </div>
+            
+            <div onclick="window.open('https://ble.ir/planlifeir', '_blank')" style="display:flex; align-items:center; gap:15px; background:rgba(255,255,255,0.08); padding:14px 18px; border-radius:16px; margin-bottom:22px; cursor:pointer;">
+                <img src="https://cdn-icons-png.flaticon.com/512/5968/5968898.png" style="width:42px; height:42px; border-radius:50%; object-fit:cover;">
+                <div style="text-align:right; flex:1;">
+                    <div style="font-weight:600;">بله</div>
+                    <div style="font-size:15px; opacity:0.85;">@planlifeir</div>
+                </div>
+            </div>
+            
+            <button onclick="closeModal()" style="width:100%; padding:14px; background:rgba(255,255,255,0.15); color:white; border:none; border-radius:12px; font-size:15px;">بستن</button>
+        </div>
+    `;
+    document.getElementById('subscriptionModal').style.display = 'flex';
 }
 
-// پخش‌کننده
+// ==================== پلیر ====================
 const audio = document.getElementById('mainAudio');
 const progressBar = document.getElementById('progressBar');
+const currentTimeEl = document.getElementById('currentTime');
+const totalTimeEl = document.getElementById('totalTime');
 const progressContainer = document.getElementById('progressContainer');
+const statusEl = document.getElementById('playerStatus');
+const playIcon = document.getElementById('playIcon');
+
+function formatTime(s) { if (!s || isNaN(s)) return "0:00"; return `${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,'0')}`; }
+function updateProgress() { if (!audio.duration) return; progressBar.style.width = `${(audio.currentTime / audio.duration) * 100}%`; currentTimeEl.textContent = formatTime(audio.currentTime); }
+audio.addEventListener('timeupdate', updateProgress);
+audio.addEventListener('loadedmetadata', () => totalTimeEl.textContent = formatTime(audio.duration));
+progressContainer.addEventListener('click', e => { const rect = progressContainer.getBoundingClientRect(); audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration; });
+function updatePlayerStatus(playing) { statusEl.textContent = playing ? 'در حال پخش' : 'متوقف شده'; }
 
 function playAudio(title, src, cover) {
     document.getElementById('npTitle').textContent = title;
+    document.getElementById('npSubtitle').textContent = "PlanLife";
     document.getElementById('npCover').src = cover;
     document.getElementById('nowPlayingScreen').classList.add('active');
-    
     audio.src = src;
-    audio.play().catch(() => {});
+    audio.play().then(() => { updatePlayerStatus(true); playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; });
+    currentTrackIndex = courseData.findIndex(item => item.src === src);
 }
 
-function togglePlay() {
-    if (audio.paused) audio.play();
-    else audio.pause();
-}
+function togglePlay() { if (audio.paused) { audio.play(); playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; updatePlayerStatus(true); } else { audio.pause(); playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; updatePlayerStatus(false); } }
+function seek(sec) { audio.currentTime += sec; }
+function prevTrack() { if (currentTrackIndex > 0) { const p = courseData[currentTrackIndex - 1]; playAudio(p.title, p.src, p.cover); } }
+function nextTrack() { if (currentTrackIndex < courseData.length - 1) { const n = courseData[currentTrackIndex + 1]; playAudio(n.title, n.src, n.cover); } }
+function closeNowPlaying() { document.getElementById('nowPlayingScreen').classList.remove('active'); audio.pause(); updatePlayerStatus(false); }
+function showMenu() { alert("منو"); }
+function goToHome() { window.location.href = "index.html"; }
 
-function closeNowPlaying() {
-    document.getElementById('nowPlayingScreen').classList.remove('active');
-    audio.pause();
-}
-
-function goToHome() {
-    window.location.href = "index.html";
-}
-
-// بارگذاری اولیه
 window.onload = loadPage;
 </script>
 </body>
