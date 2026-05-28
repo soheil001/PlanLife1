@@ -15,38 +15,51 @@
     @keyframes twinkle { 0% { opacity: 0.35; } 100% { opacity: 0.65; } }
 
     header { position: fixed; top: 0; left: 0; right: 0; height: 65px; display: flex; align-items: center; padding: 0 20px; z-index: 100; background: rgba(0,0,0,0.25); backdrop-filter: blur(10px); }
+
     .main-center { position: relative; z-index: 5; min-height: 100vh; padding: 75px 20px 120px; }
+
     h2 { font-size: 32px; margin-bottom: 15px; text-align: center; font-weight: 900; }
+
     .section-title { font-size: 22px; margin: 20px 0 12px; padding: 0 5px; }
+
     .horizontal-scroll { display: flex; gap: 15px; overflow-x: auto; padding: 12px 0 25px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
     .horizontal-scroll::-webkit-scrollbar { display: none; }
+
     .slide-item { min-width: 140px; flex-shrink: 0; text-align: center; cursor: pointer; background: rgba(255,255,255,0.11); backdrop-filter: blur(12px); border-radius: 18px; padding: 10px 8px; }
     .slide-item img { width: 130px; height: 130px; object-fit: cover; border-radius: 18px; margin-bottom: 8px; }
+
     .podcast-item { background: rgba(255,255,255,0.1); backdrop-filter: blur(12px); border-radius: 18px; padding: 12px 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; cursor: pointer; }
     .podcast-item img { width: 55px; height: 55px; object-fit: cover; border-radius: 12px; }
     .music-info { flex: 1; }
     .music-title { font-weight: 600; font-size: 16px; }
     .music-artist { font-size: 14px; opacity: 0.8; }
     .music-duration { font-size: 14px; opacity: 0.7; align-self: center; }
+
     .play-circle { width: 42px; height: 42px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
     .now-playing { position: fixed; inset: 0; background: rgba(10, 10, 25, 0.96); backdrop-filter: blur(30px); z-index: 300; display: none; flex-direction: column; align-items: center; padding: 20px 20px 40px; overflow: hidden; }
     .now-playing.active { display: flex; }
+
     .player-topbar { width: 100%; max-width: 380px; display: flex; justify-content: space-between; align-items: center; padding: 8px 0 16px; }
     .player-status { font-size: 15px; font-weight: 600; opacity: 0.85; }
+
     .big-cover { width: 100%; max-width: 310px; margin: 10px 0 20px; }
     .big-cover img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 24px; box-shadow: 0 25px 70px rgba(192, 38, 211, 0.55); }
+
     .track-info { text-align: center; width: 100%; max-width: 360px; margin-bottom: 16px; }
     .np-title { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
     .np-subtitle { font-size: 16.5px; opacity: 0.7; }
+
     .progress-section { width: 100%; max-width: 360px; margin-bottom: 28px; }
     .progress-container { width: 100%; height: 5px; background: rgba(255,255,255,0.18); border-radius: 999px; cursor: pointer; margin-bottom: 8px; }
     .progress-bar { height: 100%; background: linear-gradient(to right, #ff9500, #ff6b00); border-radius: 999px; box-shadow: 0 0 12px #ff9500; }
     .time-display { display: flex; justify-content: space-between; font-size: 13.5px; opacity: 0.75; }
+
     .main-controls { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 360px; padding: 0 10px; margin-bottom: 30px; }
     .control-btn { width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     .control-btn svg { width: 30px; height: 30px; fill: #ddd; transition: all 0.2s; }
     .control-btn:active svg { fill: #ff9500; transform: scale(0.9); }
+
     .play-main { width: 82px; height: 82px; background: #ff9500; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(255, 149, 0, 0.65); cursor: pointer; }
     .play-main svg { width: 36px; height: 36px; fill: #1a0033; }
 </style>
@@ -56,7 +69,18 @@
 <div class="stars"></div>
 
 <header>
-    <div onclick="goToHome()" style="font-size:28px; cursor:pointer; color:white;">← خانه</div>
+    <div onclick="goToHome()" 
+         style="font-size:15px; cursor:pointer; color:white; 
+                background: rgba(255,255,255,0.12); 
+                backdrop-filter: blur(12px); 
+                padding: 9px 22px; 
+                border-radius: 30px; 
+                display: inline-flex; 
+                align-items: center; 
+                gap: 8px; 
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        ← خانه
+    </div>
 </header>
 
 <div class="main-center">
@@ -250,7 +274,7 @@ function checkUnlockCode() {
 
 function closeModal() { document.getElementById('subscriptionModal').style.display = 'none'; }
 
-// ==================== پشتیبانی با آیکون‌های واقعی (لینک‌های عمومی) ====================
+// ==================== پشتیبانی با آیکون‌های واقعی ====================
 function showSupportModal() {
     closeModal();
     const content = document.getElementById('modalContent');
@@ -328,9 +352,10 @@ function prevTrack() { if (currentTrackIndex > 0) { const p = courseData[current
 function nextTrack() { if (currentTrackIndex < courseData.length - 1) { const n = courseData[currentTrackIndex + 1]; playAudio(n.title, n.src, n.cover); } }
 function closeNowPlaying() { document.getElementById('nowPlayingScreen').classList.remove('active'); audio.pause(); updatePlayerStatus(false); }
 function showMenu() { alert("منو"); }
-function goToHome() { window.location.href = "index.html"; }
+function goToHome() { window.location.href = "https://planlife.ir"; }
 
 window.onload = loadPage;
 </script>
 </body>
 </html>
+```px;
