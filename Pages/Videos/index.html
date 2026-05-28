@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a0033">
+<title>ویدیوهای ماورایی • PlanLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+        height: 100%;
+        font-family: 'Vazirmatn', sans-serif;
+        color: white;
+        background: #030303;
+    }
+
+    .stars { 
+        position: fixed; inset: 0; background: transparent; z-index: 1; pointer-events: none; 
+    }
+    .stars::before, .stars::after {
+        content: ''; position: absolute; inset: 0;
+        background-image: radial-gradient(white 1px, transparent 1px);
+        background-size: 80px 80px; opacity: 0.45; animation: twinkle 10s infinite alternate;
+    }
+
+    .main-center {
+        padding: 30px 20px 50px;
+        max-width: 720px;
+        margin: 0 auto;
+    }
+
+    .page-title {
+        font-size: 34px;
+        font-weight: 900;
+        text-align: center;
+        margin-bottom: 25px;
+        color: #ffd700;
+        text-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+    }
+
+    /* دسته‌بندی‌های افقی */
+    .category-scroll {
+        display: flex;
+        gap: 12px;
+        overflow-x: auto;
+        padding: 12px 0 25px;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .category-scroll::-webkit-scrollbar { display: none; }
+
+    .category-chip {
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        padding: 10px 22px;
+        border-radius: 30px;
+        white-space: nowrap;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .category-chip.active {
+        background: #d4af37;
+        color: #1a0033;
+        border-color: #d4af37;
+    }
+
+    /* کارت‌های ویدیو (شیشه‌ای تمام عرض) */
+    .video-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .video-card {
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(212, 175, 55, 0.35);
+        border-radius: 22px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
+    .video-card:hover { transform: translateY(-6px); }
+
+    .video-cover {
+        width: 100%;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+    }
+
+    .video-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.75) 85%);
+        display: flex;
+        align-items: flex-end;
+        padding: 20px;
+    }
+
+    .video-info {
+        flex: 1;
+    }
+    .video-title {
+        font-size: 17.5px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+    .video-subtitle {
+        font-size: 13.5px;
+        opacity: 0.75;
+    }
+
+    .play-btn {
+        width: 56px;
+        height: 56px;
+        background: #d4af37;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
+        flex-shrink: 0;
+    }
+    .play-btn .triangle {
+        width: 0;
+        height: 0;
+        border-top: 12px solid transparent;
+        border-bottom: 12px solid transparent;
+        border-left: 20px solid #1a0033;
+        margin-left: 4px;
+    }
+
+    /* مودال پخش ویدیو */
+    #videoModal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.95);
+        z-index: 500;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+    .modal-content {
+        width: 100%;
+        max-width: 800px;
+        background: #111;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+    }
+    .modal-header {
+        padding: 16px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #1a1a1a;
+    }
+    .modal-close {
+        font-size: 28px;
+        color: #d4af37;
+        cursor: pointer;
+    }
+    video {
+        width: 100%;
+        display: block;
+    }
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<div class="main-center">
+    <h1 class="page-title">ویدیوهای ماورایی 🎥</h1>
+
+    <!-- دسته‌بندی‌ها -->
+    <div class="category-scroll" id="categoryScroll">
+        <div class="category-chip active" onclick="filterVideos('all')">همه</div>
+        <div class="category-chip" onclick="filterVideos('ثروت')">ثروت</div>
+        <div class="category-chip" onclick="filterVideos('عشق')">عشق و روابط</div>
+        <div class="category-chip" onclick="filterVideos('تحول')">تحول حال و احساس</div>
+        <div class="category-chip" onclick="filterVideos('اعتماد')">اعتماد به نفس</div>
+        <div class="category-chip" onclick="filterVideos('لیاقت')">احساس لیاقت</div>
+    </div>
+
+    <!-- لیست ویدیوها -->
+    <div class="video-list" id="videoList"></div>
+</div>
+
+<!-- مودال پخش ویدیو -->
+<div id="videoModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div id="modalTitle" style="font-weight:700; font-size:18px;"></div>
+            <div class="modal-close" onclick="closeVideoModal()">✕</div>
+        </div>
+        <video id="videoPlayer" controls autoplay></video>
+    </div>
+</div>
+
+<script>
+// ==================== داده‌های ویدیو ====================
+const videoData = [
+    {
+        id: 1,
+        title: "رازهای ثروت - قسمت ۱",
+        subtitle: "نشانه‌های ثروت",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779569485/IMG_1110_p0sbb6.jpg",
+        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        category: "ثروت"
+    },
+    {
+        id: 2,
+        title: "رازهای ثروت - قسمت ۲",
+        subtitle: "ذهن ثروتمند",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449514/IMG_1060_bemgha.jpg",
+        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+        category: "ثروت"
+    },
+    {
+        id: 3,
+        title: "عشق و روابط - قسمت ۱",
+        subtitle: "جذب عشق واقعی",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
+        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        category: "عشق"
+    },
+    {
+        id: 4,
+        title: "تحول حال و احساس",
+        subtitle: "از منفی به مثبت",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449504/IMG_1045_lgkcd4.jpg",
+        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+        category: "تحول"
+    },
+    {
+        id: 5,
+        title: "اعتماد به نفس واقعی",
+        subtitle: "چگونه خودت را باور کنی",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449481/IMG_1048_wrc4iq.jpg",
+        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        category: "اعتماد"
+    },
+    {
+        id: 6,
+        title: "احساس لیاقت",
+        subtitle: "تو شایسته بهترین‌ها هستی",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779657211/IMG_1151_zqcux9.jpg",
+        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+        category: "لیاقت"
+    }
+];
+
+// ==================== بارگذاری ویدیوها ====================
+function loadVideos(filter = 'all') {
+    const container = document.getElementById('videoList');
+    container.innerHTML = '';
+
+    const filtered = filter === 'all' 
+        ? videoData 
+        : videoData.filter(v => v.category === filter);
+
+    filtered.forEach(video => {
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        card.innerHTML = `
+            <img src="${video.cover}" class="video-cover" alt="${video.title}">
+            <div class="video-overlay">
+                <div class="video-info">
+                    <div class="video-title">${video.title}</div>
+                    <div class="video-subtitle">${video.subtitle}</div>
+                </div>
+                <div class="play-btn" onclick="event.stopImmediatePropagation(); playVideo(${video.id})">
+                    <div class="triangle"></div>
+                </div>
+            </div>
+        `;
+        card.onclick = () => playVideo(video.id);
+        container.appendChild(card);
+    });
+}
+
+// ==================== پخش ویدیو ====================
+function playVideo(id) {
+    const video = videoData.find(v => v.id === id);
+    if (!video) return;
+
+    const modal = document.getElementById('videoModal');
+    const player = document.getElementById('videoPlayer');
+    const title = document.getElementById('modalTitle');
+
+    title.textContent = video.title;
+    player.src = video.src;
+    modal.style.display = 'flex';
+    player.play();
+}
+
+function closeVideoModal() {
+    const modal = document.getElementById('videoModal');
+    const player = document.getElementById('videoPlayer');
+    player.pause();
+    player.src = '';
+    modal.style.display = 'none';
+}
+
+// ==================== فیلتر دسته‌بندی ====================
+function filterVideos(category) {
+    // حذف کلاس active از همه
+    document.querySelectorAll('.category-chip').forEach(chip => {
+        chip.classList.remove('active');
+    });
+
+    // اضافه کردن کلاس active به چیپ کلیک‌شده
+    event.target.classList.add('active');
+
+    loadVideos(category);
+}
+
+// ==================== شروع ====================
+window.onload = () => {
+    loadVideos('all');
+};
+</script>
+</body>
+</html>
