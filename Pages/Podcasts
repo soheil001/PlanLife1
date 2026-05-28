@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a0033">
+<title>پادکست‌های PlanLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+        height: 100%;
+        font-family: 'Vazirmatn', sans-serif;
+        overflow-x: hidden;
+        color: white;
+        background: #030303;
+    }
+    .stars { position: fixed; inset: 0; background: transparent; z-index: 1; pointer-events: none; }
+    .stars::before, .stars::after {
+        content: ''; position: absolute; inset: 0;
+        background-image: radial-gradient(white 1px, transparent 1px);
+        background-size: 80px 80px; opacity: 0.45;
+    }
+    .stars::after { background-size: 140px 140px; opacity: 0.3; }
+
+    header { position: fixed; top: 0; left: 0; right: 0; height: 65px; display: flex; align-items: center; padding: 0 20px; z-index: 100; background: rgba(0,0,0,0.25); backdrop-filter: blur(10px); }
+
+    .main-center { position: relative; z-index: 5; min-height: 100vh; padding: 75px 20px 120px; }
+
+    h2 { font-size: 32px; margin-bottom: 15px; text-align: center; }
+
+    .section-title { font-size: 22px; margin: 20px 0 12px; padding: 0 5px; }
+
+    .horizontal-scroll {
+        display: flex; gap: 15px; overflow-x: auto; padding: 12px 0 25px; 
+        scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    }
+    .horizontal-scroll::-webkit-scrollbar { display: none; }
+
+    .slide-item {
+        min-width: 140px; flex-shrink: 0; text-align: center; cursor: pointer;
+        background: rgba(255,255,255,0.11); backdrop-filter: blur(12px);
+        border-radius: 18px; padding: 10px 8px;
+    }
+    .slide-item img { width: 130px; height: 130px; object-fit: cover; border-radius: 18px; margin-bottom: 8px; }
+
+    .music-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+    }
+    .music-box {
+        background: rgba(255,255,255,0.11); 
+        backdrop-filter: blur(16px);
+        border-radius: 22px;
+        padding: 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .music-box:hover { transform: translateY(-6px); }
+    .music-cover {
+        width: 100%;
+        aspect-ratio: 1/1;
+        border-radius: 18px;
+        object-fit: cover;
+        margin-bottom: 12px;
+    }
+    .music-name { font-size: 15.5px; font-weight: 500; margin-bottom: 10px; line-height: 1.4; }
+    .play-btn-yellow {
+        width: 48px; height: 48px;
+        background: #ffd700;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto;
+    }
+    .play-icon {
+        width: 0; height: 0;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-left: 16px solid #1a0033;
+        margin-left: 3px;
+    }
+
+    .now-playing {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 300;
+        display: none; flex-direction: column; align-items: center; padding: 40px 20px 30px;
+    }
+    .now-playing.active { display: flex; }
+    .big-cover img {
+        width: 280px; height: 280px; object-fit: cover; border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    }
+    .custom-player { width: 100%; max-width: 340px; }
+    .progress-container { height: 7px; background: rgba(255,255,255,0.2); border-radius: 10px; margin: 15px 0; cursor: pointer; }
+    .progress-bar { height: 100%; width: 0%; background: linear-gradient(to right, #c026d3, #ff8800); }
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<header>
+    <div onclick="goToHome()" style="font-size:28px; cursor:pointer;">←</div>
+</header>
+
+<div class="main-center">
+    <h2>پادکست‌های PlanLife</h2>
+    
+    <div class="section-title">دسته‌بندی‌ها</div>
+    <div class="horizontal-scroll" id="categorySlides"></div>
+    
+    <div class="section-title" id="currentCategoryTitle">همه پادکست‌ها</div>
+    <div class="music-grid" id="podcastGrid"></div>
+</div>
+
+<!-- Now Playing -->
+<div id="nowPlayingScreen" class="now-playing">
+    <button onclick="closeNowPlaying()" style="align-self:flex-start; background:none; border:none; color:white; font-size:32px;">←</button>
+    
+    <div class="big-cover">
+        <img id="npCover" src="" alt="">
+    </div>
+    
+    <h2 id="npTitle" style="margin-bottom:8px; text-align:center;">عنوان</h2>
+    <p id="npSubtitle" style="opacity:0.7; margin-bottom:30px;">PlanLife</p>
+
+    <div class="custom-player">
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <button onclick="togglePlay()" id="playBtn" style="background:#ffd700; color:#1a0033; border:none; padding:15px 40px; border-radius:50px; font-weight:bold;">▶ پخش</button>
+    </div>
+
+    <audio id="mainAudio" style="display:none;"></audio>
+    <button onclick="closeNowPlaying()" style="margin-top:40px; background:rgba(255,255,255,0.1); color:white; border:none; padding:12px 40px; border-radius:30px;">بستن</button>
+</div>
+
+<script>
+// ==================== داده‌های پادکست ====================
+const podcastData = [
+    {title: "باورهای ثروت", episode: "(نشانه های ثروت)", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779519463/Neshane_-_servat_-_Free_ec5tcj.m4a", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449538/IMG_1059_eqlr5g.jpg"},
+    {title: "باورهای ثروت", episode: "(فقط با سختی کشیدن میشود ؟)", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779522590/SakhTi_keshidan_-_planlife_Free_dzwkuq.m4a", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449538/IMG_1059_eqlr5g.jpg"},
+    {title: "باورهای ثروت", episode: "(خسیس بودن در زندگی)", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779530272/Khasis_bodan_-_planLife.ir_Free_sv3vbr.m4a", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449538/IMG_1059_eqlr5g.jpg"},
+    {title: "باورهای ثروت", episode: "(ارزش من به حساب بانکیمه ؟)", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779558560/Arzeshmandi_-_liyaghat_free_planlife.ir_nnlw34.m4a", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449514/IMG_1060_bemgha.jpg"},
+    // بقیه پادکست‌ها را هم می‌توانید اضافه کنید
+];
+
+function loadPodcastPage() {
+    const categories = ["باورهای ثروت", "عشق و روابط", "تحول حال و احساس", "اعتماد به نفس", "احساس لیاقت"];
+    let html = '';
+    categories.forEach(cat => {
+        html += `<div class="slide-item" onclick="selectPodcastCat('${cat}')"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"><p>${cat}</p></div>`;
+    });
+    document.getElementById('categorySlides').innerHTML = html;
+    loadPodcastItems(null);
+}
+
+function selectPodcastCat(cat) {
+    document.getElementById('currentCategoryTitle').textContent = cat;
+    loadPodcastItems(cat);
+}
+
+function loadPodcastItems(cat) {
+    let html = '';
+    const cats = cat ? [cat] : ["باورهای ثروت", "عشق و روابط", "تحول حال و احساس", "اعتماد به نفس", "احساس لیاقت"];
+    
+    cats.forEach(c => {
+        const filtered = podcastData.filter(item => item.title === c);
+        filtered.forEach(item => {
+            html += `
+                <div class="music-box" onclick="playAudio('${item.title} - ${item.episode}', '${item.src}', '${item.cover}')">
+                    <img src="${item.cover}" class="music-cover" alt="${item.title}">
+                    <div class="music-name">${item.title}<br><small>${item.episode}</small></div>
+                    <div class="play-btn-yellow"><div class="play-icon"></div></div>
+                </div>
+            `;
+        });
+    });
+    document.getElementById('podcastGrid').innerHTML = html || '<p style="text-align:center; padding:40px; opacity:0.7;">موردی یافت نشد</p>';
+}
+
+// پخش‌کننده صدا
+const audio = document.getElementById('mainAudio');
+const progressBar = document.getElementById('progressBar');
+const progressContainer = document.getElementById('progressContainer');
+
+function playAudio(title, src, cover) {
+    document.getElementById('npTitle').textContent = title;
+    document.getElementById('npCover').src = cover;
+    document.getElementById('nowPlayingScreen').classList.add('active');
+    
+    audio.src = src;
+    audio.play();
+}
+
+function togglePlay() {
+    if (audio.paused) audio.play();
+    else audio.pause();
+}
+
+function closeNowPlaying() {
+    document.getElementById('nowPlayingScreen').classList.remove('active');
+    audio.pause();
+}
+
+function goToHome() {
+    window.location.href = "index.html";
+}
+
+// بارگذاری اولیه
+window.onload = loadPodcastPage;
+</script>
+</body>
+</html>
