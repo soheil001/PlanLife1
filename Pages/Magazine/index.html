@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a0033">
+<title>مجله ماورایی • PlanLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+        height: 100%;
+        font-family: 'Vazirmatn', sans-serif;
+        overflow-x: hidden;
+        color: white;
+        background: #030303;
+    }
+
+    .stars { 
+        position: fixed; inset: 0; background: transparent; z-index: 1; pointer-events: none; 
+    }
+    .stars::before, .stars::after {
+        content: ''; position: absolute; inset: 0;
+        background-image: radial-gradient(white 1px, transparent 1px);
+        background-size: 80px 80px; opacity: 0.45; animation: twinkle 10s infinite alternate;
+    }
+    .stars::after { background-size: 140px 140px; opacity: 0.3; animation-duration: 16s; }
+    @keyframes twinkle { 0% { opacity: 0.35; } 100% { opacity: 0.65; } }
+
+    .main-center {
+        position: relative; z-index: 5; min-height: 100vh; 
+        padding: 50px 20px 60px; display: flex; flex-direction: column; align-items: center;
+    }
+
+    .page-title {
+        font-size: 38px; font-weight: 700; 
+        text-shadow: 0 0 30px rgba(160, 240, 255, 0.9); 
+        margin-bottom: 35px; text-align: center;
+        background: linear-gradient(90deg, #ffd700, #a0f0ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .magazine-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 18px;
+        width: 100%;
+        max-width: 720px;
+    }
+
+    .article-card {
+        background: rgba(255,255,255,0.11); 
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(212, 175, 55, 0.55);
+        border-radius: 22px;
+        padding: 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    .article-card::before {
+        content: '';
+        position: absolute;
+        inset: -12px;
+        background: radial-gradient(circle at center, rgba(255, 136, 0, 0.45), transparent 70%);
+        z-index: -1;
+        filter: blur(22px);
+        border-radius: 30px;
+        opacity: 0.6;
+    }
+    .article-card:hover { 
+        transform: translateY(-10px) scale(1.02); 
+        box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+    }
+    .article-card img {
+        width: 100%;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        border-radius: 16px;
+        margin-bottom: 14px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        border: 2px solid rgba(255,255,255,0.25);
+    }
+    .article-card .title {
+        font-size: 15.5px;
+        font-weight: 600;
+        line-height: 1.4;
+        margin-bottom: 8px;
+        min-height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .article-card .icon {
+        width: 42px;
+        height: 42px;
+        background: #c026d3;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        font-size: 22px;
+        box-shadow: 0 4px 15px rgba(192, 38, 211, 0.6);
+    }
+
+    /* Modal */
+    #articleModal {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 500;
+        display: none; align-items: center; justify-content: center; padding: 20px;
+    }
+    .article-content {
+        background: rgba(255,255,255,0.11); backdrop-filter: blur(22px);
+        border: 1px solid rgba(212, 175, 55, 0.5);
+        border-radius: 26px;
+        padding: 32px 26px; width: 100%; max-width: 420px; max-height: 88vh;
+        overflow-y: auto;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+        position: relative;
+    }
+    .article-content h2 {
+        font-size: 23px;
+        margin-bottom: 22px;
+        text-align: center;
+        color: #ffd700;
+        line-height: 1.35;
+    }
+    .article-content .article-body {
+        line-height: 1.85;
+        font-size: 16px;
+        opacity: 0.95;
+        text-align: justify;
+    }
+    .article-content .article-body p {
+        margin-bottom: 14px;
+    }
+
+    .close-btn {
+        position: absolute; top: 18px; left: 18px; 
+        background: none; border: none; color: white; font-size: 30px; 
+        cursor: pointer; z-index: 10;
+    }
+
+    .glass-btn {
+        width: 100%; padding: 14px; background: rgba(255,255,255,0.15);
+        color: white; border: 1px solid rgba(212, 175, 55, 0.5); border-radius: 14px;
+        font-weight: 600; cursor: pointer; margin-top: 20px;
+        font-size: 15.5px;
+        transition: all 0.2s;
+    }
+    .glass-btn:hover { background: rgba(255,255,255,0.28); }
+
+    .loading {
+        text-align: center; padding: 60px 20px; opacity: 0.75;
+        font-size: 15px;
+    }
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<div class="main-center">
+    <h1 class="page-title">مجله ماورایی</h1>
+
+    <div class="magazine-grid" id="magazineGrid"></div>
+    
+    <div style="margin-top: 60px; text-align: center; opacity: 0.45; font-size: 13px;">
+        PlanLife • ماورای ذهن
+    </div>
+</div>
+
+<!-- Modal مقاله -->
+<div id="articleModal">
+    <div class="article-content">
+        <button onclick="closeArticleModal()" class="close-btn">✕</button>
+        <h2 id="articleTitle"></h2>
+        <div class="article-body" id="articleBody"></div>
+        <button onclick="closeArticleModal()" class="glass-btn">بستن مقاله</button>
+    </div>
+</div>
+
+<script>
+// ==================== داده‌های مجله ماورایی ====================
+const magazineData = [
+    {
+        id: 1,
+        title: "رازهای ذهن ناخودآگاه",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779569485/IMG_1110_p0sbb6.jpg",
+        url: "https://raw.githubusercontent.com/soheil001/PlanLife1/refs/heads/main/Maghale/Raze_zehne_nakhodagah"
+    },
+    {
+        id: 2,
+        title: "کد نویسی ذهن",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779609443/IMG_1135_mqg7vx.jpg",
+        url: "https://raw.githubusercontent.com/soheil001/PlanLife1/refs/heads/main/Maghale/Psychocybernetics"
+    },
+    {
+        id: 3,
+        title: "کد نویسی ذهنی ۲",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779609441/IMG_1138_wgoa0x.jpg",
+        url: "https://raw.githubusercontent.com/soheil001/PlanLife1/refs/heads/main/Maghale/Coding_mind"
+    },
+    {
+        id: 4,
+        title: "سفر به درون روح",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779655928/IMG_1162_a6jnpi.jpg",
+        url: "https://raw.githubusercontent.com/soheil001/PlanLife1/refs/heads/main/Maghale/Safar_daron_roh"
+    },
+    {
+        id: 5,
+        title: "نیکولا تسلا",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779657203/IMG_1152_c7r1do.jpg",
+        url: "https://raw.githubusercontent.com/soheil001/PlanLife1/refs/heads/main/Maghale/Nikola_Tesla"
+    },
+    {
+        id: 6,
+        title: "سیگیل و نمادها",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779741275/IMG_0228_d7odfo.jpg",
+        url: "https://raw.githubusercontent.com/soheil001/PlanLife1/refs/heads/main/Maghale/Sigil-namad"
+    },
+    {
+        id: 7,
+        title: "ساعت ۳:۳۳ صبح",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779912509/IMG_1190_owkm1g.jpg",
+        url: "https://raw.githubusercontent.com/soheil001/PlanLife1/refs/heads/main/Maghale/3%3A33"
+    },
+    {
+        id: 8,
+        title: "دفترچه ای که هر شب باید کاملش کنی",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779657211/IMG_1151_zqcux9.jpg",
+        url: "https://raw.githubusercontent.com/soheil001/PlanLife1/refs/heads/main/Maghale/daftarche"
+    },
+    {
+        id: 9,
+        title: "سود مرکب",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779657212/IMG_1149_qg8mn3.jpg",
+        url: "https://raw.githubusercontent.com/soheil001/PlanLife1/refs/heads/main/Maghale/sode_morakab"
+    },
+    {
+        id: 10,
+        title: "اتصال به منبع الهی",
+        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449504/IMG_1045_lgkcd4.jpg",
+        url: ""
+    }
+];
+
+// ==================== بارگذاری کارت‌ها ====================
+function loadMagazinePage() {
+    const grid = document.getElementById('magazineGrid');
+    let html = '';
+    
+    magazineData.forEach(article => {
+        html += `
+            <div class="article-card" onclick="showArticle(${article.id})">
+                <img src="${article.cover}" alt="${article.title}">
+                <div class="title">${article.title}</div>
+                <div class="icon">📰</div>
+            </div>
+        `;
+    });
+    
+    grid.innerHTML = html;
+}
+
+// ==================== نمایش مقاله ====================
+function showArticle(id) {
+    const article = magazineData.find(a => a.id === id);
+    if (!article) return;
+
+    document.getElementById('articleTitle').textContent = article.title;
+    const bodyDiv = document.getElementById('articleBody');
+    
+    bodyDiv.innerHTML = `<div class="loading">در حال بارگذاری مقاله...</div>`;
+    document.getElementById('articleModal').style.display = 'flex';
+
+    if (article.url && article.url.trim() !== "") {
+        fetch(article.url)
+            .then(response => {
+                if (!response.ok) throw new Error('خطا در بارگذاری');
+                return response.text();
+            })
+            .then(content => {
+                bodyDiv.innerHTML = content;
+            })
+            .catch(err => {
+                bodyDiv.innerHTML = `
+                    <p style="color:#ff6666; text-align:center; padding:30px 10px;">
+                        ❌ نتوانستیم مقاله را بارگذاری کنیم.<br><br>
+                        لطفاً اتصال اینترنت خود را بررسی کنید یا بعداً تلاش نمایید.
+                    </p>
+                `;
+                console.error(err);
+            });
+    } else {
+        bodyDiv.innerHTML = `
+            <p style="text-align:center; padding:40px 15px; opacity:0.85; line-height:1.7;">
+                این مقاله به زودی اضافه خواهد شد.<br>
+                منتظر محتوای جدید ماورایی باشید ✨
+            </p>
+        `;
+    }
+}
+
+function closeArticleModal() {
+    document.getElementById('articleModal').style.display = 'none';
+}
+
+// ==================== شروع ====================
+window.onload = () => {
+    loadMagazinePage();
+};
+</script>
+</body>
+</html>
