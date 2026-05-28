@@ -30,11 +30,22 @@
         display: flex; align-items: center; padding: 0 20px; z-index: 100; 
         background: rgba(0,0,0,0.25); backdrop-filter: blur(10px); 
     }
-    .hamburger { font-size: 28px; cursor: pointer; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; }
+    .hamburger { 
+        font-size: 28px; cursor: pointer; width: 50px; height: 50px; 
+        border-radius: 50%; background: rgba(255,255,255,0.1); 
+        display: flex; align-items: center; justify-content: center;
+        transition: all 0.2s ease;
+    }
+    .hamburger:hover { background: rgba(212,175,55,0.2); }
 
     .main-center { 
         position: relative; z-index: 5; min-height: 100vh; 
         padding: 75px 20px 120px; display: flex; flex-direction: column; align-items: center; 
+        transition: filter 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .main-center.blurred {
+        filter: blur(7px);
+        pointer-events: none;
     }
 
     .title { 
@@ -64,6 +75,94 @@
         display: flex; background: rgba(255,255,255,0.13); border-radius: 25px; padding: 6px; margin-top: 8px; 
     }
     input { flex: 1; background: transparent; border: none; color: white; font-size: 16.5px; padding: 12px 15px; outline: none; }
+
+    /* ===== دکمه ارسال - گوی عصبی نبض‌زن ===== */
+    .send-btn {
+        width: 48px;
+        height: 48px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease;
+    }
+    .send-btn:hover {
+        transform: scale(1.1);
+    }
+    .send-btn:active {
+        transform: scale(0.92);
+    }
+
+    .orb {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(12px);
+        border: 1.5px solid #d4af37;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 
+            0 0 15px rgba(212, 175, 55, 0.5),
+            inset 0 0 12px rgba(255,255,255,0.3);
+        animation: orb-pulse 2.2s ease-in-out infinite;
+    }
+
+    .core {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 14px;
+        height: 14px;
+        background: radial-gradient(circle, #fff 20%, #d4af37 70%);
+        border-radius: 50%;
+        box-shadow: 0 0 18px #d4af37;
+        animation: core-glow 1.6s ease-in-out infinite alternate;
+        z-index: 3;
+    }
+
+    .neural-lines {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+    }
+
+    .neural-lines .line {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 120%;
+        height: 1.2px;
+        background: linear-gradient(90deg, transparent, #d4af37, transparent);
+        box-shadow: 0 0 6px #d4af37;
+        transform-origin: center;
+        animation: neural-rotate 3.5s linear infinite;
+    }
+
+    .neural-lines .line:nth-child(1) { transform: rotate(0deg); animation-duration: 3.2s; }
+    .neural-lines .line:nth-child(2) { transform: rotate(36deg); animation-duration: 4.1s; }
+    .neural-lines .line:nth-child(3) { transform: rotate(72deg); animation-duration: 2.8s; }
+    .neural-lines .line:nth-child(4) { transform: rotate(108deg); animation-duration: 3.8s; }
+    .neural-lines .line:nth-child(5) { transform: rotate(144deg); animation-duration: 4.5s; }
+
+    @keyframes orb-pulse {
+        0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(212, 175, 55, 0.5); }
+        50% { transform: scale(1.08); box-shadow: 0 0 28px rgba(212, 175, 55, 0.85); }
+    }
+
+    @keyframes core-glow {
+        from { box-shadow: 0 0 12px #d4af37; }
+        to { box-shadow: 0 0 26px #fff, 0 0 38px #d4af37; }
+    }
+
+    @keyframes neural-rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
 
     .services-grid { 
         display: grid; 
@@ -98,9 +197,120 @@
         border: 2px solid rgba(255,255,255,0.3); 
     }
     .service-box span { 
-        font-size: 17px; 
-        font-weight: 700; 
+        font-size: 17.5px; 
+        font-weight: 800;
         color: white;
+        text-decoration: none;
+        text-shadow: 0 0 10px rgba(212, 175, 55, 0.35);
+        letter-spacing: 0.3px;
+    }
+
+    .services-grid a {
+        text-decoration: none !important;
+        color: white !important;
+    }
+
+    /* ===== منوی شیشه‌ای (از راست - کوچکتر) ===== */
+    #menu-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        z-index: 150;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease;
+    }
+    #menu-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .side-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 255px;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.085);
+        backdrop-filter: blur(26px);
+        -webkit-backdrop-filter: blur(26px);
+        border-left: 1px solid rgba(212, 175, 55, 0.3);
+        box-shadow: -12px 0 40px rgba(0, 0, 0, 0.7);
+        z-index: 200;
+        transform: translateX(100%);
+        transition: transform 0.55s cubic-bezier(0.25, 0.1, 0.25, 1);
+        padding: 22px 16px 28px;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+    .side-menu.open {
+        transform: translateX(0);
+    }
+
+    .menu-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.22);
+    }
+    .menu-header h2 {
+        font-size: 22px;
+        font-weight: 900;
+        color: #d4af37;
+        text-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
+    }
+    .close-btn {
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: #d4af37;
+        cursor: pointer;
+        border-radius: 50%;
+        transition: all 0.2s ease;
+    }
+    .close-btn:hover {
+        background: rgba(212, 175, 55, 0.15);
+        transform: rotate(90deg);
+    }
+
+    .menu-items {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+    }
+
+    .menu-item {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(212, 175, 55, 0.18);
+        border-radius: 15px;
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: white;
+        font-size: 15.8px;
+        font-weight: 700;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+    }
+    .menu-item:hover {
+        background: rgba(212, 175, 55, 0.11);
+        border-color: #d4af37;
+        transform: translateX(-8px);
+        box-shadow: 0 6px 20px rgba(212, 175, 55, 0.22);
+    }
+    .menu-item:active {
+        transform: scale(0.97);
+    }
+    .menu-item .text {
+        flex: 1;
+        line-height: 1.35;
     }
 </style>
 </head>
@@ -121,7 +331,16 @@
         <div class="input-box">
             <input id="user-input" placeholder="پیام بده...">
             <button class="send-btn" onclick="sendMessage()">
-                <div class="orb-send"></div>
+                <div class="orb">
+                    <div class="neural-lines">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                    </div>
+                    <div class="core"></div>
+                </div>
             </button>
         </div>
     </div>
@@ -188,6 +407,48 @@
     </div>
 </div>
 
+<!-- ===== منوی شیشه‌ای (از راست) ===== -->
+<div id="menu-overlay" onclick="closeMenu()"></div>
+
+<div id="side-menu" class="side-menu">
+    <div class="menu-header">
+        <h2>PlanLife</h2>
+        <div class="close-btn" onclick="closeMenu()">✕</div>
+    </div>
+    
+    <div class="menu-items">
+        
+        <a href="https://planlife.ir" class="menu-item" onclick="closeMenu()">
+            <span class="text">خانه</span>
+        </a>
+        
+        <a href="https://planlife.ir/Pages/podcasts_free/index.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">پادکست‌های رایگان</span>
+        </a>
+        
+        <a href="music.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">موزیک‌ها</span>
+        </a>
+        
+        <a href="https://planlife.ir/Pages/Doreha/index.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">دوره‌ها</span>
+        </a>
+        
+        <a href="magazine.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">مجله ماورایی</span>
+        </a>
+        
+        <a href="library.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">کتابخانه</span>
+        </a>
+        
+        <a href="videos.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">ویدیوها</span>
+        </a>
+        
+    </div>
+</div>
+
 <script>
 // چت ساده
 window.onload = () => {
@@ -198,19 +459,94 @@ function sendMessage() {
     const input = document.getElementById("user-input");
     const text = input.value.trim();
     if (!text) return;
+    
     const output = document.getElementById("chat-output");
     output.innerHTML += `<div class="msg-user">${text}</div>`;
     input.value = "";
+    output.scrollTop = output.scrollHeight;
 
-    setTimeout(() => {
-        output.innerHTML += `<div class="msg-bot">من در حال آموزش دیدن برای تبدیل به هوش ماورایی هستم. فعلاً از منوی بالا استفاده کنید 🧠</div>`;
+    // پیام لودینگ
+    const loadingId = 'loading-' + Date.now();
+    output.innerHTML += `<div class="msg-bot" id="${loadingId}">در حال فکر کردن... 🧠</div>`;
+    output.scrollTop = output.scrollHeight;
+
+    const API_KEY = "xai-a1g61vdyBDwJvzVksGj5F8X0cvmOzNZ10o4yAJ7Xezn17UBgOq3V3pztT3U2GY7bFG3RdBLHsLzf8Rxm";
+
+    fetch("https://api.x.ai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${API_KEY}`
+        },
+        body: JSON.stringify({
+            model: "grok-2-1212",
+            messages: [
+                {
+                    role: "system",
+                    content: "تو یک دستیار مفید، مهربان و هوشمند به نام PlanLife هستی. به زبان فارسی پاسخ بده و پاسخ‌هات کوتاه، مفید و دوستانه باشه."
+                },
+                {
+                    role: "user",
+                    content: text
+                }
+            ],
+            temperature: 0.7,
+            max_tokens: 800
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const loadingEl = document.getElementById(loadingId);
+        if (loadingEl) loadingEl.remove();
+
+        let reply = "متأسفانه الان نمی‌تونم جواب بدم. دوباره امتحان کن.";
+        if (data.choices && data.choices[0] && data.choices[0].message) {
+            reply = data.choices[0].message.content;
+        }
+
+        output.innerHTML += `<div class="msg-bot">${reply}</div>`;
         output.scrollTop = output.scrollHeight;
-    }, 700);
+    })
+    .catch(error => {
+        const loadingEl = document.getElementById(loadingId);
+        if (loadingEl) loadingEl.remove();
+        
+        output.innerHTML += `<div class="msg-bot">خطا در ارتباط با هوش مصنوعی. لطفاً دوباره تلاش کن.</div>`;
+        output.scrollTop = output.scrollHeight;
+        console.error(error);
+    });
 }
 
 function toggleMenu() {
-    alert("منوی کناری در حال توسعه است.");
+    const menu = document.getElementById('side-menu');
+    const overlay = document.getElementById('menu-overlay');
+    const main = document.querySelector('.main-center');
+    
+    if (menu.classList.contains('open')) {
+        closeMenu();
+    } else {
+        menu.classList.add('open');
+        overlay.classList.add('active');
+        main.classList.add('blurred');
+    }
 }
+
+function closeMenu() {
+    const menu = document.getElementById('side-menu');
+    const overlay = document.getElementById('menu-overlay');
+    const main = document.querySelector('.main-center');
+    
+    menu.classList.remove('open');
+    overlay.classList.remove('active');
+    main.classList.remove('blurred');
+}
+
+// بستن منو با کلید ESC
+document.addEventListener('keydown', function(e) {
+    if (e.key === "Escape") {
+        closeMenu();
+    }
+});
 </script>
 </body>
 </html>
