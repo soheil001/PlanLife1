@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>موزیک آرامش بخش • PlanLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+        height: 100%;
+        font-family: 'Vazirmatn', sans-serif;
+        color: white;
+        background: #0f0a1f;
+    }
+
+    .stars { 
+        position: fixed; inset: 0; background: transparent; z-index: 1; pointer-events: none; 
+    }
+    .stars::before, .stars::after {
+        content: ''; position: absolute; inset: 0;
+        background-image: radial-gradient(white 1px, transparent 1px);
+        background-size: 80px 80px; opacity: 0.35; animation: twinkle 12s infinite alternate;
+    }
+
+    .main-center {
+        padding: 30px 20px 40px; display: flex; flex-direction: column; align-items: center;
+    }
+
+    .page-title {
+        font-size: 32px; font-weight: 700; 
+        color: #ffd700; text-shadow: 0 0 25px rgba(255, 215, 0, 0.6); 
+        margin-bottom: 25px; text-align: center;
+    }
+
+    .music-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 16px;
+        width: 100%;
+        max-width: 700px;
+    }
+
+    .music-box {
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        border-radius: 20px;
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .music-box:hover { transform: translateY(-6px); }
+    .music-cover {
+        width: 100%;
+        aspect-ratio: 1/1;
+        border-radius: 16px;
+        object-fit: cover;
+        margin-bottom: 10px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    }
+    .music-name {
+        font-size: 14.5px;
+        font-weight: 500;
+        line-height: 1.3;
+        min-height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* ==================== پلیر شیک ==================== */
+    .now-playing {
+        position: fixed; inset: 0; background: #0f0a1f; z-index: 300;
+        display: none; flex-direction: column; padding: 0;
+    }
+    .now-playing.active { display: flex; }
+
+    .player-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+        font-size: 17px;
+        font-weight: 500;
+    }
+
+    .player-image {
+        width: 82%;
+        max-width: 310px;
+        aspect-ratio: 1/1;
+        border-radius: 26px;
+        object-fit: cover;
+        box-shadow: 0 25px 70px rgba(0,0,0,0.75);
+        margin: 10px auto 20px;
+        display: block;
+    }
+
+    .player-info {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .player-title {
+        font-size: 23px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    .player-subtitle {
+        font-size: 15px;
+        opacity: 0.7;
+    }
+
+    .progress-container {
+        width: 85%;
+        max-width: 340px;
+        margin: 0 auto 10px;
+    }
+    .progress-bar-bg {
+        height: 5px;
+        background: rgba(255,255,255,0.12);
+        border-radius: 9999px;
+        position: relative;
+        cursor: pointer;
+    }
+    .progress-bar-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(to right, #ff9500, #ffcc00);
+        border-radius: 9999px;
+        box-shadow: 0 0 12px #ff9500;
+    }
+
+    .time-row {
+        width: 85%;
+        max-width: 340px;
+        margin: 0 auto 25px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        opacity: 0.65;
+    }
+
+    .controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 22px;
+        margin-bottom: 30px;
+    }
+
+    .control-btn {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    .control-btn:active { transform: scale(0.85); }
+
+    .play-btn {
+        width: 82px;
+        height: 82px;
+        background: #ff9500;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 40px #ff9500,
+                    0 0 80px rgba(255, 149, 0, 0.5);
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .play-btn:active { transform: scale(0.92); }
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<div class="main-center">
+    <h1 class="page-title">موزیک آرامش بخش</h1>
+    <div class="music-grid" id="musicGrid"></div>
+</div>
+
+<!-- پلیر -->
+<div id="nowPlayingScreen" class="now-playing">
+    
+    <div class="player-header">
+        <div style="font-size:24px; opacity:0.6;">⋯</div>
+        <div style="font-weight:600;">در حال پخش</div>
+        <div onclick="closeNowPlaying()" style="font-size:28px; cursor:pointer;">←</div>
+    </div>
+
+    <img id="npCover" class="player-image" src="" alt="">
+
+    <div class="player-info">
+        <div id="npTitle" class="player-title">عنوان</div>
+        <div id="npSubtitle" class="player-subtitle">PlanLife</div>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-bar-bg" id="progressContainer">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+    </div>
+
+    <div class="time-row">
+        <span id="currentTime">0:00</span>
+        <span id="totalTime">0:00</span>
+    </div>
+
+    <!-- کنترل‌ها با آیکون‌های SVG شیک -->
+    <div class="controls">
+        <!-- Rewind 15s -->
+        <div class="control-btn" onclick="seek(-15)">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 3v18"></path>
+                <path d="M7 12l-4 4 4 4"></path>
+                <path d="M21 12a9 9 0 0 0-9-9"></path>
+                <path d="M12 3v2"></path>
+            </svg>
+        </div>
+
+        <!-- Previous -->
+        <div class="control-btn" onclick="seek(-5)">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="#ddd" stroke="#ddd" stroke-width="0">
+                <path d="M19 20L9 12l10-8v16z"/>
+                <rect x="5" y="4" width="3" height="16" rx="1"/>
+            </svg>
+        </div>
+
+        <!-- Play / Pause -->
+        <div onclick="togglePlay()" class="play-btn" id="playBtn">
+            <svg id="playIcon" width="32" height="32" viewBox="0 0 24 24" fill="#1a0033">
+                <path d="M8 5v14l11-7z"/>
+            </svg>
+        </div>
+
+        <!-- Next -->
+        <div class="control-btn" onclick="seek(5)">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="#ddd" stroke="#ddd" stroke-width="0">
+                <path d="M5 4l10 8-10 8V4z"/>
+                <rect x="16" y="4" width="3" height="16" rx="1"/>
+            </svg>
+        </div>
+
+        <!-- Forward 15s -->
+        <div class="control-btn" onclick="seek(15)">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 3v18"></path>
+                <path d="M17 12l4 4-4 4"></path>
+                <path d="M3 12a9 9 0 0 1 9-9"></path>
+                <path d="M12 3v2"></path>
+            </svg>
+        </div>
+    </div>
+
+    <audio id="mainAudio" style="display:none;"></audio>
+    <div style="position:absolute; bottom:22px; left:50%; transform:translateX(-50%); font-size:13px; opacity:0.5;">planlife.ir</div>
+</div>
+
+<script>
+// ==================== داده‌ها ====================
+const musicData = [
+    {id:1, title:"باورهای ثروت", subtitle:"نشانه های ثروت", src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779519463/Neshane_-_servat_-_Free_ec5tcj.m4a", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779569485/IMG_1110_p0sbb6.jpg"},
+    {id:2, title:"موزیک آرامش ۲", subtitle:"PlanLife", src:"https://s3.castbox.fm/13/4b/04/ce5935400d8b31401227f466b0.mp3", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449481/IMG_1048_wrc4iq.jpg"},
+    {id:3, title:"موزیک آرامش ۳", subtitle:"PlanLife", src:"https://s3.castbox.fm/78/f5/fe/ebd5e14a859cd629ea4bffa931.mp3", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449479/IMG_1047_mzxexo.jpg"},
+    {id:4, title:"موزیک آرامش ۴", subtitle:"PlanLife", src:"https://s3.castbox.fm/3b/a0/49/2ed3ed48d18de19f03fc69667e.mp3", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449504/IMG_1045_lgkcd4.jpg"},
+    {id:5, title:"موزیک آرامش ۵", subtitle:"PlanLife", src:"https://s3.castbox.fm/8e/dd/f5/becf814845927ab14f6cb05ec0.mp3", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449481/IMG_1048_wrc4iq.jpg"},
+    {id:6, title:"موزیک آرامش ۶", subtitle:"PlanLife", src:"https://s3.castbox.fm/2c/e9/88/5872e64484acc259dd45b0e2af.mp3", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449479/IMG_1047_mzxexo.jpg"},
+    {id:7, title:"موزیک آرامش ۷", subtitle:"PlanLife", src:"https://s3.castbox.fm/0a/75/1d/03c40549d695f00bbeceb43967.mp3", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449504/IMG_1045_lgkcd4.jpg"},
+    {id:8, title:"موزیک آرامش ۸", subtitle:"PlanLife", src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449481/IMG_1048_wrc4iq.jpg"},
+    {id:9, title:"موزیک آرامش ۹", subtitle:"PlanLife", src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449479/IMG_1047_mzxexo.jpg"},
+    {id:10,title:"موزیک آرامش ۱۰",subtitle:"PlanLife",src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449504/IMG_1045_lgkcd4.jpg"}
+];
+
+function loadMusicPage() {
+    const grid = document.getElementById('musicGrid');
+    let html = '';
+    musicData.forEach(m => {
+        html += `
+            <div class="music-box" onclick="playAudio('${m.title}', '${m.subtitle}', '${m.src}', '${m.cover}')">
+                <img src="${m.cover}" class="music-cover" alt="${m.title}">
+                <div class="music-name">${m.title}</div>
+            </div>
+        `;
+    });
+    grid.innerHTML = html;
+}
+
+let currentAudio = null;
+
+function playAudio(title, subtitle, src, cover) {
+    const screen = document.getElementById('nowPlayingScreen');
+    document.getElementById('npTitle').textContent = title;
+    document.getElementById('npSubtitle').textContent = subtitle;
+    document.getElementById('npCover').src = cover;
+    screen.classList.add('active');
+
+    const audio = document.getElementById('mainAudio');
+    audio.src = src;
+    audio.play().catch(() => {});
+    currentAudio = audio;
+
+    audio.ontimeupdate = updateProgress;
+    audio.onloadedmetadata = () => {
+        document.getElementById('totalTime').textContent = formatTime(audio.duration);
+    };
+}
+
+function formatTime(seconds) {
+    const min = Math.floor(seconds / 60);
+    const sec = Math.floor(seconds % 60);
+    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+}
+
+function updateProgress() {
+    const audio = currentAudio;
+    if (!audio || !audio.duration) return;
+    const progress = (audio.currentTime / audio.duration) * 100;
+    document.getElementById('progressBar').style.width = `${progress}%`;
+    document.getElementById('currentTime').textContent = formatTime(audio.currentTime);
+}
+
+document.getElementById('progressContainer').addEventListener('click', function(e) {
+    const audio = currentAudio;
+    if (!audio || !audio.duration) return;
+    const rect = this.getBoundingClientRect();
+    const pos = (e.clientX - rect.left) / rect.width;
+    audio.currentTime = pos * audio.duration;
+});
+
+function togglePlay() {
+    const audio = currentAudio;
+    const playBtn = document.getElementById('playBtn');
+    const icon = document.getElementById('playIcon');
+
+    if (!audio) return;
+
+    if (audio.paused) {
+        audio.play();
+        icon.outerHTML = `<svg id="playIcon" width="28" height="28" viewBox="0 0 24 24" fill="#1a0033"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
+    } else {
+        audio.pause();
+        icon.outerHTML = `<svg id="playIcon" width="32" height="32" viewBox="0 0 24 24" fill="#1a0033"><path d="M8 5v14l11-7z"/></svg>`;
+    }
+}
+
+function seek(seconds) {
+    const audio = currentAudio;
+    if (audio) audio.currentTime += seconds;
+}
+
+function closeNowPlaying() {
+    const screen = document.getElementById('nowPlayingScreen');
+    const audio = document.getElementById('mainAudio');
+    audio.pause();
+    screen.classList.remove('active');
+}
+
+window.onload = () => {
+    loadMusicPage();
+};
+</script>
+</body>
+</html>
