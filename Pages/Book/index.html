@@ -145,36 +145,65 @@
             color: white;
             border: 1px solid rgba(255,255,255,0.3);
         }
+
+        /* استایل مودال خواننده PDF */
+        .pdf-reader-modal .modal-content {
+            max-width: 98%;
+            width: 98%;
+            height: 92%;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pdf-reader-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            flex-shrink: 0;
+        }
+
+        .pdf-reader-header h3 {
+            color: #d4af37;
+            margin: 0;
+            font-size: 17px;
+        }
+
+        .pdf-reader-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0 8px;
+        }
+
+        #pdf-iframe {
+            width: 100%;
+            flex: 1;
+            border: none;
+            background: #fff;
+        }
     </style>
 </head>
 <body>
 
     <div class="stars-bg"></div>
 
-    <!-- 
-    ================================================
-    راهنما برای شما (لینک‌های PDF):
-    - تمام لینک‌های PDF را با آدرس واقعی فایل‌های PDF خودتان جایگزین کنید.
-    - مثلاً: https://yourdomain.com/pdfs/ghodrat-e-adat.pdf
-    - اگر PDF روی سرور دیگری (مثل Google Drive, Dropbox, یا Cloudinary) دارید، لینک مستقیم آن را بگذارید.
-    - برای کتاب‌های صوتی هم می‌توانید لینک PDF بگذارید (یا بعداً لینک صوتی اضافه کنید).
-    ================================================
-    -->
-
     <!-- کتاب های صوتی (رایگان) -->
     <div class="section">
         <div class="section-title">🎧 کتاب های صوتی</div>
         <div class="horizontal-row">
-            <!-- ۱. قدرت عادت -->
             <div class="book-item" onclick="showBookDetail('قدرت عادت', 'این کتاب رازهای علمی عادت‌های موفق را آشکار می‌کند و به شما کمک می‌کند عادت‌های بد را تغییر دهید.', false, 'https://YOUR_DOMAIN.com/pdfs/power-of-habit.pdf')"><img src="https://picsum.photos/id/1015/300/300"><div class="book-title">قدرت عادت</div><div class="book-price">رایگان</div><div class="book-rating">★★★★★</div></div>
             
-            <!-- ۲. سفر روح -->
             <div class="book-item" onclick="showBookDetail('سفر روح', 'داستانی الهام‌بخش درباره سفر درونی و کشف معنای واقعی زندگی.', false, 'https://YOUR_DOMAIN.com/pdfs/journey-of-soul.pdf')"><img src="https://picsum.photos/id/102/300/300"><div class="book-title">سفر روح</div><div class="book-price">رایگان</div><div class="book-rating">★★★★★</div></div>
             
-            <!-- ۳. اتمیک هابیتس -->
             <div class="book-item" onclick="showBookDetail('اتمیک هابیتس', 'راهنمای عملی برای ایجاد تغییرات کوچک اما قدرتمند که نتایج بزرگی به همراه دارد.', false, 'https://YOUR_DOMAIN.com/pdfs/atomic-habits.pdf')"><img src="https://picsum.photos/id/1033/300/300"><div class="book-title">اتمیک هابیتس</div><div class="book-price">رایگان</div><div class="book-rating">★★★★★</div></div>
             
-            <!-- ۴. هنر ظریف رهایی -->
             <div class="book-item" onclick="showBookDetail('هنر ظریف رهایی', 'این کتاب به شما می‌آموزد چگونه از نگرانی‌های بی‌مورد رها شوید و زندگی معنادارتری داشته باشید.', false, 'https://YOUR_DOMAIN.com/pdfs/art-of-not-giving.pdf')"><img src="https://picsum.photos/id/1040/300/300"><div class="book-title">هنر ظریف رهایی</div><div class="book-price">رایگان</div><div class="book-rating">★★★★☆</div></div>
         </div>
     </div>
@@ -183,16 +212,12 @@
     <div class="section">
         <div class="section-title">📚 کتاب های رایگان</div>
         <div class="horizontal-row">
-            <!-- ۱. قانون جذب -->
             <div class="book-item" onclick="showBookDetail('قانون جذب', 'کتابی که به شما یاد می‌دهد چگونه افکار و انرژی مثبت را به سمت اهداف خود جذب کنید.', false, 'https://YOUR_DOMAIN.com/pdfs/law-of-attraction.pdf')"><img src="https://picsum.photos/id/106/300/300"><div class="book-title">قانون جذب</div><div class="book-price">رایگان</div><div class="book-rating">★★★★★</div></div>
             
-            <!-- ۲. بیداری روح -->
             <div class="book-item" onclick="showBookDetail('بیداری روح', 'راهنمایی برای بیداری معنوی و اتصال عمیق‌تر با خود واقعی‌تان.', false, 'https://YOUR_DOMAIN.com/pdfs/spiritual-awakening.pdf')"><img src="https://picsum.photos/id/1074/300/300"><div class="book-title">بیداری روح</div><div class="book-price">رایگان</div><div class="book-rating">★★★★★</div></div>
             
-            <!-- ۳. ذهن کامل -->
             <div class="book-item" onclick="showBookDetail('ذهن کامل', 'تکنیک‌های عملی برای تمرکز کامل و آرامش ذهن در دنیای پرمشغله امروز.', false, 'https://YOUR_DOMAIN.com/pdfs/mindfulness-complete.pdf')"><img src="https://picsum.photos/id/1080/300/300"><div class="book-title">ذهن کامل</div><div class="book-price">رایگان</div><div class="book-rating">★★★★☆</div></div>
             
-            <!-- ۴. نیروی حال -->
             <div class="book-item" onclick="showBookDetail('نیروی حال', 'کتابی transformative درباره زندگی در لحظه حال و رهایی از گذشته و آینده.', false, 'https://YOUR_DOMAIN.com/pdfs/power-of-now.pdf')"><img src="https://picsum.photos/id/1018/300/300"><div class="book-title">نیروی حال</div><div class="book-price">رایگان</div><div class="book-rating">★★★★★</div></div>
         </div>
     </div>
@@ -201,16 +226,12 @@
     <div class="section">
         <div class="section-title">💎 کتاب های خاص و پولی</div>
         <div class="horizontal-row">
-            <!-- ۱. هنر ظریف رهایی (پولی) -->
             <div class="book-item" onclick="showBookDetail('هنر ظریف رهایی', 'این کتاب به شما می‌آموزد چگونه از نگرانی‌های بی‌مورد رها شوید و زندگی معنادارتری داشته باشید.', true, 'https://api.cloudinary.com/v1_1/dshielkdt/image/download?api_key=884443113314115&attachment=true&audit_context=eyJhY3Rvcl90eXBlIjoidXNlciIsImFjdG9yX2lkIjoiNWI1NTI2ZmJlYTkxOTg3ZDcxOTlkODcwNWJlN2M0YmYiLCJ1c2VyX2V4dGVybmFsX2lkIjoiMThlMzU3MzE1ZDU3YjQ0OTFhMDIzOGQ5NzEyYzJiIiwidXNlcl9jdXN0b21faWQiOiJzb2hlaWwuYmcxQGdtYWlsLmNvbSIsImNvbXBvbmVudCI6ImNvbnNvbGUifQ%3D%3D&public_id=Screenshot_2024-08-16_at_10.14.03_hkrxui&signature=e28c5226cf3b727a8e92ed12c29caac93e865939&source=ml&target_filename=Screenshot_2024-08-16_at_10.14.03_hkrxui.pdf&timestamp=1780014362&type=upload')"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780013257/Untitled_design_wyybit.png"><div class="book-title">هنر ظریف رهایی</div><div class="book-price">۰.۵ PlanCoin</div><div class="book-rating">★★★★☆</div></div>
             
-            <!-- ۲. قدرت عادت (پولی) -->
             <div class="book-item" onclick="showBookDetail('قدرت عادت', 'رازهای علمی پشت عادت‌های موفق و چگونگی ساخت عادت‌های خوب.', true, 'https://YOUR_DOMAIN.com/pdfs/power-of-habit.pdf')"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780013257/Untitled_design_wyybit.png"><div class="book-title">قدرت عادت</div><div class="book-price">۰.۶ PlanCoin</div><div class="book-rating">★★★★★</div></div>
             
-            <!-- ۳. سفر روح (پولی) -->
             <div class="book-item" onclick="showBookDetail('سفر روح', 'داستانی الهام‌بخش درباره سفر درونی و کشف معنای واقعی زندگی.', true, 'https://YOUR_DOMAIN.com/pdfs/journey-of-soul.pdf')"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780013257/Untitled_design_wyybit.png"><div class="book-title">سفر روح</div><div class="book-price">۰.۷ PlanCoin</div><div class="book-rating">★★★★★</div></div>
             
-            <!-- ۴. اتمیک هابیتس (پولی) -->
             <div class="book-item" onclick="showBookDetail('اتمیک هابیتس', 'راهنمای عملی برای ایجاد تغییرات کوچک اما قدرتمند که نتایج بزرگی به همراه دارد.', true, 'https://YOUR_DOMAIN.com/pdfs/atomic-habits.pdf')"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780013257/Untitled_design_wyybit.png"><div class="book-title">اتمیک هابیتس</div><div class="book-price">۰.۸ PlanCoin</div><div class="book-rating">★★★★★</div></div>
         </div>
     </div>
@@ -224,7 +245,7 @@
                 <p id="detail-summary" style="color:#ddd; font-size:14.5px;"></p>
             </div>
 
-            <button onclick="handleReadButton()" class="btn btn-read">📖 خواندن / دانلود PDF</button>
+            <button onclick="handleReadButton()" class="btn btn-read">📖 خواندن کتاب</button>
             <button onclick="closeBookDetail()" class="btn btn-close">بستن</button>
         </div>
     </div>
@@ -273,6 +294,17 @@
         </div>
     </div>
 
+    <!-- مودال خواننده PDF (داخل سایت) -->
+    <div class="modal pdf-reader-modal" id="pdf-reader-modal">
+        <div class="modal-content">
+            <div class="pdf-reader-header">
+                <h3 id="reader-title"></h3>
+                <button class="pdf-reader-close" onclick="closePdfReader()">×</button>
+            </div>
+            <iframe id="pdf-iframe" allowfullscreen></iframe>
+        </div>
+    </div>
+
     <script>
         let currentBookIsPaid = false;
         let currentPdfUrl = '';
@@ -293,9 +325,9 @@
                 document.getElementById('modal').classList.add('active');
             } else {
                 if (currentPdfUrl) {
-                    window.open(currentPdfUrl, '_blank');
+                    openPdfReader(currentPdfUrl, document.getElementById('detail-title').innerText);
                 } else {
-                    alert("✅ کتاب در حال باز شدن است...\n(در نسخه واقعی به صفحه خواندن کتاب هدایت می‌شوید)");
+                    alert("✅ کتاب در حال باز شدن است...");
                 }
             }
         }
@@ -312,10 +344,10 @@
             }
             
             if (code === "55555") {
-                alert("✅ کد اشتراک معتبر است!\nاشتراک شما فعال شد. کتاب باز می‌شود...");
+                alert("✅ کد اشتراک معتبر است!\nاشتراک شما فعال شد.");
                 closeModal();
                 if (currentPdfUrl) {
-                    window.open(currentPdfUrl, '_blank');
+                    openPdfReader(currentPdfUrl, document.getElementById('detail-title').innerText);
                 }
             } else {
                 alert("❌ کد اشتراک نامعتبر است. لطفاً دوباره تلاش کنید.");
@@ -335,6 +367,20 @@
             document.getElementById('contact-modal').classList.remove('active');
         }
 
+        // ===== توابع جدید برای خواننده PDF داخل سایت =====
+        function openPdfReader(pdfUrl, title) {
+            document.getElementById('reader-title').innerText = title;
+            const iframe = document.getElementById('pdf-iframe');
+            iframe.src = pdfUrl;
+            document.getElementById('pdf-reader-modal').classList.add('active');
+        }
+
+        function closePdfReader() {
+            const iframe = document.getElementById('pdf-iframe');
+            iframe.src = ''; // پاک کردن برای توقف لودینگ
+            document.getElementById('pdf-reader-modal').classList.remove('active');
+        }
+
         // بستن مودال با کلیک بیرون
         document.getElementById('book-detail-modal').addEventListener('click', function(e) {
             if (e.target.id === 'book-detail-modal') closeBookDetail();
@@ -344,6 +390,9 @@
         });
         document.getElementById('contact-modal').addEventListener('click', function(e) {
             if (e.target.id === 'contact-modal') closeContactModal();
+        });
+        document.getElementById('pdf-reader-modal').addEventListener('click', function(e) {
+            if (e.target.id === 'pdf-reader-modal') closePdfReader();
         });
     </script>
 </body>
