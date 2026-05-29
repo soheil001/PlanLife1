@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlanLife • کتابخانه</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&amp;display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: #0a0814;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .stars-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: transparent;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .stars-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: 
+                radial-gradient(white 1px, transparent 1px),
+                radial-gradient(white 1px, transparent 1px);
+            background-size: 80px 80px, 140px 140px;
+            opacity: 0.6;
+            animation: twinkle 8s infinite alternate;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.5; }
+            100% { opacity: 0.85; }
+        }
+
+        .section {
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 14px;
+            color: #d4af37;
+        }
+
+        .horizontal-row {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            padding-bottom: 15px;
+            scrollbar-width: none;
+        }
+        .horizontal-row::-webkit-scrollbar { display: none; }
+
+        .book-item {
+            width: 130px;
+            flex-shrink: 0;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .book-item img {
+            width: 100%;
+            height: 175px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        .book-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            margin-top: 8px;
+            margin-bottom: 3px;
+        }
+
+        .book-price {
+            font-size: 12px;
+            color: #d4af37;
+        }
+
+        .book-rating {
+            color: #ffd700;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        .glass-box {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: right;
+            line-height: 1.7;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .btn-read {
+            background: #d4af37;
+            color: #111;
+        }
+
+        .btn-close {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars-bg"></div>
+
+    <!-- کتاب های صوتی (رایگان) -->
+    <div class="section">
+        <div class="section-title">🎧 کتاب های صوتی</div>
+        <div class="horizontal-row">
+            <div class="book-item" onclick="showBookDetail('قدرت عادت', 'این کتاب رازهای علمی عادت‌های موفق را آشکار می‌کند و به شما کمک می‌کند عادت‌های بد را تغییر دهید.', false)"><img src="https://picsum.photos/id/1015/300/300"><div class="book-title">قدرت عادت</div><div class="book-price">رایگان</div><div class="book-rating">★★★★★</div></div>
+            <div class="book-item" onclick="showBookDetail('سفر روح', 'داستانی الهام‌بخش درباره سفر درونی و کشف معنای واقعی زندگی.', false)"><img src="https://picsum.photos/id/102/300/300"><div class="book-title">سفر روح</div><div class="book-price">رایگان</div><div class="book-rating">★★★★★</div></div>
+            <div class="book-item" onclick="showBookDetail('اتمیک هابیتس', 'راهنمای عملی برای ایجاد تغییرات کوچک اما قدرتمند که نتایج بزرگی به همراه دارد.', false)"><img src="https://picsum.photos/id/1033/300/300"><div class="book-title">اتمیک هابیتس</div><div class="book-price">رایگان</div><div class="book-rating">★★★★★</div></div>
+            <div class="book-item" onclick="showBookDetail('هنر ظریف رهایی', 'این کتاب به شما می‌آموزد چگونه از نگرانی‌های بی‌مورد رها شوید و زندگی معنادارتری داشته باشید.', false)"><img src="https://picsum.photos/id/1040/300/300"><div class="book-title">هنر ظریف رهایی</div><div class="book-price">رایگان</div><div class="book-rating">★★★★☆</div></div>
+        </div>
+    </div>
+
+    <!-- کتاب های رایگان -->
+    <div class="section">
+        <div class="section-title">📚 کتاب های رایگان</div>
+        <div class="horizontal-row">
+            <div class="book-item" onclick="showBookDetail('قانون جذب', 'کتابی که به شما یاد می‌دهد چگونه افکار و انرژی مثبت را به سمت اهداف خود جذب کنید.', false)"><img src="https://picsum.photos/id/106/300/300"><div class="book-title">قانون جذب</div><div class="book-price">رایگان</div><div class="book-rating">★★★★★</div></div>
+            <div class="book-item" onclick="showBookDetail('بیداری روح', 'راهنمایی برای بیداری معنوی و اتصال عمیق‌تر با خود واقعی‌تان.', false)"><img src="https://picsum.photos/id/1074/300/300"><div class="book-title">بیداری روح</div><div class="book-price">رایگان</div><div class="book-rating">★★★★★</div></div>
+            <div class="book-item" onclick="showBookDetail('ذهن کامل', 'تکنیک‌های عملی برای تمرکز کامل و آرامش ذهن در دنیای پرمشغله امروز.', false)"><img src="https://picsum.photos/id/1080/300/300"><div class="book-title">ذهن کامل</div><div class="book-price">رایگان</div><div class="book-rating">★★★★☆</div></div>
+            <div class="book-item" onclick="showBookDetail('نیروی حال', 'کتابی transformative درباره زندگی در لحظه حال و رهایی از گذشته و آینده.', false)"><img src="https://picsum.photos/id/1018/300/300"><div class="book-title">نیروی حال</div><div class="book-price">رایگان</div><div class="book-rating">★★★★★</div></div>
+        </div>
+    </div>
+
+    <!-- کتاب های خاص و پولی -->
+    <div class="section">
+        <div class="section-title">💎 کتاب های خاص و پولی</div>
+        <div class="horizontal-row">
+            <div class="book-item" onclick="showBookDetail('هنر ظریف رهایی', 'این کتاب به شما می‌آموزد چگونه از نگرانی‌های بی‌مورد رها شوید و زندگی معنادارتری داشته باشید.', true)"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780013257/Untitled_design_wyybit.png"><div class="book-title">هنر ظریف رهایی</div><div class="book-price">۰.۵ PlanCoin</div><div class="book-rating">★★★★☆</div></div>
+            <div class="book-item" onclick="showBookDetail('قدرت عادت', 'رازهای علمی پشت عادت‌های موفق و چگونگی ساخت عادت‌های خوب.', true)"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780013257/Untitled_design_wyybit.png"><div class="book-title">قدرت عادت</div><div class="book-price">۰.۶ PlanCoin</div><div class="book-rating">★★★★★</div></div>
+            <div class="book-item" onclick="showBookDetail('سفر روح', 'داستانی الهام‌بخش درباره سفر درونی و کشف معنای واقعی زندگی.', true)"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780013257/Untitled_design_wyybit.png"><div class="book-title">سفر روح</div><div class="book-price">۰.۷ PlanCoin</div><div class="book-rating">★★★★★</div></div>
+            <div class="book-item" onclick="showBookDetail('اتمیک هابیتس', 'راهنمای عملی برای ایجاد تغییرات کوچک اما قدرتمند که نتایج بزرگی به همراه دارد.', true)"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780013257/Untitled_design_wyybit.png"><div class="book-title">اتمیک هابیتس</div><div class="book-price">۰.۸ PlanCoin</div><div class="book-rating">★★★★★</div></div>
+        </div>
+    </div>
+
+    <!-- مودال خلاصه کتاب شیشه‌ای -->
+    <div class="modal" id="book-detail-modal">
+        <div class="modal-content">
+            <h3 id="detail-title" style="color:#d4af37; margin-bottom:15px; font-size:20px;"></h3>
+            
+            <div class="glass-box">
+                <p id="detail-summary" style="color:#ddd; font-size:14.5px;"></p>
+            </div>
+
+            <button onclick="handleReadButton()" class="btn btn-read">📖 خواندن</button>
+            <button onclick="closeBookDetail()" class="btn btn-close">بستن</button>
+        </div>
+    </div>
+
+    <!-- مودال اشتراک -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h3 id="modal-title" style="color:#d4af37; margin-bottom:15px;"></h3>
+            <p>برای مطالعه این کتاب، لطفاً کد اشتراک خود را وارد کنید.</p>
+            
+            <input type="text" id="code-input" placeholder="کد اشتراک را وارد کنید" 
+                   style="width:100%; padding:14px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.3); border-radius:12px; color:white; text-align:center; margin-bottom:15px;">
+            
+            <button onclick="submitCode()" 
+                    style="width:100%; padding:14px; background:#d4af37; color:#111; border:none; border-radius:12px; font-weight:700; margin-bottom:12px;">
+                ارسال کد
+            </button>
+
+            <button onclick="showContactOptions()" 
+                    style="width:100%; padding:12px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.3); color:white; border-radius:12px; font-size:14px;">
+                ارتباط با ما
+            </button>
+        </div>
+    </div>
+
+    <!-- مودال ارتباط با ما -->
+    <div class="modal" id="contact-modal">
+        <div class="modal-content">
+            <h3 style="color:#d4af37; margin-bottom:20px;">ارتباط با ما</h3>
+            
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <a href="https://t.me/planlifeir" target="_blank" 
+                   style="background:#0088cc; color:white; padding:14px; border-radius:12px; text-decoration:none; font-weight:700;">
+                    📱 تلگرام (@planlifeir)
+                </a>
+                <a href="https://ble.ir/planlifeir" target="_blank" 
+                   style="background:#00a000; color:white; padding:14px; border-radius:12px; text-decoration:none; font-weight:700;">
+                    💬 بله (@planlifeir)
+                </a>
+            </div>
+            
+            <button onclick="closeContactModal()" 
+                    style="margin-top:20px; padding:10px; background:#333; color:white; border:none; border-radius:10px;">
+                بستن
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentBookIsPaid = false;
+
+        function showBookDetail(title, summary, isPaid) {
+            document.getElementById('detail-title').innerText = title;
+            document.getElementById('detail-summary').innerText = summary;
+            currentBookIsPaid = isPaid;
+            document.getElementById('book-detail-modal').classList.add('active');
+        }
+
+        function handleReadButton() {
+            closeBookDetail();
+            if (currentBookIsPaid) {
+                const title = document.getElementById('detail-title').innerText;
+                document.getElementById('modal-title').innerText = title;
+                document.getElementById('modal').classList.add('active');
+            } else {
+                alert("✅ کتاب در حال باز شدن است...\n(در نسخه واقعی به صفحه خواندن کتاب هدایت می‌شوید)");
+            }
+        }
+
+        function closeBookDetail() {
+            document.getElementById('book-detail-modal').classList.remove('active');
+        }
+
+        function submitCode() {
+            const code = document.getElementById('code-input').value.trim();
+            if (!code) {
+                alert("لطفاً کد اشتراک را وارد کنید.");
+                return;
+            }
+            
+            if (code === "55555") {
+                alert("✅ کد اشتراک معتبر است!\nاشتراک شما فعال شد. کتاب باز می‌شود...");
+                closeModal();
+                // اینجا می‌تونی بعداً لینک دانلود یا صفحه کتاب رو باز کنی
+            } else {
+                alert("❌ کد اشتراک نامعتبر است. لطفاً دوباره تلاش کنید.");
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        function showContactOptions() {
+            closeModal();
+            document.getElementById('contact-modal').classList.add('active');
+        }
+
+        function closeContactModal() {
+            document.getElementById('contact-modal').classList.remove('active');
+        }
+
+        // بستن مودال با کلیک بیرون
+        document.getElementById('book-detail-modal').addEventListener('click', function(e) {
+            if (e.target.id === 'book-detail-modal') closeBookDetail();
+        });
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target.id === 'modal') closeModal();
+        });
+        document.getElementById('contact-modal').addEventListener('click', function(e) {
+            if (e.target.id === 'contact-modal') closeContactModal();
+        });
+    </script>
+</body>
+</html>
