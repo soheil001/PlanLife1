@@ -67,71 +67,145 @@
         border-color: #d4af37;
     }
 
-    /* کارت‌های ویدیو (شیشه‌ای تمام عرض) */
+    /* لیست مستند ها - ۳ ردیف با اسکرول افقی */
     .video-list {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
+        display: grid;
+        grid-template-rows: repeat(3, auto);
+        grid-auto-flow: column;
+        grid-auto-columns: 240px;
+        gap: 18px 14px;
+        overflow-x: auto;
+        padding: 10px 5px 40px;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
     }
+    .video-list::-webkit-scrollbar { display: none; }
 
     .video-card {
         background: rgba(255,255,255,0.08);
         border: 1px solid rgba(212, 175, 55, 0.35);
-        border-radius: 22px;
+        border-radius: 18px;
         overflow: hidden;
         position: relative;
         box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         cursor: pointer;
-        transition: transform 0.3s;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+        width: 240px;
+        flex-shrink: 0;
     }
-    .video-card:hover { transform: translateY(-6px); }
+    .video-card:hover { 
+        transform: translateY(-12px) scale(1.02); 
+        box-shadow: 0 20px 60px rgba(212, 175, 55, 0.25);
+    }
 
     .video-cover {
         width: 100%;
         aspect-ratio: 16/9;
         object-fit: cover;
+        display: block;
     }
 
     .video-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.75) 85%);
+        background: linear-gradient(to bottom, transparent 35%, rgba(0,0,0,0.85) 80%);
         display: flex;
         align-items: flex-end;
-        padding: 20px;
+        padding: 16px 14px;
     }
 
     .video-info {
         flex: 1;
+        padding-right: 8px;
     }
     .video-title {
-        font-size: 17.5px;
+        font-size: 15px;
         font-weight: 700;
-        margin-bottom: 4px;
+        margin-bottom: 3px;
+        line-height: 1.3;
     }
     .video-subtitle {
-        font-size: 13.5px;
+        font-size: 12px;
         opacity: 0.75;
+        line-height: 1.2;
     }
 
     .play-btn {
-        width: 56px;
-        height: 56px;
+        width: 44px;
+        height: 44px;
         background: #d4af37;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.7);
         flex-shrink: 0;
+        transition: transform 0.2s;
+    }
+    .play-btn:hover {
+        transform: scale(1.1);
     }
     .play-btn .triangle {
         width: 0;
         height: 0;
-        border-top: 12px solid transparent;
-        border-bottom: 12px solid transparent;
-        border-left: 20px solid #1a0033;
-        margin-left: 4px;
+        border-top: 9px solid transparent;
+        border-bottom: 9px solid transparent;
+        border-left: 15px solid #1a0033;
+        margin-left: 3px;
+    }
+
+    /* هر ردیف پیشنهادها - اسکرول افقی مستقل */
+    .poster-list {
+        display: flex;
+        flex-direction: row;
+        gap: 14px;
+        overflow-x: auto;
+        padding: 10px 5px 30px;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+    .poster-list::-webkit-scrollbar { display: none; }
+
+    .poster-card {
+        background: transparent;
+        border: none;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+        cursor: pointer;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 168px;
+        flex-shrink: 0;
+    }
+    .poster-card:hover {
+        transform: translateY(-10px) scale(1.03);
+    }
+
+    .poster-cover {
+        width: 100%;
+        aspect-ratio: 2 / 3;           /* دقیقاً مثل پوسترهای اپل تی‌وی */
+        object-fit: cover;
+        border-radius: 14px;
+        display: block;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .poster-info {
+        padding: 10px 4px 0;
+    }
+    .poster-title {
+        font-size: 13.5px;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.35;
+        margin-bottom: 2px;
+    }
+    .poster-subtitle {
+        font-size: 11.5px;
+        color: #aaa;
+        opacity: 0.85;
     }
 
     /* مودال پخش ویدیو */
@@ -169,6 +243,15 @@
         width: 100%;
         display: block;
     }
+
+    /* بخش عنوان مثل اپل تی‌وی */
+    .section-header {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #ffd700;
+        padding-left: 5px;
+    }
 </style>
 </head>
 <body>
@@ -188,8 +271,19 @@
         <div class="category-chip" onclick="filterVideos('لیاقت')">احساس لیاقت</div>
     </div>
 
-    <!-- لیست ویدیوها -->
+    <!-- لیست ویدیوها - اسکرول افقی -->
+    <div class="section-header">مستند ها</div>
     <div class="video-list" id="videoList"></div>
+
+    <!-- پیشنهادهای ویژه - هر ردیف اسکرول افقی مجزا -->
+    <div class="section-header" style="margin-top: 25px;">پیشنهادهای ویژه</div>
+    
+    <div style="margin-bottom: 20px;">
+        <div class="poster-list" id="posterRow1"></div>
+    </div>
+    <div>
+        <div class="poster-list" id="posterRow2"></div>
+    </div>
 </div>
 
 <!-- مودال پخش ویدیو -->
@@ -204,7 +298,7 @@
 </div>
 
 <script>
-// ==================== داده‌های ویدیو ====================
+// ==================== داده‌های ویدیو (با ویدیوهای تستی اضافه) ====================
 const videoData = [
     {
         id: 1,
@@ -225,7 +319,7 @@ const videoData = [
     {
         id: 3,
         title: "استرهیکس سمینار",
-        subtitle: "از غم و انوه به شادی ",
+        subtitle: "از غم و انوه به شادی",
         cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779987770/IMG_1223_rbor7c.jpg",
         src: "https://aspb26.cdn.asset.aparat.com/aparat-video/130cd5a8ef41176dbea488e96984ef1e16918897-360p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6Ijg3MTNlMTJmNjJkNzdmODZhMzI1MzE1YmE2NzEyOWQ5IiwiZXhwIjoxNzgwMDUyMzIyLCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.I9TnnkqfV-uYaQBtCUpqlupqyERm-LAmT5Ing5b7V5Q",
         category: "عشق"
@@ -253,15 +347,65 @@ const videoData = [
         cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779657211/IMG_1151_zqcux9.jpg",
         src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
         category: "لیاقت"
+    },
+    // ==================== ویدیوهای تستی اضافه (برای تست اسکرول افقی) ====================
+    {
+        id: 7,
+        title: "قانون جذب ثروت",
+        subtitle: "ابراهیم استوارت",
+        cover: "https://picsum.photos/id/106/400/225",
+        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        category: "ثروت"
+    },
+    {
+        id: 8,
+        title: "جذب عشق واقعی",
+        subtitle: "ماورایی",
+        cover: "https://picsum.photos/id/1074/400/225",
+        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+        category: "عشق"
+    },
+    {
+        id: 9,
+        title: "تحول درونی عمیق",
+        subtitle: "از ترس به قدرت",
+        cover: "https://picsum.photos/id/1015/400/225",
+        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Tears_of_Steel.mp4",
+        category: "تحول"
+    },
+    {
+        id: 10,
+        title: "اعتماد به نفس طلایی",
+        subtitle: "داستان موفقیت",
+        cover: "https://picsum.photos/id/102/400/225",
+        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+        category: "اعتماد"
+    },
+    {
+        id: 11,
+        title: "احساس لیاقت بی‌نهایت",
+        subtitle: "تو لایق همه چیز هستی",
+        cover: "https://picsum.photos/id/1033/400/225",
+        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+        category: "لیاقت"
+    },
+    {
+        id: 12,
+        title: "راز میلیونرها",
+        subtitle: "دارن هاردی",
+        cover: "https://picsum.photos/id/1040/400/225",
+        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+        category: "ثروت"
     }
 ];
 
-// ==================== بارگذاری ویدیوها ====================
-function loadVideos(filter = 'all') {
-    const container = document.getElementById('videoList');
+// ==================== بارگذاری ویدیوها (اسکرول افقی) ====================
+function loadVideos(filter = 'all', containerId = 'videoList') {
+    const container = document.getElementById(containerId);
+    if (!container) return;
     container.innerHTML = '';
 
-    const filtered = filter === 'all' 
+    let filtered = filter === 'all' 
         ? videoData 
         : videoData.filter(v => v.category === filter);
 
@@ -282,6 +426,52 @@ function loadVideos(filter = 'all') {
         `;
         card.onclick = () => playVideo(video.id);
         container.appendChild(card);
+    });
+}
+
+// ==================== بارگذاری لیست پایین (پوستر مثل اپل تی‌وی) ====================
+function loadPosters(filter = 'all') {
+    const row1 = document.getElementById('posterRow1');
+    const row2 = document.getElementById('posterRow2');
+    if (!row1 || !row2) return;
+    
+    row1.innerHTML = '';
+    row2.innerHTML = '';
+
+    let filtered = filter === 'all' 
+        ? videoData 
+        : videoData.filter(v => v.category === filter);
+
+    // ردیف اول: ۶ ویدیو اول
+    const firstRow = filtered.slice(0, 6);
+    firstRow.forEach(video => {
+        const card = document.createElement('div');
+        card.className = 'poster-card';
+        card.innerHTML = `
+            <img src="${video.cover}" class="poster-cover" alt="${video.title}">
+            <div class="poster-info">
+                <div class="poster-title">${video.title}</div>
+                <div class="poster-subtitle">${video.subtitle}</div>
+            </div>
+        `;
+        card.onclick = () => playVideo(video.id);
+        row1.appendChild(card);
+    });
+
+    // ردیف دوم: بقیه ویدیوها (۶ تا)
+    const secondRow = filtered.slice(6, 12);
+    secondRow.forEach(video => {
+        const card = document.createElement('div');
+        card.className = 'poster-card';
+        card.innerHTML = `
+            <img src="${video.cover}" class="poster-cover" alt="${video.title}">
+            <div class="poster-info">
+                <div class="poster-title">${video.title}</div>
+                <div class="poster-subtitle">${video.subtitle}</div>
+            </div>
+        `;
+        card.onclick = () => playVideo(video.id);
+        row2.appendChild(card);
     });
 }
 
@@ -316,14 +506,19 @@ function filterVideos(category) {
     });
 
     // اضافه کردن کلاس active به چیپ کلیک‌شده
-    event.target.classList.add('active');
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
 
-    loadVideos(category);
+    // بارگذاری مجدد هر دو لیست با فیلتر
+    loadVideos(category, 'videoList');
+    loadPosters(category);
 }
 
 // ==================== شروع ====================
 window.onload = () => {
-    loadVideos('all');
+    loadVideos('all', 'videoList');   // لیست بالا - مستند ها (اندازه قبلی)
+    loadPosters('all');               // لیست پایین - پوستر مثل اپل تی‌وی
 };
 </script>
 </body>
