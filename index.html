@@ -473,7 +473,7 @@ function sendMessage() {
     output.innerHTML += `<div class="msg-bot" id="${loadingId}">در حال فکر کردن... 🧠</div>`;
     output.scrollTop = output.scrollHeight;
 
-    const API_KEY = "xai-a1g61vdyBDwJvzVksGj5F8X0cvmOzNZ10o4yAJ7Xezn17UBgOq3V3pztT3U2GY7bFG3RdBLHsLzf8Rxm";
+    const API_KEY = "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";
 
     fetch("https://api.x.ai/v1/chat/completions", {
         method: "POST",
@@ -497,7 +497,12 @@ function sendMessage() {
             max_tokens: 800
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
         const loadingEl = document.getElementById(loadingId);
         if (loadingEl) loadingEl.remove();
