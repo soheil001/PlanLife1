@@ -176,6 +176,17 @@
 
     .btn:hover { background: #d4af37; transform: scale(1.05); }
 
+    .delete-btn {
+        background: rgba(255, 60, 60, 0.8);
+        color: white;
+        border: none;
+        padding: 6px 14px;
+        font-size: 14px;
+        border-radius: 50px;
+        cursor: pointer;
+        float: left;
+    }
+
     .history {
         margin-top: 40px;
         width: 100%;
@@ -190,6 +201,7 @@
         padding: 18px;
         margin-bottom: 18px;
         border: 1px solid rgba(212,175,55,0.3);
+        position: relative;
     }
 
     .tab-buttons {
@@ -199,7 +211,7 @@
         justify-content: center;
     }
 
-    /* استایل‌های منو (کپی از صفحه اصلی) */
+    /* استایل‌های منو */
     #menu-overlay {
         position: fixed;
         inset: 0;
@@ -421,7 +433,7 @@
     </div>
 </div>
 
-<!-- منوی شیشه‌ای (کپی دقیق از صفحه اصلی) -->
+<!-- منوی شیشه‌ای -->
 <div id="menu-overlay" onclick="closeMenu()"></div>
 
 <div id="side-menu" class="side-menu">
@@ -510,6 +522,18 @@ function saveAnswers(type) {
     closeForm();
 }
 
+// حذف یک ورودی
+function deleteEntry(timestamp) {
+    if (!confirm('آیا مطمئن هستید که می‌خواهید این تمرین را حذف کنید؟')) return;
+    
+    let history = JSON.parse(localStorage.getItem('exercisesHistory')) || [];
+    history = history.filter(item => item.timestamp !== timestamp);
+    localStorage.setItem('exercisesHistory', JSON.stringify(history));
+    
+    loadHistory();
+    alert('✅ تمرین حذف شد.');
+}
+
 // بارگذاری تاریخچه
 function loadHistory(filter = 'all') {
     const list = document.getElementById('history-list');
@@ -529,6 +553,7 @@ function loadHistory(filter = 'all') {
         const isMorning = entry.type === 'morning';
         html += `
             <div class="history-entry">
+                <button class="delete-btn" onclick="deleteEntry(${entry.timestamp})">حذف</button>
                 <h4>${entry.date} — ${isMorning ? '🌅 صبح' : '🌙 شب'}</h4>
                 <p><strong>۱. حال خوب:</strong> ${entry.q1 || '—'}</p>
                 <p><strong>۲. اشخاص:</strong> ${entry.q2 || '—'}</p>
@@ -601,7 +626,7 @@ function downloadAllHistory() {
     URL.revokeObjectURL(url);
 }
 
-// توابع منو (کپی از صفحه اصلی)
+// توابع منو
 function toggleMenu() {
     const menu = document.getElementById('side-menu');
     const overlay = document.getElementById('menu-overlay');
