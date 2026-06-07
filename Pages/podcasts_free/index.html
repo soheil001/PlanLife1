@@ -433,25 +433,23 @@ function updateAdminHeader() {
 // ===== کامنت‌ها (در حافظه مرورگر، عمومی با storage API) =====
 // از window.storage برای ذخیره عمومی استفاده می‌کنیم
 
-async function loadComments(id) {
+function loadComments(id) {
     const list = document.getElementById('commentsList');
     list.innerHTML = `<div class="loading-comments">در حال بارگذاری نظرات...</div>`;
     document.getElementById('commentCount').textContent = '...';
 
     try {
-        const result = await window.storage.get(`planlife_comments_${id}`, true);
-        const comments = result ? JSON.parse(result.value) : [];
-        allComments[id] = comments;
-        renderComments(id);
-    } catch (e) {
-        allComments[id] = allComments[id] || [];
-        renderComments(id);
+        const saved = localStorage.getItem(`planlife_comments_${id}`);
+        allComments[id] = saved ? JSON.parse(saved) : [];
+    } catch(e) {
+        allComments[id] = [];
     }
+    renderComments(id);
 }
 
-async function saveComments(id) {
+function saveComments(id) {
     try {
-        await window.storage.set(`planlife_comments_${id}`, JSON.stringify(allComments[id] || []), true);
+        localStorage.setItem(`planlife_comments_${id}`, JSON.stringify(allComments[id] || []));
     } catch(e) {
         console.error('خطا در ذخیره‌سازی:', e);
     }
@@ -495,7 +493,7 @@ function renderComments(id) {
     });
 }
 
-async function addComment() {
+function addComment() {
     if (!currentPodcastId) return;
     
     const nameInput = document.getElementById('commentName').value.trim() || 'ناشناس';
@@ -519,11 +517,24 @@ async function addComment() {
         time: `${persianDate} • ${persianTime}`
     });
     
-    await saveComments(currentPodcastId);
+    saveComments(currentPodcastId);
     renderComments(currentPodcastId);
+    updateCardBadge(currentPodcastId);
     
     document.getElementById('commentText').value = '';
     document.getElementById('commentName').value = '';
+}
+
+function updateCardBadge(id) {
+    // badge روی کارت گرید رو real-time آپدیت کن
+    const cnt = (allComments[id] || []).length;
+    const badge = document.getElementById(`card-badge-${id}`);
+    if (badge) badge.textContent = toPersianNum(cnt);
+    // badge روی cover پلیر
+    const coverCount = document.getElementById('coverCommentCount');
+    if (coverCount) coverCount.textContent = toPersianNum(cnt);
+    const mainCount = document.getElementById('commentCount');
+    if (mainCount) mainCount.textContent = cnt;
 }
 
 async function deleteComment(podcastId, commentId) {
@@ -531,8 +542,9 @@ async function deleteComment(podcastId, commentId) {
     if (!confirm('این نظر حذف شود؟')) return;
     
     allComments[podcastId] = (allComments[podcastId] || []).filter(c => c.id !== commentId);
-    await saveComments(podcastId);
+    saveComments(podcastId);
     renderComments(podcastId);
+    updateCardBadge(podcastId);
 }
 
 // ===== پلیر =====
@@ -622,13 +634,13 @@ function goToHome() {
 }
 
 // ===== ساخت صفحه =====
-async function loadPodcastPage() {
+function loadPodcastPage() {
     const cats = ["باورهای ثروت","عشق و روابط","تحول حال و احساس","رشد کسب و کار","اعتماد به نفس","احساس لیاقت"];
     let h = '';
     cats.forEach(c => h += `<div onclick="selectPodcastCat('${c}')" style="min-width:140px;text-align:center;background:rgba(255,255,255,0.11);border-radius:18px;padding:10px;cursor:pointer;flex-shrink:0;"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" style="width:130px;height:130px;border-radius:18px;object-fit:cover;"><p style="margin-top:10px;font-size:14.5px;font-weight:600;">${c}</p></div>`);
     document.getElementById('categorySlides').innerHTML = h;
     // اول کانت کامنت‌ها رو لود کن، بعد گرید بساز
-    await loadAllCommentCounts();
+    loadAllCommentCounts();
     renderGrid(podcastData);
 }
 
@@ -637,16 +649,15 @@ function getCommentCount(id) {
     return c ? c.length : 0;
 }
 
-async function loadAllCommentCounts() {
-    const promises = podcastData.map(async item => {
+function loadAllCommentCounts() {
+    podcastData.forEach(item => {
         try {
-            const result = await window.storage.get(`planlife_comments_${item.id}`, true);
-            allComments[item.id] = result ? JSON.parse(result.value) : [];
+            const saved = localStorage.getItem(`planlife_comments_${item.id}`);
+            allComments[item.id] = saved ? JSON.parse(saved) : [];
         } catch(e) {
-            allComments[item.id] = allComments[item.id] || [];
+            allComments[item.id] = [];
         }
     });
-    await Promise.all(promises);
 }
 
 function renderGrid(items) {
@@ -661,7 +672,7 @@ function renderGrid(items) {
                 <img src="${item.cover}" style="width:100%;aspect-ratio:1/1;border-radius:18px;object-fit:cover;">
                 <div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.62);backdrop-filter:blur(6px);border-radius:999px;padding:4px 9px;display:flex;align-items:center;gap:5px;">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="#ff9500"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
-                    <span style="font-size:12px;font-weight:700;color:white;">${cntPersian}</span>
+                    <span id="card-badge-${item.id}" style="font-size:12px;font-weight:700;color:white;">${cntPersian}</span>
                 </div>
             </div>
             <div style="font-size:15.5px;font-weight:600;margin:10px 0 6px;">${item.title}<br><small style="opacity:0.75;font-weight:400;">${item.episode}</small></div>
