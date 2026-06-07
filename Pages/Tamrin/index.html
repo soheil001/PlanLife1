@@ -109,7 +109,6 @@
         z-index: 10;
     }
 
-    /* فرم‌ها */
     .form-container {
         display: none;
         width: 100%;
@@ -159,6 +158,7 @@
         padding: 12px 16px;
         color: white;
         font-size: 16px;
+        font-family: inherit;
     }
 
     .btn {
@@ -175,6 +175,7 @@
     }
 
     .btn:hover { background: #d4af37; transform: scale(1.05); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
     .delete-btn {
         background: rgba(255, 60, 60, 0.8);
@@ -211,107 +212,150 @@
         justify-content: center;
     }
 
-    /* استایل‌های منو */
+    /* منو */
     #menu-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.55);
-        z-index: 150;
-        opacity: 0;
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.55);
+        z-index: 150; opacity: 0;
         pointer-events: none;
         transition: opacity 0.5s ease;
     }
-    #menu-overlay.active {
-        opacity: 1;
-        pointer-events: auto;
-    }
+    #menu-overlay.active { opacity: 1; pointer-events: auto; }
 
     .side-menu {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 255px;
-        height: 100vh;
-        background: rgba(255, 255, 255, 0.085);
+        position: fixed; top: 0; right: 0;
+        width: 255px; height: 100vh;
+        background: rgba(255,255,255,0.085);
         backdrop-filter: blur(26px);
-        -webkit-backdrop-filter: blur(26px);
-        border-left: 1px solid rgba(212, 175, 55, 0.3);
-        box-shadow: -12px 0 40px rgba(0, 0, 0, 0.7);
+        border-left: 1px solid rgba(212,175,55,0.3);
+        box-shadow: -12px 0 40px rgba(0,0,0,0.7);
         z-index: 200;
         transform: translateX(100%);
-        transition: transform 0.55s cubic-bezier(0.25, 0.1, 0.25, 1);
+        transition: transform 0.55s cubic-bezier(0.25,0.1,0.25,1);
         padding: 22px 16px 28px;
-        display: flex;
-        flex-direction: column;
-        overflow-y: auto;
+        display: flex; flex-direction: column; overflow-y: auto;
     }
-    .side-menu.open {
-        transform: translateX(0);
-    }
+    .side-menu.open { transform: translateX(0); }
 
     .menu-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 24px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid rgba(212, 175, 55, 0.22);
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 24px; padding-bottom: 15px;
+        border-bottom: 1px solid rgba(212,175,55,0.22);
     }
-    .menu-header h2 {
-        font-size: 22px;
-        font-weight: 900;
-        color: #d4af37;
-        text-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
-    }
+    .menu-header h2 { font-size: 22px; font-weight: 900; color: #d4af37; text-shadow: 0 0 12px rgba(212,175,55,0.5); }
     .close-btn {
-        width: 38px;
-        height: 38px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        color: #d4af37;
-        cursor: pointer;
-        border-radius: 50%;
+        width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+        font-size: 24px; color: #d4af37; cursor: pointer; border-radius: 50%;
         transition: all 0.2s ease;
     }
-    .close-btn:hover {
-        background: rgba(212, 175, 55, 0.15);
-        transform: rotate(90deg);
-    }
-
-    .menu-items {
-        display: flex;
-        flex-direction: column;
-        gap: 9px;
-    }
-
+    .close-btn:hover { background: rgba(212,175,55,0.15); transform: rotate(90deg); }
+    .menu-items { display: flex; flex-direction: column; gap: 9px; }
     .menu-item {
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(212, 175, 55, 0.18);
-        border-radius: 15px;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(212,175,55,0.18);
+        border-radius: 15px; padding: 14px 18px;
+        display: flex; align-items: center;
+        text-decoration: none; color: white;
+        font-size: 15.8px; font-weight: 700;
+        transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+        box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+    }
+    .menu-item:hover { background: rgba(212,175,55,0.11); border-color: #d4af37; transform: translateX(-8px); box-shadow: 0 6px 20px rgba(212,175,55,0.22); }
+    .menu-item .text { flex: 1; line-height: 1.35; }
+
+    /* ===== مودال اطلاعیه ذخیره ابری ===== */
+    .modal-overlay {
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.7);
+        z-index: 500;
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.4s ease;
+        padding: 20px;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .modal-box {
+        background: rgba(10, 5, 30, 0.92);
+        backdrop-filter: blur(30px);
+        border: 1px solid rgba(212,175,55,0.6);
+        border-radius: 28px;
+        padding: 36px 30px;
+        max-width: 480px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 0 60px rgba(212,175,55,0.25), 0 20px 60px rgba(0,0,0,0.8);
+        transform: scale(0.92);
+        transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .modal-overlay.active .modal-box { transform: scale(1); }
+
+    .modal-icon { font-size: 56px; margin-bottom: 18px; animation: pulse-icon 2s infinite; }
+    @keyframes pulse-icon { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+    .modal-title {
+        font-size: 22px; font-weight: 900;
+        color: #d4af37;
+        text-shadow: 0 0 20px rgba(212,175,55,0.5);
+        margin-bottom: 16px;
+    }
+
+    .modal-text {
+        font-size: 15px; line-height: 2;
+        color: rgba(255,255,255,0.85);
+        margin-bottom: 24px;
+    }
+
+    .modal-highlight {
+        background: rgba(212,175,55,0.12);
+        border: 1px solid rgba(212,175,55,0.35);
+        border-radius: 16px;
         padding: 14px 18px;
-        display: flex;
-        align-items: center;
-        text-decoration: none;
-        color: white;
-        font-size: 15.8px;
-        font-weight: 700;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+        margin-bottom: 22px;
+        font-size: 14px;
+        color: rgba(255,255,255,0.7);
+        line-height: 1.9;
+        text-align: right;
     }
-    .menu-item:hover {
-        background: rgba(212, 175, 55, 0.11);
-        border-color: #d4af37;
-        transform: translateX(-8px);
-        box-shadow: 0 6px 20px rgba(212, 175, 55, 0.22);
+
+    .modal-btn {
+        background: linear-gradient(135deg, #d4af37, #f0c84a);
+        color: #111; border: none;
+        padding: 14px 36px;
+        font-size: 16px; font-weight: 900;
+        border-radius: 50px; cursor: pointer;
+        transition: all 0.3s;
+        font-family: inherit;
+        box-shadow: 0 4px 20px rgba(212,175,55,0.4);
     }
-    .menu-item:active {
-        transform: scale(0.97);
+    .modal-btn:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(212,175,55,0.6); }
+
+    /* loading spinner */
+    .spinner {
+        display: inline-block; width: 22px; height: 22px;
+        border: 3px solid rgba(212,175,55,0.3);
+        border-top-color: #d4af37;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        vertical-align: middle; margin-left: 8px;
     }
-    .menu-item .text {
-        flex: 1;
-        line-height: 1.35;
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .sync-status {
+        text-align: center; padding: 10px;
+        font-size: 14px; color: rgba(212,175,55,0.8);
+        min-height: 36px;
+    }
+
+    .expiry-badge {
+        display: inline-block;
+        background: rgba(212,175,55,0.15);
+        border: 1px solid rgba(212,175,55,0.4);
+        border-radius: 20px;
+        padding: 4px 14px;
+        font-size: 13px;
+        color: #d4af37;
+        margin-bottom: 8px;
     }
 </style>
 </head>
@@ -322,6 +366,24 @@
 <header>
     <div class="hamburger" onclick="toggleMenu()">☰</div>
 </header>
+
+<!-- مودال اطلاعیه ذخیره ابری -->
+<div class="modal-overlay" id="cloud-modal">
+    <div class="modal-box">
+        <div class="modal-icon">☁️</div>
+        <div class="modal-title">ذخیره‌سازی ابری فعال شد</div>
+        <div class="modal-text">
+            تمرین شما با موفقیت در فضای ابری ذخیره شد
+        </div>
+        <div class="modal-highlight">
+            <div>🔒 <strong>فقط شما</strong> می‌توانید این تمرینات را ببینید</div>
+            <div>⏳ اطلاعات شما به مدت <strong>۱ هفته</strong> ذخیره می‌ماند</div>
+            <div>💾 می‌توانید آن‌ها را دانلود کنید</div>
+            <div>🔄 در هر دستگاهی قابل دسترس است</div>
+        </div>
+        <button class="modal-btn" onclick="closeCloudModal()">متوجه شدم ✓</button>
+    </div>
+</div>
 
 <div class="main-center">
     <div onclick="window.location.href='https://planlife.ir'" class="back-btn">←</div>
@@ -351,44 +413,37 @@
             <label class="question-label">۱. بابت چه چیزی در این لحظه حالم خوب است؟</label>
             <textarea id="mq1" placeholder="اینجا بنویس..."></textarea>
         </div>
-        
         <div class="question">
             <label class="question-label">۲. بابت چه کسی در این لحظه حالم خوب است؟</label>
             <textarea id="mq2" placeholder="اینجا بنویس..."></textarea>
         </div>
-        
         <div class="question">
-            <label class="question-label">۳. کدام باورهای قدرتمندکننده رو امروز باید مرور کنم با خودم (گوش کنم)؟</label>
+            <label class="question-label">۳. کدام باورهای قدرتمندکننده رو امروز باید مرور کنم؟</label>
             <textarea id="mq3" placeholder="اینجا بنویس..."></textarea>
         </div>
-        
         <div class="question">
             <label class="question-label">۴. مهم‌ترین کاری که امروز باید تمامش کنم چیست؟</label>
             <textarea id="mq4" placeholder="اینجا بنویس..."></textarea>
         </div>
-        
         <div class="question">
             <label class="question-label">۵. هدف امسال من چیست؟ و چه کارهایی برای رسیدن به آن می‌توانم انجام دهم؟</label>
             <textarea id="mq5" placeholder="اینجا بنویس..."></textarea>
         </div>
-        
         <div class="question">
             <label class="question-label">۶. امروز می‌خوام خداوند چه اتفاقاتی برای من رقم بزنه؟</label>
             <textarea id="mq6" placeholder="اینجا بنویس..."></textarea>
         </div>
-        
         <div class="question">
-            <label class="question-label">۷. امروز چه تقسیم کاری با خداوند انجام می‌دم؟ (چه کاری بر عهده من، چه کاری بر عهده خدا)</label>
+            <label class="question-label">۷. امروز چه تقسیم کاری با خداوند انجام می‌دم؟</label>
             <textarea id="mq7" placeholder="اینجا بنویس..."></textarea>
         </div>
-        
         <div class="question">
             <label class="question-label">۸. امروز تصمیم دارم چقدر بی‌فکر باشم (نسبت به افکار منفی)؟</label>
             <textarea id="mq8" placeholder="اینجا بنویس..."></textarea>
         </div>
 
         <div style="text-align:center; margin:30px 0 10px;">
-            <button class="btn" onclick="saveAnswers('morning')">ذخیره تمرین صبح</button>
+            <button class="btn" id="save-morning-btn" onclick="saveAnswers('morning')">ذخیره تمرین صبح ☁️</button>
             <button class="btn" onclick="closeForm()" style="background:rgba(255,255,255,0.2);">بازگشت</button>
         </div>
     </div>
@@ -411,10 +466,13 @@
         <div class="question"><label class="question-label">۱۰. امشب چقدر می‌خوام مدیتیشن کنم؟ (چند دقیقه)</label><input type="number" id="nq10" class="small-input" placeholder="دقیقه"></div>
 
         <div style="text-align:center; margin:30px 0 10px;">
-            <button class="btn" onclick="saveAnswers('night')">ذخیره تمرین شب</button>
+            <button class="btn" id="save-night-btn" onclick="saveAnswers('night')">ذخیره تمرین شب ☁️</button>
             <button class="btn" onclick="closeForm()" style="background:rgba(255,255,255,0.2);">بازگشت</button>
         </div>
     </div>
+
+    <!-- وضعیت همگام‌سازی -->
+    <div class="sync-status" id="sync-status"></div>
 
     <!-- تاریخچه -->
     <div class="history" id="history-section">
@@ -424,7 +482,7 @@
             <button class="btn" onclick="showHistory('night')" style="padding:10px 20px;font-size:15px;">شب</button>
         </div>
         <h3>تاریخچه تمرینات</h3>
-        <div id="history-list"></div>
+        <div id="history-list"><p style="text-align:center;opacity:0.6;padding:20px;">در حال بارگذاری... <span class="spinner"></span></p></div>
         
         <div style="text-align:center; margin-top:25px;">
             <button class="btn" onclick="downloadAllHistory()">دانلود همه به صورت متن</button>
@@ -435,44 +493,94 @@
 
 <!-- منوی شیشه‌ای -->
 <div id="menu-overlay" onclick="closeMenu()"></div>
-
 <div id="side-menu" class="side-menu">
     <div class="menu-header">
         <h2>PlanLife</h2>
         <div class="close-btn" onclick="closeMenu()">✕</div>
     </div>
-    
     <div class="menu-items">
-        <a href="https://planlife.ir" class="menu-item" onclick="closeMenu()">
-            <span class="text">خانه</span>
-        </a>
-        <a href="https://planlife.ir/Pages/podcasts_free/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">پادکست‌های رایگان</span>
-        </a>
-        <a href="https://planlife.ir/Pages/Music/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">موزیک‌ها</span>
-        </a>
-        <a href="https://planlife.ir/Pages/Doreha/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">دوره‌ها</span>
-        </a>
-        <a href="https://planlife.ir/Pages/Magazine/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">مجله ماورایی</span>
-        </a>
-        <a href="library.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">کتابخانه</span>
-        </a>
-        <a href="https://planlife.ir/Pages/Video/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">ویدیوها</span>
-        </a>
+        <a href="https://planlife.ir" class="menu-item" onclick="closeMenu()"><span class="text">خانه</span></a>
+        <a href="https://planlife.ir/Pages/podcasts_free/index.html" class="menu-item" onclick="closeMenu()"><span class="text">پادکست‌های رایگان</span></a>
+        <a href="https://planlife.ir/Pages/Music/index.html" class="menu-item" onclick="closeMenu()"><span class="text">موزیک‌ها</span></a>
+        <a href="https://planlife.ir/Pages/Doreha/index.html" class="menu-item" onclick="closeMenu()"><span class="text">دوره‌ها</span></a>
+        <a href="https://planlife.ir/Pages/Magazine/index.html" class="menu-item" onclick="closeMenu()"><span class="text">مجله ماورایی</span></a>
+        <a href="library.html" class="menu-item" onclick="closeMenu()"><span class="text">کتابخانه</span></a>
+        <a href="https://planlife.ir/Pages/Video/index.html" class="menu-item" onclick="closeMenu()"><span class="text">ویدیوها</span></a>
     </div>
 </div>
 
 <script>
-// باز کردن فرم
+// ========== تنظیمات JSONBin ==========
+const JSONBIN_BIN_ID   = '6a257a88da38895dfe94f630';
+const JSONBIN_MASTER_KEY = '$2a$10$0LIPWu8zUHDSSPOGS0v5z.qSAdQB0ruLVwurkAvAHEEuk61021Xzi';
+const JSONBIN_ACCESS_KEY = '$2a$10$VGH4Okvb3ddZayggiBmpcOvDJo.2ExAJirwaudQZI/TJGkzjn6iBW';
+const BASE_URL         = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
+const ONE_WEEK_MS      = 7 * 24 * 60 * 60 * 1000;
+
+// شناسه یکتای کاربر — ذخیره در localStorage تا همیشه یکسان باشد
+function getUserId() {
+    let uid = localStorage.getItem('planlife_uid');
+    if (!uid) {
+        uid = 'user_' + Math.random().toString(36).substr(2, 12) + '_' + Date.now();
+        localStorage.setItem('planlife_uid', uid);
+    }
+    return uid;
+}
+
+const USER_ID = getUserId();
+
+// وضعیت نمایش
+function setSyncStatus(msg, loading = false) {
+    const el = document.getElementById('sync-status');
+    el.innerHTML = msg + (loading ? ' <span class="spinner"></span>' : '');
+}
+
+// ========== خواندن از JSONBin ==========
+async function fetchBin() {
+    try {
+        const res = await fetch(BASE_URL + '/latest', {
+            headers: { 'X-Master-Key': JSONBIN_MASTER_KEY }
+        });
+        if (!res.ok) return {};
+        const json = await res.json();
+        return json.record || {};
+    } catch(e) {
+        return {};
+    }
+}
+
+// ========== نوشتن در JSONBin ==========
+async function updateBin(data) {
+    const res = await fetch(BASE_URL, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Master-Key': JSONBIN_MASTER_KEY
+        },
+        body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('خطا در ذخیره‌سازی ابری');
+    return true;
+}
+
+// ========== گرفتن تمرینات کاربر (پاک‌سازی قدیمی‌ها) ==========
+async function getUserHistory() {
+    const bin = await fetchBin();
+    const userKey = 'exercises_' + USER_ID;
+    let entries = bin[userKey] || [];
+
+    // حذف ورودی‌های بیشتر از ۱ هفته
+    const now = Date.now();
+    entries = entries.filter(e => (now - e.timestamp) < ONE_WEEK_MS);
+    return { bin, entries, userKey };
+}
+
+// ========== باز کردن فرم ==========
 function openForm(type) {
     document.getElementById('main-grid').style.display = 'none';
     document.getElementById('history-section').style.display = 'none';
-    
+    document.getElementById('sync-status').style.display = 'none';
+
     if (type === 'morning') {
         document.getElementById('morning-form').style.display = 'block';
     } else {
@@ -485,136 +593,177 @@ function closeForm() {
     document.getElementById('night-form').style.display = 'none';
     document.getElementById('main-grid').style.display = 'grid';
     document.getElementById('history-section').style.display = 'block';
+    document.getElementById('sync-status').style.display = 'block';
     loadHistory();
 }
 
-// ذخیره پاسخ‌ها
-function saveAnswers(type) {
+// ========== ذخیره پاسخ‌ها در JSONBin ==========
+async function saveAnswers(type) {
     const prefix = type === 'morning' ? 'm' : 'n';
+    const btnId = type === 'morning' ? 'save-morning-btn' : 'save-night-btn';
+    const btn = document.getElementById(btnId);
+    btn.disabled = true;
+    btn.innerHTML = 'در حال ذخیره... <span class="spinner"></span>';
+
     const data = {
-        type: type,
+        type,
+        userId: USER_ID,
         date: new Date().toLocaleDateString('fa-IR'),
         timestamp: Date.now(),
+        expiresAt: Date.now() + ONE_WEEK_MS,
         q1: document.getElementById(prefix + 'q1').value.trim(),
         q2: document.getElementById(prefix + 'q2').value.trim(),
         q3: document.getElementById(prefix + 'q3').value.trim(),
         q4: document.getElementById(prefix + 'q4').value.trim(),
-        q5: document.getElementById(prefix + 'q5').value.trim(),
-        q6: document.getElementById(prefix + 'q6').value.trim(),
-        q7: document.getElementById(prefix + 'q7').value.trim(),
+        q5: document.getElementById(prefix + 'q5') ? document.getElementById(prefix + 'q5').value.trim() : '',
+        q6: document.getElementById(prefix + 'q6') ? document.getElementById(prefix + 'q6').value.trim() : '',
+        q7: document.getElementById(prefix + 'q7') ? document.getElementById(prefix + 'q7').value.trim() : '',
         q8: document.getElementById(prefix + 'q8').value.trim(),
     };
 
     if (type === 'night') {
         data.q4note = document.getElementById('nq4note').value.trim();
-        data.q3 = document.getElementById('nq3').value.trim();
-        data.q7 = document.getElementById('nq7').value.trim();
-        data.q8 = document.getElementById('nq8').value.trim();
         data.q9 = document.getElementById('nq9').value.trim();
         data.q10 = document.getElementById('nq10').value.trim();
     }
 
-    let history = JSON.parse(localStorage.getItem('exercisesHistory')) || [];
-    history.unshift(data);
-    localStorage.setItem('exercisesHistory', JSON.stringify(history));
+    try {
+        const { bin, entries, userKey } = await getUserHistory();
+        entries.unshift(data);
+        bin[userKey] = entries;
+        await updateBin(bin);
 
-    alert(`✅ تمرین ${type === 'morning' ? 'صبح' : 'شب'} با موفقیت ذخیره شد!`);
+        btn.disabled = false;
+        btn.innerHTML = type === 'morning' ? 'ذخیره تمرین صبح ☁️' : 'ذخیره تمرین شب ☁️';
+
+        // نشان دادن مودال اطلاعیه
+        showCloudModal();
+
+    } catch(e) {
+        btn.disabled = false;
+        btn.innerHTML = type === 'morning' ? 'ذخیره تمرین صبح ☁️' : 'ذخیره تمرین شب ☁️';
+        alert('❌ خطا در اتصال به سرور: ' + e.message);
+    }
+}
+
+// ========== مودال ابری ==========
+function showCloudModal() {
+    document.getElementById('cloud-modal').classList.add('active');
+}
+function closeCloudModal() {
+    document.getElementById('cloud-modal').classList.remove('active');
     closeForm();
 }
 
-// حذف یک ورودی
-function deleteEntry(timestamp) {
+// ========== حذف یک ورودی ==========
+async function deleteEntry(timestamp) {
     if (!confirm('آیا مطمئن هستید که می‌خواهید این تمرین را حذف کنید؟')) return;
-    
-    let history = JSON.parse(localStorage.getItem('exercisesHistory')) || [];
-    history = history.filter(item => item.timestamp !== timestamp);
-    localStorage.setItem('exercisesHistory', JSON.stringify(history));
-    
-    loadHistory();
-    alert('✅ تمرین حذف شد.');
+    setSyncStatus('در حال حذف...', true);
+
+    try {
+        const { bin, entries, userKey } = await getUserHistory();
+        const newEntries = entries.filter(e => e.timestamp !== timestamp);
+        bin[userKey] = newEntries;
+        await updateBin(bin);
+        setSyncStatus('✅ تمرین حذف شد.');
+        loadHistory();
+    } catch(e) {
+        setSyncStatus('❌ خطا در حذف: ' + e.message);
+    }
 }
 
-// بارگذاری تاریخچه
-function loadHistory(filter = 'all') {
+// ========== بارگذاری تاریخچه ==========
+let currentFilter = 'all';
+
+async function loadHistory(filter = currentFilter) {
+    currentFilter = filter;
     const list = document.getElementById('history-list');
-    let history = JSON.parse(localStorage.getItem('exercisesHistory')) || [];
+    list.innerHTML = '<p style="text-align:center;opacity:0.6;padding:20px;">در حال بارگذاری... <span class="spinner"></span></p>';
+    setSyncStatus('در حال دریافت از سرور...', true);
 
-    if (filter !== 'all') {
-        history = history.filter(item => item.type === filter);
+    try {
+        const { entries } = await getUserHistory();
+        let filtered = filter === 'all' ? entries : entries.filter(e => e.type === filter);
+        setSyncStatus('✅ اطلاعات از سرور دریافت شد');
+
+        if (filtered.length === 0) {
+            list.innerHTML = '<p style="text-align:center;opacity:0.7;padding:20px;">هنوز تمرینی ثبت نشده است.</p>';
+            return;
+        }
+
+        const now = Date.now();
+        let html = '';
+        filtered.forEach(entry => {
+            const isMorning = entry.type === 'morning';
+            const remaining = entry.expiresAt ? Math.ceil((entry.expiresAt - now) / (1000*60*60*24)) : '?';
+            const expBadge = `<span class="expiry-badge">⏳ ${remaining > 0 ? remaining + ' روز باقی‌مانده' : 'منقضی شده'}</span>`;
+            html += `
+                <div class="history-entry">
+                    <button class="delete-btn" onclick="deleteEntry(${entry.timestamp})">حذف</button>
+                    <h4>${entry.date} — ${isMorning ? '🌅 صبح' : '🌙 شب'}</h4>
+                    ${expBadge}
+                    <p><strong>۱. حال خوب:</strong> ${entry.q1 || '—'}</p>
+                    <p><strong>۲. اشخاص:</strong> ${entry.q2 || '—'}</p>
+                    ${isMorning ? `
+                    <p><strong>۳. باورها:</strong> ${entry.q3 || '—'}</p>
+                    <p><strong>۴. کار مهم:</strong> ${entry.q4 || '—'}</p>
+                    <p><strong>۵. هدف سال:</strong> ${entry.q5 || '—'}</p>
+                    <p><strong>۶. درخواست از خدا:</strong> ${entry.q6 || '—'}</p>
+                    <p><strong>۷. تقسیم کار:</strong> ${entry.q7 || '—'}</p>
+                    <p><strong>۸. بی‌فکری:</strong> ${entry.q8 || '—'}</p>` : `
+                    <p><strong>۳. درصد باورها:</strong> ${entry.q3 || '—'}%</p>
+                    <p><strong>۴. کار مهم:</strong> ${entry.q4 || '—'} ${entry.q4note ? '— ' + entry.q4note : ''}</p>
+                    <p><strong>۵. اقدامات:</strong> ${entry.q5 || '—'}</p>
+                    <p><strong>۶. محقق شده:</strong> ${entry.q6 || '—'}</p>
+                    <p><strong>۷. نمره بی‌فکری:</strong> ${entry.q7 || '—'}/۱۰</p>
+                    <p><strong>۸. اتفاقات جالب:</strong> ${entry.q8 || '—'}</p>
+                    <p><strong>۹. تجسم:</strong> ${entry.q9 || '—'}</p>
+                    <p><strong>۱۰. مدیتیشن:</strong> ${entry.q10 || '—'} دقیقه</p>`}
+                </div>
+            `;
+        });
+        list.innerHTML = html;
+
+    } catch(e) {
+        list.innerHTML = '<p style="text-align:center;color:#ff6060;padding:20px;">❌ خطا در اتصال به سرور</p>';
+        setSyncStatus('❌ خطا در اتصال');
     }
-
-    if (history.length === 0) {
-        list.innerHTML = `<p style="text-align:center; opacity:0.7; padding:20px;">هنوز تمرینی ثبت نشده است.</p>`;
-        return;
-    }
-
-    let html = '';
-    history.forEach(entry => {
-        const isMorning = entry.type === 'morning';
-        html += `
-            <div class="history-entry">
-                <button class="delete-btn" onclick="deleteEntry(${entry.timestamp})">حذف</button>
-                <h4>${entry.date} — ${isMorning ? '🌅 صبح' : '🌙 شب'}</h4>
-                <p><strong>۱. حال خوب:</strong> ${entry.q1 || '—'}</p>
-                <p><strong>۲. اشخاص:</strong> ${entry.q2 || '—'}</p>
-                ${isMorning ? `
-                <p><strong>۳. باورها:</strong> ${entry.q3 || '—'}</p>
-                <p><strong>۴. کار مهم:</strong> ${entry.q4 || '—'}</p>
-                <p><strong>۵. هدف سال:</strong> ${entry.q5 || '—'}</p>
-                <p><strong>۶. درخواست از خدا:</strong> ${entry.q6 || '—'}</p>
-                <p><strong>۷. تقسیم کار:</strong> ${entry.q7 || '—'}</p>
-                <p><strong>۸. بی‌فکری:</strong> ${entry.q8 || '—'}</p>` : `
-                <p><strong>۳. درصد باورها:</strong> ${entry.q3 || '—'}%</p>
-                <p><strong>۴. کار مهم:</strong> ${entry.q4 || '—'}</p>
-                <p><strong>۵. اقدامات:</strong> ${entry.q5 || '—'}</p>
-                <p><strong>۶. محقق شده:</strong> ${entry.q6 || '—'}</p>
-                <p><strong>۷. نمره بی‌فکری:</strong> ${entry.q7 || '—'}/۱۰</p>
-                <p><strong>۸. اتفاقات جالب:</strong> ${entry.q8 || '—'}</p>
-                <p><strong>۹. تجسم:</strong> ${entry.q9 || '—'}</p>
-                <p><strong>۱۰. مدیتیشن:</strong> ${entry.q10 || '—'} دقیقه</p>`}
-            </div>
-        `;
-    });
-    list.innerHTML = html;
 }
 
-function showHistory(filter) {
-    loadHistory(filter);
-}
+function showHistory(filter) { loadHistory(filter); }
 
-// دانلود همه به صورت متن
-function downloadAllHistory() {
-    let history = JSON.parse(localStorage.getItem('exercisesHistory')) || [];
-    if (history.length === 0) {
-        alert("هنوز هیچ تمرینی ذخیره نشده!");
-        return;
-    }
+// ========== دانلود ==========
+async function downloadAllHistory() {
+    setSyncStatus('در حال دریافت...', true);
+    const { entries } = await getUserHistory();
+    setSyncStatus('');
 
-    let text = "📖 تاریخچه کامل تمرینات مجازی PlanLife\n\n";
-    
-    history.forEach((entry) => {
+    if (entries.length === 0) { alert('هنوز هیچ تمرینی ذخیره نشده!'); return; }
+
+    let text = '📖 تاریخچه کامل تمرینات مجازی PlanLife\n\n';
+    entries.forEach(entry => {
         const type = entry.type === 'morning' ? '🌅 تمرین صبح' : '🌙 تمرین شب';
         text += `=== ${entry.date} — ${type} ===\n\n`;
-        text += `۱. حال خوب: ${entry.q1 || '—'}\n`;
-        text += `۲. اشخاص: ${entry.q2 || '—'}\n`;
+        text += `۱. حال خوب: ${entry.q1||'—'}\n`;
+        text += `۲. اشخاص: ${entry.q2||'—'}\n`;
         if (entry.type === 'morning') {
-            text += `۳. باورها: ${entry.q3 || '—'}\n`;
-            text += `۴. کار مهم: ${entry.q4 || '—'}\n`;
-            text += `۵. هدف سال: ${entry.q5 || '—'}\n`;
-            text += `۶. درخواست از خدا: ${entry.q6 || '—'}\n`;
-            text += `۷. تقسیم کار: ${entry.q7 || '—'}\n`;
-            text += `۸. بی‌فکری: ${entry.q8 || '—'}\n`;
+            text += `۳. باورها: ${entry.q3||'—'}\n`;
+            text += `۴. کار مهم: ${entry.q4||'—'}\n`;
+            text += `۵. هدف سال: ${entry.q5||'—'}\n`;
+            text += `۶. درخواست از خدا: ${entry.q6||'—'}\n`;
+            text += `۷. تقسیم کار: ${entry.q7||'—'}\n`;
+            text += `۸. بی‌فکری: ${entry.q8||'—'}\n`;
         } else {
-            text += `۳. درصد باورها: ${entry.q3 || '—'}%\n`;
-            text += `۴. کار مهم: ${entry.q4 || '—'}\n`;
-            text += `۵. اقدامات: ${entry.q5 || '—'}\n`;
-            text += `۶. محقق شده: ${entry.q6 || '—'}\n`;
-            text += `۷. نمره بی‌فکری: ${entry.q7 || '—'}/۱۰\n`;
-            text += `۸. اتفاقات جالب: ${entry.q8 || '—'}\n`;
-            text += `۹. تجسم: ${entry.q9 || '—'}\n`;
-            text += `۱۰. مدیتیشن: ${entry.q10 || '—'} دقیقه\n`;
+            text += `۳. درصد باورها: ${entry.q3||'—'}%\n`;
+            text += `۴. کار مهم: ${entry.q4||'—'}\n`;
+            text += `۵. اقدامات: ${entry.q5||'—'}\n`;
+            text += `۶. محقق شده: ${entry.q6||'—'}\n`;
+            text += `۷. نمره بی‌فکری: ${entry.q7||'—'}/۱۰\n`;
+            text += `۸. اتفاقات جالب: ${entry.q8||'—'}\n`;
+            text += `۹. تجسم: ${entry.q9||'—'}\n`;
+            text += `۱۰. مدیتیشن: ${entry.q10||'—'} دقیقه\n`;
         }
-        text += "\n────────────────────────────\n\n";
+        text += '\n────────────────────────────\n\n';
     });
 
     const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
@@ -626,41 +775,20 @@ function downloadAllHistory() {
     URL.revokeObjectURL(url);
 }
 
-// توابع منو
+// ========== منو ==========
 function toggleMenu() {
     const menu = document.getElementById('side-menu');
     const overlay = document.getElementById('menu-overlay');
-    const main = document.querySelector('.main-center');
-    
-    if (menu.classList.contains('open')) {
-        closeMenu();
-    } else {
-        menu.classList.add('open');
-        overlay.classList.add('active');
-        main.classList.add('blurred');
-    }
+    menu.classList.contains('open') ? closeMenu() : (menu.classList.add('open'), overlay.classList.add('active'));
 }
-
 function closeMenu() {
-    const menu = document.getElementById('side-menu');
-    const overlay = document.getElementById('menu-overlay');
-    const main = document.querySelector('.main-center');
-    
-    menu.classList.remove('open');
-    overlay.classList.remove('active');
-    main.classList.remove('blurred');
+    document.getElementById('side-menu').classList.remove('open');
+    document.getElementById('menu-overlay').classList.remove('active');
 }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
 
-document.addEventListener('keydown', function(e) {
-    if (e.key === "Escape") {
-        closeMenu();
-    }
-});
-
-// بارگذاری اولیه
-window.onload = () => {
-    loadHistory('all');
-};
+// ========== اجرای اولیه ==========
+window.onload = () => { loadHistory('all'); };
 </script>
 </body>
 </html>
