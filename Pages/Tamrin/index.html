@@ -263,7 +263,81 @@
     .menu-item:hover { background: rgba(212,175,55,0.11); border-color: #d4af37; transform: translateX(-8px); box-shadow: 0 6px 20px rgba(212,175,55,0.22); }
     .menu-item .text { flex: 1; line-height: 1.35; }
 
-    /* ===== مودال اطلاعیه ذخیره ابری ===== */
+    /* ===== کارت اتفاقات جالب ===== */
+    .events-card {
+        background: linear-gradient(135deg, rgba(34,197,94,0.07), rgba(255,255,255,0.04));
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(34,197,94,0.4);
+        border-radius: 28px;
+        padding: 32px 24px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25,0.1,0.25,1);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 25px rgba(34,197,94,0.15);
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 20px;
+        width: 100%; max-width: 720px;
+        margin-top: 20px;
+        min-height: 180px;
+    }
+    .events-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 35px rgba(34,197,94,0.3);
+    }
+    .events-card h2 {
+        font-size: 22px; font-weight: 900;
+        color: #4ade80;
+        text-shadow: 0 0 15px rgba(74,222,128,0.5);
+    }
+
+    /* فرم اتفاقات جالب */
+    #events-form {
+        display: none;
+        width: 100%; max-width: 720px;
+        background: rgba(255,255,255,0.09);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(34,197,94,0.4);
+        border-radius: 28px;
+        padding: 30px; margin-top: 20px;
+    }
+    #events-form h2 {
+        color: #4ade80;
+        text-align: center; margin-bottom: 20px;
+        font-size: 24px; font-weight: 900;
+        text-shadow: 0 0 20px rgba(74,222,128,0.4);
+    }
+    .events-question-label {
+        font-size: 18px; font-weight: 700;
+        color: #4ade80; display: block;
+        margin-bottom: 14px; line-height: 1.7;
+    }
+    #events-text {
+        width: 100%; min-height: 180px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(34,197,94,0.4);
+        border-radius: 16px; padding: 16px 20px;
+        color: white; font-size: 16px;
+        resize: vertical; font-family: inherit;
+    }
+    .events-save-btn {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        color: white; border: none;
+        padding: 14px 36px; font-size: 17px;
+        font-weight: 900; border-radius: 50px;
+        cursor: pointer; transition: all 0.3s;
+        margin: 8px; font-family: inherit;
+        box-shadow: 0 4px 20px rgba(34,197,94,0.35);
+    }
+    .events-save-btn:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(34,197,94,0.5); }
+    .events-save-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* تاریخچه فیلتر */
+    .tab-btn-events {
+        background: rgba(34,197,94,0.2) !important;
+        border: 1px solid rgba(34,197,94,0.5) !important;
+        color: #4ade80 !important;
+    }
     .modal-overlay {
         position: fixed; inset: 0;
         background: rgba(0,0,0,0.7);
@@ -342,9 +416,33 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .sync-status {
-        text-align: center; padding: 10px;
-        font-size: 14px; color: rgba(212,175,55,0.8);
-        min-height: 36px;
+        text-align: center; padding: 12px 20px;
+        font-size: 15px; color: rgba(212,175,55,0.9);
+        min-height: 44px;
+        font-family: 'Vazirmatn', sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .sync-tick {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 26px; height: 26px; min-width: 26px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        box-shadow: 0 0 12px rgba(34,197,94,0.5), 0 2px 8px rgba(0,0,0,0.3);
+        font-size: 13px;
+        color: white;
+        font-weight: 900;
+        animation: tick-pop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes tick-pop { 0% { transform: scale(0); opacity:0; } 100% { transform: scale(1); opacity:1; } }
+    .sync-error-dot {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 26px; height: 26px; min-width: 26px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ef4444, #b91c1c);
+        box-shadow: 0 0 12px rgba(239,68,68,0.5);
+        font-size: 13px; color: white; font-weight: 900;
     }
 
     .expiry-badge {
@@ -471,6 +569,24 @@
         </div>
     </div>
 
+    <!-- کارت اتفاقات جالب -->
+    <div class="events-card" id="events-card" onclick="openEventsForm()">
+        <div style="font-size:52px;">✨</div>
+        <h2>اتفاقات جالب امروزم</h2>
+        <p style="color:rgba(255,255,255,0.6);font-size:15px;">لحظه‌های خوبی که امروز تجربه کردی</p>
+    </div>
+
+    <!-- فرم اتفاقات جالب -->
+    <div id="events-form">
+        <h2>✨ اتفاقات جالب امروزم</h2>
+        <label class="events-question-label">امروز چه اتفاقات خوبی تجربه کردی که حس خوبی بهت داد؟</label>
+        <textarea id="events-text" placeholder="هر اتفاق خوبی که امروز داشتی رو اینجا بنویس... هرچقدر هم کوچیک باشه مهمه 💚"></textarea>
+        <div style="text-align:center; margin-top:24px;">
+            <button class="events-save-btn" id="save-events-btn" onclick="saveEvents()">ذخیره اتفاقات ☁️</button>
+            <button class="btn" onclick="closeEventsForm()" style="background:rgba(255,255,255,0.2);">بازگشت</button>
+        </div>
+    </div>
+
     <!-- وضعیت همگام‌سازی -->
     <div class="sync-status" id="sync-status"></div>
 
@@ -480,13 +596,14 @@
             <button class="btn" onclick="showHistory('all')" style="padding:10px 20px;font-size:15px;">همه</button>
             <button class="btn" onclick="showHistory('morning')" style="padding:10px 20px;font-size:15px;">صبح</button>
             <button class="btn" onclick="showHistory('night')" style="padding:10px 20px;font-size:15px;">شب</button>
+            <button class="btn tab-btn-events" onclick="showHistory('events')" style="padding:10px 20px;font-size:15px;">✨ اتفاقات</button>
         </div>
         <h3>تاریخچه تمرینات</h3>
         <div id="history-list"><p style="text-align:center;opacity:0.6;padding:20px;">در حال بارگذاری... <span class="spinner"></span></p></div>
         
-        <div style="text-align:center; margin-top:25px;">
-            <button class="btn" onclick="downloadAllHistory()">دانلود همه به صورت متن</button>
-            <button class="btn" onclick="window.print()" style="background:rgba(255,255,255,0.2);">چاپ / ذخیره PDF</button>
+        <div style="text-align:center; margin-top:25px; display:flex; flex-direction:column; gap:10px; align-items:center;">
+            <button class="btn" onclick="window.print()" style="width:220px;">📄 دانلود PDF</button>
+            <button class="btn" onclick="downloadAllHistory()" style="background:rgba(255,255,255,0.2); width:220px;">💾 دانلود به صورت متن</button>
         </div>
     </div>
 </div>
@@ -530,9 +647,12 @@ function getUserId() {
 const USER_ID = getUserId();
 
 // وضعیت نمایش
-function setSyncStatus(msg, loading = false) {
+function setSyncStatus(msg, loading = false, success = false, error = false) {
     const el = document.getElementById('sync-status');
-    el.innerHTML = msg + (loading ? ' <span class="spinner"></span>' : '');
+    let icon = '';
+    if (success) icon = '<span class="sync-tick">✓</span>';
+    else if (error) icon = '<span class="sync-error-dot">✕</span>';
+    el.innerHTML = icon + (msg ? '<span>' + msg + '</span>' : '') + (loading ? '<span class="spinner"></span>' : '');
 }
 
 // ========== خواندن از JSONBin ==========
@@ -578,6 +698,7 @@ async function getUserHistory() {
 // ========== باز کردن فرم ==========
 function openForm(type) {
     document.getElementById('main-grid').style.display = 'none';
+    document.getElementById('events-card').style.display = 'none';
     document.getElementById('history-section').style.display = 'none';
     document.getElementById('sync-status').style.display = 'none';
 
@@ -592,9 +713,59 @@ function closeForm() {
     document.getElementById('morning-form').style.display = 'none';
     document.getElementById('night-form').style.display = 'none';
     document.getElementById('main-grid').style.display = 'grid';
+    document.getElementById('events-card').style.display = 'flex';
     document.getElementById('history-section').style.display = 'block';
-    document.getElementById('sync-status').style.display = 'block';
+    document.getElementById('sync-status').style.display = 'flex';
     loadHistory();
+}
+
+// ========== فرم اتفاقات جالب ==========
+function openEventsForm() {
+    document.getElementById('main-grid').style.display = 'none';
+    document.getElementById('events-card').style.display = 'none';
+    document.getElementById('history-section').style.display = 'none';
+    document.getElementById('sync-status').style.display = 'none';
+    document.getElementById('events-form').style.display = 'block';
+}
+
+function closeEventsForm() {
+    document.getElementById('events-form').style.display = 'none';
+    document.getElementById('main-grid').style.display = 'grid';
+    document.getElementById('events-card').style.display = 'flex';
+    document.getElementById('history-section').style.display = 'block';
+    document.getElementById('sync-status').style.display = 'flex';
+    loadHistory();
+}
+
+async function saveEvents() {
+    const btn = document.getElementById('save-events-btn');
+    const text = document.getElementById('events-text').value.trim();
+    if (!text) { alert('لطفاً اتفاقات خود را بنویسید'); return; }
+    btn.disabled = true;
+    btn.innerHTML = 'در حال ذخیره... <span class="spinner"></span>';
+
+    const data = {
+        type: 'events',
+        userId: USER_ID,
+        date: new Date().toLocaleDateString('fa-IR'),
+        timestamp: Date.now(),
+        expiresAt: Date.now() + ONE_WEEK_MS,
+        text: text
+    };
+
+    try {
+        const { bin, entries, userKey } = await getUserHistory();
+        entries.unshift(data);
+        bin[userKey] = entries;
+        await updateBin(bin);
+        btn.disabled = false;
+        btn.innerHTML = 'ذخیره اتفاقات ☁️';
+        showCloudModal();
+    } catch(e) {
+        btn.disabled = false;
+        btn.innerHTML = 'ذخیره اتفاقات ☁️';
+        alert('❌ خطا در اتصال به سرور: ' + e.message);
+    }
 }
 
 // ========== ذخیره پاسخ‌ها در JSONBin ==========
@@ -652,7 +823,15 @@ function showCloudModal() {
 }
 function closeCloudModal() {
     document.getElementById('cloud-modal').classList.remove('active');
-    closeForm();
+    // بستن هر فرم باز
+    document.getElementById('morning-form').style.display = 'none';
+    document.getElementById('night-form').style.display = 'none';
+    document.getElementById('events-form').style.display = 'none';
+    document.getElementById('main-grid').style.display = 'grid';
+    document.getElementById('events-card').style.display = 'flex';
+    document.getElementById('history-section').style.display = 'block';
+    document.getElementById('sync-status').style.display = 'flex';
+    loadHistory();
 }
 
 // ========== حذف یک ورودی ==========
@@ -665,10 +844,10 @@ async function deleteEntry(timestamp) {
         const newEntries = entries.filter(e => e.timestamp !== timestamp);
         bin[userKey] = newEntries;
         await updateBin(bin);
-        setSyncStatus('✅ تمرین حذف شد.');
+        setSyncStatus('تمرین با موفقیت حذف شد', false, true);
         loadHistory();
     } catch(e) {
-        setSyncStatus('❌ خطا در حذف: ' + e.message);
+        setSyncStatus('خطا در حذف: ' + e.message, false, false, true);
     }
 }
 
@@ -684,7 +863,7 @@ async function loadHistory(filter = currentFilter) {
     try {
         const { entries } = await getUserHistory();
         let filtered = filter === 'all' ? entries : entries.filter(e => e.type === filter);
-        setSyncStatus('✅ اطلاعات از سرور دریافت شد');
+        setSyncStatus('اطلاعات از سرور دریافت شد', false, true);
 
         if (filtered.length === 0) {
             list.innerHTML = '<p style="text-align:center;opacity:0.7;padding:20px;">هنوز تمرینی ثبت نشده است.</p>';
@@ -694,9 +873,21 @@ async function loadHistory(filter = currentFilter) {
         const now = Date.now();
         let html = '';
         filtered.forEach(entry => {
-            const isMorning = entry.type === 'morning';
             const remaining = entry.expiresAt ? Math.ceil((entry.expiresAt - now) / (1000*60*60*24)) : '?';
             const expBadge = `<span class="expiry-badge">⏳ ${remaining > 0 ? remaining + ' روز باقی‌مانده' : 'منقضی شده'}</span>`;
+
+            if (entry.type === 'events') {
+                html += `
+                    <div class="history-entry" style="border-color:rgba(34,197,94,0.35);">
+                        <button class="delete-btn" onclick="deleteEntry(${entry.timestamp})">حذف</button>
+                        <h4>${entry.date} — ✨ اتفاقات جالب</h4>
+                        ${expBadge}
+                        <p style="margin-top:8px;line-height:1.9;">${entry.text || '—'}</p>
+                    </div>`;
+                return;
+            }
+
+            const isMorning = entry.type === 'morning';
             html += `
                 <div class="history-entry">
                     <button class="delete-btn" onclick="deleteEntry(${entry.timestamp})">حذف</button>
@@ -726,7 +917,7 @@ async function loadHistory(filter = currentFilter) {
 
     } catch(e) {
         list.innerHTML = '<p style="text-align:center;color:#ff6060;padding:20px;">❌ خطا در اتصال به سرور</p>';
-        setSyncStatus('❌ خطا در اتصال');
+        setSyncStatus('خطا در اتصال به سرور', false, false, true);
     }
 }
 
@@ -742,6 +933,12 @@ async function downloadAllHistory() {
 
     let text = '📖 تاریخچه کامل تمرینات مجازی PlanLife\n\n';
     entries.forEach(entry => {
+        if (entry.type === 'events') {
+            text += `=== ${entry.date} — ✨ اتفاقات جالب ===\n\n`;
+            text += `${entry.text || '—'}\n`;
+            text += '\n────────────────────────────\n\n';
+            return;
+        }
         const type = entry.type === 'morning' ? '🌅 تمرین صبح' : '🌙 تمرین شب';
         text += `=== ${entry.date} — ${type} ===\n\n`;
         text += `۱. حال خوب: ${entry.q1||'—'}\n`;
