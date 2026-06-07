@@ -10,12 +10,20 @@
     body { font-family: 'Vazirmatn', sans-serif; background: #030303; color: white; }
 
     .now-playing {
-        position: fixed; inset: 0; 
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 100%;
+        height: 100dvh;
         background: rgba(10, 10, 25, 0.96);
         backdrop-filter: blur(30px);
         z-index: 300; display: none; flex-direction: column; 
-        align-items: center; padding: 20px 20px 40px; overflow-y: auto;
+        align-items: center;
+        padding: 20px 20px 40px;
+        overflow-y: auto;
+        overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        will-change: transform;
     }
     .now-playing.active { display: flex; }
 
@@ -87,21 +95,145 @@
         padding-right: 4px;
         margin-bottom: 14px;
     }
-    .comments-list::-webkit-scrollbar {
-        width: 5px;
-    }
+    .comments-list::-webkit-scrollbar { width: 5px; }
     .comments-list::-webkit-scrollbar-thumb {
         background: rgba(255,255,255,0.25);
         border-radius: 10px;
+    }
+
+    /* ===== مودال لاگین ===== */
+    .login-overlay {
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.7);
+        backdrop-filter: blur(12px);
+        z-index: 999;
+        display: none; align-items: center; justify-content: center;
+    }
+    .login-overlay.active { display: flex; }
+
+    .login-box {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 28px;
+        padding: 36px 30px;
+        width: 90%; max-width: 340px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        position: relative;
+    }
+    .login-box h3 {
+        font-size: 22px; font-weight: 800;
+        text-align: center; margin-bottom: 6px;
+    }
+    .login-box p {
+        font-size: 13px; opacity: 0.6;
+        text-align: center; margin-bottom: 24px;
+    }
+    .login-field {
+        width: 100%;
+        background: rgba(0,0,0,0.4);
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 14px;
+        padding: 13px 16px;
+        color: white;
+        font-size: 15px;
+        outline: none;
+        font-family: inherit;
+        margin-bottom: 12px;
+        transition: border 0.2s;
+    }
+    .login-field:focus {
+        border-color: #ff9500;
+    }
+    .login-btn {
+        width: 100%;
+        background: #ff9500;
+        color: #1a0033;
+        border: none;
+        border-radius: 999px;
+        padding: 14px 0;
+        font-weight: 800;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 4px;
+        font-family: inherit;
+        transition: opacity 0.2s;
+    }
+    .login-btn:active { opacity: 0.8; }
+    .login-error {
+        color: #ff4444;
+        font-size: 13px;
+        text-align: center;
+        margin-top: 10px;
+        display: none;
+    }
+    .login-close {
+        position: absolute; top: 14px; left: 16px;
+        font-size: 22px; cursor: pointer; opacity: 0.6;
+        background: none; border: none; color: white;
+    }
+
+    /* ===== دکمه ادمین در هدر ===== */
+    .admin-badge {
+        display: flex; align-items: center; gap: 6px;
+        background: rgba(255,149,0,0.2);
+        border: 1px solid rgba(255,149,0,0.5);
+        border-radius: 999px;
+        padding: 6px 14px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #ff9500;
+        cursor: pointer;
+    }
+
+    .delete-btn {
+        background: rgba(255,50,50,0.2);
+        border: 1px solid rgba(255,50,50,0.4);
+        color: #ff6464;
+        border-radius: 8px;
+        padding: 4px 10px;
+        font-size: 12px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.2s;
+    }
+    .delete-btn:hover { background: rgba(255,50,50,0.4); }
+
+    .loading-comments {
+        text-align: center;
+        padding: 20px;
+        opacity: 0.6;
+        font-size: 14px;
     }
 </style>
 </head>
 <body>
 
-<header style="position:fixed;top:0;left:0;right:0;height:65px;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);display:flex;align-items:center;padding:0 20px;z-index:100;">
+<!-- ===== هدر ===== -->
+<header style="position:fixed;top:0;left:0;right:0;height:65px;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:100;">
     <div onclick="goToHome()" style="font-size:28px;cursor:pointer;">←</div>
+    <div id="headerAuthArea">
+        <button onclick="openLogin()" class="admin-badge">
+            🔐 ورود
+        </button>
+    </div>
 </header>
 
+<!-- ===== مودال لاگین ===== -->
+<div id="loginOverlay" class="login-overlay">
+    <div class="login-box">
+        <button class="login-close" onclick="closeLogin()">✕</button>
+        <h3>🔐 ورود ادمین</h3>
+        <p>اطلاعات مدیریت را وارد کنید</p>
+        <input id="loginUsername" class="login-field" type="text" placeholder="نام کاربری" autocomplete="off">
+        <input id="loginPassword" class="login-field" type="password" placeholder="رمز عبور">
+        <button class="login-btn" onclick="doLogin()">ورود</button>
+        <div id="loginError" class="login-error">نام کاربری یا رمز عبور اشتباه است</div>
+    </div>
+</div>
+
+<!-- ===== محتوای اصلی ===== -->
 <div style="margin-top:80px;text-align:center;">
     <h2 style="font-size:32px;font-weight:900;">پادکست‌های PlanLife</h2>
 </div>
@@ -114,7 +246,7 @@
     <div id="podcastGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:18px;"></div>
 </div>
 
-<!-- ==================== پلیر بزرگ‌تر ==================== -->
+<!-- ===== پلیر بزرگ ===== -->
 <div id="nowPlayingScreen" class="now-playing">
     
     <div class="player-topbar">
@@ -142,35 +274,25 @@
         </div>
     </div>
 
-    <!-- کنترل‌ها -->
     <div class="main-controls">
-        <!-- عقب -->
         <div class="control-btn" onclick="prevTrack()">
             <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z"/></svg>
         </div>
-        
-        <!-- ۱۰ ثانیه عقب -->
         <div class="control-btn" onclick="seek(-10)">
             <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
         </div>
-        
-        <!-- پخش / توقف -->
         <div onclick="togglePlay()" class="play-main" id="playBtn">
             <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </div>
-        
-        <!-- ۱۰ ثانیه جلو -->
         <div class="control-btn" onclick="seek(10)">
             <svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg>
         </div>
-        
-        <!-- جلو -->
         <div class="control-btn" onclick="nextTrack()">
             <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
         </div>
     </div>
 
-    <!-- ==================== بخش نظرات ==================== -->
+    <!-- ===== بخش نظرات ===== -->
     <div class="comments-section">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; padding:0 4px;">
             <span style="font-size:19px; font-weight:700;">💬 نظرات</span>
@@ -179,15 +301,17 @@
         
         <div id="commentsList" class="comments-list"></div>
         
-        <div style="background:rgba(255,255,255,0.09); border-radius:18px; padding:14px 14px 16px;">
+        <div id="commentForm" style="background:rgba(255,255,255,0.09); border-radius:18px; padding:16px 16px 18px;">
             <input id="commentName" type="text" placeholder="نام شما (اختیاری)" 
-                   style="width:100%; background:rgba(0,0,0,0.35); border:none; border-radius:12px; padding:11px 15px; color:white; font-size:14.5px; margin-bottom:9px; outline:none; font-family:inherit;">
+                   onfocus="scrollToForm()"
+                   style="width:100%; background:rgba(0,0,0,0.4); border:1.5px solid rgba(255,255,255,0.1); border-radius:14px; padding:13px 16px; color:white; font-size:16px; margin-bottom:10px; outline:none; font-family:inherit; -webkit-appearance:none; appearance:none;">
             
-            <textarea id="commentText" placeholder="نظر خود را اینجا بنویسید..." rows="2"
-                      style="width:100%; background:rgba(0,0,0,0.35); border:none; border-radius:12px; padding:12px 15px; color:white; font-size:14.5px; resize:vertical; min-height:58px; outline:none; font-family:inherit; line-height:1.45;"></textarea>
+            <textarea id="commentText" placeholder="نظر خود را اینجا بنویسید..." rows="3"
+                      onfocus="scrollToForm()"
+                      style="width:100%; background:rgba(0,0,0,0.4); border:1.5px solid rgba(255,255,255,0.1); border-radius:14px; padding:13px 16px; color:white; font-size:16px; resize:none; height:80px; outline:none; font-family:inherit; line-height:1.5; display:block; -webkit-appearance:none; appearance:none;"></textarea>
             
             <button onclick="addComment()" 
-                    style="margin-top:11px; width:100%; background:#ff9500; color:#1a0033; border:none; border-radius:999px; padding:13px 0; font-weight:800; font-size:15.5px; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 15px rgba(255,149,0,0.3);">
+                    style="margin-top:12px; width:100%; background:#ff9500; color:#1a0033; border:none; border-radius:999px; padding:15px 0; font-weight:800; font-size:16px; cursor:pointer; font-family:inherit; box-shadow:0 4px 18px rgba(255,149,0,0.35); -webkit-tap-highlight-color:transparent;">
                 ارسال نظر
             </button>
         </div>
@@ -197,7 +321,7 @@
 </div>
 
 <script>
-// ==================== داده‌ها ====================
+// ===== داده‌های پادکست =====
 const podcastData = [
     {id: 1, title: "باورهای ثروت", episode: "نشانه های ثروت", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779519463/Neshane_-_servat_-_Free_ec5tcj.m4a", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449538/IMG_1059_eqlr5g.jpg"},
     {id: 2, title: "عشق و روابط", episode: "وابسته ی ورود به رابطه", src: "https://res.cloudinary.com/dfthbclzi/video/upload/v1780654795/Vabaste_rabete_dbwigg.mp3", cover: "https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
@@ -223,8 +347,14 @@ const podcastData = [
     {id: 22, title: "رشد کسب و کار", episode: "منابع کمه ( کمبود )", src: "https://res.cloudinary.com/dfthbclzi/video/upload/v1780662292/Kambod_manabe_ccjvg7.mp3", cover: "https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
 ];
 
+// ===== متغیرهای سراسری =====
 let currentTrackIndex = 0;
 let currentPodcastId = null;
+let isAdmin = false;
+let allComments = {}; // { podcastId: [ {id, name, text, time}, ... ] }
+
+const ADMIN_USER = 'Admin';
+const ADMIN_PASS = '12345';
 
 const audio = document.getElementById('mainAudio');
 const progressBar = document.getElementById('progressBar');
@@ -234,6 +364,150 @@ const progressContainer = document.getElementById('progressContainer');
 const statusEl = document.getElementById('playerStatus');
 const playIcon = document.getElementById('playIcon');
 
+// ===== ادمین =====
+function openLogin() {
+    document.getElementById('loginOverlay').classList.add('active');
+    document.getElementById('loginError').style.display = 'none';
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginPassword').value = '';
+    setTimeout(() => document.getElementById('loginUsername').focus(), 100);
+}
+
+function closeLogin() {
+    document.getElementById('loginOverlay').classList.remove('active');
+}
+
+function doLogin() {
+    const u = document.getElementById('loginUsername').value.trim();
+    const p = document.getElementById('loginPassword').value;
+    if (u === ADMIN_USER && p === ADMIN_PASS) {
+        isAdmin = true;
+        closeLogin();
+        updateAdminHeader();
+        if (currentPodcastId) renderComments(currentPodcastId);
+    } else {
+        document.getElementById('loginError').style.display = 'block';
+    }
+}
+
+function doLogout() {
+    isAdmin = false;
+    updateAdminHeader();
+    if (currentPodcastId) renderComments(currentPodcastId);
+}
+
+function updateAdminHeader() {
+    const area = document.getElementById('headerAuthArea');
+    if (isAdmin) {
+        area.innerHTML = `<div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:13px;opacity:0.7;">👑 Admin</span>
+            <button onclick="doLogout()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:999px;color:white;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">خروج</button>
+        </div>`;
+    } else {
+        area.innerHTML = `<button onclick="openLogin()" class="admin-badge">🔐 ورود</button>`;
+    }
+}
+
+// ===== کامنت‌ها (در حافظه مرورگر، عمومی با storage API) =====
+// از window.storage برای ذخیره عمومی استفاده می‌کنیم
+
+async function loadComments(id) {
+    const list = document.getElementById('commentsList');
+    list.innerHTML = `<div class="loading-comments">در حال بارگذاری نظرات...</div>`;
+    document.getElementById('commentCount').textContent = '...';
+
+    try {
+        const result = await window.storage.get(`planlife_comments_${id}`, true);
+        const comments = result ? JSON.parse(result.value) : [];
+        allComments[id] = comments;
+        renderComments(id);
+    } catch (e) {
+        allComments[id] = allComments[id] || [];
+        renderComments(id);
+    }
+}
+
+async function saveComments(id) {
+    try {
+        await window.storage.set(`planlife_comments_${id}`, JSON.stringify(allComments[id] || []), true);
+    } catch(e) {
+        console.error('خطا در ذخیره‌سازی:', e);
+    }
+}
+
+function renderComments(id) {
+    const comments = allComments[id] || [];
+    const list = document.getElementById('commentsList');
+    const countEl = document.getElementById('commentCount');
+    
+    if (!list || !countEl) return;
+    
+    countEl.textContent = comments.length;
+    list.innerHTML = '';
+    
+    if (comments.length === 0) {
+        list.innerHTML = `<p style="opacity:0.6; text-align:center; padding:22px 10px; font-size:14px; line-height:1.6;">هنوز نظری ثبت نشده.<br>اولین نفر باشید و نظرتون رو بنویسید!</p>`;
+        return;
+    }
+    
+    comments.forEach(c => {
+        const div = document.createElement('div');
+        div.style.cssText = 'background:rgba(255,255,255,0.085); border-radius:14px; padding:13px 15px; margin-bottom:9px; border:1px solid rgba(255,255,255,0.06);';
+        div.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:7px;">
+                <strong style="color:#ffd700; font-size:14.5px;">${c.name}</strong>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:11.5px; opacity:0.55; white-space:nowrap;">${c.time}</span>
+                    ${isAdmin ? `<button class="delete-btn" onclick="deleteComment(${id}, ${c.id})">🗑 حذف</button>` : ''}
+                </div>
+            </div>
+            <p style="font-size:14.8px; line-height:1.55; margin:0; color:#f0f0f0;">${c.text}</p>
+        `;
+        list.appendChild(div);
+    });
+}
+
+async function addComment() {
+    if (!currentPodcastId) return;
+    
+    const nameInput = document.getElementById('commentName').value.trim() || 'ناشناس';
+    const text = document.getElementById('commentText').value.trim();
+    
+    if (!text) {
+        alert('لطفاً متن نظر را وارد کنید.');
+        return;
+    }
+    
+    if (!allComments[currentPodcastId]) allComments[currentPodcastId] = [];
+    
+    const now = new Date();
+    const persianDate = now.toLocaleDateString('fa-IR', { year: 'numeric', month: 'short', day: 'numeric' });
+    const persianTime = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+    
+    allComments[currentPodcastId].unshift({
+        id: Date.now(),
+        name: nameInput,
+        text: text,
+        time: `${persianDate} • ${persianTime}`
+    });
+    
+    await saveComments(currentPodcastId);
+    renderComments(currentPodcastId);
+    
+    document.getElementById('commentText').value = '';
+    document.getElementById('commentName').value = '';
+}
+
+async function deleteComment(podcastId, commentId) {
+    if (!isAdmin) return;
+    if (!confirm('این نظر حذف شود؟')) return;
+    
+    allComments[podcastId] = (allComments[podcastId] || []).filter(c => c.id !== commentId);
+    await saveComments(podcastId);
+    renderComments(podcastId);
+}
+
+// ===== پلیر =====
 function formatTime(s) {
     if (!s || isNaN(s)) return "0:00";
     return `${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,'0')}`;
@@ -257,76 +531,6 @@ function updatePlayerStatus(playing) {
     statusEl.textContent = playing ? 'در حال پخش' : 'متوقف شده';
 }
 
-function getCommentsKey(id) {
-    return `planlife_comments_${id}`;
-}
-
-function loadComments(id) {
-    const key = getCommentsKey(id);
-    const saved = localStorage.getItem(key);
-    const comments = saved ? JSON.parse(saved) : [];
-    renderComments(comments);
-}
-
-function renderComments(comments) {
-    const list = document.getElementById('commentsList');
-    const countEl = document.getElementById('commentCount');
-    
-    if (!list || !countEl) return;
-    
-    countEl.textContent = comments.length;
-    list.innerHTML = '';
-    
-    if (comments.length === 0) {
-        list.innerHTML = `<p style="opacity:0.6; text-align:center; padding:22px 10px; font-size:14px; line-height:1.6;">هنوز نظری ثبت نشده.<br>اولین نفر باشید و نظرتون رو بنویسید!</p>`;
-        return;
-    }
-    
-    comments.forEach(c => {
-        const div = document.createElement('div');
-        div.style.cssText = 'background:rgba(255,255,255,0.085); border-radius:14px; padding:13px 15px; margin-bottom:9px; border:1px solid rgba(255,255,255,0.06);';
-        div.innerHTML = `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:7px;">
-                <strong style="color:#ffd700; font-size:14.5px;">${c.name}</strong>
-                <span style="font-size:11.5px; opacity:0.55; white-space:nowrap;">${c.time}</span>
-            </div>
-            <p style="font-size:14.8px; line-height:1.55; margin:0; color:#f0f0f0;">${c.text}</p>
-        `;
-        list.appendChild(div);
-    });
-}
-
-function addComment() {
-    if (!currentPodcastId) return;
-    
-    const nameInput = document.getElementById('commentName').value.trim() || 'ناشناس';
-    const text = document.getElementById('commentText').value.trim();
-    
-    if (!text) {
-        alert('لطفاً متن نظر را وارد کنید.');
-        return;
-    }
-    
-    const key = getCommentsKey(currentPodcastId);
-    let comments = JSON.parse(localStorage.getItem(key) || '[]');
-    
-    const now = new Date();
-    const persianDate = now.toLocaleDateString('fa-IR', { year: 'numeric', month: 'short', day: 'numeric' });
-    const persianTime = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
-    
-    comments.unshift({
-        id: Date.now(),
-        name: nameInput,
-        text: text,
-        time: `${persianDate} • ${persianTime}`
-    });
-    
-    localStorage.setItem(key, JSON.stringify(comments));
-    renderComments(comments);
-    
-    document.getElementById('commentText').value = '';
-}
-
 function playAudio(title, episode, src, cover, id) {
     document.getElementById('npTitle').textContent = title;
     document.getElementById('npSubtitle').textContent = episode;
@@ -340,11 +544,9 @@ function playAudio(title, episode, src, cover, id) {
     audio.play().then(() => {
         updatePlayerStatus(true);
         playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-        loadComments(id);
-    }).catch(() => {
-        updatePlayerStatus(false);
-        loadComments(id);
-    });
+    }).catch(() => updatePlayerStatus(false));
+
+    loadComments(id);
 }
 
 function togglePlay() {
@@ -391,28 +593,54 @@ function goToHome() {
     window.location.href = "https://planlife.ir"; 
 }
 
+// ===== ساخت صفحه =====
 function loadPodcastPage() {
     const cats = ["باورهای ثروت","عشق و روابط","تحول حال و احساس","رشد کسب و کار","اعتماد به نفس","احساس لیاقت"];
     let h = '';
     cats.forEach(c => h += `<div onclick="selectPodcastCat('${c}')" style="min-width:140px;text-align:center;background:rgba(255,255,255,0.11);border-radius:18px;padding:10px;cursor:pointer;flex-shrink:0;"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" style="width:130px;height:130px;border-radius:18px;object-fit:cover;"><p style="margin-top:10px;font-size:14.5px;font-weight:600;">${c}</p></div>`);
     document.getElementById('categorySlides').innerHTML = h;
+    renderGrid(podcastData);
+}
 
+function renderGrid(items) {
     let g = '';
-    podcastData.forEach(item => {
-        g += `<div onclick="playAudio('${item.title}','${item.episode}','${item.src}','${item.cover}',${item.id})" style="background:rgba(255,255,255,0.11);border-radius:22px;padding:12px;text-align:center;cursor:pointer;"><img src="${item.cover}" style="width:100%;aspect-ratio:1/1;border-radius:18px;object-fit:cover;"><div style="font-size:15.5px;font-weight:600;margin:10px 0 6px;">${item.title}<br><small style="opacity:0.75;font-weight:400;">${item.episode}</small></div><div style="width:48px;height:48px;background:#ffd700;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;"><div style="width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:16px solid #1a0033;margin-left:3px;"></div></div></div>`;
+    items.forEach(item => {
+        g += `<div onclick="playAudio('${item.title.replace(/'/g,"\\'")}','${item.episode.replace(/'/g,"\\'")}','${item.src}','${item.cover}',${item.id})" style="background:rgba(255,255,255,0.11);border-radius:22px;padding:12px;text-align:center;cursor:pointer;"><img src="${item.cover}" style="width:100%;aspect-ratio:1/1;border-radius:18px;object-fit:cover;"><div style="font-size:15.5px;font-weight:600;margin:10px 0 6px;">${item.title}<br><small style="opacity:0.75;font-weight:400;">${item.episode}</small></div><div style="width:48px;height:48px;background:#ffd700;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;"><div style="width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:16px solid #1a0033;margin-left:3px;"></div></div></div>`;
     });
     document.getElementById('podcastGrid').innerHTML = g;
 }
 
 function selectPodcastCat(cat) {
     document.getElementById('currentCategoryTitle').textContent = cat;
-    let g = '';
-    const filtered = podcastData.filter(item => item.title === cat);
-    filtered.forEach(item => {
-        g += `<div onclick="playAudio('${item.title}','${item.episode}','${item.src}','${item.cover}',${item.id})" style="background:rgba(255,255,255,0.11);border-radius:22px;padding:12px;text-align:center;cursor:pointer;"><img src="${item.cover}" style="width:100%;aspect-ratio:1/1;border-radius:18px;object-fit:cover;"><div style="font-size:15.5px;font-weight:600;margin:10px 0 6px;">${item.title}<br><small style="opacity:0.75;font-weight:400;">${item.episode}</small></div><div style="width:48px;height:48px;background:#ffd700;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;"><div style="width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:16px solid #1a0033;margin-left:3px;"></div></div></div>`;
-    });
-    document.getElementById('podcastGrid').innerHTML = g;
+    renderGrid(podcastData.filter(item => item.title === cat));
 }
+
+// ===== فیکس لرزش کیبورد موبایل =====
+function scrollToForm() {
+    setTimeout(() => {
+        const form = document.getElementById('commentForm');
+        if (form) {
+            form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, 320);
+}
+
+// جلوگیری از resize لرزش
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+        const screen = document.getElementById('nowPlayingScreen');
+        if (screen && screen.classList.contains('active')) {
+            // ثابت نگه داشتن موقعیت
+        }
+    });
+}
+
+// Enter در لاگین
+document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.getElementById('loginOverlay').classList.contains('active')) {
+        doLogin();
+    }
+});
 
 window.onload = loadPodcastPage;
 </script>
