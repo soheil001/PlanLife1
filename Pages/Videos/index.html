@@ -3,523 +3,684 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#1a0033">
 <title>ویدیوهای ماورایی • PlanLife</title>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
+    :root {
+        --gold: #d4af37;
+        --gold-light: #f0d060;
+        --gold-glow: rgba(212,175,55,0.35);
+        --glass-bg: rgba(255,255,255,0.07);
+        --glass-border: rgba(255,255,255,0.15);
+        --glass-shine: rgba(255,255,255,0.25);
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
     html, body {
-        height: 100%;
+        min-height: 100%;
         font-family: 'Vazirmatn', sans-serif;
         color: white;
-        background: #030303;
+        background: #02000d;
+        overflow-x: hidden;
     }
 
-    .stars { 
-        position: fixed; inset: 0; background: transparent; z-index: 1; pointer-events: none; 
-    }
-    .stars::before, .stars::after {
-        content: ''; position: absolute; inset: 0;
-        background-image: radial-gradient(white 1px, transparent 1px);
-        background-size: 80px 80px; opacity: 0.45; animation: twinkle 10s infinite alternate;
+    /* ===== GALAXY BACKGROUND ===== */
+    .galaxy {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
     }
 
-    .main-center {
-        padding: 30px 20px 50px;
-        max-width: 720px;
+    /* Deep space base */
+    .galaxy::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(ellipse 120% 80% at 60% -10%, rgba(80,20,180,0.6) 0%, transparent 55%),
+            radial-gradient(ellipse 80% 60% at -10% 40%, rgba(140,40,220,0.4) 0%, transparent 50%),
+            radial-gradient(ellipse 60% 50% at 100% 70%, rgba(180,50,120,0.35) 0%, transparent 50%),
+            radial-gradient(ellipse 40% 40% at 50% 100%, rgba(60,10,140,0.5) 0%, transparent 60%),
+            radial-gradient(ellipse 100% 100% at 50% 50%, rgba(5,0,25,0.95) 0%, transparent 100%);
+    }
+
+    /* Milky Way arm */
+    .galaxy-arm {
+        position: absolute;
+        width: 200%;
+        height: 300px;
+        top: 20%;
+        left: -50%;
+        background: radial-gradient(ellipse 100% 100% at 50% 50%,
+            rgba(180,140,255,0.12) 0%,
+            rgba(120,80,220,0.06) 40%,
+            transparent 70%);
+        transform: rotate(-20deg);
+        filter: blur(30px);
+        animation: armPulse 12s ease-in-out infinite alternate;
+    }
+    @keyframes armPulse {
+        0% { opacity: 0.6; transform: rotate(-20deg) scaleY(1); }
+        100% { opacity: 1; transform: rotate(-18deg) scaleY(1.1); }
+    }
+
+    /* Nebula clouds */
+    .nebula {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        animation: nebulaDrift 18s ease-in-out infinite alternate;
+    }
+    .nebula-1 { width: 500px; height: 300px; background: rgba(120,40,200,0.28); top: -80px; left: -100px; animation-delay: 0s; }
+    .nebula-2 { width: 400px; height: 400px; background: rgba(200,60,140,0.2); top: 30%; right: -100px; animation-delay: -6s; }
+    .nebula-3 { width: 350px; height: 250px; background: rgba(40,80,200,0.22); bottom: 10%; left: 10%; animation-delay: -12s; }
+    .nebula-4 { width: 250px; height: 250px; background: rgba(212,175,55,0.12); top: 55%; left: 40%; animation-delay: -4s; }
+    @keyframes nebulaDrift {
+        0% { transform: translate(0,0) scale(1); opacity: 0.7; }
+        100% { transform: translate(15px,-25px) scale(1.06); opacity: 1; }
+    }
+
+    /* Stars canvas */
+    #stars { position: absolute; inset: 0; }
+
+    /* ===== HEADER / LOGO ===== */
+    .header {
+        position: relative;
+        z-index: 2;
+        padding: 28px 24px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logo-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(212,175,55,0.5), rgba(212,175,55,0.15));
+        border: 1px solid rgba(212,175,55,0.5);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 20px rgba(212,175,55,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+        font-size: 20px;
+    }
+
+    .logo-text {
+        font-size: 26px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        background: linear-gradient(135deg, #ffffff 0%, var(--gold-light) 45%, var(--gold) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(0 0 16px rgba(212,175,55,0.5));
+        text-transform: uppercase;
+    }
+
+    /* ===== LAYOUT ===== */
+    .main {
+        position: relative;
+        z-index: 1;
+        padding: 28px 20px 80px;
+        max-width: 760px;
         margin: 0 auto;
     }
 
+    /* ===== PAGE TITLE ===== */
     .page-title {
-        font-size: 34px;
-        font-weight: 900;
+        font-size: 24px;
+        font-weight: 800;
         text-align: center;
-        margin-bottom: 25px;
-        color: #ffd700;
-        text-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+        margin-bottom: 28px;
+        color: rgba(255,255,255,0.75);
+        letter-spacing: -0.3px;
     }
 
-    /* دسته‌بندی‌های افقی */
+    /* ===== CATEGORY SCROLL (slider style) ===== */
+    .cat-wrapper {
+        position: relative;
+        margin-bottom: 28px;
+    }
+
     .category-scroll {
         display: flex;
         gap: 12px;
         overflow-x: auto;
-        padding: 12px 0 25px;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
-    }
-    .category-scroll::-webkit-scrollbar { display: none; }
-
-    .category-chip {
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(212, 175, 55, 0.4);
-        padding: 10px 22px;
-        border-radius: 30px;
-        white-space: nowrap;
-        font-size: 15px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-    .category-chip.active {
-        background: #d4af37;
-        color: #1a0033;
-        border-color: #d4af37;
-    }
-
-    /* لیست مستند ها - ۳ ردیف با اسکرول افقی */
-    .video-list {
-        display: grid;
-        grid-template-rows: repeat(3, auto);
-        grid-auto-flow: column;
-        grid-auto-columns: 240px;
-        gap: 18px 14px;
-        overflow-x: auto;
-        padding: 10px 5px 40px;
+        padding: 6px 4px 10px;
         scrollbar-width: none;
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
     }
-    .video-list::-webkit-scrollbar { display: none; }
+    .category-scroll::-webkit-scrollbar { display: none; }
 
-    .video-card {
+    /* fade edges */
+    .cat-wrapper::before,
+    .cat-wrapper::after {
+        content: '';
+        position: absolute;
+        top: 0; bottom: 10px;
+        width: 40px;
+        z-index: 2;
+        pointer-events: none;
+    }
+    .cat-wrapper::before { left: 0; background: linear-gradient(to right, rgba(2,0,13,0.8), transparent); }
+    .cat-wrapper::after { right: 0; background: linear-gradient(to left, rgba(2,0,13,0.8), transparent); }
+
+    .chip {
         background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(212, 175, 55, 0.35);
+        border: 1px solid rgba(255,255,255,0.18);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        padding: 13px 26px;
+        border-radius: 50px;
+        white-space: nowrap;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: rgba(255,255,255,0.75);
+        position: relative;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+    .chip::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    }
+    .chip.active {
+        background: linear-gradient(135deg, rgba(212,175,55,0.45), rgba(212,175,55,0.2));
+        border-color: rgba(212,175,55,0.75);
+        color: var(--gold-light);
+        box-shadow: 0 0 24px rgba(212,175,55,0.3), inset 0 1px 0 rgba(255,255,255,0.25);
+        transform: scale(1.04);
+    }
+    .chip:hover:not(.active) {
+        background: rgba(255,255,255,0.13);
+        border-color: rgba(255,255,255,0.28);
+        color: white;
+        transform: scale(1.02);
+    }
+
+    /* ===== SECTION LABEL ===== */
+    .section-label {
+        font-size: 13px;
+        font-weight: 700;
+        color: rgba(255,255,255,0.45);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+    }
+    .section-label span { color: var(--gold); }
+
+    /* ===== VIDEO GRID (horizontal, 3 rows) ===== */
+    .video-grid {
+        display: grid;
+        grid-template-rows: repeat(3, auto);
+        grid-auto-flow: column;
+        grid-auto-columns: 220px;
+        gap: 14px 13px;
+        overflow-x: auto;
+        padding: 6px 4px 34px;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .video-grid::-webkit-scrollbar { display: none; }
+
+    /* ===== VIDEO CARD ===== */
+    .vcard {
+        width: 220px;
         border-radius: 18px;
         overflow: hidden;
         position: relative;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         cursor: pointer;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
-        width: 240px;
-        flex-shrink: 0;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.14);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.12);
+        transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
     }
-    .video-card:hover { 
-        transform: translateY(-12px) scale(1.02); 
-        box-shadow: 0 20px 60px rgba(212, 175, 55, 0.25);
+    .vcard::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+        z-index: 10;
+        pointer-events: none;
     }
+    .vcard:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 22px 55px rgba(0,0,0,0.55), 0 0 35px var(--gold-glow), inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+    .vcard:hover .play-glass { opacity: 1; transform: translate(-50%,-50%) scale(1); }
 
-    .video-cover {
+    .vcard-thumb {
         width: 100%;
         aspect-ratio: 16/9;
         object-fit: cover;
         display: block;
     }
 
-    .video-overlay {
+    .vcard-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(to bottom, transparent 35%, rgba(0,0,0,0.85) 80%);
+        background: linear-gradient(to bottom, transparent 25%, rgba(3,0,18,0.88) 80%);
         display: flex;
         align-items: flex-end;
-        padding: 16px 14px;
+        padding: 12px 13px;
     }
 
-    .video-info {
-        flex: 1;
-        padding-right: 8px;
-    }
-    .video-title {
-        font-size: 15px;
-        font-weight: 700;
-        margin-bottom: 3px;
-        line-height: 1.3;
-    }
-    .video-subtitle {
-        font-size: 12px;
-        opacity: 0.75;
-        line-height: 1.2;
-    }
+    .vcard-text { flex: 1; padding-left: 8px; }
+    .vcard-title { font-size: 13.5px; font-weight: 700; margin-bottom: 2px; line-height: 1.3; }
+    .vcard-sub { font-size: 11px; color: rgba(255,255,255,0.55); }
 
-    .play-btn {
-        width: 44px;
-        height: 44px;
-        background: #d4af37;
+    /* ===== GLASS PLAY BUTTON (center hover) ===== */
+    .play-glass {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%,-50%) scale(0.8);
+        width: 54px; height: 54px;
         border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 0 20px rgba(212, 175, 55, 0.7);
-        flex-shrink: 0;
-        transition: transform 0.2s;
+        background: rgba(255,255,255,0.13);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1.5px solid rgba(255,255,255,0.38);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.35), 0 0 0 10px rgba(255,255,255,0.04);
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0;
+        transition: opacity 0.28s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+        z-index: 20;
+        pointer-events: none;
     }
-    .play-btn:hover {
-        transform: scale(1.1);
+    .play-glass::before {
+        content: '';
+        position: absolute; inset: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 28%, rgba(255,255,255,0.28) 0%, transparent 65%);
     }
-    .play-btn .triangle {
-        width: 0;
-        height: 0;
-        border-top: 9px solid transparent;
-        border-bottom: 9px solid transparent;
-        border-left: 15px solid #1a0033;
-        margin-left: 3px;
+    .play-tri {
+        width: 0; height: 0;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-left: 18px solid rgba(255,255,255,0.95);
+        margin-left: 4px;
+        position: relative; z-index: 1;
+        filter: drop-shadow(0 0 5px rgba(255,255,255,0.4));
     }
 
-    /* هر ردیف پیشنهادها - اسکرول افقی مستقل */
-    .poster-list {
+    /* Small play at card bottom */
+    .play-sm {
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.11);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255,255,255,0.28);
+        box-shadow: 0 4px 14px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+        position: relative;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .play-sm::before {
+        content: '';
+        position: absolute; inset: 0; border-radius: 50%;
+        background: radial-gradient(circle at 35% 28%, rgba(255,255,255,0.22) 0%, transparent 70%);
+    }
+    .play-sm-tri {
+        width: 0; height: 0;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-left: 10px solid white;
+        margin-left: 2px;
+        position: relative; z-index: 1;
+    }
+    .play-sm:hover { transform: scale(1.14); box-shadow: 0 6px 22px rgba(212,175,55,0.35), inset 0 1px 0 rgba(255,255,255,0.25); }
+
+    /* ===== POSTER ROWS (3 rows) ===== */
+    .poster-row {
         display: flex;
-        flex-direction: row;
-        gap: 14px;
+        gap: 13px;
         overflow-x: auto;
-        padding: 10px 5px 30px;
+        padding: 6px 4px 22px;
         scrollbar-width: none;
         -webkit-overflow-scrolling: touch;
-        scroll-behavior: smooth;
     }
-    .poster-list::-webkit-scrollbar { display: none; }
+    .poster-row::-webkit-scrollbar { display: none; }
 
-    .poster-card {
-        background: transparent;
-        border: none;
+    .pcard {
+        width: 148px;
+        flex-shrink: 0;
+        cursor: pointer;
+        transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .pcard:hover { transform: translateY(-10px) scale(1.03); }
+    .pcard:hover .pcard-play { opacity: 1; transform: scale(1); }
+
+    .pcard-img-wrap {
+        position: relative;
         border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-        cursor: pointer;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        width: 168px;
-        flex-shrink: 0;
+        box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+        border: 1px solid rgba(255,255,255,0.13);
     }
-    .poster-card:hover {
-        transform: translateY(-10px) scale(1.03);
+    .pcard-img-wrap::before {
+        content: '';
+        position: absolute; top: 0; left: 0; right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+        z-index: 2;
     }
-
-    .poster-cover {
+    .pcard-img {
         width: 100%;
-        aspect-ratio: 2 / 3;           /* دقیقاً مثل پوسترهای اپل تی‌وی */
+        aspect-ratio: 2/3;
         object-fit: cover;
-        border-radius: 14px;
         display: block;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
+    .pcard-play {
+        position: absolute;
+        bottom: 9px; left: 9px;
+        width: 34px; height: 34px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.14);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.32);
+        box-shadow: 0 4px 14px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.22);
+        display: flex; align-items: center; justify-content: center;
+        z-index: 5;
+        opacity: 0;
+        transform: scale(0.78);
+        transition: opacity 0.25s, transform 0.28s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .pcard-play-tri {
+        width: 0; height: 0;
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        border-left: 9px solid white;
+        margin-left: 2px;
+    }
+    .pcard-info { padding: 9px 2px 0; }
+    .pcard-title { font-size: 12.5px; font-weight: 700; color: white; line-height: 1.3; margin-bottom: 2px; }
+    .pcard-sub { font-size: 10.5px; color: rgba(255,255,255,0.45); }
 
-    .poster-info {
-        padding: 10px 4px 0;
-    }
-    .poster-title {
-        font-size: 13.5px;
-        font-weight: 700;
-        color: #fff;
-        line-height: 1.35;
-        margin-bottom: 2px;
-    }
-    .poster-subtitle {
-        font-size: 11.5px;
-        color: #aaa;
-        opacity: 0.85;
-    }
-
-    /* مودال پخش ویدیو */
-    #videoModal {
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.95);
-        z-index: 500;
+    /* ===== MODAL ===== */
+    #modal {
+        position: fixed; inset: 0;
+        background: rgba(0,0,8,0.92);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        z-index: 999;
         display: none;
         align-items: center;
         justify-content: center;
         padding: 20px;
     }
-    .modal-content {
-        width: 100%;
-        max-width: 800px;
-        background: #111;
-        border-radius: 20px;
+    .modal-box {
+        width: 100%; max-width: 780px;
+        background: rgba(15,8,40,0.88);
+        border: 1px solid rgba(255,255,255,0.13);
+        border-radius: 24px;
         overflow: hidden;
-        box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+        box-shadow: 0 40px 100px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.13);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
     }
-    .modal-header {
-        padding: 16px 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: #1a1a1a;
+    .modal-top {
+        padding: 15px 18px;
+        display: flex; justify-content: space-between; align-items: center;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+        background: rgba(255,255,255,0.03);
     }
+    .modal-title-text { font-size: 16px; font-weight: 700; }
     .modal-close {
-        font-size: 28px;
-        color: #d4af37;
-        cursor: pointer;
+        width: 30px; height: 30px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.18);
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; font-size: 15px; color: rgba(255,255,255,0.8);
+        transition: background 0.2s;
     }
-    video {
-        width: 100%;
-        display: block;
-    }
+    .modal-close:hover { background: rgba(255,255,255,0.18); }
+    video { width: 100%; display: block; }
 
-    /* بخش عنوان مثل اپل تی‌وی */
-    .section-header {
-        font-size: 18px;
-        font-weight: 700;
-        margin-bottom: 12px;
-        color: #ffd700;
-        padding-left: 5px;
-    }
+    .mt { margin-top: 28px; }
+    .mb { margin-bottom: 14px; }
 </style>
 </head>
 <body>
 
-<div class="stars"></div>
+<!-- Galaxy Background -->
+<div class="galaxy">
+    <canvas id="stars"></canvas>
+    <div class="galaxy-arm"></div>
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+    <div class="nebula nebula-3"></div>
+    <div class="nebula nebula-4"></div>
+</div>
 
-<div class="main-center">
-    <h1 class="page-title">ویدیوهای ماورایی 🎥</h1>
-
-    <!-- دسته‌بندی‌ها -->
-    <div class="category-scroll" id="categoryScroll">
-        <div class="category-chip active" onclick="filterVideos('all')">همه</div>
-        <div class="category-chip" onclick="filterVideos('ثروت')">ثروت</div>
-        <div class="category-chip" onclick="filterVideos('عشق')">عشق و روابط</div>
-        <div class="category-chip" onclick="filterVideos('تحول')">تحول حال و احساس</div>
-        <div class="category-chip" onclick="filterVideos('اعتماد')">اعتماد به نفس</div>
-        <div class="category-chip" onclick="filterVideos('لیاقت')">احساس لیاقت</div>
-    </div>
-
-    <!-- لیست ویدیوها - اسکرول افقی -->
-    <div class="section-header">مستند ها</div>
-    <div class="video-list" id="videoList"></div>
-
-    <!-- پیشنهادهای ویژه - هر ردیف اسکرول افقی مجزا -->
-    <div class="section-header" style="margin-top: 25px;">پیشنهادهای ویژه</div>
-    
-    <div style="margin-bottom: 20px;">
-        <div class="poster-list" id="posterRow1"></div>
-    </div>
-    <div>
-        <div class="poster-list" id="posterRow2"></div>
+<!-- Header / Logo -->
+<div class="header">
+    <div class="logo">
+        <div class="logo-icon">✦</div>
+        <div class="logo-text">PlanLife</div>
     </div>
 </div>
 
-<!-- مودال پخش ویدیو -->
-<div id="videoModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div id="modalTitle" style="font-weight:700; font-size:18px;"></div>
-            <div class="modal-close" onclick="closeVideoModal()">✕</div>
+<div class="main">
+
+    <h1 class="page-title">ویدیوهای ماورایی 🎥</h1>
+
+    <!-- Categories -->
+    <div class="cat-wrapper">
+        <div class="category-scroll" id="cats">
+            <div class="chip active" onclick="filter('all',this)">همه</div>
+            <div class="chip" onclick="filter('ثروت',this)">ثروت</div>
+            <div class="chip" onclick="filter('عشق',this)">عشق و روابط</div>
+            <div class="chip" onclick="filter('تحول',this)">تحول</div>
+            <div class="chip" onclick="filter('اعتماد',this)">اعتماد به نفس</div>
+            <div class="chip" onclick="filter('لیاقت',this)">احساس لیاقت</div>
         </div>
-        <video id="videoPlayer" controls autoplay></video>
+    </div>
+
+    <!-- Documentaries -->
+    <div class="section-label mb"><span>مستندها</span></div>
+    <div class="video-grid" id="vGrid"></div>
+
+    <!-- Featured 3 rows -->
+    <div class="section-label mt mb"><span>پیشنهادهای ویژه</span></div>
+    <div class="poster-row" id="pRow1"></div>
+    <div class="poster-row" id="pRow2"></div>
+    <div class="poster-row" id="pRow3"></div>
+
+</div>
+
+<!-- Modal -->
+<div id="modal">
+    <div class="modal-box">
+        <div class="modal-top">
+            <div class="modal-title-text" id="mTitle"></div>
+            <div class="modal-close" onclick="closeModal()">✕</div>
+        </div>
+        <video id="vPlayer" controls autoplay></video>
     </div>
 </div>
 
 <script>
-// ==================== داده‌های ویدیو (با ویدیوهای تستی اضافه) ====================
-const videoData = [
-    {
-        id: 1,
-        title: "نیکولا تسلا",
-        subtitle: "ماورایی",
-        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779986672/IMG_1221_jqjhpq.jpg",
-        src: "https://persian1.cdn.asset.aparat.com/aparat-video/c68fc7d5a81c80e58251480982b2093347709199-720p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjA2NzhiYmExNjY4MTk2YjU0MDNkNzA1ODc5NjhjMDA2IiwiZXhwIjoxNzgwMDUyNjI1LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.WEP2EFns_jZ9RHgR-aO_PuBVStaNA7CUFosfGhvOmRs",
-        category: "ثروت"
-    },
-    {
-        id: 2,
-        title: "استرهیکس سمینار",
-        subtitle: "ماورایی",
-        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779987179/IMG_1222_adwrqu.jpg",
-        src: "https://hw17.cdn.asset.aparat.com/aparat-video/47af1a7ef3892943248663f1a334dd9c21946381-360p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImEzN2FhNTA2NjAzZDlmMjg5MWI4NWY3MTQwYzRjZDFmIiwiZXhwIjoxNzgwMDA0OTQ4LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.ZJyGHnfwoZoOPPkGN8zFHlnXZrdR5GqcysPVfzfChog",
-        category: "ثروت"
-    },
-    {
-        id: 3,
-        title: "استرهیکس سمینار",
-        subtitle: "از غم و انوه به شادی",
-        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779987770/IMG_1223_rbor7c.jpg",
-        src: "https://aspb26.cdn.asset.aparat.com/aparat-video/130cd5a8ef41176dbea488e96984ef1e16918897-360p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6Ijg3MTNlMTJmNjJkNzdmODZhMzI1MzE1YmE2NzEyOWQ5IiwiZXhwIjoxNzgwMDUyMzIyLCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.I9TnnkqfV-uYaQBtCUpqlupqyERm-LAmT5Ing5b7V5Q",
-        category: "عشق"
-    },
-    {
-        id: 4,
-        title: "فیلم زندگی وارن بافت",
-        subtitle: "سرگذشت وارن بافت",
-        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779994484/IMG_1228_altecx.jpg",
-        src: "https://caspian19.asset.aparat.com/aparat-video/4ca3cbd240f2418eecf260472e019f5361562643-720p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjkwYzY3MWU1NzZiMjg0ZDNmNDRlOTQzNWFiNjYwNmFhIiwiZXhwIjoxNzgwMDEyMDgxLCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.41DdjKPr5Q22to6vxV4vyXibr4yr_pim-wHXIEeVQ3U",
-        category: "تحول"
-    },
-    {
-        id: 5,
-        title: "راز ابر موفق ها",
-        subtitle: "دارن هاردی",
-        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779995682/IMG_1229_d6nbjf.jpg",
-        src: "https://persian19.asset.aparat.com/aparat-video/aa41f62267d2d700395fdd0440f7799b62047924-360p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImRiZDNhYjhmNTM3ZTIwZDQ4MzZlZmM2NTNiZjRiOGZhIiwiZXhwIjoxNzgwMDEzNTU5LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.wL9WZKzilO8Oyv2L9i3QuZCuLcExqc4B6_Ey-SxkQpI",
-        category: "اعتماد"
-    },
-    {
-        id: 6,
-        title: "احساس لیاقت",
-        subtitle: "تو شایسته بهترین‌ها هستی",
-        cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779657211/IMG_1151_zqcux9.jpg",
-        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-        category: "لیاقت"
-    },
-    // ==================== ویدیوهای تستی اضافه (برای تست اسکرول افقی) ====================
-    {
-        id: 7,
-        title: "قانون جذب ثروت",
-        subtitle: "ابراهیم استوارت",
-        cover: "https://picsum.photos/id/106/400/225",
-        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-        category: "ثروت"
-    },
-    {
-        id: 8,
-        title: "جذب عشق واقعی",
-        subtitle: "ماورایی",
-        cover: "https://picsum.photos/id/1074/400/225",
-        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-        category: "عشق"
-    },
-    {
-        id: 9,
-        title: "تحول درونی عمیق",
-        subtitle: "از ترس به قدرت",
-        cover: "https://picsum.photos/id/1015/400/225",
-        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Tears_of_Steel.mp4",
-        category: "تحول"
-    },
-    {
-        id: 10,
-        title: "اعتماد به نفس طلایی",
-        subtitle: "داستان موفقیت",
-        cover: "https://picsum.photos/id/102/400/225",
-        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-        category: "اعتماد"
-    },
-    {
-        id: 11,
-        title: "احساس لیاقت بی‌نهایت",
-        subtitle: "تو لایق همه چیز هستی",
-        cover: "https://picsum.photos/id/1033/400/225",
-        src: "https://z2fwzmlsbwrvd25sb2fkcw.gapfilm.ir/stream/ZARDFILM/31350?src=GF_AG_ZARDF_40407",
-        category: "لیاقت"
-    },
-    {
-        id: 12,
-        title: "راز میلیونرها",
-        subtitle: "دارن هاردی",
-        cover: "https://picsum.photos/id/1040/400/225",
-        src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-        category: "ثروت"
+/* ===== STARS CANVAS ===== */
+(function() {
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     }
+
+    function createStars() {
+        stars = [];
+        const count = Math.floor((canvas.width * canvas.height) / 3000);
+        for (let i = 0; i < count; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: Math.random() * 1.4 + 0.2,
+                alpha: Math.random() * 0.7 + 0.2,
+                speed: Math.random() * 0.008 + 0.002,
+                offset: Math.random() * Math.PI * 2,
+                color: Math.random() > 0.85 ? '#ffd080' : (Math.random() > 0.7 ? '#c0b0ff' : '#ffffff')
+            });
+        }
+    }
+
+    let t = 0;
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        t += 0.012;
+        stars.forEach(s => {
+            const a = s.alpha * (0.6 + 0.4 * Math.sin(t * s.speed * 60 + s.offset));
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fillStyle = s.color.replace(')', `,${a})`).replace('rgb', 'rgba').replace('#ffffff', `rgba(255,255,255,${a})`).replace('#ffd080', `rgba(255,208,128,${a})`).replace('#c0b0ff', `rgba(192,176,255,${a})`);
+            ctx.fill();
+        });
+        requestAnimationFrame(draw);
+    }
+
+    resize();
+    createStars();
+    draw();
+    window.addEventListener('resize', () => { resize(); createStars(); });
+})();
+
+/* ===== DATA ===== */
+const data = [
+    { id:1, title:"نیکولا تسلا", sub:"ماورایی", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779986672/IMG_1221_jqjhpq.jpg", src:"https://persian1.cdn.asset.aparat.com/aparat-video/c68fc7d5a81c80e58251480982b2093347709199-720p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjA2NzhiYmExNjY4MTk2YjU0MDNkNzA1ODc5NjhjMDA2IiwiZXhwIjoxNzgwMDUyNjI1LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.WEP2EFns_jZ9RHgR-aO_PuBVStaNA7CUFosfGhvOmRs", cat:"ثروت" },
+    { id:2, title:"استرهیکس سمینار", sub:"ماورایی", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779987179/IMG_1222_adwrqu.jpg", src:"https://hw17.cdn.asset.aparat.com/aparat-video/47af1a7ef3892943248663f1a334dd9c21946381-360p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImEzN2FhNTA2NjAzZDlmMjg5MWI4NWY3MTQwYzRjZDFmIiwiZXhwIjoxNzgwMDA0OTQ4LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.ZJyGHnfwoZoOPPkGN8zFHlnXZrdR5GqcysPVfzfChog", cat:"ثروت" },
+    { id:3, title:"استرهیکس سمینار", sub:"از غم به شادی", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779987770/IMG_1223_rbor7c.jpg", src:"https://aspb26.cdn.asset.aparat.com/aparat-video/130cd5a8ef41176dbea488e96984ef1e16918897-360p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6Ijg3MTNlMTJmNjJkNzdmODZhMzI1MzE1YmE2NzEyOWQ5IiwiZXhwIjoxNzgwMDUyMzIyLCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.I9TnnkqfV-uYaQBtCUpqlupqyERm-LAmT5Ing5b7V5Q", cat:"عشق" },
+    { id:4, title:"فیلم زندگی وارن بافت", sub:"سرگذشت وارن بافت", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779994484/IMG_1228_altecx.jpg", src:"https://caspian19.asset.aparat.com/aparat-video/4ca3cbd240f2418eecf260472e019f5361562643-720p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjkwYzY3MWU1NzZiMjg0ZDNmNDRlOTQzNWFiNjYwNmFhIiwiZXhwIjoxNzgwMDEyMDgxLCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.41DdjKPr5Q22to6vxV4vyXibr4yr_pim-wHXIEeVQ3U", cat:"تحول" },
+    { id:5, title:"راز ابر موفق‌ها", sub:"دارن هاردی", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779995682/IMG_1229_d6nbjf.jpg", src:"https://persian19.asset.aparat.com/aparat-video/aa41f62267d2d700395fdd0440f7799b62047924-360p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImRiZDNhYjhmNTM3ZTIwZDQ4MzZlZmM2NTNiZjRiOGZhIiwiZXhwIjoxNzgwMDEzNTU5LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.wL9WZKzilO8Oyv2L9i3QuZCuLcExqc4B6_Ey-SxkQpI", cat:"اعتماد" },
+    { id:6, title:"احساس لیاقت", sub:"تو شایسته بهترین‌ها هستی", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779657211/IMG_1151_zqcux9.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", cat:"لیاقت" },
+    { id:7, title:"قانون جذب ثروت", sub:"ابراهیم استوارت", cover:"https://picsum.photos/id/106/400/225", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", cat:"ثروت" },
+    { id:8, title:"جذب عشق واقعی", sub:"ماورایی", cover:"https://picsum.photos/id/1074/400/225", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4", cat:"عشق" },
+    { id:9, title:"تحول درونی عمیق", sub:"از ترس به قدرت", cover:"https://picsum.photos/id/1015/400/225", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Tears_of_Steel.mp4", cat:"تحول" },
+    { id:10, title:"اعتماد به نفس طلایی", sub:"داستان موفقیت", cover:"https://picsum.photos/id/102/400/225", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", cat:"اعتماد" },
+    { id:11, title:"احساس لیاقت بی‌نهایت", sub:"تو لایق همه چیز هستی", cover:"https://picsum.photos/id/1033/400/225", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4", cat:"لیاقت" },
+    { id:12, title:"راز میلیونرها", sub:"دارن هاردی", cover:"https://picsum.photos/id/1040/400/225", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", cat:"ثروت" },
+    { id:13, title:"قدرت ذهن", sub:"برایان تریسی", cover:"https://picsum.photos/id/1080/400/225", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4", cat:"تحول" },
+    { id:14, title:"عشق بی‌شرط", sub:"ماورایی", cover:"https://picsum.photos/id/1011/400/225", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4", cat:"عشق" },
+    { id:15, title:"ثروت پنهان", sub:"جیم ران", cover:"https://picsum.photos/id/1068/400/225", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4", cat:"ثروت" },
+    { id:16, title:"تغییر باور", sub:"ماورایی", cover:"https://picsum.photos/id/1041/400/225", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", cat:"اعتماد" },
+    { id:17, title:"راه لیاقت", sub:"جیک دایر", cover:"https://picsum.photos/id/1055/400/225", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4", cat:"لیاقت" },
+    { id:18, title:"جادوی شادی", sub:"ماورایی", cover:"https://picsum.photos/id/1060/400/225", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", cat:"عشق" }
 ];
 
-// ==================== بارگذاری ویدیوها (اسکرول افقی) ====================
-function loadVideos(filter = 'all', containerId = 'videoList') {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    container.innerHTML = '';
+/* ===== PLAY ===== */
+function play(id) {
+    const v = data.find(x => x.id === id);
+    if (!v) return;
+    document.getElementById('mTitle').textContent = v.title;
+    document.getElementById('vPlayer').src = v.src;
+    document.getElementById('modal').style.display = 'flex';
+    document.getElementById('vPlayer').play();
+}
 
-    let filtered = filter === 'all' 
-        ? videoData 
-        : videoData.filter(v => v.category === filter);
+function closeModal() {
+    const p = document.getElementById('vPlayer');
+    p.pause(); p.src = '';
+    document.getElementById('modal').style.display = 'none';
+}
 
-    filtered.forEach(video => {
-        const card = document.createElement('div');
-        card.className = 'video-card';
-        card.innerHTML = `
-            <img src="${video.cover}" class="video-cover" alt="${video.title}">
-            <div class="video-overlay">
-                <div class="video-info">
-                    <div class="video-title">${video.title}</div>
-                    <div class="video-subtitle">${video.subtitle}</div>
+/* ===== RENDER GRID ===== */
+function renderGrid(items) {
+    const g = document.getElementById('vGrid');
+    g.innerHTML = '';
+    items.forEach(v => {
+        const d = document.createElement('div');
+        d.className = 'vcard';
+        d.innerHTML = `
+            <img src="${v.cover}" class="vcard-thumb" alt="${v.title}" loading="lazy">
+            <div class="play-glass"><div class="play-tri"></div></div>
+            <div class="vcard-overlay">
+                <div class="vcard-text">
+                    <div class="vcard-title">${v.title}</div>
+                    <div class="vcard-sub">${v.sub}</div>
                 </div>
-                <div class="play-btn" onclick="event.stopImmediatePropagation(); playVideo(${video.id})">
-                    <div class="triangle"></div>
+                <div class="play-sm" onclick="event.stopPropagation();play(${v.id})">
+                    <div class="play-sm-tri"></div>
                 </div>
-            </div>
-        `;
-        card.onclick = () => playVideo(video.id);
-        container.appendChild(card);
+            </div>`;
+        d.onclick = () => play(v.id);
+        g.appendChild(d);
     });
 }
 
-// ==================== بارگذاری لیست پایین (پوستر مثل اپل تی‌وی) ====================
-function loadPosters(filter = 'all') {
-    const row1 = document.getElementById('posterRow1');
-    const row2 = document.getElementById('posterRow2');
-    if (!row1 || !row2) return;
-    
-    row1.innerHTML = '';
-    row2.innerHTML = '';
+/* ===== RENDER POSTERS (3 rows) ===== */
+function renderPosters(items) {
+    const rows = [
+        document.getElementById('pRow1'),
+        document.getElementById('pRow2'),
+        document.getElementById('pRow3')
+    ];
+    rows.forEach(r => r.innerHTML = '');
 
-    let filtered = filter === 'all' 
-        ? videoData 
-        : videoData.filter(v => v.category === filter);
+    const third = Math.ceil(items.length / 3);
+    const chunks = [items.slice(0, third), items.slice(third, third*2), items.slice(third*2)];
 
-    // ردیف اول: ۶ ویدیو اول
-    const firstRow = filtered.slice(0, 6);
-    firstRow.forEach(video => {
-        const card = document.createElement('div');
-        card.className = 'poster-card';
-        card.innerHTML = `
-            <img src="${video.cover}" class="poster-cover" alt="${video.title}">
-            <div class="poster-info">
-                <div class="poster-title">${video.title}</div>
-                <div class="poster-subtitle">${video.subtitle}</div>
-            </div>
-        `;
-        card.onclick = () => playVideo(video.id);
-        row1.appendChild(card);
-    });
-
-    // ردیف دوم: بقیه ویدیوها (۶ تا)
-    const secondRow = filtered.slice(6, 12);
-    secondRow.forEach(video => {
-        const card = document.createElement('div');
-        card.className = 'poster-card';
-        card.innerHTML = `
-            <img src="${video.cover}" class="poster-cover" alt="${video.title}">
-            <div class="poster-info">
-                <div class="poster-title">${video.title}</div>
-                <div class="poster-subtitle">${video.subtitle}</div>
-            </div>
-        `;
-        card.onclick = () => playVideo(video.id);
-        row2.appendChild(card);
+    chunks.forEach((chunk, ri) => {
+        chunk.forEach(v => {
+            const d = document.createElement('div');
+            d.className = 'pcard';
+            d.innerHTML = `
+                <div class="pcard-img-wrap">
+                    <img src="${v.cover}" class="pcard-img" alt="${v.title}" loading="lazy">
+                    <div class="pcard-play"><div class="pcard-play-tri"></div></div>
+                </div>
+                <div class="pcard-info">
+                    <div class="pcard-title">${v.title}</div>
+                    <div class="pcard-sub">${v.sub}</div>
+                </div>`;
+            d.onclick = () => play(v.id);
+            rows[ri].appendChild(d);
+        });
     });
 }
 
-// ==================== پخش ویدیو ====================
-function playVideo(id) {
-    const video = videoData.find(v => v.id === id);
-    if (!video) return;
-
-    const modal = document.getElementById('videoModal');
-    const player = document.getElementById('videoPlayer');
-    const title = document.getElementById('modalTitle');
-
-    title.textContent = video.title;
-    player.src = video.src;
-    modal.style.display = 'flex';
-    player.play();
+/* ===== FILTER ===== */
+function filter(cat, el) {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    const items = cat === 'all' ? data : data.filter(v => v.cat === cat);
+    renderGrid(items);
+    renderPosters(items);
 }
 
-function closeVideoModal() {
-    const modal = document.getElementById('videoModal');
-    const player = document.getElementById('videoPlayer');
-    player.pause();
-    player.src = '';
-    modal.style.display = 'none';
-}
+/* ===== INIT ===== */
+renderGrid(data);
+renderPosters(data);
 
-// ==================== فیلتر دسته‌بندی ====================
-function filterVideos(category) {
-    // حذف کلاس active از همه
-    document.querySelectorAll('.category-chip').forEach(chip => {
-        chip.classList.remove('active');
-    });
-
-    // اضافه کردن کلاس active به چیپ کلیک‌شده
-    if (event && event.target) {
-        event.target.classList.add('active');
-    }
-
-    // بارگذاری مجدد هر دو لیست با فیلتر
-    loadVideos(category, 'videoList');
-    loadPosters(category);
-}
-
-// ==================== شروع ====================
-window.onload = () => {
-    loadVideos('all', 'videoList');   // لیست بالا - مستند ها (اندازه قبلی)
-    loadPosters('all');               // لیست پایین - پوستر مثل اپل تی‌وی
-};
+document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
 </script>
 </body>
 </html>
