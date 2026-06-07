@@ -14,7 +14,7 @@
     .stars::after { background-size: 140px 140px; opacity: 0.3; animation-duration: 16s; }
     @keyframes twinkle { 0% { opacity: 0.35; } 100% { opacity: 0.65; } }
 
-    header { position: fixed; top: 0; left: 0; right: 0; height: 65px; display: flex; align-items: center; padding: 0 20px; z-index: 100; background: rgba(0,0,0,0.25); backdrop-filter: blur(10px); }
+    header { position: fixed; top: 0; left: 0; right: 0; height: 65px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 100; background: rgba(0,0,0,0.25); backdrop-filter: blur(10px); }
 
     .main-center { position: relative; z-index: 5; min-height: 100vh; padding: 75px 20px 140px; }
     h2 { font-size: 32px; margin-bottom: 15px; text-align: center; font-weight: 900; }
@@ -65,7 +65,7 @@
     .drag-handle-wrap { width: 100%; display: flex; justify-content: center; padding: 6px 0 2px; flex-shrink: 0; cursor: grab; }
     .drag-handle { width: 44px; height: 5px; background: rgba(255,255,255,0.65); border-radius: 999px; box-shadow: 0 0 8px rgba(255,255,255,0.2); }
 
-    /* ===== mini player - شیشه‌ای گرد ===== */
+    /* ===== mini player ===== */
     .mini-player {
         position: fixed;
         bottom: 15px; left: 15px; right: 15px;
@@ -95,12 +95,21 @@
     .player-topbar { width: 100%; max-width: 380px; display: flex; justify-content: space-between; align-items: center; padding: 8px 0 16px; flex-shrink: 0; }
     .player-status { font-size: 15px; font-weight: 600; opacity: 0.85; }
 
-    .big-cover { width: 100%; max-width: 310px; margin: 10px 0 20px; flex-shrink: 0; }
-    .big-cover img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 24px; box-shadow: 0 25px 70px rgba(192,38,211,0.55); }
+    .big-cover { width: 100%; max-width: 200px; margin: 6px 0 10px; position: relative; flex-shrink: 0; }
+    .big-cover img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 20px; box-shadow: 0 15px 45px rgba(192,38,211,0.5); }
+    .cover-comment-badge {
+        position: absolute; bottom: -13px; left: 50%; transform: translateX(-50%);
+        background: rgba(20,20,40,0.92); border: 1px solid rgba(255,255,255,0.18);
+        backdrop-filter: blur(10px); border-radius: 999px; padding: 5px 14px;
+        display: flex; align-items: center; gap: 6px;
+        font-size: 13px; font-weight: 700; white-space: nowrap;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    }
+    .cover-comment-badge svg { width: 15px; height: 15px; fill: #ff9500; flex-shrink: 0; }
 
-    .track-info { text-align: center; width: 100%; max-width: 360px; margin-bottom: 16px; flex-shrink: 0; }
-    .np-title { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
-    .np-subtitle { font-size: 16.5px; opacity: 0.7; }
+    .track-info { text-align: center; width: 100%; max-width: 360px; margin: 20px 0 10px; flex-shrink: 0; }
+    .np-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .np-subtitle { font-size: 14.5px; opacity: 0.7; }
 
     .progress-section { width: 100%; max-width: 360px; margin-bottom: 28px; flex-shrink: 0; }
     .progress-container { width: 100%; height: 5px; background: rgba(255,255,255,0.18); border-radius: 999px; cursor: pointer; margin-bottom: 8px; }
@@ -121,6 +130,10 @@
     .comments-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 10px; }
     .delete-btn { background: rgba(255,50,50,0.2); border: 1px solid rgba(255,50,50,0.4); color: #ff6464; border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer; font-family: inherit; }
     .delete-btn:active { background: rgba(255,50,50,0.5); }
+    .loading-comments { text-align: center; padding: 20px; opacity: 0.6; font-size: 14px; }
+
+    /* admin badge */
+    .admin-badge { display: flex; align-items: center; gap: 6px; background: rgba(255,149,0,0.2); border: 1px solid rgba(255,149,0,0.5); border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 700; color: #ff9500; cursor: pointer; font-family: inherit; }
 
     /* modal */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 400; display: none; align-items: center; justify-content: center; }
@@ -142,6 +155,9 @@
                 box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
         ← خانه
     </div>
+    <div id="headerAuthArea">
+        <button onclick="openAdminModal()" class="admin-badge">🔐 ورود ادمین</button>
+    </div>
 </header>
 
 <div class="main-center">
@@ -152,7 +168,7 @@
     <div id="podcastList"></div>
 </div>
 
-<!-- Modal اشتراک -->
+<!-- Modal اشتراک / ادمین -->
 <div id="subscriptionModal" class="modal-overlay">
     <div class="modal-box" id="modalContent"></div>
 </div>
@@ -181,7 +197,16 @@
         <span id="playerStatus" class="player-status">در حال پخش</span>
         <button onclick="showMenu()" style="font-size:26px;background:none;border:none;color:white;">⋯</button>
     </div>
-    <div class="big-cover"><img id="npCover" src="" alt=""></div>
+
+    <div class="big-cover">
+        <img id="npCover" src="" alt="">
+        <div class="cover-comment-badge" id="coverCommentBadge">
+            <svg viewBox="0 0 24 24"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
+            <span id="coverCommentCount">۰</span>
+            <span style="opacity:0.7; font-weight:500;">نظر</span>
+        </div>
+    </div>
+
     <div class="track-info">
         <h2 id="npTitle" class="np-title">عنوان دوره</h2>
         <p id="npSubtitle" class="np-subtitle">PlanLife</p>
@@ -211,9 +236,9 @@
         </div>
         <div id="commentsList" class="comments-list"></div>
         <div id="commentForm" style="background:rgba(255,255,255,0.09);border-radius:18px;padding:16px 16px 18px;">
-            <input id="commentName" type="text" placeholder="نام شما (اختیاری)"
+            <input id="commentName" type="text" placeholder="نام شما (اختیاری)" onfocus="scrollToForm()"
                    style="width:100%;background:rgba(0,0,0,0.4);border:1.5px solid rgba(255,255,255,0.1);border-radius:14px;padding:13px 16px;color:white;font-size:16px;margin-bottom:10px;outline:none;font-family:inherit;-webkit-appearance:none;">
-            <textarea id="commentText" placeholder="نظر خود را اینجا بنویسید..." rows="3"
+            <textarea id="commentText" placeholder="نظر خود را اینجا بنویسید..." rows="3" onfocus="scrollToForm()"
                       style="width:100%;background:rgba(0,0,0,0.4);border:1.5px solid rgba(255,255,255,0.1);border-radius:14px;padding:13px 16px;color:white;font-size:16px;resize:none;height:80px;outline:none;font-family:inherit;line-height:1.5;display:block;-webkit-appearance:none;"></textarea>
             <button onclick="addComment()"
                     style="margin-top:12px;width:100%;background:#ff9500;color:#1a0033;border:none;border-radius:999px;padding:15px 0;font-weight:800;font-size:16px;cursor:pointer;font-family:inherit;box-shadow:0 4px 18px rgba(255,149,0,0.35);">
@@ -227,98 +252,48 @@
 
 <script>
 // ==================== داده‌های دوره‌ها ====================
-// برای تغییر هر قسمت فقط مقدار src را عوض کنید
 const courseData = [
-
-    // ---------- دوره کارگاه ثروتسازی ----------
-    { title: "دوره کارگاه ثروتسازی", episode: 1,  duration: "32:45", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779651755/Servat_-_dore_-_1_eu9z9o.m4a" },
-    { title: "دوره کارگاه ثروتسازی", episode: 2,  duration: "43:12", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://res.cloudinary.com/dfthbclzi/video/upload/v1780690833/Kargah_servatsazi_-_2_jusneo.m4a" },
-    { title: "دوره کارگاه ثروتسازی", episode: 3,  duration: "21:58", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
-    { title: "دوره کارگاه ثروتسازی", episode: 4,  duration: "35:05", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
-    { title: "دوره کارگاه ثروتسازی", episode: 5,  duration: "33:30", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
-    { title: "دوره کارگاه ثروتسازی", episode: 6,  duration: "28:44", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
-    { title: "دوره کارگاه ثروتسازی", episode: 7,  duration: "37:21", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
-    { title: "دوره کارگاه ثروتسازی", episode: 8,  duration: "41:10", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
-    { title: "دوره کارگاه ثروتسازی", episode: 9,  duration: "29:55", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
-    { title: "دوره کارگاه ثروتسازی", episode: 10, duration: "44:00", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
-    { title: "دوره کارگاه ثروتسازی", episode: 11, duration: "38:17", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
-
-    // ---------- دوره عشق و روابط ----------
-    { title: "دوره عشق و روابط", episode: 1,  duration: "32:45", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
-    { title: "دوره عشق و روابط", episode: 2,  duration: "43:12", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408669file_17524.mpeg" },
-    { title: "دوره عشق و روابط", episode: 3,  duration: "21:58", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
-    { title: "دوره عشق و روابط", episode: 4,  duration: "35:05", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
-    { title: "دوره عشق و روابط", episode: 5,  duration: "33:30", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
-    { title: "دوره عشق و روابط", episode: 6,  duration: "28:44", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
-    { title: "دوره عشق و روابط", episode: 7,  duration: "37:21", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
-    { title: "دوره عشق و روابط", episode: 8,  duration: "41:10", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
-    { title: "دوره عشق و روابط", episode: 9,  duration: "29:55", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
-
-    // ---------- دوره تحول حال و احساس ----------
-    { title: "دوره تحول حال و احساس", episode: 1, duration: "32:45", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
-
-    // ---------- دوره اعتماد به نفس ----------
-    { title: "دوره اعتماد به نفس", episode: 1, duration: "32:45", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
-    { title: "دوره اعتماد به نفس", episode: 2, duration: "43:12", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
-    { title: "دوره اعتماد به نفس", episode: 3, duration: "21:58", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
-    { title: "دوره اعتماد به نفس", episode: 4, duration: "35:05", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
-    { title: "دوره اعتماد به نفس", episode: 5, duration: "33:30", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
-
-    // ---------- دوره احساس لیاقت ----------
-    { title: "دوره احساس لیاقت", episode: 1,  duration: "32:45", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
-    { title: "دوره احساس لیاقت", episode: 2,  duration: "43:12", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
-    { title: "دوره احساس لیاقت", episode: 3,  duration: "21:58", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
-    { title: "دوره احساس لیاقت", episode: 4,  duration: "35:05", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
-    { title: "دوره احساس لیاقت", episode: 5,  duration: "33:30", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
-    { title: "دوره احساس لیاقت", episode: 6,  duration: "28:44", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
-    { title: "دوره احساس لیاقت", episode: 7,  duration: "37:21", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
-    { title: "دوره احساس لیاقت", episode: 8,  duration: "41:10", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
-    { title: "دوره احساس لیاقت", episode: 9,  duration: "29:55", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
-    { title: "دوره احساس لیاقت", episode: 10, duration: "44:00", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
-    { title: "دوره احساس لیاقت", episode: 11, duration: "38:17", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
-    { title: "دوره احساس لیاقت", episode: 12, duration: "25:33", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg",
-      src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره کارگاه ثروتسازی", episode: 1,  duration: "32:45", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779651755/Servat_-_dore_-_1_eu9z9o.m4a" },
+    { title: "دوره کارگاه ثروتسازی", episode: 2,  duration: "43:12", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dfthbclzi/video/upload/v1780690833/Kargah_servatsazi_-_2_jusneo.m4a" },
+    { title: "دوره کارگاه ثروتسازی", episode: 3,  duration: "21:58", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره کارگاه ثروتسازی", episode: 4,  duration: "35:05", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره کارگاه ثروتسازی", episode: 5,  duration: "33:30", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره کارگاه ثروتسازی", episode: 6,  duration: "28:44", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره کارگاه ثروتسازی", episode: 7,  duration: "37:21", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره کارگاه ثروتسازی", episode: 8,  duration: "41:10", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره کارگاه ثروتسازی", episode: 9,  duration: "29:55", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره کارگاه ثروتسازی", episode: 10, duration: "44:00", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره کارگاه ثروتسازی", episode: 11, duration: "38:17", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره عشق و روابط", episode: 1,  duration: "32:45", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+    { title: "دوره عشق و روابط", episode: 2,  duration: "43:12", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408669file_17524.mpeg" },
+    { title: "دوره عشق و روابط", episode: 3,  duration: "21:58", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+    { title: "دوره عشق و روابط", episode: 4,  duration: "35:05", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+    { title: "دوره عشق و روابط", episode: 5,  duration: "33:30", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+    { title: "دوره عشق و روابط", episode: 6,  duration: "28:44", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+    { title: "دوره عشق و روابط", episode: 7,  duration: "37:21", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+    { title: "دوره عشق و روابط", episode: 8,  duration: "41:10", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+    { title: "دوره عشق و روابط", episode: 9,  duration: "29:55", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+    { title: "دوره تحول حال و احساس", episode: 1, duration: "32:45", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره اعتماد به نفس", episode: 1, duration: "32:45", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره اعتماد به نفس", episode: 2, duration: "43:12", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره اعتماد به نفس", episode: 3, duration: "21:58", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره اعتماد به نفس", episode: 4, duration: "35:05", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره اعتماد به نفس", episode: 5, duration: "33:30", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره احساس لیاقت", episode: 1,  duration: "32:45", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره احساس لیاقت", episode: 2,  duration: "43:12", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره احساس لیاقت", episode: 3,  duration: "21:58", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره احساس لیاقت", episode: 4,  duration: "35:05", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره احساس لیاقت", episode: 5,  duration: "33:30", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره احساس لیاقت", episode: 6,  duration: "28:44", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره احساس لیاقت", episode: 7,  duration: "37:21", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره احساس لیاقت", episode: 8,  duration: "41:10", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره احساس لیاقت", episode: 9,  duration: "29:55", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره احساس لیاقت", episode: 10, duration: "44:00", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره احساس لیاقت", episode: 11, duration: "38:17", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره احساس لیاقت", episode: 12, duration: "25:33", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
 ];
 
 // ==================== کدهای اشتراک ====================
-// کد admin2933 برای همه دسته‌بندی‌ها کار می‌کند و دسترسی ادمین می‌دهد
 const ADMIN_CODE = "admin2933";
 const subscriptionCodes = {
     "دوره کارگاه ثروتسازی":    ["77777", "BA777", "TH777", "Servat"],
@@ -332,7 +307,7 @@ const subscriptionCodes = {
 let unlockedCategories = {};
 let isAdmin = false;
 let currentTrackIndex = 0;
-let currentTrackKey = null; // کلید یکتا برای هر قسمت: "title_episode"
+let currentTrackKey = null;
 let allComments = {};
 
 const audio = document.getElementById('mainAudio');
@@ -343,11 +318,15 @@ const progressContainer = document.getElementById('progressContainer');
 const statusEl = document.getElementById('playerStatus');
 const playIcon = document.getElementById('playIcon');
 
-// ==================== بارگذاری کامنت‌ها ====================
-function commentKey(title, episode) { return `planlife_course_${title}_${episode}`; }
+// ==================== کامنت‌ها ====================
+function commentKey(title, episode) { return `planlife_course_${title}_ep${episode}`; }
+
+function toPersianNum(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
 
 function loadComments(title, episode) {
     const key = commentKey(title, episode);
+    document.getElementById('commentsList').innerHTML = `<div class="loading-comments">در حال بارگذاری...</div>`;
+    document.getElementById('commentCount').textContent = '...';
     try { const s = localStorage.getItem(key); allComments[key] = s ? JSON.parse(s) : []; }
     catch(e) { allComments[key] = []; }
     renderComments(key);
@@ -357,14 +336,14 @@ function saveComments(key) {
     try { localStorage.setItem(key, JSON.stringify(allComments[key] || [])); } catch(e) {}
 }
 
-function toPersianNum(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
-
 function renderComments(key) {
     const comments = allComments[key] || [];
     const list = document.getElementById('commentsList');
     const countEl = document.getElementById('commentCount');
+    const coverCount = document.getElementById('coverCommentCount');
     if (!list || !countEl) return;
     countEl.textContent = comments.length;
+    if (coverCount) coverCount.textContent = toPersianNum(comments.length);
     list.innerHTML = '';
     if (comments.length === 0) {
         list.innerHTML = `<p style="opacity:0.6;text-align:center;padding:22px 10px;font-size:14px;line-height:1.6;">هنوز نظری ثبت نشده.<br>اولین نفر باشید!</p>`;
@@ -410,9 +389,79 @@ function deleteComment(key, commentId) {
     renderComments(key);
 }
 
+function scrollToForm() {
+    setTimeout(() => {
+        const f = document.getElementById('commentForm');
+        if (f) f.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 320);
+}
+
+// ==================== ادمین ====================
+function openAdminModal() {
+    document.getElementById('modalContent').innerHTML = `
+        <h3 style="margin-bottom:15px;">👑 ورود ادمین</h3>
+        <p style="margin-bottom:20px;opacity:0.8;font-size:14px;">کد ادمین را وارد کنید تا دسترسی کامل داشته باشید</p>
+        <input id="adminCodeInput" type="password" maxlength="15" placeholder="کد ادمین"
+               style="width:100%;padding:14px;border-radius:12px;border:none;text-align:center;font-size:22px;
+                      margin-bottom:14px;background:rgba(255,255,255,0.1);color:white;font-family:inherit;outline:none;letter-spacing:2px;">
+        <button onclick="checkAdminCode()" class="modal-btn" style="background:#ff9500;color:#1a0033;font-weight:bold;">تأیید</button>
+        <button onclick="closeModal()" class="modal-btn" style="background:rgba(255,255,255,0.15);color:white;margin-top:8px;">بستن</button>`;
+    document.getElementById('subscriptionModal').classList.add('active');
+    setTimeout(() => document.getElementById('adminCodeInput') && document.getElementById('adminCodeInput').focus(), 200);
+}
+
+function checkAdminCode() {
+    const code = document.getElementById('adminCodeInput').value.trim();
+    if (code === ADMIN_CODE) {
+        isAdmin = true;
+        const allCats = ["دوره کارگاه ثروتسازی","دوره عشق و روابط","دوره تحول حال و احساس","دوره اعتماد به نفس","دوره احساس لیاقت"];
+        allCats.forEach(c => unlockedCategories[c] = true);
+        updateAdminHeader();
+        document.getElementById('modalContent').innerHTML = `
+            <div style="font-size:70px;">👑</div>
+            <h3 style="color:#ffd700;margin:10px 0;">ورود ادمین موفق</h3>
+            <p style="opacity:0.8;margin-bottom:18px;">دسترسی کامل به همه دوره‌ها فعال شد.<br>می‌توانید نظرات را حذف کنید.</p>
+            <button onclick="closeModal()" class="modal-btn" style="background:#ff9500;color:#1a0033;font-weight:bold;">بستن</button>`;
+        if (currentTrackKey) renderComments(currentTrackKey);
+    } else {
+        document.getElementById('adminCodeInput').style.border = '2px solid #ff4444';
+        document.getElementById('adminCodeInput').value = '';
+        document.getElementById('adminCodeInput').placeholder = '❌ کد اشتباه است';
+        setTimeout(() => {
+            if (document.getElementById('adminCodeInput')) {
+                document.getElementById('adminCodeInput').style.border = 'none';
+                document.getElementById('adminCodeInput').placeholder = 'کد ادمین';
+            }
+        }, 1800);
+    }
+}
+
+function updateAdminHeader() {
+    const area = document.getElementById('headerAuthArea');
+    if (isAdmin) {
+        area.innerHTML = `<div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:13px;opacity:0.7;">👑 Admin</span>
+            <button onclick="doLogout()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:999px;color:white;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">خروج</button>
+        </div>`;
+    } else {
+        area.innerHTML = `<button onclick="openAdminModal()" class="admin-badge">🔐 ورود ادمین</button>`;
+    }
+}
+
+function doLogout() {
+    isAdmin = false;
+    updateAdminHeader();
+    if (currentTrackKey) renderComments(currentTrackKey);
+}
+
 // ==================== رندر صفحه ====================
 function loadPage() {
     const categories = ["دوره کارگاه ثروتسازی","دوره عشق و روابط","دوره تحول حال و احساس","دوره اعتماد به نفس","دوره احساس لیاقت"];
+    // پیش‌بارگذاری کامنت‌ها
+    courseData.forEach(item => {
+        const k = commentKey(item.title, item.episode);
+        try { const s = localStorage.getItem(k); allComments[k] = s ? JSON.parse(s) : []; } catch(e) { allComments[k] = []; }
+    });
     document.getElementById('categorySlides').innerHTML = categories.map(cat =>
         `<div class="slide-item" onclick="selectCat('${cat}')">
             <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg">
@@ -433,12 +482,18 @@ function loadItems(cat) {
     cats.forEach(c => {
         courseData.filter(item => item.title === c).forEach(item => {
             const idx = courseData.indexOf(item);
+            const key = commentKey(item.title, item.episode);
+            const cnt = toPersianNum((allComments[key] || []).length);
             html += `
             <div class="podcast-item" onclick="playCourse(${idx})">
                 <img src="${item.cover}" alt="">
                 <div class="music-info">
                     <div class="music-title">${item.title}</div>
                     <div class="music-artist">قسمت ${item.episode}</div>
+                    <div style="display:inline-flex;align-items:center;gap:4px;margin-top:4px;background:rgba(255,149,0,0.15);border-radius:999px;padding:3px 9px;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="#ff9500"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
+                        <span id="list-badge-${idx}" style="font-size:12px;color:#ff9500;font-weight:700;">${cnt}</span>
+                    </div>
                 </div>
                 <div class="music-duration">${item.duration}</div>
                 <div class="play-circle">
@@ -479,23 +534,20 @@ function checkUnlockCode() {
     const code = document.getElementById('unlockCode').value.trim();
     const category = window.currentUnlockCategory;
 
-    // بررسی کد ادمین
     if (code === ADMIN_CODE) {
         isAdmin = true;
-        // همه دسته‌بندی‌ها باز می‌شوند
-        ["دوره کارگاه ثروتسازی","دوره عشق و روابط","دوره تحول حال و احساس","دوره اعتماد به نفس","دوره احساس لیاقت"]
-            .forEach(c => unlockedCategories[c] = true);
+        const allCats = ["دوره کارگاه ثروتسازی","دوره عشق و روابط","دوره تحول حال و احساس","دوره اعتماد به نفس","دوره احساس لیاقت"];
+        allCats.forEach(c => unlockedCategories[c] = true);
+        updateAdminHeader();
         document.getElementById('modalContent').innerHTML = `
             <div style="font-size:70px;">👑</div>
             <h3 style="color:#ffd700;margin:10px 0;">ورود ادمین</h3>
-            <p style="opacity:0.8;margin-bottom:18px;">دسترسی کامل فعال شد. می‌توانید نظرات را حذف کنید.</p>
+            <p style="opacity:0.8;margin-bottom:18px;">دسترسی کامل به همه دوره‌ها فعال شد.</p>
             <button onclick="closeModal()" class="modal-btn" style="background:#ff9500;color:#1a0033;font-weight:bold;">بستن</button>`;
-        // کامنت‌ها را دوباره رندر کنید تا دکمه حذف نمایش داده شود
         if (currentTrackKey) renderComments(currentTrackKey);
         return;
     }
 
-    // بررسی کد عادی دسته‌بندی
     if (subscriptionCodes[category] && subscriptionCodes[category].includes(code)) {
         unlockedCategories[category] = true;
         document.getElementById('modalContent').innerHTML = `
@@ -508,7 +560,8 @@ function checkUnlockCode() {
             <div style="font-size:70px;color:#ff3366;">✕</div>
             <h3>کد اشتباه است</h3>
             <p>لطفاً کد صحیح را وارد کنید یا با پشتیبانی تماس بگیرید.</p>
-            <button onclick="closeModal()" class="modal-btn" style="background:rgba(255,255,255,0.2);color:white;margin-top:16px;">بستن</button>`;
+            <button onclick="showSubscriptionModal('${category}')" class="modal-btn" style="background:rgba(255,255,255,0.2);color:white;margin-top:16px;">تلاش مجدد</button>
+            <button onclick="closeModal()" class="modal-btn" style="background:rgba(255,255,255,0.1);color:white;">بستن</button>`;
     }
 }
 
