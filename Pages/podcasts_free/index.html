@@ -35,19 +35,36 @@
     .player-status { font-size: 15px; font-weight: 600; opacity: 0.85; }
 
     .big-cover {
-        width: 100%; max-width: 310px; margin: 10px 0 20px;
+        width: 100%; max-width: 200px; margin: 6px 0 10px;
+        position: relative;
     }
     .big-cover img {
         width: 100%; aspect-ratio: 1/1; object-fit: cover;
-        border-radius: 24px;
-        box-shadow: 0 25px 70px rgba(192, 38, 211, 0.55);
+        border-radius: 20px;
+        box-shadow: 0 15px 45px rgba(192, 38, 211, 0.5);
+    }
+    .cover-comment-badge {
+        position: absolute;
+        bottom: -13px; left: 50%; transform: translateX(-50%);
+        background: rgba(20,20,40,0.92);
+        border: 1px solid rgba(255,255,255,0.18);
+        backdrop-filter: blur(10px);
+        border-radius: 999px;
+        padding: 5px 14px;
+        display: flex; align-items: center; gap: 6px;
+        font-size: 13px; font-weight: 700;
+        white-space: nowrap;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    }
+    .cover-comment-badge svg {
+        width: 15px; height: 15px; fill: #ff9500; flex-shrink: 0;
     }
 
     .track-info {
-        text-align: center; width: 100%; max-width: 360px; margin-bottom: 16px;
+        text-align: center; width: 100%; max-width: 360px; margin: 20px 0 10px;
     }
-    .np-title { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
-    .np-subtitle { font-size: 16.5px; opacity: 0.7; }
+    .np-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .np-subtitle { font-size: 14.5px; opacity: 0.7; }
 
     .progress-section {
         width: 100%; max-width: 360px; margin-bottom: 28px;
@@ -224,10 +241,10 @@
 <div id="loginOverlay" class="login-overlay">
     <div class="login-box">
         <button class="login-close" onclick="closeLogin()">✕</button>
-        <h3>🔐 ورود </h3>
+        <h3>🔐 ورود ادمین</h3>
         <p>اطلاعات مدیریت را وارد کنید</p>
-        <input id="loginUsername" class="login-field" type="text" placeholder="username" autocomplete="off">
-        <input id="loginPassword" class="login-field" type="password" placeholder="password">
+        <input id="loginUsername" class="login-field" type="text" placeholder="نام کاربری" autocomplete="off">
+        <input id="loginPassword" class="login-field" type="password" placeholder="رمز عبور">
         <button class="login-btn" onclick="doLogin()">ورود</button>
         <div id="loginError" class="login-error">نام کاربری یا رمز عبور اشتباه است</div>
     </div>
@@ -257,6 +274,11 @@
     
     <div class="big-cover">
         <img id="npCover" src="" alt="">
+        <div class="cover-comment-badge" id="coverCommentBadge">
+            <svg viewBox="0 0 24 24"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
+            <span id="coverCommentCount">۰</span>
+            <span style="opacity:0.7; font-weight:500;">نظر</span>
+        </div>
     </div>
     
     <div class="track-info">
@@ -435,14 +457,20 @@ async function saveComments(id) {
     }
 }
 
+function toPersianNum(n) {
+    return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+}
+
 function renderComments(id) {
     const comments = allComments[id] || [];
     const list = document.getElementById('commentsList');
     const countEl = document.getElementById('commentCount');
+    const coverCount = document.getElementById('coverCommentCount');
     
     if (!list || !countEl) return;
     
     countEl.textContent = comments.length;
+    if (coverCount) coverCount.textContent = toPersianNum(comments.length);
     list.innerHTML = '';
     
     if (comments.length === 0) {
@@ -594,18 +622,51 @@ function goToHome() {
 }
 
 // ===== ساخت صفحه =====
-function loadPodcastPage() {
+async function loadPodcastPage() {
     const cats = ["باورهای ثروت","عشق و روابط","تحول حال و احساس","رشد کسب و کار","اعتماد به نفس","احساس لیاقت"];
     let h = '';
     cats.forEach(c => h += `<div onclick="selectPodcastCat('${c}')" style="min-width:140px;text-align:center;background:rgba(255,255,255,0.11);border-radius:18px;padding:10px;cursor:pointer;flex-shrink:0;"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" style="width:130px;height:130px;border-radius:18px;object-fit:cover;"><p style="margin-top:10px;font-size:14.5px;font-weight:600;">${c}</p></div>`);
     document.getElementById('categorySlides').innerHTML = h;
+    // اول کانت کامنت‌ها رو لود کن، بعد گرید بساز
+    await loadAllCommentCounts();
     renderGrid(podcastData);
+}
+
+function getCommentCount(id) {
+    const c = allComments[id];
+    return c ? c.length : 0;
+}
+
+async function loadAllCommentCounts() {
+    const promises = podcastData.map(async item => {
+        try {
+            const result = await window.storage.get(`planlife_comments_${item.id}`, true);
+            allComments[item.id] = result ? JSON.parse(result.value) : [];
+        } catch(e) {
+            allComments[item.id] = allComments[item.id] || [];
+        }
+    });
+    await Promise.all(promises);
 }
 
 function renderGrid(items) {
     let g = '';
     items.forEach(item => {
-        g += `<div onclick="playAudio('${item.title.replace(/'/g,"\\'")}','${item.episode.replace(/'/g,"\\'")}','${item.src}','${item.cover}',${item.id})" style="background:rgba(255,255,255,0.11);border-radius:22px;padding:12px;text-align:center;cursor:pointer;"><img src="${item.cover}" style="width:100%;aspect-ratio:1/1;border-radius:18px;object-fit:cover;"><div style="font-size:15.5px;font-weight:600;margin:10px 0 6px;">${item.title}<br><small style="opacity:0.75;font-weight:400;">${item.episode}</small></div><div style="width:48px;height:48px;background:#ffd700;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;"><div style="width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:16px solid #1a0033;margin-left:3px;"></div></div></div>`;
+        const cnt = getCommentCount(item.id);
+        const cntPersian = toPersianNum(cnt);
+        const safeTitle = item.title.replace(/'/g, "\\'");
+        const safeEp = item.episode.replace(/'/g, "\\'");
+        g += `<div onclick="playAudio('${safeTitle}','${safeEp}','${item.src}','${item.cover}',${item.id})" style="background:rgba(255,255,255,0.11);border-radius:22px;padding:12px;text-align:center;cursor:pointer;">
+            <div style="position:relative;">
+                <img src="${item.cover}" style="width:100%;aspect-ratio:1/1;border-radius:18px;object-fit:cover;">
+                <div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.62);backdrop-filter:blur(6px);border-radius:999px;padding:4px 9px;display:flex;align-items:center;gap:5px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#ff9500"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
+                    <span style="font-size:12px;font-weight:700;color:white;">${cntPersian}</span>
+                </div>
+            </div>
+            <div style="font-size:15.5px;font-weight:600;margin:10px 0 6px;">${item.title}<br><small style="opacity:0.75;font-weight:400;">${item.episode}</small></div>
+            <div style="width:48px;height:48px;background:#ffd700;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;"><div style="width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:16px solid #1a0033;margin-left:3px;"></div></div>
+        </div>`;
     });
     document.getElementById('podcastGrid').innerHTML = g;
 }
