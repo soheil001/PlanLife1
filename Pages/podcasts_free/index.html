@@ -45,7 +45,6 @@
     .drag-handle-wrap {
         width: 100%; display: flex; justify-content: center;
         padding: 6px 0 2px; flex-shrink: 0;
-        /* کشیدنی بودن handle */
         cursor: grab;
     }
     .drag-handle {
@@ -58,23 +57,34 @@
 
     /* ===== mini player ===== */
     .mini-player {
-        position: fixed; bottom: 0; left: 0; right: 0;
+        position: fixed;
+        bottom: 15px;
+        left: 15px;
+        right: 15px;
         height: 72px;
-        background: rgba(12,12,28,0.96);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-top: 1px solid rgba(255,255,255,0.1);
+        background: rgba(18, 18, 40, 0.72);
+        backdrop-filter: blur(28px) saturate(180%);
+        -webkit-backdrop-filter: blur(28px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 22px;
+        box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.55),
+            0 2px 8px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
         z-index: 290;
-        display: none; align-items: center;
-        padding: 0 16px; gap: 12px;
+        display: none;
+        align-items: center;
+        padding: 0 16px;
+        gap: 12px;
         cursor: pointer;
+        overflow: hidden;
     }
     .mini-player.active { display: flex; }
-    .mini-cover { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+    .mini-cover { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
     .mini-info { flex: 1; overflow: hidden; }
     .mini-title { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .mini-ep { font-size: 12px; opacity: 0.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .mini-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.12); }
+    .mini-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.10); border-radius: 0 0 22px 22px; overflow: hidden; }
     .mini-progress-bar { height: 100%; background: linear-gradient(to right, #ff9500, #ff6b00); border-radius: 999px; transition: width 0.5s linear; }
     .mini-play-btn { width: 42px; height: 42px; background: #ff9500; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 14px rgba(255,149,0,0.5); }
     .mini-play-btn svg { width: 22px; height: 22px; fill: #1a0033; }
@@ -165,7 +175,7 @@
     <div style="font-size:22px;margin:25px 0 12px;font-weight:700;">دسته‌بندی‌ها</div>
     <div style="display:flex;gap:15px;overflow-x:auto;padding-bottom:25px;" id="categorySlides"></div>
     <div id="currentCategoryTitle" style="font-size:22px;margin:25px 0 12px;font-weight:700;">همه پادکست‌ها</div>
-    <div id="podcastGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:18px;padding-bottom:100px;"></div>
+    <div id="podcastGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:18px;padding-bottom:120px;"></div>
 </div>
 
 <div id="miniPlayer" class="mini-player" onclick="expandPlayer()">
@@ -394,7 +404,6 @@ function playAudio(title, episode, src, cover, id) {
     expandPlayer();
 }
 
-// ===== PLAYER OPEN/CLOSE - Apple Music style =====
 function expandPlayer() {
     const screen = document.getElementById('nowPlayingScreen');
     document.getElementById('miniPlayer').classList.remove('active');
@@ -483,8 +492,6 @@ document.addEventListener('keydown', e => {
     if (e.key === 'Enter' && document.getElementById('loginOverlay').classList.contains('active')) doLogin();
 });
 
-// ===== SWIPE GESTURE: Apple Music style =====
-// swipe بالا = اسکرول | swipe پایین از بالا = انیمیشن مینیمایز
 (function() {
     const screen = document.getElementById('nowPlayingScreen');
     let startY = 0, startX = 0, lastY = 0, velocity = 0, lastTime = 0;
@@ -495,7 +502,6 @@ document.addEventListener('keydown', e => {
         startY = t.clientY; startX = t.clientX;
         lastY = startY; lastTime = Date.now();
         velocity = 0; intentDecided = false; isMinimizing = false;
-        // reset any leftover inline styles so transition is clean
         screen.style.transition = 'none';
     }
 
@@ -509,9 +515,8 @@ document.addEventListener('keydown', e => {
 
         if (!intentDecided && (Math.abs(dy) > 8 || adx > 8)) {
             intentDecided = true;
-            if (adx > Math.abs(dy) * 1.2) return; // افقی → ignore
-            if (dy < 0) return; // بالا → scroll طبیعی
-            // پایین: فقط اگه scrollTop = 0 minimize کن
+            if (adx > Math.abs(dy) * 1.2) return;
+            if (dy < 0) return;
             if (dy > 0 && screen.scrollTop <= 1) {
                 isMinimizing = true;
                 screen.style.willChange = 'transform, border-radius';
@@ -521,15 +526,10 @@ document.addEventListener('keydown', e => {
         if (!isMinimizing || dy <= 0) return;
         e.preventDefault();
 
-        // progress: 0 = بالا، 1 = کاملاً پایین
         const progress = Math.min(dy / 380, 1);
         const resistance = dy * (1 - progress * 0.3);
-
-        // border-radius: از 0 تا 28px
         const radius = progress * 28;
-        // scale: از 1 تا 0.92 (مثل اپل)
         const scale = 1 - progress * 0.08;
-        // opacity محتوا: کم می‌شه
         const opacity = 1 - progress * 0.15;
 
         screen.style.transform = `translateY(${resistance}px) scale(${scale})`;
@@ -548,17 +548,15 @@ document.addEventListener('keydown', e => {
         screen.style.transition = 'transform 0.46s cubic-bezier(0.32,0.72,0,1), border-radius 0.46s cubic-bezier(0.32,0.72,0,1), opacity 0.46s ease';
 
         if (shouldMinimize) {
-            // انیمیشن نهایی به پایین با corner radius کامل
             screen.style.transform = 'translateY(100%) scale(0.92)';
             screen.style.borderRadius = '28px 28px 0 0';
             screen.style.opacity = '0.6';
             setTimeout(() => {
                 screen.classList.remove('active');
-                screen.style.cssText = ''; // همه inline style پاک
+                screen.style.cssText = '';
                 if (audio.src) document.getElementById('miniPlayer').classList.add('active');
             }, 460);
         } else {
-            // برگشت نرم
             screen.style.transform = 'translateY(0) scale(1)';
             screen.style.borderRadius = '0px';
             screen.style.opacity = '1';
