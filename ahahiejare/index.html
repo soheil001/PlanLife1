@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اجاره‌یار - اجاره هر چیزی</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00796b;
+    --green-light: #009688;
+    --green-dark: #004d40;
+    --green-bg: #e0f2f1;
+    --accent: #ff6f00;
+    --text: #212121;
+    --text-light: #757575;
+    --border: #e0e0e0;
+    --bg: #f5f5f5;
+    --white: #ffffff;
+    --shadow: 0 1px 4px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Vazirmatn', sans-serif; background: var(--bg); color: var(--text); }
+
+  /* HEADER */
+  header {
+    background: var(--green);
+    color: white;
+    padding: 0 20px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; cursor:pointer; }
+  .logo span { color: #80cbc4; }
+  .header-search {
+    flex: 1;
+    max-width: 420px;
+    margin: 0 20px;
+    position: relative;
+  }
+  .header-search input {
+    width: 100%;
+    padding: 9px 40px 9px 16px;
+    border-radius: 8px;
+    border: none;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 14px;
+    outline: none;
+    background: rgba(255,255,255,0.15);
+    color: white;
+  }
+  .header-search input::placeholder { color: rgba(255,255,255,0.7); }
+  .header-search input:focus { background: rgba(255,255,255,0.25); }
+  .search-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    opacity: 0.8;
+  }
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+  .btn-post {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .btn-post:hover { background: #e65100; }
+  .btn-msg {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: none;
+    padding: 9px 14px;
+    border-radius: 8px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-msg:hover { background: rgba(255,255,255,0.25); }
+
+  /* MAIN LAYOUT */
+  .main-wrap { max-width: 1200px; margin: 0 auto; padding: 20px 16px; display: flex; gap: 20px; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 240px;
+    flex-shrink: 0;
+  }
+  .filter-box {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+  }
+  .filter-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+  .filter-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-light);
+    transition: color 0.2s;
+  }
+  .filter-item:last-child { border-bottom: none; }
+  .filter-item:hover, .filter-item.active { color: var(--green); font-weight: 600; }
+  .filter-item .cat-icon { font-size: 18px; }
+  .filter-item .count {
+    margin-right: auto;
+    background: var(--green-bg);
+    color: var(--green);
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .price-range { display: flex; flex-direction: column; gap: 8px; }
+  .price-input {
+    display: flex;
+    gap: 8px;
+  }
+  .price-input input {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 12px;
+    outline: none;
+    text-align: center;
+  }
+  .price-input input:focus { border-color: var(--green); }
+  .city-select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 13px;
+    outline: none;
+    color: var(--text);
+    background: white;
+    cursor: pointer;
+  }
+  .btn-filter {
+    width: 100%;
+    background: var(--green);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: background 0.2s;
+  }
+  .btn-filter:hover { background: var(--green-dark); }
+
+  /* CONTENT */
+  .content { flex: 1; min-width: 0; }
+  .sort-bar {
+    background: white;
+    border-radius: 10px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    font-size: 13px;
+  }
+  .sort-bar span { color: var(--text-light); }
+  .sort-bar strong { color: var(--text); }
+  .sort-select {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 13px;
+    outline: none;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .ads-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .ad-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.2s;
+    position: relative;
+  }
+  .ad-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .ad-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    background: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    position: relative;
+  }
+  .ad-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+  }
+  .ad-body { padding: 12px; }
+  .ad-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; line-height: 1.4; }
+  .ad-location { font-size: 12px; color: var(--text-light); margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
+  .ad-price {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--green-dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ad-price .per { font-size: 11px; font-weight: 400; color: var(--text-light); }
+  .ad-date { font-size: 11px; color: #bdbdbd; }
+
+  /* CATEGORIES */
+  .categories {
+    background: white;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .cat-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+  .cat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .cat-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 8px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    background: white;
+    transition: all 0.2s;
+    font-family: 'Vazirmatn', sans-serif;
+  }
+  .cat-btn:hover, .cat-btn.active { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+  .cat-btn .icon { font-size: 26px; }
+
+  /* PAGES */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* DETAIL PAGE */
+  .detail-wrap { max-width: 900px; margin: 0 auto; padding: 20px 16px; }
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--green);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 16px;
+    border: none;
+    background: none;
+    font-family: 'Vazirmatn', sans-serif;
+    padding: 0;
+  }
+  .detail-grid { display: grid; grid-template-columns: 1fr 320px; gap: 20px; }
+  .detail-main { background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+  .detail-img {
+    width: 100%;
+    height: 320px;
+    background: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+  }
+  .detail-info { padding: 20px; }
+  .detail-info h1 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .detail-meta { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+  .detail-tag {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--text-light);
+  }
+  .detail-desc { font-size: 14px; line-height: 1.8; color: var(--text); border-top: 1px solid var(--border); padding-top: 16px; }
+  .detail-sidebar { display: flex; flex-direction: column; gap: 16px; }
+  .contact-box { background: white; border-radius: 12px; padding: 20px; box-shadow: var(--shadow); }
+  .price-big { font-size: 24px; font-weight: 800; color: var(--green-dark); margin-bottom: 4px; }
+  .price-unit { font-size: 13px; color: var(--text-light); margin-bottom: 16px; }
+  .btn-call {
+    width: 100%;
+    background: var(--green);
+    color: white;
+    border: none;
+    padding: 13px;
+    border-radius: 10px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: background 0.2s;
+  }
+  .btn-call:hover { background: var(--green-dark); }
+  .btn-chat {
+    width: 100%;
+    background: white;
+    color: var(--green);
+    border: 2px solid var(--green);
+    padding: 11px;
+    border-radius: 10px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-chat:hover { background: var(--green-bg); }
+  .owner-box { background: white; border-radius: 12px; padding: 16px; box-shadow: var(--shadow); }
+  .owner-info { display: flex; align-items: center; gap: 12px; }
+  .owner-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--green-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+  .owner-name { font-size: 15px; font-weight: 600; }
+  .owner-since { font-size: 12px; color: var(--text-light); }
+
+  /* POST PAGE */
+  .post-wrap { max-width: 700px; margin: 0 auto; padding: 20px 16px; }
+  .post-form { background: white; border-radius: 12px; padding: 24px; box-shadow: var(--shadow); }
+  .post-form h2 { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    color: var(--text);
+    background: white;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus { border-color: var(--green); }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .upload-box {
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    color: var(--text-light);
+    font-size: 13px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .upload-box:hover { border-color: var(--green); background: var(--green-bg); }
+  .upload-box .upload-icon { font-size: 32px; margin-bottom: 8px; }
+  .btn-submit {
+    width: 100%;
+    background: var(--green);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s;
+  }
+  .btn-submit:hover { background: var(--green-dark); }
+
+  /* MESSAGES PAGE */
+  .msg-wrap { max-width: 900px; margin: 0 auto; padding: 20px 16px; }
+  .msg-layout { display: grid; grid-template-columns: 280px 1fr; gap: 0; background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); height: 580px; }
+  .msg-list { border-left: 1px solid var(--border); overflow-y: auto; }
+  .msg-list-header { padding: 16px; font-size: 15px; font-weight: 700; border-bottom: 1px solid var(--border); }
+  .msg-thread {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .msg-thread:hover, .msg-thread.active { background: var(--green-bg); }
+  .thread-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--green-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .thread-info { flex: 1; min-width: 0; }
+  .thread-name { font-size: 13px; font-weight: 600; }
+  .thread-last { font-size: 12px; color: var(--text-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .thread-meta { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+  .thread-time { font-size: 11px; color: #bdbdbd; }
+  .unread-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; }
+  .chat-area { display: flex; flex-direction: column; }
+  .chat-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+  .chat-header .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--green-bg); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .chat-header .name { font-size: 15px; font-weight: 600; }
+  .chat-header .item { font-size: 12px; color: var(--text-light); }
+  .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+  .msg-bubble {
+    max-width: 70%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .msg-bubble.sent { background: var(--green); color: white; align-self: flex-start; border-bottom-right-radius: 4px; }
+  .msg-bubble.received { background: #f5f5f5; color: var(--text); align-self: flex-end; border-bottom-left-radius: 4px; }
+  .msg-time { font-size: 11px; opacity: 0.7; margin-top: 4px; }
+  .chat-input { padding: 16px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
+  .chat-input input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 24px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 14px;
+    outline: none;
+  }
+  .chat-input input:focus { border-color: var(--green); }
+  .btn-send {
+    background: var(--green);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 24px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  /* NAV TABS */
+  .nav-tabs { display: flex; background: white; border-bottom: 2px solid var(--border); padding: 0 20px; margin-bottom: 0; overflow-x: auto; }
+  .nav-tab {
+    padding: 14px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-light);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    transition: all 0.2s;
+    font-family: 'Vazirmatn', sans-serif;
+    border: none;
+    background: none;
+  }
+  .nav-tab:hover { color: var(--green); }
+  .nav-tab.active { color: var(--green); border-bottom-color: var(--green); font-weight: 700; }
+
+  /* SUCCESS */
+  .success-msg {
+    display: none;
+    background: var(--green-bg);
+    border: 1.5px solid var(--green);
+    color: var(--green-dark);
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .cat-grid { grid-template-columns: repeat(3, 1fr); }
+    .detail-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .msg-layout { grid-template-columns: 1fr; }
+    .msg-list { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo" onclick="showPage('home')">اجاره<span>یار</span></div>
+  <div class="header-search">
+    <span class="search-icon">🔍</span>
+    <input type="text" placeholder="جستجو در آگهی‌ها..." id="headerSearch" oninput="filterAds()">
+  </div>
+  <div class="header-actions">
+    <button class="btn-msg" onclick="showPage('messages')">💬 پیام‌ها</button>
+    <button class="btn-post" onclick="showPage('post')">+ ثبت آگهی</button>
+  </div>
+</header>
+
+<!-- NAV TABS -->
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="switchTab(this, 'home')">🏠 صفحه اصلی</button>
+  <button class="nav-tab" onclick="switchTab(this, 'post')">📋 ثبت آگهی</button>
+  <button class="nav-tab" onclick="switchTab(this, 'messages')">💬 پیام‌ها</button>
+</div>
+
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
+  <div class="main-wrap">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="filter-box">
+        <div class="filter-title">🏷 دسته‌بندی</div>
+        <div class="filter-item active" onclick="filterCat('all', this)">
+          <span class="cat-icon">🔷</span> همه آگهی‌ها
+          <span class="count">24</span>
+        </div>
+        <div class="filter-item" onclick="filterCat('tools', this)">
+          <span class="cat-icon">🔧</span> ابزار و تجهیزات
+          <span class="count">8</span>
+        </div>
+        <div class="filter-item" onclick="filterCat('home', this)">
+          <span class="cat-icon">🏠</span> وسایل خانه
+          <span class="count">6</span>
+        </div>
+        <div class="filter-item" onclick="filterCat('event', this)">
+          <span class="cat-icon">🎉</span> رویداد و مجلس
+          <span class="count">5</span>
+        </div>
+        <div class="filter-item" onclick="filterCat('sport', this)">
+          <span class="cat-icon">⚽</span> ورزشی
+          <span class="count">3</span>
+        </div>
+        <div class="filter-item" onclick="filterCat('tech', this)">
+          <span class="cat-icon">💻</span> فناوری
+          <span class="count">2</span>
+        </div>
+      </div>
+
+      <div class="filter-box">
+        <div class="filter-title">📍 شهر</div>
+        <select class="city-select">
+          <option>همه شهرها</option>
+          <option>تهران</option>
+          <option>اصفهان</option>
+          <option>شیراز</option>
+          <option>مشهد</option>
+          <option>تبریز</option>
+        </select>
+      </div>
+
+      <div class="filter-box">
+        <div class="filter-title">💰 قیمت روزانه (تومان)</div>
+        <div class="price-range">
+          <div class="price-input">
+            <input type="number" placeholder="از" id="priceMin">
+            <input type="number" placeholder="تا" id="priceMax">
+          </div>
+          <button class="btn-filter" onclick="applyFilter()">اعمال فیلتر</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <div class="content">
+      <!-- CATEGORIES -->
+      <div class="categories">
+        <div class="cat-title">دسته‌بندی‌ها</div>
+        <div class="cat-grid">
+          <button class="cat-btn active" onclick="filterCatBtn(this, 'all')"><span class="icon">🔷</span>همه</button>
+          <button class="cat-btn" onclick="filterCatBtn(this, 'tools')"><span class="icon">🔧</span>ابزار</button>
+          <button class="cat-btn" onclick="filterCatBtn(this, 'home')"><span class="icon">🏠</span>خانه</button>
+          <button class="cat-btn" onclick="filterCatBtn(this, 'event')"><span class="icon">🎉</span>مجلس</button>
+          <button class="cat-btn" onclick="filterCatBtn(this, 'sport')"><span class="icon">⚽</span>ورزشی</button>
+        </div>
+      </div>
+
+      <!-- SORT BAR -->
+      <div class="sort-bar">
+        <span>نمایش <strong id="adCount">24</strong> آگهی</span>
+        <select class="sort-select" onchange="sortAds(this.value)">
+          <option value="newest">جدیدترین</option>
+          <option value="cheapest">ارزان‌ترین</option>
+          <option value="expensive">گران‌ترین</option>
+        </select>
+      </div>
+
+      <!-- ADS GRID -->
+      <div class="ads-grid" id="adsGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL PAGE -->
+<div id="page-detail" class="page">
+  <div class="detail-wrap">
+    <button class="back-btn" onclick="showPage('home')">← بازگشت به لیست</button>
+    <div class="detail-grid">
+      <div class="detail-main">
+        <div class="detail-img" id="detailImg">🔧</div>
+        <div class="detail-info">
+          <h1 id="detailTitle"></h1>
+          <div class="detail-meta">
+            <span class="detail-tag">📍 <span id="detailCity"></span></span>
+            <span class="detail-tag">🏷 <span id="detailCat"></span></span>
+            <span class="detail-tag">📅 <span id="detailDate"></span></span>
+          </div>
+          <div class="detail-desc" id="detailDesc"></div>
+        </div>
+      </div>
+      <div class="detail-sidebar">
+        <div class="contact-box">
+          <div class="price-big" id="detailPrice"></div>
+          <div class="price-unit">تومان / روز</div>
+          <button class="btn-call" onclick="alert('📞 شماره: 0912-XXX-XXXX')">📞 تماس با آگهی‌دهنده</button>
+          <button class="btn-chat" onclick="showPage('messages')">💬 ارسال پیام</button>
+        </div>
+        <div class="owner-box">
+          <div style="font-size:13px;font-weight:700;margin-bottom:12px;">اطلاعات آگهی‌دهنده</div>
+          <div class="owner-info">
+            <div class="owner-avatar">👤</div>
+            <div>
+              <div class="owner-name" id="detailOwner"></div>
+              <div class="owner-since">عضو از ۱۴۰۲</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- POST PAGE -->
+<div id="page-post" class="page">
+  <div class="post-wrap">
+    <div class="post-form">
+      <h2>📋 ثبت آگهی جدید</h2>
+      <div class="success-msg" id="successMsg">✅ آگهی شما با موفقیت ثبت شد!</div>
+      <div class="form-group">
+        <label>عنوان آگهی *</label>
+        <input type="text" placeholder="مثال: دریل شارژی بوش برای اجاره" id="adTitle">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>دسته‌بندی *</label>
+          <select id="adCat">
+            <option value="">انتخاب کنید</option>
+            <option value="tools">🔧 ابزار و تجهیزات</option>
+            <option value="home">🏠 وسایل خانه</option>
+            <option value="event">🎉 رویداد و مجلس</option>
+            <option value="sport">⚽ ورزشی</option>
+            <option value="tech">💻 فناوری</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>شهر *</label>
+          <select id="adCity">
+            <option value="">انتخاب کنید</option>
+            <option>تهران</option>
+            <option>اصفهان</option>
+            <option>شیراز</option>
+            <option>مشهد</option>
+            <option>تبریز</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>قیمت روزانه (تومان) *</label>
+          <input type="number" placeholder="مثال: 150000" id="adPrice">
+        </div>
+        <div class="form-group">
+          <label>حداقل مدت اجاره</label>
+          <select id="adMinDays">
+            <option>۱ روز</option>
+            <option>۲ روز</option>
+            <option>۳ روز</option>
+            <option>هفتگی</option>
+          </select>
+          </div>
+      </div>
+      <div class="form-group">
+        <label>توضیحات</label>
+        <textarea placeholder="وضعیت وسیله، شرایط اجاره، نکات مهم..." id="adDesc"></textarea>
+      </div>
+      <div class="form-group">
+        <label>تصویر</label>
+        <div class="upload-box" onclick="alert('آپلود تصویر در نسخه نمایشی غیرفعال است')">
+          <div class="upload-icon">📷</div>
+          <div>برای آپلود کلیک کنید</div>
+          <div style="font-size:11px;margin-top:4px;color:#bdbdbd">تا ۵ تصویر - JPG, PNG</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>نام صاحب آگهی *</label>
+          <input type="text" placeholder="نام شما" id="adOwner">
+        </div>
+        <div class="form-group">
+          <label>شماره تماس *</label>
+          <input type="tel" placeholder="09XXXXXXXXX" id="adPhone">
+        </div>
+      </div>
+      <button class="btn-submit" onclick="submitAd()">ثبت آگهی</button>
+    </div>
+  </div>
+</div>
+
+<!-- MESSAGES PAGE -->
+<div id="page-messages" class="page">
+  <div class="msg-wrap">
+    <div class="msg-layout">
+      <div class="msg-list">
+        <div class="msg-list-header">💬 پیام‌ها</div>
+        <div class="msg-thread active" onclick="selectThread(this, 0)">
+          <div class="thread-avatar">👤</div>
+          <div class="thread-info">
+            <div class="thread-name">علی محمدی</div>
+            <div class="thread-last">سلام، آیا دریل موجوده؟</div>
+          </div>
+          <div class="thread-meta">
+            <div class="thread-time">۱۰ دقیقه</div>
+            <div class="unread-dot"></div>
+          </div>
+        </div>
+        <div class="msg-thread" onclick="selectThread(this, 1)">
+          <div class="thread-avatar">👩</div>
+          <div class="thread-info">
+            <div class="thread-name">سارا احمدی</div>
+            <div class="thread-last">ممنون، فردا میام</div>
+          </div>
+          <div class="thread-meta">
+            <div class="thread-time">۲ ساعت</div>
+          </div>
+        </div>
+        <div class="msg-thread" onclick="selectThread(this, 2)">
+          <div class="thread-avatar">🧔</div>
+          <div class="thread-info">
+            <div class="thread-name">رضا کریمی</div>
+            <div class="thread-last">قیمت مذاکره داره؟</div>
+          </div>
+          <div class="thread-meta">
+            <div class="thread-time">دیروز</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-area">
+        <div class="chat-header">
+          <div class="avatar">👤</div>
+          <div>
+            <div class="name" id="chatName">علی محمدی</div>
+            <div class="item" id="chatItem">درباره: دریل شارژی بوش</div>
+          </div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+          <div class="msg-bubble received">سلام، آیا دریل شما موجوده؟<div class="msg-time">۱۰ دقیقه پیش</div></div>
+          <div class="msg-bubble sent">سلام، بله موجوده. کی میخواید؟<div class="msg-time">۸ دقیقه پیش</div></div>
+          <div class="msg-bubble received">آخر هفته میشه؟<div class="msg-time">۵ دقیقه پیش</div></div>
+        </div>
+        <div class="chat-input">
+          <input type="text" placeholder="پیام خود را بنویسید..." id="chatInputField" onkeypress="if(event.key==='Enter') sendMsg()">
+          <button class="btn-send" onclick="sendMsg()">ارسال</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const allAds = [
+  { id:1, title:'دریل شارژی بوش حرفه‌ای', cat:'tools', city:'تهران', price:120000, icon:'🔧', desc:'دریل شارژی بوش ۱۸ ولت در وضعیت عالی. مناسب برای کارهای خانگی و حرفه‌ای. همراه با کیف و شارژر اضافه.', date:'دیروز', owner:'محمد رضایی', badge:'ویژه' },
+  { id:2, title:'چادر مسافرتی ۶ نفره', cat:'sport', city:'اصفهان', price:80000, icon:'⛺', desc:'چادر کمپینگ ۶ نفره ضد آب مناسب برای کوهنوردی و سفر. قطب‌های آلومینیوم و پارچه ضد آب.', date:'۲ روز پیش', owner:'علی صادقی' },
+  { id:3, title:'میز و صندلی عروسی (۱۰ست)', cat:'event', city:'تهران', price:500000, icon:'🪑', desc:'ست کامل میز و صندلی مجلسی برای مراسم عروسی و تولد. تمیز و سالم.', date:'امروز', owner:'فاطمه کریمی', badge:'جدید' },
+  { id:4, title:'پروژکتور فول HD سونی', cat:'tech', city:'تهران', price:200000, icon:'📽️', desc:'پروژکتور سونی ۱۰۸۰p با وضوح عالی. مناسب برای جلسات، سینمای خانگی و کنفرانس.', date:'امروز', owner:'حسین نوری' },
+  { id:5, title:'جارو برقی صنعتی', cat:'home', city:'شیراز', price:150000, icon:'🧹', desc:'جارو برقی صنعتی مناسب برای تمیزکاری عمیق فرش‌ها، کارگاه و مغازه.', date:'۳ روز پیش', owner:'مریم احمدی' },
+  { id:6, title:'دوچرخه کوهستانی ۲۶', cat:'sport', city:'تهران', price:100000, icon:'🚵', desc:'دوچرخه کوهستانی سایز ۲۶ با ۲۱ دنده. مناسب برای تفریح و ورزش.', date:'دیروز', owner:'امیر زارعی' },
+  { id:7, title:'سیستم صوتی مجلس', cat:'event', city:'مشهد', price:350000, icon:'🔊', desc:'سیستم صوتی کامل شامل بلندگو، آمپلی‌فایر و میکروفون. مناسب برای مراسم تا ۳۰۰ نفر.', date:'امروز', owner:'رضا حسینی', badge:'جدید' },
+  { id:8, title:'نردبان آلومینیوم ۵ متری', cat:'tools', city:'تهران', price:90000, icon:'🪜', desc:'نردبان آلومینیوم تاشو ۵ متری. سبک و مقاوم. مناسب برای رنگ‌آمیزی و نصب.', date:'۴ روز پیش', owner:'سعید محمدی' },
+  { id:9, title:'دوربین عکاسی کانن R6', cat:'tech', city:'تهران', price:450000, icon:'📷', desc:'دوربین حرفه‌ای کانن EOS R6 با لنز ۲۴-۱۰۵. مناسب برای عکاسی رویداد و پرتره.', date:'دیروز', owner:'نگار رستمی' },
+  { id:10, title:'ماشین ظرفشویی', cat:'home', city:'اصفهان', price:180000, icon:'🍽️', desc:'ماشین ظرفشویی بوش ۱۲ نفره. برای مراسم و مهمانی‌های بزرگ مناسب.', date:'۵ روز پیش', owner:'زهرا موسوی' },
+  { id:11, title:'پاور وینچ برقی', cat:'tools', city:'تبریز', price:250000, icon:'⚙️', desc:'وینچ برقی ۲ تن. مناسب برای کارهای ساختمانی و تعمیرگاه.', date:'امروز', owner:'کامران جعفری', badge:'جدید' },
+  { id:12, title:'کارگر بزرگ خیمه (۱۰x۱۰)', cat:'event', city:'تهران', price:600000, icon:'⛱️', desc:'خیمه برزنتی بزرگ ۱۰x۱۰ برای مراسم در فضای باز. همراه با تیم نصب.', date:'۲ روز پیش', owner:'مهدی کمالی' },
+];
+
+const threads = [
+  { name:'علی محمدی', item:'دریل شارژی بوش', msgs:[
+    {t:'received',m:'سلام، آیا دریل شما موجوده؟',time:'۱۰ دقیقه پیش'},
+    {t:'sent',m:'سلام، بله موجوده. کی میخواید؟',time:'۸ دقیقه پیش'},
+    {t:'received',m:'آخر هفته میشه؟',time:'۵ دقیقه پیش'},
+  ]},
+  { name:'سارا احمدی', item:'میز و صندلی عروسی', msgs:[
+    {t:'received',m:'سلام، ۱۵ست دارید؟',time:'دیروز'},
+    {t:'sent',m:'بله، ۱۵ست در دسترسه',time:'دیروز'},
+    {t:'received',m:'ممنون، فردا میام',time:'دیروز'},
+  ]},
+  { name:'رضا کریمی', item:'پروژکتور سونی', msgs:[
+    {t:'received',m:'سلام، قیمت مذاکره داره؟',time:'دیروز'},
+  ]},
+];
+
+let currentCat = 'all';
+let currentSearch = '';
+
+function renderAds(ads) {
+  const grid = document.getElementById('adsGrid');
+  document.getElementById('adCount').textContent = ads.length;
+  grid.innerHTML = ads.map(ad => `
+    <div class="ad-card" onclick="showDetail(${ad.id})">
+      <div class="ad-img">
+        ${ad.badge ? `<div class="ad-badge">${ad.badge}</div>` : ''}
+        ${ad.icon}
+      </div>
+      <div class="ad-body">
+        <div class="ad-title">${ad.title}</div>
+        <div class="ad-location">📍 ${ad.city}</div>
+        <div class="ad-price">
+          <span>${ad.price.toLocaleString('fa-IR')}</span>
+          <span class="per">${ad.date}</span>
+        </div>
+        <div class="ad-date">تومان / روز</div>
+      </div>
+    </div>
+  `).join('');
+}
+function getFiltered() {
+  return allAds.filter(a => {
+    const catOk = currentCat === 'all' || a.cat === currentCat;
+    const searchOk = !currentSearch || a.title.includes(currentSearch) || a.city.includes(currentSearch);
+    return catOk && searchOk;
+  });
+}
+
+function filterAds() {
+  currentSearch = document.getElementById('headerSearch').value;
+  renderAds(getFiltered());
+}
+
+function filterCat(cat, el) {
+  currentCat = cat;
+  document.querySelectorAll('.filter-item').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  renderAds(getFiltered());
+}
+
+function filterCatBtn(el, cat) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  renderAds(getFiltered());
+}
+
+function applyFilter() {
+  const min = parseInt(document.getElementById('priceMin').value) || 0;
+  const max = parseInt(document.getElementById('priceMax').value) || Infinity;
+  const ads = getFiltered().filter(a => a.price >= min && a.price <= max);
+  renderAds(ads);
+}
+
+function sortAds(val) {
+  let ads = getFiltered();
+  if(val === 'cheapest') ads.sort((a,b) => a.price - b.price);
+  else if(val === 'expensive') ads.sort((a,b) => b.price - a.price);
+  renderAds(ads);
+}
+
+function showDetail(id) {
+  const ad = allAds.find(a => a.id === id);
+  if(!ad) return;
+  document.getElementById('detailImg').textContent = ad.icon;
+  document.getElementById('detailTitle').textContent = ad.title;
+  document.getElementById('detailCity').textContent = ad.city;
+  document.getElementById('detailCat').textContent = ({tools:'ابزار',home:'خانه',event:'رویداد',sport:'ورزشی',tech:'فناوری'})[ad.cat];
+  document.getElementById('detailDate').textContent = ad.date;
+  document.getElementById('detailDesc').textContent = ad.desc;
+  document.getElementById('detailPrice').textContent = ad.price.toLocaleString('fa-IR');
+  document.getElementById('detailOwner').textContent = ad.owner;
+  showPage('detail');
+}
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const tabs = {home:0, post:1, messages:2, detail:0};
+  const idx = tabs[name] ?? 0;
+  document.querySelectorAll('.nav-tab')[idx]?.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function switchTab(el, page) {
+  showPage(page);
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function submitAd() {
+  const title = document.getElementById('adTitle').value;
+  const cat = document.getElementById('adCat').value;
+  const city = document.getElementById('adCity').value;
+  const price = document.getElementById('adPrice').value;
+  const owner = document.getElementById('adOwner').value;
+  if(!title || !cat || !city || !price || !owner) {
+    alert('لطفاً همه فیلدهای اجباری را پر کنید');
+    return;
+  }
+  const newAd = {
+    id: allAds.length + 1,
+    title, cat, city,
+    price: parseInt(price),
+    icon: {tools:'🔧',home:'🏠',event:'🎉',sport:'⚽',tech:'💻'}[cat] || '📦',
+    desc: document.getElementById('adDesc').value,
+    date: 'همین الان',
+    owner,
+    badge: 'جدید'
+  };
+  allAds.unshift(newAd);
+  document.getElementById('successMsg').style.display = 'block';
+  setTimeout(() => {
+    document.getElementById('successMsg').style.display = 'none';
+    showPage('home');
+    renderAds(getFiltered());
+  }, 2000);
+}
+
+function selectThread(el, idx) {
+  document.querySelectorAll('.msg-thread').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const t = threads[idx];
+  document.getElementById('chatName').textContent = t.name;
+  document.getElementById('chatItem').textContent = 'درباره: ' + t.item;
+  document.getElementById('chatMessages').innerHTML = t.msgs.map(m => `
+    <div class="msg-bubble ${m.t}">${m.m}<div class="msg-time">${m.time}</div></div>
+  `).join('');
+}
+
+function sendMsg() {
+  const input = document.getElementById('chatInputField');
+  const txt = input.value.trim();
+  if(!txt) return;
+  const container = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg-bubble sent';
+  div.innerHTML = txt + '<div class="msg-time">همین الان</div>';
+  container.appendChild(div);
+  input.value = '';
+  container.scrollTop = container.scrollHeight;
+
+  setTimeout(() => {
+    const replies = ['ممنون از پیامتون', 'باشه، فردا بهتون اطلاع میدم', 'خواهش می‌کنم 🙏', 'چشم، در نظر می‌گیرم'];
+    const reply = document.createElement('div');
+    reply.className = 'msg-bubble received';
+    reply.innerHTML = replies[Math.floor(Math.random()*replies.length)] + '<div class="msg-time">همین الان</div>';
+    container.appendChild(reply);
+    container.scrollTop = container.scrollHeight;
+  }, 1000);
+}
+
+// INIT
+renderAds(allAds);
+</script>
+</body>
+</html>
