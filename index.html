@@ -18,217 +18,231 @@
         background: #030303;
     }
 
-    .stars { position: fixed; inset: 0; background: transparent; z-index: 1; pointer-events: none; }
+    .stars { position: fixed; top:0;left:0;right:0;bottom:0; background: transparent; z-index: 1; pointer-events: none; }
     .stars::before, .stars::after {
-        content: ''; position: absolute; inset: 0;
+        content: ''; position: absolute; top:0;left:0;right:0;bottom:0;
         background-image: radial-gradient(white 1px, transparent 1px);
         background-size: 80px 80px; opacity: 0.45;
+        -webkit-animation: twinkle 10s infinite alternate, stars-move 20s linear infinite;
         animation: twinkle 10s infinite alternate, stars-move 20s linear infinite;
     }
     .stars::after {
         background-size: 140px 140px; opacity: 0.3;
+        -webkit-animation: twinkle 16s infinite alternate, stars-move-diagonal 32s linear infinite;
         animation: twinkle 16s infinite alternate, stars-move-diagonal 32s linear infinite;
     }
+    @-webkit-keyframes twinkle { 0% { opacity: 0.35; } 100% { opacity: 0.65; } }
     @keyframes twinkle { 0% { opacity: 0.35; } 100% { opacity: 0.65; } }
+    @-webkit-keyframes stars-move { from { background-position: 0 0; } to { background-position: 22px -480px; } }
     @keyframes stars-move { from { background-position: 0 0; } to { background-position: 22px -480px; } }
+    @-webkit-keyframes stars-move-diagonal { from { background-position: 0 0; } to { background-position: -35px -550px; } }
     @keyframes stars-move-diagonal { from { background-position: 0 0; } to { background-position: -35px -550px; } }
 
     header {
         position: fixed; top: 0; left: 0; right: 0; height: 65px;
-        display: flex; align-items: center; padding: 0 20px; z-index: 100;
-        background: rgba(0,0,0,0.25); backdrop-filter: blur(10px);
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        padding: 0 20px; z-index: 100;
+        background: rgba(0,0,0,0.25);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
     }
     .hamburger {
         font-size: 28px; cursor: pointer; width: 50px; height: 50px;
         border-radius: 50%; background: rgba(255,255,255,0.1);
-        display: flex; align-items: center; justify-content: center;
-        transition: all 0.2s ease;
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        -webkit-justify-content: center; justify-content: center;
+        -webkit-transition: all 0.2s ease; transition: all 0.2s ease;
     }
-    .hamburger:hover { background: rgba(212,175,55,0.2); }
 
     .main-center {
         position: relative; z-index: 5; min-height: 100vh;
         padding: 75px 20px 120px;
-        display: flex; flex-direction: column; align-items: center;
-        transition: filter 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+        display: -webkit-flex; display: flex;
+        -webkit-flex-direction: column; flex-direction: column;
+        -webkit-align-items: center; align-items: center;
+        -webkit-transition: filter 0.5s ease; transition: filter 0.5s ease;
     }
-    .main-center.blurred { filter: blur(7px); pointer-events: none; }
+    .main-center.blurred { -webkit-filter: blur(7px); filter: blur(7px); pointer-events: none; }
 
     .title {
         font-size: 42px; font-weight: 900;
         font-family: 'Cinzel', 'Vazirmatn', serif;
-        text-shadow: 0 0 30px rgba(212, 175, 55, 0.9), 0 0 60px rgba(160, 240, 255, 0.4);
-        margin-bottom: 25px; color: white;
-        letter-spacing: 3px;
+        text-shadow: 0 0 30px rgba(212,175,55,0.9), 0 0 60px rgba(160,240,255,0.4);
+        margin-bottom: 25px; color: white; letter-spacing: 3px;
     }
 
-    /* ===== چت باکس ===== */
+    /* چت باکس */
     .chat-container {
         width: 100%; max-width: 360px; height: 390px;
-        background: rgba(255,255,255,0.11); backdrop-filter: blur(16px);
+        background: rgba(255,255,255,0.11);
+        -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
         border-radius: 28px;
-        border: 1px solid rgba(212, 175, 55, 0.55);
-        box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 25px rgba(212, 175, 55, 0.25);
-        display: flex; flex-direction: column;
+        border: 1px solid rgba(212,175,55,0.55);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 25px rgba(212,175,55,0.25);
+        display: -webkit-flex; display: flex;
+        -webkit-flex-direction: column; flex-direction: column;
         padding: 12px; margin-bottom: 35px;
-        position: relative;
     }
-
     #chat-output {
-        flex: 1; overflow-y: auto;
+        -webkit-flex: 1; flex: 1; overflow-y: auto;
         padding: 8px 6px;
-        display: flex; flex-direction: column; gap: 10px;
-        scroll-behavior: smooth;
+        display: -webkit-flex; display: flex;
+        -webkit-flex-direction: column; flex-direction: column;
+        gap: 10px; scroll-behavior: smooth;
     }
     #chat-output::-webkit-scrollbar { width: 3px; }
     #chat-output::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 10px; }
 
     .msg-bot {
-        align-self: flex-start; margin-right: auto;
+        -webkit-align-self: flex-start; align-self: flex-start;
         background: rgba(255,255,255,0.12);
         border: 1px solid rgba(212,175,55,0.2);
         padding: 10px 14px;
         border-radius: 4px 18px 18px 18px;
         max-width: 84%; line-height: 1.8; font-size: 13.5px;
-        font-family: 'Vazirmatn', sans-serif; font-weight: 500;
-        color: rgba(255,255,255,0.95);
-        box-shadow: 0 3px 14px rgba(0,0,0,0.25);
-        animation: slideFromLeft 0.38s cubic-bezier(0.34,1.4,0.64,1) both;
+        font-weight: 500; color: rgba(255,255,255,0.95);
+        -webkit-animation: slideFromLeft 0.38s ease both;
+        animation: slideFromLeft 0.38s ease both;
     }
-
     .msg-user {
-        align-self: flex-end; margin-left: auto;
+        -webkit-align-self: flex-end; align-self: flex-end;
+        background: -webkit-linear-gradient(135deg, rgba(110,70,240,0.88), rgba(75,35,190,0.92));
         background: linear-gradient(135deg, rgba(110,70,240,0.88), rgba(75,35,190,0.92));
         border: 1px solid rgba(150,110,255,0.35);
         padding: 10px 14px;
         border-radius: 18px 4px 18px 18px;
         max-width: 84%; line-height: 1.8; font-size: 13.5px;
-        font-family: 'Vazirmatn', sans-serif; font-weight: 600; color: white;
-        box-shadow: 0 3px 14px rgba(75,35,190,0.35);
-        animation: slideFromRight 0.32s cubic-bezier(0.34,1.4,0.64,1) both;
+        font-weight: 600; color: white;
+        -webkit-animation: slideFromRight 0.32s ease both;
+        animation: slideFromRight 0.32s ease both;
     }
-
+    @-webkit-keyframes slideFromLeft {
+        from { opacity: 0; -webkit-transform: translateX(-12px); transform: translateX(-12px); }
+        to   { opacity: 1; -webkit-transform: translateX(0); transform: translateX(0); }
+    }
     @keyframes slideFromLeft {
-        from { opacity: 0; transform: translateX(-12px) scale(0.97); }
-        to   { opacity: 1; transform: translateX(0) scale(1); }
+        from { opacity: 0; transform: translateX(-12px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+    @-webkit-keyframes slideFromRight {
+        from { opacity: 0; -webkit-transform: translateX(12px); transform: translateX(12px); }
+        to   { opacity: 1; -webkit-transform: translateX(0); transform: translateX(0); }
     }
     @keyframes slideFromRight {
-        from { opacity: 0; transform: translateX(12px) scale(0.97); }
-        to   { opacity: 1; transform: translateX(0) scale(1); }
+        from { opacity: 0; transform: translateX(12px); }
+        to   { opacity: 1; transform: translateX(0); }
     }
 
     .input-box {
-        display: flex;
+        display: -webkit-flex; display: flex;
         background: rgba(255,255,255,0.10);
         border: 1px solid rgba(212,175,55,0.2);
-        border-radius: 25px; padding: 4px; margin-top: 8px; flex-shrink: 0;
+        border-radius: 25px; padding: 4px; margin-top: 8px; -webkit-flex-shrink: 0; flex-shrink: 0;
     }
     input {
-        flex: 1; background: transparent; border: none; color: white;
-        font-size: 16px;
-        font-family: 'Vazirmatn', sans-serif;
+        -webkit-flex: 1; flex: 1; background: transparent; border: none; color: white;
+        font-size: 16px; font-family: 'Vazirmatn', sans-serif;
         padding: 10px 14px; outline: none;
+        -webkit-appearance: none; appearance: none;
     }
     input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
 
     .send-btn {
         width: 46px; height: 46px; background: transparent; border: none;
         cursor: pointer; padding: 0;
-        display: flex; align-items: center; justify-content: center;
-        transition: transform 0.2s ease; flex-shrink: 0;
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        -webkit-justify-content: center; justify-content: center;
+        -webkit-flex-shrink: 0; flex-shrink: 0;
     }
-    .send-btn:hover { transform: scale(1.1); }
-    .send-btn:active { transform: scale(0.92); }
 
     /* ORB */
     .orb {
         width: 40px; height: 40px; border-radius: 50%;
-        background: rgba(255,255,255,0.08); backdrop-filter: blur(12px);
+        background: rgba(255,255,255,0.08);
+        -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
         border: 1.5px solid #d4af37; position: relative; overflow: hidden;
         box-shadow: 0 0 15px rgba(212,175,55,0.5), inset 0 0 12px rgba(255,255,255,0.3);
+        -webkit-animation: orb-pulse 2.2s ease-in-out infinite;
         animation: orb-pulse 2.2s ease-in-out infinite;
     }
     .core {
         position: absolute; top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%,-50%); transform: translate(-50%,-50%);
         width: 13px; height: 13px;
+        background: -webkit-radial-gradient(circle, #fff 20%, #d4af37 70%);
         background: radial-gradient(circle, #fff 20%, #d4af37 70%);
         border-radius: 50%; box-shadow: 0 0 18px #d4af37;
-        animation: core-glow 1.6s ease-in-out infinite alternate; z-index: 3;
+        -webkit-animation: core-glow 1.6s ease-in-out infinite alternate;
+        animation: core-glow 1.6s ease-in-out infinite alternate;
+        z-index: 3;
     }
-    .neural-lines { position: absolute; inset: 0; z-index: 2; }
+    .neural-lines { position: absolute; top:0;left:0;right:0;bottom:0; z-index: 2; }
     .neural-lines .line {
         position: absolute; top: 50%; left: 50%;
         width: 120%; height: 1.2px;
+        background: -webkit-linear-gradient(90deg, transparent, #d4af37, transparent);
         background: linear-gradient(90deg, transparent, #d4af37, transparent);
-        box-shadow: 0 0 6px #d4af37; transform-origin: center;
+        -webkit-transform-origin: center; transform-origin: center;
+        -webkit-animation: neural-rotate 3.5s linear infinite;
         animation: neural-rotate 3.5s linear infinite;
     }
-    .neural-lines .line:nth-child(1) { transform: rotate(0deg); animation-duration: 3.2s; }
-    .neural-lines .line:nth-child(2) { transform: rotate(36deg); animation-duration: 4.1s; }
-    .neural-lines .line:nth-child(3) { transform: rotate(72deg); animation-duration: 2.8s; }
-    .neural-lines .line:nth-child(4) { transform: rotate(108deg); animation-duration: 3.8s; }
-    .neural-lines .line:nth-child(5) { transform: rotate(144deg); animation-duration: 4.5s; }
+    .neural-lines .line:nth-child(1) { -webkit-transform: rotate(0deg); transform: rotate(0deg); -webkit-animation-duration: 3.2s; animation-duration: 3.2s; }
+    .neural-lines .line:nth-child(2) { -webkit-transform: rotate(36deg); transform: rotate(36deg); -webkit-animation-duration: 4.1s; animation-duration: 4.1s; }
+    .neural-lines .line:nth-child(3) { -webkit-transform: rotate(72deg); transform: rotate(72deg); -webkit-animation-duration: 2.8s; animation-duration: 2.8s; }
+    .neural-lines .line:nth-child(4) { -webkit-transform: rotate(108deg); transform: rotate(108deg); -webkit-animation-duration: 3.8s; animation-duration: 3.8s; }
+    .neural-lines .line:nth-child(5) { -webkit-transform: rotate(144deg); transform: rotate(144deg); -webkit-animation-duration: 4.5s; animation-duration: 4.5s; }
 
+    @-webkit-keyframes orb-pulse {
+        0%,100% { -webkit-transform: scale(1); transform: scale(1); }
+        50% { -webkit-transform: scale(1.08); transform: scale(1.08); }
+    }
     @keyframes orb-pulse {
-        0%,100% { transform: scale(1); box-shadow: 0 0 15px rgba(212,175,55,0.5); }
-        50% { transform: scale(1.08); box-shadow: 0 0 28px rgba(212,175,55,0.85); }
+        0%,100% { transform: scale(1); }
+        50% { transform: scale(1.08); }
+    }
+    @-webkit-keyframes core-glow {
+        from { box-shadow: 0 0 12px #d4af37; }
+        to { box-shadow: 0 0 26px #fff, 0 0 38px #d4af37; }
     }
     @keyframes core-glow {
         from { box-shadow: 0 0 12px #d4af37; }
         to { box-shadow: 0 0 26px #fff, 0 0 38px #d4af37; }
+    }
+    @-webkit-keyframes neural-rotate {
+        from { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+        to { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
     }
     @keyframes neural-rotate {
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
     }
 
-    /* ===== انیمیشن مغز ===== */
+    /* thinking */
     .brain-thinking {
-        display: flex; align-items: center; gap: 10px; padding: 4px 2px;
-    }
-    .brain-img-wrap {
-        position: relative; width: 38px; height: 38px; flex-shrink: 0;
-    }
-    .brain-img-wrap img {
-        width: 38px; height: 38px; object-fit: contain;
-        filter: sepia(1) saturate(3) hue-rotate(5deg) brightness(1.1)
-            drop-shadow(0 0 6px rgba(212,175,55,0.9))
-            drop-shadow(0 0 14px rgba(212,175,55,0.6));
-        animation: brain-think 1.6s ease-in-out infinite;
-    }
-    @keyframes brain-think {
-        0%   { transform: scale(1)    rotate(-1deg); filter: sepia(1) saturate(3) hue-rotate(5deg) brightness(1.1) drop-shadow(0 0 6px rgba(212,175,55,0.9)); }
-        25%  { transform: scale(1.07) rotate(0deg);  filter: sepia(1) saturate(4) hue-rotate(10deg) brightness(1.3) drop-shadow(0 0 16px rgba(255,220,80,1)); }
-        50%  { transform: scale(1.04) rotate(1deg);  filter: sepia(1) saturate(3) hue-rotate(5deg) brightness(1.15) drop-shadow(0 0 10px rgba(212,175,55,0.8)); }
-        75%  { transform: scale(1.09) rotate(-0.5deg); filter: sepia(1) saturate(5) hue-rotate(15deg) brightness(1.4) drop-shadow(0 0 20px rgba(255,200,50,1)); }
-        100% { transform: scale(1)    rotate(-1deg); filter: sepia(1) saturate(3) hue-rotate(5deg) brightness(1.1) drop-shadow(0 0 6px rgba(212,175,55,0.9)); }
-    }
-    .spark {
-        position: absolute; width: 4px; height: 4px; border-radius: 50%;
-        background: #ffe066; opacity: 0; pointer-events: none;
-    }
-    .spark:nth-child(1) { top: -3px; left: 50%; animation: spark-fly 1.3s ease-out infinite 0s; --dx:4px; --dy:-10px; }
-    .spark:nth-child(2) { top: 50%; right: -3px; animation: spark-fly 1.3s ease-out infinite 0.4s; --dx:10px; --dy:-3px; }
-    .spark:nth-child(3) { bottom: -3px; left: 35%; animation: spark-fly 1.3s ease-out infinite 0.8s; --dx:-3px; --dy:10px; }
-    .spark:nth-child(4) { top: 35%; left: -3px; animation: spark-fly 1.3s ease-out infinite 1.1s; --dx:-10px; --dy:3px; }
-    @keyframes spark-fly {
-        0%   { opacity: 0; transform: translate(0,0) scale(0.4); }
-        25%  { opacity: 1; }
-        100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        gap: 10px; padding: 4px 2px;
     }
     .thinking-dots {
         font-size: 13px; color: rgba(212,175,55,0.9); font-weight: 600;
-        font-family: 'Vazirmatn', sans-serif;
-        display: flex; align-items: center; gap: 3px;
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        gap: 3px;
     }
     .thinking-dots span {
+        -webkit-animation: dot-bounce 1.2s ease-in-out infinite;
         animation: dot-bounce 1.2s ease-in-out infinite;
         display: inline-block; font-size: 18px; line-height: 1; color: #d4af37;
     }
-    .thinking-dots span:nth-child(1) { animation-delay: 0s; }
-    .thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+    .thinking-dots span:nth-child(2) { -webkit-animation-delay: 0.2s; animation-delay: 0.2s; }
+    .thinking-dots span:nth-child(3) { -webkit-animation-delay: 0.4s; animation-delay: 0.4s; }
+    @-webkit-keyframes dot-bounce {
+        0%,80%,100% { -webkit-transform: translateY(0); transform: translateY(0); opacity: 0.4; }
+        40% { -webkit-transform: translateY(-5px); transform: translateY(-5px); opacity: 1; }
+    }
     @keyframes dot-bounce {
         0%,80%,100% { transform: translateY(0); opacity: 0.4; }
         40% { transform: translateY(-5px); opacity: 1; }
@@ -237,62 +251,148 @@
         display: inline-block; width: 2px; height: 1em;
         background: rgba(255,255,255,0.75); margin-right: 1px;
         vertical-align: text-bottom;
+        -webkit-animation: cursor-flash 0.55s step-end infinite;
         animation: cursor-flash 0.55s step-end infinite;
     }
+    @-webkit-keyframes cursor-flash { 0%,100%{opacity:1;} 50%{opacity:0;} }
     @keyframes cursor-flash { 0%,100%{opacity:1;} 50%{opacity:0;} }
 
-    /* ===== خدمات ===== */
+    /* سرویس‌ها */
     .services-grid {
-        display: grid; grid-template-columns: 1fr 1fr;
+        display: -webkit-flex; display: flex;
+        -webkit-flex-wrap: wrap; flex-wrap: wrap;
         gap: 16px; width: 100%; max-width: 360px;
     }
+    .services-grid a {
+        text-decoration: none; color: white;
+        width: calc(50% - 8px);
+        display: block;
+    }
     .service-box {
-        background: rgba(255,255,255,0.11); backdrop-filter: blur(16px);
+        background: rgba(255,255,255,0.11);
+        -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
         border-radius: 24px; padding: 15px 10px 12px; text-align: center;
         cursor: pointer; height: 230px;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        gap: 10px; transition: all 0.3s;
+        display: -webkit-flex; display: flex;
+        -webkit-flex-direction: column; flex-direction: column;
+        -webkit-align-items: center; align-items: center;
+        -webkit-justify-content: center; justify-content: center;
+        gap: 10px;
+        -webkit-transition: -webkit-transform 0.3s ease; transition: transform 0.3s ease;
         border: 1px solid rgba(212,175,55,0.55);
         box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 25px rgba(212,175,55,0.25);
+        width: 100%;
     }
-    .service-box:hover { transform: translateY(-8px); }
+    .service-box:active { -webkit-transform: scale(0.97); transform: scale(0.97); }
     .service-box img {
         width: 145px; height: 145px; object-fit: cover;
         border-radius: 18px; border: 2px solid rgba(255,255,255,0.3);
     }
     .service-box span {
         font-size: 17.5px; font-weight: 800; color: white;
-        text-shadow: 0 0 10px rgba(212,175,55,0.35); letter-spacing: 0.3px;
+        text-shadow: 0 0 10px rgba(212,175,55,0.35);
     }
-    .services-grid a { text-decoration: none !important; color: white !important; }
 
-    /* ===== باکس کد نویسی ذهنی ===== */
+    /* باکس کد نویسی ذهنی */
+    .mindcode-box {
+        background: #000 !important;
+        border: 1px solid rgba(0,255,65,0.45) !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 20px rgba(0,255,65,0.15) !important;
+        position: relative;
+        overflow: hidden;
+    }
+    .mindcode-box::before {
+        content: '';
+        position: absolute; top:0;left:0;right:0;bottom:0;
+        background-image: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 3px,
+            rgba(0,255,65,0.02) 3px,
+            rgba(0,255,65,0.02) 4px
+        );
+        pointer-events: none;
+        border-radius: 24px;
+        z-index: 0;
+    }
+    .mc-terminal {
+        width: 115px;
+        height: 92px;
+        background: #000;
+        border: 1px solid rgba(0,255,65,0.5);
+        border-radius: 8px;
+        padding: 7px 9px;
+        font-family: 'Share Tech Mono', 'Courier New', monospace;
+        font-size: 9.5px;
+        color: #00ff41;
+        overflow: hidden;
+        line-height: 1.6;
+        text-align: left;
+        direction: ltr;
+        box-shadow: 0 0 15px rgba(0,255,65,0.2);
+        position: relative;
+        z-index: 1;
+    }
+    .mc-prompt {
+        color: rgba(0,255,65,0.45);
+        margin-bottom: 3px;
+        font-size: 8.5px;
+    }
+    .mc-code {
+        -webkit-animation: matrix-scroll 3s linear infinite;
+        animation: matrix-scroll 3s linear infinite;
+    }
+    @-webkit-keyframes matrix-scroll {
+        0%   { -webkit-transform: translateY(0); transform: translateY(0); }
+        100% { -webkit-transform: translateY(-58px); transform: translateY(-58px); }
+    }
     @keyframes matrix-scroll {
         0%   { transform: translateY(0); }
-        100% { transform: translateY(-60px); }
+        100% { transform: translateY(-58px); }
+    }
+    .mc-title {
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 16px;
+        font-weight: 900;
+        color: #00ff41;
+        text-shadow: 0 0 10px #00ff41, 0 0 22px rgba(0,255,65,0.4);
+        position: relative; z-index: 1;
+    }
+    .mc-sub {
+        font-family: 'Share Tech Mono', 'Courier New', monospace;
+        font-size: 8.5px;
+        color: rgba(0,255,65,0.4);
+        letter-spacing: 2px;
+        position: relative; z-index: 1;
     }
 
-    /* ===== منو ===== */
+    /* منو */
     #menu-overlay {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.55);
-        z-index: 150; opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
+        position: fixed; top:0;left:0;right:0;bottom:0;
+        background: rgba(0,0,0,0.55);
+        z-index: 150; opacity: 0; pointer-events: none;
+        -webkit-transition: opacity 0.5s ease; transition: opacity 0.5s ease;
     }
     #menu-overlay.active { opacity: 1; pointer-events: auto; }
-
     .side-menu {
         position: fixed; top: 0; right: 0; width: 255px; height: 100vh;
-        background: rgba(255,255,255,0.085); backdrop-filter: blur(26px);
-        -webkit-backdrop-filter: blur(26px);
+        background: rgba(255,255,255,0.085);
+        -webkit-backdrop-filter: blur(26px); backdrop-filter: blur(26px);
         border-left: 1px solid rgba(212,175,55,0.3);
         box-shadow: -12px 0 40px rgba(0,0,0,0.7);
-        z-index: 200; transform: translateX(100%);
-        transition: transform 0.55s cubic-bezier(0.25,0.1,0.25,1);
-        padding: 22px 16px 28px; display: flex; flex-direction: column; overflow-y: auto;
+        z-index: 200;
+        -webkit-transform: translateX(100%); transform: translateX(100%);
+        -webkit-transition: -webkit-transform 0.55s ease; transition: transform 0.55s ease;
+        padding: 22px 16px 28px;
+        display: -webkit-flex; display: flex;
+        -webkit-flex-direction: column; flex-direction: column;
+        overflow-y: auto;
     }
-    .side-menu.open { transform: translateX(0); }
-
+    .side-menu.open { -webkit-transform: translateX(0); transform: translateX(0); }
     .menu-header {
-        display: flex; align-items: center; justify-content: space-between;
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        -webkit-justify-content: space-between; justify-content: space-between;
         margin-bottom: 24px; padding-bottom: 15px;
         border-bottom: 1px solid rgba(212,175,55,0.22);
     }
@@ -302,26 +402,23 @@
         text-shadow: 0 0 12px rgba(212,175,55,0.5);
     }
     .close-btn {
-        width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+        width: 38px; height: 38px;
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        -webkit-justify-content: center; justify-content: center;
         font-size: 24px; color: #d4af37; cursor: pointer;
-        border-radius: 50%; transition: all 0.2s ease;
+        border-radius: 50%;
     }
-    .close-btn:hover { background: rgba(212,175,55,0.15); transform: rotate(90deg); }
-    .menu-items { display: flex; flex-direction: column; gap: 9px; }
+    .menu-items { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; gap: 9px; }
     .menu-item {
         background: rgba(255,255,255,0.06); border: 1px solid rgba(212,175,55,0.18);
         border-radius: 15px; padding: 14px 18px;
-        display: flex; align-items: center; text-decoration: none; color: white;
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        text-decoration: none; color: white;
         font-size: 15.8px; font-weight: 700;
-        transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
-        box-shadow: 0 3px 12px rgba(0,0,0,0.25);
     }
-    .menu-item:hover {
-        background: rgba(212,175,55,0.11); border-color: #d4af37;
-        transform: translateX(-8px); box-shadow: 0 6px 20px rgba(212,175,55,0.22);
-    }
-    .menu-item:active { transform: scale(0.97); }
-    .menu-item .text { flex: 1; line-height: 1.35; }
+    .menu-item .text { -webkit-flex: 1; flex: 1; line-height: 1.35; }
 </style>
 </head>
 <body>
@@ -353,18 +450,21 @@
     </div>
 
     <div class="services-grid">
+
         <a href="https://planlife.ir/Pages/podcasts_free/index.html">
             <div class="service-box">
                 <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="">
                 <span>پادکست رایگان</span>
             </div>
         </a>
+
         <a href="https://planlife.ir/Pages/Doreha/index.html">
             <div class="service-box">
                 <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="">
                 <span>دوره ها</span>
             </div>
         </a>
+
         <a href="https://planlife.ir/Pages/Magazine/index.html">
             <div class="service-box">
                 <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="">
@@ -372,63 +472,25 @@
             </div>
         </a>
 
-        <!-- ===== باکس کد نویسی ذهنی ===== -->
-        <a href="https://planlife.ir/Pages/MindCoding/index.html">
-            <div class="service-box" style="position:relative;overflow:hidden;border-color:#00ff4166 !important;box-shadow:0 10px 40px rgba(0,0,0,0.6),0 0 25px rgba(0,255,65,0.2) !important;">
-                <!-- بکگراند مشکی هکری -->
-                <div style="position:absolute;inset:0;background:linear-gradient(135deg,#000 0%,#001500 50%,#000 100%);z-index:0;border-radius:22px;"></div>
-                <!-- اسکن‌لاین‌ها -->
-                <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,0.03) 2px,rgba(0,255,65,0.03) 4px);z-index:1;border-radius:22px;pointer-events:none;"></div>
-                <!-- محتوا -->
-                <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:100%;height:100%;">
-                    <!-- ترمینال مینیاتوری -->
-                    <div style="
-                        width:110px;height:90px;
-                        background:#000;
-                        border:1.5px solid #00ff4188;
-                        border-radius:8px;
-                        padding:6px 8px;
-                        font-family:'Share Tech Mono',monospace;
-                        font-size:9.5px;
-                        color:#00ff41;
-                        overflow:hidden;
-                        line-height:1.55;
-                        text-align:left;
-                        direction:ltr;
-                        box-shadow:0 0 18px #00ff4133,inset 0 0 10px rgba(0,255,65,0.04);
-                    ">
-                        <div style="color:#00ff4166;margin-bottom:2px;">root@mind:~$</div>
-                        <div style="animation:matrix-scroll 3s linear infinite;">
-                            if(belief){<br>
-                            &nbsp;rewrite();<br>
-                            }<br>
-                            RAS.update();<br>
-                            grow(life);<br>
-                            &nbsp;<br>
-                            if(belief){<br>
-                            &nbsp;rewrite();<br>
-                        </div>
+        <a href="https://planlife.ir/Pages/Mindcoding/index.html">
+            <div class="service-box mindcode-box">
+                <div class="mc-terminal">
+                    <div class="mc-prompt">root@mind:~$</div>
+                    <div class="mc-code">
+                        if(belief){<br>
+                        &nbsp;rewrite();<br>
+                        }<br>
+                        RAS.update();<br>
+                        grow(life);<br>
+                        mind++;<br>
+                        if(belief){<br>
+                        &nbsp;rewrite();<br>
                     </div>
-                    <!-- اسم -->
-                    <span style="
-                        font-family:'Vazirmatn',sans-serif;
-                        font-size:16px;
-                        font-weight:900;
-                        color:#00ff41;
-                        text-shadow:0 0 12px #00ff41,0 0 25px #00ff4155;
-                        letter-spacing:0.5px;
-                    ">کد نویسی ذهنی</span>
-                    <!-- ساب‌تایتل -->
-                    <span style="
-                        font-family:'Share Tech Mono',monospace;
-                        font-size:9px;
-                        color:#00ff4155;
-                        letter-spacing:2.5px;
-                    ">MIND.REBOOT.EXE</span>
                 </div>
+                <span class="mc-title">کد نویسی ذهنی</span>
+                <span class="mc-sub">MIND.REBOOT.EXE</span>
             </div>
         </a>
-        <!-- ===== پایان باکس کد نویسی ذهنی ===== -->
 
         <a href="https://planlife.ir/Pages/Videos/index.html">
             <div class="service-box">
@@ -436,24 +498,28 @@
                 <span>ویدیوها 🎥</span>
             </div>
         </a>
+
         <a href="https://planlife.ir/Pages/Music/index.html">
             <div class="service-box">
                 <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="">
                 <span>موزیک ها</span>
             </div>
         </a>
+
         <a href="https://planlife.ir/Pages/Book/index.html">
             <div class="service-box">
                 <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449504/IMG_1045_lgkcd4.jpg" alt="">
                 <span>کتابخانه 📚</span>
             </div>
         </a>
+
         <a href="https://planlife.ir/Pages/Tamrin/index.html">
             <div class="service-box">
                 <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="">
                 <span>تمرینات مجازی</span>
             </div>
         </a>
+
     </div>
 </div>
 
@@ -479,7 +545,7 @@
         <a href="https://planlife.ir/Pages/Magazine/index.html" class="menu-item" onclick="closeMenu()">
             <span class="text">مجله ماورایی</span>
         </a>
-        <a href="https://planlife.ir/Pages/MindCoding/index.html" class="menu-item" onclick="closeMenu()">
+        <a href="https://planlife.ir/Pages/Mindcoding/index.html" class="menu-item" onclick="closeMenu()">
             <span class="text">کد نویسی ذهنی 💻</span>
         </a>
         <a href="https://planlife.ir/Pages/Book/index.html" class="menu-item" onclick="closeMenu()">
@@ -492,17 +558,14 @@
 </div>
 
 <script>
-// ======= سیستم QA =======
-const QA_URL = "https://raw.githubusercontent.com/soheil001/planlife1/main/qa.json";
-let qaData = null;
+var QA_URL = "https://raw.githubusercontent.com/soheil001/planlife1/main/qa.json";
+var qaData = null;
 
-async function loadQA() {
-    try {
-        const res = await fetch(QA_URL + "?t=" + Date.now());
-        qaData = await res.json();
-    } catch(e) {
-        console.log("خطا در بارگذاری QA:", e);
-    }
+function loadQA() {
+    return fetch(QA_URL + "?t=" + Date.now())
+        .then(function(res){ return res.json(); })
+        .then(function(data){ qaData = data; })
+        .catch(function(e){ console.log("خطا:", e); });
 }
 
 function normalize(text) {
@@ -512,107 +575,84 @@ function normalize(text) {
 }
 
 function scoreEntry(entry, userWords, userText) {
-    let score = 0;
-    let expandedWords = [...userWords];
+    var score = 0;
+    var expandedWords = userWords.slice();
     if (qaData && qaData.synonyms) {
-        for (const [key, synonyms] of Object.entries(qaData.synonyms)) {
-            const allForms = [key, ...synonyms].map(normalize);
-            if (userWords.some(w => allForms.includes(w))) expandedWords.push(...allForms);
+        var keys = Object.keys(qaData.synonyms);
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            var synonyms = qaData.synonyms[key];
+            var allForms = [key].concat(synonyms).map(normalize);
+            if (userWords.some(function(w){ return allForms.indexOf(w) >= 0; })) {
+                expandedWords = expandedWords.concat(allForms);
+            }
         }
     }
-    for (const q of entry.questions) {
-        const normQ = normalize(q);
+    for (var j = 0; j < entry.questions.length; j++) {
+        var normQ = normalize(entry.questions[j]);
         if (normQ === normalize(userText)) return 1000;
-        if (normalize(userText).includes(normQ) || normQ.includes(normalize(userText))) score += 80;
+        if (normalize(userText).indexOf(normQ) >= 0 || normQ.indexOf(normalize(userText)) >= 0) score += 80;
     }
-    const allQWords = entry.questions.map(q => normalize(q)).join(' ').split(/\s+/);
-    const tagWords = entry.tags ? entry.tags.map(t => normalize(t)) : [];
-    for (const word of expandedWords) {
+    var allQWords = entry.questions.map(function(q){ return normalize(q); }).join(' ').split(/\s+/);
+    var tagWords = entry.tags ? entry.tags.map(function(t){ return normalize(t); }) : [];
+    for (var k = 0; k < expandedWords.length; k++) {
+        var word = expandedWords[k];
         if (word.length < 2) continue;
-        if (allQWords.some(w => w.includes(word) || word.includes(w))) score += 15;
-        if (tagWords.some(t => t.includes(word) || word.includes(t))) score += 20;
+        if (allQWords.some(function(w){ return w.indexOf(word) >= 0 || word.indexOf(w) >= 0; })) score += 15;
+        if (tagWords.some(function(t){ return t.indexOf(word) >= 0 || word.indexOf(t) >= 0; })) score += 20;
     }
     return score;
 }
 
 function findAnswer(userText) {
     if (!qaData || !qaData.qa) return null;
-    const norm = normalize(userText);
-    const words = norm.split(/\s+/).filter(w => w.length > 1);
-    let bestScore = 0, bestAnswer = null;
-    for (const entry of qaData.qa) {
-        const score = scoreEntry(entry, words, userText);
-        if (score > bestScore) { bestScore = score; bestAnswer = entry.answer; }
+    var norm = normalize(userText);
+    var words = norm.split(/\s+/).filter(function(w){ return w.length > 1; });
+    var bestScore = 0, bestAnswer = null;
+    for (var i = 0; i < qaData.qa.length; i++) {
+        var score = scoreEntry(qaData.qa[i], words, userText);
+        if (score > bestScore) { bestScore = score; bestAnswer = qaData.qa[i].answer; }
     }
     if (bestScore >= 15) return bestAnswer;
     return qaData.default_response || null;
 }
 
-// ======= پیام‌ها =======
 function addMessage(text, type) {
-    const output = document.getElementById("chat-output");
-    const div = document.createElement("div");
+    var output = document.getElementById("chat-output");
+    var div = document.createElement("div");
     div.className = type === 'user' ? 'msg-user' : 'msg-bot';
     div.innerHTML = text.replace(/\n/g,'<br>');
     output.appendChild(div);
     output.scrollTop = output.scrollHeight;
 }
 
-// ======= انیمیشن مغز PNG =======
-function showBrainThinking() {
-    const output = document.getElementById("chat-output");
-    const div = document.createElement("div");
+function showThinking() {
+    var output = document.getElementById("chat-output");
+    var div = document.createElement("div");
     div.className = 'msg-bot';
     div.id = 'thinking-indicator';
-    div.innerHTML = `
-        <div class="brain-thinking">
-            <div class="brain-img-wrap">
-                <div class="spark"></div>
-                <div class="spark"></div>
-                <div class="spark"></div>
-                <div class="spark"></div>
-                <svg width="38" height="38" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 8px rgba(212,175,55,0.9)) drop-shadow(0 0 16px rgba(212,175,55,0.5));animation:brain-think 1.6s ease-in-out infinite;">
-                  <ellipse cx="38" cy="52" rx="22" ry="28" fill="#c8922a" opacity="0.95"/>
-                  <ellipse cx="62" cy="52" rx="22" ry="28" fill="#d4af37" opacity="0.95"/>
-                  <ellipse cx="38" cy="52" rx="14" ry="20" fill="#e8c84a" opacity="0.5"/>
-                  <ellipse cx="62" cy="52" rx="14" ry="20" fill="#f0d060" opacity="0.5"/>
-                  <path d="M50 28 C50 22 42 18 36 22 C30 18 22 22 20 30 C14 32 12 40 16 46" stroke="#fff8dc" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.7"/>
-                  <path d="M50 28 C50 22 58 18 64 22 C70 18 78 22 80 30 C86 32 88 40 84 46" stroke="#fff8dc" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.7"/>
-                  <path d="M28 42 C32 38 36 42 34 48 C38 44 44 46 42 52" stroke="#fff8dc" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
-                  <path d="M72 42 C68 38 64 42 66 48 C62 44 56 46 58 52" stroke="#fff8dc" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
-                  <rect x="47" y="30" width="6" height="44" rx="3" fill="#a07820" opacity="0.8"/>
-                  <circle cx="50" cy="26" r="5" fill="#d4af37" opacity="0.9"/>
-                </svg>
-            </div>
-            <div class="thinking-dots">
-                در حال فکر کردن
-                <span>.</span><span>.</span><span>.</span>
-            </div>
-        </div>`;
+    div.innerHTML = '<div class="brain-thinking"><div class="thinking-dots">در حال فکر کردن <span>.</span><span>.</span><span>.</span></div></div>';
     output.appendChild(div);
     output.scrollTop = output.scrollHeight;
 }
 
 function removeThinking() {
-    const el = document.getElementById('thinking-indicator');
+    var el = document.getElementById('thinking-indicator');
     if (el) el.remove();
 }
 
-// ======= تایپ‌رایتر =======
 function typewriterMessage(text, onDone) {
-    const output = document.getElementById("chat-output");
-    const div = document.createElement("div");
+    var output = document.getElementById("chat-output");
+    var div = document.createElement("div");
     div.className = 'msg-bot';
-    const span = document.createElement("span");
-    const cursor = document.createElement("span");
+    var span = document.createElement("span");
+    var cursor = document.createElement("span");
     cursor.className = "cursor-blink";
     div.appendChild(span);
     div.appendChild(cursor);
     output.appendChild(div);
-
-    const chars = [...text.replace(/<br>/g, '\n')];
-    let i = 0, rawText = '';
-
+    var chars = Array.from(text.replace(/<br>/g, '\n'));
+    var i = 0, rawText = '';
     function typeNext() {
         if (i >= chars.length) {
             cursor.remove();
@@ -620,52 +660,47 @@ function typewriterMessage(text, onDone) {
             if (onDone) onDone();
             return;
         }
-        const ch = chars[i];
+        var ch = chars[i];
         rawText += ch === '\n' ? '<br>' : ch;
         span.innerHTML = rawText;
         i++;
         output.scrollTop = output.scrollHeight;
-        const delay = /[.!?،؟\n]/.test(ch) ? 180 : 45;
+        var delay = /[.!?،؟\n]/.test(ch) ? 180 : 45;
         setTimeout(typeNext, delay);
     }
     typeNext();
 }
 
-// ======= ارسال پیام =======
-let isSending = false;
-async function sendMessage() {
+var isSending = false;
+function sendMessage() {
     if (isSending) return;
-    const input = document.getElementById("user-input");
-    const text = input.value.trim();
+    var input = document.getElementById("user-input");
+    var text = input.value.trim();
     if (!text) return;
-
     isSending = true;
     input.disabled = true;
-
     addMessage(text, 'user');
     input.value = "";
-
-    showBrainThinking();
-    await new Promise(r => setTimeout(r, 2200));
-    removeThinking();
-
-    const answer = findAnswer(text);
-    const reply = answer || "سوال جالبیه! برای پاسخ دقیق‌تر می‌تونی از پادکست‌ها و دوره‌های پایین استفاده کنی یا سوالت رو با کلمات دیگه بپرسی 😊";
-
-    typewriterMessage(reply, () => {
-        input.disabled = false;
-        input.focus();
-        isSending = false;
-    });
+    showThinking();
+    setTimeout(function() {
+        removeThinking();
+        var answer = findAnswer(text);
+        var reply = answer || "سوال جالبیه! برای پاسخ دقیق‌تر می‌تونی از پادکست‌ها و دوره‌های پایین استفاده کنی یا سوالت رو با کلمات دیگه بپرسی 😊";
+        typewriterMessage(reply, function() {
+            input.disabled = false;
+            input.focus();
+            isSending = false;
+        });
+    }, 2200);
 }
 
-// ======= منو =======
 function toggleMenu() {
-    const menu = document.getElementById('side-menu');
-    const overlay = document.getElementById('menu-overlay');
-    const main = document.querySelector('.main-center');
-    if (menu.classList.contains('open')) { closeMenu(); }
-    else {
+    var menu = document.getElementById('side-menu');
+    var overlay = document.getElementById('menu-overlay');
+    var main = document.querySelector('.main-center');
+    if (menu.classList.contains('open')) {
+        closeMenu();
+    } else {
         menu.classList.add('open');
         overlay.classList.add('active');
         main.classList.add('blurred');
@@ -676,24 +711,22 @@ function closeMenu() {
     document.getElementById('menu-overlay').classList.remove('active');
     document.querySelector('.main-center').classList.remove('blurred');
 }
-document.addEventListener('keydown', e => { if (e.key === "Escape") closeMenu(); });
+document.addEventListener('keydown', function(e) { if (e.key === "Escape") closeMenu(); });
 
-// ======= شروع =======
-window.onload = async () => {
-    const input = document.getElementById('user-input');
-
-    input.addEventListener('focus', () => {
+window.onload = function() {
+    var input = document.getElementById('user-input');
+    input.addEventListener('focus', function() {
         document.body.style.position = 'fixed';
         document.body.style.width = '100%';
     });
-    input.addEventListener('blur', () => {
+    input.addEventListener('blur', function() {
         document.body.style.position = '';
         document.body.style.width = '';
         window.scrollTo(0, 0);
     });
-
-    await loadQA();
-    addMessage("به PlanLife خوش اومدی 🌟\nهر سوالی درباره باور، ثروت، روابط یا اعتماد به نفس داری بپرس!", 'bot');
+    loadQA().then(function() {
+        addMessage("به PlanLife خوش اومدی 🌟\nهر سوالی درباره باور، ثروت، روابط یا اعتماد به نفس داری بپرس!", 'bot');
+    });
 };
 </script>
 </body>
