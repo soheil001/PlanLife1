@@ -159,15 +159,16 @@ body::after {
 
 /* Input area */
 .terminal-input-area {
-    background: #020802;
-    border: 1px solid #00ff4133;
-    border-top: 2px solid #00ff4166;
-    padding: 12px 18px;
+    background: #030f03;
+    border: 1px solid #00ff4155;
+    border-top: 2px solid #00ff41aa;
+    padding: 18px 20px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     flex-shrink: 0;
-    border-radius: 0 0 0 0;
+    min-height: 70px;
+    box-shadow: 0 -4px 24px #00ff4115;
 }
 .input-prompt {
     color: #00ff41;
@@ -182,38 +183,39 @@ body::after {
     border: none;
     outline: none;
     color: #00ff41;
-    font-size: 14px;
+    font-size: 16px;
     font-family: 'Vazirmatn', sans-serif;
     font-weight: 600;
     direction: rtl;
     caret-color: #00ff41;
     text-shadow: 0 0 6px #00ff4166;
+    min-height: 28px;
 }
 #belief-input::placeholder {
-    color: #00ff4133;
-    font-size: 13px;
+    color: #00ff4166;
+    font-size: 14px;
 }
 
 /* Execute button */
 .exec-btn {
-    background: transparent;
-    border: 1px solid #00ff4155;
+    background: #00ff4110;
+    border: 1px solid #00ff4188;
     color: #00ff41;
     font-family: 'Share Tech Mono', monospace;
-    font-size: 12px;
-    padding: 6px 14px;
-    border-radius: 4px;
+    font-size: 13px;
+    padding: 10px 18px;
+    border-radius: 6px;
     cursor: pointer;
     letter-spacing: 1px;
     transition: all 0.2s;
     flex-shrink: 0;
     text-shadow: 0 0 8px #00ff41;
-    box-shadow: 0 0 8px #00ff4122;
+    box-shadow: 0 0 12px #00ff4133;
 }
 .exec-btn:hover {
-    background: #00ff4115;
+    background: #00ff4122;
     border-color: #00ff41;
-    box-shadow: 0 0 16px #00ff4144;
+    box-shadow: 0 0 20px #00ff4155;
 }
 .exec-btn:disabled {
     opacity: 0.3;
@@ -347,7 +349,6 @@ window.addEventListener('resize', () => { canvas.width = window.innerWidth; canv
 // ===== QA Data =====
 const QA_URL = "https://raw.githubusercontent.com/soheil001/planlife1/main/mental-coding-qa.json";
 
-// fallback داده‌های پایه در صورت خطا
 const beliefQA_fallback = [
 {"keywords":["ثروتمند","ثروت","پول","سخت","نمیشه","نمیتونم","امکان"],
  "result":"این باور باعث میشه ناخودآگاهت هر فرصت مالی رو رد کنه. مغزت دنبال شواهدی میگرده که ثروت رو سخت نشون بده و از موقعیت‌های سودآور فرار کنی. نتیجه: ثروتمند نمی‌شی نه به خاطر شرایط، بلکه چون ذهنت اجازه نمیده."},
@@ -368,7 +369,6 @@ async function loadBeliefQA() {
         const res = await fetch(QA_URL + "?t=" + Date.now());
         const data = await res.json();
         if (data.beliefs && data.beliefs.length > 0) {
-            // تبدیل فرمت JSON به فرمت داخلی
             beliefQA = data.beliefs.map(item => ({
                 keywords: item.tags || [],
                 result: item.analysis
@@ -533,7 +533,6 @@ document.getElementById('belief-input').addEventListener('keydown', e => {
     if (e.key === 'Enter') runAnalysis();
 });
 
-// لود داده‌ها از GitHub هنگام باز شدن صفحه
 loadBeliefQA();
 </script>
 </body>
