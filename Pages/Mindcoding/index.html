@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>کد نویسی ذهنی | PlanLife</title>
+<title>اسکنر ذهن | PlanLife</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
@@ -18,270 +18,309 @@ html, body {
     color: #00ff41;
 }
 
-/* CRT scanline overlay */
 body::before {
     content: '';
     position: fixed;
     inset: 0;
     background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.07) 2px,
-        rgba(0,0,0,0.07) 4px
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px
     );
     pointer-events: none;
     z-index: 999;
 }
 
-/* Green CRT glow on screen edges */
 body::after {
     content: '';
     position: fixed;
     inset: 0;
-    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,255,65,0.04) 100%);
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(0,255,65,0.06) 100%);
     pointer-events: none;
     z-index: 998;
 }
 
-/* Matrix rain canvas */
 #matrix-canvas {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    opacity: 0.07;
+    position: fixed; inset: 0; z-index: 0; opacity: 0.06;
 }
 
-.terminal-wrapper {
+/* Radar overlay */
+#radar-canvas {
     position: fixed;
-    inset: 0;
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    padding: 12px 16px;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-    max-width: 720px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s;
+}
+#radar-canvas.active { opacity: 1; }
+
+.terminal-wrapper {
+    position: fixed; inset: 0; z-index: 10;
+    display: flex; flex-direction: column;
+    padding: 10px 14px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    max-width: 760px;
     margin: 0 auto;
 }
 
-/* Header bar */
 .terminal-topbar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 16px;
-    background: #0a0a0a;
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 15px;
+    background: #080808;
     border: 1px solid #00ff4133;
     border-bottom: none;
     border-radius: 10px 10px 0 0;
     flex-shrink: 0;
 }
-.dot { width: 13px; height: 13px; border-radius: 50%; }
+.dot { width: 12px; height: 12px; border-radius: 50%; }
 .dot.red   { background: #ff5f56; box-shadow: 0 0 8px #ff5f5688; }
 .dot.yellow{ background: #ffbd2e; box-shadow: 0 0 8px #ffbd2e88; }
 .dot.green { background: #27c93f; box-shadow: 0 0 8px #27c93f88; }
 .terminal-title {
     margin-right: auto;
-    font-size: 13px;
-    color: #00ff4188;
+    font-size: 12px; color: #00ff4188;
     letter-spacing: 2px;
-    font-family: 'Share Tech Mono', monospace;
 }
+.signal-bars {
+    display: flex; gap: 2px; align-items: flex-end;
+}
+.signal-bars span {
+    width: 4px; background: #00ff41;
+    box-shadow: 0 0 4px #00ff41;
+    animation: signal-pulse 1.5s ease-in-out infinite;
+}
+.signal-bars span:nth-child(1){ height: 5px; animation-delay: 0s; }
+.signal-bars span:nth-child(2){ height: 9px; animation-delay: 0.2s; }
+.signal-bars span:nth-child(3){ height: 13px; animation-delay: 0.4s; }
+.signal-bars span:nth-child(4){ height: 17px; animation-delay: 0.6s; }
+@keyframes signal-pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
 
-/* Header prompt */
 .header-prompt {
     background: #030d03;
     border: 1px solid #00ff4133;
     border-bottom: 2px solid #00ff4166;
-    padding: 14px 20px;
+    padding: 12px 18px;
     flex-shrink: 0;
     text-align: center;
 }
 .header-prompt .prompt-line {
-    font-size: 11px;
-    color: #00ff4166;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    font-family: 'Share Tech Mono', monospace;
-    margin-bottom: 5px;
+    font-size: 10px; color: #00ff4166;
+    letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 4px;
 }
 .header-prompt .prompt-main {
-    font-size: 15px;
-    color: #00ff41cc;
-    font-family: 'Vazirmatn', sans-serif;
-    font-weight: 700;
+    font-size: 16px; color: #00ff41cc;
+    font-family: 'Vazirmatn', sans-serif; font-weight: 900;
     direction: rtl;
-    letter-spacing: 0.5px;
 }
 .header-prompt .prompt-sub {
-    font-size: 12px;
-    color: #00ff4155;
+    font-size: 12px; color: #00ff4155;
     font-family: 'Vazirmatn', sans-serif;
-    margin-top: 4px;
-    direction: rtl;
+    margin-top: 3px; direction: rtl;
 }
 
-/* Main terminal output */
 .terminal-body {
     flex: 1;
     background: #020802;
     border: 1px solid #00ff4133;
-    border-top: none;
-    border-bottom: none;
-    padding: 16px 18px;
+    border-top: none; border-bottom: none;
+    padding: 14px 16px;
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 13px;
+    display: flex; flex-direction: column;
+    gap: 3px;
+    font-size: 12.5px;
     line-height: 1.7;
     min-height: 0;
 }
 .terminal-body::-webkit-scrollbar { width: 3px; }
 .terminal-body::-webkit-scrollbar-thumb { background: #00ff4133; }
 
-.line { display: flex; gap: 8px; animation: fadein 0.15s ease both; }
-@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+.line {
+    display: flex; gap: 8px;
+    animation: fadein 0.12s ease both;
+}
+@keyframes fadein { from{opacity:0;transform:translateX(4px);} to{opacity:1;transform:translateX(0);} }
 
-.line .prefix { color: #00ff4155; flex-shrink: 0; }
+.line .prefix { color: #00ff4155; flex-shrink: 0; min-width: 56px; }
 .line .text   { color: #00ff41cc; word-break: break-word; }
 .line.yellow-line .text { color: #ffd700bb; }
-.line.red-line    .text { color: #ff4444bb; }
+.line.red-line    .text { color: #ff4444; text-shadow: 0 0 8px #ff444488; }
 .line.cyan-line   .text { color: #00ffffaa; }
 .line.white-line  .text { color: #ffffffaa; }
+.line.dim-line    .text { color: #00ff4155; }
+.line.error-line  .text {
+    color: #ff4444;
+    font-family: 'Share Tech Mono', monospace;
+    text-shadow: 0 0 10px #ff444466;
+}
 .line.result-line .text {
     color: #00ff41;
     font-family: 'Vazirmatn', sans-serif;
-    font-size: 13.5px;
+    font-size: 13px;
+    line-height: 2;
+    direction: rtl;
+    font-weight: 700;
+    text-shadow: 0 0 10px #00ff4177;
+}
+.line.belief-line .text {
+    color: #ff6b35;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 12.5px;
     line-height: 1.9;
     direction: rtl;
     font-weight: 600;
-    text-shadow: 0 0 8px #00ff4166;
+    text-shadow: 0 0 8px #ff6b3566;
+    padding-right: 8px;
+    border-right: 2px solid #ff6b3555;
+}
+.line.final-line .text {
+    color: #ffd700;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 13px;
+    line-height: 2;
+    direction: rtl;
+    font-weight: 900;
+    text-shadow: 0 0 12px #ffd70088;
+}
+.line.link-line .text {
+    color: #00ffff;
+    text-decoration: underline;
+    cursor: pointer;
+    text-shadow: 0 0 8px #00ffff88;
 }
 
-/* Input area */
 .terminal-input-area {
     background: #030f03;
     border: 1px solid #00ff4155;
     border-top: 2px solid #00ff41aa;
-    padding: 18px 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    padding: 16px 18px;
+    display: flex; align-items: center; gap: 10px;
     flex-shrink: 0;
-    min-height: 70px;
+    min-height: 68px;
     box-shadow: 0 -4px 24px #00ff4115;
 }
 .input-prompt {
-    color: #00ff41;
-    font-size: 15px;
-    flex-shrink: 0;
+    color: #00ff41; font-size: 14px; flex-shrink: 0;
     text-shadow: 0 0 8px #00ff41;
-    font-family: 'Share Tech Mono', monospace;
+    white-space: nowrap;
 }
-#belief-input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #00ff41;
-    font-size: 16px;
-    font-family: 'Vazirmatn', sans-serif;
-    font-weight: 600;
-    direction: rtl;
-    caret-color: #00ff41;
+#wish-input {
+    flex: 1; background: transparent;
+    border: none; outline: none;
+    color: #00ff41; font-size: 15px;
+    font-family: 'Vazirmatn', sans-serif; font-weight: 700;
+    direction: rtl; caret-color: #00ff41;
     text-shadow: 0 0 6px #00ff4166;
-    min-height: 28px;
+    min-height: 26px;
 }
-#belief-input::placeholder {
-    color: #00ff4166;
-    font-size: 14px;
-}
+#wish-input::placeholder { color: #00ff4166; font-size: 13px; }
 
-/* Execute button */
 .exec-btn {
     background: #00ff4110;
     border: 1px solid #00ff4188;
     color: #00ff41;
     font-family: 'Share Tech Mono', monospace;
-    font-size: 13px;
-    padding: 10px 18px;
-    border-radius: 6px;
-    cursor: pointer;
-    letter-spacing: 1px;
-    transition: all 0.2s;
+    font-size: 12px; padding: 10px 16px;
+    border-radius: 6px; cursor: pointer;
+    letter-spacing: 1px; transition: all 0.2s;
     flex-shrink: 0;
     text-shadow: 0 0 8px #00ff41;
     box-shadow: 0 0 12px #00ff4133;
 }
-.exec-btn:hover {
-    background: #00ff4122;
-    border-color: #00ff41;
-    box-shadow: 0 0 20px #00ff4155;
-}
-.exec-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-}
+.exec-btn:hover { background: #00ff4122; border-color: #00ff41; box-shadow: 0 0 20px #00ff4155; }
+.exec-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-/* Bottom bar */
 .terminal-footer {
-    background: #0a0a0a;
+    background: #080808;
     border: 1px solid #00ff4133;
     border-top: none;
     border-radius: 0 0 10px 10px;
-    padding: 7px 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: 6px 16px;
+    display: flex; justify-content: space-between; align-items: center;
     flex-shrink: 0;
 }
-.footer-text {
-    font-size: 11px;
-    color: #00ff4144;
-    letter-spacing: 2px;
-}
+.footer-text { font-size: 10px; color: #00ff4144; letter-spacing: 2px; }
 .blink { animation: blink 1s step-end infinite; }
 @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
 
-/* Back button */
 .back-btn {
-    position: fixed;
-    top: 16px;
-    left: 16px;
+    position: fixed; top: 14px; left: 14px;
     background: #0a0a0a;
     border: 1px solid #00ff4133;
     color: #00ff4188;
     font-family: 'Share Tech Mono', monospace;
-    font-size: 12px;
-    padding: 7px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    z-index: 1000;
-    letter-spacing: 1px;
-    text-decoration: none;
-    transition: all 0.2s;
+    font-size: 11px; padding: 7px 13px;
+    border-radius: 6px; cursor: pointer;
+    z-index: 1000; letter-spacing: 1px;
+    text-decoration: none; transition: all 0.2s;
 }
-.back-btn:hover {
-    color: #00ff41;
-    border-color: #00ff4166;
-    background: #00ff4110;
-}
+.back-btn:hover { color: #00ff41; border-color: #00ff4166; background: #00ff4110; }
 
-/* Progress bar */
 .progress-bar-wrap {
-    height: 2px;
-    background: #00ff4110;
-    border-radius: 2px;
-    overflow: hidden;
-    margin: 2px 0;
+    height: 3px; background: #00ff4110;
+    border-radius: 2px; overflow: hidden; margin: 3px 0;
 }
 .progress-bar-fill {
     height: 100%;
     background: linear-gradient(90deg, #00ff41, #00ff4166);
-    width: 0%;
-    transition: width 0.1s linear;
+    width: 0%; transition: width 0.08s linear;
+    box-shadow: 0 0 10px #00ff41;
+}
+
+/* Radar scan overlay on terminal */
+.radar-scan-line {
+    position: absolute; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00ff4166, transparent);
     box-shadow: 0 0 8px #00ff41;
+    pointer-events: none;
+    z-index: 20;
+    display: none;
+}
+.radar-scan-line.scanning {
+    display: block;
+    animation: scan-sweep 0.8s linear infinite;
+}
+@keyframes scan-sweep {
+    0% { top: 0; opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
+.terminal-body { position: relative; }
+
+/* Error box */
+.error-box {
+    border: 1px solid #ff444488;
+    background: #ff44440a;
+    padding: 10px 14px;
+    margin: 4px 0;
+    border-radius: 4px;
+    animation: fadein 0.15s ease both;
+    box-shadow: 0 0 12px #ff444422;
+}
+.error-box .error-title {
+    color: #ff4444;
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+    text-shadow: 0 0 6px #ff444488;
+}
+.error-box .error-item {
+    color: #ff8866;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 12px;
+    line-height: 2;
+    direction: rtl;
+    padding: 1px 0;
+    border-bottom: 1px solid #ff444411;
+}
+.error-box .error-item:last-child { border-bottom: none; }
+.error-box .error-item::before {
+    content: '✗ ';
+    color: #ff4444;
+    font-family: monospace;
 }
 </style>
 </head>
@@ -295,27 +334,31 @@ body::after {
         <div class="dot red"></div>
         <div class="dot yellow"></div>
         <div class="dot green"></div>
-        <span class="terminal-title">PLANLIFE_MIND_REBOOT v2.4.1</span>
+        <span class="terminal-title">PLANLIFE_MIND_SCANNER v3.1.0</span>
+        <div class="signal-bars">
+            <span></span><span></span><span></span><span></span>
+        </div>
     </div>
 
     <div class="header-prompt">
-        <div class="prompt-line">>>> MENTAL CODING SYSTEM ACTIVE <<<</div>
-        <div class="prompt-main">باور منفی خودتو وارد کن، نتیجه رو ببین</div>
-        <div class="prompt-sub">سیستم باور تو را تحلیل و بازنویسی می‌کند</div>
+        <div class="prompt-line">>> WISH DECODER & BELIEF SCANNER ONLINE <<<</div>
+        <div class="prompt-main">خواسته‌ات رو بنویس — ذهنت رو اسکن می‌کنیم</div>
+        <div class="prompt-sub">مثال: خونه، پول، ازدواج، موفقیت، سلامتی...</div>
     </div>
 
     <div class="terminal-body" id="terminal-output">
-        <div class="line cyan-line"><span class="prefix">[INIT]</span><span class="text">PlanLife Mind Compiler v2.4.1 loaded...</span></div>
-        <div class="line"><span class="prefix">[OK]</span><span class="text">Subconscious belief scanner: READY</span></div>
-        <div class="line"><span class="prefix">[OK]</span><span class="text">Neural pattern analyzer: ONLINE</span></div>
-        <div class="line"><span class="prefix">[OK]</span><span class="text">Belief rewriter engine: ARMED</span></div>
-        <div class="line yellow-line"><span class="prefix">[SYS]</span><span class="text">Awaiting belief input from user...</span></div>
+        <div class="radar-scan-line" id="scan-line"></div>
+        <div class="line cyan-line"><span class="prefix">[INIT]</span><span class="text">PlanLife Mind Scanner v3.1.0 — LOADED</span></div>
+        <div class="line"><span class="prefix">[OK]</span><span class="text">Neural wish decoder: READY</span></div>
+        <div class="line"><span class="prefix">[OK]</span><span class="text">Limiting belief detector: ARMED</span></div>
+        <div class="line"><span class="prefix">[OK]</span><span class="text">Subconscious pattern scanner: ONLINE</span></div>
+        <div class="line yellow-line"><span class="prefix">[SYS]</span><span class="text">Enter your wish to begin deep scan...</span></div>
     </div>
 
     <div class="terminal-input-area">
-        <span class="input-prompt">root@mind:~$</span>
-        <input id="belief-input" type="text" placeholder="باورت رو اینجا بنویس..." autocomplete="off" spellcheck="false">
-        <button class="exec-btn" id="exec-btn" onclick="runAnalysis()">EXEC</button>
+        <span class="input-prompt">wish@mind:~$</span>
+        <input id="wish-input" type="text" placeholder="خواسته‌ات رو اینجا بنویس..." autocomplete="off" spellcheck="false">
+        <button class="exec-btn" id="exec-btn" onclick="runScan()">SCAN</button>
     </div>
 
     <div class="terminal-footer">
@@ -329,15 +372,13 @@ body::after {
 // ===== Matrix Rain =====
 const canvas = document.getElementById('matrix-canvas');
 const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 const cols = Math.floor(canvas.width / 18);
 const drops = Array(cols).fill(1);
 function drawMatrix() {
     ctx.fillStyle = 'rgba(0,0,0,0.05)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#00ff41';
-    ctx.font = '14px Share Tech Mono';
+    ctx.fillStyle = '#00ff41'; ctx.font = '13px Share Tech Mono';
     for (let i = 0; i < drops.length; i++) {
         const ch = String.fromCharCode(0x30A0 + Math.random() * 96);
         ctx.fillText(ch, i * 18, drops[i] * 18);
@@ -348,66 +389,522 @@ function drawMatrix() {
 setInterval(drawMatrix, 55);
 window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
 
-// ===== QA Data =====
-const QA_URL = "https://raw.githubusercontent.com/soheil001/planlife1/main/mental-coding-qa.json";
-
-const beliefQA_fallback = [
-{"keywords":["ثروتمند","ثروت","پول","سخت","نمیشه","نمیتونم","امکان"],
- "result":"این باور باعث میشه ناخودآگاهت هر فرصت مالی رو رد کنه. مغزت دنبال شواهدی میگرده که ثروت رو سخت نشون بده و از موقعیت‌های سودآور فرار کنی. نتیجه: ثروتمند نمی‌شی نه به خاطر شرایط، بلکه چون ذهنت اجازه نمیده."},
-{"keywords":["لایق","لیاقت","نمیارزم","ارزش","ندارم"],
- "result":"مغزت برنامه‌ریزی شده که نعمت رو پس بزنه. حتی وقتی موفق بشی، احساس تقلب و دروغین بودن داری. این باور موفقیت‌هات رو از درون خراب می‌کنه."},
-{"keywords":["شانس","اقبال","بدشانس","بخت","طالع"],
- "result":"وقتی موفقیت رو به شانس نسبت میدی، کنترل زندگیت رو از دست میدی. ذهنت منفعل می‌مونه و منتظر معجزه میشه به جای اینکه عمل کنه."},
-{"keywords":["موفقیت","موفق","نمیشم","نمیتونم","ضعیف"],
- "result":"ناخودآگاهت دنبال شکست می‌گرده تا این باور رو تأیید کنه. حتی وقتی موفق میشی، اون رو کوچیک میبینی. این باور یه پیشگویی خودانجام‌دهنده‌ست."},
-{"keywords":["رابطه","ازدواج","عشق","کسی","تنها"],
- "result":"این باور دیوار نامرئی بین تو و دیگران می‌سازه. ناخودآگاهت سیگنال‌هایی میفرسته که نزدیکی رو طرد می‌کنه. نتیجه: همون تنهایی که ازش می‌ترسی رو جذب می‌کنی."}
+// ===== WISH DATABASE — 30 wishes, 10 beliefs each =====
+const WISHES = [
+  {
+    keys: ['خونه','خانه','ملک','مسکن','آپارتمان','زمین','خرید خانه'],
+    wish: 'داشتن خانه',
+    beliefs: [
+      'خونه خریدن تو این شرایط اقتصادی محاله',
+      'من هیچ‌وقت پول کافی برای خانه جمع نمی‌کنم',
+      'آدم‌هایی مثل من هیچ‌وقت صاحب خانه نمی‌شن',
+      'بازار مسکن فقط برای پول‌دارهاست',
+      'اگه یه جا خوندم باید بمونم، نه اینکه خونه بخرم',
+      'ریسک وام گرفتن خیلی زیاده',
+      'من شانس خونه‌دار شدن ندارم',
+      'خونه داشتن یعنی گیر افتادن در یه جا',
+      'هر بار که پس‌انداز می‌کنم یه اتفاق میفته',
+      'لیاقت داشتن خونه قشنگ رو ندارم'
+    ]
+  },
+  {
+    keys: ['پول','ثروت','درآمد','مالی','سرمایه','ثروتمند','غنی'],
+    wish: 'ثروت و درآمد بالا',
+    beliefs: [
+      'پول درآوردن سخت و طاقت‌فرساست',
+      'آدم‌های پولدار همه کلاهبردارند',
+      'من برای پول‌دار بودن ساخته نشدم',
+      'عشق به پول ریشه همه بدی‌هاست',
+      'داشتن پول زیاد آدم رو خراب می‌کنه',
+      'رزق هر کسی مشخصه و قابل تغییر نیست',
+      'ثروتمند شدن بدون شانس غیرممکنه',
+      'اگه پول‌دار بشم، مردم دورم رو می‌گیرن',
+      'من استحقاق درآمد بالا رو ندارم',
+      'ثروت نصیب آدم‌های باهوش‌تر از من میشه'
+    ]
+  },
+  {
+    keys: ['ازدواج','ازدواج کردن','همسر','شریک','عروسی'],
+    wish: 'ازدواج و تشکیل خانواده',
+    beliefs: [
+      'آدم مناسب برای من وجود نداره',
+      'همه ازدواج‌ها آخرش به طلاق ختم میشه',
+      'من برای زندگی مشترک ساخته نشدم',
+      'اگه ازدواج کنم آزادیم رو از دست میدم',
+      'کسی که من دوستش دارم منو دوست نداره',
+      'سن من برای ازدواج گذشته',
+      'من خیلی عیب دارم که کسی بخواد باهام بمونه',
+      'رابطه‌های پایدار دروغه، همه نقش بازی می‌کنن',
+      'عشق واقعی فقط تو فیلمه',
+      'من بدشانسم در رابطه'
+    ]
+  },
+  {
+    keys: ['رابطه','دوستی','عشق','محبت','کنار هم','نزدیکی'],
+    wish: 'رابطه عمیق و عاشقانه',
+    beliefs: [
+      'من لیاقت عشق واقعی رو ندارم',
+      'هر کسی که دوستش دارم ترکم می‌کنه',
+      'در رابطه همیشه آسیب می‌بینم',
+      'اگه خودم رو نشون بدم، دیگران فرار می‌کنن',
+      'عشق یعنی دردسر و وابستگی',
+      'من احساساتم رو درست بیان نمی‌کنم',
+      'آدم‌ها آخرش تغییر می‌کنن و ناامیدم می‌کنن',
+      'کسی درکم نمی‌کنه',
+      'وابسته شدن نشانه ضعفه',
+      'من برای تنها بودن ساخته شدم'
+    ]
+  },
+  {
+    keys: ['موفقیت','موفق','پیشرفت','رشد','به جایی رسیدن'],
+    wish: 'موفقیت در زندگی',
+    beliefs: [
+      'من به اندازه کافی باهوش نیستم',
+      'موفقیت فقط برای آدم‌های خاصه',
+      'شانس میزان موفقیت رو مشخص می‌کنه',
+      'اگه سعی کنم و شکست بخورم، همه می‌خندن',
+      'من خیلی دیر شروع کردم',
+      'پشتکار من کافی نیست',
+      'محیطم اجازه رشد به من نمیده',
+      'موفقیت یعنی زیر پا گذاشتن بقیه',
+      'من هیچ استعداد خاصی ندارم',
+      'قبلاً شکست خوردم، پس دوباره شکست می‌خورم'
+    ]
+  },
+  {
+    keys: ['سلامتی','سلامت','بدن','وزن','تناسب اندام','ورزش'],
+    wish: 'سلامتی و تناسب اندام',
+    beliefs: [
+      'ژنتیک من این اجازه رو نمیده',
+      'من اراده کافی برای رژیم ندارم',
+      'بدن من هیچ‌وقت تغییر نمی‌کنه',
+      'ورزش برای من حال خوبی نداره',
+      'سالم بودن خیلی گرون‌قیمته',
+      'من وقت کافی برای ورزش ندارم',
+      'همه تو خانواده‌مون اضافه وزن داریم',
+      'من هیچ‌وقت انگیزه‌ام رو حفظ نمی‌کنم',
+      'دردها و بیماری‌های من دائمی‌ان',
+      'من خیلی پیر شدم برای تغییر'
+    ]
+  },
+  {
+    keys: ['کار','شغل','کسب‌وکار','بیزینس','تجارت','کارآفرینی','استارتاپ'],
+    wish: 'کار و کسب‌وکار موفق',
+    beliefs: [
+      'من توانایی کارآفرین شدن رو ندارم',
+      'بازار ایران برای کسب‌وکار جدید مناسب نیست',
+      'ایده‌هام به اندازه کافی خوب نیستن',
+      'سرمایه اولیه ندارم پس نمیتونم شروع کنم',
+      'رقبا خیلی قوی‌ترن',
+      'اگه شکست بخورم آبروم میره',
+      'کارمند بودن امن‌تره',
+      'من مهارت‌های کافی ندارم',
+      'اقتصاد کشور اجازه نمیده',
+      'من برای فروش استعداد ندارم'
+    ]
+  },
+  {
+    keys: ['آرامش','آرامش ذهنی','شادی','خوشبختی','شاد','آسودگی'],
+    wish: 'آرامش و شادی درونی',
+    beliefs: [
+      'من آدم شادی نیستم',
+      'با این زندگی که دارم نمیشه شاد بود',
+      'آرامش برای همیشه پایدار نمیمونه',
+      'شادی احساس سطحیه',
+      'من باید رنج بکشم تا به جایی برسم',
+      'نگرانی بخشی از شخصیت منه',
+      'اگه شاد باشم، بدبختی در راهه',
+      'کمال‌گراییم اجازه نمیده استراحت کنم',
+      'خوشحالی نشان دادن ضعفه',
+      'من لیاقت آرامش واقعی رو ندارم'
+    ]
+  },
+  {
+    keys: ['استقلال','آزادی','وابستگی','خودم باشم','مستقل'],
+    wish: 'استقلال و آزادی',
+    beliefs: [
+      'بدون کمک دیگران نمی‌تونم کنار بیام',
+      'استقلال یعنی تنهایی',
+      'من برای تصمیم‌گیری به اندازه کافی قوی نیستم',
+      'اگه استقلال داشته باشم همه ناراحت میشن',
+      'آزادی نسبی‌ست و مطلق وجود نداره',
+      'وابستگی به دیگران طبیعیه و تغییرش ممکن نیست',
+      'من همیشه به تایید دیگران نیاز دارم',
+      'مستقل بودن خودخواهیه',
+      'من توانایی مراقبت از خودم رو ندارم',
+      'کنترل زندگیم دست خودم نیست'
+    ]
+  },
+  {
+    keys: ['تحصیل','دانشگاه','مدرک','یادگیری','علم','دانش'],
+    wish: 'تحصیل و دانش',
+    beliefs: [
+      'من باهوشی کافی برای تحصیل عالی ندارم',
+      'دیگه دیر شده برای ادامه تحصیل',
+      'مدرک در این کشور فایده‌ای نداره',
+      'تحصیل گرونه و من توانش رو ندارم',
+      'من حافظه خوبی ندارم',
+      'تحصیل بدون اتصالات بیهوده‌ست',
+      'من برای یادگیری تنبلم',
+      'رشته‌ای که می‌خوام بازار کار نداره',
+      'تجربه از مدرک مهم‌تره، پس چرا درس بخونم',
+      'من در محیط آموزشی احساس راحتی نمی‌کنم'
+    ]
+  },
+  {
+    keys: ['سفر','مسافرت','خارج','دنیا','کشورها','گردش'],
+    wish: 'سفر و دیدن دنیا',
+    beliefs: [
+      'سفر خارجی برای من لوکسه',
+      'ویزا نمی‌دن پس فایده نداره',
+      'من تنها نمی‌تونم سفر کنم',
+      'پول سفر هدر دادنه',
+      'من شجاعت کافی برای سفر تنها رو ندارم',
+      'زبانم کافی نیست',
+      'سفر فقط برای کسایی‌ست که وقت آزاد دارن',
+      'دنیا ناامنه و سفر خطرناکه',
+      'من هیچ‌وقت پولم برای سفر کافی نیست',
+      'اونقدری جالب نیستم که با آدم‌های جدید آشنا بشم'
+    ]
+  },
+  {
+    keys: ['اعتماد به نفس','خودباوری','عزت نفس','اعتقاد به خود'],
+    wish: 'اعتماد به نفس بالا',
+    beliefs: [
+      'من آدم کم‌رویی هستم',
+      'نظر دیگران همیشه مهم‌تر از نظر منه',
+      'من مهارت‌های اجتماعی ضعیفی دارم',
+      'دیگران همیشه بهتر از من هستن',
+      'اگه بیشتر از خودم تعریف کنم، متکبر به نظر میرسم',
+      'در موقعیت‌های استرس‌زا همیشه خرابش می‌کنم',
+      'از رد شدن می‌ترسم',
+      'من ظاهر مناسبی برای موفقیت اجتماعی ندارم',
+      'هر بار که صحبت می‌کنم دیگران قضاوتم می‌کنن',
+      'من به جذابیتم اعتماد ندارم'
+    ]
+  },
+  {
+    keys: ['دوست','رفیق','جمع','اجتماعی','شبکه','ارتباط اجتماعی'],
+    wish: 'دوستان خوب و شبکه اجتماعی',
+    beliefs: [
+      'آدم‌ها اساساً خودخواه‌ان',
+      'من در جمع خوب نیستم',
+      'کسی منو واقعاً دوست نداره',
+      'دوستی‌ها پایدار نمیمونن',
+      'من برای ساختن رابطه خیلی خسته‌ام',
+      'آدم‌های اطرافم با من هم‌سطح نیستن',
+      'من نمی‌تونم به کسی اعتماد کنم',
+      'اگه راحت باشم، آدم‌ها ازم سوءاستفاده می‌کنن',
+      'ارتباطات سطحی بهتر از دوستی عمیقه',
+      'من جذابیت اجتماعی کافی ندارم'
+    ]
+  },
+  {
+    keys: ['مهاجرت','خارج رفتن','کشور دیگه','اقامت','ویزا'],
+    wish: 'مهاجرت و زندگی در خارج',
+    beliefs: [
+      'من به اندازه کافی ماهر نیستم',
+      'بدون زبان کافی نمیشه مهاجرت کرد',
+      'در خارج از کشور هم خوش نمی‌گذره',
+      'مهاجرت یعنی از دست دادن خانواده',
+      'سیستم مهاجرت علیه آدم‌هایی مثل منه',
+      'من قوی‌تر از آن نیستم که از صفر شروع کنم',
+      'شاید اونجا هم مثل اینجا بشه',
+      'بدون حمایت کسی نمیشه مهاجرت کرد',
+      'من برای فرهنگ خارجی ساخته نشدم',
+      'مهاجرت رویاست، نه واقعیت'
+    ]
+  },
+  {
+    keys: ['نوشتن','کتاب','نویسندگی','رمان','مقاله','محتوا'],
+    wish: 'نویسندگی و خلق محتوا',
+    beliefs: [
+      'کلمه‌ها همونطور که می‌خوام نمیان',
+      'نوشته‌هام به اندازه کافی خوب نیستن',
+      'کسی کارم رو نمی‌خونه',
+      'برای نوشتن باید استعداد ذاتی داشت',
+      'ایده خلاقانه‌ای ندارم',
+      'قبلاً شروع کردم و نیمه‌کاره موند',
+      'بازار کتاب مرده',
+      'نوشتن پول‌ساز نیست',
+      'من خیلی انتقادگرم نسبت به نوشته‌هام',
+      'نوشتن باید انگیزه‌ای بیاد، نمیشه زورکی نوشت'
+    ]
+  },
+  {
+    keys: ['هنر','موسیقی','نقاشی','طراحی','خلاقیت','هنرمند'],
+    wish: 'هنر و خلاقیت',
+    beliefs: [
+      'استعداد هنری ندارم',
+      'من برای هنر دیر شروع کردم',
+      'هنر درآمد نداره',
+      'کارهای هنری‌ام ارزش نشان دادن ندارن',
+      'هنرمندان واقعی من رو مسخره می‌کنن',
+      'خلاقیت یه چیز ذاتیه که من ندارم',
+      'هنر برای آدم‌های خاص و بی‌خیاله',
+      'من برای جدی گرفته شدن خیلی آماتورم',
+      'انتقادها تحملشون سخته',
+      'محیطم هنر رو درک نمی‌کنه'
+    ]
+  },
+  {
+    keys: ['فرزند','بچه','مادری','پدری','تربیت','خانواده'],
+    wish: 'داشتن فرزند و خانواده',
+    beliefs: [
+      'من شایستگی مادر/پدر بودن رو ندارم',
+      'دنیای امروز برای آوردن بچه مناسب نیست',
+      'من هنوز به اندازه کافی بالغ نشدم',
+      'من آسیب‌های دوران کودکی دارم که منتقل میشه',
+      'داشتن بچه یعنی پایان زندگی شخصی',
+      'هزینه بزرگ کردن بچه خیلی زیاده',
+      'من انرژی کافی ندارم',
+      'همسرم برای بچه‌دار شدن آماده نیست',
+      'من حوصله بچه ندارم',
+      'من نگران بیماری ارثی هستم'
+    ]
+  },
+  {
+    keys: ['معنا','هدف','مسیر','چرا هستم','ارزش','زندگی'],
+    wish: 'معنا و هدف در زندگی',
+    beliefs: [
+      'زندگی معنایی نداره',
+      'من هنوز نمی‌دونم چی می‌خوام',
+      'دیگران اهدافشون رو زودتر پیدا کردن',
+      'هدف‌هایم همیشه تغییر می‌کنن',
+      'برای داشتن هدف باید شرایط خاصی داشته باشی',
+      'من تو مسیر اشتباهی هستم و برگشتنی نیست',
+      'معنا چیز فلسفیه، کاربردی نیست',
+      'انگیزه‌ام زود از بین میره',
+      'گذشته‌ام اجازه نمیده معنا پیدا کنم',
+      'من برای زندگی معناداری ساخته نشدم'
+    ]
+  },
+  {
+    keys: ['ورزش کردن','باشگاه','دویدن','فیتنس','بدنسازی'],
+    wish: 'داشتن بدنی سالم از طریق ورزش',
+    beliefs: [
+      'من از ورزش کردن نفرت دارم',
+      'باشگاه رفتن از نظر اجتماعی اضطراب‌آوره',
+      'من زود خسته میشم',
+      'نتایج ورزش هیچ‌وقت دوام نداره',
+      'من به کمک یه مربی شخصی نیاز دارم و پولش رو ندارم',
+      'تنم بعد از چند روز درد میکنه',
+      'وقت ندارم',
+      'با آپارتمان‌نشینی نمیشه فعال بود',
+      'ذاتاً کم‌تحرکم',
+      'موفقیت در ورزش نیاز به ژنتیک داره'
+    ]
+  },
+  {
+    keys: ['ذهنیت','تفکر','مثبت اندیشی','باور','نگرش'],
+    wish: 'تغییر ذهنیت و نگرش',
+    beliefs: [
+      'من ذاتاً منفی‌بینم',
+      'تغییر ذهنیت در سن من دیگه ممکن نیست',
+      'مثبت‌اندیشی دروغه و واقعی نیست',
+      'محیطم اجازه تغییر به من نمیده',
+      'من چند بار امتحان کردم و نشد',
+      'تراپی و کوچینگ پولشو دارم ولی فایده نداره',
+      'ناخودآگاهم تغییر نمی‌کنه',
+      'باورها وراثتی‌ان',
+      'کتاب‌های توسعه فردی برای آدم‌های معمولی نیست',
+      'تغییر واقعی تو داستان‌هاست، نه زندگی واقعی'
+    ]
+  },
+  {
+    keys: ['کنترل','نظم','عادت','روتین','منضبط','سازمان‌دهی'],
+    wish: 'نظم و کنترل زندگی',
+    beliefs: [
+      'من آدم منظمی نیستم',
+      'روتین زندگی رو کسل‌کننده می‌کنه',
+      'من فراموشکارم',
+      'نمی‌تونم بیشتر از یه هفته عادت حفظ کنم',
+      'زندگی آنقدر غیرقابل پیش‌بینیه که نمیشه برنامه داشت',
+      'من تحت فشار بهتر کار می‌کنم، نه با برنامه',
+      'نظم یعنی سختگیری روی خودم',
+      'من ADHD دارم و نظم برام ممکن نیست',
+      'برنامه‌ریزی وقتم رو هدر میده',
+      'من نه به خودم پایبندم، نه به دیگران'
+    ]
+  },
+  {
+    keys: ['رهبری','مدیریت','تیم','رئیس بودن','لیدر','مدیر'],
+    wish: 'رهبری و مدیریت تیم',
+    beliefs: [
+      'رهبر به دنیا میاد، ساخته نمیشه',
+      'من صدای قاطعی ندارم',
+      'از تعارض و درگیری فرار می‌کنم',
+      'دیگران اگه ببینن ضعفم رو احترامم نمی‌ذارن',
+      'من خیلی حساسم برای مدیریت',
+      'مدیر بودن یعنی دشمن داشتن',
+      'من هنوز تجربه کافی ندارم',
+      'اگه رهبری کنم، دیگران زیرم نمیرن',
+      'تصمیماتم همیشه اشتباهه',
+      'من از مسئولیت می‌ترسم'
+    ]
+  },
+  {
+    keys: ['تکنولوژی','برنامه‌نویسی','دیجیتال','مهارت دیجیتال','کامپیوتر'],
+    wish: 'مهارت دیجیتال و تکنولوژی',
+    beliefs: [
+      'من برای کامپیوتر و تکنولوژی ساخته نشدم',
+      'یاد گرفتن برنامه‌نویسی در سنم دیگه دیره',
+      'ذهن من برای ریاضیات و منطق مناسب نیست',
+      'اون‌هایی که تو تکنولوژی موفق‌ان نابغه‌ان',
+      'من مهارت‌های فنی ضعیفی دارم',
+      'تغییر تکنولوژی آنقدر سریعه که نمیشه همراهش بود',
+      'اگه اشتباه کنم همه چیز رو خراب می‌کنم',
+      'من از شکست در کدنویسی می‌ترسم',
+      'تکنولوژی فقط برای جوان‌تره',
+      'من زبانم برای کدنویسی کافی نیست'
+    ]
+  },
+  {
+    keys: ['کنجکاوی','علاقه','اشتیاق','هیجان','زندگی جذاب'],
+    wish: 'زندگی پر از هیجان و علاقه',
+    beliefs: [
+      'زندگی من یکنواخت و خسته‌کننده‌ست',
+      'هیجان با بزرگ شدن از بین میره',
+      'من از علایقم شرم دارم',
+      'علاقه‌هام به اندازه کافی جدی نیستن',
+      'آدم‌های اطرافم علایقم رو درک نمی‌کنن',
+      'کسی به علاقه‌هایم پول نمیده',
+      'شروع کردن یه چیز جدید خیلی انرژی میبره',
+      'من به زودی از علایق جدیدم خسته میشم',
+      'اشتیاق برای آدم‌های جوون‌تره',
+      'با این همه مشغله، وقت علاقه‌مندی ندارم'
+    ]
+  },
+  {
+    keys: ['بخشش','رها کردن','گذشته','ترمیم','آشتی'],
+    wish: 'بخشش و رها کردن گذشته',
+    beliefs: [
+      'کسایی که به من آسیب زدن لیاقت بخشش ندارن',
+      'بخشیدن یعنی ضعف',
+      'فراموش کردن ممکن نیست',
+      'اگه ببخشم، آسیب دوباره تکرار میشه',
+      'زخم‌هام خیلی عمیقه که بشه رهاشون کرد',
+      'دیگران هنوز معذرت‌خواهی نکردن',
+      'بخشش به اون‌ها حق میده دوباره اشتباه کنن',
+      'من هنوز آماده نیستم',
+      'خشم و کینه بخشی از منه',
+      'اگه رها کنم انگار قبول می‌کنم که اشتباه نکردن'
+    ]
+  },
+  {
+    keys: ['آینده','فردا','چشم‌انداز','برنامه بلندمدت','هدف بلندمدت'],
+    wish: 'چشم‌انداز روشن برای آینده',
+    beliefs: [
+      'آینده تاریکه و بهتر نمیشه',
+      'من کنترلی بر آینده‌ام ندارم',
+      'برنامه‌ریزی بلندمدت بی‌فایده‌ست',
+      'شرایط کشور هر آینده‌ای رو خراب می‌کنه',
+      'نسل ما آینده خوبی نداره',
+      'قبلاً امیدوار بودم ولی تجربه تلخ داشتم',
+      'آینده‌نگری اضطراب میاره',
+      'من به تصویرسازی آینده مهارت ندارم',
+      'آرزو کردن دردناکه چون شاید برآورده نشه',
+      'من برای آینده درخشان خیلی عادی هستم'
+    ]
+  },
+  {
+    keys: ['اثرگذاری','تاثیر','تغییر','کمک','خدمت','ارزش‌آفرینی'],
+    wish: 'اثرگذاری و ارزش‌آفرینی',
+    beliefs: [
+      'من آدم معمولی‌ام و تاثیری نمی‌ذارم',
+      'یه نفر نمیتونه چیزی رو تغییر بده',
+      'هنوز به اندازه کافی برای کمک کردن آماده نشدم',
+      'اول باید خودم رو درست کنم',
+      'مشکلات دنیا خیلی بزرگه',
+      'اگه کمک کنم ازم سوءاستفاده میشه',
+      'من منابع کافی برای اثرگذاری ندارم',
+      'ارزش‌آفرینی نیاز به موقعیت خاص داره',
+      'صدای من شنیده نمیشه',
+      'اول باید مشهور بشم تا بتونم تاثیر بذارم'
+    ]
+  },
+  {
+    keys: ['شجاعت','ریسک','جسارت','جرئت','اقدام','عمل'],
+    wish: 'شجاعت برای اقدام',
+    beliefs: [
+      'من آدم ریسک‌پذیری نیستم',
+      'شکست برام یعنی آخر دنیا',
+      'قبل از هر قدم باید همه چیز رو بدونم',
+      'من به غریزه‌ام اعتماد ندارم',
+      'همیشه منتظرم شرایط کامل‌تر بشه',
+      'دیگران فکر می‌کنن ایده‌هام احمقانه‌ست',
+      'ریسک یعنی بی‌احتیاطی',
+      'اگه اشتباه کنم جبرانش سخته',
+      'من از موقعیت‌های ناشناخته می‌ترسم',
+      'شجاعت برای آدم‌های خاصه، نه من'
+    ]
+  },
+  {
+    keys: ['خواب','استراحت','ریکاوری','انرژی','تجدید قوا'],
+    wish: 'استراحت و انرژی کافی',
+    beliefs: [
+      'استراحت کردن یعنی تنبلی',
+      'من حق استراحت ندارم تا همه چیز درست نشه',
+      'خوابم همیشه آشفته‌ست',
+      'بدون خستگی پیشرفتی در کار نیست',
+      'من برای کار کردن زیاده شناخته میشم',
+      'استراحت دادن به خودم احساس گناه ایجاد می‌کنه',
+      'انرژیم هیچ‌وقت کافی نیست',
+      'همیشه نگرانیم اجازه خواب راحت نمیده',
+      'من کند میشم اگه زیاد استراحت کنم',
+      'دیگران که نمی‌خوابن من چطور می‌تونم'
+    ]
+  },
+  {
+    keys: ['تغییر','دگرگونی','رشد','شروع از نو','بازسازی'],
+    wish: 'تغییر و شروع از نو',
+    beliefs: [
+      'من دیگه تغییر نمی‌کنم، این منم',
+      'تغییر در این سن دیر شده',
+      'هر بار شروع کردم به جایی نرسیدم',
+      'تغییر واقعی چند سال طول میکشه',
+      'محیطم اجازه نمیده تغییر کنم',
+      'تغییر یعنی خیانت به خودم',
+      'دیگران انتظار تغییر از من ندارن',
+      'تغییر نیاز به منابعی داره که من ندارم',
+      'همیشه به عقب برمیگردم',
+      'تغییر دردناکه و من تحملش رو ندارم'
+    ]
+  }
 ];
 
-let beliefQA = beliefQA_fallback;
-
-async function loadBeliefQA() {
-    try {
-        const res = await fetch(QA_URL + "?t=" + Date.now());
-        const data = await res.json();
-        if (data.beliefs && data.beliefs.length > 0) {
-            beliefQA = data.beliefs.map(item => ({
-                keywords: item.tags || [],
-                result: item.analysis
-            }));
-            console.log(`✅ ${beliefQA.length} باور از GitHub لود شد`);
-        }
-    } catch(e) {
-        console.log("⚠️ استفاده از داده‌های fallback:", e);
-        beliefQA = beliefQA_fallback;
-    }
-}
-
-const codeLines = [
-    "import belief_module from './subconscious'",
-    "const neural_pattern = brain.scan(user.input)",
-    "belief_parser.tokenize(input_string)",
-    "if (belief.type === 'limiting') { flag = true; }",
-    "subconscious.write(belief, 'active_programs')",
-    "reality_engine.compile(belief_set)",
-    "for (let i=0; i<neurons.length; i++) neurons[i].fire()",
-    "reticular_activating_system.filter(world_view)",
-    "amygdala.threat_response(belief.content)",
-    "prefrontal_cortex.override = false",
-    "dopamine.reward_circuit.block(success_pattern)",
-    "belief.propagate(life_outcomes)",
-    "RAS.setFilter(limiting_belief)",
-    "cortisol.elevate(); growth_hormones.suppress()",
-    "self_worth.value = belief.calculate()",
-    "opportunity_detector.sensitivity -= 0.87",
-    "action_threshold.value = Infinity",
-    "comfort_zone.radius.expand(fear * 3.14)",
-    "cognitive_dissonance.resolve(belief, 'keep_belief')",
-    "universe.law_of_attraction.activate(belief.frequency)",
-    "timeline.branch(belief_active_path)",
-    "neural_plasticity.direction = 'reinforce'",
-    "identity.core.update(belief.label)",
-    "self_talk.loop(belief.narrative, Infinity)"
+// Scanning code lines
+const SCAN_CODES = [
+  'initializing deep_scan_protocol(wish_vector)',
+  'mapping neural_pathways → cortex_prefrontal',
+  'loading subconscious_layer[0x3F]...',
+  'scanning reticular_activating_system',
+  'read belief_registry[core_identity]',
+  'detect pattern_match: cognitive_filter',
+  'trace amygdala.threat_response(wish)',
+  'sampling self_worth.baseline_value = 0.31',
+  'enum memory_bank → formative_events[*]',
+  'compile childhood_programs.dll → active',
+  'run wish_frequency_analyzer(target)',
+  'inject dopamine.reward_predict(wish)',
+  'crossref social_comparison_module',
+  'fetch comfort_zone.boundary_radius',
+  'calc action_threshold → Infinity detected',
+  'log identity.label.match("not_worthy")',
+  'trace belief.propagation_path(outcomes)',
+  'scan fear_index.magnitude = 9.4',
+  'check opportunity_detector.sensitivity → OFF',
+  'read timeline.branch_probability(wish)',
+  'analyze self_sabotage_patterns[active]',
+  'lookup cultural_conditioning_blocks',
+  'decode parental_voice.echo(subconscious)',
+  'run neural_plasticity.direction → reverse',
+  'flag limiting_belief_cluster FOUND',
+  'verify RAS.filter = anti_wish_mode',
+  'compile reality_creation_engine(blocked)',
+  'scan mirror_neuron_network(role_models)',
+  'read failure_memory.weight = HIGH',
+  'check growth_mindset.installed = FALSE'
 ];
 
 function addLine(text, type = '', delay = 0) {
@@ -418,7 +915,9 @@ function addLine(text, type = '', delay = 0) {
             div.className = `line ${type}`;
             const prefixes = {
                 '': '[>>]', 'yellow-line': '[SYS]', 'red-line': '[ERR]',
-                'cyan-line': '[INF]', 'white-line': '[DAT]', 'result-line': '[OUT]'
+                'cyan-line': '[INF]', 'white-line': '[DAT]', 'result-line': '[OUT]',
+                'dim-line': '[...]', 'error-line': '[ERR]', 'final-line': '[!!!]',
+                'link-line': '[LNK]', 'belief-line': '[BUG]'
             };
             div.innerHTML = `<span class="prefix">${prefixes[type] || '[>>]'}</span><span class="text">${text}</span>`;
             out.appendChild(div);
@@ -428,101 +927,153 @@ function addLine(text, type = '', delay = 0) {
     });
 }
 
-function addProgress(id) {
+function addProgress(duration) {
     const out = document.getElementById('terminal-output');
     const wrap = document.createElement('div');
-    wrap.style.padding = '2px 0';
+    wrap.style.padding = '3px 0';
     const bar = document.createElement('div');
     bar.className = 'progress-bar-wrap';
     const fill = document.createElement('div');
     fill.className = 'progress-bar-fill';
-    fill.id = id;
     bar.appendChild(fill);
     wrap.appendChild(bar);
     out.appendChild(wrap);
     out.scrollTop = out.scrollHeight;
-    return fill;
-}
-
-function animateProgress(fill, duration) {
     return new Promise(resolve => {
-        let width = 0;
-        const step = 100 / (duration / 80);
-        const timer = setInterval(() => {
-            width = Math.min(100, width + step + Math.random() * step * 0.5);
-            fill.style.width = width + '%';
-            if (width >= 100) { clearInterval(timer); resolve(); }
-        }, 80);
+        let w = 0;
+        const step = 100 / (duration / 60);
+        const t = setInterval(() => {
+            w = Math.min(100, w + step + Math.random() * step * 0.6);
+            fill.style.width = w + '%';
+            out.scrollTop = out.scrollHeight;
+            if (w >= 100) { clearInterval(t); setTimeout(resolve, 100); }
+        }, 60);
     });
 }
 
-function findResult(text) {
+function addErrorBox(beliefs) {
+    return new Promise(resolve => {
+        const out = document.getElementById('terminal-output');
+        const box = document.createElement('div');
+        box.className = 'error-box';
+        box.innerHTML = `<div class="error-title">⚠ CRITICAL BUGS DETECTED IN BELIEF SYSTEM — ${beliefs.length} ERRORS FOUND</div>`;
+        beliefs.forEach((b, i) => {
+            const item = document.createElement('div');
+            item.className = 'error-item';
+            item.style.animationDelay = (i * 0.08) + 's';
+            item.textContent = b;
+            box.appendChild(item);
+        });
+        out.appendChild(box);
+        out.scrollTop = out.scrollHeight;
+        setTimeout(resolve, 300);
+    });
+}
+
+function setScanLine(active) {
+    document.getElementById('scan-line').className = active ? 'radar-scan-line scanning' : 'radar-scan-line';
+}
+
+function findWish(text) {
     const norm = text.toLowerCase()
         .replace(/ي/g,'ی').replace(/ك/g,'ک')
         .replace(/‌/g,' ').trim();
-    let best = null, bestScore = 0;
-    for (const item of beliefQA) {
-        let score = 0;
-        for (const kw of item.keywords) {
-            if (norm.includes(kw)) score += 10;
+    for (const w of WISHES) {
+        for (const k of w.keys) {
+            if (norm.includes(k)) return w;
         }
-        if (score > bestScore) { bestScore = score; best = item.result; }
     }
-    if (bestScore > 0) return best;
-    return `این باور یک برنامه محدودکننده در ناخودآگاه شماست. مغزت دنبال شواهدی میگرده که این باور رو ثابت کنه و از هر چیزی که اون رو به چالش بکشه فرار می‌کنه. نتیجه: زندگیت در مدار این باور قفل میشه تا زمانی که تصمیم بگیری کدت رو دوباره بنویسی.`;
+    return null;
 }
 
 let isRunning = false;
-async function runAnalysis() {
+
+async function runScan() {
     if (isRunning) return;
-    const input = document.getElementById('belief-input');
+    const input = document.getElementById('wish-input');
     const btn = document.getElementById('exec-btn');
     const status = document.getElementById('status-text');
     const text = input.value.trim();
-    if (!text) return;
+    if (!text) {
+        input.focus();
+        return;
+    }
 
     isRunning = true;
     btn.disabled = true;
     input.disabled = true;
-    status.textContent = 'PROCESSING...';
+    status.textContent = 'SCANNING...';
+    setScanLine(true);
 
     const out = document.getElementById('terminal-output');
-    out.innerHTML += '<hr style="border:none;border-top:1px solid #00ff4122;margin:8px 0;">';
+    out.innerHTML += `<div class="radar-scan-line" id="scan-line" style="display:none"></div>`;
+    out.innerHTML += '<hr style="border:none;border-top:1px solid #00ff4118;margin:8px 0;">';
 
-    await addLine(`analyze("${text}")`, 'yellow-line');
-    await addLine('Scanning belief pattern...', '', 100);
+    const found = findWish(text);
 
-    const fill1 = addProgress('p1');
-    await animateProgress(fill1, 1200);
+    await addLine(`scan_wish("${text}")`, 'yellow-line');
+    await addLine('Initializing deep neural scan...', '', 80);
+    await addProgress(1000);
 
-    const shuffled = [...codeLines].sort(() => Math.random() - 0.5).slice(0, 14);
+    const shuffled = [...SCAN_CODES].sort(() => Math.random() - 0.5).slice(0, 18);
     for (let i = 0; i < shuffled.length; i++) {
-        const types = ['', '', 'cyan-line', 'white-line', ''];
+        const types = ['', '', 'cyan-line', 'dim-line', 'white-line', ''];
         const t = types[Math.floor(Math.random() * types.length)];
-        await addLine(shuffled[i], t, 80 + Math.random() * 120);
+        await addLine(shuffled[i], t, 70 + Math.random() * 110);
     }
 
-    await addLine('Compiling belief impact report...', 'yellow-line', 200);
-    const fill2 = addProgress('p2');
-    await animateProgress(fill2, 1400);
+    await addLine('Compiling wish execution path...', 'yellow-line', 150);
+    await addProgress(1200);
 
-    await addLine('ERROR: Limiting belief detected in core identity layer', 'red-line', 300);
-    await addLine('Calculating life impact score... 94.7%', '', 200);
-    await addLine('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'cyan-line', 150);
-    await addLine('BELIEF ANALYSIS COMPLETE:', 'yellow-line', 100);
+    // Simulation of wish running in mind
+    await addLine('wish.run() → EXECUTING IN SUBCONSCIOUS MIND', 'cyan-line', 200);
+    await addLine('vvvvvvvvvvvvv SIMULATION ACTIVE vvvvvvvvvvvvv', 'dim-line', 100);
+    await addLine(
+        found
+            ? `وقتی ذهن شما در حال اجرای خواسته "${found.wish}" است، این کدها در مغزتان نوشته می‌شوند:`
+            : `وقتی ذهن شما در حال اجرای این خواسته است، این کدها در مغزتان نوشته می‌شوند:`,
+        'result-line', 300
+    );
 
-    const result = findResult(text);
-    const lines = result.split('.');
-    for (const line of lines) {
-        if (line.trim()) {
-            await addLine(line.trim() + '.', 'result-line', 350);
-        }
+    await addLine('running wish_simulation.exe...', '', 200);
+    await addProgress(800);
+
+    // ERROR — bug found
+    await addLine('', '', 100);
+    await addLine('RUNTIME_ERROR: Critical bugs detected in belief_system.core', 'error-line', 200);
+    await addLine('ERROR_CODE: 0xBELIEF — Limiting belief cluster blocking execution', 'error-line', 150);
+    await addLine('STACK_TRACE: wish_execution → belief_filter → BLOCKED', 'error-line', 150);
+    await addLine('', '', 100);
+
+    // Insert beliefs
+    if (found) {
+        await addErrorBox(found.beliefs);
+    } else {
+        const generic = [
+            'من لیاقت این خواسته را ندارم',
+            'این خواسته برای من ممکن نیست',
+            'شرایط من با این هدف جور نیست',
+            'قبلاً تلاش کردم و نشد',
+            'دیگران بهتر از من موفق میشن',
+            'من به اندازه کافی قوی نیستم',
+            'شانس با من یار نیست',
+            'دنیا علیه من است',
+            'از دست من برنمیاد',
+            'این فقط آرزوست، واقعیت نیست'
+        ];
+        await addErrorBox(generic);
     }
 
+    await addLine('', '', 150);
+    await addLine('ممکن است این باورهای محدودکننده در ذهنتان داشته باشید', 'result-line', 250);
+    await addLine('این باورها مثل bug های کد هستند که اجرای خواسته شما را block می‌کنند', 'result-line', 200);
     await addLine('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'cyan-line', 200);
-    await addLine('برای بازنویسی این باور، دوره‌های PlanLife رو ببین ↓', 'result-line', 300);
-    await addLine('planlife.ir/Pages/Doreha/index.html', 'yellow-line', 100);
+    await addLine('برای اصلاح این باورها و بازنویسی کد ذهنت:', 'final-line', 300);
+    await addLine('PLANLIFE.IR — باورهات رو از نو بنویس', 'final-line', 200);
+    await addLine('planlife.ir', 'link-line', 150);
+    await addLine('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'cyan-line', 150);
 
+    setScanLine(false);
     input.value = '';
     input.disabled = false;
     btn.disabled = false;
@@ -531,11 +1082,9 @@ async function runAnalysis() {
     input.focus();
 }
 
-document.getElementById('belief-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') runAnalysis();
+document.getElementById('wish-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') runScan();
 });
-
-loadBeliefQA();
 </script>
 </body>
 </html>
