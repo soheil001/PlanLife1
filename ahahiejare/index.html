@@ -96,6 +96,7 @@ header{position:sticky;top:0;z-index:200;height:64px;display:flex;align-items:ce
 .ads-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;}
 .ad-card{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:all .25s;box-shadow:var(--shadow-card);position:relative;}
 .ad-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.45);border-color:var(--border-mid);background:var(--glass-mid);}
+.ad-card.expired{opacity:.5;pointer-events:none;}
 .ad-img-wrap{width:100%;height:164px;background:linear-gradient(135deg,rgba(0,137,123,0.12),rgba(0,77,64,0.2));border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
 .ad-img-placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text-dim);}
 .ad-img-icon{width:52px;height:52px;border-radius:14px;background:var(--glass-mid);border:1px solid var(--border-mid);display:flex;align-items:center;justify-content:center;}
@@ -122,6 +123,8 @@ header{position:sticky;top:0;z-index:200;height:64px;display:flex;align-items:ce
 .carousel-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;}
 .carousel-track::-webkit-scrollbar{display:none;}
 .carousel-slide{flex-shrink:0;width:100%;height:300px;scroll-snap-align:start;background:linear-gradient(135deg,rgba(0,137,123,.14),rgba(0,77,64,.22));display:flex;align-items:center;justify-content:center;}
+.carousel-slide.with-image{background:none;overflow:hidden;}
+.carousel-slide img{width:100%;height:100%;object-fit:cover;}
 .carousel-slide .big-icon{width:80px;height:80px;border-radius:20px;background:var(--glass-mid);border:1px solid var(--border-mid);display:flex;align-items:center;justify-content:center;}
 .carousel-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;}
 .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:.2s;}
@@ -215,11 +218,21 @@ header{position:sticky;top:0;z-index:200;height:64px;display:flex;align-items:ce
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .upload-zone{border:1.5px dashed rgba(255,255,255,.2);border-radius:var(--radius-md);padding:28px 20px;text-align:center;cursor:pointer;color:var(--text-dim);font-size:13px;transition:.22s;background:rgba(255,255,255,0.04);backdrop-filter:blur(8px);}
 .upload-zone:hover{border-color:var(--teal);background:rgba(0,137,123,.05);color:var(--text-muted);}
+.upload-zone.loading{border-color:var(--teal);opacity:.7;}
 .upload-zone .up-icon{margin-bottom:8px;color:var(--text-dim);}
 .upload-hint{font-size:11px;color:var(--text-dim);margin-top:5px;}
+.upload-progress{display:none;width:100%;height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:10px;overflow:hidden;}
+.upload-progress.show{display:block;}
+.upload-progress-bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-mid));width:0%;transition:width .3s;}
+.image-preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:10px;margin-top:14px;}
+.preview-item{position:relative;border-radius:8px;overflow:hidden;background:rgba(255,255,255,.08);border:1px solid var(--border);cursor:pointer;}
+.preview-item img{width:100%;height:80px;object-fit:cover;}
+.preview-item .remove-btn{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.7);color:white;border:none;width:20px;height:20px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;opacity:0;transition:.2s;}
+.preview-item:hover .remove-btn{opacity:1;}
 .btn-submit{width:100%;margin-top:10px;background:linear-gradient(135deg,var(--teal),var(--teal-mid));color:white;border:none;padding:15px;border-radius:var(--radius-md);font-family:var(--font);font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,137,123,.35);transition:.22s;letter-spacing:.3px;}
 .btn-submit:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,137,123,.45);}
 .success-banner{display:none;background:rgba(0,137,123,.15);border:1px solid var(--teal);border-radius:var(--radius-md);padding:14px 20px;font-size:14px;font-weight:600;color:var(--teal);margin-bottom:18px;text-align:center;}
+
 /* Messages */
 .msg-wrap{max-width:960px;margin:0 auto;padding:28px 20px;position:relative;z-index:1;}
 .msg-layout{display:grid;grid-template-columns:290px 1fr;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;height:600px;box-shadow:var(--shadow-glass);}
@@ -283,7 +296,6 @@ header{position:sticky;top:0;z-index:200;height:64px;display:flex;align-items:ce
 </style>
 </head>
 <body>
-
 <header>
   <div class="logo" onclick="showPage('home')">سیلو<span>.</span></div>
   <div class="header-search">
@@ -435,7 +447,6 @@ header{position:sticky;top:0;z-index:200;height:64px;display:flex;align-items:ce
             <div class="cat-sub-item" onclick="filterSub('event',this)">نورپردازی مجلس</div>
           </div>
         </div>
-
         <div class="cat-group">
           <div class="cat-group-header" onclick="toggleGroup(this,'personal')">
             <span class="cg-dot"></span> وسایل شخصی <span class="cg-count">۹</span><span class="cg-arrow">›</span>
@@ -571,7 +582,6 @@ header{position:sticky;top:0;z-index:200;height:64px;display:flex;align-items:ce
     </div>
   </div>
 </div>
-
 <!-- POST -->
 <div id="page-post" class="page">
   <div class="post-wrap">
@@ -664,14 +674,18 @@ header{position:sticky;top:0;z-index:200;height:64px;display:flex;align-items:ce
       </div>
 
       <div class="form-divider"></div>
-      <div class="form-section-title">تصاویر</div>
-      <div class="upload-zone" onclick="alert('آپلود تصویر در نسخه آزمایشی غیرفعال است')">
+      <div class="form-section-title">تصاویر (اختیاری)</div>
+      <div class="upload-zone" id="uploadZone">
         <div class="up-icon">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         </div>
-        <div>برای آپلود کلیک کنید</div>
+        <div>برای آپلود کلیک کنید یا تصویر را بکشید</div>
         <div class="upload-hint">تا ۵ تصویر — JPG یا PNG — حداکثر ۵ مگابایت</div>
       </div>
+      <div class="upload-progress" id="uploadProgress">
+        <div class="upload-progress-bar" id="progressBar"></div>
+      </div>
+            <div class="image-preview" id="imagePreview"></div>
 
       <div class="form-divider"></div>
       <div class="form-section-title">اطلاعات تماس</div>
@@ -711,6 +725,7 @@ header{position:sticky;top:0;z-index:200;height:64px;display:flex;align-items:ce
     </div>
   </div>
 </div>
+
 <!-- MESSAGES -->
 <div id="page-messages" class="page">
   <div class="msg-wrap">
@@ -751,7 +766,6 @@ header{position:sticky;top:0;z-index:200;height:64px;display:flex;align-items:ce
     </div>
   </div>
 </div>
-
 <!-- MODAL CALL -->
 <div class="modal-overlay" id="callModal">
   <div class="modal-box">
@@ -773,6 +787,7 @@ header{position:sticky;top:0;z-index:200;height:64px;display:flex;align-items:ce
     </div>
   </div>
 </div>
+
 <!-- MODAL POST -->
 <div class="modal-overlay" id="postModal">
   <div class="modal-box">
@@ -797,19 +812,165 @@ header{position:sticky;top:0;z-index:200;height:64px;display:flex;align-items:ce
 </div>
 
 <script>
-const allAds=[
-  {id:1,title:'دریل شارژی بوش حرفه‌ای ۱۸ ولت',cat:'tools',city:'تهران',price:120000,icon:'tools',desc:'دریل شارژی بوش ۱۸ ولت در وضعیت عالی. همراه با کیف حمل، شارژر و دو باتری.',date:'دیروز',owner:'محمد رضایی',badge:'ویژه'},
-  {id:2,title:'چادر کمپینگ ۶ نفره ضد آب',cat:'sport',city:'اصفهان',price:80000,icon:'sport',desc:'چادر کمپینگ ۶ نفره ضد آب. قطب‌های آلومینیوم، پارچه ضد آب ۳۰۰۰mm.',date:'۲ روز پیش',owner:'علی صادقی'},
-  {id:3,title:'میز و صندلی مجلسی — ۱۰ ست',cat:'event',city:'تهران',price:500000,icon:'event',desc:'ست کامل میز گرد و صندلی تاشو مجلسی. حمل و نصب با هزینه جداگانه.',date:'امروز',owner:'فاطمه کریمی',badge:'جدید'},
-  {id:4,title:'پروژکتور فول‌اچ‌دی سونی VPL',cat:'tech',city:'تهران',price:200000,icon:'tech',desc:'پروژکتور سونی ۱۰۸۰p. مناسب برای جلسات و سینمای خانگی.',date:'امروز',owner:'حسین نوری'},
-  {id:5,title:'جاروبرقی صنعتی ۲۲۰۰ وات',cat:'home',city:'شیراز',price:150000,icon:'home',desc:'جاروبرقی صنعتی ظرفیت ۲۰ لیتر، مکش قوی.',date:'۳ روز پیش',owner:'مریم احمدی'},
-  {id:6,title:'دوچرخه کوهستانی ۲۶ اینچ',cat:'sport',city:'تهران',price:100000,icon:'sport',desc:'دوچرخه کوهستانی ۲۶ اینچ ۲۱ دنده شیمانو. ترمز دیسک.',date:'دیروز',owner:'امیر زارعی'},
-  {id:7,title:'سیستم صوتی کامل مجلس',cat:'event',city:'مشهد',price:350000,icon:'event',desc:'سیستم صوتی: دو بلندگو ۱۵ اینچ، آمپلی‌فایر ۲۰۰۰ وات، میکروفون بی‌سیم.',date:'امروز',owner:'رضا حسینی',badge:'جدید'},
-  {id:8,title:'نردبان آلومینیوم ۵ متری',cat:'tools',city:'تهران',price:90000,icon:'tools',desc:'نردبان آلومینیوم تاشو ۵ متر. ظرفیت ۱۵۰ کیلوگرم.',date:'۴ روز پیش',owner:'سعید محمدی'},
-  {id:9,title:'دوربین کانن EOS R6',cat:'tech',city:'تهران',price:450000,icon:'tech',desc:'دوربین میرورلس کانن EOS R6 با لنز RF 24-105.',date:'دیروز',owner:'نگار رستمی'},
-  {id:10,title:'ماشین ظرفشویی بوش ۱۲ نفره',cat:'home',city:'اصفهان',price:180000,icon:'home',desc:'ماشین ظرفشویی بوش. مناسب برای مراسم بزرگ.',date:'۵ روز پیش',owner:'زهرا موسوی'},
-  {id:11,title:'وینچ برقی ۲ تن صنعتی',cat:'tools',city:'تبریز',price:250000,icon:'tools',desc:'وینچ برقی ۲ تن برای کارهای ساختمانی و حمل بار.',date:'امروز',owner:'کامران جعفری',badge:'جدید'},
-  {id:12,title:'خیمه برزنتی ۱۰×۱۰ با تیم نصب',cat:'event',city:'تهران',price:600000,icon:'event',desc:'خیمه برزنتی ضد آب. با تیم نصب و برچیدن. ظرفیت ۱۵۰ نفر.',date:'۲ روز پیش',owner:'مهدی کمالی'},
+// =================== IMAGE COMPRESSION & UPLOAD ===================
+const MAX_IMAGES = 5;
+const MAX_SIZE_MB = 5;
+let uploadedImages = [];
+
+function compressImage(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width, height = img.height;
+        const maxWidth = 1200, maxHeight = 1200;
+        if (width > height) {
+          if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; }
+        } else {
+          if (height > maxHeight) { width *= maxHeight / height; height = maxHeight; }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob((blob) => {
+          const compressedFile = new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() });
+          resolve(compressedFile);
+        }, 'image/jpeg', 0.75);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function initUploadZone() {
+  const zone = document.getElementById('uploadZone');
+  if (!zone) return;
+  
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = 'image/jpeg,image/png';
+  fileInput.multiple = true;
+  fileInput.style.display = 'none';
+  fileInput.id = 'fileInputHidden';
+  fileInput.onchange = (e) => handleFiles(e.target.files);
+  document.body.appendChild(fileInput);
+  
+  zone.addEventListener('click', () => fileInput.click());
+  zone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    zone.classList.add('loading');
+  });
+  zone.addEventListener('dragleave', () => zone.classList.remove('loading'));
+  zone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    zone.classList.remove('loading');
+    handleFiles(e.dataTransfer.files);
+  });
+}
+
+async function handleFiles(files) {
+  if (uploadedImages.length >= MAX_IMAGES) {
+    alert(`حداکثر ${MAX_IMAGES} تصویر مجاز است`);
+    return;
+  }
+  
+  const progressBar = document.getElementById('uploadProgress');
+  progressBar.classList.add('show');
+  let processed = 0;
+  
+  for (let file of files) {
+    if (uploadedImages.length >= MAX_IMAGES) break;
+    if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+      alert(`فایل ${file.name} بزرگتر از ${MAX_SIZE_MB}MB است`);
+      continue;
+    }
+    const compressed = await compressImage(file);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      uploadedImages.push({ name: file.name, data: e.target.result });
+      renderPreview();
+      processed++;
+      document.getElementById('progressBar').style.width = (processed / Math.min(files.length, MAX_IMAGES - uploadedImages.length + processed)) * 100 + '%';
+      if (processed === Math.min(files.length, MAX_IMAGES - uploadedImages.length + processed)) {
+        setTimeout(() => progressBar.classList.remove('show'), 800);
+      }
+    };
+    reader.readAsDataURL(compressed);
+  }
+}
+
+function renderPreview() {
+  const container = document.getElementById('imagePreview');
+  container.innerHTML = uploadedImages.map((img, i) => `
+    <div class="preview-item">
+      <img src="${img.data}">
+      <button type="button" class="remove-btn" onclick="removeImage(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function removeImage(i) {
+  uploadedImages.splice(i, 1);
+  renderPreview();
+}
+
+// =================== AD EXPIRY SYSTEM ===================
+const EXPIRY_DAYS = 14;
+
+function isAdExpired(ad) {
+  const postTime = ad.postTime || Date.now();
+  const expiryTime = postTime + (EXPIRY_DAYS * 24 * 60 * 60 * 1000);
+  return Date.now() > expiryTime;
+}
+
+function removeExpiredAds() {
+  allAds = allAds.filter(ad => !isAdExpired(ad));
+  saveAdsToStorage();
+}
+
+function saveAdsToStorage() {
+  localStorage.setItem('siloAds', JSON.stringify(allAds));
+}
+
+function loadAdsFromStorage() {
+  const stored = localStorage.getItem('siloAds');
+  if (stored) {
+    allAds = JSON.parse(stored);
+    removeExpiredAds();
+  }
+}
+
+// =================== AUTO SCROLL ON MOBILE ===================
+function scrollToAds() {
+  const isMobile = window.innerWidth <= 768;
+  if (!isMobile) return;
+  
+  const adsGrid = document.getElementById('adsGrid');
+  if (adsGrid) {
+    setTimeout(() => {
+      adsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
+  }
+}
+
+// =================== MAIN ADS ARRAY ===================
+let allAds = [
+  {id:1,title:'دریل شارژی بوش حرفه‌ای ۱۸ ولت',cat:'tools',city:'تهران',price:120000,icon:'tools',desc:'دریل شارژی بوش ۱۸ ولت در وضعیت عالی. همراه با کیف حمل، شارژر و دو باتری.',date:'دیروز',owner:'محمد رضایی',badge:'ویژه',postTime:Date.now()-86400000},
+  {id:2,title:'چادر کمپینگ ۶ نفره ضد آب',cat:'sport',city:'اصفهان',price:80000,icon:'sport',desc:'چادر کمپینگ ۶ نفره ضد آب. قطب‌های آلومینیوم، پارچه ضد آب ۳۰۰۰mm.',date:'۲ روز پیش',owner:'علی صادقی',postTime:Date.now()-172800000},
+  {id:3,title:'میز و صندلی مجلسی — ۱۰ ست',cat:'event',city:'تهران',price:500000,icon:'event',desc:'ست کامل میز گرد و صندلی تاشو مجلسی. حمل و نصب با هزینه جداگانه.',date:'امروز',owner:'فاطمه کریمی',badge:'جدید',postTime:Date.now()},
+  {id:4,title:'پروژکتور فول‌اچ‌دی سونی VPL',cat:'tech',city:'تهران',price:200000,icon:'tech',desc:'پروژکتور سونی ۱۰۸۰p. مناسب برای جلسات و سینمای خانگی.',date:'امروز',owner:'حسین نوری',postTime:Date.now()},
+  {id:5,title:'جاروبرقی صنعتی ۲۲۰۰ وات',cat:'home',city:'شیراز',price:150000,icon:'home',desc:'جاروبرقی صنعتی ظرفیت ۲۰ لیتر، مکش قوی.',date:'۳ روز پیش',owner:'مریم احمدی',postTime:Date.now()-259200000},
+  {id:6,title:'دوچرخه کوهستانی ۲۶ اینچ',cat:'sport',city:'تهران',price:100000,icon:'sport',desc:'دوچرخه کوهستانی ۲۶ اینچ ۲۱ دنده شیمانو. ترمز دیسک.',date:'دیروز',owner:'امیر زارعی',postTime:Date.now()-86400000},
+  {id:7,title:'سیستم صوتی کامل مجلس',cat:'event',city:'مشهد',price:350000,icon:'event',desc:'سیستم صوتی: دو بلندگو ۱۵ اینچ، آمپلی‌فایر ۲۰۰۰ وات، میکروفون بی‌سیم.',date:'امروز',owner:'رضا حسینی',badge:'جدید',postTime:Date.now()},
+  {id:8,title:'نردبان آلومینیوم ۵ متری',cat:'tools',city:'تهران',price:90000,icon:'tools',desc:'نردبان آلومینیوم تاشو ۵ متر. ظرفیت ۱۵۰ کیلوگرم.',date:'۴ روز پیش',owner:'سعید محمدی',postTime:Date.now()-345600000},
+  {id:9,title:'دوربین کانن EOS R6',cat:'tech',city:'تهران',price:450000,icon:'tech',desc:'دوربین میرورلس کانن EOS R6 با لنز RF 24-105.',date:'دیروز',owner:'نگار رستمی',postTime:Date.now()-86400000},
+  {id:10,title:'ماشین ظرفشویی بوش ۱۲ نفره',cat:'home',city:'اصفهان',price:180000,icon:'home',desc:'ماشین ظرفشویی بوش. مناسب برای مراسم بزرگ.',date:'۵ روز پیش',owner:'زهرا موسوی',postTime:Date.now()-432000000},
+  {id:11,title:'وینچ برقی ۲ تن صنعتی',cat:'tools',city:'تبریز',price:250000,icon:'tools',desc:'وینچ برقی ۲ تن برای کارهای ساختمانی و حمل بار.',date:'امروز',owner:'کامران جعفری',badge:'جدید',postTime:Date.now()},
+  {id:12,title:'خیمه برزنتی ۱۰×۱۰ با تیم نصب',cat:'event',city:'تهران',price:600000,icon:'event',desc:'خیمه برزنتی ضد آب. با تیم نصب و برچیدن. ظرفیت ۱۵۰ نفر.',date:'۲ روز پیش',owner:'مهدی کمالی',postTime:Date.now()-172800000},
 ];
 
 const catIcons={
@@ -858,8 +1019,10 @@ function updateSubCat(){
 
 function renderAds(ads){
   document.getElementById('adCount').textContent=ads.length;
-  document.getElementById('adsGrid').innerHTML=ads.map(ad=>`
-    <div class="ad-card" onclick="showDetail(${ad.id})">
+  document.getElementById('adsGrid').innerHTML=ads.map(ad=>{
+    const expired=isAdExpired(ad);
+    return `
+    <div class="ad-card${expired?' expired':''}">
       <div class="ad-img-wrap">
         ${ad.badge?`<div class="ad-badge">${ad.badge}</div>`:''}
         <div class="ad-img-placeholder">
@@ -875,7 +1038,8 @@ function renderAds(ads){
           <div class="ad-date">${ad.date}</div>
         </div>
       </div>
-    </div>`).join('');
+    </div>`
+  }).join('');
 }
 
 function getFiltered(){
@@ -901,6 +1065,7 @@ function filterCatGroup(el,cat){
   el.classList.add('active');
   document.querySelectorAll('.cat-sub-item').forEach(e=>e.classList.remove('active'));
   renderAds(getFiltered());
+  scrollToAds();
 }
 function filterSub(parentCat,el){
   currentCat=parentCat;
@@ -908,6 +1073,7 @@ function filterSub(parentCat,el){
   document.querySelectorAll('.cat-group-header').forEach(e=>e.classList.remove('active'));
   el.classList.add('active');
   renderAds(getFiltered());
+  scrollToAds();
 }
 
 function filterCatBtn(el,cat){
@@ -915,6 +1081,7 @@ function filterCatBtn(el,cat){
   document.querySelectorAll('.cat-btn').forEach(e=>e.classList.remove('active'));
   el.classList.add('active');
   renderAds(getFiltered());
+  scrollToAds();
 }
 
 function applyFilter(){
@@ -922,7 +1089,6 @@ function applyFilter(){
   const max=parseInt(document.getElementById('priceMax').value)||Infinity;
   renderAds(getFiltered().filter(a=>a.price>=min&&a.price<=max));
 }
-
 function sortAds(val){
   let ads=getFiltered();
   if(val==='cheapest')ads.sort((a,b)=>a.price-b.price);
@@ -939,11 +1105,16 @@ function showDetail(id){
   document.getElementById('detailDesc').textContent=ad.desc;
   document.getElementById('detailPrice').textContent=ad.price.toLocaleString('fa-IR');
   document.getElementById('detailOwner').textContent=ad.owner;
-  carouselIndex=0;carouselSlides=3;
+  carouselIndex=0;carouselSlides=(ad.images?.length||0)+1;
   const color=catColors[ad.icon]||'#b0bec5';
   const icon=catIcons[ad.icon]||catIcons.default;
-  document.getElementById('carouselTrack').innerHTML=[1,2,3].map((_,i)=>`<div class="carousel-slide" style="background:linear-gradient(${135+i*30}deg,rgba(0,137,123,${0.1+i*0.03}),rgba(0,77,64,${0.18+i*0.04}))"><div class="big-icon" style="color:${color}">${icon}</div></div>`).join('');
-  document.getElementById('carouselDots').innerHTML=[0,1,2].map(i=>`<div class="dot${i===0?' active':''}" onclick="goSlide(${i})"></div>`).join('');
+  let slides=`<div class="carousel-slide" style="background:linear-gradient(135deg,rgba(0,137,123,0.1),rgba(0,77,64,0.22))"><div class="big-icon" style="color:${color}">${icon}</div></div>`;
+  if(ad.images){
+    ad.images.forEach(img=>slides+=`<div class="carousel-slide with-image"><img src="${img}"></div>`);
+  }
+  document.getElementById('carouselTrack').innerHTML=slides;
+  const dotCount=Math.max(1,(ad.images?.length||0)+1);
+  document.getElementById('carouselDots').innerHTML=Array(dotCount).fill(0).map((_,i)=>`<div class="dot${i===0?' active':''}" onclick="goSlide(${i})"></div>`).join('');
   showPage('detail');
 }
 
@@ -991,11 +1162,32 @@ function doSubmitAd(){
   if(!pendingAdData)return;
   closeModal('postModal');
   const{title,cat,city,price,owner}=pendingAdData;
-  allAds.unshift({id:allAds.length+1,title,cat,city,price:parseInt(price),icon:cat,desc:document.getElementById('adDesc').value||'بدون توضیحات.',date:'همین الان',owner,badge:'جدید'});
+  const newAd={
+    id:Math.max(...allAds.map(a=>a.id),0)+1,
+    title,cat,city,
+    price:parseInt(price),
+    icon:cat,
+    desc:document.getElementById('adDesc').value||'بدون توضیحات.',
+    date:'همین الان',
+    owner,
+    badge:'جدید',
+    postTime:Date.now(),
+    images:uploadedImages.map(img=>img.data)
+  };
+  allAds.unshift(newAd);
+  uploadedImages=[];
+  renderPreview();
   pendingAdData=null;
+  saveAdsToStorage();
   const banner=document.getElementById('successMsg');
   banner.style.display='block';
   setTimeout(()=>{banner.style.display='none';showPage('home');renderAds(getFiltered());},2200);
+  document.getElementById('adTitle').value='';
+  document.getElementById('adCat').value='';
+  document.getElementById('adCity').value='';
+  document.getElementById('adPrice').value='';
+  document.getElementById('adOwner').value='';
+  document.getElementById('adDesc').value='';
 }
 
 function selectThread(el,idx){
@@ -1023,7 +1215,12 @@ function sendMsg(){
 }
 
 document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
-renderAds(allAds);
+window.addEventListener('load',()=>{
+  loadAdsFromStorage();
+  initUploadZone();
+  renderAds(allAds);
+  removeExpiredAds();
+});
 </script>
 </body>
 </html>
