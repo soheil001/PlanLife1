@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>پنل کاربری — سیلو</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#00897b;--teal-mid:#00695c;--teal-glow:rgba(0,137,123,0.18);
+  --accent:#ff6d00;--bg-start:#0a1628;--bg-end:#0d2137;--text:#f0f4f8;
+  --text-muted:rgba(240,244,248,0.55);--text-dim:rgba(240,244,248,0.35);
+  --glass:rgba(255,255,255,0.07);--glass-mid:rgba(255,255,255,0.11);
+  --glass-hover:rgba(255,255,255,0.15);--border:rgba(255,255,255,0.1);
+  --border-mid:rgba(255,255,255,0.16);--shadow-glass:0 8px 32px rgba(0,0,0,0.35);
+  --radius-lg:18px;--radius-md:12px;--radius-sm:8px;--font:'Vazirmatn',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:linear-gradient(135deg,var(--bg-start) 0%,var(--bg-end) 60%,#0b1d2e 100%);min-height:100vh;color:var(--text);}
+body::before{content:'';position:fixed;width:600px;height:600px;background:radial-gradient(circle,rgba(0,137,123,0.12) 0%,transparent 70%);top:-150px;right:-150px;border-radius:50%;pointer-events:none;z-index:0;}
+
+header{position:sticky;top:0;z-index:200;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:rgba(10,22,40,0.72);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+.logo{display:flex;align-items:center;cursor:pointer;transition:opacity .2s;text-decoration:none;}
+.logo img{height:40px;object-fit:contain;}
+.header-right{display:flex;align-items:center;gap:12px;}
+.btn-back{background:var(--glass);color:var(--text);border:1px solid var(--border);padding:9px 16px;border-radius:40px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px;text-decoration:none;}
+.btn-back:hover{background:var(--glass-hover);}
+.btn-logout{background:transparent;color:rgba(255,100,100,.7);border:1px solid rgba(255,100,100,.2);padding:9px 16px;border-radius:40px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px;}
+.btn-logout:hover{background:rgba(255,100,100,.08);color:#ff6b6b;}
+
+.panel-wrap{max-width:1000px;margin:0 auto;padding:28px 20px;position:relative;z-index:1;}
+
+/* پروفایل */
+.profile-card{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;margin-bottom:24px;box-shadow:var(--shadow-glass);display:flex;align-items:center;gap:22px;flex-wrap:wrap;}
+.profile-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-mid));display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:white;flex-shrink:0;}
+.profile-name{font-size:20px;font-weight:700;margin-bottom:4px;}
+.profile-phone{font-size:13px;color:var(--text-muted);}
+.profile-stats{display:flex;gap:20px;margin-top:12px;flex-wrap:wrap;}
+.stat-item{text-align:center;}
+.stat-num{font-size:20px;font-weight:800;}
+.stat-label{font-size:11px;color:var(--text-dim);margin-top:2px;}
+.stat-teal .stat-num{color:var(--teal);}
+.stat-orange .stat-num{color:#ffa726;}
+.btn-new-ad{background:linear-gradient(135deg,var(--teal),var(--teal-mid));color:white;border:none;padding:11px 22px;border-radius:40px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,137,123,.35);transition:.2s;display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;margin-right:auto;}
+.btn-new-ad:hover{transform:translateY(-1px);}
+
+/* تب‌ها */
+.panel-tabs{display:flex;gap:4px;background:var(--glass);border:1px solid var(--border);border-radius:40px;padding:4px;margin-bottom:22px;width:fit-content;}
+.panel-tab{padding:9px 20px;border:none;border-radius:36px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:var(--text-muted);transition:.22s;}
+.panel-tab.active{background:var(--teal);color:white;box-shadow:0 2px 10px rgba(0,137,123,.4);}
+.tab-section{display:none;}
+.tab-section.active{display:block;}
+
+/* گرید آگهی‌ها */
+.my-ads-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+.my-ad-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:.2s;}
+.my-ad-card:hover{border-color:var(--border-mid);background:var(--glass-mid);}
+.my-ad-img{width:100%;height:140px;object-fit:cover;display:block;}
+.my-ad-img-ph{width:100%;height:140px;display:flex;align-items:center;justify-content:center;font-size:36px;background:rgba(0,137,123,.07);}
+.my-ad-body{padding:14px;}
+.my-ad-title{font-size:14px;font-weight:600;margin-bottom:8px;line-height:1.4;}
+.my-ad-status{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:8px;flex-wrap:wrap;}
+.my-ad-price{font-size:13px;color:var(--teal);font-weight:700;}
+
+/* badge وضعیت */
+.status-badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;}
+.s-pending{background:rgba(255,167,38,.15);color:#ffa726;border:1px solid rgba(255,167,38,.3);}
+.s-approved{background:rgba(0,137,123,.15);color:var(--teal);border:1px solid rgba(0,137,123,.3);}
+.s-rejected{background:rgba(255,100,100,.1);color:#ff6b6b;border:1px solid rgba(255,100,100,.2);}
+.s-banned{background:rgba(239,83,80,.12);color:#ef5350;border:1px solid rgba(239,83,80,.25);}
+
+.pending-note{background:rgba(255,167,38,.06);border:1px solid rgba(255,167,38,.2);border-radius:var(--radius-sm);padding:8px 12px;font-size:11px;color:#ffa726;margin-top:8px;display:flex;align-items:center;gap:6px;line-height:1.5;}
+.rejected-note{background:rgba(255,100,100,.06);border:1px solid rgba(255,100,100,.15);border-radius:var(--radius-sm);padding:8px 12px;font-size:11px;color:#ff7070;margin-top:8px;line-height:1.5;}
+.approved-note{background:rgba(0,137,123,.06);border:1px solid rgba(0,137,123,.2);border-radius:var(--radius-sm);padding:8px 12px;font-size:11px;color:var(--teal);margin-top:8px;line-height:1.5;}
+
+/* حالت خالی */
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-dim);grid-column:1/-1;}
+.empty-state .es-icon{font-size:48px;margin-bottom:12px;}
+.empty-state p{font-size:14px;margin-bottom:16px;}
+
+/* ویرایش پروفایل */
+.profile-edit-box{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;}
+.profile-edit-box h3{font-size:17px;font-weight:700;margin-bottom:20px;}
+.form-group{margin-bottom:14px;}
+.form-group label{display:block;font-size:12px;font-weight:600;margin-bottom:6px;color:var(--text-muted);}
+.form-group input{width:100%;padding:11px 14px;background:rgba(255,255,255,.07);border:1px solid var(--border-mid);border-radius:var(--radius-sm);font-family:var(--font);font-size:13px;color:var(--text);outline:none;transition:.22s;}
+.form-group input:focus{border-color:var(--teal);background:rgba(0,137,123,.07);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.btn-save{padding:12px 28px;background:linear-gradient(135deg,var(--teal),var(--teal-mid));border:none;border-radius:var(--radius-md);color:white;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:.2s;}
+.btn-save:hover{transform:translateY(-1px);}
+.save-success{display:none;background:rgba(0,137,123,.12);border:1px solid var(--teal);border-radius:var(--radius-sm);padding:10px 16px;font-size:13px;color:var(--teal);font-weight:600;margin-top:12px;text-align:center;}
+.save-success.show{display:block;}
+
+/* auth gate */
+.auth-gate{position:fixed;inset:0;z-index:500;background:rgba(5,15,30,.92);backdrop-filter:blur(18px);display:none;align-items:center;justify-content:center;padding:20px;}
+.auth-gate.show{display:flex;}
+.auth-gate-box{background:rgba(13,33,55,.88);border:1px solid var(--border-mid);border-radius:var(--radius-lg);padding:40px 36px;max-width:380px;width:100%;text-align:center;}
+.auth-gate-box img{height:44px;margin-bottom:12px;}
+.auth-gate-box h3{font-size:18px;font-weight:700;margin-bottom:10px;}
+.auth-gate-box p{font-size:13px;color:var(--text-muted);margin-bottom:24px;line-height:1.7;}
+.btn-go-login{display:inline-block;background:linear-gradient(135deg,var(--teal),var(--teal-mid));color:white;padding:13px 32px;border-radius:40px;font-family:var(--font);font-size:14px;font-weight:700;text-decoration:none;}
+
+@media(max-width:768px){.form-row{grid-template-columns:1fr;}.my-ads-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:480px){.my-ads-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">
+    <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1781018687/_ir_puvab6.png" alt="سیلو">
+  </a>
+  <div class="header-right">
+    <a href="index.html" class="btn-back">صفحه اصلی</a>
+    <button class="btn-logout" onclick="doLogout()">خروج</button>
+  </div>
+</header>
+
+<!-- Auth gate — فقط اگر لاگین نباشه نشون داده میشه -->
+<div class="auth-gate" id="authGate">
+  <div class="auth-gate-box">
+    <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1781018687/_ir_puvab6.png" alt="سیلو">
+    <h3>ابتدا وارد شوید</h3>
+    <p>برای دسترسی به پنل کاربری باید وارد حساب خود شوید.</p>
+    <a href="index.html" class="btn-go-login">بازگشت و ورود به حساب</a>
+  </div>
+</div>
+
+<div class="panel-wrap" id="panelWrap">
+  <div class="profile-card">
+    <div class="profile-avatar" id="pAvatar"></div>
+    <div class="profile-info" style="flex:1;">
+      <div class="profile-name" id="pName"></div>
+      <div class="profile-phone" id="pPhone"></div>
+      <div class="profile-stats">
+        <div class="stat-item stat-teal">
+          <div class="stat-num" id="statPublished">0</div>
+          <div class="stat-label">منتشر شده</div>
+        </div>
+        <div class="stat-item stat-orange">
+          <div class="stat-num" id="statPending">0</div>
+          <div class="stat-label">در انتظار</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="statTotal" style="color:var(--text);">0</div>
+          <div class="stat-label">کل آگهی‌ها</div>
+        </div>
+      </div>
+    </div>
+    <a href="post.html" class="btn-new-ad">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      آگهی جدید
+    </a>
+  </div>
+
+  <div class="panel-tabs">
+    <button class="panel-tab active" onclick="switchTab('ads', event)">آگهی‌های من</button>
+    <button class="panel-tab"        onclick="switchTab('profile', event)">مشخصات</button>
+  </div>
+
+  <!-- تب آگهی‌ها -->
+  <div class="tab-section active" id="tab-ads">
+    <div class="my-ads-grid" id="myAdsGrid"></div>
+  </div>
+
+  <!-- تب ویرایش پروفایل -->
+  <div class="tab-section" id="tab-profile">
+    <div class="profile-edit-box">
+      <h3>ویرایش مشخصات</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>نام و نام خانوادگی</label>
+          <input type="text" id="editName">
+        </div>
+        <div class="form-group">
+          <label>شماره موبایل</label>
+          <input type="tel" id="editPhone">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>رمز عبور جدید (خالی = بدون تغییر)</label>
+        <input type="password" id="editPass" placeholder="رمز جدید">
+      </div>
+      <button class="btn-save" onclick="saveProfile()">ذخیره تغییرات</button>
+      <div class="save-success" id="profileSaved">مشخصات ذخیره شد ✓</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══ helpers ══ */
+function getCurrentUser(){ try{ return JSON.parse(localStorage.getItem('siloCurrentUser') || 'null'); } catch{ return null; } }
+function setCurrentUser(u){ localStorage.setItem('siloCurrentUser', JSON.stringify(u)); }
+function clearCurrentUser(){ localStorage.removeItem('siloCurrentUser'); }
+function getUsers(){ try{ return JSON.parse(localStorage.getItem('siloUsers') || '[]'); } catch{ return []; } }
+function saveUsers(u){ localStorage.setItem('siloUsers', JSON.stringify(u)); }
+
+/*
+  آگهی‌های کاربر از دو منبع خونده میشن:
+  1. siloPendingAds — همه آگهی‌ها (pending / rejected / approved)
+  2. siloAds        — آگهی‌های تأیید شده که ادمین approve کرده
+
+  برای نمایش کامل، هر دو منبع merge میشن و duplicate حذف میشه.
+*/
+function getAllUserAds(userPhone) {
+  let pending = [];
+  let published = [];
+
+  try { pending   = JSON.parse(localStorage.getItem('siloPendingAds') || '[]'); } catch{}
+  try { published = JSON.parse(localStorage.getItem('siloAds')        || '[]'); } catch{}
+
+  /* آگهی‌های کاربر از pending */
+  const mine = pending.filter(a =>
+    a.ownerPhone === userPhone || a.phone === userPhone
+  );
+
+  /* آگهی‌های تأیید شده از siloAds که ممکنه در pending نباشن */
+  const publishedMine = published.filter(a =>
+    (a.ownerPhone === userPhone || a.phone === userPhone) &&
+    !mine.find(m => m.id === a.id)   /* اگه قبلاً اضافه نشده */
+  ).map(a => ({ ...a, status: 'approved' }));
+
+  return [...mine, ...publishedMine];
+}
+
+let currentUser = null;
+
+function doLogout() {
+  clearCurrentUser();
+  window.location.href = 'index.html';
+}
+
+function loadPanel() {
+  currentUser = getCurrentUser();
+
+  if (!currentUser) {
+    document.getElementById('authGate').classList.add('show');
+    document.getElementById('panelWrap').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('pAvatar').textContent = currentUser.name.charAt(0);
+  document.getElementById('pName').textContent   = currentUser.name;
+  document.getElementById('pPhone').textContent  = currentUser.phone;
+  document.getElementById('editName').value  = currentUser.name;
+  document.getElementById('editPhone').value = currentUser.phone;
+
+  loadMyAds();
+}
+
+function loadMyAds() {
+  const mine = getAllUserAds(currentUser.phone);
+
+  const published = mine.filter(a => a.status === 'approved').length;
+  const waiting   = mine.filter(a => a.status === 'pending').length;
+
+  document.getElementById('statPublished').textContent = published;
+  document.getElementById('statPending').textContent   = waiting;
+  document.getElementById('statTotal').textContent     = mine.length;
+
+  const grid = document.getElementById('myAdsGrid');
+
+  if (!mine.length) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="es-icon">📋</div>
+        <p>هنوز آگهی‌ای ثبت نکرده‌اید.</p>
+        <a href="post.html" class="btn-new-ad" style="display:inline-flex;margin:0 auto;">ثبت اولین آگهی</a>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = mine.map(ad => `
+    <div class="my-ad-card">
+      ${ad.images && ad.images[0]
+        ? `<img class="my-ad-img" src="${ad.images[0]}" alt="">`
+        : `<div class="my-ad-img-ph">📦</div>`}
+      <div class="my-ad-body">
+        <div class="my-ad-title">${ad.title}</div>
+        <div class="my-ad-status">
+          <span class="my-ad-price">${Number(ad.price).toLocaleString('fa-IR')} ت/روز</span>
+          ${getStatusBadge(ad)}
+        </div>
+        ${getStatusNote(ad)}
+      </div>
+    </div>`).join('');
+}
+
+function getStatusBadge(ad) {
+  if (ad.hasBannedWord && ad.status === 'pending')
+    return `<span class="status-badge s-banned">نیاز به بررسی</span>`;
+  if (ad.status === 'pending')
+    return `<span class="status-badge s-pending">⏳ در بررسی</span>`;
+  if (ad.status === 'approved')
+    return `<span class="status-badge s-approved">✓ منتشر شده</span>`;
+  if (ad.status === 'rejected')
+    return `<span class="status-badge s-rejected">✕ رد شده</span>`;
+  return '';
+}
+
+function getStatusNote(ad) {
+  if (ad.status === 'pending')
+    return `<div class="pending-note">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+      </svg>
+      آگهی در حال بررسی است. پس از تأیید ادمین منتشر می‌شود.
+    </div>`;
+  if (ad.status === 'approved')
+    return `<div class="approved-note">✓ آگهی منتشر شده و در سایت قابل مشاهده است.</div>`;
+  if (ad.status === 'rejected')
+    return `<div class="rejected-note">✕ این آگهی توسط ادمین رد شده است. برای اطلاعات بیشتر تماس بگیرید.</div>`;
+  return '';
+}
+
+function switchTab(name, e) {
+  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  e.target.classList.add('active');
+}
+
+function saveProfile() {
+  const name  = document.getElementById('editName').value.trim();
+  const phone = document.getElementById('editPhone').value.trim();
+  const pass  = document.getElementById('editPass').value;
+
+  if (!name || !phone) { alert('نام و شماره الزامی است'); return; }
+
+  let users = getUsers();
+  const idx = users.findIndex(u => u.phone === currentUser.phone);
+  if (idx >= 0) {
+    users[idx].name  = name;
+    users[idx].phone = phone;
+    if (pass && pass.length >= 6) users[idx].pass = pass;
+    saveUsers(users);
+  }
+
+  const updated = { name, phone };
+  setCurrentUser(updated);
+  currentUser = updated;
+
+  document.getElementById('pAvatar').textContent = name.charAt(0);
+  document.getElementById('pName').textContent   = name;
+  document.getElementById('pPhone').textContent  = phone;
+
+  document.getElementById('profileSaved').classList.add('show');
+  setTimeout(() => document.getElementById('profileSaved').classList.remove('show'), 3000);
+}
+
+window.addEventListener('load', loadPanel);
+</script>
+</body>
+</html>
