@@ -7,333 +7,287 @@
 <title>SECURE TERMINAL v2.4.1</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #000000 !important;
+    color: #00ff41;
+    font-family: 'Courier New', Courier, monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.025) 2px, rgba(0,255,65,0.025) 4px);
+    pointer-events: none;
+    z-index: 9999;
+  }
+  @keyframes flicker { 0%,94%,100%{opacity:1} 95%{opacity:0.85} 97%{opacity:0.92} }
+  @keyframes blink { 50%{opacity:0} }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  @keyframes radarSweep { to{transform:rotate(360deg)} }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  @keyframes blip { 0%{opacity:1;r:3} 100%{opacity:0;r:8} }
+  @keyframes scanline { 0%{top:0} 100%{top:100%} }
 
-html, body {
-background: #000000 !important;
-background-color: #000000 !important;
-color: #00ff41;
-font-family: ‘Courier New’, Courier, monospace;
-min-height: 100vh;
-overflow-x: hidden;
-position: relative;
-}
-
-body::before {
-content: ‘’;
-position: fixed;
-inset: 0;
-background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.03) 2px, rgba(0,255,65,0.03) 4px);
-pointer-events: none;
-z-index: 999;
-}
-
-body::after {
-content: ‘’;
-position: fixed;
-inset: 0;
-background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.4) 100%);
-pointer-events: none;
-z-index: 998;
-animation: flicker 8s infinite;
-}
-
-@keyframes flicker { 0%,95%,100%{opacity:1} 96%{opacity:0.85} 97%{opacity:1} 98%{opacity:0.9} }
-@keyframes blink { 50%{opacity:0} }
-@keyframes spin { to{transform:rotate(360deg)} }
-
-.main-container {
+.wrap {
 display: flex;
 flex-direction: column;
 align-items: center;
 min-height: 100vh;
-padding: 20px;
-gap: 16px;
+padding: 16px;
+gap: 14px;
 background: #000000;
 }
 
+/* TOP BAR */
 .top-bar {
-width: 100%;
-max-width: 900px;
-display: flex;
-justify-content: space-between;
-align-items: center;
+width: 100%; max-width: 960px;
+display: flex; justify-content: space-between; align-items: center;
 border-bottom: 1px solid #00aa2a;
-padding-bottom: 8px;
-font-size: 11px;
-color: #00aa2a;
-flex-wrap: wrap;
-gap: 4px;
-background: #000000;
+padding-bottom: 7px;
+font-size: 11px; color: #00aa2a;
+flex-wrap: wrap; gap: 4px;
 }
+.top-bar .blink { animation: blink 1s step-end infinite; color: #00ff41; }
 
-.top-bar .blink {
-animation: blink 1s step-end infinite;
+/* ASCII */
+.ascii-hdr {
+font-family: ‘Courier New’, monospace;
+font-size: clamp(7px, 1.6vw, 15px);
 color: #00ff41;
+text-align: center; line-height: 1.1;
+text-shadow: 0 0 8px #00ff41, 0 0 18px #00aa2a;
+white-space: pre; overflow-x: auto;
+width: 100%; max-width: 960px;
+background: #000000; font-weight: bold;
 }
 
-.ascii-header {
-font-family: ‘Courier New’, Courier, monospace;
-font-size: clamp(10px, 2vw, 18px);
-color: #00ff41;
-text-align: center;
-line-height: 1.1;
-text-shadow: 0 0 8px #00ff41, 0 0 20px #00aa2a;
-white-space: pre;
-overflow-x: auto;
-width: 100%;
-max-width: 900px;
-background: #000000;
-font-weight: bold;
-}
-
+/* STATS */
 .stats-bar {
-width: 100%;
-max-width: 900px;
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-gap: 8px;
+width: 100%; max-width: 960px;
+display: grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr));
+gap: 7px;
+}
+.stat-box { border: 1px solid #005515; padding: 7px 9px; background: #000a02; }
+.stat-label { color: #00aa2a; font-size: 10px; margin-bottom: 3px; }
+.stat-value { color: #00ff41; font-size: 14px; font-weight: bold; text-shadow: 0 0 5px #00ff41; }
+.pbar { height: 3px; background: #002208; margin-top: 4px; overflow: hidden; }
+.pfill { height: 100%; background: #00ff41; box-shadow: 0 0 5px #00ff41; transition: width 1s; }
+
+/* TERMINAL */
+.terminal { width: 100%; max-width: 960px; border: 1px solid #00aa2a; background: #000a02; border-radius: 3px; overflow: hidden; box-shadow: 0 0 14px rgba(0,255,65,0.18); }
+.t-bar { background: #001a05; border-bottom: 1px solid #00aa2a; padding: 6px 12px; display: flex; align-items: center; gap: 9px; font-size: 11px; color: #00aa2a; }
+.dots { display: flex; gap: 5px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: #001a05; border: 1px solid #00aa2a; }
+.t-out {
+padding: 12px; height: clamp(160px,25vh,260px);
+overflow-y: auto; font-size: clamp(11px,1.7vw,13px);
+line-height: 1.7; color: #00ff41;
+background: #000a02;
+scrollbar-width: thin; scrollbar-color: #00aa2a transparent;
+}
+.t-out::-webkit-scrollbar { width: 4px; }
+.t-out::-webkit-scrollbar-thumb { background: #00aa2a; }
+.ln { display: block; word-break: break-all; color: #00ff41; }
+.ln.d { color: #00882a; }
+.ln.b { color: #ffffff; text-shadow: 0 0 5px #00ff41; }
+.ln.w { color: #ffcc00; }
+.ln.e { color: #ff4444; }
+.ln.r { color: #ff4444; font-weight: bold; }
+
+/* RADAR */
+.radar-wrap {
+width: 100%; max-width: 960px;
+display: flex; justify-content: center; align-items: center;
+padding: 10px 0; gap: 20px; flex-wrap: wrap;
 background: #000000;
 }
+.radar-container { position: relative; width: 140px; height: 140px; }
+.radar-svg { width: 100%; height: 100%; }
+.radar-sweep {
+transform-origin: 70px 70px;
+animation: radarSweep 3s linear infinite;
+}
+.radar-status-col { display: flex; flex-direction: column; gap: 6px; }
+.radar-status-item { font-size: 11px; color: #00aa2a; display: flex; align-items: center; gap: 6px; }
+.radar-dot { width: 7px; height: 7px; border-radius: 50%; background: #00ff41; box-shadow: 0 0 4px #00ff41; animation: pulse 1.5s infinite; }
+.radar-dot.warn { background: #ffcc00; box-shadow: 0 0 4px #ffcc00; }
+.radar-dot.err { background: #ff4444; box-shadow: 0 0 4px #ff4444; }
+.fp-status { text-align: center; font-size: 11px; color: #00aa2a; margin-top: 5px; animation: blink 1.5s step-end infinite; }
 
-.stat-box {
-border: 1px solid #005515;
-padding: 8px 10px;
-font-size: 10px;
-background: #000a02;
+/* LOGIN */
+.login-sec {
+width: 100%; max-width: 960px;
+border: 1px solid #00aa2a; background: #000a02;
+padding: 16px; box-shadow: 0 0 14px rgba(0,255,65,0.1);
+}
+.login-title {
+font-size: 11px; color: #00aa2a;
+margin-bottom: 12px; border-bottom: 1px solid #002208;
+padding-bottom: 5px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px;
+}
+.frow { display: flex; align-items: center; gap: 9px; margin-bottom: 9px; flex-wrap: wrap; }
+.flabel { font-size: clamp(11px,2vw,13px); color: #00aa2a; min-width: 90px; white-space: nowrap; }
+.finput-wrap {
+flex: 1; min-width: 180px;
+display: flex; align-items: center;
+border: 1px solid #00aa2a; background: #000000;
+padding: 7px 10px; gap: 6px;
+}
+.finput-wrap span { color: #00aa2a; font-size: 13px; }
+.finput-wrap input {
+background: #000000; border: none; outline: none;
+color: #00ff41; font-family: ‘Courier New’, monospace;
+font-size: clamp(12px,2vw,14px); width: 100%; caret-color: #00ff41;
+}
+.finput-wrap input::placeholder { color: #004a15; }
+.btn-row { display: flex; gap: 9px; margin-top: 13px; flex-wrap: wrap; }
+.btn {
+background: #000000; border: 1px solid #00aa2a;
+color: #00ff41; font-family: ‘Courier New’, monospace;
+font-size: clamp(11px,2vw,13px); padding: 8px 16px;
+cursor: pointer; transition: all 0.2s;
+text-transform: uppercase; letter-spacing: 1px;
+}
+.btn:hover { background: #001a05; box-shadow: 0 0 12px rgba(0,255,65,0.4); color: #fff; }
+.btn.primary { border-color: #00ff41; box-shadow: 0 0 7px rgba(0,255,65,0.3); }
+
+/* ── POST-LOGIN PANELS ── */
+#postLogin { display: none; width: 100%; max-width: 960px; flex-direction: column; gap: 14px; }
+#postLogin.show { display: flex; }
+
+.panel-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+gap: 12px;
+width: 100%;
 }
 
-.stat-label { color: #00aa2a; margin-bottom: 3px; font-family: ‘Courier New’, monospace; }
-.stat-value { color: #00ff41; font-size: 14px; font-weight: bold; text-shadow: 0 0 6px #00ff41; font-family: ‘Courier New’, monospace; }
-
-.progress-bar { height: 3px; background: #002a08; margin-top: 5px; overflow: hidden; }
-.progress-fill { height: 100%; background: #00ff41; box-shadow: 0 0 6px #00ff41; transition: width 1s ease; }
-
-.terminal {
-width: 100%;
-max-width: 900px;
+.panel {
 border: 1px solid #00aa2a;
-box-shadow: 0 0 15px rgba(0,255,65,0.2);
 background: #000a02;
-border-radius: 4px;
+padding: 12px;
+box-shadow: 0 0 10px rgba(0,255,65,0.1);
+animation: fadeIn 0.5s ease;
+position: relative;
 overflow: hidden;
 }
-
-.terminal-bar {
-background: #001a05;
-border-bottom: 1px solid #00aa2a;
-padding: 7px 12px;
-display: flex;
-align-items: center;
-gap: 10px;
-font-size: 11px;
-color: #00aa2a;
-font-family: ‘Courier New’, monospace;
-}
-
-.terminal-bar .dots { display: flex; gap: 6px; }
-.terminal-bar .dot { width: 10px; height: 10px; border-radius: 50%; background: #001a05; border: 1px solid #00aa2a; }
-
-.terminal-output {
-padding: 14px;
-height: clamp(180px, 28vh, 280px);
-overflow-y: auto;
-font-size: clamp(11px, 1.8vw, 13px);
-line-height: 1.7;
-color: #00ff41;
-font-family: ‘Courier New’, Courier, monospace;
-background: #000a02;
-scrollbar-width: thin;
-scrollbar-color: #00aa2a transparent;
-}
-
-.terminal-output::-webkit-scrollbar { width: 4px; }
-.terminal-output::-webkit-scrollbar-thumb { background: #00aa2a; }
-
-.line { display: block; word-break: break-all; color: #00ff41; }
-.line.dim { color: #00882a; }
-.line.bright { color: #ffffff; text-shadow: 0 0 6px #00ff41; }
-.line.warn { color: #ffcc00; }
-.line.err { color: #ff4444; }
-
-.fingerprint-area {
-width: 100%;
-max-width: 900px;
-display: flex;
-justify-content: center;
-padding: 6px 0;
-background: #000000;
-}
-
-.fp-container {
-position: relative;
-width: clamp(90px, 16vw, 130px);
-height: clamp(90px, 16vw, 130px);
-}
-
-.fp-svg { width: 100%; height: 100%; filter: drop-shadow(0 0 8px #00ff41); }
-
-.fp-ring {
-position: absolute;
-inset: -6px;
-border: 1px solid #00aa2a;
-border-radius: 50%;
-animation: spin 6s linear infinite;
-}
-
-.fp-ring::before {
+.panel::before {
 content: ‘’;
 position: absolute;
-top: -3px; left: 50%;
-width: 6px; height: 6px;
-background: #00ff41;
-border-radius: 50%;
-transform: translateX(-50%);
-box-shadow: 0 0 8px #00ff41;
+left: 0; top: -100%;
+width: 100%; height: 2px;
+background: linear-gradient(90deg, transparent, #00ff41, transparent);
+animation: scanline 3s linear infinite;
 }
-
-.fp-status {
-text-align: center;
-font-size: 11px;
-color: #00aa2a;
-margin-top: 6px;
-animation: blink 1.5s step-end infinite;
-font-family: ‘Courier New’, monospace;
+.panel-title {
+font-size: 12px; font-weight: bold;
+color: #00ff41; border-bottom: 1px solid #003a0d;
+padding-bottom: 6px; margin-bottom: 10px;
+text-shadow: 0 0 6px #00ff41;
+display: flex; justify-content: space-between; align-items: center;
 }
-
-.login-section {
-width: 100%;
-max-width: 900px;
-border: 1px solid #00aa2a;
-background: #000a02;
-padding: 18px;
-box-shadow: 0 0 15px rgba(0,255,65,0.1);
+.panel-title span.live {
+font-size: 10px; color: #ff4444;
+animation: blink 0.8s step-end infinite;
+border: 1px solid #ff4444; padding: 1px 5px;
 }
+.panel-line { font-size: 11px; color: #00aa2a; margin-bottom: 4px; line-height: 1.6; }
+.panel-line .val { color: #00ff41; font-weight: bold; }
+.panel-line .ok { color: #00ff41; }
+.panel-line .warn-c { color: #ffcc00; }
+.panel-line .err-c { color: #ff4444; }
+.panel-line .run { color: #00ff41; }
+.panel-line .idle { color: #006622; }
 
-.login-title {
-font-size: 11px;
-color: #00aa2a;
-margin-bottom: 14px;
-border-bottom: 1px solid #002a08;
-padding-bottom: 6px;
-display: flex;
-justify-content: space-between;
-flex-wrap: wrap;
-gap: 4px;
-font-family: ‘Courier New’, monospace;
+/* CHART */
+.chart-area {
+width: 100%; height: 80px;
+border: 1px solid #003a0d;
+background: #000500;
+position: relative;
+overflow: hidden;
+margin-top: 8px;
 }
+.chart-canvas { width: 100%; height: 100%; }
 
-.field-row {
-display: flex;
-align-items: center;
-gap: 10px;
-margin-bottom: 10px;
-flex-wrap: wrap;
+/* PROCESS TABLE */
+.proc-table { width: 100%; border-collapse: collapse; font-size: 10px; margin-top: 6px; }
+.proc-table th { color: #00aa2a; border-bottom: 1px solid #003a0d; padding: 3px 5px; text-align: left; }
+.proc-table td { color: #00ff41; padding: 2px 5px; border-bottom: 1px solid #001a05; }
+.proc-table tr.hl td { background: #00ff4115; }
+.proc-table tr.hl2 td { background: #ff000015; }
+
+/* CONSOLE */
+.console-out {
+font-size: 11px; line-height: 1.6; color: #00aa2a;
+height: 120px; overflow-y: auto;
+scrollbar-width: thin; scrollbar-color: #00aa2a transparent;
+background: #000500; padding: 6px;
+border: 1px solid #003a0d; margin-top: 6px;
 }
+.console-out::-webkit-scrollbar { width: 3px; }
+.console-out::-webkit-scrollbar-thumb { background: #00aa2a; }
+.c-line { display: block; }
+.c-line.c-b { color: #00ff41; }
+.c-line.c-w { color: #ffcc00; }
+.c-line.c-r { color: #ff4444; }
 
-.field-label {
-font-size: clamp(11px, 2vw, 13px);
-color: #00aa2a;
-min-width: 90px;
-white-space: nowrap;
-font-family: ‘Courier New’, monospace;
-}
+/* ENCRYPTION PANEL */
+.enc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
+.enc-item { border: 1px solid #003a0d; padding: 6px 8px; background: #000500; }
+.enc-key { font-size: 9px; color: #00aa2a; margin-bottom: 2px; }
+.enc-val { font-size: 12px; color: #00ff41; font-weight: bold; text-shadow: 0 0 4px #00ff41; }
 
-.field-input-wrap {
-flex: 1;
-min-width: 180px;
-display: flex;
-align-items: center;
-border: 1px solid #00aa2a;
-background: #000000;
-padding: 7px 10px;
-gap: 6px;
-}
+/* NETWORK MAP */
+.net-map { width: 100%; height: 120px; margin-top: 8px; border: 1px solid #003a0d; background: #000500; }
 
-.field-input-wrap span { color: #00aa2a; font-size: 13px; font-family: ‘Courier New’, monospace; }
+/* SYSTEM INFO */
+.sys-id { font-size: 10px; color: #00aa2a; word-break: break-all; margin-top: 4px; }
+.sys-id .sid { color: #00ff41; font-size: 11px; }
 
-.field-input-wrap input {
-background: #000000;
-border: none;
-outline: none;
-color: #00ff41;
-font-family: ‘Courier New’, Courier, monospace;
-font-size: clamp(12px, 2vw, 14px);
-width: 100%;
-caret-color: #00ff41;
-}
-
-.field-input-wrap input::placeholder { color: #004a15; }
-
-.btn-row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
-
-.btn {
-background: #000000;
-border: 1px solid #00aa2a;
-color: #00ff41;
-font-family: ‘Courier New’, Courier, monospace;
-font-size: clamp(11px, 2vw, 13px);
-padding: 8px 18px;
-cursor: pointer;
-transition: all 0.2s;
-text-transform: uppercase;
-letter-spacing: 1px;
-}
-
-.btn:hover {
-background: #001a05;
-box-shadow: 0 0 12px rgba(0,255,65,0.4);
-color: #ffffff;
-}
-
-.btn.primary { border-color: #00ff41; box-shadow: 0 0 8px rgba(0,255,65,0.3); }
-
+/* BOTTOM */
 .bottom-bar {
-width: 100%;
-max-width: 900px;
-display: flex;
-justify-content: space-between;
-font-size: 10px;
-color: #005515;
-border-top: 1px solid #003a0d;
-padding-top: 6px;
-flex-wrap: wrap;
-gap: 4px;
-font-family: ‘Courier New’, monospace;
-background: #000000;
+width: 100%; max-width: 960px;
+display: flex; justify-content: space-between;
+font-size: 10px; color: #005515;
+border-top: 1px solid #003a0d; padding-top: 6px;
+flex-wrap: wrap; gap: 4px;
 }
 
 #matrixCanvas {
-position: fixed;
-top: 0; left: 0;
+position: fixed; top: 0; left: 0;
 width: 100%; height: 100%;
-opacity: 0.05;
-pointer-events: none;
-z-index: 0;
-background: #000000;
+opacity: 0.04; pointer-events: none; z-index: 0; background: #000000;
 }
-
-.main-container > * { position: relative; z-index: 1; }
+.wrap > * { position: relative; z-index: 1; }
 
 @media (max-width: 600px) {
-.ascii-header { font-size: 8px; }
-.field-label { min-width: 70px; }
+.ascii-hdr { font-size: 6px; }
+.flabel { min-width: 70px; }
+.panel-grid { grid-template-columns: 1fr; }
 }
 </style>
 
 </head>
 <body>
-
 <canvas id="matrixCanvas"></canvas>
 
-<div class="main-container">
+<div class="wrap">
+
+  <!-- TOP BAR -->
 
   <div class="top-bar">
     <span>[ SYS:ONLINE ] [ ENC:AES-256 ] [ VPN:ACTIVE ]</span>
     <span id="clock" class="blink">00:00:00 UTC</span>
-    <span>NET:SECURE | IP: <span id="fakeIP">---.---.---.---</span></span>
+    <span>NET:SECURE | IP: <span id="fakeIP">---.---.---</span></span>
   </div>
 
-  <pre class="ascii-header">
+  <!-- ASCII HEADER -->
+
+  <pre class="ascii-hdr">
  ######  ##    ## ########  ######## ########     ######## ######## ########  ##     ## 
 ##    ##  ##  ##  ##     ## ##       ##     ##       ##    ##       ##     ## ###   ### 
 ##         ####   ##     ## ##       ##     ##       ##    ##       ##     ## #### #### 
@@ -342,377 +296,553 @@ background: #000000;
 ##    ##    ##    ##     ## ##       ##    ##        ##    ##       ##    ##  ##     ## 
  ######     ##    ########  ######## ##     ##       ##    ######## ##     ## ##     ##</pre>
 
+  <!-- STATS -->
+
   <div class="stats-bar">
-    <div class="stat-box">
-      <div class="stat-label">// CPU LOAD</div>
-      <div class="stat-value" id="cpu">00%</div>
-      <div class="progress-bar"><div class="progress-fill" id="cpuBar" style="width:0%"></div></div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-label">// MEMORY</div>
-      <div class="stat-value" id="mem">0.0 GB</div>
-      <div class="progress-bar"><div class="progress-fill" id="memBar" style="width:0%"></div></div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-label">// PACKETS</div>
-      <div class="stat-value" id="packets">0</div>
-      <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-label">// ENCRYPTION</div>
-      <div class="stat-value">AES-256</div>
-      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-label">// FIREWALL</div>
-      <div class="stat-value">ACTIVE</div>
-      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-label">// PING</div>
-      <div class="stat-value" id="ping">--ms</div>
-      <div class="progress-bar"><div class="progress-fill" id="pingBar" style="width:20%"></div></div>
-    </div>
+    <div class="stat-box"><div class="stat-label">// CPU LOAD</div><div class="stat-value" id="cpu">00%</div><div class="pbar"><div class="pfill" id="cpuBar" style="width:0%"></div></div></div>
+    <div class="stat-box"><div class="stat-label">// MEMORY</div><div class="stat-value" id="mem">0.0 GB</div><div class="pbar"><div class="pfill" id="memBar" style="width:0%"></div></div></div>
+    <div class="stat-box"><div class="stat-label">// PACKETS</div><div class="stat-value" id="packets">0</div><div class="pbar"><div class="pfill" style="width:60%"></div></div></div>
+    <div class="stat-box"><div class="stat-label">// ENCRYPTION</div><div class="stat-value">AES-256</div><div class="pbar"><div class="pfill" style="width:100%"></div></div></div>
+    <div class="stat-box"><div class="stat-label">// FIREWALL</div><div class="stat-value">ACTIVE</div><div class="pbar"><div class="pfill" style="width:100%"></div></div></div>
+    <div class="stat-box"><div class="stat-label">// PING</div><div class="stat-value" id="ping">--ms</div><div class="pbar"><div class="pfill" id="pingBar" style="width:20%"></div></div></div>
   </div>
 
+  <!-- TERMINAL -->
+
   <div class="terminal">
-    <div class="terminal-bar">
+    <div class="t-bar">
       <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       <span>root@cyberterm:~$ — SECURE SHELL v4.2.1</span>
     </div>
-    <div class="terminal-output" id="termOutput">
-      <span class="line dim">Initializing secure connection...</span>
-      <span class="line dim">Loading kernel modules... [OK]</span>
-      <span class="line">System ready. Type username or password to begin analysis.</span>
-      <span class="line dim">&nbsp;</span>
+    <div class="t-out" id="termOut">
+      <span class="ln d">Initializing secure connection...</span>
+      <span class="ln d">Loading kernel modules... [OK]</span>
+      <span class="ln">System ready. Enter credentials to begin.</span>
     </div>
   </div>
 
-  <div class="fingerprint-area">
+  <!-- RADAR -->
+
+  <div class="radar-wrap">
     <div>
-      <div class="fp-container">
-        <div class="fp-ring" id="fpRing"></div>
-        <svg class="fp-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g stroke="#00ff41" stroke-width="1.2" stroke-linecap="round">
-            <path d="M50 15 C30 15, 15 30, 15 50 C15 70, 30 85, 50 85 C70 85, 85 70, 85 50 C85 30, 70 15, 50 15"/>
-            <path d="M50 22 C34 22, 22 34, 22 50 C22 66, 34 78, 50 78 C66 78, 78 66, 78 50 C78 34, 66 22, 50 22"/>
-            <path d="M50 29 C37 29, 29 37, 29 50 C29 63, 37 71, 50 71 C63 71, 71 63, 71 50 C71 37, 63 29, 50 29"/>
-            <path d="M50 36 C41 36, 36 41, 36 50 C36 59, 41 64, 50 64 C59 64, 64 59, 64 50 C64 41, 59 36, 50 36"/>
-            <path d="M50 43 C45 43, 43 45, 43 50 C43 55, 45 57, 50 57 C55 57, 57 55, 57 50 C57 45, 55 43, 50 43"/>
-            <line x1="50" y1="10" x2="50" y2="18"/>
-            <line x1="50" y1="82" x2="50" y2="90"/>
-            <line x1="10" y1="50" x2="18" y2="50"/>
-            <line x1="82" y1="50" x2="90" y2="50"/>
-            <line x1="22" y1="22" x2="28" y2="28"/>
-            <line x1="72" y1="22" x2="78" y2="28"/>
-            <line x1="22" y1="78" x2="28" y2="72"/>
-            <line x1="72" y1="78" x2="78" y2="72"/>
-            <circle cx="50" cy="50" r="3" fill="#00ff41"/>
+      <div class="radar-container">
+        <svg class="radar-svg" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+          <!-- grid circles -->
+          <circle cx="70" cy="70" r="60" stroke="#005515" stroke-width="0.5" fill="none"/>
+          <circle cx="70" cy="70" r="45" stroke="#005515" stroke-width="0.5" fill="none"/>
+          <circle cx="70" cy="70" r="30" stroke="#005515" stroke-width="0.5" fill="none"/>
+          <circle cx="70" cy="70" r="15" stroke="#005515" stroke-width="0.5" fill="none"/>
+          <!-- crosshairs -->
+          <line x1="70" y1="10" x2="70" y2="130" stroke="#005515" stroke-width="0.5"/>
+          <line x1="10" y1="70" x2="130" y2="70" stroke="#005515" stroke-width="0.5"/>
+          <line x1="27" y1="27" x2="113" y2="113" stroke="#003a0d" stroke-width="0.4"/>
+          <line x1="113" y1="27" x2="27" y2="113" stroke="#003a0d" stroke-width="0.4"/>
+          <!-- sweep -->
+          <g class="radar-sweep" id="radarSweep">
+            <defs>
+              <radialGradient id="sweepGrad" cx="0%" cy="50%" r="100%">
+                <stop offset="0%" stop-color="#00ff41" stop-opacity="0"/>
+                <stop offset="100%" stop-color="#00ff41" stop-opacity="0.35"/>
+              </radialGradient>
+            </defs>
+            <path d="M70 70 L130 70 A60 60 0 0 0 70 10 Z" fill="url(#sweepGrad)"/>
+            <line x1="70" y1="70" x2="130" y2="70" stroke="#00ff41" stroke-width="1.2" opacity="0.9"/>
           </g>
-          <circle id="fpScanLine" cx="50" cy="50" r="38" stroke="#00ff41" stroke-width="0.5" stroke-dasharray="6 232" opacity="0.9"/>
+          <!-- blips -->
+          <circle id="blip1" cx="95" cy="45" r="3" fill="#00ff41" opacity="0.9">
+            <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite"/>
+          </circle>
+          <circle id="blip2" cx="50" cy="88" r="3" fill="#ffcc00" opacity="0.9">
+            <animate attributeName="opacity" values="1;0.1;1" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="3;6;3" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <circle id="blip3" cx="108" cy="78" r="2.5" fill="#00ff41" opacity="0.8">
+            <animate attributeName="opacity" values="0.8;0.1;0.8" dur="1.5s" repeatCount="indefinite"/>
+          </circle>
+          <circle id="blip4" cx="35" cy="52" r="2" fill="#ff4444" opacity="0.9">
+            <animate attributeName="opacity" values="1;0;1" dur="2.5s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="2;5;2" dur="2.5s" repeatCount="indefinite"/>
+          </circle>
+          <!-- center dot -->
+          <circle cx="70" cy="70" r="2.5" fill="#00ff41" opacity="1"/>
+          <!-- outer ring -->
+          <circle cx="70" cy="70" r="63" stroke="#00aa2a" stroke-width="1" fill="none"/>
+          <!-- tick marks -->
+          <g stroke="#00aa2a" stroke-width="0.6">
+            <line x1="70" y1="7" x2="70" y2="12"/>
+            <line x1="70" y1="128" x2="70" y2="133"/>
+            <line x1="7" y1="70" x2="12" y2="70"/>
+            <line x1="128" y1="70" x2="133" y2="70"/>
+          </g>
         </svg>
       </div>
-      <div class="fp-status" id="fpStatus">SCANNING...</div>
+      <div class="fp-status" id="radarStatus">SCANNING...</div>
+    </div>
+    <div class="radar-status-col">
+      <div class="radar-status-item"><div class="radar-dot"></div><span id="rs1">TARGET LOCK: SEARCHING</span></div>
+      <div class="radar-status-item"><div class="radar-dot"></div><span id="rs2">SIGNAL: STRONG</span></div>
+      <div class="radar-status-item"><div class="radar-dot warn"></div><span id="rs3">ANOMALY: DETECTED</span></div>
+      <div class="radar-status-item"><div class="radar-dot err"></div><span id="rs4">THREAT: LOW</span></div>
+      <div class="radar-status-item"><div class="radar-dot"></div><span id="rs5">RANGE: 500km</span></div>
+      <div class="radar-status-item"><div class="radar-dot"></div><span id="rs6">OBJECTS: <span id="objCount">3</span></span></div>
     </div>
   </div>
 
-  <div class="login-section">
+  <!-- LOGIN -->
+
+  <div class="login-sec">
     <div class="login-title">
       <span>// AUTHENTICATION REQUIRED — CLEARANCE: ALPHA</span>
       <span id="authTimer">SESSION: 00:00</span>
     </div>
+    <div class="frow">
+      <span class="flabel">[ USERNAME ]</span>
+      <div class="finput-wrap">
+        <span>root@</span>
+        <input type="text" id="uInput" placeholder="enter_identifier..." autocomplete="off" spellcheck="false"/>
+      </div>
+    </div>
+    <div class="frow">
+      <span class="flabel">[ PASSWORD ]</span>
+      <div class="finput-wrap">
+        <span>****</span>
+        <input type="password" id="pInput" placeholder="enter_password..." autocomplete="off"/>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn primary" onclick="doLogin()">[ AUTHENTICATE ]</button>
+      <button class="btn" onclick="clearAll()">[ CLEAR ]</button>
+      <button class="btn" onclick="runScan()">[ RUN SCAN ]</button>
+    </div>
+  </div>
+
+  <!-- POST LOGIN PANELS -->
+
+  <div id="postLogin">
 
 ```
-<div class="field-row">
-  <span class="field-label">[ USERNAME ]</span>
-  <div class="field-input-wrap">
-    <span>root@</span>
-    <input type="text" id="usernameInput" placeholder="enter_identifier..." autocomplete="off" spellcheck="false"/>
+<!-- ROW 1: System Info + Encryption -->
+<div class="panel-grid">
+  <div class="panel" id="panSysInfo">
+    <div class="panel-title">▶ SYSTEM INFORMATION <span class="live">LIVE</span></div>
+    <div class="panel-line">POWER: <span class="val" id="siPower">--</span>%</div>
+    <div class="panel-line">STORAGE: <span class="val" id="siStorage">--</span> GB</div>
+    <div class="panel-line">VERSION: <span class="val">PPR1.180610.011</span></div>
+    <div class="panel-line">DEVICE ID: <span class="val" id="siDevId">--</span></div>
+    <div class="panel-line">DEVICE ALIAS: <span class="val" id="siAlias">--</span></div>
+    <div class="panel-line">OS BUILD: <span class="val">CYBER-OS 5.19.0</span></div>
+    <div class="panel-line">UPTIME: <span class="val" id="siUptime">00:00:00</span></div>
+    <div class="sys-id">FINGERPRINT: <span class="sid" id="siFP">--</span></div>
+  </div>
+
+  <div class="panel" id="panEnc">
+    <div class="panel-title">▶ SYSTEM ENCRYPTION</div>
+    <div class="enc-grid">
+      <div class="enc-item"><div class="enc-key">ALGORITHM</div><div class="enc-val">AES-256</div></div>
+      <div class="enc-item"><div class="enc-key">KEY SIZE</div><div class="enc-val">256-bit</div></div>
+      <div class="enc-item"><div class="enc-key">CIPHER</div><div class="enc-val">GCM</div></div>
+      <div class="enc-item"><div class="enc-key">STATUS</div><div class="enc-val" style="color:#00ff41">ACTIVE</div></div>
+      <div class="enc-item"><div class="enc-key">HASH</div><div class="enc-val">SHA-512</div></div>
+      <div class="enc-item"><div class="enc-key">PROTOCOL</div><div class="enc-val">TLS 1.3</div></div>
+    </div>
+    <div style="margin-top:10px">
+      <div class="panel-line" id="encLine1">Generating session keys...</div>
+      <div class="panel-line" id="encLine2">Verifying certificate chain...</div>
+      <div class="panel-line" id="encLine3">Establishing secure tunnel...</div>
+    </div>
   </div>
 </div>
 
-<div class="field-row">
-  <span class="field-label">[ PASSWORD ]</span>
-  <div class="field-input-wrap">
-    <span>****</span>
-    <input type="password" id="passwordInput" placeholder="enter_password..." autocomplete="off"/>
+<!-- ROW 2: CPU Chart + Memory Chart -->
+<div class="panel-grid">
+  <div class="panel" id="panCpuChart">
+    <div class="panel-title">▶ CPU MONITOR <span class="live">LIVE</span></div>
+    <div class="panel-line">LOAD: <span class="val" id="cpuLive">--</span>% &nbsp; CORES: <span class="val">8</span> &nbsp; THREADS: <span class="val">16</span></div>
+    <div class="chart-area"><canvas class="chart-canvas" id="cpuChart"></canvas></div>
+    <div class="panel-line" style="margin-top:5px">TEMP: <span class="val" id="cpuTemp">--</span>°C &nbsp; FREQ: <span class="val" id="cpuFreq">--</span> GHz</div>
+  </div>
+
+  <div class="panel" id="panMemChart">
+    <div class="panel-title">▶ MEMORY MONITOR <span class="live">LIVE</span></div>
+    <div class="panel-line">USED: <span class="val" id="memLive">--</span> GB / 8 GB</div>
+    <div class="chart-area"><canvas class="chart-canvas" id="memChart"></canvas></div>
+    <div class="panel-line" style="margin-top:5px">SWAP: <span class="val" id="swapVal">--</span> MB &nbsp; CACHE: <span class="val" id="cacheVal">--</span> MB</div>
   </div>
 </div>
 
-<div class="btn-row">
-  <button class="btn primary" onclick="initiateLogin()">[ AUTHENTICATE ]</button>
-  <button class="btn" onclick="clearAll()">[ CLEAR ]</button>
-  <button class="btn" onclick="runScan()">[ RUN SCAN ]</button>
+<!-- ROW 3: Process Table -->
+<div class="panel" id="panProc">
+  <div class="panel-title">▶ PROCESS MONITOR <span class="live">LIVE</span></div>
+  <table class="proc-table">
+    <thead>
+      <tr><th>PID</th><th>PACKAGE</th><th>STATUS</th><th>PRI</th><th>RES</th><th>CPU%</th><th>MEM%</th></tr>
+    </thead>
+    <tbody id="procBody"></tbody>
+  </table>
+</div>
+
+<!-- ROW 4: Console + Network -->
+<div class="panel-grid">
+  <div class="panel" id="panConsole">
+    <div class="panel-title">▶ SYSTEM CONSOLE <span class="live">LIVE</span></div>
+    <div class="panel-line">
+      BATTERY[<span id="batBar" style="color:#00ff41">|||||||</span>] <span class="val" id="batPct">--</span>%
+    </div>
+    <div class="panel-line">
+      STORAGE[<span id="stBar" style="color:#ffcc00">|||||</span>] <span class="val" id="stPct">--</span>%
+    </div>
+    <div class="panel-line">
+      WIFI   [<span id="wfBar" style="color:#00ff41">||||||||||</span>] <span class="val" id="wfPct">--</span>dBm
+    </div>
+    <div class="console-out" id="consoleOut"></div>
+  </div>
+
+  <div class="panel" id="panNet">
+    <div class="panel-title">▶ NETWORK MAP</div>
+    <canvas class="net-map" id="netMap"></canvas>
+    <div class="panel-line" style="margin-top:6px">ACTIVE NODES: <span class="val" id="nodeCount">--</span></div>
+    <div class="panel-line">BANDWIDTH: <span class="val" id="bwVal">--</span> Mbps</div>
+    <div class="panel-line">LATENCY: <span class="val" id="latVal">--</span> ms</div>
+    <div class="panel-line">PACKETS/s: <span class="val" id="ppsVal">--</span></div>
+  </div>
+</div>
+
+<!-- ROW 5: Task list -->
+<div class="panel" id="panTasks">
+  <div class="panel-title">▶ TASK MANAGER</div>
+  <div class="panel-line" id="taskLine1"></div>
+  <div class="panel-line" id="taskLine2"></div>
+  <div class="panel-line" id="taskLine3"></div>
+  <div class="panel-line" id="taskLine4"></div>
 </div>
 ```
 
   </div>
+
+  <!-- BOTTOM BAR -->
 
   <div class="bottom-bar">
-    <span>KERNEL: 5.19.0-cyber // BUILD: 2024.03.14-ALPHA</span>
-    <span id="bottomStatus">STATUS: STANDBY</span>
-    <span>THREAT: <span id="threatLevel" style="color:#00ff41">LOW</span></span>
+    <span>KERNEL: 5.19.0-cyber // BUILD: 2024.03.14</span>
+    <span id="bStatus">STATUS: STANDBY</span>
+    <span>THREAT: <span id="threat" style="color:#00ff41">LOW</span></span>
   </div>
 
 </div>
 
 <script>
-// MATRIX RAIN
-const canvas = document.getElementById('matrixCanvas');
-const ctx = canvas.getContext('2d');
+// ── MATRIX ──
+const mc = document.getElementById('matrixCanvas');
+const cx = mc.getContext('2d');
 let drops = [];
-function initMatrix() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  const cols = Math.floor(canvas.width / 16);
-  drops = Array.from({length: cols}, () => Math.random() * -50);
+function initMx() {
+  mc.width = window.innerWidth; mc.height = window.innerHeight;
+  drops = Array.from({length: Math.floor(mc.width/16)}, () => Math.random()*-50);
 }
-function drawMatrix() {
-  ctx.fillStyle = 'rgba(0,0,0,0.05)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#00ff41';
-  ctx.font = '14px Courier New';
-  const chars = '0123456789ABCDEF></?!@#$%^&*()';
-  drops.forEach((y, i) => {
-    const ch = chars[Math.floor(Math.random() * chars.length)];
-    ctx.fillText(ch, i * 16, y * 16);
-    if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+function drawMx() {
+  cx.fillStyle = 'rgba(0,0,0,0.05)'; cx.fillRect(0,0,mc.width,mc.height);
+  cx.fillStyle = '#00ff41'; cx.font = '14px Courier New';
+  const ch = '0123456789ABCDEF></?@#$%^&*';
+  drops.forEach((y,i) => {
+    cx.fillText(ch[Math.floor(Math.random()*ch.length)], i*16, y*16);
+    if(y*16 > mc.height && Math.random()>0.975) drops[i]=0;
     drops[i]++;
   });
 }
-initMatrix();
-setInterval(drawMatrix, 50);
-window.addEventListener('resize', initMatrix);
+initMx(); setInterval(drawMx,50); window.addEventListener('resize',initMx);
 
-// CLOCK
-function updateClock() {
-  const now = new Date();
-  document.getElementById('clock').textContent = now.toUTCString().split(' ')[4] + ' UTC';
+// ── CLOCK ──
+function tick() {
+  document.getElementById('clock').textContent = new Date().toUTCString().split(' ')[4]+' UTC';
 }
-setInterval(updateClock, 1000);
-updateClock();
+setInterval(tick,1000); tick();
 
-// FAKE IP
-function randIP() { return Array.from({length:4}, () => Math.floor(Math.random()*254+1)).join('.'); }
-document.getElementById('fakeIP').textContent = randIP();
+// ── FAKE IP ──
+function rIP() { return Array.from({length:4},()=>Math.floor(Math.random()*254+1)).join('.'); }
+document.getElementById('fakeIP').textContent = rIP();
 
-// STATS
-let sessionSeconds = 0;
-setInterval(() => {
-  const cpu = Math.floor(30 + Math.random() * 55);
-  const mem = (1.2 + Math.random() * 2.8).toFixed(1);
-  const pkts = Math.floor(Math.random() * 999999).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  const ping = Math.floor(8 + Math.random() * 40);
-  document.getElementById('cpu').textContent = cpu + '%';
-  document.getElementById('cpuBar').style.width = cpu + '%';
-  document.getElementById('mem').textContent = mem + ' GB';
-  document.getElementById('memBar').style.width = (parseFloat(mem)/4*100) + '%';
-  document.getElementById('packets').textContent = pkts;
-  document.getElementById('ping').textContent = ping + 'ms';
-  document.getElementById('pingBar').style.width = Math.min(ping/100*100,100) + '%';
-  sessionSeconds++;
-  const m = String(Math.floor(sessionSeconds/60)).padStart(2,'0');
-  const s = String(sessionSeconds%60).padStart(2,'0');
-  document.getElementById('authTimer').textContent = 'SESSION: ' + m + ':' + s;
-}, 1000);
+// ── STATS ──
+let ss=0;
+setInterval(()=>{
+  const cpu=Math.floor(30+Math.random()*55), mem=(1.2+Math.random()*2.8).toFixed(1);
+  const pkts=Math.floor(Math.random()*999999).toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  const png=Math.floor(8+Math.random()*40);
+  document.getElementById('cpu').textContent=cpu+'%';
+  document.getElementById('cpuBar').style.width=cpu+'%';
+  document.getElementById('mem').textContent=mem+' GB';
+  document.getElementById('memBar').style.width=(parseFloat(mem)/4*100)+'%';
+  document.getElementById('packets').textContent=pkts;
+  document.getElementById('ping').textContent=png+'ms';
+  document.getElementById('pingBar').style.width=Math.min(png/100*100,100)+'%';
+  ss++; const m=String(Math.floor(ss/60)).padStart(2,'0'), s2=String(ss%60).padStart(2,'0');
+  document.getElementById('authTimer').textContent='SESSION: '+m+':'+s2;
+},1000);
 
-// FINGERPRINT
-let fpScanAngle = 0;
-const fpStatuses = ['SCANNING...','ANALYZING...','MAPPING RIDGES...','CROSS-REFERENCING...'];
-let fpIdx = 0;
-setInterval(() => {
-  fpScanAngle = (fpScanAngle + 3) % 360;
-  const scanLine = document.getElementById('fpScanLine');
-  const offset = (fpScanAngle / 360) * 238;
-  scanLine.setAttribute('stroke-dashoffset', -offset);
-}, 30);
-setInterval(() => {
-  fpIdx = (fpIdx+1) % fpStatuses.length;
-  document.getElementById('fpStatus').textContent = fpStatuses[fpIdx];
-}, 1800);
+// ── RADAR ──
+const rStats=['SCANNING...','TRACKING...','LOCKED...','ANALYZING...','SWEEPING...'];
+let ri=0;
+setInterval(()=>{ ri=(ri+1)%rStats.length; document.getElementById('radarStatus').textContent=rStats[ri]; },1800);
+setInterval(()=>{
+  document.getElementById('objCount').textContent=Math.floor(2+Math.random()*5);
+  document.getElementById('rs2').textContent='SIGNAL: '+(Math.random()>0.3?'STRONG':'WEAK');
+},3000);
 
-// TERMINAL
-const termOut = document.getElementById('termOutput');
-let isTyping = false;
+// ── TERMINAL ──
+const to = document.getElementById('termOut');
+let typing=false;
+function aln(txt,cls){ return new Promise(r=>{ setTimeout(()=>{ const s=document.createElement('span'); s.className='ln '+(cls||''); s.textContent=txt; to.appendChild(s); to.scrollTop=to.scrollHeight; r(); },0); }); }
+function slp(ms){ return new Promise(r=>setTimeout(r,ms)); }
+function rHex(n){ let s=''; for(let i=0;i<n;i++) s+=Math.floor(Math.random()*16).toString(16).toUpperCase(); return s; }
 
-function addLine(text, cls) {
-  cls = cls || '';
-  return new Promise(function(resolve) {
-    setTimeout(function() {
-      const span = document.createElement('span');
-      span.className = 'line ' + cls;
-      span.textContent = text;
-      termOut.appendChild(span);
-      termOut.scrollTop = termOut.scrollHeight;
-      resolve();
-    }, 0);
-  });
-}
-function sleep(ms) { return new Promise(function(r){ setTimeout(r, ms); }); }
-
-const codeSnippets = [
+const snips=[
   "Initializing network scanner...",
   "Loading exploit database v4.2.1...",
-  "Checking open ports: 22, 80, 443, 8080, 3306...",
-  "PORT 22/tcp   OPEN   ssh     OpenSSH 8.4",
-  "PORT 80/tcp   OPEN   http    Apache httpd 2.4.51",
-  "PORT 443/tcp  OPEN   https   TLS 1.3",
-  "Enumerating services on target host...",
-  "Running CVE database lookup...",
+  "Checking open ports: 22, 80, 443, 8080...",
+  "PORT 22/tcp   OPEN   ssh   OpenSSH 8.4",
+  "PORT 80/tcp   OPEN   http  Apache 2.4.51",
+  "PORT 443/tcp  OPEN   https TLS 1.3",
+  "Enumerating services on target...",
   "CVE-2023-4911: glibc vulnerability [CHECKING]",
-  "CVE-2024-1086: kernel exploit      [CHECKING]",
-  "Analyzing packet headers...",
+  "CVE-2024-1086: kernel exploit [CHECKING]",
   "ARP spoofing detection: NEGATIVE",
-  "SSL certificate fingerprint: SHA256:a4:f3:8c:2d...",
   "DNS enumeration: 14 subdomains found",
-  "Checking for SQL injection vectors...",
+  "Checking SQL injection vectors... [CLEAN]",
   "XSS payload testing... [SANITIZED]",
-  "Running bruteforce dictionary... [BLOCKED]",
+  "Bruteforce dictionary... [BLOCKED]",
   "Firewall rules: 47 entries detected",
   "IDS/IPS: Snort 3.0 [ACTIVE]",
-  "Tor relay check: NOT DETECTED",
   "VPN tunnel: WireGuard [ESTABLISHED]",
-  "Encryption layer: AES-256-GCM [VERIFIED]",
+  "Encryption: AES-256-GCM [VERIFIED]",
   "Zero-day scan: NO CRITICAL FINDINGS",
-  "Hash cracking module: MD5/SHA1/SHA256",
-  "System integrity: NOMINAL",
-  "Memory forensics: No anomalies detected",
+  "Memory forensics: No anomalies",
   "Kernel rootkit scan: CLEAN",
-  "Process injection test: NEGATIVE",
   "Privilege escalation vectors: PATCHED",
-  "Scan complete. Report saved to /var/log/scan.log",
+  "Scan complete. Report saved.",
 ];
 
-function randHex(n) {
-  var s='';
-  for(var i=0;i<n;i++) s+= Math.floor(Math.random()*16).toString(16).toUpperCase();
-  return s;
+function runSeq(kw) {
+  if(typing) return; typing=true;
+  const sh=[...snips].sort(()=>Math.random()-0.5).slice(0,14+Math.floor(Math.random()*6));
+  aln('','d'); aln('root@cyberterm:~$ analyze --target "'+kw+'"','');
+  let d=150;
+  aln('[*] Target: "'+kw.toUpperCase()+'"','b');
+  sh.forEach((l,i)=>{ setTimeout(()=>aln(l,'d'),d); d+=55+Math.floor(Math.random()*70); });
+  setTimeout(()=>{ aln('[OK] Analysis: "'+kw.toUpperCase()+'"','b'); aln('[*] FP: '+rHex(8)+'-'+rHex(4),''); aln('','d'); typing=false; },d+200);
 }
 
-function hexLines() {
-  var hex = [];
-  for(var i=0;i<3;i++){
-    var h = '0x' + (Math.floor(Math.random()*0xFFFF)).toString(16).toUpperCase().padStart(4,'0') + '  ';
-    for(var j=0;j<16;j++) h += Math.floor(Math.random()*256).toString(16).toUpperCase().padStart(2,'0') + ' ';
-    hex.push(h);
-  }
-  return hex;
-}
+let tt;
+function onInp(e){ clearTimeout(tt); const v=e.target.value.trim(); if(!v) return; tt=setTimeout(()=>runSeq(v),600); }
+document.getElementById('uInput').addEventListener('input',onInp);
+document.getElementById('pInput').addEventListener('input',e=>{ clearTimeout(tt); const v=e.target.value; if(!v) return; tt=setTimeout(()=>runSeq('HASH:'+rHex(8)),600); });
 
-function runTerminalSequence(keyword) {
-  if(isTyping) return;
-  isTyping = true;
-  var shuffled = codeSnippets.slice().sort(function(){return Math.random()-0.5}).slice(0, 16 + Math.floor(Math.random()*8));
-  var hex = hexLines();
-  addLine('', 'dim');
-  addLine('root@cyberterm:~$ analyze --target "' + keyword + '" --deep-scan', '');
-  var delay = 200;
-  addLine('[*] Target acquired: "' + keyword.toUpperCase() + '"', 'bright');
-  shuffled.forEach(function(line, i) {
-    setTimeout(function(){ addLine(line, 'dim'); }, delay);
-    delay += 60 + Math.floor(Math.random()*80);
-    if(i % 5 === 4) {
-      hex.forEach(function(h){ setTimeout(function(){ addLine(h, 'dim'); }, delay); delay += 40; });
-    }
-  });
-  setTimeout(function() {
-    addLine('', 'dim');
-    addLine('[OK] Analysis complete for: "' + keyword.toUpperCase() + '"', 'bright');
-    addLine('[*] Fingerprint ID: ' + randHex(8) + '-' + randHex(4) + '-' + randHex(4), '');
-    addLine('[*] Risk score: ' + Math.floor(Math.random()*40) + '/100 [LOW]', '');
-    addLine('', 'dim');
-    isTyping = false;
-  }, delay + 300);
-}
-
-var typingTimer;
-function onInput(e) {
-  clearTimeout(typingTimer);
-  var val = e.target.value.trim();
-  if(!val) return;
-  typingTimer = setTimeout(function(){ runTerminalSequence(val); }, 600);
-}
-document.getElementById('usernameInput').addEventListener('input', onInput);
-document.getElementById('passwordInput').addEventListener('input', function(e) {
-  clearTimeout(typingTimer);
-  var val = e.target.value;
-  if(!val) return;
-  typingTimer = setTimeout(function(){ runTerminalSequence('PASSWORD_HASH:' + randHex(8)); }, 600);
-});
-
-function initiateLogin() {
-  var user = document.getElementById('usernameInput').value || 'UNKNOWN';
-  document.getElementById('bottomStatus').textContent = 'STATUS: AUTHENTICATING...';
-  document.getElementById('fpStatus').textContent = 'VERIFYING...';
-  addLine('', 'dim');
-  addLine('[*] Authentication attempt: ' + user, 'warn');
-  setTimeout(function(){ addLine('[*] Verifying credentials against database...', 'dim'); }, 300);
-  setTimeout(function(){ addLine('[*] 2FA: Biometric fingerprint scan initiated...', 'dim'); }, 600);
-  setTimeout(function(){
-    var success = Math.random() > 0.4;
-    if(success) {
-      addLine('[OK] AUTHENTICATION SUCCESSFUL', 'bright');
-      addLine('[OK] Welcome, ' + user.toUpperCase() + '. Access granted.', 'bright');
-      document.getElementById('bottomStatus').textContent = 'STATUS: AUTHENTICATED';
-      document.getElementById('fpStatus').textContent = 'VERIFIED OK';
-      document.getElementById('threatLevel').textContent = 'MINIMAL';
+// ── LOGIN ──
+function doLogin() {
+  const usr = document.getElementById('uInput').value || 'UNKNOWN';
+  const pwd = document.getElementById('pInput').value || '';
+  if(!usr || !pwd) { aln('[!] Enter username and password first.','w'); return; }
+  document.getElementById('bStatus').textContent='STATUS: AUTHENTICATING...';
+  aln('','d'); aln('[*] Auth attempt: '+usr,'w');
+  setTimeout(()=>aln('[*] Verifying credentials...','d'),300);
+  setTimeout(()=>aln('[*] 2FA: Radar biometric scan...','d'),600);
+  setTimeout(()=>{
+    const ok=Math.random()>0.25;
+    if(ok){
+      aln('[OK] AUTH SUCCESSFUL','b'); aln('[OK] Welcome, '+usr.toUpperCase(),'b');
+      document.getElementById('bStatus').textContent='STATUS: AUTHENTICATED';
+      document.getElementById('radarStatus').textContent='VERIFIED OK';
+      document.getElementById('threat').textContent='MINIMAL';
+      startPanels(usr);
     } else {
-      addLine('[ERR] AUTHENTICATION FAILED — Invalid credentials', 'err');
-      addLine('[!] Warning: Unauthorized access attempt logged.', 'warn');
-      document.getElementById('bottomStatus').textContent = 'STATUS: ACCESS DENIED';
-      document.getElementById('fpStatus').textContent = 'REJECTED';
-      document.getElementById('threatLevel').style.color = '#ff4444';
-      document.getElementById('threatLevel').textContent = 'HIGH';
-      setTimeout(function(){
-        document.getElementById('threatLevel').style.color = '#00ff41';
-        document.getElementById('threatLevel').textContent = 'LOW';
-      }, 5000);
+      aln('[ERR] AUTH FAILED','e'); aln('[!] Access attempt logged.','w');
+      document.getElementById('bStatus').textContent='STATUS: DENIED';
+      document.getElementById('threat').style.color='#ff4444';
+      document.getElementById('threat').textContent='HIGH';
+      setTimeout(()=>{ document.getElementById('threat').style.color='#00ff41'; document.getElementById('threat').textContent='LOW'; },5000);
     }
-  }, 1000);
+  },1000);
 }
 
 function clearAll() {
-  document.getElementById('usernameInput').value = '';
-  document.getElementById('passwordInput').value = '';
-  addLine('[*] Input buffers cleared.', 'dim');
-  document.getElementById('bottomStatus').textContent = 'STATUS: STANDBY';
+  document.getElementById('uInput').value='';
+  document.getElementById('pInput').value='';
+  aln('[*] Buffers cleared.','d');
 }
 
 function runScan() {
-  var tasks = [
-    'Checking network interfaces... [OK]',
-    'Scanning open ports 1-65535... [OK]',
-    'Testing firewall rules... [OK]',
-    'Verifying SSL certificates... [OK]',
-    'Auditing system logs... [OK]',
-    'Running integrity checks... [OK]',
-    'Analyzing traffic patterns... [OK]',
-    'Checking for anomalies... [OK]',
-  ];
-  addLine('', 'dim');
-  addLine('[*] Initiating full system diagnostic...', '');
-  tasks.forEach(function(t, i){
-    setTimeout(function(){ addLine(t, 'dim'); }, 120*(i+1));
-  });
-  setTimeout(function(){
-    addLine('[OK] Full scan complete. All systems nominal.', 'bright');
-    document.getElementById('bottomStatus').textContent = 'STATUS: SCAN COMPLETE';
-  }, 120*(tasks.length+1));
+  const tasks=['Checking interfaces... [OK]','Scanning ports... [OK]','Firewall check... [OK]','SSL verify... [OK]','Log audit... [OK]','Traffic analysis... [OK]'];
+  aln('','d'); aln('[*] Full diagnostic...','');
+  tasks.forEach((t,i)=>setTimeout(()=>aln(t,'d'),120*(i+1)));
+  setTimeout(()=>{ aln('[OK] All systems nominal.','b'); document.getElementById('bStatus').textContent='STATUS: SCAN COMPLETE'; },120*(tasks.length+1));
 }
 
-// BOOT
-setTimeout(function(){
-  var boot = [
-    ['[BOOT] Loading security modules...', 'dim'],
-    ['[BOOT] Establishing encrypted tunnel...', 'dim'],
-    ['[BOOT] Fingerprint scanner: ONLINE', 'dim'],
-    ['[BOOT] IDS/IPS: ACTIVE', 'dim'],
-    ['[READY] System initialized. Enter credentials to proceed.', 'bright'],
-  ];
-  boot.forEach(function(b, i){
-    setTimeout(function(){ addLine(b[0], b[1]); }, i * 200);
+// ── BOOT ──
+setTimeout(()=>{
+  [['[BOOT] Loading security modules...','d'],['[BOOT] Encrypted tunnel...','d'],['[BOOT] Radar scanner: ONLINE','d'],['[BOOT] IDS/IPS: ACTIVE','d'],['[READY] System initialized.','b']].forEach(([t,c],i)=>setTimeout(()=>aln(t,c),i*200));
+},300);
+
+// ── CHARTS ──
+let cpuData=Array(40).fill(30), memData=Array(40).fill(30);
+function drawChart(canvasId, data, color){
+  const cv=document.getElementById(canvasId); if(!cv) return;
+  const ctx2=cv.getContext('2d');
+  const w=cv.offsetWidth, h=cv.offsetHeight;
+  cv.width=w; cv.height=h;
+  ctx2.clearRect(0,0,w,h);
+  // grid
+  ctx2.strokeStyle='#002208'; ctx2.lineWidth=0.5;
+  for(let i=0;i<5;i++){ ctx2.beginPath(); ctx2.moveTo(0,h/4*i); ctx2.lineTo(w,h/4*i); ctx2.stroke(); }
+  // line
+  ctx2.strokeStyle=color; ctx2.lineWidth=1.5;
+  ctx2.shadowBlur=4; ctx2.shadowColor=color;
+  ctx2.beginPath();
+  data.forEach((v,i)=>{ const x=i/data.length*w, y=h-(v/100*h); i===0?ctx2.moveTo(x,y):ctx2.lineTo(x,y); });
+  ctx2.stroke();
+  // fill
+  ctx2.strokeStyle='transparent';
+  ctx2.fillStyle='rgba(0,255,65,0.06)';
+  ctx2.lineTo(w,h); ctx2.lineTo(0,h); ctx2.fill();
+}
+
+// ── PROCESS DATA ──
+const procs=[
+  ['3102','com.android.system','R','3135','128659 kB','10%','4%'],
+  ['2801','com.android.phone','I','2445','111689 kB','7%','2%'],
+  ['1011','and.system.wifi','I','3256','146261 kB','2%','1%'],
+  ['3801','com.aris.monitor','R','2801','115964 kB','6%','1%'],
+  ['1903','com.aris.battery','R','600','107602 kB','1%','1%'],
+  ['2340','sys.user.cache','I','1120','113272 kB','0%','0%'],
+  ['1034','com.aris.intit','R','2258','134413 kB','1%','1%'],
+  ['2089','com.aris.data','R','2470','113454 kB','2%','1%'],
+  ['2301','com.aris.usr','I','1740','123361 kB','0%','0%'],
+  ['1291','com.android.bluetooth','R','3344','127729 kB','3%','3%'],
+];
+
+function renderProcs(){
+  const tb=document.getElementById('procBody'); if(!tb) return;
+  tb.innerHTML='';
+  procs.forEach((p,i)=>{
+    const tr=document.createElement('tr');
+    const isHl=(p[2]==='R'&&parseFloat(p[5])>5);
+    const isRed=(p[0]==='1011');
+    tr.className=isRed?'hl2':(isHl?'hl':'');
+    tr.innerHTML='<td>'+p[0]+'</td><td>'+p[1]+'</td>'
+      +'<td class="'+(p[2]==='R'?'run':'idle')+'">'+(p[2]==='R'?'R (running)':'I (idle)')+'</td>'
+      +'<td>'+p[3]+'</td><td>'+p[4]+'</td><td>'+p[5]+'</td><td>'+p[6]+'</td>';
+    tb.appendChild(tr);
+    // randomize cpu
+    setTimeout(()=>{
+      const cells=tr.querySelectorAll('td');
+      cells[5].textContent=Math.floor(parseFloat(p[5])+Math.random()*4-2)+'%';
+    },Math.random()*2000);
   });
-}, 300);
+}
+
+// ── NETWORK MAP ──
+function drawNetMap(){
+  const cv=document.getElementById('netMap'); if(!cv) return;
+  const ctx3=cv.getContext('2d');
+  const w=cv.offsetWidth, h=cv.offsetHeight;
+  cv.width=w; cv.height=h;
+  ctx3.fillStyle='#000500'; ctx3.fillRect(0,0,w,h);
+  // grid
+  ctx3.strokeStyle='#002208'; ctx3.lineWidth=0.4;
+  for(let i=0;i<8;i++){ ctx3.beginPath(); ctx3.moveTo(w/8*i,0); ctx3.lineTo(w/8*i,h); ctx3.stroke(); }
+  for(let i=0;i<4;i++){ ctx3.beginPath(); ctx3.moveTo(0,h/4*i); ctx3.lineTo(w,h/4*i); ctx3.stroke(); }
+  // nodes
+  const nodes=[[w*.5,h*.5,'#00ff41','HOST'],[w*.15,h*.3,'#00aa2a','NODE-A'],[w*.8,h*.25,'#00aa2a','NODE-B'],[w*.2,h*.75,'#ffcc00','NODE-C'],[w*.75,h*.7,'#00aa2a','NODE-D'],[w*.55,h*.15,'#ff4444','UNKNOWN']];
+  // connections
+  ctx3.strokeStyle='#003a0d'; ctx3.lineWidth=0.8;
+  nodes.slice(1).forEach(n=>{ ctx3.beginPath(); ctx3.moveTo(nodes[0][0],nodes[0][1]); ctx3.lineTo(n[0],n[1]); ctx3.stroke(); });
+  // draw nodes
+  nodes.forEach(n=>{
+    ctx3.beginPath(); ctx3.arc(n[0],n[1],5,0,Math.PI*2);
+    ctx3.fillStyle=n[2]; ctx3.shadowBlur=8; ctx3.shadowColor=n[2]; ctx3.fill();
+    ctx3.font='9px Courier New'; ctx3.fillStyle=n[2]; ctx3.shadowBlur=0;
+    ctx3.fillText(n[3],n[0]+7,n[1]+4);
+  });
+  document.getElementById('nodeCount').textContent=nodes.length;
+}
+
+// ── CONSOLE LINES ──
+const consoleMsgs=[
+  ['31%] Task: 132, thr: 8 running','c-b'],
+  ['32%] Load average 12.32.12 .12.12','c-b'],
+  ['58%] Current time: '+new Date().toTimeString().split(' ')[0],'c-w'],
+  [new Date().toDateString(),''],
+  ['19%] system variable loaded.','c-b'],
+  ['99%]','c-b'],
+  ['kernel: driver loaded OK',''],
+  ['net: interface eth0 UP','c-b'],
+  ['net: packets recv 18493',''],
+  ['sys: cron job executed',''],
+  ['auth: session opened for root','c-w'],
+];
+let cIdx=0;
+function addConsoleLine(){
+  const co=document.getElementById('consoleOut'); if(!co) return;
+  if(cIdx<consoleMsgs.length){
+    const s=document.createElement('span'); s.className='c-line '+consoleMsgs[cIdx][1]; s.textContent=consoleMsgs[cIdx][0];
+    co.appendChild(s); co.scrollTop=co.scrollHeight; cIdx++;
+  }
+}
+
+// ── UPTIME ──
+let upSec=0;
+function fmtUp(s){ const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), ss2=s%60; return [h,m,ss2].map(v=>String(v).padStart(2,'0')).join(':'); }
+
+// ── START PANELS ──
+function startPanels(usr){
+  const pl=document.getElementById('postLogin');
+  pl.classList.add('show');
+  pl.scrollIntoView({behavior:'smooth'});
+
+  // system info
+  document.getElementById('siDevId').textContent=rHex(8).match(/.{1,4}/g).join('-');
+  document.getElementById('siAlias').textContent=usr.toUpperCase()+'-DEVICE';
+  document.getElementById('siFP').textContent=rHex(16);
+
+  // live updates
+  setInterval(()=>{
+    const cpu2=Math.floor(25+Math.random()*60);
+    const mem2=(1.5+Math.random()*3).toFixed(1);
+    cpuData.push(cpu2); cpuData.shift();
+    memData.push(parseFloat(mem2)/8*100); memData.shift();
+    drawChart('cpuChart',cpuData,'#00ff41');
+    drawChart('memChart',memData,'#00aa2a');
+    document.getElementById('cpuLive').textContent=cpu2;
+    document.getElementById('memLive').textContent=mem2;
+    document.getElementById('cpuTemp').textContent=Math.floor(45+cpu2*0.35);
+    document.getElementById('cpuFreq').textContent=(2.1+Math.random()*1.4).toFixed(2);
+    document.getElementById('swapVal').textContent=Math.floor(200+Math.random()*300);
+    document.getElementById('cacheVal').textContent=Math.floor(800+Math.random()*400);
+    document.getElementById('siPower').textContent=Math.floor(40+Math.random()*55);
+    document.getElementById('siStorage').textContent=(32+Math.random()*80).toFixed(1);
+    document.getElementById('bwVal').textContent=(10+Math.random()*90).toFixed(1);
+    document.getElementById('latVal').textContent=Math.floor(5+Math.random()*30);
+    document.getElementById('ppsVal').textContent=Math.floor(1000+Math.random()*5000);
+    document.getElementById('batPct').textContent=Math.floor(60+Math.random()*35);
+    document.getElementById('stPct').textContent=Math.floor(30+Math.random()*60);
+    document.getElementById('wfPct').textContent='-'+(Math.floor(40+Math.random()*30));
+    upSec++; document.getElementById('siUptime').textContent=fmtUp(upSec);
+    renderProcs(); drawNetMap();
+    addConsoleLine();
+    // task lines
+    document.getElementById('taskLine1').innerHTML='31%] Task: <span class="val">'+Math.floor(120+Math.random()*20)+'</span>, thr: <span class="val">'+Math.floor(6+Math.random()*4)+'</span> running';
+    document.getElementById('taskLine2').innerHTML='32%] Load average <span class="val">'+(Math.random()*15).toFixed(2)+' '+(Math.random()*15).toFixed(2)+' '+(Math.random()*15).toFixed(2)+'</span>';
+    document.getElementById('taskLine3').innerHTML='<span style="color:#ff4444">58%] Current time: '+new Date().toTimeString().split(' ')[0]+'</span>';
+    document.getElementById('taskLine4').innerHTML='<span style="color:#00aa2a">19%] System variables: OK | Processes: NOMINAL</span>';
+  },1200);
+
+  // encryption typing
+  setTimeout(()=>{
+    const el=[document.getElementById('encLine1'),document.getElementById('encLine2'),document.getElementById('encLine3')];
+    const msgs=[['[OK] Session keys: '+rHex(16),'ok'],['[OK] Certificate: VALID — CA:LetsEncrypt','ok'],['[OK] Tunnel established — latency 4ms','ok']];
+    msgs.forEach((m,i)=>setTimeout(()=>{ el[i].innerHTML=m[0]; el[i].className='panel-line '+m[1]; },i*800));
+  },1000);
+}
+
+// INPUT
+document.addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
 </script>
 
 </body>
