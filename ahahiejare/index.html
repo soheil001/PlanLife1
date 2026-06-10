@@ -3,1224 +3,434 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>سیلو — اجاره هر چیزی</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<title>پنل ادمین — سیلو</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root {
-  --teal:#00897b;--teal-mid:#00695c;--teal-deep:#004d40;--teal-glow:rgba(0,137,123,0.18);
-  --accent:#ff6d00;--bg-start:#0a1628;--bg-end:#0d2137;--text:#f0f4f8;
-  --text-muted:rgba(240,244,248,0.55);--text-dim:rgba(240,244,248,0.35);
-  --glass:rgba(255,255,255,0.07);--glass-mid:rgba(255,255,255,0.11);
-  --glass-hover:rgba(255,255,255,0.15);--border:rgba(255,255,255,0.1);
-  --border-mid:rgba(255,255,255,0.16);--shadow-glass:0 8px 32px rgba(0,0,0,0.35);
-  --shadow-card:0 4px 24px rgba(0,0,0,0.28);--shadow-sm:0 2px 12px rgba(0,0,0,0.22);
-  --radius-lg:18px;--radius-md:12px;--radius-sm:8px;--font:'Vazirmatn',system-ui,sans-serif;
+:root{
+  --teal:#00897b;--teal-mid:#00695c;--accent:#ff6d00;
+  --bg:#0a1628;--bg2:#0d2137;--text:#f0f4f8;
+  --muted:rgba(240,244,248,0.55);--dim:rgba(240,244,248,0.32);
+  --glass:rgba(255,255,255,0.06);--glass2:rgba(255,255,255,0.10);
+  --border:rgba(255,255,255,0.09);--border2:rgba(255,255,255,0.15);
+  --r:14px;--font:'Vazirmatn',system-ui,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{font-family:var(--font);background:linear-gradient(135deg,var(--bg-start) 0%,var(--bg-end) 60%,#0b1d2e 100%);min-height:100vh;color:var(--text);overflow-x:hidden;}
-body::before,body::after{content:'';position:fixed;border-radius:50%;pointer-events:none;z-index:0;}
-body::before{width:600px;height:600px;background:radial-gradient(circle,rgba(0,137,123,0.12) 0%,transparent 70%);top:-150px;right:-150px;}
-body::after{width:500px;height:500px;background:radial-gradient(circle,rgba(255,109,0,0.07) 0%,transparent 70%);bottom:-100px;left:-100px;}
+body{font-family:var(--font);background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 60%,#0b1d2e 100%);min-height:100vh;color:var(--text);display:flex;flex-direction:column;}
 
-header{position:sticky;top:0;z-index:200;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:rgba(10,22,40,0.72);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);box-shadow:0 2px 20px rgba(0,0,0,0.4);}
-.logo{font-size:26px;font-weight:900;letter-spacing:-1px;cursor:pointer;user-select:none;color:var(--text);transition:opacity .2s;}
-.logo span{color:var(--teal);}
-.logo:hover{opacity:.85;}
-.header-search{flex:1;max-width:440px;margin:0 24px;position:relative;}
-.header-search input{width:100%;padding:10px 44px 10px 16px;background:var(--glass);border:1px solid var(--border-mid);border-radius:40px;color:var(--text);font-family:var(--font);font-size:14px;outline:none;backdrop-filter:blur(8px);transition:all .25s;}
-.header-search input::placeholder{color:var(--text-dim);}
-.header-search input:focus{background:var(--glass-mid);border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-glow);}
-.search-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text-dim);pointer-events:none;}
-.header-actions{display:flex;gap:10px;align-items:center;}
-.btn-msg{background:var(--glass);color:var(--text);border:1px solid var(--border);padding:9px 16px;border-radius:40px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;backdrop-filter:blur(8px);transition:all .2s;display:flex;align-items:center;gap:6px;}
-.btn-msg:hover{background:var(--glass-hover);border-color:var(--border-mid);}
-.btn-post{background:linear-gradient(135deg,var(--teal),var(--teal-mid));color:white;border:none;padding:9px 20px;border-radius:40px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,137,123,0.35);transition:all .2s;white-space:nowrap;}
-.btn-post:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,137,123,0.45);}
+/* ── LOGIN ── */
+.login-screen{position:fixed;inset:0;z-index:999;background:radial-gradient(ellipse at 30% 20%,rgba(0,137,123,.18) 0%,transparent 60%),linear-gradient(135deg,#060e1c 0%,#0d2137 100%);display:flex;align-items:center;justify-content:center;padding:20px;}
+.login-card{background:rgba(13,33,55,.92);border:1px solid var(--border2);border-radius:20px;padding:44px 40px;max-width:400px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,.7);text-align:center;}
+.login-card img{height:42px;margin-bottom:8px;}
+.login-title{font-size:20px;font-weight:800;margin-bottom:4px;}
+.login-sub{font-size:12px;color:var(--dim);margin-bottom:28px;}
+.login-field{width:100%;padding:13px 16px;background:rgba(255,255,255,.06);border:1px solid var(--border2);border-radius:10px;font-family:var(--font);font-size:14px;color:var(--text);outline:none;margin-bottom:12px;transition:.2s;}
+.login-field:focus{border-color:var(--teal);background:rgba(0,137,123,.07);}
+.login-field::placeholder{color:var(--dim);}
+.btn-enter{width:100%;padding:14px;background:linear-gradient(135deg,var(--teal),var(--teal-mid));border:none;border-radius:10px;color:white;font-family:var(--font);font-size:15px;font-weight:800;cursor:pointer;letter-spacing:.3px;margin-top:4px;transition:.2s;}
+.btn-enter:hover{opacity:.9;}
+.err{font-size:12px;color:#ff6b6b;margin-top:10px;display:none;}
+.err.on{display:block;}
 
-.nav-tabs{display:flex;background:rgba(10,22,40,0.55);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto;scrollbar-width:none;position:relative;z-index:100;}
-.nav-tabs::-webkit-scrollbar{display:none;}
-.nav-tab{padding:14px 22px;font-family:var(--font);font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .2s;letter-spacing:.3px;}
-.nav-tab:hover{color:var(--text);}
-.nav-tab.active{color:var(--teal);border-bottom-color:var(--teal);font-weight:700;}
+/* ── LAYOUT ── */
+.sidebar{width:220px;flex-shrink:0;background:rgba(10,22,40,.8);border-left:1px solid var(--border);position:fixed;top:0;right:0;bottom:0;display:flex;flex-direction:column;padding:20px 0;z-index:100;}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:0 20px 20px;border-bottom:1px solid var(--border);}
+.sb-logo img{height:32px;}
+.sb-badge{background:rgba(255,109,0,.2);border:1px solid rgba(255,109,0,.4);color:#ff9040;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;}
+.sb-nav{flex:1;padding:12px 0;}
+.sb-item{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:.15s;border-right:3px solid transparent;}
+.sb-item:hover{color:var(--text);background:rgba(255,255,255,.04);}
+.sb-item.active{color:var(--teal);background:rgba(0,137,123,.08);border-right-color:var(--teal);}
+.sb-item svg{flex-shrink:0;}
+.sb-cnt{margin-right:auto;background:rgba(239,83,80,.2);color:#ef5350;border-radius:20px;padding:1px 7px;font-size:11px;font-weight:700;}
+.sb-cnt.green{background:rgba(0,137,123,.2);color:var(--teal);}
+.sb-bottom{padding:16px 20px;border-top:1px solid var(--border);}
+.btn-logout{width:100%;padding:10px;background:rgba(255,100,100,.08);border:1px solid rgba(255,100,100,.2);border-radius:10px;color:rgba(255,120,120,.8);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:.2s;}
+.btn-logout:hover{background:rgba(255,100,100,.15);color:#ff8080;}
 
-.main-wrap{max-width:1240px;margin:0 auto;padding:28px 20px;display:flex;gap:22px;position:relative;z-index:1;}
-.sidebar{width:268px;flex-shrink:0;}
-.filter-box{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;margin-bottom:16px;box-shadow:var(--shadow-glass);}
-.filter-title{font-size:12px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:14px;}
+.main{margin-right:220px;flex:1;padding:28px 28px;}
 
-/* Collapsible sidebar cats */
-.cat-group{margin-bottom:2px;}
-.cat-group-header{display:flex;align-items:center;gap:8px;padding:9px 4px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text-muted);border-bottom:1px solid rgba(255,255,255,0.05);transition:all .18s;user-select:none;}
-.cat-group-header:hover{color:var(--text);}
-.cat-group-header.active{color:var(--teal);}
-.cg-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.2);flex-shrink:0;transition:.2s;}
-.cat-group-header.active .cg-dot{background:var(--teal);box-shadow:0 0 8px var(--teal);}
-.cg-arrow{margin-right:auto;font-size:10px;color:var(--text-dim);transition:transform .22s;}
-.cat-group-header.open .cg-arrow{transform:rotate(90deg);}
-.cg-count{background:var(--glass-mid);border:1px solid var(--border);color:var(--text-muted);font-size:11px;padding:2px 7px;border-radius:20px;font-weight:600;}
-.cat-group-header.active .cg-count{color:var(--teal);border-color:var(--teal);}
-.cat-sub-list{display:none;padding:4px 0 6px 16px;}
-.cat-sub-list.open{display:block;}
-.cat-sub-item{display:flex;align-items:center;gap:8px;padding:7px 8px;font-size:12px;color:var(--text-dim);cursor:pointer;border-radius:6px;transition:.15s;}
-.cat-sub-item:hover{background:rgba(255,255,255,.05);color:var(--text-muted);}
-.cat-sub-item.active{color:var(--teal);background:rgba(0,137,123,.08);}
-.cat-sub-item::before{content:'—';font-size:10px;color:rgba(255,255,255,.2);flex-shrink:0;}
+/* ── SECTIONS ── */
+.section{display:none;}
+.section.active{display:block;}
 
-.city-select,.sort-select{width:100%;padding:9px 12px;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-sm);font-family:var(--font);font-size:13px;color:var(--text);outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;transition:.2s;}
-.sort-select{width:auto;}
-.city-select:focus,.sort-select:focus{border-color:var(--teal);}
-.city-select option,.sort-select option{background:#0d2137;color:var(--text);}
-.price-row{display:flex;gap:8px;}
-.price-row input{flex:1;padding:9px 10px;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-sm);font-family:var(--font);font-size:12px;color:var(--text);outline:none;text-align:center;transition:.2s;}
-.price-row input::placeholder{color:var(--text-dim);}
-.price-row input:focus{border-color:var(--teal);}
-.btn-filter{width:100%;margin-top:10px;background:linear-gradient(135deg,var(--teal),var(--teal-mid));color:white;border:none;padding:10px;border-radius:var(--radius-sm);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;transition:.2s;box-shadow:0 4px 14px rgba(0,137,123,.3);}
-.btn-filter:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,137,123,.4);}
+/* ── DASHBOARD ── */
+.dash-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:28px;}
+.dash-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;position:relative;overflow:hidden;}
+.dash-card::before{content:'';position:absolute;top:-20px;left:-20px;width:80px;height:80px;border-radius:50%;opacity:.12;}
+.dash-card.c-teal::before{background:var(--teal);}
+.dash-card.c-orange::before{background:#ffa726;}
+.dash-card.c-red::before{background:#ef5350;}
+.dash-card.c-blue::before{background:#42a5f5;}
+.dash-num{font-size:36px;font-weight:900;line-height:1;}
+.dash-label{font-size:12px;color:var(--muted);margin-top:6px;}
+.c-teal .dash-num{color:var(--teal);}
+.c-orange .dash-num{color:#ffa726;}
+.c-red .dash-num{color:#ef5350;}
+.c-blue .dash-num{color:#64b5f6;}
+.dash-sub{font-size:11px;color:var(--dim);margin-top:2px;}
 
-.content{flex:1;min-width:0;}
-.categories{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 22px;margin-bottom:20px;box-shadow:var(--shadow-glass);}
-.cat-section-title{font-size:13px;font-weight:700;color:var(--text-muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:16px;}
-.cat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
-.cat-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:var(--radius-md);cursor:pointer;font-family:var(--font);font-size:11px;font-weight:500;color:var(--text-muted);transition:all .22s;text-align:center;}
-.cat-btn:hover{background:var(--glass-mid);color:var(--text);border-color:var(--border-mid);transform:translateY(-2px);}
-.cat-btn.active{background:rgba(0,137,123,.15);border-color:var(--teal);color:var(--teal);}
-.cat-icon-box{width:38px;height:38px;border-radius:10px;background:var(--glass);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:.22s;}
-.cat-btn.active .cat-icon-box{background:rgba(0,137,123,.2);border-color:var(--teal);}
+/* ── ADS LIST ── */
+.section-head{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.ads-list{display:flex;flex-direction:column;gap:12px;}
+.ad-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;display:flex;gap:14px;align-items:flex-start;transition:.15s;}
+.ad-card:hover{background:var(--glass2);}
+.ad-card.flagged{border-color:rgba(239,83,80,.3);background:rgba(239,83,80,.04);}
+.thumb{width:76px;height:68px;border-radius:8px;object-fit:cover;flex-shrink:0;background:rgba(0,137,123,.1);}
+.thumb-ph{width:76px;height:68px;border-radius:8px;background:rgba(0,137,123,.07);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.ad-info{flex:1;min-width:0;}
+.ad-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:5px;}
+.ad-name{font-size:14px;font-weight:700;}
+.badge{padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;}
+.b-pending{background:rgba(255,167,38,.15);color:#ffa726;border:1px solid rgba(255,167,38,.3);}
+.b-approved{background:rgba(0,137,123,.15);color:var(--teal);border:1px solid rgba(0,137,123,.3);}
+.b-rejected{background:rgba(255,100,100,.1);color:#ff7070;border:1px solid rgba(255,100,100,.2);}
+.b-banned{background:rgba(239,83,80,.15);color:#ef5350;border:1px solid rgba(239,83,80,.3);}
+.ad-meta{font-size:11px;color:var(--muted);display:flex;flex-wrap:wrap;gap:0 10px;margin-bottom:5px;}
+.ad-owner-row{font-size:12px;color:var(--dim);margin-top:4px;}
+.banned-alert{display:inline-flex;align-items:center;gap:5px;background:rgba(239,83,80,.1);border:1px solid rgba(239,83,80,.2);border-radius:6px;padding:4px 10px;font-size:11px;color:#ef9090;margin-top:5px;}
+.ad-actions{display:flex;flex-direction:column;gap:7px;flex-shrink:0;}
+.btn-ok{padding:8px 16px;background:linear-gradient(135deg,var(--teal),var(--teal-mid));color:white;border:none;border-radius:8px;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:.15s;}
+.btn-ok:hover{opacity:.88;}
+.btn-no{padding:8px 16px;background:rgba(255,100,100,.09);color:#ff8080;border:1px solid rgba(255,100,100,.22);border-radius:8px;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:.15s;}
+.btn-no:hover{background:rgba(255,100,100,.18);}
 
-.sort-bar{background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;font-size:13px;box-shadow:var(--shadow-sm);}
-.sort-bar span{color:var(--text-muted);}
-.sort-bar strong{color:var(--teal);}
-.ads-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;}
-.ad-card{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:all .25s;box-shadow:var(--shadow-card);position:relative;}
-.ad-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.45);border-color:var(--border-mid);background:var(--glass-mid);}
-.ad-card.expired{opacity:.5;pointer-events:none;}
-.ad-img-wrap{width:100%;height:164px;background:linear-gradient(135deg,rgba(0,137,123,0.12),rgba(0,77,64,0.2));border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
-.ad-img-placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text-dim);}
-.ad-img-icon{width:52px;height:52px;border-radius:14px;background:var(--glass-mid);border:1px solid var(--border-mid);display:flex;align-items:center;justify-content:center;}
-.ad-img-label{font-size:11px;letter-spacing:.5px;}
-.ad-badge{position:absolute;top:10px;right:10px;background:linear-gradient(135deg,var(--accent),#e65100);color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.5px;box-shadow:0 2px 8px rgba(255,109,0,.4);}
-.ad-body{padding:14px 16px;}
-.ad-title{font-size:14px;font-weight:600;line-height:1.45;margin-bottom:8px;color:var(--text);}
-.ad-location{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);margin-bottom:10px;}
-.ad-location-dot{width:5px;height:5px;border-radius:50%;background:var(--teal);}
-.ad-footer{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(255,255,255,.06);padding-top:10px;}
-.ad-price{font-size:16px;font-weight:700;color:var(--text);}
-.ad-price small{font-size:11px;font-weight:400;color:var(--text-muted);display:block;}
-.ad-date{font-size:11px;color:var(--text-dim);}
+/* ── USERS ── */
+.users-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
+.user-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:18px;}
+.user-av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-mid));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:white;margin-bottom:10px;}
+.user-name{font-size:14px;font-weight:700;margin-bottom:3px;}
+.user-phone{font-size:12px;color:var(--muted);}
+.user-date{font-size:11px;color:var(--dim);margin-top:6px;}
 
-.page{display:none;}
-.page.active{display:block;}
+.empty{text-align:center;padding:60px 20px;color:var(--dim);}
+.empty-ico{font-size:44px;margin-bottom:10px;}
 
-.detail-wrap{max-width:960px;margin:0 auto;padding:28px 20px;position:relative;z-index:1;}
-.back-btn{display:inline-flex;align-items:center;gap:8px;color:var(--teal);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;padding:8px 0;margin-bottom:20px;transition:.2s;}
-.back-btn:hover{opacity:.75;}
-.detail-grid{display:grid;grid-template-columns:1fr 310px;gap:22px;}
-.detail-main{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-glass);}
-.detail-carousel{position:relative;}
-.carousel-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;}
-.carousel-track::-webkit-scrollbar{display:none;}
-.carousel-slide{flex-shrink:0;width:100%;height:300px;scroll-snap-align:start;background:linear-gradient(135deg,rgba(0,137,123,.14),rgba(0,77,64,.22));display:flex;align-items:center;justify-content:center;}
-.carousel-slide.with-image{background:none;overflow:hidden;}
-.carousel-slide img{width:100%;height:100%;object-fit:cover;}
-.carousel-slide .big-icon{width:80px;height:80px;border-radius:20px;background:var(--glass-mid);border:1px solid var(--border-mid);display:flex;align-items:center;justify-content:center;}
-.carousel-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;}
-.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:.2s;}
-.dot.active{background:var(--teal);width:18px;border-radius:3px;}
-.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:50%;color:white;font-size:16px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;z-index:5;}
-.carousel-btn:hover{background:rgba(0,137,123,.5);}
-.carousel-btn.prev{right:12px;}
-.carousel-btn.next{left:12px;}
-.detail-info{padding:22px;}
-.detail-info h1{font-size:20px;font-weight:700;margin-bottom:12px;line-height:1.4;}
-.detail-tags{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
-.detail-tag{display:flex;align-items:center;gap:6px;background:var(--glass-mid);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--text-muted);}
-.detail-tag-dot{width:5px;height:5px;border-radius:50%;background:var(--teal);}
-.detail-desc{font-size:14px;line-height:1.9;color:var(--text-muted);border-top:1px solid rgba(255,255,255,.07);padding-top:18px;}
-.detail-sidebar{display:flex;flex-direction:column;gap:16px;}
-.contact-box{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;box-shadow:var(--shadow-glass);}
-.price-big{font-size:26px;font-weight:900;color:var(--text);}
-.price-unit{font-size:12px;color:var(--text-dim);margin-bottom:18px;letter-spacing:.3px;}
-.price-toman{color:var(--teal);font-size:14px;font-weight:600;}
-.btn-call,.btn-chat{width:100%;border-radius:var(--radius-md);font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:all .22s;padding:13px;}
-.btn-call{background:linear-gradient(135deg,var(--teal),var(--teal-mid));color:white;border:none;margin-bottom:10px;box-shadow:0 4px 16px rgba(0,137,123,.35);}
-.btn-call:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,137,123,.45);}
-.btn-chat{background:transparent;color:var(--teal);border:1.5px solid var(--teal);}
-.btn-chat:hover{background:rgba(0,137,123,.1);}
-.owner-box{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-glass);}
-.owner-label{font-size:11px;font-weight:700;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;}
-.owner-info{display:flex;align-items:center;gap:12px;}
-.owner-avatar{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,rgba(0,137,123,.25),rgba(0,77,64,.35));border:1px solid var(--border-mid);display:flex;align-items:center;justify-content:center;}
-.owner-name{font-size:14px;font-weight:600;}
-.owner-since{font-size:12px;color:var(--text-dim);margin-top:2px;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(13,33,55,.97);border:1px solid var(--teal);color:var(--teal);padding:11px 22px;border-radius:40px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;}
+.toast.on{opacity:1;}
 
-/* ──── POST FORM ──── */
-.post-wrap{max-width:720px;margin:0 auto;padding:28px 20px;position:relative;z-index:1;}
-.post-form{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-glass);}
-.post-form h2{font-size:20px;font-weight:700;margin-bottom:24px;color:var(--text);}
-.form-section-title{font-size:11px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:14px;margin-top:8px;}
-.form-divider{height:1px;background:rgba(255,255,255,.07);margin:20px 0;}
-.form-group{margin-bottom:16px;}
-.form-group label{display:block;font-size:12px;font-weight:600;margin-bottom:7px;color:var(--text-muted);letter-spacing:.3px;}
-
-/* Glass inputs */
-.form-group input,
-.form-group textarea{
-  width:100%;padding:11px 14px;
-  background:rgba(255,255,255,0.07);
-  border:1px solid rgba(255,255,255,0.14);
-  border-radius:var(--radius-sm);
-  font-family:var(--font);font-size:14px;color:var(--text);
-  outline:none;transition:.22s;
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
+@media(max-width:768px){
+  .sidebar{width:100%;position:relative;height:auto;flex-direction:row;flex-wrap:wrap;}
+  .main{margin-right:0;}
+  .dash-grid{grid-template-columns:1fr 1fr;}
 }
-.form-group input::placeholder,
-.form-group textarea::placeholder{color:var(--text-dim);}
-.form-group input:focus,
-.form-group textarea:focus{
-  border-color:var(--teal);
-  background:rgba(0,137,123,0.08);
-  box-shadow:0 0 0 3px var(--teal-glow),inset 0 1px 0 rgba(255,255,255,0.1);
-}
-.form-group textarea{resize:vertical;min-height:100px;}
-
-/* Glass select */
-.glass-select-wrap{position:relative;}
-.glass-select-wrap::after{
-  content:'';position:absolute;left:12px;top:50%;transform:translateY(-50%);
-  width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;
-  border-top:5px solid rgba(255,255,255,0.35);pointer-events:none;
-}
-.glass-select-wrap select,
-.form-group select{
-  width:100%;padding:11px 14px 11px 36px;
-  background:rgba(255,255,255,0.07);
-  border:1px solid rgba(255,255,255,0.14);
-  border-radius:var(--radius-sm);
-  font-family:var(--font);font-size:14px;color:var(--text);
-  outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;
-  transition:.22s;
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
-}
-.glass-select-wrap select:focus,
-.form-group select:focus{
-  border-color:var(--teal);
-  background:rgba(0,137,123,0.08);
-  box-shadow:0 0 0 3px var(--teal-glow),inset 0 1px 0 rgba(255,255,255,0.1);
-}
-.glass-select-wrap select option,
-.form-group select option{background:#0d2137;color:var(--text);}
-
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.upload-zone{border:1.5px dashed rgba(255,255,255,.2);border-radius:var(--radius-md);padding:28px 20px;text-align:center;cursor:pointer;color:var(--text-dim);font-size:13px;transition:.22s;background:rgba(255,255,255,0.04);backdrop-filter:blur(8px);}
-.upload-zone:hover{border-color:var(--teal);background:rgba(0,137,123,.05);color:var(--text-muted);}
-.upload-zone.loading{border-color:var(--teal);opacity:.7;}
-.upload-zone .up-icon{margin-bottom:8px;color:var(--text-dim);}
-.upload-hint{font-size:11px;color:var(--text-dim);margin-top:5px;}
-.upload-progress{display:none;width:100%;height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:10px;overflow:hidden;}
-.upload-progress.show{display:block;}
-.upload-progress-bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-mid));width:0%;transition:width .3s;}
-.image-preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:10px;margin-top:14px;}
-.preview-item{position:relative;border-radius:8px;overflow:hidden;background:rgba(255,255,255,.08);border:1px solid var(--border);cursor:pointer;}
-.preview-item img{width:100%;height:80px;object-fit:cover;}
-.preview-item .remove-btn{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.7);color:white;border:none;width:20px;height:20px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;opacity:0;transition:.2s;}
-.preview-item:hover .remove-btn{opacity:1;}
-.btn-submit{width:100%;margin-top:10px;background:linear-gradient(135deg,var(--teal),var(--teal-mid));color:white;border:none;padding:15px;border-radius:var(--radius-md);font-family:var(--font);font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,137,123,.35);transition:.22s;letter-spacing:.3px;}
-.btn-submit:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,137,123,.45);}
-.success-banner{display:none;background:rgba(0,137,123,.15);border:1px solid var(--teal);border-radius:var(--radius-md);padding:14px 20px;font-size:14px;font-weight:600;color:var(--teal);margin-bottom:18px;text-align:center;}
-
-/* Messages */
-.msg-wrap{max-width:960px;margin:0 auto;padding:28px 20px;position:relative;z-index:1;}
-.msg-layout{display:grid;grid-template-columns:290px 1fr;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;height:600px;box-shadow:var(--shadow-glass);}
-.msg-list{border-left:1px solid rgba(255,255,255,.07);overflow-y:auto;}
-.msg-list::-webkit-scrollbar{width:4px;}
-.msg-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px;}
-.msg-list-header{padding:18px 18px 14px;font-size:14px;font-weight:700;border-bottom:1px solid rgba(255,255,255,.07);color:var(--text);}
-.msg-thread{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;display:flex;align-items:center;gap:12px;transition:.18s;}
-.msg-thread:hover,.msg-thread.active{background:rgba(0,137,123,.08);}
-.thread-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,rgba(0,137,123,.2),rgba(0,77,64,.3));border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.thread-info{flex:1;min-width:0;}
-.thread-name{font-size:13px;font-weight:600;color:var(--text);}
-.thread-last{font-size:12px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
-.thread-meta{display:flex;flex-direction:column;align-items:flex-end;gap:5px;}
-.thread-time{font-size:11px;color:var(--text-dim);}
-.unread-dot{width:8px;height:8px;background:var(--teal);border-radius:50%;box-shadow:0 0 6px var(--teal);}
-.chat-area{display:flex;flex-direction:column;}
-.chat-header{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:12px;}
-.chat-header .c-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,rgba(0,137,123,.2),rgba(0,77,64,.3));border:1px solid var(--border);display:flex;align-items:center;justify-content:center;}
-.chat-header .c-name{font-size:14px;font-weight:600;}
-.chat-header .c-item{font-size:12px;color:var(--text-dim);margin-top:2px;}
-.chat-messages{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
-.chat-messages::-webkit-scrollbar{width:4px;}
-.chat-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px;}
-.msg-bubble{max-width:70%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.55;}
-.msg-bubble.sent{background:linear-gradient(135deg,var(--teal),var(--teal-mid));color:white;align-self:flex-start;border-bottom-right-radius:4px;}
-.msg-bubble.received{background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--text);align-self:flex-end;border-bottom-left-radius:4px;}
-.msg-time{font-size:11px;opacity:.6;margin-top:5px;}
-.chat-input{padding:16px 20px;border-top:1px solid rgba(255,255,255,.07);display:flex;gap:10px;}
-.chat-input input{flex:1;padding:11px 16px;background:var(--glass);border:1px solid var(--border);border-radius:40px;font-family:var(--font);font-size:14px;color:var(--text);outline:none;transition:.2s;}
-.chat-input input::placeholder{color:var(--text-dim);}
-.chat-input input:focus{border-color:var(--teal);background:var(--glass-mid);}
-.btn-send{background:linear-gradient(135deg,var(--teal),var(--teal-mid));color:white;border:none;padding:11px 22px;border-radius:40px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:.2s;}
-.btn-send:hover{transform:translateY(-1px);}
-
-/* Modal */
-.modal-overlay{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.65);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:20px;}
-.modal-overlay.open{display:flex;}
-.modal-box{background:rgba(13,33,55,0.78);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border:1px solid var(--border-mid);border-radius:var(--radius-lg);padding:30px;max-width:480px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.6);animation:modalIn .3s cubic-bezier(.34,1.56,.64,1) both;}
-@keyframes modalIn{from{opacity:0;transform:scale(.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.modal-logo{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px;letter-spacing:-1px;}
-.modal-logo span{color:var(--teal);}
-.modal-tagline{font-size:12px;color:var(--text-dim);margin-bottom:22px;}
-.modal-title{font-size:16px;font-weight:700;margin-bottom:14px;color:var(--text);}
-.modal-body{font-size:13px;line-height:1.85;color:var(--text-muted);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:20px;}
-.modal-body strong{color:var(--text);}
-.modal-check{display:flex;align-items:flex-start;gap:12px;margin-bottom:22px;cursor:pointer;}
-.modal-check input[type="checkbox"]{width:18px;height:18px;margin-top:1px;accent-color:var(--teal);cursor:pointer;flex-shrink:0;}
-.modal-check span{font-size:13px;color:var(--text-muted);line-height:1.6;}
-.modal-actions{display:flex;gap:10px;}
-.btn-modal-cancel{flex:1;padding:12px;background:transparent;border:1.5px solid rgba(255,255,255,.15);border-radius:var(--radius-md);color:var(--text-muted);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:.2s;}
-.btn-modal-cancel:hover{border-color:rgba(255,255,255,.3);color:var(--text);}
-.btn-modal-ok{flex:2;padding:12px;background:linear-gradient(135deg,var(--teal),var(--teal-mid));border:none;border-radius:var(--radius-md);color:white;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,137,123,.35);transition:.2s;opacity:.5;pointer-events:none;}
-.btn-modal-ok.ready{opacity:1;pointer-events:all;}
-.btn-modal-ok.ready:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,137,123,.45);}
-
-@media(max-width:1100px){.cat-grid{grid-template-columns:repeat(4,1fr);}}
-@media(max-width:900px){.detail-grid{grid-template-columns:1fr;}.cat-grid{grid-template-columns:repeat(4,1fr);}}
-@media(max-width:768px){.sidebar{display:none;}.msg-layout{grid-template-columns:1fr;}.msg-list{display:none;}.form-row{grid-template-columns:1fr;}.header-search{max-width:200px;}}
-@media(max-width:500px){.cat-grid{grid-template-columns:repeat(3,1fr);}.ads-grid{grid-template-columns:1fr 1fr;gap:10px;}.main-wrap{padding:14px 12px;}}
 </style>
 </head>
 <body>
-<header>
-  <div class="logo" onclick="showPage('home')">سیلو<span>.</span></div>
-  <div class="header-search">
-    <div class="search-icon">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    </div>
-    <input type="text" placeholder="جستجوی آگهی، شهر، دسته‌بندی..." id="headerSearch" oninput="filterAds()">
-  </div>
-  <div class="header-actions">
-    <button class="btn-msg" onclick="showPage('messages')">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      پیام‌ها
-    </button>
-    <button class="btn-post" onclick="showPage('post')">ثبت آگهی</button>
-  </div>
-</header>
 
-<nav class="nav-tabs">
-  <button class="nav-tab active" onclick="switchTab(this,'home')">صفحه اصلی</button>
-  <button class="nav-tab" onclick="switchTab(this,'post')">ثبت آگهی</button>
-  <button class="nav-tab" onclick="switchTab(this,'messages')">پیام‌ها</button>
-</nav>
-
-<!-- HOME -->
-<div id="page-home" class="page active">
-  <div class="main-wrap">
-    <aside class="sidebar">
-      <div class="filter-box">
-        <div class="filter-title">دسته‌بندی</div>
-
-        <div class="cat-group">
-          <div class="cat-group-header active" onclick="filterCatGroup(this,'all')">
-            <span class="cg-dot"></span> همه آگهی‌ها <span class="cg-count">+۶۰</span>
-          </div>
-        </div>
-
-        <div class="cat-group">
-          <div class="cat-group-header" onclick="toggleGroup(this,'sport')">
-            <span class="cg-dot"></span> ورزش و تناسب اندام <span class="cg-count">۱۲</span><span class="cg-arrow">›</span>
-          </div>
-          <div class="cat-sub-list" id="grp-sport">
-            <div class="cat-sub-item" onclick="filterSub('sport',this)">ورزش‌های توپی</div>
-            <div class="cat-sub-item" onclick="filterSub('sport',this)">کوهنوردی و کمپینگ</div>
-            <div class="cat-sub-item" onclick="filterSub('sport',this)">غواصی و ورزش‌های آبی</div>
-            <div class="cat-sub-item" onclick="filterSub('sport',this)">ماهیگیری</div>
-            <div class="cat-sub-item" onclick="filterSub('sport',this)">تجهیزات ورزشی</div>
-            <div class="cat-sub-item" onclick="filterSub('sport',this)">ورزش‌های زمستانی</div>
-            <div class="cat-sub-item" onclick="filterSub('sport',this)">اسب و تجهیزات سوارکاری</div>
-          </div>
-        </div>
-
-        <div class="cat-group">
-          <div class="cat-group-header" onclick="toggleGroup(this,'music')">
-            <span class="cg-dot"></span> آلات موسیقی <span class="cg-count">۷</span><span class="cg-arrow">›</span>
-          </div>
-          <div class="cat-sub-list" id="grp-music">
-            <div class="cat-sub-item" onclick="filterSub('music',this)">سازهای زهی</div>
-            <div class="cat-sub-item" onclick="filterSub('music',this)">سازهای بادی</div>
-            <div class="cat-sub-item" onclick="filterSub('music',this)">سازهای کوبه‌ای</div>
-            <div class="cat-sub-item" onclick="filterSub('music',this)">کیبورد و پیانو</div>
-            <div class="cat-sub-item" onclick="filterSub('music',this)">سازهای الکترونیک</div>
-            <div class="cat-sub-item" onclick="filterSub('music',this)">تجهیزات صدا</div>
-          </div>
-        </div>
-
-        <div class="cat-group">
-          <div class="cat-group-header" onclick="toggleGroup(this,'collect')">
-            <span class="cg-dot"></span> کلکسیون و سرگرمی <span class="cg-count">۵</span><span class="cg-arrow">›</span>
-          </div>
-          <div class="cat-sub-list" id="grp-collect">
-            <div class="cat-sub-item" onclick="filterSub('collect',this)">سکه، تمبر، اسکناس</div>
-            <div class="cat-sub-item" onclick="filterSub('collect',this)">اشیاء عتیقه</div>
-            <div class="cat-sub-item" onclick="filterSub('collect',this)">آثار هنری</div>
-          </div>
-        </div>
-
-        <div class="cat-group">
-          <div class="cat-group-header" onclick="filterCatGroup(this,'book')">
-            <span class="cg-dot"></span> کتاب و مجله <span class="cg-count">۴</span>
-          </div>
-        </div>
-
-        <div class="cat-group">
-          <div class="cat-group-header" onclick="toggleGroup(this,'ticket')">
-            <span class="cg-dot"></span> بلیط <span class="cg-count">۶</span><span class="cg-arrow">›</span>
-          </div>
-          <div class="cat-sub-list" id="grp-ticket">
-            <div class="cat-sub-item" onclick="filterSub('ticket',this)">کنسرت و موسیقی</div>
-            <div class="cat-sub-item" onclick="filterSub('ticket',this)">رویدادهای ورزشی</div>
-            <div class="cat-sub-item" onclick="filterSub('ticket',this)">سفر و گردشگری</div>
-            <div class="cat-sub-item" onclick="filterSub('ticket',this)">تئاتر و سینما</div>
-          </div>
-        </div>
-        <div class="cat-group">
-          <div class="cat-group-header" onclick="toggleGroup(this,'tech')">
-            <span class="cg-dot"></span> کالای دیجیتال <span class="cg-count">۱۰</span><span class="cg-arrow">›</span>
-          </div>
-          <div class="cat-sub-list" id="grp-tech">
-            <div class="cat-sub-item" onclick="filterSub('tech',this)">موبایل و تبلت</div>
-            <div class="cat-sub-item" onclick="filterSub('tech',this)">رایانه</div>
-            <div class="cat-sub-item" onclick="filterSub('tech',this)">کنسول و بازی ویدیویی</div>
-            <div class="cat-sub-item" onclick="filterSub('tech',this)">صوتی و تصویری</div>
-            <div class="cat-sub-item" onclick="filterSub('tech',this)">تلفن رومیزی</div>
-            <div class="cat-sub-item" onclick="filterSub('tech',this)">دوربین و عکاسی</div>
-          </div>
-        </div>
-
-        <div class="cat-group">
-          <div class="cat-group-header" onclick="toggleGroup(this,'home')">
-            <span class="cg-dot"></span> خانه و آشپزخانه <span class="cg-count">۱۵</span><span class="cg-arrow">›</span>
-          </div>
-          <div class="cat-sub-list" id="grp-home">
-            <div class="cat-sub-item" onclick="filterSub('home',this)">لوازم خانگی برقی</div>
-            <div class="cat-sub-item" onclick="filterSub('home',this)">ظروف و لوازم آشپزخانه</div>
-            <div class="cat-sub-item" onclick="filterSub('home',this)">خوردنی و آشامیدنی</div>
-            <div class="cat-sub-item" onclick="filterSub('home',this)">خیاطی و بافتنی</div>
-            <div class="cat-sub-item" onclick="filterSub('home',this)">مبلمان و صنایع چوب</div>
-            <div class="cat-sub-item" onclick="filterSub('home',this)">نور و روشنایی</div>
-            <div class="cat-sub-item" onclick="filterSub('home',this)">فرش، گلیم، موکت</div>
-            <div class="cat-sub-item" onclick="filterSub('home',this)">تشک، روتختی، رختخواب</div>
-            <div class="cat-sub-item" onclick="filterSub('home',this)">لوازم دکوری و تزئینی</div>
-            <div class="cat-sub-item" onclick="filterSub('home',this)">تهویه، سرمایش، گرمایش</div>
-            <div class="cat-sub-item" onclick="filterSub('home',this)">شستشو و نظافت</div>
-          </div>
-        </div>
-
-        <div class="cat-group">
-          <div class="cat-group-header" onclick="toggleGroup(this,'tools')">
-            <span class="cg-dot"></span> ابزار و تجهیزات <span class="cg-count">۸</span><span class="cg-arrow">›</span>
-          </div>
-          <div class="cat-sub-list" id="grp-tools">
-            <div class="cat-sub-item" onclick="filterSub('tools',this)">ابزار برقی</div>
-            <div class="cat-sub-item" onclick="filterSub('tools',this)">ابزار دستی</div>
-            <div class="cat-sub-item" onclick="filterSub('tools',this)">تجهیزات ساختمانی</div>
-            <div class="cat-sub-item" onclick="filterSub('tools',this)">باغبانی و فضای سبز</div>
-            <div class="cat-sub-item" onclick="filterSub('tools',this)">تجهیزات صنعتی</div>
-          </div>
-        </div>
-
-        <div class="cat-group">
-          <div class="cat-group-header" onclick="toggleGroup(this,'event')">
-            <span class="cg-dot"></span> رویداد و مجلس <span class="cg-count">۵</span><span class="cg-arrow">›</span>
-          </div>
-          <div class="cat-sub-list" id="grp-event">
-            <div class="cat-sub-item" onclick="filterSub('event',this)">عروسی و مراسم</div>
-            <div class="cat-sub-item" onclick="filterSub('event',this)">سیستم صوتی</div>
-            <div class="cat-sub-item" onclick="filterSub('event',this)">چادر و سایبان</div>
-            <div class="cat-sub-item" onclick="filterSub('event',this)">میز و صندلی</div>
-            <div class="cat-sub-item" onclick="filterSub('event',this)">نورپردازی مجلس</div>
-          </div>
-        </div>
-        <div class="cat-group">
-          <div class="cat-group-header" onclick="toggleGroup(this,'personal')">
-            <span class="cg-dot"></span> وسایل شخصی <span class="cg-count">۹</span><span class="cg-arrow">›</span>
-          </div>
-          <div class="cat-sub-list" id="grp-personal">
-            <div class="cat-sub-item" onclick="filterSub('personal',this)">کیف، کفش، لباس</div>
-            <div class="cat-sub-item" onclick="filterSub('personal',this)">زیورآلات و اکسسوری</div>
-            <div class="cat-sub-item" onclick="filterSub('personal',this)">آرایشی، بهداشتی</div>
-            <div class="cat-sub-item" onclick="filterSub('personal',this)">کفش و لباس بچه</div>
-            <div class="cat-sub-item" onclick="filterSub('personal',this)">وسایل بچه و اسباب‌بازی</div>
-            <div class="cat-sub-item" onclick="filterSub('personal',this)">لوازم‌التحریر</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="filter-box">
-        <div class="filter-title">شهر</div>
-        <select class="city-select">
-          <option>همه شهرها</option>
-          <option>تهران</option><option>اصفهان</option><option>شیراز</option>
-          <option>مشهد</option><option>تبریز</option><option>کرج</option>
-          <option>قم</option><option>رشت</option><option>اهواز</option><option>کرمانشاه</option>
-        </select>
-      </div>
-
-      <div class="filter-box">
-        <div class="filter-title">قیمت روزانه (تومان)</div>
-        <div class="price-row">
-          <input type="number" placeholder="از" id="priceMin">
-          <input type="number" placeholder="تا" id="priceMax">
-        </div>
-        <button class="btn-filter" onclick="applyFilter()">اعمال فیلتر</button>
-      </div>
-    </aside>
-
-    <div class="content">
-      <div class="categories">
-        <div class="cat-section-title">دسته‌بندی‌های اصلی</div>
-        <div class="cat-grid">
-          <button class="cat-btn active" onclick="filterCatBtn(this,'all')">
-            <div class="cat-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>همه
-          </button>
-          <button class="cat-btn" onclick="filterCatBtn(this,'tools')">
-            <div class="cat-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>ابزار
-          </button>
-          <button class="cat-btn" onclick="filterCatBtn(this,'home')">
-            <div class="cat-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>خانه
-          </button>
-          <button class="cat-btn" onclick="filterCatBtn(this,'event')">
-            <div class="cat-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>مجلس
-          </button>
-          <button class="cat-btn" onclick="filterCatBtn(this,'sport')">
-            <div class="cat-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg></div>ورزشی
-          </button>
-          <button class="cat-btn" onclick="filterCatBtn(this,'tech')">
-            <div class="cat-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>دیجیتال
-          </button>
-          <button class="cat-btn" onclick="filterCatBtn(this,'music')">
-            <div class="cat-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>موسیقی
-          </button>
-          <button class="cat-btn" onclick="filterCatBtn(this,'book')">
-            <div class="cat-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>کتاب
-          </button>
-          <button class="cat-btn" onclick="filterCatBtn(this,'personal')">
-            <div class="cat-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>شخصی
-          </button>
-          <button class="cat-btn" onclick="filterCatBtn(this,'ticket')">
-            <div class="cat-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg></div>بلیط
-          </button>
-          <button class="cat-btn" onclick="filterCatBtn(this,'collect')">
-            <div class="cat-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>کلکسیون
-          </button>
-        </div>
-      </div>
-       <div class="sort-bar">
-        <span>نمایش <strong id="adCount">12</strong> آگهی</span>
-        <select class="sort-select" onchange="sortAds(this.value)">
-          <option value="newest">جدیدترین</option>
-          <option value="cheapest">ارزان‌ترین</option>
-          <option value="expensive">گران‌ترین</option>
-        </select>
-      </div>
-      <div class="ads-grid" id="adsGrid"></div>
-    </div>
+<!-- ══ LOGIN ══ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1781018687/_ir_puvab6.png" alt="سیلو">
+    <div class="login-title">پنل مدیریت سیلو</div>
+    <div class="login-sub">دسترسی فقط برای مدیر سایت</div>
+    <input class="login-field" type="tel" id="aPhone" placeholder="شماره موبایل">
+    <input class="login-field" type="password" id="aPass" placeholder="رمز عبور">
+    <div class="err" id="loginErr">شماره یا رمز عبور اشتباه است</div>
+    <button class="btn-enter" onclick="doLogin()">ورود به پنل</button>
   </div>
 </div>
 
-<!-- DETAIL -->
-<div id="page-detail" class="page">
-  <div class="detail-wrap">
-    <button class="back-btn" onclick="showPage('home')">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-      بازگشت به لیست
-    </button>
-    <div class="detail-grid">
-      <div class="detail-main">
-        <div class="detail-carousel">
-          <div class="carousel-track" id="carouselTrack"></div>
-          <div class="carousel-dots" id="carouselDots"></div>
-          <button class="carousel-btn prev" onclick="carouselMove(-1)">&#8250;</button>
-          <button class="carousel-btn next" onclick="carouselMove(1)">&#8249;</button>
-        </div>
-        <div class="detail-info">
-          <h1 id="detailTitle"></h1>
-          <div class="detail-tags">
-            <span class="detail-tag"><span class="detail-tag-dot"></span><span id="detailCity"></span></span>
-            <span class="detail-tag"><span class="detail-tag-dot"></span><span id="detailCat"></span></span>
-            <span class="detail-tag"><span class="detail-tag-dot"></span><span id="detailDate"></span></span>
-          </div>
-          <div class="detail-desc" id="detailDesc"></div>
-        </div>
+<!-- ══ APP ══ -->
+<div id="app" style="display:none;display:flex;min-height:100vh;">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sb-logo">
+      <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1781018687/_ir_puvab6.png" alt="">
+      <span class="sb-badge">ادمین</span>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-item active" onclick="go('dash',this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        داشبورد
       </div>
-      <div class="detail-sidebar">
-        <div class="contact-box">
-          <div class="price-big" id="detailPrice"></div>
-          <div class="price-unit"><span class="price-toman">تومان</span> به ازای هر روز اجاره</div>
-          <button class="btn-call" onclick="openCallModal()">تماس با آگهی‌دهنده</button>
-          <button class="btn-chat" onclick="showPage('messages')">ارسال پیام</button>
+      <div class="sb-item" onclick="go('pending',this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        در انتظار بررسی
+        <span class="sb-cnt" id="cntPendingBadge" style="display:none"></span>
+      </div>
+      <div class="sb-item" onclick="go('banned',this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+        کلمات ممنوع
+        <span class="sb-cnt" id="cntBannedBadge" style="display:none"></span>
+      </div>
+      <div class="sb-item" onclick="go('approved',this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        تأیید شده
+        <span class="sb-cnt green" id="cntApprovedBadge" style="display:none"></span>
+      </div>
+      <div class="sb-item" onclick="go('rejected',this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        رد شده
+      </div>
+      <div class="sb-item" onclick="go('users',this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        کاربران
+      </div>
+    </div>
+    <div class="sb-bottom">
+      <button class="btn-logout" onclick="doLogout()">خروج از پنل</button>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- داشبورد -->
+    <div class="section active" id="sec-dash">
+      <div class="section-head">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        آمار امروز
+      </div>
+      <div class="dash-grid">
+        <div class="dash-card c-teal">
+          <div class="dash-num" id="d-approvedToday">0</div>
+          <div class="dash-label">آگهی تأیید شده امروز</div>
         </div>
-        <div class="owner-box">
-          <div class="owner-label">آگهی‌دهنده</div>
-          <div class="owner-info">
-            <div class="owner-avatar">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <div>
-              <div class="owner-name" id="detailOwner"></div>
-              <div class="owner-since">عضو از ۱۴۰۲</div>
-            </div>
-          </div>
+        <div class="dash-card c-red">
+          <div class="dash-num" id="d-rejectedToday">0</div>
+          <div class="dash-label">آگهی رد شده امروز</div>
+        </div>
+        <div class="dash-card c-orange">
+          <div class="dash-num" id="d-usersToday">0</div>
+          <div class="dash-label">ثبت‌نام امروز</div>
+        </div>
+        <div class="dash-card c-blue">
+          <div class="dash-num" id="d-views">0</div>
+          <div class="dash-label">بازدید سایت (کل)</div>
         </div>
       </div>
     </div>
-  </div>
-</div>
-<!-- POST -->
-<div id="page-post" class="page">
-  <div class="post-wrap">
-    <div class="post-form">
-      <h2>ثبت آگهی جدید</h2>
-      <div class="success-banner" id="successMsg">آگهی شما با موفقیت ثبت شد و در حال بررسی است.</div>
 
-      <div class="form-section-title">اطلاعات آگهی</div>
-      <div class="form-group">
-        <label>عنوان آگهی *</label>
-        <input type="text" placeholder="مثال: دریل شارژی بوش — وضعیت عالی" id="adTitle">
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>دسته‌بندی اصلی *</label>
-          <div class="glass-select-wrap">
-            <select id="adCat" onchange="updateSubCat()">
-              <option value="">انتخاب کنید</option>
-              <option value="tools">ابزار و تجهیزات</option>
-              <option value="home">خانه و آشپزخانه</option>
-              <option value="event">رویداد و مجلس</option>
-              <option value="sport">ورزش و تناسب اندام</option>
-              <option value="tech">کالای دیجیتال</option>
-              <option value="music">آلات موسیقی</option>
-              <option value="book">کتاب و مجله</option>
-              <option value="ticket">بلیط</option>
-              <option value="collect">کلکسیون و سرگرمی</option>
-              <option value="personal">وسایل شخصی</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>زیردسته</label>
-          <div class="glass-select-wrap">
-            <select id="adSubCat">
-              <option value="">ابتدا دسته اصلی را انتخاب کنید</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>شهر *</label>
-          <div class="glass-select-wrap">
-            <select id="adCity">
-              <option value="">انتخاب کنید</option>
-              <option>تهران</option><option>اصفهان</option><option>شیراز</option>
-              <option>مشهد</option><option>تبریز</option><option>کرج</option>
-              <option>قم</option><option>رشت</option><option>اهواز</option><option>کرمانشاه</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>منطقه / محله</label>
-          <input type="text" placeholder="مثال: ونک، پونک..." id="adArea">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>قیمت روزانه (تومان) *</label>
-          <input type="number" placeholder="مثال: 150,000" id="adPrice">
-        </div>
-        <div class="form-group">
-          <label>حداقل مدت اجاره</label>
-          <div class="glass-select-wrap">
-            <select id="adMinDays">
-              <option>۱ روز</option><option>۲ روز</option><option>۳ روز</option>
-              <option>هفتگی</option><option>ماهانه</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>وضعیت کالا</label>
-          <div class="glass-select-wrap">
-            <select id="adCondition">
-              <option>نو</option><option>در حد نو</option><option>خوب</option><option>معمولی</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>ودیعه / ضمانت (تومان)</label>
-          <input type="number" placeholder="اختیاری" id="adDeposit">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>توضیحات</label>
-        <textarea placeholder="وضعیت وسیله، شرایط اجاره، نکات مهم برای مستاجر..." id="adDesc"></textarea>
-      </div>
-
-      <div class="form-divider"></div>
-      <div class="form-section-title">تصاویر (اختیاری)</div>
-      <div class="upload-zone" id="uploadZone">
-        <div class="up-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        </div>
-        <div>برای آپلود کلیک کنید یا تصویر را بکشید</div>
-        <div class="upload-hint">تا ۵ تصویر — JPG یا PNG — حداکثر ۵ مگابایت</div>
-      </div>
-      <div class="upload-progress" id="uploadProgress">
-        <div class="upload-progress-bar" id="progressBar"></div>
-      </div>
-            <div class="image-preview" id="imagePreview"></div>
-
-      <div class="form-divider"></div>
-      <div class="form-section-title">اطلاعات تماس</div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>نام آگهی‌دهنده *</label>
-          <input type="text" placeholder="نام کامل شما" id="adOwner">
-        </div>
-        <div class="form-group">
-          <label>شماره تماس *</label>
-          <input type="tel" placeholder="09XXXXXXXXX" id="adPhone">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>روش تحویل</label>
-          <div class="glass-select-wrap">
-            <select id="adDelivery">
-              <option>حضوری (مراجعه خریدار)</option>
-              <option>ارسال با پیک</option>
-              <option>هر دو روش</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>نحوه پرداخت</label>
-          <div class="glass-select-wrap">
-            <select id="adPayment">
-              <option>نقد</option>
-              <option>کارت به کارت</option>
-              <option>هر دو روش</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <button class="btn-submit" onclick="openPostModal()">ثبت آگهی</button>
+    <!-- در انتظار -->
+    <div class="section" id="sec-pending">
+      <div class="section-head">در انتظار بررسی</div>
+      <div class="ads-list" id="list-pending"></div>
     </div>
+
+    <!-- کلمات ممنوع -->
+    <div class="section" id="sec-banned">
+      <div class="section-head">آگهی‌های دارای کلمه ممنوع</div>
+      <div class="ads-list" id="list-banned"></div>
+    </div>
+
+    <!-- تأیید شده -->
+    <div class="section" id="sec-approved">
+      <div class="section-head">آگهی‌های تأیید شده</div>
+      <div class="ads-list" id="list-approved"></div>
+    </div>
+
+    <!-- رد شده -->
+    <div class="section" id="sec-rejected">
+      <div class="section-head">آگهی‌های رد شده</div>
+      <div class="ads-list" id="list-rejected"></div>
+    </div>
+
+    <!-- کاربران -->
+    <div class="section" id="sec-users">
+      <div class="section-head">کاربران ثبت‌نام شده — <span id="totalUsers" style="color:var(--teal)">0</span> نفر</div>
+      <div class="users-grid" id="usersList"></div>
+    </div>
+
   </div>
 </div>
 
-<!-- MESSAGES -->
-<div id="page-messages" class="page">
-  <div class="msg-wrap">
-    <div class="msg-layout">
-      <div class="msg-list">
-        <div class="msg-list-header">پیام‌ها</div>
-        <div class="msg-thread active" onclick="selectThread(this,0)">
-          <div class="thread-avatar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-          <div class="thread-info"><div class="thread-name">علی محمدی</div><div class="thread-last">سلام، آیا دریل موجوده؟</div></div>
-          <div class="thread-meta"><div class="thread-time">۱۰ دقیقه</div><div class="unread-dot"></div></div>
-        </div>
-        <div class="msg-thread" onclick="selectThread(this,1)">
-          <div class="thread-avatar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-          <div class="thread-info"><div class="thread-name">سارا احمدی</div><div class="thread-last">ممنون، فردا میام</div></div>
-          <div class="thread-meta"><div class="thread-time">۲ ساعت</div></div>
-        </div>
-        <div class="msg-thread" onclick="selectThread(this,2)">
-          <div class="thread-avatar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-          <div class="thread-info"><div class="thread-name">رضا کریمی</div><div class="thread-last">قیمت مذاکره داره؟</div></div>
-          <div class="thread-meta"><div class="thread-time">دیروز</div></div>
-        </div>
-      </div>
-      <div class="chat-area">
-        <div class="chat-header">
-          <div class="c-avatar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-          <div><div class="c-name" id="chatName">علی محمدی</div><div class="c-item" id="chatItem">درباره: دریل شارژی بوش</div></div>
-        </div>
-        <div class="chat-messages" id="chatMessages">
-          <div class="msg-bubble received">سلام، آیا دریل شما موجوده؟<div class="msg-time">۱۰ دقیقه پیش</div></div>
-          <div class="msg-bubble sent">سلام، بله موجوده. کی میخواید؟<div class="msg-time">۸ دقیقه پیش</div></div>
-          <div class="msg-bubble received">آخر هفته میشه؟<div class="msg-time">۵ دقیقه پیش</div></div>
-        </div>
-        <div class="chat-input">
-          <input type="text" placeholder="پیام خود را بنویسید..." id="chatInputField" onkeypress="if(event.key==='Enter')sendMsg()">
-          <button class="btn-send" onclick="sendMsg()">ارسال</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- MODAL CALL -->
-<div class="modal-overlay" id="callModal">
-  <div class="modal-box">
-    <div class="modal-logo">سیلو<span>.</span></div>
-    <div class="modal-tagline">بازار اجاره آنلاین ایران</div>
-    <div class="modal-title">پیش از تماس بخوانید</div>
-    <div class="modal-body">
-      <strong>سایت cllo.ir (سیلو)</strong> صرفاً یک بستر اتصال بین اجاره‌دهنده و اجاره‌گیرنده است.<br><br>
-      این سایت <strong>هیچ‌گونه مسئولیتی</strong> در قبال وضعیت، کیفیت، صحت اطلاعات، خسارت، مفقودی، یا هرگونه اختلاف ناشی از وسیله اجاره‌شده <strong>ندارد</strong>.<br><br>
-      قرارداد اجاره مستقیماً میان دو طرف بسته می‌شود. پیش از تحویل وسیله، از وضعیت آن اطمینان حاصل کنید.
-    </div>
-    <label class="modal-check">
-      <input type="checkbox" id="callAgree" onchange="toggleCallBtn()">
-      <span>موارد فوق را خواندم و می‌دانم که <strong>cllo.ir</strong> مسئولیتی در قبال این اجاره ندارد.</span>
-    </label>
-    <div class="modal-actions">
-      <button class="btn-modal-cancel" onclick="closeModal('callModal')">انصراف</button>
-      <button class="btn-modal-ok" id="callOkBtn" onclick="doCall()">نمایش شماره تماس</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL POST -->
-<div class="modal-overlay" id="postModal">
-  <div class="modal-box">
-    <div class="modal-logo">سیلو<span>.</span></div>
-    <div class="modal-tagline">بازار اجاره آنلاین ایران</div>
-    <div class="modal-title">قوانین انتشار آگهی</div>
-    <div class="modal-body">
-      با ثبت آگهی در <strong>cllo.ir (سیلو)</strong> تأیید می‌کنید که:<br><br>
-      — آگهی شما صادقانه وضعیت واقعی وسیله را توصیف می‌کند.<br>
-      — مسئولیت کامل هرگونه خسارت، اختلاف، یا مشکل ناشی از اجاره با <strong>شما</strong> است.<br>
-      — <strong>سایت cllo.ir هیچ‌گونه مسئولیتی</strong> در قبال وسیله اجاره‌شده ندارد.
-    </div>
-    <label class="modal-check">
-      <input type="checkbox" id="postAgree" onchange="togglePostBtn()">
-      <span>قوانین فوق را خواندم و می‌پذیرم که <strong>cllo.ir</strong> مسئولیتی در قبال آگهی من ندارد.</span>
-    </label>
-    <div class="modal-actions">
-      <button class="btn-modal-cancel" onclick="closeModal('postModal')">انصراف</button>
-      <button class="btn-modal-ok" id="postOkBtn" onclick="doSubmitAd()">انتشار آگهی</button>
-    </div>
-  </div>
-</div>
+<div class="toast" id="toast"></div>
 
 <script>
-// =================== IMAGE COMPRESSION & UPLOAD ===================
-const MAX_IMAGES = 5;
-const MAX_SIZE_MB = 5;
-let uploadedImages = [];
+/* ── اطلاعات ادمین ── */
+const ADMIN_PHONE = '09144535075';
+const ADMIN_PASS  = '29332107';
 
-function compressImage(file) {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let width = img.width, height = img.height;
-        const maxWidth = 1200, maxHeight = 1200;
-        if (width > height) {
-          if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; }
-        } else {
-          if (height > maxHeight) { width *= maxHeight / height; height = maxHeight; }
-        }
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-        canvas.toBlob((blob) => {
-          const compressedFile = new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() });
-          resolve(compressedFile);
-        }, 'image/jpeg', 0.75);
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
+/* ── helpers ── */
+const $ = id => document.getElementById(id);
+const getPending = () => { try{return JSON.parse(localStorage.getItem('siloPendingAds')||'[]');}catch{return[];} };
+const savePending = a => localStorage.setItem('siloPendingAds', JSON.stringify(a));
+const getAllAds   = () => { try{return JSON.parse(localStorage.getItem('siloAds')||'[]');}catch{return[];} };
+const saveAllAds  = a => localStorage.setItem('siloAds', JSON.stringify(a));
+const getUsers    = () => { try{return JSON.parse(localStorage.getItem('siloUsers')||'[]');}catch{return[];} };
+
+function todayStr(){
+  const d=new Date();
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+function isToday(ts){
+  if(!ts)return false;
+  const d=new Date(ts);
+  const t=new Date();
+  return d.getFullYear()===t.getFullYear()&&d.getMonth()===t.getMonth()&&d.getDate()===t.getDate();
 }
 
-function initUploadZone() {
-  const zone = document.getElementById('uploadZone');
-  if (!zone) return;
-  
-  const fileInput = document.createElement('input');
-  fileInput.type = 'file';
-  fileInput.accept = 'image/jpeg,image/png';
-  fileInput.multiple = true;
-  fileInput.style.display = 'none';
-  fileInput.id = 'fileInputHidden';
-  fileInput.onchange = (e) => handleFiles(e.target.files);
-  document.body.appendChild(fileInput);
-  
-  zone.addEventListener('click', () => fileInput.click());
-  zone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    zone.classList.add('loading');
-  });
-  zone.addEventListener('dragleave', () => zone.classList.remove('loading'));
-  zone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    zone.classList.remove('loading');
-    handleFiles(e.dataTransfer.files);
-  });
+/* ── ورود ── */
+function doLogin(){
+  const ph = $('aPhone').value.trim();
+  const pw = $('aPass').value;
+  if(ph===ADMIN_PHONE && pw===ADMIN_PASS){
+    $('loginScreen').style.display='none';
+    $('app').style.display='flex';
+    loadAll();
+    setInterval(loadAll, 30000);
+  } else {
+    $('loginErr').classList.add('on');
+  }
+}
+function doLogout(){
+  $('loginScreen').style.display='flex';
+  $('app').style.display='none';
+  $('aPhone').value='';
+  $('aPass').value='';
+  $('loginErr').classList.remove('on');
+}
+document.addEventListener('keydown', e => {
+  if(e.key==='Enter' && $('loginScreen').style.display!=='none') doLogin();
+});
+
+/* ── ناوبری ── */
+function go(name, el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(s=>s.classList.remove('active'));
+  $('sec-'+name).classList.add('active');
+  el.classList.add('active');
 }
 
-async function handleFiles(files) {
-  if (uploadedImages.length >= MAX_IMAGES) {
-    alert(`حداکثر ${MAX_IMAGES} تصویر مجاز است`);
+/* ── بارگذاری ── */
+function loadAll(){
+  const pending = getPending();
+  const users   = getUsers();
+
+  const pendingList  = pending.filter(a=>a.status==='pending'&&!a.hasBannedWord);
+  const bannedList   = pending.filter(a=>a.status==='pending'&&a.hasBannedWord);
+  const approvedList = pending.filter(a=>a.status==='approved');
+  const rejectedList = pending.filter(a=>a.status==='rejected');
+
+  /* sidebar badges */
+  setBadge('cntPendingBadge',  pendingList.length);
+  setBadge('cntBannedBadge',   bannedList.length);
+  setBadge('cntApprovedBadge', approvedList.length);
+
+  /* داشبورد - آمار امروز */
+  const approvedToday = pending.filter(a=>a.status==='approved'&&isToday(a.approvedAt)).length;
+  const rejectedToday = pending.filter(a=>a.status==='rejected'&&isToday(a.rejectedAt)).length;
+  const usersToday    = users.filter(u=>isToday(u.registeredAt)).length;
+
+  /* بازدید - در localStorage ذخیره می‌شود */
+  const views = parseInt(localStorage.getItem('siloViews')||'0');
+
+  $('d-approvedToday').textContent = approvedToday;
+  $('d-rejectedToday').textContent = rejectedToday;
+  $('d-usersToday').textContent    = usersToday;
+  $('d-views').textContent         = views.toLocaleString('fa-IR');
+
+  renderList('pending',  pendingList);
+  renderList('banned',   bannedList);
+  renderList('approved', approvedList);
+  renderList('rejected', rejectedList);
+  renderUsers(users);
+}
+
+function setBadge(id, n){
+  const el=$(id);
+  if(n>0){el.textContent=n;el.style.display='inline-flex';}
+  else el.style.display='none';
+}
+
+/* ── رندر آگهی‌ها ── */
+function renderList(key, ads){
+  const el=$('list-'+key);
+  if(!ads.length){
+    el.innerHTML=`<div class="empty"><div class="empty-ico">✓</div><p>موردی وجود ندارد</p></div>`;
     return;
   }
-  
-  const progressBar = document.getElementById('uploadProgress');
-  progressBar.classList.add('show');
-  let processed = 0;
-  
-  for (let file of files) {
-    if (uploadedImages.length >= MAX_IMAGES) break;
-    if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-      alert(`فایل ${file.name} بزرگتر از ${MAX_SIZE_MB}MB است`);
-      continue;
-    }
-    const compressed = await compressImage(file);
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      uploadedImages.push({ name: file.name, data: e.target.result });
-      renderPreview();
-      processed++;
-      document.getElementById('progressBar').style.width = (processed / Math.min(files.length, MAX_IMAGES - uploadedImages.length + processed)) * 100 + '%';
-      if (processed === Math.min(files.length, MAX_IMAGES - uploadedImages.length + processed)) {
-        setTimeout(() => progressBar.classList.remove('show'), 800);
-      }
-    };
-    reader.readAsDataURL(compressed);
-  }
-}
-
-function renderPreview() {
-  const container = document.getElementById('imagePreview');
-  container.innerHTML = uploadedImages.map((img, i) => `
-    <div class="preview-item">
-      <img src="${img.data}">
-      <button type="button" class="remove-btn" onclick="removeImage(${i})">✕</button>
-    </div>
-  `).join('');
-}
-
-function removeImage(i) {
-  uploadedImages.splice(i, 1);
-  renderPreview();
-}
-
-// =================== AD EXPIRY SYSTEM ===================
-const EXPIRY_DAYS = 14;
-
-function isAdExpired(ad) {
-  const postTime = ad.postTime || Date.now();
-  const expiryTime = postTime + (EXPIRY_DAYS * 24 * 60 * 60 * 1000);
-  return Date.now() > expiryTime;
-}
-
-function removeExpiredAds() {
-  allAds = allAds.filter(ad => !isAdExpired(ad));
-  saveAdsToStorage();
-}
-
-function saveAdsToStorage() {
-  localStorage.setItem('siloAds', JSON.stringify(allAds));
-}
-
-function loadAdsFromStorage() {
-  const stored = localStorage.getItem('siloAds');
-  if (stored) {
-    allAds = JSON.parse(stored);
-    removeExpiredAds();
-  }
-}
-
-// =================== AUTO SCROLL ON MOBILE ===================
-function scrollToAds() {
-  const isMobile = window.innerWidth <= 768;
-  if (!isMobile) return;
-  
-  const adsGrid = document.getElementById('adsGrid');
-  if (adsGrid) {
-    setTimeout(() => {
-      adsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 300);
-  }
-}
-
-// =================== MAIN ADS ARRAY ===================
-let allAds = [
-  {id:1,title:'دریل شارژی بوش حرفه‌ای ۱۸ ولت',cat:'tools',city:'تهران',price:120000,icon:'tools',desc:'دریل شارژی بوش ۱۸ ولت در وضعیت عالی. همراه با کیف حمل، شارژر و دو باتری.',date:'دیروز',owner:'محمد رضایی',badge:'ویژه',postTime:Date.now()-86400000},
-  {id:2,title:'چادر کمپینگ ۶ نفره ضد آب',cat:'sport',city:'اصفهان',price:80000,icon:'sport',desc:'چادر کمپینگ ۶ نفره ضد آب. قطب‌های آلومینیوم، پارچه ضد آب ۳۰۰۰mm.',date:'۲ روز پیش',owner:'علی صادقی',postTime:Date.now()-172800000},
-  {id:3,title:'میز و صندلی مجلسی — ۱۰ ست',cat:'event',city:'تهران',price:500000,icon:'event',desc:'ست کامل میز گرد و صندلی تاشو مجلسی. حمل و نصب با هزینه جداگانه.',date:'امروز',owner:'فاطمه کریمی',badge:'جدید',postTime:Date.now()},
-  {id:4,title:'پروژکتور فول‌اچ‌دی سونی VPL',cat:'tech',city:'تهران',price:200000,icon:'tech',desc:'پروژکتور سونی ۱۰۸۰p. مناسب برای جلسات و سینمای خانگی.',date:'امروز',owner:'حسین نوری',postTime:Date.now()},
-  {id:5,title:'جاروبرقی صنعتی ۲۲۰۰ وات',cat:'home',city:'شیراز',price:150000,icon:'home',desc:'جاروبرقی صنعتی ظرفیت ۲۰ لیتر، مکش قوی.',date:'۳ روز پیش',owner:'مریم احمدی',postTime:Date.now()-259200000},
-  {id:6,title:'دوچرخه کوهستانی ۲۶ اینچ',cat:'sport',city:'تهران',price:100000,icon:'sport',desc:'دوچرخه کوهستانی ۲۶ اینچ ۲۱ دنده شیمانو. ترمز دیسک.',date:'دیروز',owner:'امیر زارعی',postTime:Date.now()-86400000},
-  {id:7,title:'سیستم صوتی کامل مجلس',cat:'event',city:'مشهد',price:350000,icon:'event',desc:'سیستم صوتی: دو بلندگو ۱۵ اینچ، آمپلی‌فایر ۲۰۰۰ وات، میکروفون بی‌سیم.',date:'امروز',owner:'رضا حسینی',badge:'جدید',postTime:Date.now()},
-  {id:8,title:'نردبان آلومینیوم ۵ متری',cat:'tools',city:'تهران',price:90000,icon:'tools',desc:'نردبان آلومینیوم تاشو ۵ متر. ظرفیت ۱۵۰ کیلوگرم.',date:'۴ روز پیش',owner:'سعید محمدی',postTime:Date.now()-345600000},
-  {id:9,title:'دوربین کانن EOS R6',cat:'tech',city:'تهران',price:450000,icon:'tech',desc:'دوربین میرورلس کانن EOS R6 با لنز RF 24-105.',date:'دیروز',owner:'نگار رستمی',postTime:Date.now()-86400000},
-  {id:10,title:'ماشین ظرفشویی بوش ۱۲ نفره',cat:'home',city:'اصفهان',price:180000,icon:'home',desc:'ماشین ظرفشویی بوش. مناسب برای مراسم بزرگ.',date:'۵ روز پیش',owner:'زهرا موسوی',postTime:Date.now()-432000000},
-  {id:11,title:'وینچ برقی ۲ تن صنعتی',cat:'tools',city:'تبریز',price:250000,icon:'tools',desc:'وینچ برقی ۲ تن برای کارهای ساختمانی و حمل بار.',date:'امروز',owner:'کامران جعفری',badge:'جدید',postTime:Date.now()},
-  {id:12,title:'خیمه برزنتی ۱۰×۱۰ با تیم نصب',cat:'event',city:'تهران',price:600000,icon:'event',desc:'خیمه برزنتی ضد آب. با تیم نصب و برچیدن. ظرفیت ۱۵۰ نفر.',date:'۲ روز پیش',owner:'مهدی کمالی',postTime:Date.now()-172800000},
-];
-
-const catIcons={
-  tools:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
-  home:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
-  event:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`,
-  sport:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>`,
-  tech:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`,
-  music:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
-  book:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
-  personal:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`,
-  ticket:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg>`,
-  collect:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>`,
-  default:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>`,
-};
-const catNames={tools:'ابزار و تجهیزات',home:'خانه و آشپزخانه',event:'رویداد و مجلس',sport:'ورزش و تناسب اندام',tech:'کالای دیجیتال',music:'آلات موسیقی',book:'کتاب و مجله',personal:'وسایل شخصی',ticket:'بلیط',collect:'کلکسیون و سرگرمی'};
-const catColors={tools:'#80cbc4',home:'#a5d6a7',event:'#ce93d8',sport:'#90caf9',tech:'#ffcc80',music:'#f48fb1',book:'#bcaaa4',personal:'#80deea',ticket:'#ffe082',collect:'#a5d6a7'};
-
-const subCats={
-  tools:['ابزار برقی','ابزار دستی','تجهیزات ساختمانی','باغبانی و فضای سبز','تجهیزات صنعتی'],
-  home:['لوازم خانگی برقی','ظروف و لوازم آشپزخانه','خوردنی و آشامیدنی','خیاطی و بافتنی','مبلمان و صنایع چوب','نور و روشنایی','فرش، گلیم، موکت','تشک، روتختی، رختخواب','لوازم دکوری','تهویه، سرمایش، گرمایش','شستشو و نظافت'],
-  event:['عروسی و مراسم','سیستم صوتی','چادر و سایبان','میز و صندلی','نورپردازی مجلس'],
-  sport:['ورزش‌های توپی','کوهنوردی و کمپینگ','غواصی و ورزش‌های آبی','ماهیگیری','تجهیزات ورزشی','ورزش‌های زمستانی','اسب و تجهیزات سوارکاری'],
-  tech:['موبایل و تبلت','رایانه','کنسول و بازی ویدیویی','صوتی و تصویری','تلفن رومیزی','دوربین و عکاسی'],
-  music:['سازهای زهی','سازهای بادی','سازهای کوبه‌ای','کیبورد و پیانو','سازهای الکترونیک','تجهیزات صدا'],
-  book:['کتاب درسی','کتاب عمومی','مجله و نشریه','کتاب کودک'],
-  ticket:['کنسرت و موسیقی','رویدادهای ورزشی','سفر و گردشگری','تئاتر و سینما'],
-  collect:['سکه، تمبر، اسکناس','اشیاء عتیقه','آثار هنری'],
-  personal:['کیف، کفش، لباس','زیورآلات و اکسسوری','آرایشی، بهداشتی','کفش و لباس بچه','وسایل بچه و اسباب‌بازی','لوازم‌التحریر'],
-};
-
-const threads=[
-  {name:'علی محمدی',item:'دریل شارژی بوش',msgs:[{t:'received',m:'سلام، آیا دریل شما موجوده؟',time:'۱۰ دقیقه پیش'},{t:'sent',m:'سلام، بله موجوده. کی میخواید؟',time:'۸ دقیقه پیش'},{t:'received',m:'آخر هفته میشه؟',time:'۵ دقیقه پیش'}]},
-  {name:'سارا احمدی',item:'میز و صندلی عروسی',msgs:[{t:'received',m:'سلام، ۱۵ ست دارید؟',time:'دیروز'},{t:'sent',m:'بله، ۱۵ ست در دسترسه',time:'دیروز'},{t:'received',m:'ممنون، فردا میام',time:'دیروز'}]},
-  {name:'رضا کریمی',item:'پروژکتور سونی',msgs:[{t:'received',m:'سلام، قیمت مذاکره داره؟',time:'دیروز'}]},
-];
-
-let currentCat='all',currentSearch='',pendingAdData=null,carouselIndex=0,carouselSlides=0;
-
-function updateSubCat(){
-  const cat=document.getElementById('adCat').value;
-  const sel=document.getElementById('adSubCat');
-  if(!cat||!subCats[cat]){sel.innerHTML='<option value="">ابتدا دسته اصلی را انتخاب کنید</option>';return;}
-  sel.innerHTML='<option value="">انتخاب زیردسته</option>'+subCats[cat].map(s=>`<option>${s}</option>`).join('');
-}
-
-function renderAds(ads){
-  document.getElementById('adCount').textContent=ads.length;
-  document.getElementById('adsGrid').innerHTML=ads.map(ad=>{
-    const expired=isAdExpired(ad);
-    return `
-    <div class="ad-card${expired?' expired':''}">
-      <div class="ad-img-wrap">
-        ${ad.badge?`<div class="ad-badge">${ad.badge}</div>`:''}
-        <div class="ad-img-placeholder">
-          <div class="ad-img-icon" style="color:${catColors[ad.icon]||'#b0bec5'}">${catIcons[ad.icon]||catIcons.default}</div>
-          <span class="ad-img-label" style="color:${catColors[ad.icon]||'#b0bec5'}">${catNames[ad.cat]||''}</span>
+  el.innerHTML = ads.map(ad=>`
+    <div class="ad-card ${ad.hasBannedWord?'flagged':''}" id="row-${ad.id}">
+      ${ad.images&&ad.images[0]
+        ?`<img class="thumb" src="${ad.images[0]}" alt="">`
+        :`<div class="thumb-ph">📦</div>`}
+      <div class="ad-info">
+        <div class="ad-top">
+          <span class="ad-name">${ad.title}</span>
+          ${statusBadge(ad)}
         </div>
-      </div>
-      <div class="ad-body">
-        <div class="ad-title">${ad.title}</div>
-        <div class="ad-location"><span class="ad-location-dot"></span>${ad.city}</div>
-        <div class="ad-footer">
-          <div class="ad-price">${ad.price.toLocaleString('fa-IR')}<small>تومان / روز</small></div>
-          <div class="ad-date">${ad.date}</div>
+        <div class="ad-meta">
+          <span>🏙 ${ad.city}</span>
+          <span>💰 ${ad.price.toLocaleString('fa-IR')} ت/روز</span>
+          <span>🕐 ${ad.submittedAt||'—'}</span>
         </div>
+        <div class="ad-owner-row">
+          👤 <strong>${ad.owner}</strong> &nbsp;|&nbsp; 📞 ${ad.phone} &nbsp;|&nbsp; دسته: ${ad.cat}
+        </div>
+        ${ad.desc?`<div style="font-size:11px;color:var(--dim);margin-top:5px;">${ad.desc.substring(0,120)}${ad.desc.length>120?'...':''}</div>`:''}
+        ${ad.hasBannedWord?`<div class="banned-alert">⚠️ کلمه ممنوع: <strong>${ad.bannedWordFound}</strong></div>`:''}
       </div>
-    </div>`
-  }).join('');
+      <div class="ad-actions">
+        ${ad.status==='pending'
+          ?`<button class="btn-ok"  onclick="approve(${ad.id})">✓ تأیید</button>
+            <button class="btn-no"  onclick="reject(${ad.id})">✕ رد</button>`
+          :ad.status==='approved'
+            ?`<button class="btn-no" onclick="reject(${ad.id})">✕ رد و حذف</button>`
+            :`<button class="btn-ok" onclick="approve(${ad.id})">✓ تأیید مجدد</button>`
+        }
+      </div>
+    </div>`).join('');
 }
 
-function getFiltered(){
-  return allAds.filter(a=>{
-    const catOk=currentCat==='all'||a.cat===currentCat;
-    const srch=!currentSearch||a.title.includes(currentSearch)||a.city.includes(currentSearch)||a.desc.includes(currentSearch);
-    return catOk&&srch;
-  });
+function statusBadge(ad){
+  if(ad.hasBannedWord&&ad.status==='pending') return`<span class="badge b-banned">ممنوع</span>`;
+  if(ad.status==='pending')  return`<span class="badge b-pending">در انتظار</span>`;
+  if(ad.status==='approved') return`<span class="badge b-approved">تأیید شده</span>`;
+  if(ad.status==='rejected') return`<span class="badge b-rejected">رد شده</span>`;
+  return'';
 }
 
-function filterAds(){currentSearch=document.getElementById('headerSearch').value;renderAds(getFiltered());}
-
-function toggleGroup(headerEl,groupKey){
-  const listEl=document.getElementById('grp-'+groupKey);
-  const isOpen=listEl.classList.contains('open');
-  listEl.classList.toggle('open',!isOpen);
-  headerEl.classList.toggle('open',!isOpen);
+/* ── تأیید / رد ── */
+function approve(id){
+  let p=getPending(), i=p.findIndex(a=>a.id===id);
+  if(i<0)return;
+  p[i].status='approved';
+  p[i].approvedAt=Date.now();
+  savePending(p);
+  let all=getAllAds().filter(a=>a.id!==id);
+  const obj={...p[i],badge:'جدید'};
+  delete obj.hasBannedWord; delete obj.bannedWordFound;
+  all.unshift(obj);
+  saveAllAds(all);
+  toast('آگهی تأیید و منتشر شد ✓');
+  loadAll();
+}
+function reject(id){
+  let p=getPending(), i=p.findIndex(a=>a.id===id);
+  if(i<0)return;
+  p[i].status='rejected';
+  p[i].rejectedAt=Date.now();
+  savePending(p);
+  saveAllAds(getAllAds().filter(a=>a.id!==id));
+  toast('آگهی رد شد');
+  loadAll();
 }
 
-function filterCatGroup(el,cat){
-  currentCat=cat;
-  document.querySelectorAll('.cat-group-header').forEach(e=>e.classList.remove('active'));
-  el.classList.add('active');
-  document.querySelectorAll('.cat-sub-item').forEach(e=>e.classList.remove('active'));
-  renderAds(getFiltered());
-  scrollToAds();
-}
-function filterSub(parentCat,el){
-  currentCat=parentCat;
-  document.querySelectorAll('.cat-sub-item').forEach(e=>e.classList.remove('active'));
-  document.querySelectorAll('.cat-group-header').forEach(e=>e.classList.remove('active'));
-  el.classList.add('active');
-  renderAds(getFiltered());
-  scrollToAds();
-}
-
-function filterCatBtn(el,cat){
-  currentCat=cat;
-  document.querySelectorAll('.cat-btn').forEach(e=>e.classList.remove('active'));
-  el.classList.add('active');
-  renderAds(getFiltered());
-  scrollToAds();
-}
-
-function applyFilter(){
-  const min=parseInt(document.getElementById('priceMin').value)||0;
-  const max=parseInt(document.getElementById('priceMax').value)||Infinity;
-  renderAds(getFiltered().filter(a=>a.price>=min&&a.price<=max));
-}
-function sortAds(val){
-  let ads=getFiltered();
-  if(val==='cheapest')ads.sort((a,b)=>a.price-b.price);
-  else if(val==='expensive')ads.sort((a,b)=>b.price-a.price);
-  renderAds(ads);
-}
-
-function showDetail(id){
-  const ad=allAds.find(a=>a.id===id);if(!ad)return;
-  document.getElementById('detailTitle').textContent=ad.title;
-  document.getElementById('detailCity').textContent=ad.city;
-  document.getElementById('detailCat').textContent=catNames[ad.cat]||ad.cat;
-  document.getElementById('detailDate').textContent=ad.date;
-  document.getElementById('detailDesc').textContent=ad.desc;
-  document.getElementById('detailPrice').textContent=ad.price.toLocaleString('fa-IR');
-  document.getElementById('detailOwner').textContent=ad.owner;
-  carouselIndex=0;carouselSlides=(ad.images?.length||0)+1;
-  const color=catColors[ad.icon]||'#b0bec5';
-  const icon=catIcons[ad.icon]||catIcons.default;
-  let slides=`<div class="carousel-slide" style="background:linear-gradient(135deg,rgba(0,137,123,0.1),rgba(0,77,64,0.22))"><div class="big-icon" style="color:${color}">${icon}</div></div>`;
-  if(ad.images){
-    ad.images.forEach(img=>slides+=`<div class="carousel-slide with-image"><img src="${img}"></div>`);
+/* ── کاربران ── */
+function renderUsers(users){
+  $('totalUsers').textContent = users.length;
+  const el=$('usersList');
+  if(!users.length){
+    el.innerHTML=`<div class="empty"><div class="empty-ico">👥</div><p>هنوز کاربری ثبت‌نام نکرده</p></div>`;
+    return;
   }
-  document.getElementById('carouselTrack').innerHTML=slides;
-  const dotCount=Math.max(1,(ad.images?.length||0)+1);
-  document.getElementById('carouselDots').innerHTML=Array(dotCount).fill(0).map((_,i)=>`<div class="dot${i===0?' active':''}" onclick="goSlide(${i})"></div>`).join('');
-  showPage('detail');
+  el.innerHTML = users.map(u=>`
+    <div class="user-card">
+      <div class="user-av">${(u.name||'؟').charAt(0)}</div>
+      <div class="user-name">${u.name||'—'}</div>
+      <div class="user-phone">${u.phone||'—'}</div>
+      <div class="user-date">تاریخ ثبت‌نام: ${u.registeredAt ? new Date(u.registeredAt).toLocaleDateString('fa-IR') : 'نامشخص'}</div>
+    </div>`).join('');
 }
 
-function carouselMove(dir){carouselIndex=(carouselIndex+dir+carouselSlides)%carouselSlides;goSlide(carouselIndex);}
-function goSlide(idx){
-  carouselIndex=idx;
-  const track=document.getElementById('carouselTrack');
-  track.scrollTo({left:idx*track.offsetWidth,behavior:'smooth'});
-  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+/* ── toast ── */
+function toast(msg){
+  const t=$('toast');
+  t.textContent=msg; t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),3000);
 }
-
-function showPage(name){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
-  const tabMap={home:0,post:1,messages:2,detail:0};
-  document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',i===(tabMap[name]??0)));
-  window.scrollTo(0,0);
-}
-function switchTab(el,page){
-  showPage(page);
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-}
-
-function openModal(id){document.getElementById(id).classList.add('open');}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-function openCallModal(){document.getElementById('callAgree').checked=false;document.getElementById('callOkBtn').classList.remove('ready');openModal('callModal');}
-function toggleCallBtn(){document.getElementById('callOkBtn').classList.toggle('ready',document.getElementById('callAgree').checked);}
-function doCall(){closeModal('callModal');setTimeout(()=>alert('شماره تماس: 0912-XXX-XXXX'),300);}
-
-function openPostModal(){
-  const title=document.getElementById('adTitle').value;
-  const cat=document.getElementById('adCat').value;
-  const city=document.getElementById('adCity').value;
-  const price=document.getElementById('adPrice').value;
-  const owner=document.getElementById('adOwner').value;
-  if(!title||!cat||!city||!price||!owner){alert('لطفاً همه فیلدهای اجباری را پر کنید');return;}
-  pendingAdData={title,cat,city,price,owner};
-  document.getElementById('postAgree').checked=false;
-  document.getElementById('postOkBtn').classList.remove('ready');
-  openModal('postModal');
-}
-function togglePostBtn(){document.getElementById('postOkBtn').classList.toggle('ready',document.getElementById('postAgree').checked);}
-function doSubmitAd(){
-  if(!pendingAdData)return;
-  closeModal('postModal');
-  const{title,cat,city,price,owner}=pendingAdData;
-  const newAd={
-    id:Math.max(...allAds.map(a=>a.id),0)+1,
-    title,cat,city,
-    price:parseInt(price),
-    icon:cat,
-    desc:document.getElementById('adDesc').value||'بدون توضیحات.',
-    date:'همین الان',
-    owner,
-    badge:'جدید',
-    postTime:Date.now(),
-    images:uploadedImages.map(img=>img.data)
-  };
-  allAds.unshift(newAd);
-  uploadedImages=[];
-  renderPreview();
-  pendingAdData=null;
-  saveAdsToStorage();
-  const banner=document.getElementById('successMsg');
-  banner.style.display='block';
-  setTimeout(()=>{banner.style.display='none';showPage('home');renderAds(getFiltered());},2200);
-  document.getElementById('adTitle').value='';
-  document.getElementById('adCat').value='';
-  document.getElementById('adCity').value='';
-  document.getElementById('adPrice').value='';
-  document.getElementById('adOwner').value='';
-  document.getElementById('adDesc').value='';
-}
-
-function selectThread(el,idx){
-  document.querySelectorAll('.msg-thread').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  const t=threads[idx];
-  document.getElementById('chatName').textContent=t.name;
-  document.getElementById('chatItem').textContent='درباره: '+t.item;
-  document.getElementById('chatMessages').innerHTML=t.msgs.map(m=>`<div class="msg-bubble ${m.t}">${m.m}<div class="msg-time">${m.time}</div></div>`).join('');
-}
-function sendMsg(){
-  const input=document.getElementById('chatInputField');
-  const txt=input.value.trim();if(!txt)return;
-  const container=document.getElementById('chatMessages');
-  const div=document.createElement('div');
-  div.className='msg-bubble sent';div.innerHTML=txt+'<div class="msg-time">همین الان</div>';
-  container.appendChild(div);input.value='';container.scrollTop=container.scrollHeight;
-  setTimeout(()=>{
-    const replies=['ممنون از پیامتون','باشه، فردا بهتون اطلاع میدم','خواهش می‌کنم','چشم، در نظر می‌گیرم'];
-    const reply=document.createElement('div');
-    reply.className='msg-bubble received';
-    reply.innerHTML=replies[Math.floor(Math.random()*replies.length)]+'<div class="msg-time">همین الان</div>';
-    container.appendChild(reply);container.scrollTop=container.scrollHeight;
-  },1100);
-}
-
-document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
-window.addEventListener('load',()=>{
-  loadAdsFromStorage();
-  initUploadZone();
-  renderAds(allAds);
-  removeExpiredAds();
-});
 </script>
 </body>
 </html>
