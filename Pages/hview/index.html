@@ -6,50 +6,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SECURE TERMINAL v2.4.1</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-–green: #00ff41;
-–green-dim: #00aa2a;
-–green-faint: #003a0d;
-–bg: #000000;
-–scan: rgba(0,255,65,0.03);
-}
-
-html {
+html, body {
 background: #000000 !important;
 background-color: #000000 !important;
-}
-
-body {
-background: #000000 !important;
-background-color: #000000 !important;
-color: var(–green);
-font-family: ‘Share Tech Mono’, monospace;
+color: #00ff41;
+font-family: ‘Courier New’, Courier, monospace;
 min-height: 100vh;
 overflow-x: hidden;
 position: relative;
 }
 
-/* CRT scanlines */
 body::before {
 content: ‘’;
 position: fixed;
 inset: 0;
-background: repeating-linear-gradient(
-0deg,
-transparent,
-transparent 2px,
-var(–scan) 2px,
-var(–scan) 4px
-);
+background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.03) 2px, rgba(0,255,65,0.03) 4px);
 pointer-events: none;
 z-index: 999;
 }
 
-/* CRT flicker */
 body::after {
 content: ‘’;
 position: fixed;
@@ -60,12 +37,9 @@ z-index: 998;
 animation: flicker 8s infinite;
 }
 
-@keyframes flicker {
-0%,95%,100% { opacity: 1; }
-96% { opacity: 0.85; }
-97% { opacity: 1; }
-98% { opacity: 0.9; }
-}
+@keyframes flicker { 0%,95%,100%{opacity:1} 96%{opacity:0.85} 97%{opacity:1} 98%{opacity:0.9} }
+@keyframes blink { 50%{opacity:0} }
+@keyframes spin { to{transform:rotate(360deg)} }
 
 .main-container {
 display: flex;
@@ -74,35 +48,33 @@ align-items: center;
 min-height: 100vh;
 padding: 20px;
 gap: 16px;
+background: #000000;
 }
 
-/* TOP BAR */
 .top-bar {
 width: 100%;
 max-width: 900px;
 display: flex;
 justify-content: space-between;
 align-items: center;
-border-bottom: 1px solid var(–green-dim);
+border-bottom: 1px solid #00aa2a;
 padding-bottom: 8px;
 font-size: 11px;
-color: var(–green-dim);
+color: #00aa2a;
 flex-wrap: wrap;
 gap: 4px;
+background: #000000;
 }
 
 .top-bar .blink {
 animation: blink 1s step-end infinite;
-color: var(–green);
+color: #00ff41;
 }
 
-@keyframes blink { 50% { opacity: 0; } }
-
-/* ASCII ART */
 .ascii-header {
-font-family: ‘VT323’, monospace;
-font-size: clamp(12px, 2.5vw, 20px);
-color: #00ff41 !important;
+font-family: ‘Courier New’, Courier, monospace;
+font-size: clamp(10px, 2vw, 18px);
+color: #00ff41;
 text-align: center;
 line-height: 1.1;
 text-shadow: 0 0 8px #00ff41, 0 0 20px #00aa2a;
@@ -111,65 +83,85 @@ overflow-x: auto;
 width: 100%;
 max-width: 900px;
 background: #000000;
+font-weight: bold;
 }
 
-/* TERMINAL WINDOW */
+.stats-bar {
+width: 100%;
+max-width: 900px;
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+gap: 8px;
+background: #000000;
+}
+
+.stat-box {
+border: 1px solid #005515;
+padding: 8px 10px;
+font-size: 10px;
+background: #000a02;
+}
+
+.stat-label { color: #00aa2a; margin-bottom: 3px; font-family: ‘Courier New’, monospace; }
+.stat-value { color: #00ff41; font-size: 14px; font-weight: bold; text-shadow: 0 0 6px #00ff41; font-family: ‘Courier New’, monospace; }
+
+.progress-bar { height: 3px; background: #002a08; margin-top: 5px; overflow: hidden; }
+.progress-fill { height: 100%; background: #00ff41; box-shadow: 0 0 6px #00ff41; transition: width 1s ease; }
+
 .terminal {
 width: 100%;
 max-width: 900px;
 border: 1px solid #00aa2a;
-box-shadow: 0 0 15px rgba(0,255,65,0.15), inset 0 0 30px rgba(0,255,65,0.02);
+box-shadow: 0 0 15px rgba(0,255,65,0.2);
 background: #000a02;
 border-radius: 4px;
 overflow: hidden;
 }
 
 .terminal-bar {
-background: #003a0d;
+background: #001a05;
 border-bottom: 1px solid #00aa2a;
-padding: 6px 12px;
+padding: 7px 12px;
 display: flex;
 align-items: center;
 gap: 10px;
 font-size: 11px;
 color: #00aa2a;
+font-family: ‘Courier New’, monospace;
 }
 
 .terminal-bar .dots { display: flex; gap: 6px; }
-.terminal-bar .dot {
-width: 10px; height: 10px; border-radius: 50%;
-background: var(–green-faint);
-border: 1px solid var(–green-dim);
-}
+.terminal-bar .dot { width: 10px; height: 10px; border-radius: 50%; background: #001a05; border: 1px solid #00aa2a; }
 
 .terminal-output {
 padding: 14px;
 height: clamp(180px, 28vh, 280px);
 overflow-y: auto;
 font-size: clamp(11px, 1.8vw, 13px);
-line-height: 1.6;
-color: var(–green);
+line-height: 1.7;
+color: #00ff41;
+font-family: ‘Courier New’, Courier, monospace;
+background: #000a02;
 scrollbar-width: thin;
-scrollbar-color: var(–green-dim) transparent;
+scrollbar-color: #00aa2a transparent;
 }
 
 .terminal-output::-webkit-scrollbar { width: 4px; }
-.terminal-output::-webkit-scrollbar-thumb { background: var(–green-dim); }
+.terminal-output::-webkit-scrollbar-thumb { background: #00aa2a; }
 
-.line { display: block; word-break: break-all; }
-.line.dim { color: var(–green-dim); }
-.line.bright { color: #ffffff; text-shadow: 0 0 6px var(–green); }
+.line { display: block; word-break: break-all; color: #00ff41; }
+.line.dim { color: #00882a; }
+.line.bright { color: #ffffff; text-shadow: 0 0 6px #00ff41; }
 .line.warn { color: #ffcc00; }
 .line.err { color: #ff4444; }
-.cursor-line { display: flex; align-items: center; gap: 4px; }
 
-/* FINGERPRINT */
 .fingerprint-area {
 width: 100%;
 max-width: 900px;
 display: flex;
 justify-content: center;
 padding: 6px 0;
+background: #000000;
 }
 
 .fp-container {
@@ -178,16 +170,12 @@ width: clamp(90px, 16vw, 130px);
 height: clamp(90px, 16vw, 130px);
 }
 
-.fp-svg {
-width: 100%;
-height: 100%;
-filter: drop-shadow(0 0 8px var(–green));
-}
+.fp-svg { width: 100%; height: 100%; filter: drop-shadow(0 0 8px #00ff41); }
 
 .fp-ring {
 position: absolute;
 inset: -6px;
-border: 1px solid var(–green-dim);
+border: 1px solid #00aa2a;
 border-radius: 50%;
 animation: spin 6s linear infinite;
 }
@@ -197,23 +185,21 @@ content: ‘’;
 position: absolute;
 top: -3px; left: 50%;
 width: 6px; height: 6px;
-background: var(–green);
+background: #00ff41;
 border-radius: 50%;
 transform: translateX(-50%);
-box-shadow: 0 0 8px var(–green);
+box-shadow: 0 0 8px #00ff41;
 }
-
-@keyframes spin { to { transform: rotate(360deg); } }
 
 .fp-status {
 text-align: center;
 font-size: 11px;
-color: var(–green-dim);
+color: #00aa2a;
 margin-top: 6px;
 animation: blink 1.5s step-end infinite;
+font-family: ‘Courier New’, monospace;
 }
 
-/* LOGIN FORM */
 .login-section {
 width: 100%;
 max-width: 900px;
@@ -225,12 +211,15 @@ box-shadow: 0 0 15px rgba(0,255,65,0.1);
 
 .login-title {
 font-size: 11px;
-color: var(–green-dim);
+color: #00aa2a;
 margin-bottom: 14px;
-border-bottom: 1px solid var(–green-faint);
+border-bottom: 1px solid #002a08;
 padding-bottom: 6px;
 display: flex;
 justify-content: space-between;
+flex-wrap: wrap;
+gap: 4px;
+font-family: ‘Courier New’, monospace;
 }
 
 .field-row {
@@ -243,9 +232,10 @@ flex-wrap: wrap;
 
 .field-label {
 font-size: clamp(11px, 2vw, 13px);
-color: var(–green-dim);
+color: #00aa2a;
 min-width: 90px;
 white-space: nowrap;
+font-family: ‘Courier New’, monospace;
 }
 
 .field-input-wrap {
@@ -255,37 +245,32 @@ display: flex;
 align-items: center;
 border: 1px solid #00aa2a;
 background: #000000;
-padding: 6px 10px;
+padding: 7px 10px;
 gap: 6px;
 }
 
-.field-input-wrap span { color: var(–green-dim); font-size: 13px; }
+.field-input-wrap span { color: #00aa2a; font-size: 13px; font-family: ‘Courier New’, monospace; }
 
 .field-input-wrap input {
-background: transparent;
+background: #000000;
 border: none;
 outline: none;
-color: var(–green);
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(11px, 2vw, 13px);
+color: #00ff41;
+font-family: ‘Courier New’, Courier, monospace;
+font-size: clamp(12px, 2vw, 14px);
 width: 100%;
-caret-color: var(–green);
+caret-color: #00ff41;
 }
 
-.field-input-wrap input::placeholder { color: #1a4d2a; }
+.field-input-wrap input::placeholder { color: #004a15; }
 
-.btn-row {
-display: flex;
-gap: 10px;
-margin-top: 14px;
-flex-wrap: wrap;
-}
+.btn-row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
 
 .btn {
-background: transparent;
-border: 1px solid var(–green-dim);
-color: var(–green);
-font-family: ‘Share Tech Mono’, monospace;
+background: #000000;
+border: 1px solid #00aa2a;
+color: #00ff41;
+font-family: ‘Courier New’, Courier, monospace;
 font-size: clamp(11px, 2vw, 13px);
 padding: 8px 18px;
 cursor: pointer;
@@ -294,78 +279,43 @@ text-transform: uppercase;
 letter-spacing: 1px;
 }
 
-.btn:hover, .btn.active {
-background: var(–green-faint);
-box-shadow: 0 0 12px rgba(0,255,65,0.3);
-color: #fff;
+.btn:hover {
+background: #001a05;
+box-shadow: 0 0 12px rgba(0,255,65,0.4);
+color: #ffffff;
 }
 
-.btn.primary {
-border-color: var(–green);
-box-shadow: 0 0 8px rgba(0,255,65,0.2);
-}
+.btn.primary { border-color: #00ff41; box-shadow: 0 0 8px rgba(0,255,65,0.3); }
 
-/* STATS BAR */
-.stats-bar {
-width: 100%;
-max-width: 900px;
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-gap: 8px;
-}
-
-.stat-box {
-border: 1px solid #003a0d;
-padding: 8px 10px;
-font-size: 10px;
-background: #000a02;
-}
-
-.stat-label { color: var(–green-dim); margin-bottom: 3px; }
-.stat-value { color: var(–green); font-size: 13px; text-shadow: 0 0 6px var(–green); }
-
-.progress-bar {
-height: 3px;
-background: var(–green-faint);
-margin-top: 4px;
-overflow: hidden;
-}
-
-.progress-fill {
-height: 100%;
-background: var(–green);
-box-shadow: 0 0 6px var(–green);
-transition: width 1s ease;
-}
-
-/* BOTTOM */
 .bottom-bar {
 width: 100%;
 max-width: 900px;
 display: flex;
 justify-content: space-between;
 font-size: 10px;
-color: var(–green-faint);
-border-top: 1px solid var(–green-faint);
+color: #005515;
+border-top: 1px solid #003a0d;
 padding-top: 6px;
 flex-wrap: wrap;
 gap: 4px;
+font-family: ‘Courier New’, monospace;
+background: #000000;
 }
 
-/* MATRIX CANVAS */
 #matrixCanvas {
 position: fixed;
 top: 0; left: 0;
 width: 100%; height: 100%;
-opacity: 0.04;
+opacity: 0.05;
 pointer-events: none;
 z-index: 0;
+background: #000000;
 }
 
 .main-container > * { position: relative; z-index: 1; }
 
 @media (max-width: 600px) {
-.ascii-header { font-size: 9px; }
+.ascii-header { font-size: 8px; }
 .field-label { min-width: 70px; }
 }
 </style>
@@ -380,16 +330,17 @@ z-index: 0;
   <div class="top-bar">
     <span>[ SYS:ONLINE ] [ ENC:AES-256 ] [ VPN:ACTIVE ]</span>
     <span id="clock" class="blink">00:00:00 UTC</span>
-    <span>NET:<span id="netStatus">SECURE</span> | IP: <span id="fakeIP">---.---.---.---</span></span>
+    <span>NET:SECURE | IP: <span id="fakeIP">---.---.---.---</span></span>
   </div>
 
   <pre class="ascii-header">
- ██████╗██╗   ██╗██████╗ ███████╗██████╗     ████████╗███████╗██████╗ ███╗   ███╗
-██╔════╝╚██╗ ██╔╝██╔══██╗██╔════╝██╔══██╗    ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║
-██║      ╚████╔╝ ██████╔╝█████╗  ██████╔╝       ██║   █████╗  ██████╔╝██╔████╔██║
-██║       ╚██╔╝  ██╔══██╗██╔══╝  ██╔══██╗       ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║
-╚██████╗   ██║   ██████╔╝███████╗██║  ██║       ██║   ███████╗██║  ██║██║ ╚═╝ ██║
- ╚═════╝   ╚═╝   ╚═════╝ ╚══════╝╚═╝  ╚═╝       ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝</pre>
+ ######  ##    ## ########  ######## ########     ######## ######## ########  ##     ## 
+##    ##  ##  ##  ##     ## ##       ##     ##       ##    ##       ##     ## ###   ### 
+##         ####   ##     ## ##       ##     ##       ##    ##       ##     ## #### #### 
+##          ##    ########  ######   ########        ##    ######   ########  ## ### ## 
+##          ##    ##     ## ##       ##   ##         ##    ##       ##   ##   ##     ## 
+##    ##    ##    ##     ## ##       ##    ##        ##    ##       ##    ##  ##     ## 
+ ######     ##    ########  ######## ##     ##       ##    ######## ##     ## ##     ##</pre>
 
   <div class="stats-bar">
     <div class="stat-box">
@@ -405,7 +356,7 @@ z-index: 0;
     <div class="stat-box">
       <div class="stat-label">// PACKETS</div>
       <div class="stat-value" id="packets">0</div>
-      <div class="progress-bar"><div class="progress-fill" id="pktBar" style="width:60%"></div></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
     </div>
     <div class="stat-box">
       <div class="stat-label">// ENCRYPTION</div>
@@ -414,7 +365,7 @@ z-index: 0;
     </div>
     <div class="stat-box">
       <div class="stat-label">// FIREWALL</div>
-      <div class="stat-value" id="fwStatus">ACTIVE</div>
+      <div class="stat-value">ACTIVE</div>
       <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
     </div>
     <div class="stat-box">
@@ -441,8 +392,8 @@ z-index: 0;
     <div>
       <div class="fp-container">
         <div class="fp-ring" id="fpRing"></div>
-        <svg class="fp-svg" id="fpSvg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g id="fpLines" stroke="#00ff41" stroke-width="1" stroke-linecap="round">
+        <svg class="fp-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="#00ff41" stroke-width="1.2" stroke-linecap="round">
             <path d="M50 15 C30 15, 15 30, 15 50 C15 70, 30 85, 50 85 C70 85, 85 70, 85 50 C85 30, 70 15, 50 15"/>
             <path d="M50 22 C34 22, 22 34, 22 50 C22 66, 34 78, 50 78 C66 78, 78 66, 78 50 C78 34, 66 22, 50 22"/>
             <path d="M50 29 C37 29, 29 37, 29 50 C29 63, 37 71, 50 71 C63 71, 71 63, 71 50 C71 37, 63 29, 50 29"/>
@@ -458,7 +409,7 @@ z-index: 0;
             <line x1="72" y1="78" x2="78" y2="72"/>
             <circle cx="50" cy="50" r="3" fill="#00ff41"/>
           </g>
-          <circle id="fpScanLine" cx="50" cy="15" r="48" stroke="#00ff41" stroke-width="0.5" stroke-dasharray="4 296" opacity="0.8"/>
+          <circle id="fpScanLine" cx="50" cy="50" r="38" stroke="#00ff41" stroke-width="0.5" stroke-dasharray="6 232" opacity="0.9"/>
         </svg>
       </div>
       <div class="fp-status" id="fpStatus">SCANNING...</div>
@@ -467,7 +418,7 @@ z-index: 0;
 
   <div class="login-section">
     <div class="login-title">
-      <span>// AUTHENTICATION REQUIRED — CLEARANCE LEVEL: ALPHA</span>
+      <span>// AUTHENTICATION REQUIRED — CLEARANCE: ALPHA</span>
       <span id="authTimer">SESSION: 00:00</span>
     </div>
 
@@ -484,7 +435,7 @@ z-index: 0;
   <span class="field-label">[ PASSWORD ]</span>
   <div class="field-input-wrap">
     <span>****</span>
-    <input type="password" id="passwordInput" placeholder="••••••••••••••••" autocomplete="off"/>
+    <input type="password" id="passwordInput" placeholder="enter_password..." autocomplete="off"/>
   </div>
 </div>
 
@@ -500,30 +451,28 @@ z-index: 0;
   <div class="bottom-bar">
     <span>KERNEL: 5.19.0-cyber // BUILD: 2024.03.14-ALPHA</span>
     <span id="bottomStatus">STATUS: STANDBY</span>
-    <span>THREAT LEVEL: <span id="threatLevel" style="color:#00ff41">LOW</span></span>
+    <span>THREAT: <span id="threatLevel" style="color:#00ff41">LOW</span></span>
   </div>
 
 </div>
 
 <script>
-// ── MATRIX RAIN ──────────────────────────────────────────────
+// MATRIX RAIN
 const canvas = document.getElementById('matrixCanvas');
 const ctx = canvas.getContext('2d');
 let drops = [];
-
 function initMatrix() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   const cols = Math.floor(canvas.width / 16);
   drops = Array.from({length: cols}, () => Math.random() * -50);
 }
-
 function drawMatrix() {
   ctx.fillStyle = 'rgba(0,0,0,0.05)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = '#00ff41';
-  ctx.font = '14px Share Tech Mono';
-  const chars = '0123456789ABCDEF></?!@#$%^&*()アイウエオカキクケコサシスセソ';
+  ctx.font = '14px Courier New';
+  const chars = '0123456789ABCDEF></?!@#$%^&*()';
   drops.forEach((y, i) => {
     const ch = chars[Math.floor(Math.random() * chars.length)];
     ctx.fillText(ch, i * 16, y * 16);
@@ -531,34 +480,29 @@ function drawMatrix() {
     drops[i]++;
   });
 }
-
 initMatrix();
 setInterval(drawMatrix, 50);
 window.addEventListener('resize', initMatrix);
 
-// ── CLOCK ────────────────────────────────────────────────────
+// CLOCK
 function updateClock() {
   const now = new Date();
-  document.getElementById('clock').textContent =
-    now.toUTCString().split(' ')[4] + ' UTC';
+  document.getElementById('clock').textContent = now.toUTCString().split(' ')[4] + ' UTC';
 }
 setInterval(updateClock, 1000);
 updateClock();
 
-// ── FAKE IP ──────────────────────────────────────────────────
-function randIP() {
-  return Array.from({length:4}, () => Math.floor(Math.random()*254+1)).join('.');
-}
+// FAKE IP
+function randIP() { return Array.from({length:4}, () => Math.floor(Math.random()*254+1)).join('.'); }
 document.getElementById('fakeIP').textContent = randIP();
 
-// ── STATS ANIMATION ──────────────────────────────────────────
+// STATS
 let sessionSeconds = 0;
 setInterval(() => {
   const cpu = Math.floor(30 + Math.random() * 55);
   const mem = (1.2 + Math.random() * 2.8).toFixed(1);
   const pkts = Math.floor(Math.random() * 999999).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   const ping = Math.floor(8 + Math.random() * 40);
-
   document.getElementById('cpu').textContent = cpu + '%';
   document.getElementById('cpuBar').style.width = cpu + '%';
   document.getElementById('mem').textContent = mem + ' GB';
@@ -566,64 +510,60 @@ setInterval(() => {
   document.getElementById('packets').textContent = pkts;
   document.getElementById('ping').textContent = ping + 'ms';
   document.getElementById('pingBar').style.width = Math.min(ping/100*100,100) + '%';
-
   sessionSeconds++;
   const m = String(Math.floor(sessionSeconds/60)).padStart(2,'0');
   const s = String(sessionSeconds%60).padStart(2,'0');
-  document.getElementById('authTimer').textContent = `SESSION: ${m}:${s}`;
+  document.getElementById('authTimer').textContent = 'SESSION: ' + m + ':' + s;
 }, 1000);
 
-// ── FINGERPRINT SCAN ─────────────────────────────────────────
+// FINGERPRINT
 let fpScanAngle = 0;
 const fpStatuses = ['SCANNING...','ANALYZING...','MAPPING RIDGES...','CROSS-REFERENCING...'];
 let fpIdx = 0;
-
 setInterval(() => {
   fpScanAngle = (fpScanAngle + 3) % 360;
-  document.getElementById('fpSvg').style.transform = '';
   const scanLine = document.getElementById('fpScanLine');
-  const offset = (fpScanAngle / 360) * 302;
+  const offset = (fpScanAngle / 360) * 238;
   scanLine.setAttribute('stroke-dashoffset', -offset);
 }, 30);
-
 setInterval(() => {
   fpIdx = (fpIdx+1) % fpStatuses.length;
   document.getElementById('fpStatus').textContent = fpStatuses[fpIdx];
 }, 1800);
 
-// ── TERMINAL OUTPUT ───────────────────────────────────────────
+// TERMINAL
 const termOut = document.getElementById('termOutput');
 let isTyping = false;
 
-function addLine(text, cls = '', delay = 0) {
-  return new Promise(resolve => {
-    setTimeout(() => {
+function addLine(text, cls) {
+  cls = cls || '';
+  return new Promise(function(resolve) {
+    setTimeout(function() {
       const span = document.createElement('span');
       span.className = 'line ' + cls;
       span.textContent = text;
       termOut.appendChild(span);
       termOut.scrollTop = termOut.scrollHeight;
       resolve();
-    }, delay);
+    }, 0);
   });
 }
-
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function sleep(ms) { return new Promise(function(r){ setTimeout(r, ms); }); }
 
 const codeSnippets = [
   "Initializing network scanner...",
   "Loading exploit database v4.2.1...",
   "Checking open ports: 22, 80, 443, 8080, 3306...",
-  "PORT 22/tcp  OPEN   ssh     OpenSSH 8.4",
-  "PORT 80/tcp  OPEN   http    Apache httpd 2.4.51",
-  "PORT 443/tcp OPEN   https   TLS 1.3",
+  "PORT 22/tcp   OPEN   ssh     OpenSSH 8.4",
+  "PORT 80/tcp   OPEN   http    Apache httpd 2.4.51",
+  "PORT 443/tcp  OPEN   https   TLS 1.3",
   "Enumerating services on target host...",
   "Running CVE database lookup...",
   "CVE-2023-4911: glibc vulnerability [CHECKING]",
-  "CVE-2024-1086: kernel exploit    [CHECKING]",
+  "CVE-2024-1086: kernel exploit      [CHECKING]",
   "Analyzing packet headers...",
   "ARP spoofing detection: NEGATIVE",
-  "SSL certificate fingerprint: SHA256:a4:f3...",
+  "SSL certificate fingerprint: SHA256:a4:f3:8c:2d...",
   "DNS enumeration: 14 subdomains found",
   "Checking for SQL injection vectors...",
   "XSS payload testing... [SANITIZED]",
@@ -636,125 +576,99 @@ const codeSnippets = [
   "Zero-day scan: NO CRITICAL FINDINGS",
   "Hash cracking module: MD5/SHA1/SHA256",
   "System integrity: NOMINAL",
-  "Memory forensics: No anomalies",
+  "Memory forensics: No anomalies detected",
   "Kernel rootkit scan: CLEAN",
   "Process injection test: NEGATIVE",
   "Privilege escalation vectors: PATCHED",
   "Scan complete. Report saved to /var/log/scan.log",
 ];
 
-const hexLines = () => {
-  const hex = [];
-  for(let i=0;i<4;i++){
-    let h = '0x' + (Math.floor(Math.random()*0xFFFF)).toString(16).toUpperCase().padStart(4,'0') + '  ';
-    for(let j=0;j<16;j++) h += Math.floor(Math.random()*256).toString(16).toUpperCase().padStart(2,'0') + ' ';
-    h += ' |';
-    for(let j=0;j<16;j++) h += String.fromCharCode(Math.random()>0.5? 46 : 65+Math.floor(Math.random()*26));
-    h += '|';
-    hex.push(h);
-  }
-  return hex;
-};
-
-async function runTerminalSequence(keyword) {
-  if(isTyping) return;
-  isTyping = true;
-
-  await addLine('', 'dim');
-  await addLine(`root@cyberterm:~$ analyze --target "${keyword}" --deep-scan`, '');
-  await sleep(200);
-  await addLine(`[*] Target acquired: "${keyword.toUpperCase()}"`, 'bright');
-  await sleep(150);
-
-  // Random subset of code snippets
-  const shuffled = [...codeSnippets].sort(() => Math.random()-0.5).slice(0, 18+Math.floor(Math.random()*10));
-  const hex = hexLines();
-
-  let delay = 0;
-  shuffled.forEach((line, i) => {
-    setTimeout(() => addLine(line, 'dim'), delay);
-    delay += 60 + Math.floor(Math.random()*80);
-    if(i % 5 === 4) {
-      hex.forEach(h => {
-        setTimeout(() => addLine(h, 'dim'), delay);
-        delay += 40;
-      });
-    }
-  });
-
-  setTimeout(() => {
-    addLine('', 'dim');
-    addLine(`[✓] Analysis complete for: "${keyword.toUpperCase()}"`, 'bright');
-    addLine(`[*] Fingerprint ID: ${randHex(8)}-${randHex(4)}-${randHex(4)}`, '');
-    addLine(`[*] Risk score: ${Math.floor(Math.random()*40)}/100 [LOW]`, '');
-    addLine('', 'dim');
-    isTyping = false;
-  }, delay + 200);
-}
-
 function randHex(n) {
-  let s='';
-  for(let i=0;i<n;i++) s+= Math.floor(Math.random()*16).toString(16).toUpperCase();
+  var s='';
+  for(var i=0;i<n;i++) s+= Math.floor(Math.random()*16).toString(16).toUpperCase();
   return s;
 }
 
-// ── INPUT LISTENERS ───────────────────────────────────────────
-let typingTimer;
-
-function onInput(e) {
-  clearTimeout(typingTimer);
-  const val = e.target.value.trim();
-  if(!val) return;
-  typingTimer = setTimeout(() => {
-    runTerminalSequence(val);
-    updateThreat();
-  }, 600);
+function hexLines() {
+  var hex = [];
+  for(var i=0;i<3;i++){
+    var h = '0x' + (Math.floor(Math.random()*0xFFFF)).toString(16).toUpperCase().padStart(4,'0') + '  ';
+    for(var j=0;j<16;j++) h += Math.floor(Math.random()*256).toString(16).toUpperCase().padStart(2,'0') + ' ';
+    hex.push(h);
+  }
+  return hex;
 }
 
-document.getElementById('usernameInput').addEventListener('input', onInput);
-document.getElementById('passwordInput').addEventListener('input', (e) => {
+function runTerminalSequence(keyword) {
+  if(isTyping) return;
+  isTyping = true;
+  var shuffled = codeSnippets.slice().sort(function(){return Math.random()-0.5}).slice(0, 16 + Math.floor(Math.random()*8));
+  var hex = hexLines();
+  addLine('', 'dim');
+  addLine('root@cyberterm:~$ analyze --target "' + keyword + '" --deep-scan', '');
+  var delay = 200;
+  addLine('[*] Target acquired: "' + keyword.toUpperCase() + '"', 'bright');
+  shuffled.forEach(function(line, i) {
+    setTimeout(function(){ addLine(line, 'dim'); }, delay);
+    delay += 60 + Math.floor(Math.random()*80);
+    if(i % 5 === 4) {
+      hex.forEach(function(h){ setTimeout(function(){ addLine(h, 'dim'); }, delay); delay += 40; });
+    }
+  });
+  setTimeout(function() {
+    addLine('', 'dim');
+    addLine('[OK] Analysis complete for: "' + keyword.toUpperCase() + '"', 'bright');
+    addLine('[*] Fingerprint ID: ' + randHex(8) + '-' + randHex(4) + '-' + randHex(4), '');
+    addLine('[*] Risk score: ' + Math.floor(Math.random()*40) + '/100 [LOW]', '');
+    addLine('', 'dim');
+    isTyping = false;
+  }, delay + 300);
+}
+
+var typingTimer;
+function onInput(e) {
   clearTimeout(typingTimer);
-  const val = e.target.value;
+  var val = e.target.value.trim();
   if(!val) return;
-  typingTimer = setTimeout(() => {
-    runTerminalSequence('PASSWORD_HASH:' + randHex(8));
-    updateThreat();
-  }, 600);
+  typingTimer = setTimeout(function(){ runTerminalSequence(val); }, 600);
+}
+document.getElementById('usernameInput').addEventListener('input', onInput);
+document.getElementById('passwordInput').addEventListener('input', function(e) {
+  clearTimeout(typingTimer);
+  var val = e.target.value;
+  if(!val) return;
+  typingTimer = setTimeout(function(){ runTerminalSequence('PASSWORD_HASH:' + randHex(8)); }, 600);
 });
 
-// ── BUTTONS ───────────────────────────────────────────────────
-async function initiateLogin() {
-  const user = document.getElementById('usernameInput').value || 'UNKNOWN';
+function initiateLogin() {
+  var user = document.getElementById('usernameInput').value || 'UNKNOWN';
   document.getElementById('bottomStatus').textContent = 'STATUS: AUTHENTICATING...';
   document.getElementById('fpStatus').textContent = 'VERIFYING...';
-
-  await addLine('', 'dim');
-  await addLine(`[*] Authentication attempt: ${user}`, 'warn');
-  await sleep(300);
-  await addLine('[*] Verifying credentials against database...', 'dim');
-  await sleep(400);
-  await addLine('[*] 2FA: Biometric fingerprint scan initiated...', 'dim');
-  await sleep(500);
-
-  const success = Math.random() > 0.4;
-  if(success) {
-    await addLine('[✓] AUTHENTICATION SUCCESSFUL', 'bright');
-    await addLine(`[✓] Welcome, ${user.toUpperCase()}. Access granted.`, 'bright');
-    document.getElementById('bottomStatus').textContent = 'STATUS: AUTHENTICATED';
-    document.getElementById('fpStatus').textContent = 'VERIFIED ✓';
-    document.getElementById('threatLevel').textContent = 'MINIMAL';
-  } else {
-    await addLine('[✗] AUTHENTICATION FAILED — Invalid credentials', 'err');
-    await addLine('[!] Warning: Unauthorized access attempt logged.', 'warn');
-    document.getElementById('bottomStatus').textContent = 'STATUS: ACCESS DENIED';
-    document.getElementById('fpStatus').textContent = 'REJECTED ✗';
-    document.getElementById('threatLevel').style.color = '#ff4444';
-    document.getElementById('threatLevel').textContent = 'HIGH';
-    setTimeout(() => {
-      document.getElementById('threatLevel').style.color = '#00ff41';
-      document.getElementById('threatLevel').textContent = 'LOW';
-    }, 5000);
-  }
+  addLine('', 'dim');
+  addLine('[*] Authentication attempt: ' + user, 'warn');
+  setTimeout(function(){ addLine('[*] Verifying credentials against database...', 'dim'); }, 300);
+  setTimeout(function(){ addLine('[*] 2FA: Biometric fingerprint scan initiated...', 'dim'); }, 600);
+  setTimeout(function(){
+    var success = Math.random() > 0.4;
+    if(success) {
+      addLine('[OK] AUTHENTICATION SUCCESSFUL', 'bright');
+      addLine('[OK] Welcome, ' + user.toUpperCase() + '. Access granted.', 'bright');
+      document.getElementById('bottomStatus').textContent = 'STATUS: AUTHENTICATED';
+      document.getElementById('fpStatus').textContent = 'VERIFIED OK';
+      document.getElementById('threatLevel').textContent = 'MINIMAL';
+    } else {
+      addLine('[ERR] AUTHENTICATION FAILED — Invalid credentials', 'err');
+      addLine('[!] Warning: Unauthorized access attempt logged.', 'warn');
+      document.getElementById('bottomStatus').textContent = 'STATUS: ACCESS DENIED';
+      document.getElementById('fpStatus').textContent = 'REJECTED';
+      document.getElementById('threatLevel').style.color = '#ff4444';
+      document.getElementById('threatLevel').textContent = 'HIGH';
+      setTimeout(function(){
+        document.getElementById('threatLevel').style.color = '#00ff41';
+        document.getElementById('threatLevel').textContent = 'LOW';
+      }, 5000);
+    }
+  }, 1000);
 }
 
 function clearAll() {
@@ -762,58 +676,43 @@ function clearAll() {
   document.getElementById('passwordInput').value = '';
   addLine('[*] Input buffers cleared.', 'dim');
   document.getElementById('bottomStatus').textContent = 'STATUS: STANDBY';
-  document.getElementById('fpStatus').textContent = 'SCANNING...';
 }
 
-async function runScan() {
-  await addLine('', 'dim');
-  await addLine('[*] Initiating full system diagnostic...', '');
-  const tasks = [
-    'Checking network interfaces...',
-    'Scanning open ports 1-65535...',
-    'Testing firewall rules...',
-    'Verifying SSL certificates...',
-    'Auditing system logs...',
-    'Running integrity checks...',
-    'Analyzing traffic patterns...',
-    'Checking for anomalies...',
+function runScan() {
+  var tasks = [
+    'Checking network interfaces... [OK]',
+    'Scanning open ports 1-65535... [OK]',
+    'Testing firewall rules... [OK]',
+    'Verifying SSL certificates... [OK]',
+    'Auditing system logs... [OK]',
+    'Running integrity checks... [OK]',
+    'Analyzing traffic patterns... [OK]',
+    'Checking for anomalies... [OK]',
   ];
-  for(let i=0;i<tasks.length;i++) {
-    await sleep(120);
-    addLine(tasks[i] + ' [OK]', 'dim');
-  }
-  await sleep(150);
-  addLine('[✓] Full scan complete. All systems nominal.', 'bright');
-  document.getElementById('bottomStatus').textContent = 'STATUS: SCAN COMPLETE';
+  addLine('', 'dim');
+  addLine('[*] Initiating full system diagnostic...', '');
+  tasks.forEach(function(t, i){
+    setTimeout(function(){ addLine(t, 'dim'); }, 120*(i+1));
+  });
+  setTimeout(function(){
+    addLine('[OK] Full scan complete. All systems nominal.', 'bright');
+    document.getElementById('bottomStatus').textContent = 'STATUS: SCAN COMPLETE';
+  }, 120*(tasks.length+1));
 }
 
-function updateThreat() {
-  const levels = ['LOW','MODERATE','ELEVATED'];
-  const colors = ['#00ff41','#ffcc00','#ff8800'];
-  const i = Math.floor(Math.random()*3);
-  document.getElementById('threatLevel').textContent = levels[i];
-  document.getElementById('threatLevel').style.color = colors[i];
-  setTimeout(() => {
-    document.getElementById('threatLevel').textContent = 'LOW';
-    document.getElementById('threatLevel').style.color = '#00ff41';
-  }, 8000);
-}
-
-// Boot sequence
-(async () => {
-  await sleep(300);
-  const boot = [
+// BOOT
+setTimeout(function(){
+  var boot = [
     ['[BOOT] Loading security modules...', 'dim'],
     ['[BOOT] Establishing encrypted tunnel...', 'dim'],
     ['[BOOT] Fingerprint scanner: ONLINE', 'dim'],
     ['[BOOT] IDS/IPS: ACTIVE', 'dim'],
     ['[READY] System initialized. Enter credentials to proceed.', 'bright'],
   ];
-  for(const [txt, cls] of boot) {
-    await addLine(txt, cls);
-    await sleep(180);
-  }
-})();
+  boot.forEach(function(b, i){
+    setTimeout(function(){ addLine(b[0], b[1]); }, i * 200);
+  });
+}, 300);
 </script>
 
 </body>
