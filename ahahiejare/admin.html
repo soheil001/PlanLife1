@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>پنل ادمین — سیلو</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#00897b;--teal-mid:#00695c;--accent:#ff6d00;
+  --bg:#0a1628;--bg2:#0d2137;--text:#f0f4f8;
+  --muted:rgba(240,244,248,0.55);--dim:rgba(240,244,248,0.32);
+  --glass:rgba(255,255,255,0.06);--glass2:rgba(255,255,255,0.10);
+  --border:rgba(255,255,255,0.09);--border2:rgba(255,255,255,0.15);
+  --r:14px;--font:'Vazirmatn',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 60%,#0b1d2e 100%);min-height:100vh;color:var(--text);}
+
+.login-screen{position:fixed;inset:0;z-index:999;background:radial-gradient(ellipse at 30% 20%,rgba(0,137,123,.18) 0%,transparent 60%),linear-gradient(135deg,#060e1c 0%,#0d2137 100%);display:flex;align-items:center;justify-content:center;padding:20px;}
+.login-card{background:rgba(13,33,55,.92);border:1px solid var(--border2);border-radius:20px;padding:44px 40px;max-width:400px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,.7);text-align:center;}
+.login-card img{height:42px;margin-bottom:8px;}
+.login-title{font-size:20px;font-weight:800;margin-bottom:4px;}
+.login-sub{font-size:12px;color:var(--dim);margin-bottom:28px;}
+.login-field{width:100%;padding:13px 16px;background:rgba(255,255,255,.06);border:1px solid var(--border2);border-radius:10px;font-family:var(--font);font-size:14px;color:var(--text);outline:none;margin-bottom:12px;transition:.2s;display:block;}
+.login-field:focus{border-color:var(--teal);background:rgba(0,137,123,.07);}
+.login-field::placeholder{color:var(--dim);}
+.btn-enter{width:100%;padding:14px;background:linear-gradient(135deg,var(--teal),var(--teal-mid));border:none;border-radius:10px;color:white;font-family:var(--font);font-size:15px;font-weight:800;cursor:pointer;letter-spacing:.3px;margin-top:4px;transition:.2s;}
+.btn-enter:hover{opacity:.9;}
+.err{font-size:12px;color:#ff6b6b;margin-top:10px;display:none;}
+.err.on{display:block;}
+
+.app-wrap{display:none;min-height:100vh;}
+.app-wrap.visible{display:flex;}
+
+.sidebar{width:220px;flex-shrink:0;background:rgba(10,22,40,.8);border-left:1px solid var(--border);position:fixed;top:0;right:0;bottom:0;display:flex;flex-direction:column;padding:20px 0;z-index:100;overflow-y:auto;}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:0 20px 20px;border-bottom:1px solid var(--border);}
+.sb-logo img{height:32px;}
+.sb-badge{background:rgba(255,109,0,.2);border:1px solid rgba(255,109,0,.4);color:#ff9040;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;}
+.sb-nav{flex:1;padding:12px 0;}
+.sb-item{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:.15s;border-right:3px solid transparent;}
+.sb-item:hover{color:var(--text);background:rgba(255,255,255,.04);}
+.sb-item.active{color:var(--teal);background:rgba(0,137,123,.08);border-right-color:var(--teal);}
+.sb-cnt{margin-right:auto;background:rgba(239,83,80,.2);color:#ef5350;border-radius:20px;padding:1px 7px;font-size:11px;font-weight:700;display:none;}
+.sb-cnt.green{background:rgba(0,137,123,.2);color:var(--teal);}
+.sb-bottom{padding:16px 20px;border-top:1px solid var(--border);}
+.btn-logout{width:100%;padding:10px;background:rgba(255,100,100,.08);border:1px solid rgba(255,100,100,.2);border-radius:10px;color:rgba(255,120,120,.8);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:.2s;}
+.btn-logout:hover{background:rgba(255,100,100,.15);color:#ff8080;}
+
+.main{margin-right:220px;flex:1;padding:28px;}
+
+.section{display:none;}
+.section.active{display:block;}
+
+.dash-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:28px;}
+.dash-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;position:relative;overflow:hidden;}
+.dash-num{font-size:36px;font-weight:900;line-height:1;}
+.dash-label{font-size:12px;color:var(--muted);margin-top:6px;}
+.c-teal .dash-num{color:var(--teal);}
+.c-orange .dash-num{color:#ffa726;}
+.c-red .dash-num{color:#ef5350;}
+.c-blue .dash-num{color:#64b5f6;}
+
+.section-head{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.ads-list{display:flex;flex-direction:column;gap:12px;}
+.ad-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;display:flex;gap:14px;align-items:flex-start;transition:.15s;}
+.ad-card:hover{background:var(--glass2);}
+.ad-card.flagged{border-color:rgba(239,83,80,.3);background:rgba(239,83,80,.04);}
+.thumb{width:76px;height:68px;border-radius:8px;object-fit:cover;flex-shrink:0;}
+.thumb-ph{width:76px;height:68px;border-radius:8px;background:rgba(0,137,123,.07);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.ad-info{flex:1;min-width:0;}
+.ad-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:5px;}
+.ad-name{font-size:14px;font-weight:700;}
+.badge{padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;}
+.b-pending{background:rgba(255,167,38,.15);color:#ffa726;border:1px solid rgba(255,167,38,.3);}
+.b-approved{background:rgba(0,137,123,.15);color:var(--teal);border:1px solid rgba(0,137,123,.3);}
+.b-rejected{background:rgba(255,100,100,.1);color:#ff7070;border:1px solid rgba(255,100,100,.2);}
+.b-banned{background:rgba(239,83,80,.15);color:#ef5350;border:1px solid rgba(239,83,80,.3);}
+.ad-meta{font-size:11px;color:var(--muted);display:flex;flex-wrap:wrap;gap:0 10px;margin-bottom:5px;}
+.ad-owner-row{font-size:12px;color:var(--dim);margin-top:4px;}
+.banned-alert{display:inline-flex;align-items:center;gap:5px;background:rgba(239,83,80,.1);border:1px solid rgba(239,83,80,.2);border-radius:6px;padding:4px 10px;font-size:11px;color:#ef9090;margin-top:5px;}
+.ad-actions{display:flex;flex-direction:column;gap:7px;flex-shrink:0;}
+.btn-ok{padding:8px 16px;background:linear-gradient(135deg,var(--teal),var(--teal-mid));color:white;border:none;border-radius:8px;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.btn-no{padding:8px 16px;background:rgba(255,100,100,.09);color:#ff8080;border:1px solid rgba(255,100,100,.22);border-radius:8px;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.btn-no:hover{background:rgba(255,100,100,.18);}
+
+.users-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
+.user-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:18px;}
+.user-av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-mid));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:white;margin-bottom:10px;}
+.user-name{font-size:14px;font-weight:700;margin-bottom:3px;}
+.user-phone{font-size:12px;color:var(--muted);}
+
+.empty{text-align:center;padding:60px 20px;color:var(--dim);}
+.empty-ico{font-size:44px;margin-bottom:10px;}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(13,33,55,.97);border:1px solid var(--teal);color:var(--teal);padding:11px 22px;border-radius:40px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;}
+.toast.on{opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1781018687/_ir_puvab6.png" alt="سیلو">
+    <div class="login-title">پنل مدیریت سیلو</div>
+    <div class="login-sub">دسترسی فقط برای مدیر سایت</div>
+    <input class="login-field" type="tel" id="aPhone" placeholder="شماره موبایل" autocomplete="username">
+    <input class="login-field" type="password" id="aPass" placeholder="رمز عبور" autocomplete="current-password">
+    <div class="err" id="loginErr">شماره یا رمز عبور اشتباه است</div>
+    <button class="btn-enter" id="btnEnter" onclick="doLogin()">ورود به پنل</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app-wrap" id="appWrap">
+  <nav class="sidebar">
+    <div class="sb-logo">
+      <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1781018687/_ir_puvab6.png" alt="">
+      <span class="sb-badge">ادمین</span>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-item active" onclick="go('dash',this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        داشبورد
+      </div>
+      <div class="sb-item" onclick="go('pending',this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        در انتظار بررسی
+        <span class="sb-cnt" id="cntPendingBadge"></span>
+      </div>
+      <div class="sb-item" onclick="go('banned',this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+        کلمات ممنوع
+        <span class="sb-cnt" id="cntBannedBadge"></span>
+      </div>
+      <div class="sb-item" onclick="go('approved',this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        تأیید شده
+        <span class="sb-cnt green" id="cntApprovedBadge"></span>
+      </div>
+      <div class="sb-item" onclick="go('rejected',this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        رد شده
+      </div>
+      <div class="sb-item" onclick="go('users',this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        کاربران
+      </div>
+    </div>
+    <div class="sb-bottom">
+      <button class="btn-logout" onclick="doLogout()">خروج از پنل</button>
+    </div>
+  </nav>
+
+  <div class="main">
+    <!-- داشبورد -->
+    <div class="section active" id="sec-dash">
+      <div class="section-head">آمار کلی</div>
+      <div class="dash-grid">
+        <div class="dash-card c-teal">
+          <div class="dash-num" id="d-totalApproved">0</div>
+          <div class="dash-label">کل آگهی‌های تأیید شده</div>
+        </div>
+        <div class="dash-card c-orange">
+          <div class="dash-num" id="d-totalPending">0</div>
+          <div class="dash-label">در انتظار بررسی</div>
+        </div>
+        <div class="dash-card c-red">
+          <div class="dash-num" id="d-totalRejected">0</div>
+          <div class="dash-label">رد شده</div>
+        </div>
+        <div class="dash-card c-blue">
+          <div class="dash-num" id="d-totalUsers">0</div>
+          <div class="dash-label">کل کاربران</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- در انتظار -->
+    <div class="section" id="sec-pending">
+      <div class="section-head">در انتظار بررسی</div>
+      <div class="ads-list" id="list-pending"></div>
+    </div>
+
+    <!-- کلمات ممنوع -->
+    <div class="section" id="sec-banned">
+      <div class="section-head">آگهی‌های دارای کلمه ممنوع</div>
+      <div class="ads-list" id="list-banned"></div>
+    </div>
+
+    <!-- تأیید شده -->
+    <div class="section" id="sec-approved">
+      <div class="section-head">آگهی‌های تأیید شده</div>
+      <div class="ads-list" id="list-approved"></div>
+    </div>
+
+    <!-- رد شده -->
+    <div class="section" id="sec-rejected">
+      <div class="section-head">آگهی‌های رد شده</div>
+      <div class="ads-list" id="list-rejected"></div>
+    </div>
+
+    <!-- کاربران -->
+    <div class="section" id="sec-users">
+      <div class="section-head">کاربران ثبت‌نام شده — <span id="totalUsers" style="color:var(--teal)">0</span> نفر</div>
+      <div class="users-grid" id="usersList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══ تنظیمات ادمین ══ */
+const ADMIN_PHONE = '09144535075';
+const ADMIN_PASS  = '29332107';
+
+/* ══ helpers ══ */
+const $  = id => document.getElementById(id);
+const getPending = () => { try{ return JSON.parse(localStorage.getItem('siloPendingAds') || '[]'); } catch{ return []; } };
+const savePending = a => localStorage.setItem('siloPendingAds', JSON.stringify(a));
+const getAllAds   = () => { try{ return JSON.parse(localStorage.getItem('siloAds') || '[]'); } catch{ return []; } };
+const saveAllAds  = a => localStorage.setItem('siloAds', JSON.stringify(a));
+const getUsers    = () => { try{ return JSON.parse(localStorage.getItem('siloUsers') || '[]'); } catch{ return []; } };
+
+/* ══ ورود ══ */
+function doLogin() {
+  const ph = ($('aPhone').value || '').trim();
+  const pw = ($('aPass').value  || '');
+
+  if (ph === ADMIN_PHONE && pw === ADMIN_PASS) {
+    $('loginScreen').style.display = 'none';
+    $('appWrap').classList.add('visible');
+    loadAll();
+    setInterval(loadAll, 30000);
+  } else {
+    $('loginErr').classList.add('on');
+  }
+}
+
+function doLogout() {
+  $('appWrap').classList.remove('visible');
+  $('loginScreen').style.display = 'flex';
+  $('aPhone').value = '';
+  $('aPass').value  = '';
+  $('loginErr').classList.remove('on');
+}
+
+/* Enter key روی فیلدهای ورود */
+['aPhone','aPass'].forEach(id => {
+  $(id).addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+});
+
+/* ══ ناوبری ══ */
+function go(name, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(s => s.classList.remove('active'));
+  $('sec-' + name).classList.add('active');
+  el.classList.add('active');
+}
+
+/* ══ بارگذاری داده‌ها ══ */
+function loadAll() {
+  const pending = getPending();
+  const users   = getUsers();
+
+  const pendingList  = pending.filter(a => a.status === 'pending' && !a.hasBannedWord);
+  const bannedList   = pending.filter(a => a.status === 'pending' &&  a.hasBannedWord);
+  const approvedList = pending.filter(a => a.status === 'approved');
+  const rejectedList = pending.filter(a => a.status === 'rejected');
+
+  /* نشانگرهای sidebar */
+  setBadge('cntPendingBadge',  pendingList.length);
+  setBadge('cntBannedBadge',   bannedList.length);
+  setBadge('cntApprovedBadge', approvedList.length);
+
+  /* داشبورد */
+  $('d-totalApproved').textContent = approvedList.length;
+  $('d-totalPending').textContent  = pendingList.length + bannedList.length;
+  $('d-totalRejected').textContent = rejectedList.length;
+  $('d-totalUsers').textContent    = users.length;
+
+  renderList('pending',  pendingList);
+  renderList('banned',   bannedList);
+  renderList('approved', approvedList);
+  renderList('rejected', rejectedList);
+  renderUsers(users);
+}
+
+function setBadge(id, n) {
+  const el = $(id);
+  if (n > 0) { el.textContent = n; el.style.display = 'inline-flex'; }
+  else el.style.display = 'none';
+}
+
+/* ══ رندر کارت آگهی ══ */
+function renderList(key, ads) {
+  const el = $('list-' + key);
+  if (!ads.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-ico">✓</div><p>موردی وجود ندارد</p></div>`;
+    return;
+  }
+  el.innerHTML = ads.map(ad => `
+    <div class="ad-card ${ad.hasBannedWord ? 'flagged' : ''}">
+      ${ad.images && ad.images[0]
+        ? `<img class="thumb" src="${ad.images[0]}" alt="">`
+        : `<div class="thumb-ph">📦</div>`}
+      <div class="ad-info">
+        <div class="ad-top">
+          <span class="ad-name">${ad.title}</span>
+          ${statusBadge(ad)}
+        </div>
+        <div class="ad-meta">
+          <span>🏙 ${ad.city}</span>
+          <span>💰 ${Number(ad.price).toLocaleString('fa-IR')} ت/روز</span>
+          <span>🕐 ${ad.submittedAt || '—'}</span>
+        </div>
+        <div class="ad-owner-row">👤 <strong>${ad.owner}</strong> &nbsp;|&nbsp; 📞 ${ad.phone} &nbsp;|&nbsp; دسته: ${ad.cat}</div>
+        ${ad.desc ? `<div style="font-size:11px;color:var(--dim);margin-top:5px;">${ad.desc.substring(0,120)}${ad.desc.length>120?'...':''}</div>` : ''}
+        ${ad.hasBannedWord ? `<div class="banned-alert">⚠️ کلمه ممنوع: <strong>${ad.bannedWordFound}</strong></div>` : ''}
+      </div>
+      <div class="ad-actions">
+        ${ad.status === 'pending'
+          ? `<button class="btn-ok" onclick="approve(${ad.id})">✓ تأیید</button>
+             <button class="btn-no" onclick="reject(${ad.id})">✕ رد</button>`
+          : ad.status === 'approved'
+            ? `<button class="btn-no" onclick="reject(${ad.id})">✕ رد و حذف</button>`
+            : `<button class="btn-ok" onclick="approve(${ad.id})">✓ تأیید مجدد</button>`
+        }
+      </div>
+    </div>`).join('');
+}
+
+function statusBadge(ad) {
+  if (ad.hasBannedWord && ad.status === 'pending') return `<span class="badge b-banned">ممنوع</span>`;
+  if (ad.status === 'pending')  return `<span class="badge b-pending">در انتظار</span>`;
+  if (ad.status === 'approved') return `<span class="badge b-approved">تأیید شده</span>`;
+  if (ad.status === 'rejected') return `<span class="badge b-rejected">رد شده</span>`;
+  return '';
+}
+
+/* ══ تأیید / رد آگهی ══ */
+function approve(id) {
+  let p = getPending();
+  const i = p.findIndex(a => a.id === id);
+  if (i < 0) return;
+
+  p[i].status     = 'approved';
+  p[i].approvedAt = Date.now();
+  savePending(p);
+
+  /* اضافه کردن به siloAds برای نمایش در صفحه اصلی */
+  let all = getAllAds().filter(a => a.id !== id);
+  const obj = { ...p[i], badge: 'جدید' };
+  all.unshift(obj);
+  saveAllAds(all);
+
+  toast('آگهی تأیید و منتشر شد ✓');
+  loadAll();
+}
+
+function reject(id) {
+  let p = getPending();
+  const i = p.findIndex(a => a.id === id);
+  if (i < 0) return;
+
+  p[i].status     = 'rejected';
+  p[i].rejectedAt = Date.now();
+  savePending(p);
+
+  /* حذف از siloAds */
+  saveAllAds(getAllAds().filter(a => a.id !== id));
+
+  toast('آگهی رد شد');
+  loadAll();
+}
+
+/* ══ کاربران ══ */
+function renderUsers(users) {
+  $('totalUsers').textContent = users.length;
+  const el = $('usersList');
+  if (!users.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-ico">👥</div><p>هنوز کاربری ثبت‌نام نکرده</p></div>`;
+    return;
+  }
+  el.innerHTML = users.map(u => `
+    <div class="user-card">
+      <div class="user-av">${(u.name || '؟').charAt(0)}</div>
+      <div class="user-name">${u.name || '—'}</div>
+      <div class="user-phone">${u.phone || '—'}</div>
+    </div>`).join('');
+}
+
+/* ══ Toast ══ */
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('on');
+  setTimeout(() => t.classList.remove('on'), 3000);
+}
+</script>
+</body>
+</html>
