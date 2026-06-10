@@ -3,7 +3,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>SECURE TERMINAL v2.4.1</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -13,7 +14,14 @@
     font-family: 'Courier New', Courier, monospace;
     min-height: 100vh;
     overflow-x: hidden;
+    font-size: 16px;
   }
+  
+  input, textarea, select, button {
+    font-size: 16px !important;
+    -webkit-appearance: none;
+  }
+  
   body::before {
     content: '';
     position: fixed;
@@ -30,6 +38,9 @@
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
   @keyframes blip { 0%{opacity:1;r:3} 100%{opacity:0;r:8} }
   @keyframes scanline { 0%{top:0} 100%{top:100%} }
+  @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes scanPulse { 0%{box-shadow:inset 0 0 0 1px #00ff41} 50%{box-shadow:inset 0 0 20px 2px rgba(0,255,65,0.5)} 100%{box-shadow:inset 0 0 0 1px #00ff41} }
+  @keyframes successGlow { 0%{opacity:0;transform:scale(0.8)} 50%{opacity:1} 100%{opacity:0;transform:scale(1.1)} }
 
 .wrap {
 display: flex;
@@ -54,7 +65,7 @@ flex-wrap: wrap; gap: 4px;
 
 /* ASCII */
 .ascii-hdr {
-font-family: ‘Courier New’, monospace;
+font-family: 'Courier New', monospace;
 font-size: clamp(7px, 1.6vw, 15px);
 color: #00ff41;
 text-align: center; line-height: 1.1;
@@ -123,6 +134,8 @@ width: 100%; max-width: 960px;
 border: 1px solid #00aa2a; background: #000a02;
 padding: 16px; box-shadow: 0 0 14px rgba(0,255,65,0.1);
 }
+.login-sec.hidden { display: none; }
+
 .login-title {
 font-size: 11px; color: #00aa2a;
 margin-bottom: 12px; border-bottom: 1px solid #002208;
@@ -139,14 +152,14 @@ padding: 7px 10px; gap: 6px;
 .finput-wrap span { color: #00aa2a; font-size: 13px; }
 .finput-wrap input {
 background: #000000; border: none; outline: none;
-color: #00ff41; font-family: ‘Courier New’, monospace;
-font-size: clamp(12px,2vw,14px); width: 100%; caret-color: #00ff41;
+color: #00ff41; font-family: 'Courier New', monospace;
+width: 100%; caret-color: #00ff41;
 }
 .finput-wrap input::placeholder { color: #004a15; }
 .btn-row { display: flex; gap: 9px; margin-top: 13px; flex-wrap: wrap; }
 .btn {
 background: #000000; border: 1px solid #00aa2a;
-color: #00ff41; font-family: ‘Courier New’, monospace;
+color: #00ff41; font-family: 'Courier New', monospace;
 font-size: clamp(11px,2vw,13px); padding: 8px 16px;
 cursor: pointer; transition: all 0.2s;
 text-transform: uppercase; letter-spacing: 1px;
@@ -175,7 +188,7 @@ position: relative;
 overflow: hidden;
 }
 .panel::before {
-content: ‘’;
+content: '';
 position: absolute;
 left: 0; top: -100%;
 width: 100%; height: 2px;
@@ -248,6 +261,228 @@ border: 1px solid #003a0d; margin-top: 6px;
 .sys-id { font-size: 10px; color: #00aa2a; word-break: break-all; margin-top: 4px; }
 .sys-id .sid { color: #00ff41; font-size: 11px; }
 
+/* NEW SCAN INPUT SECTION */
+#scanInputSection {
+  width: 100%; max-width: 960px;
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+  animation: slideUp 0.5s ease;
+  margin-top: 20px;
+}
+#scanInputSection.show { display: flex; }
+
+.scan-panel {
+  border: 2px solid #00ff41;
+  background: #000a02;
+  padding: 16px;
+  box-shadow: 0 0 20px rgba(0,255,65,0.25);
+}
+
+.scan-title {
+  font-size: 13px; font-weight: bold;
+  color: #00ff41; border-bottom: 2px solid #00ff41;
+  padding-bottom: 10px; margin-bottom: 12px;
+  text-shadow: 0 0 8px #00ff41;
+}
+
+.scan-textarea {
+  width: 100%;
+  height: clamp(150px, 30vh, 300px);
+  background: #000500;
+  border: 1px solid #00aa2a;
+  color: #00ff41;
+  font-family: 'Courier New', monospace;
+  padding: 12px;
+  resize: vertical;
+  outline: none;
+  caret-color: #00ff41;
+  line-height: 1.6;
+}
+.scan-textarea::placeholder { color: #004a15; }
+.scan-textarea:focus { 
+  animation: scanPulse 0.5s ease;
+  box-shadow: inset 0 0 10px rgba(0,255,65,0.3), 0 0 15px rgba(0,255,65,0.3);
+  border-color: #00ff41;
+}
+
+.scan-info {
+  font-size: 11px;
+  color: #00aa2a;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.scan-info .char-count { color: #00ff41; }
+.scan-info .status { color: #ffcc00; }
+
+.scan-buttons {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.btn-scan {
+  background: #000000;
+  border: 2px solid #00ff41;
+  color: #00ff41;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(0,255,65,0.3);
+  flex: 1;
+  min-width: 100px;
+}
+.btn-scan:hover {
+  background: #00ff41;
+  color: #000000;
+  box-shadow: 0 0 20px rgba(0,255,65,0.6);
+}
+.btn-scan:active { transform: scale(0.95); }
+
+.btn-scan.secondary { border-color: #ff4444; color: #ff4444; box-shadow: 0 0 10px rgba(255,68,68,0.3); }
+.btn-scan.secondary:hover { background: #ff4444; color: #000000; }
+
+.btn-scan.warning { border-color: #ffcc00; color: #ffcc00; box-shadow: 0 0 10px rgba(255,204,0,0.3); }
+.btn-scan.warning:hover { background: #ffcc00; color: #000000; }
+
+.scan-output {
+  border: 1px solid #005515;
+  background: #000500;
+  padding: 12px;
+  margin-top: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+  display: none;
+}
+.scan-output.show { display: block; }
+.scan-output::-webkit-scrollbar { width: 4px; }
+.scan-output::-webkit-scrollbar-thumb { background: #00aa2a; }
+
+.scan-log { font-size: 11px; color: #00aa2a; line-height: 1.6; }
+.scan-log .success { color: #00ff41; }
+.scan-log .warning { color: #ffcc00; }
+.scan-log .error { color: #ff4444; }
+
+/* SUCCESS SCREEN */
+#successScreen {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  backdrop-filter: blur(2px);
+  z-index: 10000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  animation: fadeIn 0.5s ease;
+  overflow-y: auto;
+  padding: 20px;
+}
+#successScreen.show { display: flex; }
+
+.success-box {
+  border: 2px solid #00ff41;
+  background: #000a02;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(0,255,65,0.4);
+  animation: slideUp 0.6s ease;
+  width: 100%;
+  max-width: 500px;
+}
+
+.success-title {
+  font-size: 28px;
+  color: #00ff41;
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px #00ff41, 0 0 20px #00aa2a;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.success-status {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #00aa2a;
+  flex-wrap: wrap;
+}
+
+.checkmark {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #00ff41;
+  border-radius: 50%;
+  color: #00ff41;
+  font-weight: bold;
+  animation: successGlow 1s ease infinite;
+  flex-shrink: 0;
+}
+
+.scan-details {
+  background: #000500;
+  border: 1px solid #003a0d;
+  padding: 15px;
+  margin-top: 20px;
+  text-align: left;
+  font-size: 11px;
+  color: #00aa2a;
+  line-height: 1.8;
+}
+
+.scan-details .label { color: #00ff41; font-weight: bold; }
+
+.success-footer {
+  font-size: 12px;
+  color: #00aa2a;
+  margin-top: 20px;
+  border-top: 1px solid #003a0d;
+  padding-top: 15px;
+}
+
+.btn-continue {
+  background: #000000;
+  border: 2px solid #00ff41;
+  color: #00ff41;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  padding: 12px 30px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(0,255,65,0.3);
+  margin-top: 20px;
+}
+.btn-continue:hover {
+  background: #00ff41;
+  color: #000000;
+  box-shadow: 0 0 20px rgba(0,255,65,0.6);
+}
+
 /* BOTTOM */
 .bottom-bar {
 width: 100%; max-width: 960px;
@@ -268,6 +503,8 @@ opacity: 0.04; pointer-events: none; z-index: 0; background: #000000;
 .ascii-hdr { font-size: 6px; }
 .flabel { min-width: 70px; }
 .panel-grid { grid-template-columns: 1fr; }
+.scan-buttons { flex-direction: column; }
+.btn-scan { width: 100%; }
 }
 </style>
 
@@ -391,7 +628,7 @@ opacity: 0.04; pointer-events: none; z-index: 0; background: #000000;
 
   <!-- LOGIN -->
 
-  <div class="login-sec">
+  <div class="login-sec" id="loginSec">
     <div class="login-title">
       <span>// AUTHENTICATION REQUIRED — CLEARANCE: ALPHA</span>
       <span id="authTimer">SESSION: 00:00</span>
@@ -421,7 +658,6 @@ opacity: 0.04; pointer-events: none; z-index: 0; background: #000000;
 
   <div id="postLogin">
 
-```
 <!-- ROW 1: System Info + Encryption -->
 <div class="panel-grid">
   <div class="panel" id="panSysInfo">
@@ -516,8 +752,33 @@ opacity: 0.04; pointer-events: none; z-index: 0; background: #000000;
   <div class="panel-line" id="taskLine3"></div>
   <div class="panel-line" id="taskLine4"></div>
 </div>
-```
 
+  </div>
+
+  <!-- NEW SCAN INPUT SECTION -->
+  <div id="scanInputSection">
+    <div class="scan-panel">
+      <div class="scan-title">▶ TEXT ANALYZER - SCANNING ENGINE v3.1</div>
+      
+      <div class="scan-input-area">
+        <textarea id="scanInput" class="scan-textarea" placeholder="Enter text to analyze and scan..."></textarea>
+        <div class="scan-info">
+          <span>Characters: <span class="char-count" id="charCount">0</span></span>
+          <span>Words: <span class="char-count" id="wordCount">0</span></span>
+          <span id="scanStatus" class="status">READY</span>
+        </div>
+      </div>
+
+      <div class="scan-buttons">
+        <button class="btn-scan" onclick="performScan()">[ START SCAN ]</button>
+        <button class="btn-scan secondary" onclick="clearScanInput()">[ CLEAR ]</button>
+        <button class="btn-scan warning" onclick="goBackToLogin()">[ EXIT ]</button>
+      </div>
+
+      <div class="scan-output" id="scanOutput">
+        <div class="scan-log" id="scanLog"></div>
+      </div>
+    </div>
   </div>
 
   <!-- BOTTOM BAR -->
@@ -528,6 +789,42 @@ opacity: 0.04; pointer-events: none; z-index: 0; background: #000000;
     <span>THREAT: <span id="threat" style="color:#00ff41">LOW</span></span>
   </div>
 
+</div>
+
+<!-- SUCCESS SCREEN -->
+<div id="successScreen">
+  <div class="success-box">
+    <div class="success-title">✓ SCAN COMPLETE</div>
+    
+    <div class="success-status">
+      <div class="status-item">
+        <div class="checkmark">✓</div>
+        <span>Analysis successful</span>
+      </div>
+      <div class="status-item">
+        <div class="checkmark">✓</div>
+        <span>Data integrity verified</span>
+      </div>
+      <div class="status-item">
+        <div class="checkmark">✓</div>
+        <span>System synchronized</span>
+      </div>
+    </div>
+
+    <div class="scan-details">
+      <div><span class="label">TIMESTAMP:</span> <span id="successTime">--:--:--</span></div>
+      <div><span class="label">TEXT LENGTH:</span> <span id="successLength">-- chars</span></div>
+      <div><span class="label">PROCESSING TIME:</span> <span id="successTime2">-- ms</span></div>
+      <div><span class="label">ENCRYPTION:</span> AES-256-GCM</div>
+      <div><span class="label">STATUS:</span> <span style="color: #00ff41;">SUCCESS</span></div>
+    </div>
+
+    <div class="success-footer">
+      [ All systems nominal. Ready for next operation. ]
+    </div>
+
+    <button class="btn-continue" onclick="closeSuccessScreen()">[ CONTINUE ]</button>
+  </div>
 </div>
 
 <script>
@@ -675,6 +972,122 @@ function runScan() {
   setTimeout(()=>{ aln('[OK] All systems nominal.','b'); document.getElementById('bStatus').textContent='STATUS: SCAN COMPLETE'; },120*(tasks.length+1));
 }
 
+// ── SHOW SCAN SECTION ──
+function showScanSection() {
+  document.getElementById('scanInputSection').classList.add('show');
+  document.getElementById('scanInput').focus();
+}
+
+function goBackToLogin() {
+  document.getElementById('scanInputSection').classList.remove('show');
+  document.getElementById('loginSec').classList.remove('hidden');
+  document.getElementById('postLogin').classList.remove('show');
+  document.getElementById('scanOutput').classList.remove('show');
+  clearScanInput();
+  location.reload();
+}
+
+// ── SCAN INPUT TRACKING ──
+const scanInput = document.getElementById('scanInput');
+scanInput.addEventListener('input', () => {
+  const text = scanInput.value;
+  document.getElementById('charCount').textContent = text.length;
+  document.getElementById('wordCount').textContent = text.trim() ? text.trim().split(/\s+/).length : 0;
+  document.getElementById('scanStatus').textContent = text.length > 0 ? 'READY TO SCAN' : 'READY';
+  document.getElementById('scanStatus').style.color = text.length > 0 ? '#00ff41' : '#ffcc00';
+});
+
+function clearScanInput() {
+  scanInput.value = '';
+  document.getElementById('charCount').textContent = '0';
+  document.getElementById('wordCount').textContent = '0';
+  document.getElementById('scanStatus').textContent = 'READY';
+  document.getElementById('scanStatus').style.color = '#ffcc00';
+  document.getElementById('scanOutput').classList.remove('show');
+}
+
+// ── PERFORM SCAN ──
+const scanAnalysisLines = [
+  "[*] Initiating text analysis protocol...",
+  "[*] Scanning for patterns and anomalies...",
+  "[*] Checking encoding and integrity...",
+  "[*] Validating character set...",
+  "[*] Analyzing linguistic structure...",
+  "[*] Comparing against threat database...",
+  "[*] Checking for malicious payloads...",
+  "[*] Running entropy analysis...",
+  "[*] Verifying cryptographic signatures...",
+  "[*] Cross-referencing with security logs...",
+  "[OK] Syntax validation: PASSED",
+  "[OK] Content analysis: CLEAN",
+  "[OK] Integrity check: VERIFIED",
+  "[OK] Security scan: NO THREATS DETECTED",
+  "[OK] All systems: NOMINAL",
+];
+
+function performScan() {
+  const text = scanInput.value.trim();
+  if (text.length === 0) {
+    alert('Please enter text to scan first');
+    return;
+  }
+
+  const startTime = Date.now();
+  document.getElementById('scanStatus').textContent = 'SCANNING...';
+  document.getElementById('scanStatus').style.color = '#ffcc00';
+  document.getElementById('scanOutput').classList.add('show');
+  document.getElementById('scanLog').innerHTML = '';
+
+  const logDiv = document.getElementById('scanLog');
+
+  let delay = 0;
+  scanAnalysisLines.forEach((line, index) => {
+    setTimeout(() => {
+      const lineEl = document.createElement('div');
+      lineEl.style.animation = 'slideUp 0.3s ease';
+      if (line.includes('[OK]')) {
+        lineEl.className = 'success';
+        lineEl.textContent = line;
+      } else if (line.includes('[!]')) {
+        lineEl.className = 'error';
+        lineEl.textContent = line;
+      } else if (line.includes('[*]')) {
+        lineEl.className = 'warning';
+        lineEl.textContent = line;
+      } else {
+        lineEl.textContent = line;
+      }
+      logDiv.appendChild(lineEl);
+      logDiv.parentElement.scrollTop = logDiv.parentElement.scrollHeight;
+    }, delay);
+    delay += 80 + Math.random() * 100;
+  });
+
+  setTimeout(() => {
+    const processingTime = Date.now() - startTime;
+    document.getElementById('scanStatus').textContent = 'SCAN COMPLETE';
+    document.getElementById('scanStatus').style.color = '#00ff41';
+    showSuccessScreen(text.length, processingTime);
+  }, delay + 500);
+}
+
+// ── SUCCESS SCREEN ──
+function showSuccessScreen(textLength, processingTime) {
+  const now = new Date();
+  const timeString = now.toTimeString().split(' ')[0];
+  
+  document.getElementById('successTime').textContent = timeString;
+  document.getElementById('successLength').textContent = textLength + ' characters';
+  document.getElementById('successTime2').textContent = processingTime + ' ms';
+  
+  document.getElementById('successScreen').classList.add('show');
+}
+
+function closeSuccessScreen() {
+  document.getElementById('successScreen').classList.remove('show');
+  goBackToLogin();
+}
+
 // ── BOOT ──
 setTimeout(()=>{
   [['[BOOT] Loading security modules...','d'],['[BOOT] Encrypted tunnel...','d'],['[BOOT] Radar scanner: ONLINE','d'],['[BOOT] IDS/IPS: ACTIVE','d'],['[READY] System initialized.','b']].forEach(([t,c],i)=>setTimeout(()=>aln(t,c),i*200));
@@ -793,6 +1206,7 @@ function fmtUp(s){ const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), ss2=s%
 // ── START PANELS ──
 function startPanels(usr){
   const pl=document.getElementById('postLogin');
+  document.getElementById('loginSec').classList.add('hidden');
   pl.classList.add('show');
   pl.scrollIntoView({behavior:'smooth'});
 
@@ -839,6 +1253,11 @@ function startPanels(usr){
     const msgs=[['[OK] Session keys: '+rHex(16),'ok'],['[OK] Certificate: VALID — CA:LetsEncrypt','ok'],['[OK] Tunnel established — latency 4ms','ok']];
     msgs.forEach((m,i)=>setTimeout(()=>{ el[i].innerHTML=m[0]; el[i].className='panel-line '+m[1]; },i*800));
   },1000);
+
+  // Show scan section after panels loaded
+  setTimeout(() => {
+    showScanSection();
+  }, 2000);
 }
 
 // INPUT
