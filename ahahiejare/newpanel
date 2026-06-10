@@ -51,16 +51,12 @@ header, .sidebar, .main {transition: all .3s;}
 /* Main Content */
 .main{margin-right:240px;flex:1;padding:28px;overflow-y:auto;}
 
-/* User Panel Styles (from your second file) */
+/* User Panel */
 .panel-wrap{max-width:1000px;margin:0 auto;padding:20px;}
-.profile-card, .profile-edit-box, .my-ad-card {background:var(--glass);border:1px solid var(--border);border-radius:18px;}
-/* ... (بقیه استایل‌های کاربر رو از فایل دوم کپی کردم و خلاصه کردم) */
 .panel-tabs{display:flex;gap:4px;background:var(--glass);border:1px solid var(--border);border-radius:40px;padding:4px;margin-bottom:22px;width:fit-content;}
 .panel-tab{padding:9px 20px;border:none;border-radius:36px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);}
 .panel-tab.active{background:var(--teal);color:white;}
 .my-ads-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
-
-/* Dash & Lists */
 .dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:28px;}
 .dash-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(13,33,55,.97);border:1px solid var(--teal);color:var(--teal);padding:11px 22px;border-radius:40px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s;}
@@ -75,8 +71,8 @@ header, .sidebar, .main {transition: all .3s;}
     <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1781018687/_ir_puvab6.png" alt="سیلو">
     <div class="login-title">ورود به پنل سیلو</div>
     <div class="login-sub">ادمین یا کاربر</div>
-    <input class="login-field" type="text" id="loginUser" placeholder="نام کاربری / شماره موبایل" autocomplete="username">
-    <input class="login-field" type="password" id="loginPass" placeholder="رمز عبور" autocomplete="current-password">
+    <input class="login-field" type="text" id="loginUser" placeholder="نام کاربری / شماره موبایل">
+    <input class="login-field" type="password" id="loginPass" placeholder="رمز عبور">
     <div class="err" id="loginErr">نام کاربری یا رمز عبور اشتباه است</div>
     <button class="btn-enter" onclick="doLogin()">ورود</button>
   </div>
@@ -85,18 +81,17 @@ header, .sidebar, .main {transition: all .3s;}
 <!-- APP CONTAINER -->
 <div class="app-wrap" id="appWrap">
 
-  <!-- ADMIN MODE -->
+  <!-- ADMIN SIDEBAR -->
   <nav class="sidebar" id="adminSidebar">
-    <!-- admin sidebar content -->
     <div class="sb-logo">
       <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1781018687/_ir_puvab6.png" alt="">
       <span class="sb-badge">ادمین</span>
     </div>
     <div class="sb-nav">
       <div class="sb-item active" onclick="goSection('dash',this)">داشبورد</div>
-      <div class="sb-item" onclick="goSection('pending',this)">در انتظار بررسی <span class="sb-cnt" id="cntPendingBadge"></span></div>
-      <div class="sb-item" onclick="goSection('banned',this)">کلمات ممنوع <span class="sb-cnt" id="cntBannedBadge"></span></div>
-      <div class="sb-item" onclick="goSection('approved',this)">تأیید شده <span class="sb-cnt green" id="cntApprovedBadge"></span></div>
+      <div class="sb-item" onclick="goSection('pending',this)">در انتظار بررسی <span class="sb-cnt" id="cntPendingBadge">0</span></div>
+      <div class="sb-item" onclick="goSection('banned',this)">کلمات ممنوع <span class="sb-cnt" id="cntBannedBadge">0</span></div>
+      <div class="sb-item" onclick="goSection('approved',this)">تأیید شده <span class="sb-cnt" id="cntApprovedBadge">0</span></div>
       <div class="sb-item" onclick="goSection('rejected',this)">رد شده</div>
       <div class="sb-item" onclick="goSection('users',this)">کاربران</div>
     </div>
@@ -105,7 +100,7 @@ header, .sidebar, .main {transition: all .3s;}
     </div>
   </nav>
 
-  <!-- USER MODE HEADER -->
+  <!-- USER HEADER -->
   <header class="user-header" id="userHeader" style="display:none;">
     <a href="index.html" class="logo">
       <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1781018687/_ir_puvab6.png" alt="سیلو">
@@ -117,18 +112,34 @@ header, .sidebar, .main {transition: all .3s;}
   </header>
 
   <div class="main" id="mainContent">
-    <!-- Admin Sections -->
+    <!-- ADMIN CONTENT -->
     <div id="adminContent">
-      <!-- داشبورد -->
-      <div class="section active" id="sec-dash"> ... (محتوای داشبورد ادمین) </div>
-      <!-- بقیه بخش‌های ادمین: pending, banned, approved, rejected, users -->
+      <div class="section active" id="sec-dash">
+        <h2>داشبورد ادمین</h2>
+        <div class="dash-grid">
+          <div class="dash-card">تعداد آگهی‌های در انتظار: <strong id="dash-pending">0</strong></div>
+          <div class="dash-card">آگهی‌های تأیید شده: <strong id="dash-approved">0</strong></div>
+        </div>
+      </div>
+
+      <div class="section" id="sec-pending">
+        <h2>آگهی‌های در انتظار بررسی</h2>
+        <div id="pendingList"></div>
+      </div>
+
+      <div class="section" id="sec-approved">
+        <h2>آگهی‌های تأیید شده</h2>
+        <div id="approvedList"></div>
+      </div>
+
+      <!-- بقیه بخش‌ها رو بعداً کامل می‌کنیم -->
     </div>
 
-    <!-- User Panel -->
+    <!-- USER CONTENT -->
     <div id="userContent" style="display:none;">
       <div class="panel-wrap">
-        <!-- پروفایل + تب‌ها + آگهی‌های من + ویرایش مشخصات -->
-        <!-- محتوای کامل پنل کاربری شما -->
+        <h2>پنل کاربری</h2>
+        <p>آگهی‌های من اینجا نمایش داده می‌شود (بعداً کامل می‌کنیم)</p>
       </div>
     </div>
   </div>
@@ -137,82 +148,59 @@ header, .sidebar, .main {transition: all .3s;}
 <div class="toast" id="toast"></div>
 
 <script>
-// ================== تنظیمات ==================
+// تنظیمات
 const ADMIN_USERNAME = '00216542000';
 const ADMIN_PASS     = '29332933';
 
-// ================== Helpers ==================
 const $ = id => document.getElementById(id);
 
-function getPending() { try{ return JSON.parse(localStorage.getItem('siloPendingAds') || '[]'); } catch{ return []; } }
+// Helper functions
+function getPending() { 
+  try { return JSON.parse(localStorage.getItem('siloPendingAds') || '[]'); } 
+  catch { return []; } 
+}
 function savePending(a) { localStorage.setItem('siloPendingAds', JSON.stringify(a)); }
-function getAllAds() { try{ return JSON.parse(localStorage.getItem('siloAds') || '[]'); } catch{ return []; } }
+function getAllAds() { 
+  try { return JSON.parse(localStorage.getItem('siloAds') || '[]'); } 
+  catch { return []; } 
+}
 function saveAllAds(a) { localStorage.setItem('siloAds', JSON.stringify(a)); }
-function getUsers() { try{ return JSON.parse(localStorage.getItem('siloUsers') || '[]'); } catch{ return []; } }
-function saveUsers(u) { localStorage.setItem('siloUsers', JSON.stringify(u)); }
-function getCurrentUser(){ try{ return JSON.parse(localStorage.getItem('siloCurrentUser') || 'null'); } catch{ return null; } }
-function setCurrentUser(u){ localStorage.setItem('siloCurrentUser', JSON.stringify(u)); }
 
-// ================== Login ==================
+// Login
 function doLogin() {
   const input = ($('loginUser').value || '').trim();
   const pass  = $('loginPass').value;
 
-  const isAdmin = input.toLowerCase() === ADMIN_USERNAME && pass === ADMIN_PASS;
+  const isAdmin = input === ADMIN_USERNAME && pass === ADMIN_PASS;
 
   if (isAdmin) {
     localStorage.setItem('siloMode', 'admin');
     showAdminPanel();
-  } 
-  else {
-    // Login as normal user
-    const users = getUsers();
-    const user = users.find(u => (u.phone === input || u.name === input) && u.pass === pass);
-
-    if (user) {
-      localStorage.setItem('siloMode', 'user');
-      setCurrentUser(user);
-      showUserPanel();
-    } else {
-      $('loginErr').classList.add('on');
-      return;
-    }
+  } else {
+    $('loginErr').classList.add('on');
+    return;
   }
 
   $('loginScreen').style.display = 'none';
   $('appWrap').classList.add('visible');
 }
 
-// ================== Show Panels ==================
 function showAdminPanel() {
   $('adminSidebar').style.display = 'flex';
   $('userHeader').style.display = 'none';
   $('adminContent').style.display = 'block';
   $('userContent').style.display = 'none';
-  loadAllAdmin();
-}
-
-function showUserPanel() {
-  $('adminSidebar').style.display = 'none';
-  $('userHeader').style.display = 'flex';
-  $('adminContent').style.display = 'none';
-  $('userContent').style.display = 'block';
-  loadUserPanel();
+  loadAdminDashboard();
 }
 
 function doLogout() {
   localStorage.removeItem('siloMode');
-  localStorage.removeItem('siloCurrentUser');
   $('appWrap').classList.remove('visible');
   $('loginScreen').style.display = 'flex';
   $('loginUser').value = '';
   $('loginPass').value = '';
   $('loginErr').classList.remove('on');
 }
-
-// ================== Admin Functions (کپی از فایل اول) ==================
-function loadAllAdmin() { /* تمام توابع loadAll، renderList، approve، reject و ... از فایل ادمین */ }
-// (برای کوتاه شدن پیام، تمام توابع ادمین رو اینجا قرار دادم — در کد واقعی کامل است)
 
 function goSection(name, el) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -221,27 +209,19 @@ function goSection(name, el) {
   el.classList.add('active');
 }
 
-// ================== User Functions (کپی از فایل دوم) ==================
-function loadUserPanel() {
-  const user = getCurrentUser();
-  if (!user) return doLogout();
-  // بارگذاری پروفایل و آگهی‌ها ...
+function loadAdminDashboard() {
+  const pending = getPending();
+  $('dash-pending').textContent = pending.length;
+  // بعداً بقیه آمارها رو اضافه می‌کنیم
 }
 
-// ================== Init ==================
+// Init
 window.addEventListener('load', () => {
   const mode = localStorage.getItem('siloMode');
   if (mode === 'admin') {
     $('loginScreen').style.display = 'none';
     $('appWrap').classList.add('visible');
     showAdminPanel();
-  } else if (mode === 'user') {
-    const user = getCurrentUser();
-    if (user) {
-      $('loginScreen').style.display = 'none';
-      $('appWrap').classList.add('visible');
-      showUserPanel();
-    }
   }
 });
 </script>
