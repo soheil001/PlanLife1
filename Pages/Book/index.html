@@ -11,10 +11,7 @@
         :root {
             --gold: #d4af37;
             --gold-light: #f0d060;
-            --gold-dim: rgba(212,175,55,0.15);
             --dark: #0a0814;
-            --glass: rgba(255,255,255,0.06);
-            --glass-border: rgba(255,255,255,0.12);
             --orange: #ff9500;
         }
 
@@ -26,11 +23,8 @@
             overflow-x: hidden;
         }
 
-        /* ===== STARFIELD ===== */
-        .stars-bg {
-            position: fixed; inset: 0; z-index: 0;
-            pointer-events: none; overflow: hidden;
-        }
+        /* ─── STARFIELD ─── */
+        .stars-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
         .stars-bg canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
         .galaxy-glow { position: absolute; border-radius: 50%; }
         .galaxy-glow-1 {
@@ -46,7 +40,7 @@
         @keyframes drift1 { from { transform: translate(0,0) scale(1); } to { transform: translate(4%,6%) scale(1.08); } }
         @keyframes drift2 { from { transform: translate(0,0) scale(1); } to { transform: translate(-5%,-4%) scale(1.12); } }
 
-        /* ===== HEADER ===== */
+        /* ─── HEADER ─── */
         .site-header {
             position: relative; z-index: 10;
             text-align: center; padding: 38px 16px 26px;
@@ -65,204 +59,236 @@
             font-family: 'Cinzel', serif; font-size: 30px; font-weight: 900;
             letter-spacing: 0.15em;
             background: linear-gradient(135deg, #f0d060 0%, #d4af37 50%, #a07820 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text; text-transform: uppercase;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            text-transform: uppercase;
         }
         .site-title-big span { font-weight: 400; letter-spacing: 0.35em; font-size: 26px; }
 
-        /* ===== PAGE CONTENT ===== */
+        /* ─── PAGE WRAP ─── */
         .page-wrap { position: relative; z-index: 1; padding: 0 0 80px; }
 
-        /* ===== SECTION HEADER ===== */
+        /* ─── SECTION HEADER ─── */
         .section { margin-bottom: 32px; }
-        .section-header {
-            display: flex; align-items: center;
-            padding: 0 16px; margin-bottom: 18px;
-        }
-        .section-title {
-            font-size: 17px; font-weight: 800; color: #fff;
-            display: flex; align-items: center; gap: 8px;
-        }
+        .section-header { display: flex; align-items: center; padding: 0 16px; margin-bottom: 18px; }
+        .section-title { font-size: 17px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px; }
         .section-divider {
             width: 100%; height: 1px;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
             margin: 8px 0 32px;
         }
 
-        /* ===== FEATURED ROW (horizontal scroll) ===== */
+        /* ─── HORIZONTAL SCROLL ROW (پیشنهادی) ─── */
         .books-row {
             display: flex; gap: 16px; overflow-x: auto;
             padding: 4px 16px 12px; scrollbar-width: none; align-items: flex-start;
         }
         .books-row::-webkit-scrollbar { display: none; }
 
-        /* ===== BOOK CARD (shared) ===== */
+        /* ─── BOOK CARD (shared base) ─── */
         .book-card {
             flex-shrink: 0; width: 140px; cursor: pointer;
             transition: transform 0.25s ease; position: relative;
         }
-        .book-card:hover { transform: translateY(-5px); }
+        .book-card:hover  { transform: translateY(-5px); }
         .book-card:active { transform: scale(0.97); }
+
         .book-cover {
             width: 140px; height: 196px; border-radius: 8px;
             object-fit: cover; display: block;
             box-shadow: 0 8px 28px rgba(0,0,0,0.6), -3px 0 0 rgba(0,0,0,0.45);
         }
+
         .book-info { padding: 9px 2px 0; }
         .book-name {
-            font-size: 12px; font-weight: 700; line-height: 1.45;
-            color: #f0ead0; margin-bottom: 5px;
-            display: -webkit-box; -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical; overflow: hidden;
+            font-size: 12px; font-weight: 700; line-height: 1.45; color: #f0ead0;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
-        .book-price { font-size: 11px; font-weight: 600; color: var(--gold); }
-        .book-price.free { color: #4caf7d; }
 
-        /* Badge — only in book grid */
-        .book-badge {
-            display: inline-block;
-            font-size: 9px; font-weight: 900;
-            padding: 2px 8px; border-radius: 20px;
-            margin-bottom: 5px; line-height: 1.6;
-        }
-        .book-badge.free-badge { background: #4caf7d; color: #fff; }
-        .book-badge.paid-badge { background: linear-gradient(135deg, #ff6b00, #ff9500); color: #fff; }
-
-        /* ===== STARS ===== */
-        .star-row { display: flex; align-items: center; gap: 3px; margin-bottom: 5px; }
+        /* ─── STARS ─── */
+        .star-row { display: flex; align-items: center; gap: 3px; margin: 5px 0; }
         .stars { display: flex; gap: 1px; }
         .star { font-size: 10px; line-height: 1; }
-        .star.full { color: #ff9800; }
-        .star.half { color: #ff9800; opacity: 0.6; }
+        .star.full  { color: #ff9800; }
+        .star.half  { color: #ff9800; opacity: 0.6; }
         .star.empty { color: rgba(255,255,255,0.2); }
-        .rating-count { font-size: 10px; color: rgba(255,255,255,0.38); font-weight: 400; }
+        .rating-count { font-size: 10px; color: rgba(255,255,255,0.38); }
 
-        /* ===========================
+        /* ─── BADGES on book card ─── */
+        /*
+            برچسب‌ها روی کارت کتاب:
+            .badge-row  →  ردیف بالای کاور
+            .bdg        →  هر برچسب
+            .bdg-free   →  رایگان (سبز)
+            .bdg-paid   →  اشتراکی (نارنجی)
+            .bdg-fa     →  فارسی (طلایی)
+            .bdg-en     →  English (سفید)
+        */
+        .badge-row {
+            display: flex;
+            justify-content: space-between;   /* راست = زبان  |  چپ = رایگان/اشتراکی */
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .bdg {
+            display: inline-block; font-size: 9px; font-weight: 800;
+            padding: 2px 8px; border-radius: 20px; line-height: 1.6;
+            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+        }
+        /* سمت چپ کارت — رایگان / اشتراکی */
+        .bdg-free { background: rgba(76,175,125,0.22); color: #5dcea0; border: 1px solid rgba(76,175,125,0.35); }
+        .bdg-paid { background: rgba(255,120,0,0.2);   color: #ffaa44; border: 1px solid rgba(255,120,0,0.35); }
+        /* سمت راست کارت — زبان */
+        .bdg-fa   { background: rgba(212,175,55,0.18); color: var(--gold); border: 1px solid rgba(212,175,55,0.3); }
+        .bdg-en   { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.2); }
+
+        /* ─────────────────────────────────────────────
            ALL BOOKS GRID
-           ===========================
-           ستون‌ها: grid-template-columns را ویرایش کنید
-           مثال ۲ ستون: repeat(2, 1fr)
-           مثال ۳ ستون: repeat(3, 1fr)
-           مثال ۴ ستون: repeat(4, 1fr)
-           برای افزودن ردیف جدید: یک .book-card جدید اضافه کنید — گرید خودکار ردیف می‌سازد
-        =========================== */
+           ─────────────────────────────────────────────
+           تعداد ستون‌ها را اینجا تغییر بده:
+             ۲ ستون  →  repeat(2, 1fr)
+             ۳ ستون  →  repeat(3, 1fr)   ← پیش‌فرض موبایل
+             ۴ ستون  →  repeat(4, 1fr)
+             ۵ ستون  →  repeat(5, 1fr)
+
+           برای افزودن ردیف جدید: فقط یک .book-card اضافه کن
+           گرید خودکار ردیف می‌سازد.
+        ───────────────────────────────────────────── */
         .books-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* ← تعداد ستون‌ها را اینجا تغییر دهید */
-            gap: 18px 12px;
+            grid-template-columns: repeat(3, 1fr);  /* ← موبایل */
+            gap: 20px 12px;
             padding: 4px 14px 12px;
         }
-        .books-grid .book-card {
-            width: 100%;
-            flex-shrink: unset;
-        }
-        .books-grid .book-cover {
-            width: 100%;
-            height: auto;
-            aspect-ratio: 5 / 7;
+        .books-grid .book-card  { width: 100%; flex-shrink: unset; }
+        .books-grid .book-cover { width: 100%; height: auto; aspect-ratio: 5/7; }
+
+        /* دسکتاپ: ۵ ستون کوچک‌تر */
+        @media (min-width: 768px) {
+            .books-grid {
+                grid-template-columns: repeat(5, 1fr);   /* ← دسکتاپ */
+                gap: 20px 16px;
+                padding: 4px 24px 12px;
+            }
+            .books-row { padding: 4px 24px 12px; }
+            .section-header { padding: 0 24px; }
         }
 
-        /* =================================================
-           QUICK PREVIEW GLASS MODAL
-        ================================================= */
+        /* ══════════════════════════════════════════════
+           GLASS QUICK-VIEW MODAL  (باز می‌شه با تپ روی کتاب)
+        ══════════════════════════════════════════════ */
         .quick-modal {
             position: fixed; inset: 0;
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-            display: none; align-items: flex-end; justify-content: center; z-index: 900;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            display: none; align-items: center; justify-content: center;
+            z-index: 900; padding: 20px;
         }
         .quick-modal.active { display: flex; }
+
         .quick-sheet {
-            background: rgba(18,12,36,0.88);
+            background: rgba(14,10,30,0.75);
             backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
-            border: 1px solid rgba(255,255,255,0.13); border-bottom: none;
-            border-radius: 28px 28px 0 0; width: 100%; max-width: 520px;
-            padding: 0 0 32px; animation: slideUp 0.35s cubic-bezier(0.16,1,0.3,1);
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 26px;
+            width: 100%; max-width: 460px;
+            padding: 0 0 24px;
+            animation: fadeScale 0.3s cubic-bezier(0.16,1,0.3,1);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.6);
         }
-        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeScale { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
         .quick-handle {
-            width: 40px; height: 4px; background: rgba(255,255,255,0.18);
+            width: 40px; height: 4px; background: rgba(255,255,255,0.15);
             border-radius: 99px; margin: 14px auto 0;
         }
+
+        /* هدر: جلد + اطلاعات */
         .quick-header {
             display: flex; align-items: flex-start; gap: 16px;
-            padding: 18px 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.07);
+            padding: 20px 20px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
         }
         .quick-cover {
-            width: 70px; height: 98px; border-radius: 8px; object-fit: cover;
-            flex-shrink: 0; box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+            width: 80px; height: 112px; border-radius: 10px; object-fit: cover;
+            flex-shrink: 0; box-shadow: 0 6px 20px rgba(0,0,0,0.55);
         }
-        .quick-meta { flex: 1; }
-        .quick-title { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 6px; line-height: 1.3; }
+        .quick-meta { flex: 1; min-width: 0; }
+        .quick-title  { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 5px; line-height: 1.35; }
         .quick-author { font-size: 12px; color: rgba(255,255,255,0.45); margin-bottom: 8px; }
-        .quick-star-row { display: flex; align-items: center; gap: 4px; margin-bottom: 6px; }
-        .quick-price-tag {
+        .quick-star-row { display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
+
+        /* تگ رایگان / اشتراکی در مودال */
+        .quick-tag {
             display: inline-block; font-size: 11px; font-weight: 700;
-            padding: 3px 10px; border-radius: 20px;
+            padding: 3px 11px; border-radius: 20px;
         }
-        .quick-price-tag.free { background: rgba(76,175,125,0.2); color: #4caf7d; border: 1px solid rgba(76,175,125,0.3); }
-        .quick-price-tag.paid { background: rgba(255,149,0,0.15); color: var(--orange); border: 1px solid rgba(255,149,0,0.3); }
+        .quick-tag.free { background: rgba(76,175,125,0.18); color: #5dcea0; border: 1px solid rgba(76,175,125,0.3); }
+        .quick-tag.paid { background: rgba(255,149,0,0.15);  color: var(--orange); border: 1px solid rgba(255,149,0,0.3); }
+
         .quick-close-btn {
-            background: rgba(255,255,255,0.08); border: none; border-radius: 50%;
+            background: rgba(255,255,255,0.07); border: none; border-radius: 50%;
             width: 32px; height: 32px; font-size: 16px; color: rgba(255,255,255,0.45);
             cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
         }
-        .quick-actions { display: flex; gap: 10px; padding: 16px 20px; }
+        .quick-close-btn:hover { background: rgba(255,255,255,0.14); }
+
+        /* دو دکمه اصلی */
+        .quick-actions { display: flex; gap: 10px; padding: 16px 20px 0; }
         .quick-btn {
-            flex: 1; padding: 14px 10px; border-radius: 16px;
+            flex: 1; padding: 14px 8px; border-radius: 16px;
             font-family: 'Vazirmatn', sans-serif; font-size: 14px; font-weight: 800;
             cursor: pointer; border: none; transition: transform 0.15s, opacity 0.15s;
         }
         .quick-btn:active { transform: scale(0.97); opacity: 0.85; }
-        .quick-btn-summary { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.14); }
-        .quick-btn-action-free { background: linear-gradient(135deg, #4caf7d, #2e7d52); color: #fff; }
-        .quick-btn-action-paid { background: linear-gradient(135deg, #ff9500, #e07000); color: #fff; }
+        .quick-btn-summary { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.14); }
+        .quick-btn-free    { background: linear-gradient(135deg, #4caf7d, #2e7d52); color: #fff; }
+        .quick-btn-paid    { background: linear-gradient(135deg, #ff9500, #e07000); color: #fff; }
 
-        /* =================================================
+        /* ══════════════════════════════════════════════
            SUMMARY MODAL
-        ================================================= */
+        ══════════════════════════════════════════════ */
         .summary-modal {
             position: fixed; inset: 0;
-            background: rgba(0,0,0,0.82);
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             display: none; align-items: center; justify-content: center;
             z-index: 950; padding: 24px 16px;
         }
         .summary-modal.active { display: flex; }
-        .summary-content {
-            background: rgba(18,12,36,0.93);
+        .summary-sheet {
+            background: rgba(14,10,30,0.85);
             backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
             border: 1px solid rgba(255,255,255,0.13); border-radius: 24px;
-            width: 100%; max-width: 480px; padding: 26px 22px;
-            animation: fadeScale 0.3s ease; max-height: 80vh; overflow-y: auto;
+            width: 100%; max-width: 480px; padding: 24px 22px;
+            animation: fadeScale 0.3s ease; max-height: 78vh; overflow-y: auto;
         }
-        @keyframes fadeScale { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .summary-title-line { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-        .summary-title-text { font-size: 17px; font-weight: 800; color: var(--gold); }
-        .summary-close-btn {
+        .summary-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .summary-book-title { font-size: 16px; font-weight: 800; color: var(--gold); }
+        .summary-close {
             background: rgba(255,255,255,0.08); border: none; border-radius: 50%;
             width: 32px; height: 32px; font-size: 16px; color: rgba(255,255,255,0.45);
             cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
-        .summary-body { font-size: 14px; line-height: 1.9; color: rgba(255,255,255,0.75); }
+        .summary-text { font-size: 14px; line-height: 2; color: rgba(255,255,255,0.78); }
 
-        /* =================================================
+        /* ══════════════════════════════════════════════
            SUBSCRIPTION MODAL
-        ================================================= */
+        ══════════════════════════════════════════════ */
         .sub-modal {
             position: fixed; inset: 0; background: rgba(0,0,0,0.82);
             display: none; align-items: center; justify-content: center;
             z-index: 1010; padding: 20px;
         }
         .sub-modal.active { display: flex; }
-        .sub-content {
-            background: rgba(14,10,28,0.97); backdrop-filter: blur(30px);
+        .sub-sheet {
+            background: rgba(14,10,28,0.95); backdrop-filter: blur(30px);
             border: 1px solid rgba(255,255,255,0.12); border-radius: 24px;
             padding: 28px 22px; width: 100%; max-width: 380px;
             text-align: center; animation: fadeScale 0.3s ease;
         }
         .sub-title { font-size: 18px; font-weight: 800; color: var(--gold); margin-bottom: 10px; }
-        .sub-desc { font-size: 13px; color: rgba(255,255,255,0.55); margin-bottom: 20px; line-height: 1.7; }
+        .sub-desc  { font-size: 13px; color: rgba(255,255,255,0.55); margin-bottom: 20px; line-height: 1.7; }
         #code-input {
             width: 100%; padding: 13px 16px;
             background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);
@@ -271,57 +297,53 @@
             font-size: 15px; outline: none; transition: border-color 0.2s;
         }
         #code-input:focus { border-color: var(--gold); }
-        .detail-btn {
+        .sub-btn {
             width: 100%; padding: 14px; border: none; border-radius: 14px;
-            font-weight: 800; font-size: 14.5px; cursor: pointer; margin-bottom: 10px;
+            font-weight: 800; font-size: 14px; cursor: pointer; margin-bottom: 10px;
             font-family: 'Vazirmatn', sans-serif; transition: transform 0.15s;
         }
-        .detail-btn:active { transform: scale(0.98); }
-        .detail-btn-read { background: var(--gold); color: #111; }
-        .detail-btn-close { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.15); }
+        .sub-btn:active { transform: scale(0.98); }
+        .sub-btn-confirm { background: var(--gold); color: #111; }
+        .sub-btn-cancel  { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.14); }
 
-        /* =================================================
+        /* ══════════════════════════════════════════════
            CONTACT MODAL
-        ================================================= */
+        ══════════════════════════════════════════════ */
         .contact-modal {
             position: fixed; inset: 0; background: rgba(0,0,0,0.82);
             display: none; align-items: center; justify-content: center;
             z-index: 1020; padding: 20px;
         }
         .contact-modal.active { display: flex; }
-        .contact-content {
+        .contact-sheet {
             background: rgba(14,10,28,0.97); backdrop-filter: blur(30px);
             border: 1px solid rgba(255,255,255,0.12); border-radius: 24px;
             padding: 28px 22px; width: 100%; max-width: 360px;
             text-align: center; animation: fadeScale 0.3s ease;
         }
 
-        /* PDF Reader */
-        .pdf-reader-modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-            display: none; flex-direction: column; z-index: 1020;
-        }
-        .pdf-reader-modal.active { display: flex; }
-        .pdf-reader-header {
+        /* ── PDF READER ── */
+        .pdf-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: none; flex-direction: column; z-index: 1050; }
+        .pdf-modal.active { display: flex; }
+        .pdf-header {
             display: flex; align-items: center; justify-content: space-between;
-            padding: 14px 18px; background: rgba(0,0,0,0.7);
+            padding: 14px 18px; background: rgba(0,0,0,0.6);
             border-bottom: 1px solid rgba(255,255,255,0.1); flex-shrink: 0;
         }
-        .pdf-reader-header h3 { color: var(--gold); font-size: 16px; }
-        .pdf-reader-close { background: none; border: none; color: white; font-size: 28px; cursor: pointer; line-height: 1; }
+        .pdf-header h3 { color: var(--gold); font-size: 15px; }
+        .pdf-close { background: none; border: none; color: #fff; font-size: 28px; cursor: pointer; line-height: 1; }
         #pdf-iframe { width: 100%; flex: 1; border: none; background: #fff; }
     </style>
 </head>
 <body>
 
-<!-- Background -->
 <div class="stars-bg">
     <div class="galaxy-glow galaxy-glow-1"></div>
     <div class="galaxy-glow galaxy-glow-2"></div>
     <canvas id="starsCanvas"></canvas>
 </div>
 
-<!-- ===== HEADER ===== -->
+<!-- ══════════ HEADER ══════════ -->
 <div class="site-header">
     <div class="site-title-small">your personal library</div>
     <div class="site-title-big">PlanLife <span>Books</span></div>
@@ -329,20 +351,22 @@
 
 <div class="page-wrap">
 
-    <!-- =============================================
-         بخش ۱: پیشنهادی‌های PlanLife (اسکرول افقی)
-         برای افزودن کتاب: یک .book-card جدید در داخل این books-row اضافه کنید
-    ============================================= -->
+    <!-- ══════════════════════════════════════════
+         بخش ۱ — پیشنهادی‌های PlanLife
+         (اسکرول افقی)
+         برای افزودن: یک .book-card جدید در این .books-row اضافه کن
+    ══════════════════════════════════════════ -->
     <div class="section">
         <div class="section-header">
             <div class="section-title">✨ پیشنهادی‌های PlanLife</div>
         </div>
-        <div class="books-row" id="row-featured">
+        <div class="books-row">
 
-            <!-- ═══════════════════════════════════════════
-                 کتاب پیشنهادی — رایگان
-                 data-is-paid="false"  →  رایگان
-            ═══════════════════════════════════════════ -->
+            <!-- ┌──────────────────────────────────────────┐
+                 │  کتاب پیشنهادی — رایگان                 │
+                 │  data-is-paid="false"  →  رایگان         │
+                 │  data-lang="fa"        →  فارسی          │
+                 └──────────────────────────────────────────┘ -->
             <div class="book-card" onclick="openQuickView(this)"
                 data-title="عادت‌های اتمی"
                 data-author="جیمز کلیر"
@@ -350,20 +374,32 @@
                 data-rating="4.7"
                 data-rating-count="۲.۴k"
                 data-is-paid="false"
+                data-lang="fa"
                 data-pdf-url="https://drive.google.com/file/d/1r5TbNWk6dt6o_5luMV845kuAvsLwQIoe/preview"
-                data-summary="جیمز کلیر در این کتاب ثابت می‌کند که تغییرات کوچک یک درصدی می‌توانند نتایج شگفت‌انگیزی ایجاد کنند. با تکیه بر علم عصب‌شناسی و روان‌شناسی رفتاری، چارچوبی عملی برای ساختن عادات خوب ارائه می‌دهد.">
-                <img class="book-cover" src="https://res.cloudinary.com/dlf11vil6/image/upload/v1780946121/Textured_Image_Polaroid_Instagram_Story_d4wwow.png" alt="عادت‌های اتمی">
+                data-summary="
+جیمز کلیر در این کتاب ثابت می‌کند که تغییرات کوچک یک درصدی
+می‌توانند نتایج شگفت‌انگیزی در زندگی ایجاد کنند.
+
+او با تکیه بر علم عصب‌شناسی و روان‌شناسی رفتاری، چارچوبی
+عملی برای ساختن عادات خوب و شکستن عادات بد ارائه می‌دهد.
+
+کلیر توضیح می‌دهد که هویت ما نقش محوری در شکل‌گیری
+رفتارهایمان دارد و تغییر واقعی از تغییر باورهای ما درباره
+خودمان شروع می‌شود.
+                ">
+                <img class="book-cover"
+                    src="https://res.cloudinary.com/dlf11vil6/image/upload/v1780946121/Textured_Image_Polaroid_Instagram_Story_d4wwow.png"
+                    alt="عادت‌های اتمی">
                 <div class="book-info">
                     <div class="book-name">عادت‌های اتمی</div>
                     <div class="star-row"><div class="stars" data-rating="4.7"></div><span class="rating-count">(۲.۴k)</span></div>
-                    <div class="book-price free">رایگان</div>
                 </div>
             </div>
 
-            <!-- ═══════════════════════════════════════════
-                 کتاب پیشنهادی — اشتراکی
-                 data-is-paid="true"  →  اشتراکی
-            ═══════════════════════════════════════════ -->
+            <!-- ┌──────────────────────────────────────────┐
+                 │  کتاب پیشنهادی — اشتراکی                │
+                 │  data-is-paid="true"   →  اشتراکی        │
+                 └──────────────────────────────────────────┘ -->
             <div class="book-card" onclick="openQuickView(this)"
                 data-title="قدرت عادت"
                 data-author="چارلز داهیگ"
@@ -371,13 +407,21 @@
                 data-rating="4.3"
                 data-rating-count="۱.۸k"
                 data-is-paid="true"
+                data-lang="fa"
                 data-pdf-url=""
-                data-summary="چارلز داهیگ به بررسی علمی عادت‌ها می‌پردازد و نشان می‌دهد که چرا عادت‌ها وجود دارند و چگونه می‌توان آن‌ها را تغییر داد.">
+                data-summary="
+چارلز داهیگ در این کتاب به بررسی علمی عادت‌ها می‌پردازد
+و نشان می‌دهد که چرا عادت‌ها وجود دارند و چگونه می‌توان
+آن‌ها را تغییر داد.
+
+او مفهوم چرخه عادت را معرفی می‌کند: نشانه، روتین و پاداش.
+داهیگ با مثال‌هایی از شرکت‌های بزرگ و تیم‌های ورزشی نشان
+می‌دهد که درک ساختار عادت‌ها می‌تواند زندگی را متحول کند.
+                ">
                 <img class="book-cover" src="https://picsum.photos/seed/book2/200/280" alt="قدرت عادت">
                 <div class="book-info">
                     <div class="book-name">قدرت عادت</div>
                     <div class="star-row"><div class="stars" data-rating="4.3"></div><span class="rating-count">(۱.۸k)</span></div>
-                    <div class="book-price">اشتراکی</div>
                 </div>
             </div>
 
@@ -388,13 +432,22 @@
                 data-rating="4.8"
                 data-rating-count="۳.۱k"
                 data-is-paid="false"
+                data-lang="fa"
                 data-pdf-url=""
-                data-summary="اکهارت تله خوانندگان را به سفری درونی دعوت می‌کند تا قدرت زندگی در لحظه حال را کشف کنند.">
+                data-summary="
+اکهارت تله در این کتاب خوانندگان را به سفری درونی دعوت
+می‌کند تا قدرت زندگی در لحظه حال را کشف کنند.
+
+او نشان می‌دهد که ذهن انسان اغلب در گذشته یا آینده
+گم می‌شود و این خود منبع اصلی رنج است.
+
+تله با زبانی ساده توضیح می‌دهد که چگونه می‌توان از تله
+ذهنی خارج شد و آگاهی ناب را تجربه کرد.
+                ">
                 <img class="book-cover" src="https://picsum.photos/seed/book3/200/280" alt="نیروی حال">
                 <div class="book-info">
                     <div class="book-name">نیروی حال</div>
                     <div class="star-row"><div class="stars" data-rating="4.8"></div><span class="rating-count">(۳.۱k)</span></div>
-                    <div class="book-price free">رایگان</div>
                 </div>
             </div>
 
@@ -405,13 +458,21 @@
                 data-rating="4.5"
                 data-rating-count="۹۲۳"
                 data-is-paid="false"
+                data-lang="fa"
                 data-pdf-url=""
-                data-summary="مارک منسون با رویکردی ضد فرهنگ خودیاری سنتی می‌گوید مشکل اصلی ما این است که به چیزهای نادرستی اهمیت می‌دهیم.">
+                data-summary="
+مارک منسون با رویکردی ضد فرهنگ خودیاری سنتی می‌گوید
+مشکل اصلی ما این است که به چیزهای نادرستی اهمیت می‌دهیم.
+
+پذیرش محدودیت‌ها و ناقص بودن، کلید زندگی معنادار است.
+
+منسون با طنز توضیح می‌دهد که چگونه فقط روی چیزهایی
+انرژی بگذاریم که واقعاً اهمیت دارند.
+                ">
                 <img class="book-cover" src="https://picsum.photos/seed/book4/200/280" alt="هنر ظریف رهایی">
                 <div class="book-info">
                     <div class="book-name">هنر ظریف رهایی</div>
                     <div class="star-row"><div class="stars" data-rating="4.5"></div><span class="rating-count">(۹۲۳)</span></div>
-                    <div class="book-price free">رایگان</div>
                 </div>
             </div>
 
@@ -420,34 +481,41 @@
 
     <div class="section-divider"></div>
 
-    <!-- =============================================
-         بخش ۲: همه کتاب‌ها — گرید بی‌نهایت
-         
-         تعداد ستون‌ها: در CSS کلاس .books-grid تغییر دهید
-           مثال: grid-template-columns: repeat(2, 1fr);  ← ۲ ستون
-           مثال: grid-template-columns: repeat(3, 1fr);  ← ۳ ستون (پیش‌فرض)
-           مثال: grid-template-columns: repeat(4, 1fr);  ← ۴ ستون
+    <!-- ══════════════════════════════════════════════════════
+         بخش ۲ — همه کتاب‌ها (گرید بی‌نهایت)
+         ══════════════════════════════════════════════════════
+         تعداد ستون‌ها:
+           موبایل  →  CSS کلاس .books-grid  →  repeat(3, 1fr)
+           دسکتاپ →  media query 768px     →  repeat(5, 1fr)
 
-         افزودن ردیف جدید: فقط یک .book-card جدید اضافه کنید
-         گرید خودکار ردیف می‌سازد — نیازی به تغییر دیگری نیست
-    ============================================= -->
+         ردیف جدید: فقط یک .book-card اضافه کن — گرید خودکار ردیف می‌سازد
+
+         هر کارت:
+           data-is-paid="false"  →  رایگان  (برچسب سبز سمت چپ)
+           data-is-paid="true"   →  اشتراکی (برچسب نارنجی سمت چپ)
+           data-lang="fa"        →  برچسب «فارسی» سمت راست
+           data-lang="en"        →  برچسب «English» سمت راست
+    ══════════════════════════════════════════════════════ -->
     <div class="section">
         <div class="section-header">
             <div class="section-title">📚 همه کتاب‌ها</div>
         </div>
         <div class="books-grid" id="all-books-grid">
 
-            <!-- ═══════════════════════════════════════════
-                 نحوه افزودن کتاب جدید به گرید:
-                 
-                 data-is-paid="false"   →  برچسب «رایگان» (سبز)
-                 data-is-paid="true"    →  برچسب «اشتراکی» (نارنجی)
-                 
-                 data-lang="fa"   →  برچسب «فارسی»
-                 data-lang="en"   →  برچسب «English»
-                 
-                 data-pdf-url=""  →  لینک PDF (خالی = پیام به‌زودی)
-            ═══════════════════════════════════════════ -->
+            <!-- ╔══════════════════════════════════════════╗
+                 ║  BOOK CARD TEMPLATE — کپی کن و پر کن   ║
+                 ╠══════════════════════════════════════════╣
+                 ║  data-title      →  نام کتاب            ║
+                 ║  data-author     →  نام نویسنده          ║
+                 ║  data-cover      →  لینک تصویر جلد      ║
+                 ║  data-rating     →  امتیاز (۰ تا ۵)     ║
+                 ║  data-rating-count → تعداد رأی          ║
+                 ║  data-is-paid    →  false / true         ║
+                 ║  data-lang       →  fa / en              ║
+                 ║  data-pdf-url    →  لینک PDF کتاب       ║
+                 ║  data-summary    →  خلاصه کتاب          ║
+                 ║    (می‌تونی چند خط بنویسی، مشکلی نیست) ║
+                 ╚══════════════════════════════════════════╝ -->
 
             <!-- کتاب ۱ -->
             <div class="book-card" onclick="openQuickView(this)"
@@ -459,8 +527,19 @@
                 data-is-paid="false"
                 data-lang="fa"
                 data-pdf-url="https://drive.google.com/file/d/1r5TbNWk6dt6o_5luMV845kuAvsLwQIoe/preview"
-                data-summary="جیمز کلیر در این کتاب ثابت می‌کند که تغییرات کوچک یک درصدی می‌توانند نتایج شگفت‌انگیزی ایجاد کنند.">
-                <img class="book-cover" src="https://res.cloudinary.com/dlf11vil6/image/upload/v1780946121/Textured_Image_Polaroid_Instagram_Story_d4wwow.png" alt="عادت‌های اتمی">
+                data-summary="
+جیمز کلیر ثابت می‌کند که تغییرات کوچک یک درصدی
+می‌توانند نتایج شگفت‌انگیزی ایجاد کنند.
+
+با تکیه بر علم عصب‌شناسی، چارچوبی عملی برای ساختن
+عادات خوب و شکستن عادات بد ارائه می‌دهد.
+
+هویت ما نقش محوری در شکل‌گیری رفتارهایمان دارد
+و تغییر واقعی از تغییر باورهای ما شروع می‌شود.
+                ">
+                <img class="book-cover"
+                    src="https://res.cloudinary.com/dlf11vil6/image/upload/v1780946121/Textured_Image_Polaroid_Instagram_Story_d4wwow.png"
+                    alt="عادت‌های اتمی">
                 <div class="book-info">
                     <div class="book-name">عادت‌های اتمی</div>
                     <div class="star-row"><div class="stars" data-rating="4.7"></div></div>
@@ -477,7 +556,13 @@
                 data-is-paid="true"
                 data-lang="fa"
                 data-pdf-url=""
-                data-summary="چارلز داهیگ به بررسی علمی عادت‌ها می‌پردازد و چرخه عادت را معرفی می‌کند.">
+                data-summary="
+چارلز داهیگ به بررسی علمی عادت‌ها می‌پردازد و چرخه
+عادت را معرفی می‌کند: نشانه، روتین، پاداش.
+
+با مثال‌هایی از شرکت‌های بزرگ نشان می‌دهد که تغییر
+عادت‌ها چگونه زندگی را متحول می‌کند.
+                ">
                 <img class="book-cover" src="https://picsum.photos/seed/book2/200/280" alt="قدرت عادت">
                 <div class="book-info">
                     <div class="book-name">قدرت عادت</div>
@@ -495,7 +580,12 @@
                 data-is-paid="false"
                 data-lang="fa"
                 data-pdf-url=""
-                data-summary="اکهارت تله شما را به کشف قدرت لحظه حال دعوت می‌کند.">
+                data-summary="
+اکهارت تله شما را به کشف قدرت لحظه حال دعوت می‌کند.
+
+ذهن انسان اغلب در گذشته یا آینده گم می‌شود و این
+منبع اصلی رنج است. این کتاب راه خروج را نشان می‌دهد.
+                ">
                 <img class="book-cover" src="https://picsum.photos/seed/book3/200/280" alt="نیروی حال">
                 <div class="book-info">
                     <div class="book-name">نیروی حال</div>
@@ -513,7 +603,12 @@
                 data-is-paid="false"
                 data-lang="fa"
                 data-pdf-url=""
-                data-summary="مارک منسون می‌گوید انرژی‌ات را فقط روی چیزهای واقعاً مهم بگذار.">
+                data-summary="
+مارک منسون می‌گوید انرژی‌ات را فقط روی چیزهایی بگذار
+که واقعاً اهمیت دارند.
+
+پذیرش محدودیت‌ها و ناقص بودن، کلید زندگی معنادار است.
+                ">
                 <img class="book-cover" src="https://picsum.photos/seed/book4/200/280" alt="هنر ظریف رهایی">
                 <div class="book-info">
                     <div class="book-name">هنر ظریف رهایی</div>
@@ -531,7 +626,13 @@
                 data-is-paid="false"
                 data-lang="fa"
                 data-pdf-url=""
-                data-summary="دانیل سیگل استراتژی‌های عملی برای یکپارچه‌سازی مغز و رشد روانی سالم ارائه می‌دهد.">
+                data-summary="
+دانیل سیگل دوازده استراتژی عملی برای یکپارچه‌سازی
+نیمکره‌های چپ و راست مغز ارائه می‌دهد.
+
+والدین می‌توانند از این استراتژی‌ها برای رشد روانی
+سالم فرزندانشان استفاده کنند.
+                ">
                 <img class="book-cover" src="https://picsum.photos/seed/book5/200/280" alt="ذهن کامل">
                 <div class="book-info">
                     <div class="book-name">ذهن کامل</div>
@@ -539,7 +640,7 @@
                 </div>
             </div>
 
-            <!-- کتاب ۶ — انگلیسی، نایاب -->
+            <!-- کتاب ۶ — انگلیسی، اشتراکی -->
             <div class="book-card" onclick="openQuickView(this)"
                 data-title="Liber Null & Psychonaut"
                 data-author="Peter Carroll"
@@ -549,8 +650,19 @@
                 data-is-paid="true"
                 data-lang="en"
                 data-pdf-url="https://api.cloudinary.com/v1_1/dshielkdt/image/download?api_key=884443113314115&public_id=Screenshot_2024-08-16_at_10.14.03_hkrxui&signature=e28c5226cf3b727a8e92ed12c29caac93e865939&timestamp=1780014362&type=upload"
-                data-summary="Liber Null & Psychonaut یکی از مهم‌ترین و نادرترین متون جادوی آشوب است که پایه‌های جادوی مدرن را بنیان نهاده.">
-                <img class="book-cover" src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780013257/Untitled_design_wyybit.png" alt="Liber Null">
+                data-summary="
+One of the most important texts in Chaos Magic,
+written by Peter Carroll.
+
+This dual volume lays the foundations of modern
+magical practice, including sigil work, gnosis,
+and practical will training.
+
+Rarely available — a true collector's text.
+                ">
+                <img class="book-cover"
+                    src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780013257/Untitled_design_wyybit.png"
+                    alt="Liber Null">
                 <div class="book-info">
                     <div class="book-name">Liber Null & Psychonaut</div>
                     <div class="star-row"><div class="stars" data-rating="4.8"></div></div>
@@ -567,8 +679,16 @@
                 data-is-paid="true"
                 data-lang="fa"
                 data-pdf-url="https://drive.google.com/file/d/1i_JB7O0ROrYQhNJszA41J2If8EhXZMtt/preview"
-                data-summary="نسخه کامل و اشتراکی کتاب قدرت عادت. رازهای علمی پشت عادت‌های موفق را کشف کنید.">
-                <img class="book-cover" src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781278236/Untitled_design_igw3gz.png" alt="قدرت عادت ویژه">
+                data-summary="
+نسخه کامل و اشتراکی کتاب قدرت عادت.
+
+رازهای علمی پشت عادت‌های موفق را کشف کنید. این کتاب
+نشان می‌دهد که چطور با تغییر عادت‌های کوچک، زندگی
+بزرگ بسازید.
+                ">
+                <img class="book-cover"
+                    src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781278236/Untitled_design_igw3gz.png"
+                    alt="قدرت عادت ویژه">
                 <div class="book-info">
                     <div class="book-name">قدرت عادت — ویژه</div>
                     <div class="star-row"><div class="stars" data-rating="4.5"></div></div>
@@ -585,7 +705,13 @@
                 data-is-paid="true"
                 data-lang="fa"
                 data-pdf-url=""
-                data-summary="نگاهی فلسفی به سعادت انسانی از دیدگاه فیلسوفان بزرگ تاریخ، از ارسطو تا نیچه.">
+                data-summary="
+نگاهی فلسفی به سعادت انسانی از دیدگاه فیلسوفان بزرگ
+تاریخ، از ارسطو تا نیچه.
+
+سفری از اسپینوزا تا هایدگر در جستجوی پاسخ به این سؤال
+ابدی که خوشبختی واقعی چیست.
+                ">
                 <img class="book-cover" src="https://picsum.photos/seed/book10/200/280" alt="فلسفه خوشبختی">
                 <div class="book-info">
                     <div class="book-name">فلسفه خوشبختی</div>
@@ -603,7 +729,12 @@
                 data-is-paid="true"
                 data-lang="fa"
                 data-pdf-url=""
-                data-summary="راهنمای عملی برای ایجاد تغییرات کوچک با تأثیرات بزرگ. سیستمی که دقیقاً نشان می‌دهد چگونه عادات خوب بسازید.">
+                data-summary="
+راهنمای عملی برای ایجاد تغییرات کوچک با تأثیرات بزرگ.
+
+سیستمی که دقیقاً نشان می‌دهد چگونه عادت‌های خوب
+بسازید، عادت‌های بد را بشکنید و به اهدافتان برسید.
+                ">
                 <img class="book-cover" src="https://picsum.photos/seed/paid4/200/280" alt="اتمیک هابیتس ویژه">
                 <div class="book-info">
                     <div class="book-name">اتمیک هابیتس — ویژه</div>
@@ -611,9 +742,9 @@
                 </div>
             </div>
 
-            <!--
-            ═══════════════════════════════════════════
-            برای افزودن کتاب جدید، این بلاک را کپی کنید:
+            <!-- ╔══════════════════════════════════════════╗
+                 ║  کتاب جدید را از اینجا اضافه کن:        ║
+                 ╠══════════════════════════════════════════╣
 
             <div class="book-card" onclick="openQuickView(this)"
                 data-title="نام کتاب"
@@ -624,285 +755,258 @@
                 data-is-paid="false"
                 data-lang="fa"
                 data-pdf-url="لینک PDF"
-                data-summary="خلاصه کتاب">
+                data-summary="
+خط اول خلاصه
+
+خط دوم خلاصه — می‌تونی تا ۱۰ خط بنویسی
+
+خط سوم
+                ">
                 <img class="book-cover" src="لینک تصویر جلد" alt="نام کتاب">
                 <div class="book-info">
                     <div class="book-name">نام کتاب</div>
                     <div class="star-row"><div class="stars" data-rating="4.5"></div></div>
                 </div>
             </div>
-            ═══════════════════════════════════════════
-            -->
+
+                 ╚══════════════════════════════════════════╝ -->
 
         </div>
     </div>
 
 </div>
 
-<!-- =================================================
-     QUICK VIEW MODAL
-================================================= -->
-<div class="quick-modal" id="quick-modal" onclick="handleModalClick(event,'quick-modal')">
+<!-- ══════════ QUICK VIEW MODAL ══════════ -->
+<div class="quick-modal" id="quick-modal" onclick="handleBackdrop(event,'quick-modal')">
     <div class="quick-sheet">
         <div class="quick-handle"></div>
         <div class="quick-header">
             <img class="quick-cover" id="qv-cover" src="" alt="">
             <div class="quick-meta">
-                <div class="quick-title" id="qv-title"></div>
+                <div class="quick-title"  id="qv-title"></div>
                 <div class="quick-author" id="qv-author"></div>
                 <div class="quick-star-row">
                     <div class="stars" id="qv-stars"></div>
                     <span class="rating-count" id="qv-rcount"></span>
                 </div>
-                <span class="quick-price-tag" id="qv-price-tag"></span>
+                <span class="quick-tag" id="qv-tag"></span>
             </div>
-            <button class="quick-close-btn" onclick="closeQuickView()">✕</button>
+            <button class="quick-close-btn" onclick="closeQuick()">✕</button>
         </div>
         <div class="quick-actions">
-            <button class="quick-btn quick-btn-summary" onclick="openSummaryModal()">📖 خلاصه کتاب</button>
-            <button class="quick-btn" id="qv-action-btn" onclick="handleQuickAction()"></button>
+            <button class="quick-btn quick-btn-summary" onclick="openSummary()">📖 خلاصه کتاب</button>
+            <button class="quick-btn" id="qv-action" onclick="handleAction()"></button>
         </div>
     </div>
 </div>
 
-<!-- =================================================
-     SUMMARY MODAL
-================================================= -->
-<div class="summary-modal" id="summary-modal" onclick="handleModalClick(event,'summary-modal')">
-    <div class="summary-content">
-        <div class="summary-title-line">
-            <div class="summary-title-text" id="sum-title"></div>
-            <button class="summary-close-btn" onclick="closeSummaryModal()">✕</button>
+<!-- ══════════ SUMMARY MODAL ══════════ -->
+<div class="summary-modal" id="summary-modal" onclick="handleBackdrop(event,'summary-modal')">
+    <div class="summary-sheet">
+        <div class="summary-top">
+            <div class="summary-book-title" id="sum-title"></div>
+            <button class="summary-close" onclick="closeSummary()">✕</button>
         </div>
-        <div class="summary-body" id="sum-body"></div>
+        <div class="summary-text" id="sum-body"></div>
     </div>
 </div>
 
-<!-- =================================================
-     SUBSCRIPTION MODAL
-================================================= -->
-<div class="sub-modal" id="sub-modal" onclick="handleModalClick(event,'sub-modal')">
-    <div class="sub-content">
-        <div class="sub-title" id="sub-title">کد اشتراک</div>
+<!-- ══════════ SUBSCRIPTION MODAL ══════════ -->
+<div class="sub-modal" id="sub-modal" onclick="handleBackdrop(event,'sub-modal')">
+    <div class="sub-sheet">
+        <div class="sub-title" id="sub-book-name">کد اشتراک</div>
         <div class="sub-desc">برای مطالعه این کتاب، کد اشتراک خود را وارد کنید.</div>
         <input type="text" id="code-input" placeholder="کد اشتراک را وارد کنید">
-        <button onclick="submitCode()" class="detail-btn detail-btn-read">ارسال کد</button>
-        <button onclick="showContactOptions()" class="detail-btn detail-btn-close">ارتباط با ما</button>
+        <button class="sub-btn sub-btn-confirm" onclick="submitCode()">ارسال کد</button>
+        <button class="sub-btn sub-btn-cancel"  onclick="showContact()">ارتباط با ما</button>
     </div>
 </div>
 
-<!-- =================================================
-     CONTACT MODAL
-================================================= -->
-<div class="contact-modal" id="contact-modal" onclick="handleModalClick(event,'contact-modal')">
-    <div class="contact-content">
+<!-- ══════════ CONTACT MODAL ══════════ -->
+<div class="contact-modal" id="contact-modal" onclick="handleBackdrop(event,'contact-modal')">
+    <div class="contact-sheet">
         <h3 style="color:var(--gold);margin-bottom:20px;font-size:18px;font-weight:800;">ارتباط با ما</h3>
         <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:18px;">
-            <a href="https://t.me/planlifeir" target="_blank" style="background:#0088cc;color:white;padding:14px;border-radius:14px;text-decoration:none;font-weight:700;display:block;font-family:'Vazirmatn',sans-serif;">📱 تلگرام (@planlifeir)</a>
-            <a href="https://ble.ir/planlifeir" target="_blank" style="background:#00a000;color:white;padding:14px;border-radius:14px;text-decoration:none;font-weight:700;display:block;font-family:'Vazirmatn',sans-serif;">💬 بله (@planlifeir)</a>
+            <a href="https://t.me/planlifeir" target="_blank"
+               style="background:#0088cc;color:white;padding:14px;border-radius:14px;text-decoration:none;font-weight:700;display:block;font-family:'Vazirmatn',sans-serif;">
+               📱 تلگرام (@planlifeir)
+            </a>
+            <a href="https://ble.ir/planlifeir" target="_blank"
+               style="background:#00a000;color:white;padding:14px;border-radius:14px;text-decoration:none;font-weight:700;display:block;font-family:'Vazirmatn',sans-serif;">
+               💬 بله (@planlifeir)
+            </a>
         </div>
-        <button onclick="closeContactModal()" style="padding:10px 24px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.15);border-radius:12px;font-family:'Vazirmatn',sans-serif;cursor:pointer;font-size:14px;">بستن</button>
+        <button onclick="closeContact()"
+                style="padding:10px 24px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.15);border-radius:12px;font-family:'Vazirmatn',sans-serif;cursor:pointer;font-size:14px;">
+            بستن
+        </button>
     </div>
 </div>
 
-<!-- PDF Reader -->
-<div class="pdf-reader-modal" id="pdf-reader-modal">
-    <div class="pdf-reader-header">
-        <h3 id="reader-title"></h3>
-        <button class="pdf-reader-close" onclick="closePdfReader()">×</button>
+<!-- ══════════ PDF READER ══════════ -->
+<div class="pdf-modal" id="pdf-modal">
+    <div class="pdf-header">
+        <h3 id="pdf-title"></h3>
+        <button class="pdf-close" onclick="closePdf()">×</button>
     </div>
     <iframe id="pdf-iframe" allowfullscreen></iframe>
 </div>
 
 <script>
-/* ════════════ Stars canvas ════════════ */
+/* ════════ STARFIELD ════════ */
 (function(){
-    const canvas = document.getElementById('starsCanvas');
-    const ctx = canvas.getContext('2d');
-    let W, H, stars = [];
-    function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-    function mkStars(){
-        stars = [];
-        const count = Math.floor((W * H) / 2200);
-        for(let i = 0; i < count; i++)
-            stars.push({ x: Math.random()*W, y: Math.random()*H, r: Math.random()*1.3+0.2,
-                a: Math.random(), speed: Math.random()*0.008+0.003, phase: Math.random()*Math.PI*2 });
+    const c = document.getElementById('starsCanvas'), ctx = c.getContext('2d');
+    let W, H, S = [];
+    function resize(){ W = c.width = innerWidth; H = c.height = innerHeight; }
+    function mkS(){
+        S = [];
+        const n = Math.floor(W*H/2200);
+        for(let i=0;i<n;i++) S.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+0.2,a:Math.random(),sp:Math.random()*0.008+0.003,ph:Math.random()*Math.PI*2});
     }
     function draw(t){
-        ctx.clearRect(0, 0, W, H);
-        for(const s of stars){
-            const alpha = s.a * (0.45 + 0.55 * Math.sin(t * s.speed + s.phase));
-            ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-            ctx.fillStyle = `rgba(255,255,255,${alpha})`; ctx.fill();
-        }
+        ctx.clearRect(0,0,W,H);
+        S.forEach(s=>{
+            ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+            ctx.fillStyle=`rgba(255,255,255,${s.a*(0.45+0.55*Math.sin(t*s.sp+s.ph))})`; ctx.fill();
+        });
         requestAnimationFrame(draw);
     }
-    resize(); mkStars();
-    window.addEventListener('resize', () => { resize(); mkStars(); });
+    resize(); mkS();
+    window.addEventListener('resize',()=>{resize();mkS();});
     requestAnimationFrame(draw);
 })();
 
-/* ════════════ Stars render ════════════ */
-function renderStars(el, rating){
-    const full = Math.floor(rating);
-    const half = (rating - full) >= 0.4 ? 1 : 0;
-    const empty = 5 - full - half;
-    let html = '';
-    for(let i = 0; i < full; i++)  html += '<span class="star full">★</span>';
-    if(half)                        html += '<span class="star half">★</span>';
-    for(let i = 0; i < empty; i++) html += '<span class="star empty">★</span>';
-    el.innerHTML = html;
+/* ════════ STARS RENDER ════════ */
+function renderStars(el, r){
+    const f=Math.floor(r), h=(r-f)>=0.4?1:0, e=5-f-h;
+    el.innerHTML =
+        '<span class="star full">★</span>'.repeat(f) +
+        (h?'<span class="star half">★</span>':'') +
+        '<span class="star empty">★</span>'.repeat(e);
 }
+document.querySelectorAll('.stars[data-rating]').forEach(el=>{
+    renderStars(el, Math.min(5, Math.max(3.5, parseFloat(el.dataset.rating)+(Math.random()*0.3-0.15))));
+});
 
-/* ════════════ Badge injection ════════════
-   برچسب‌ها فقط در گرید همه کتاب‌ها نمایش داده می‌شوند.
-   بر اساس data-is-paid و data-lang ساخته می‌شوند.
-════════════ */
+/* ════════ BADGE INJECTION (فقط در گرید همه کتاب‌ها) ════════
+   برچسب رایگان/اشتراکی → سمت چپ کارت (در RTL = ابتدای badge-row)
+   برچسب زبان           → سمت راست کارت (در RTL = انتهای badge-row)
+════════ */
 function injectBadges(){
-    document.querySelectorAll('#all-books-grid .book-card').forEach(card => {
+    document.querySelectorAll('#all-books-grid .book-card').forEach(card=>{
         const isPaid = card.dataset.isPaid === 'true';
         const lang   = card.dataset.lang || '';
 
-        // برچسب اشتراکی / رایگان
-        const priceBadge = document.createElement('span');
-        priceBadge.className = 'book-badge ' + (isPaid ? 'paid-badge' : 'free-badge');
-        priceBadge.textContent = isPaid ? 'اشتراکی' : 'رایگان';
+        const row = document.createElement('div');
+        row.className = 'badge-row';
 
-        // برچسب زبان
-        let langBadge = null;
-        if(lang === 'en'){
-            langBadge = document.createElement('span');
-            langBadge.className = 'book-badge';
-            langBadge.style.cssText = 'background:rgba(255,255,255,0.15);color:#fff;margin-right:4px;';
-            langBadge.textContent = 'English';
-        } else if(lang === 'fa'){
-            langBadge = document.createElement('span');
-            langBadge.className = 'book-badge';
-            langBadge.style.cssText = 'background:rgba(212,175,55,0.2);color:var(--gold);margin-right:4px;';
-            langBadge.textContent = 'فارسی';
-        }
+        /* برچسب چپ — رایگان یا اشتراکی */
+        const pb = document.createElement('span');
+        pb.className = 'bdg ' + (isPaid ? 'bdg-paid' : 'bdg-free');
+        pb.textContent = isPaid ? 'اشتراکی' : 'رایگان';
+
+        /* برچسب راست — زبان */
+        const lb = document.createElement('span');
+        if(lang === 'en'){ lb.className='bdg bdg-en'; lb.textContent='English'; }
+        else             { lb.className='bdg bdg-fa'; lb.textContent='فارسی'; }
+
+        /* در RTL: اولی = چپ، دومی = راست */
+        row.appendChild(pb);
+        row.appendChild(lb);
 
         const img = card.querySelector('.book-cover');
-        if(langBadge) card.insertBefore(langBadge, img);
-        card.insertBefore(priceBadge, img);
+        card.insertBefore(row, img);
     });
 }
-
-/* ════════════ Render all star elements ════════════ */
-function renderAllStars(){
-    document.querySelectorAll('.stars[data-rating]').forEach(el => {
-        const base  = parseFloat(el.getAttribute('data-rating'));
-        const final = Math.min(5, Math.max(3.5, base + (Math.random()*0.4 - 0.2)));
-        renderStars(el, final);
-    });
-}
-
-renderAllStars();
 injectBadges();
 
-/* ════════════ State ════════════ */
-let currentBook = {};
+/* ════════ STATE ════════ */
+let book = {};
 
-/* ════════════ Quick View ════════════ */
+/* ════════ OPEN QUICK VIEW ════════ */
 function openQuickView(card){
     const d = card.dataset;
-    currentBook = {
-        title:       d.title,
-        author:      d.author || '',
-        cover:       d.cover,
-        rating:      parseFloat(d.rating),
-        ratingCount: d.ratingCount || '',
-        isPaid:      d.isPaid === 'true',
-        pdfUrl:      d.pdfUrl || '',
-        summary:     d.summary || '',
+    book = {
+        title:  d.title,  author: d.author||'',
+        cover:  d.cover,  rating: parseFloat(d.rating),
+        rcount: d.ratingCount||'',
+        paid:   d.isPaid==='true',
+        pdf:    d.pdfUrl||'',
+        summary: (d.summary||'').trim()
     };
-    document.getElementById('qv-cover').src     = currentBook.cover;
-    document.getElementById('qv-title').textContent  = currentBook.title;
-    document.getElementById('qv-author').textContent = currentBook.author;
-    renderStars(document.getElementById('qv-stars'), currentBook.rating);
-    document.getElementById('qv-rcount').textContent = '(' + currentBook.ratingCount + ')';
 
-    const priceTag = document.getElementById('qv-price-tag');
-    if(currentBook.isPaid){
-        priceTag.textContent = 'اشتراکی';
-        priceTag.className   = 'quick-price-tag paid';
-    } else {
-        priceTag.textContent = 'رایگان';
-        priceTag.className   = 'quick-price-tag free';
-    }
+    document.getElementById('qv-cover').src       = book.cover;
+    document.getElementById('qv-title').textContent  = book.title;
+    document.getElementById('qv-author').textContent = book.author;
+    renderStars(document.getElementById('qv-stars'), book.rating);
+    document.getElementById('qv-rcount').textContent = '(' + book.rcount + ')';
 
-    const actionBtn = document.getElementById('qv-action-btn');
-    if(currentBook.isPaid){
-        actionBtn.textContent = '🔑 خرید / اشتراک';
-        actionBtn.className   = 'quick-btn quick-btn-action-paid';
-    } else {
-        actionBtn.textContent = '📖 خواندن کتاب';
-        actionBtn.className   = 'quick-btn quick-btn-action-free';
-    }
+    const tag = document.getElementById('qv-tag');
+    tag.textContent = book.paid ? 'اشتراکی' : 'رایگان';
+    tag.className   = 'quick-tag ' + (book.paid ? 'paid' : 'free');
+
+    const btn = document.getElementById('qv-action');
+    btn.textContent = book.paid ? '🔑 خرید / اشتراک' : '📖 مشاهده کتاب';
+    btn.className   = 'quick-btn ' + (book.paid ? 'quick-btn-paid' : 'quick-btn-free');
 
     document.getElementById('quick-modal').classList.add('active');
 }
-function closeQuickView(){ document.getElementById('quick-modal').classList.remove('active'); }
+function closeQuick(){ document.getElementById('quick-modal').classList.remove('active'); }
 
-function handleQuickAction(){
-    closeQuickView();
-    if(currentBook.isPaid){
-        document.getElementById('sub-title').textContent = currentBook.title;
+/* ════════ HANDLE ACTION (مشاهده کتاب) ════════ */
+function handleAction(){
+    closeQuick();
+    if(book.paid){
+        document.getElementById('sub-book-name').textContent = book.title;
         document.getElementById('code-input').value = '';
         document.getElementById('sub-modal').classList.add('active');
     } else {
-        if(currentBook.pdfUrl && currentBook.pdfUrl.length > 4){
-            openPdfReader(currentBook.pdfUrl, currentBook.title);
-        } else {
-            alert("✅ لینک PDF این کتاب به زودی اضافه می‌شود.");
-        }
+        book.pdf && book.pdf.length > 4
+            ? openPdf(book.pdf, book.title)
+            : alert('✅ لینک PDF این کتاب به زودی اضافه می‌شود.');
     }
 }
 
-/* ════════════ Summary Modal ════════════ */
-function openSummaryModal(){
-    document.getElementById('sum-title').textContent = currentBook.title;
-    document.getElementById('sum-body').textContent  = currentBook.summary || 'خلاصه‌ای ثبت نشده.';
+/* ════════ SUMMARY ════════ */
+function openSummary(){
+    document.getElementById('sum-title').textContent = book.title;
+    document.getElementById('sum-body').textContent  = book.summary || 'خلاصه‌ای برای این کتاب ثبت نشده است.';
     document.getElementById('summary-modal').classList.add('active');
 }
-function closeSummaryModal(){ document.getElementById('summary-modal').classList.remove('active'); }
+function closeSummary(){ document.getElementById('summary-modal').classList.remove('active'); }
 
-/* ════════════ Subscription ════════════ */
+/* ════════ SUBSCRIPTION ════════ */
 function submitCode(){
     const code = document.getElementById('code-input').value.trim();
-    if(!code){ alert("لطفاً کد اشتراک را وارد کنید."); return; }
-    if(code === "55555"){
-        alert("✅ کد اشتراک معتبر است!");
-        closeSubModal();
-        if(currentBook.pdfUrl && currentBook.pdfUrl.length > 4)
-            openPdfReader(currentBook.pdfUrl, currentBook.title);
+    if(!code){ alert('لطفاً کد اشتراک را وارد کنید.'); return; }
+    if(code === '55555'){
+        alert('✅ کد معتبر است!');
+        closeSub();
+        book.pdf && book.pdf.length > 4 && openPdf(book.pdf, book.title);
     } else {
-        alert("❌ کد اشتراک نامعتبر است.");
+        alert('❌ کد اشتراک نامعتبر است.');
     }
 }
-function closeSubModal(){ document.getElementById('sub-modal').classList.remove('active'); }
-function showContactOptions(){ closeSubModal(); document.getElementById('contact-modal').classList.add('active'); }
-function closeContactModal(){ document.getElementById('contact-modal').classList.remove('active'); }
+function closeSub(){ document.getElementById('sub-modal').classList.remove('active'); }
+function showContact(){ closeSub(); document.getElementById('contact-modal').classList.add('active'); }
+function closeContact(){ document.getElementById('contact-modal').classList.remove('active'); }
 
-/* ════════════ PDF Reader ════════════ */
-function openPdfReader(url, title){
-    document.getElementById('reader-title').textContent = title;
+/* ════════ PDF ════════ */
+function openPdf(url, title){
+    document.getElementById('pdf-title').textContent = title;
     document.getElementById('pdf-iframe').src = url;
-    document.getElementById('pdf-reader-modal').classList.add('active');
+    document.getElementById('pdf-modal').classList.add('active');
 }
-function closePdfReader(){
+function closePdf(){
     document.getElementById('pdf-iframe').src = '';
-    document.getElementById('pdf-reader-modal').classList.remove('active');
+    document.getElementById('pdf-modal').classList.remove('active');
 }
 
-/* ════════════ Modal backdrop close ════════════ */
-function handleModalClick(e, id){
-    if(e.target.id === id){
-        if(id === 'quick-modal')   closeQuickView();
-        if(id === 'summary-modal') closeSummaryModal();
-        if(id === 'sub-modal')     closeSubModal();
-        if(id === 'contact-modal') closeContactModal();
-    }
+/* ════════ BACKDROP CLOSE ════════ */
+function handleBackdrop(e, id){
+    if(e.target.id !== id) return;
+    ({ 'quick-modal': closeQuick, 'summary-modal': closeSummary,
+       'sub-modal': closeSub, 'contact-modal': closeContact }[id] || (()=>{}))();
 }
 </script>
 </body>
