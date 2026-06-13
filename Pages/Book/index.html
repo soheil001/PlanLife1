@@ -105,10 +105,8 @@
         .books-row {
             display: flex; gap: 16px; overflow-x: auto;
             padding: 4px 16px 12px; scrollbar-width: none; align-items: flex-start;
-            margin-bottom: 20px;
         }
         .books-row::-webkit-scrollbar { display: none; }
-        .books-row:last-of-type { margin-bottom: 0; }
 
         /* ─── BOOK CARD (shared base) ─── */
         .book-card {
@@ -140,9 +138,18 @@
         .rating-count { font-size: 10px; color: rgba(255,255,255,0.38); }
 
         /* ─── BADGES on book card ─── */
+        /*
+            برچسب‌ها روی کارت کتاب:
+            .badge-row  →  ردیف بالای کاور
+            .bdg        →  هر برچسب
+            .bdg-free   →  رایگان (سبز)
+            .bdg-paid   →  اشتراکی (نارنجی)
+            .bdg-fa     →  فارسی (طلایی)
+            .bdg-en     →  English (سفید)
+        */
         .badge-row {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between;   /* راست = زبان  |  چپ = رایگان/اشتراکی */
             align-items: center;
             margin-bottom: 5px;
         }
@@ -151,26 +158,38 @@
             padding: 2px 8px; border-radius: 20px; line-height: 1.6;
             backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
         }
+        /* سمت چپ کارت — رایگان / اشتراکی */
         .bdg-free { background: rgba(76,175,125,0.22); color: #5dcea0; border: 1px solid rgba(76,175,125,0.35); }
         .bdg-paid { background: rgba(255,120,0,0.2);   color: #ffaa44; border: 1px solid rgba(255,120,0,0.35); }
+        /* سمت راست کارت — زبان */
         .bdg-fa   { background: rgba(212,175,55,0.18); color: var(--gold); border: 1px solid rgba(212,175,55,0.3); }
         .bdg-en   { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.2); }
 
         /* ─────────────────────────────────────────────
            ALL BOOKS GRID
-           ─────────────────────────────────────────────*/
+           ─────────────────────────────────────────────
+           تعداد ستون‌ها را اینجا تغییر بده:
+             ۲ ستون  →  repeat(2, 1fr)
+             ۳ ستون  →  repeat(3, 1fr)   ← پیش‌فرض موبایل
+             ۴ ستون  →  repeat(4, 1fr)
+             ۵ ستون  →  repeat(5, 1fr)
+
+           برای افزودن ردیف جدید: فقط یک .book-card اضافه کن
+           گرید خودکار ردیف می‌سازد.
+        ───────────────────────────────────────────── */
         .books-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(3, 1fr);  /* ← موبایل */
             gap: 20px 12px;
             padding: 4px 14px 12px;
         }
         .books-grid .book-card  { width: 100%; flex-shrink: unset; }
         .books-grid .book-cover { width: 100%; height: auto; aspect-ratio: 5/7; }
 
+        /* دسکتاپ: ۵ ستون کوچک‌تر */
         @media (min-width: 768px) {
             .books-grid {
-                grid-template-columns: repeat(5, 1fr);
+                grid-template-columns: repeat(5, 1fr);   /* ← دسکتاپ */
                 gap: 20px 16px;
                 padding: 4px 24px 12px;
             }
@@ -179,7 +198,7 @@
         }
 
         /* ══════════════════════════════════════════════
-           GLASS QUICK-VIEW MODAL
+           GLASS QUICK-VIEW MODAL  (باز می‌شه با تپ روی کتاب)
         ══════════════════════════════════════════════ */
         .quick-modal {
             position: fixed; inset: 0;
@@ -207,6 +226,7 @@
             border-radius: 99px; margin: 14px auto 0;
         }
 
+        /* هدر: جلد + اطلاعات */
         .quick-header {
             display: flex; align-items: flex-start; gap: 16px;
             padding: 20px 20px 16px;
@@ -221,6 +241,7 @@
         .quick-author { font-size: 12px; color: rgba(255,255,255,0.45); margin-bottom: 8px; }
         .quick-star-row { display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
 
+        /* تگ رایگان / اشتراکی در مودال */
         .quick-tag {
             display: inline-block; font-size: 11px; font-weight: 700;
             padding: 3px 11px; border-radius: 20px;
@@ -236,6 +257,7 @@
         }
         .quick-close-btn:hover { background: rgba(255,255,255,0.14); }
 
+        /* دو دکمه اصلی */
         .quick-actions { display: flex; gap: 10px; padding: 16px 20px 0; }
         .quick-btn {
             flex: 1; padding: 14px 8px; border-radius: 16px;
@@ -290,7 +312,6 @@
             text-align: center; animation: fadeScale 0.3s ease;
         }
         .sub-title { font-size: 18px; font-weight: 800; color: var(--gold); margin-bottom: 10px; }
-        .sub-code-hint { font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 20px; }
         .sub-desc  { font-size: 13px; color: rgba(255,255,255,0.55); margin-bottom: 20px; line-height: 1.7; }
         #code-input {
             width: 100%; padding: 13px 16px;
@@ -306,7 +327,7 @@
             font-family: 'Vazirmatn', sans-serif; transition: transform 0.15s;
         }
         .sub-btn:active { transform: scale(0.98); }
-        .sub-btn-confirm { background: linear-gradient(135deg, var(--gold), #f0d060); color: #111; }
+        .sub-btn-confirm { background: var(--gold); color: #111; }
         .sub-btn-cancel  { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.14); }
 
         /* ══════════════════════════════════════════════
@@ -324,34 +345,9 @@
             padding: 28px 22px; width: 100%; max-width: 360px;
             text-align: center; animation: fadeScale 0.3s ease;
         }
-        .contact-title { color:var(--gold); margin-bottom:20px; font-size:18px; font-weight:800; }
-        .contact-links {
-            display:flex; flex-direction:column; gap:12px; margin-bottom:18px;
-        }
-        .contact-link {
-            padding:14px; border-radius:14px; text-decoration:none; font-weight:700;
-            display:flex; align-items:center; justify-content:center; gap:8px;
-            font-family:'Vazirmatn',sans-serif; color:white; transition: transform 0.15s;
-            cursor: pointer;
-        }
-        .contact-link:active { transform: scale(0.97); }
-        .contact-link.telegram { background: linear-gradient(135deg, #0088cc, #0066aa); }
-        .contact-link.whatsapp { background: linear-gradient(135deg, #25d366, #128c7e); }
-        .contact-link.instagram { background: linear-gradient(135deg, #e4405f, #fd1d1d); }
-        .contact-link.bale { background: linear-gradient(135deg, #00a000, #008000); }
-        .contact-close {
-            padding:10px 24px; background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.7);
-            border:1px solid rgba(255,255,255,0.15); border-radius:12px; font-family:'Vazirmatn',sans-serif;
-            cursor:pointer; font-size:14px; font-weight: 600; transition: background 0.2s;
-        }
-        .contact-close:hover { background:rgba(255,255,255,0.12); }
 
         /* ── PDF READER ── */
-        .pdf-modal { 
-            position: fixed; inset: 0; background: rgba(0,0,0,0.92); 
-            display: none; flex-direction: column; z-index: 1050;
-            overflow: hidden;
-        }
+        .pdf-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: none; flex-direction: column; z-index: 1050; }
         .pdf-modal.active { display: flex; }
         .pdf-header {
             display: flex; align-items: center; justify-content: space-between;
@@ -360,13 +356,7 @@
         }
         .pdf-header h3 { color: var(--gold); font-size: 15px; }
         .pdf-close { background: none; border: none; color: #fff; font-size: 28px; cursor: pointer; line-height: 1; }
-        #pdf-iframe { 
-            width: 100%; 
-            flex: 1; 
-            border: none; 
-            background: #fff;
-            touch-action: manipulation;
-        }
+        #pdf-iframe { width: 100%; flex: 1; border: none; background: #fff; }
     </style>
 </head>
 <body>
@@ -388,16 +378,22 @@
 
 <div class="page-wrap">
 
-    <!-- ═════════════════════════════════════════════════════════
-         بخش پیشنهادی‌های PlanLife — ۲ ردیف اسکرول افقی جدا
-         ═════════════════════════════════════════════════════════ -->
+    <!-- ══════════════════════════════════════════
+         بخش ۱ — پیشنهادی‌های PlanLife
+         (اسکرول افقی)
+         برای افزودن: یک .book-card جدید در این .books-row اضافه کن
+    ══════════════════════════════════════════ -->
     <div class="section">
         <div class="section-header">
             <div class="section-title">✨ پیشنهادی‌های PlanLife</div>
         </div>
-
-        <!-- ┌─ ردیف ۱ ─┐ -->
         <div class="books-row">
+
+            <!-- ┌──────────────────────────────────────────┐
+                 │  کتاب پیشنهادی — رایگان                 │
+                 │  data-is-paid="false"  →  رایگان         │
+                 │  data-lang="fa"        →  فارسی          │
+                 └──────────────────────────────────────────┘ -->
             <div class="book-card" onclick="openQuickView(this)"
                 data-title="عادت‌های اتمی"
                 data-author="جیمز کلیر"
@@ -406,20 +402,31 @@
                 data-rating-count="۲.۴k"
                 data-is-paid="false"
                 data-lang="fa"
-                data-code="55555"
                 data-pdf-url="https://drive.google.com/file/d/1r5TbNWk6dt6o_5luMV845kuAvsLwQIoe/preview"
-                data-summary="جیمز کلیر در این کتاب ثابت می‌کند که تغییرات کوچک یک درصدی می‌توانند نتایج شگفت‌انگیزی در زندگی ایجاد کنند.
+                data-summary="
+جیمز کلیر در این کتاب ثابت می‌کند که تغییرات کوچک یک درصدی
+می‌توانند نتایج شگفت‌انگیزی در زندگی ایجاد کنند.
 
-او با تکیه بر علم عصب‌شناسی و روان‌شناسی رفتاری، چارچوبی عملی برای ساختن عادات خوب و شکستن عادات بد ارائه می‌دهد.
+او با تکیه بر علم عصب‌شناسی و روان‌شناسی رفتاری، چارچوبی
+عملی برای ساختن عادات خوب و شکستن عادات بد ارائه می‌دهد.
 
-کلیر توضیح می‌دهد که هویت ما نقش محوری در شکل‌گیری رفتارهایمان دارد و تغییر واقعی از تغییر باورهای ما درباره خودمان شروع می‌شود.">
-                <img class="book-cover" src="https://res.cloudinary.com/dlf11vil6/image/upload/v1780946121/Textured_Image_Polaroid_Instagram_Story_d4wwow.png" alt="عادت‌های اتمی">
+کلیر توضیح می‌دهد که هویت ما نقش محوری در شکل‌گیری
+رفتارهایمان دارد و تغییر واقعی از تغییر باورهای ما درباره
+خودمان شروع می‌شود.
+                ">
+                <img class="book-cover"
+                    src="https://res.cloudinary.com/dlf11vil6/image/upload/v1780946121/Textured_Image_Polaroid_Instagram_Story_d4wwow.png"
+                    alt="عادت‌های اتمی">
                 <div class="book-info">
                     <div class="book-name">عادت‌های اتمی</div>
                     <div class="star-row"><div class="stars" data-rating="4.7"></div><span class="rating-count">(۲.۴k)</span></div>
                 </div>
             </div>
 
+            <!-- ┌──────────────────────────────────────────┐
+                 │  کتاب پیشنهادی — اشتراکی                │
+                 │  data-is-paid="true"   →  اشتراکی        │
+                 └──────────────────────────────────────────┘ -->
             <div class="book-card" onclick="openQuickView(this)"
                 data-title="قدرت عادت"
                 data-author="چارلز داهیگ"
@@ -428,11 +435,16 @@
                 data-rating-count="۱.۸k"
                 data-is-paid="true"
                 data-lang="fa"
-                data-code="3333"
                 data-pdf-url=""
-                data-summary="چارلز داهیگ در این کتاب به بررسی علمی عادت‌ها می‌پردازد و نشان می‌دهد که چرا عادت‌ها وجود دارند و چگونه می‌توان آن‌ها را تغییر داد.
+                data-summary="
+چارلز داهیگ در این کتاب به بررسی علمی عادت‌ها می‌پردازد
+و نشان می‌دهد که چرا عادت‌ها وجود دارند و چگونه می‌توان
+آن‌ها را تغییر داد.
 
-او مفهوم چرخه عادت را معرفی می‌کند: نشانه، روتین و پاداش. داهیگ با مثال‌هایی از شرکت‌های بزرگ و تیم‌های ورزشی نشان می‌دهد که درک ساختار عادت‌ها می‌تواند زندگی را متحول کند.">
+او مفهوم چرخه عادت را معرفی می‌کند: نشانه، روتین و پاداش.
+داهیگ با مثال‌هایی از شرکت‌های بزرگ و تیم‌های ورزشی نشان
+می‌دهد که درک ساختار عادت‌ها می‌تواند زندگی را متحول کند.
+                ">
                 <img class="book-cover" src="https://picsum.photos/seed/book2/200/280" alt="قدرت عادت">
                 <div class="book-info">
                     <div class="book-name">قدرت عادت</div>
@@ -448,13 +460,17 @@
                 data-rating-count="۳.۱k"
                 data-is-paid="false"
                 data-lang="fa"
-                data-code="55555"
                 data-pdf-url=""
-                data-summary="اکهارت تله در این کتاب خوانندگان را به سفری درونی دعوت می‌کند تا قدرت زندگی در لحظه حال را کشف کنند.
+                data-summary="
+اکهارت تله در این کتاب خوانندگان را به سفری درونی دعوت
+می‌کند تا قدرت زندگی در لحظه حال را کشف کنند.
 
-او نشان می‌دهد که ذهن انسان اغلب در گذشته یا آینده گم می‌شود و این خود منبع اصلی رنج است.
+او نشان می‌دهد که ذهن انسان اغلب در گذشته یا آینده
+گم می‌شود و این خود منبع اصلی رنج است.
 
-تله با زبانی ساده توضیح می‌دهد که چگونه می‌توان از تله ذهنی خارج شد و آگاهی ناب را تجربه کرد.">
+تله با زبانی ساده توضیح می‌دهد که چگونه می‌توان از تله
+ذهنی خارج شد و آگاهی ناب را تجربه کرد.
+                ">
                 <img class="book-cover" src="https://picsum.photos/seed/book3/200/280" alt="نیروی حال">
                 <div class="book-info">
                     <div class="book-name">نیروی حال</div>
@@ -470,96 +486,23 @@
                 data-rating-count="۹۲۳"
                 data-is-paid="false"
                 data-lang="fa"
-                data-code="55555"
                 data-pdf-url=""
-                data-summary="مارک منسون با رویکردی ضد فرهنگ خودیاری سنتی می‌گوید مشکل اصلی ما این است که به چیزهای نادرستی اهمیت می‌دهیم.
+                data-summary="
+مارک منسون با رویکردی ضد فرهنگ خودیاری سنتی می‌گوید
+مشکل اصلی ما این است که به چیزهای نادرستی اهمیت می‌دهیم.
 
 پذیرش محدودیت‌ها و ناقص بودن، کلید زندگی معنادار است.
 
-منسون با طنز توضیح می‌دهد که چگونه فقط روی چیزهایی انرژی بگذاریم که واقعاً اهمیت دارند.">
+منسون با طنز توضیح می‌دهد که چگونه فقط روی چیزهایی
+انرژی بگذاریم که واقعاً اهمیت دارند.
+                ">
                 <img class="book-cover" src="https://picsum.photos/seed/book4/200/280" alt="هنر ظریف رهایی">
                 <div class="book-info">
                     <div class="book-name">هنر ظریف رهایی</div>
                     <div class="star-row"><div class="stars" data-rating="4.5"></div><span class="rating-count">(۹۲۳)</span></div>
                 </div>
             </div>
-        </div>
 
-        <!-- ┌─ ردیف ۲ ─┐ -->
-        <div class="books-row">
-            <div class="book-card" onclick="openQuickView(this)"
-                data-title="Money Majic"
-                data-author="لارس هلوته"
-                data-cover="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781317806/IMG_1854_icdzpy.png"
-                data-rating="4.7"
-                data-rating-count="۵.۸k"
-                data-is-paid="true"
-                data-lang="en"
-                data-code="3333"
-                data-pdf-url="https://drive.google.com/file/d/1p547rrXZmWs9692xfe3LVh-CKTM_JmM8/preview"
-                data-summary="🔮 کیمیاگری مدرن: ثروت به سبک جادوی آشوب
-کتاب «جادوی پول: چشم‌اندازی از جادوی آشوب» اثر لارس هلوته، خط بطلانی می‌کشد روی تمام تصورات سنتی و کلیشه‌ای درباره‌ی طلسم‌های ثروت.">
-                <img class="book-cover" src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781317806/IMG_1854_icdzpy.png" alt="money majic">
-                <div class="book-info">
-                    <div class="book-name">Money Majic</div>
-                    <div class="star-row"><div class="stars" data-rating="4.3"></div></div>
-                </div>
-            </div>
-
-            <div class="book-card" onclick="openQuickView(this)"
-                data-title="Belief Majic"
-                data-author="لارس هلوته"
-                data-cover="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781293734/Untitled_design_ccktbx.png"
-                data-rating="5"
-                data-rating-count="۷.۱k"
-                data-is-paid="true"
-                data-lang="en"
-                data-code="3333"
-                data-pdf-url="https://drive.google.com/file/d/1eM-SKcofGHKbAZuR06oU8z4wpHYOPJeJ/preview"
-                data-summary="👁️ جادوی باور: هک ناخودآگاه به سبک جادوی آشوب
-کتاب «جادوی باور» اثر لارس هلوته، به یکی از بنیادی‌ترین و جنجالی‌ترین اصول جادوی آشوب (Chaos Magic) می‌پردازد.">
-                <img class="book-cover" src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781293734/Untitled_design_ccktbx.png" alt="belief majic">
-                <div class="book-info">
-                    <div class="book-name">Belief Majic</div>
-                    <div class="star-row"><div class="stars" data-rating="4.8"></div></div>
-                </div>
-            </div>
-
-            <div class="book-card" onclick="openQuickView(this)"
-                data-title="Crafting Majick"
-                data-author="سوزان پزنکر"
-                data-cover="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781328327/Untitled_design_xcdviu.png"
-                data-rating="4.2"
-                data-rating-count="۶۷۴"
-                data-is-paid="false"
-                data-lang="fa"
-                data-code="55555"
-                data-pdf-url="https://drive.google.com/file/d/1ZMW_y2BGNkK9SBXvU7BE3eSIOgD4VXly/preview"
-                data-summary="✍️ جادوی قلم: خلق داستان‌ها، طلسم‌ها و آثار ماورایی با جادوی نویسندگی">
-                <img class="book-cover" src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781328327/Untitled_design_xcdviu.png" alt="crafting majick">
-                <div class="book-info">
-                    <div class="book-name">Crafting Majick</div>
-                    <div class="star-row"><div class="stars" data-rating="4.2"></div></div>
-                </div>
-            </div>
-
-            <div class="book-card" onclick="openQuickView(this)"
-                data-title="Liber Null & Psychonaut"
-                data-author="Peter Carroll"
-                data-cover="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780013257/Untitled_design_wyybit.png"
-                data-rating="4.8"
-                data-rating-count="۸۹۴"
-                data-is-paid="true"
-                data-lang="en"
-                data-code="3333"
-                data-pdf-url="https://api.cloudinary.com/v1_1/dshielkdt/image/download?api_key=884443113314115&public_id=Screenshot_2024-08-16_at_10.14.03_hkrxui&signature=e28c5226cf3b727a8e92ed12c29caac93e865939&timestamp=1780014362&type=upload"
-                data-summary="One of the most important texts in Chaos Magic, written by Peter Carroll.">
-                <img class="book-cover" src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780013257/Untitled_design_wyybit.png" alt="Liber Null">
-                <div class="book-info">
-                    <div class="book-name">Liber Null</div>
-                    <div class="star-row"><div class="stars" data-rating="4.8"></div></div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -568,16 +511,40 @@
     <!-- ══════════════════════════════════════════════════════
          بخش ۲ — همه کتاب‌ها (گرید بی‌نهایت)
          ══════════════════════════════════════════════════════
-         👉 کد اشتراکی در data-code:
-         رایگان:  data-code="55555"
-         اشتراکی: data-code="3333"
-         ══════════════════════════════════════════════════════ -->
+         تعداد ستون‌ها:
+           موبایل  →  CSS کلاس .books-grid  →  repeat(3, 1fr)
+           دسکتاپ →  media query 768px     →  repeat(5, 1fr)
+
+         ردیف جدید: فقط یک .book-card اضافه کن — گرید خودکار ردیف می‌سازد
+
+         هر کارت:
+           data-is-paid="false"  →  رایگان  (برچسب سبز سمت چپ)
+           data-is-paid="true"   →  اشتراکی (برچسب نارنجی سمت چپ)
+           data-lang="fa"        →  برچسب «فارسی» سمت راست
+           data-lang="en"        →  برچسب «English» سمت راست
+    ══════════════════════════════════════════════════════ -->
     <div class="section">
         <div class="section-header">
             <div class="section-title">📚 همه کتاب‌ها</div>
         </div>
         <div class="books-grid" id="all-books-grid">
 
+            <!-- ╔══════════════════════════════════════════╗
+                 ║  BOOK CARD TEMPLATE — کپی کن و پر کن   ║
+                 ╠══════════════════════════════════════════╣
+                 ║  data-title      →  نام کتاب            ║
+                 ║  data-author     →  نام نویسنده          ║
+                 ║  data-cover      →  لینک تصویر جلد      ║
+                 ║  data-rating     →  امتیاز (۰ تا ۵)     ║
+                 ║  data-rating-count → تعداد رأی          ║
+                 ║  data-is-paid    →  false / true         ║
+                 ║  data-lang       →  fa / en              ║
+                 ║  data-pdf-url    →  لینک PDF کتاب       ║
+                 ║  data-summary    →  خلاصه کتاب          ║
+                 ║    (می‌تونی چند خط بنویسی، مشکلی نیست) ║
+                 ╚══════════════════════════════════════════╝ -->
+
+            <!-- کتاب ۱ -->
             <div class="book-card" onclick="openQuickView(this)"
                 data-title="عادت‌های اتمی"
                 data-author="جیمز کلیر"
@@ -586,20 +553,27 @@
                 data-rating-count="۲.۴k"
                 data-is-paid="false"
                 data-lang="fa"
-                data-code="55555"
                 data-pdf-url="https://drive.google.com/file/d/1r5TbNWk6dt6o_5luMV845kuAvsLwQIoe/preview"
-                data-summary="جیمز کلیر ثابت می‌کند که تغییرات کوچک یک درصدی می‌توانند نتایج شگفت‌انگیزی ایجاد کنند.
+                data-summary="
+جیمز کلیر ثابت می‌کند که تغییرات کوچک یک درصدی
+می‌توانند نتایج شگفت‌انگیزی ایجاد کنند.
 
-با تکیه بر علم عصب‌شناسی، چارچوبی عملی برای ساختن عادات خوب و شکستن عادات بد ارائه می‌دهد.
+با تکیه بر علم عصب‌شناسی، چارچوبی عملی برای ساختن
+عادات خوب و شکستن عادات بد ارائه می‌دهد.
 
-هویت ما نقش محوری در شکل‌گیری رفتارهایمان دارد و تغییر واقعی از تغییر باورهای ما شروع می‌شود.">
-                <img class="book-cover" src="https://res.cloudinary.com/dlf11vil6/image/upload/v1780946121/Textured_Image_Polaroid_Instagram_Story_d4wwow.png" alt="عادت‌های اتمی">
+هویت ما نقش محوری در شکل‌گیری رفتارهایمان دارد
+و تغییر واقعی از تغییر باورهای ما شروع می‌شود.
+                ">
+                <img class="book-cover"
+                    src="https://res.cloudinary.com/dlf11vil6/image/upload/v1780946121/Textured_Image_Polaroid_Instagram_Story_d4wwow.png"
+                    alt="عادت‌های اتمی">
                 <div class="book-info">
                     <div class="book-name">عادت‌های اتمی</div>
                     <div class="star-row"><div class="stars" data-rating="4.7"></div></div>
                 </div>
             </div>
 
+            <!-- کتاب ۲ -->
             <div class="book-card" onclick="openQuickView(this)"
                 data-title="Money Majic"
                 data-author="لارس هلوته"
@@ -608,16 +582,33 @@
                 data-rating-count="۵.۸k"
                 data-is-paid="true"
                 data-lang="en"
-                data-code="3333"
                 data-pdf-url="https://drive.google.com/file/d/1p547rrXZmWs9692xfe3LVh-CKTM_JmM8/preview"
-                data-summary="🔮 کیمیاگری مدرن: ثروت به سبک جادوی آشوب">
-                <img class="book-cover" src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781317806/IMG_1854_icdzpy.png" alt="money majic">
+                data-summary="
+‎🔮 کیمیاگری مدرن: ثروت به سبک جادوی آشوب
+‎کتاب «جادوی پول: چشم‌اندازی از جادوی آشوب» اثر لارس هلوته، خط بطلانی می‌کشد روی تمام تصورات سنتی و کلیشه‌ای درباره‌ی طلسم‌های ثروت. هلوته در این اثر به ما یاد می‌دهد که جادوی واقعی پول، به دست آوردن ناگهانی یک گونی اسکناس نیست؛ بلکه تغییر بنیادین در ذهنیت، فرکانس فردی و نحوه تعامل ما با جریان انرژی مال است.
+‎این کتاب راهنمایی عملی، صریح و بدون تعارف برای کسانی است که می‌خواهند از تکنیک‌های جادوی آشوب (Chaos Magic) برای خلق ثروت پایدار استفاده کنند.
+‎🔑 سرفصل‌های کلیدی و درون‌مایه کتاب
+‎• فریب ثروت سریع (فصل ۱ و ۲): هلوته قانون اول را بی‌رحمانه گوشزد می‌کند؛ ثروتی که برق‌آسا و بدون زیرساخت بیاید، سریع‌تر از آنچه فکرش را بکنید ناپدید می‌شود. جادوی واقعی روی ثروت پایدار و ماندگار تمرکز دارد.
+‎• مسیر مهم‌تر از هدف است (فصل ۳ و ۴): برخلاف تصور عموم، «طمع و ولع شدید» برای پول، خودش بزرگ‌ترین مانع و ارتعاشِ فقر است. کتاب به شما می‌آموزد چگونه اشتیاق خود را کنترل کنید و روی «مسیر و ابزارها» تمرکز کنید تا پول خود به خود جاری شود.
+‎• جهت‌دهی به طلسم‌ها (فصل ۵): چطور نیت خود را دقیقاً روی هدف قفل کنیم تا جادو به بیراهه نرود؟
+‎🛠 اتاق عمل جادوی آشوب: تکنیک‌های کاربردی
+بخش هیجان‌انگیز و کاملاً عملی کتاب، به ابزارهای جادوی آشوب اختصاص دارد:
+1. رسم سیجیل‌ها (Sigils): فشرده‌سازی نیت ثروت در قالب نمادهای جادویی و تزریق آن به ناخودآگاه.
+2. خلق سرویتورها (Servitors): ساخت موجودات انرژیایی و خدمتگزاران ماورایی که مأموریتشان جذب فرصت‌های مالی برای شماست.
+3. احضار ژوپیتر (Jupiter Evocation): اتصال به کهن‌الگو و انرژی سیاره مشتری؛ مظهر فراوانی، شانس و گسترش رزق.
+‎🎯 چرا این خلاصه ارزش خواندن دارد؟
+‎اگر از کتاب‌های قانون جذبِ سطحی خسته شده‌اید و به دنبال یک رویکرد عملی، تاریک‌تر، روان‌شناختی و کاملاً کاربردی برای بهبود وضعیت مالی خود هستید، این کتاب ساختار ذهنی شما را به کل تغییر خواهد داد.
+                
+                ">
+
+                 <img class="book-cover" src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781317806/IMG_1854_icdzpy.png" alt="money majic">
                 <div class="book-info">
                     <div class="book-name">Money Majic</div>
                     <div class="star-row"><div class="stars" data-rating="4.3"></div></div>
                 </div>
             </div>
 
+            <!-- کتاب ۳ -->
             <div class="book-card" onclick="openQuickView(this)"
                 data-title="Belief Majic"
                 data-author="لارس هلوته"
@@ -626,16 +617,27 @@
                 data-rating-count="۷.۱k"
                 data-is-paid="true"
                 data-lang="en"
-                data-code="3333"
                 data-pdf-url="https://drive.google.com/file/d/1eM-SKcofGHKbAZuR06oU8z4wpHYOPJeJ/preview"
-                data-summary="👁️ جادوی باور: هک ناخودآگاه به سبک جادوی آشوب">
-                <img class="book-cover" src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781293734/Untitled_design_ccktbx.png" alt="belief majic">
+                data-summary="
+👁️ جادوی باور: هک ناخودآگاه به سبک جادوی آشوب
+‏‎کتاب «جادوی باور» اثر لارس هلوته، به یکی از بنیادی‌ترین و جنجالی‌ترین اصول جادوی آشوب (Chaos Magic) می‌پردازد: «باور، یک حقیقت مطلق نیست، بلکه فقط یک ابزار است.»
+‏‎هلوته در این اثر موجز و تکان‌دهنده به شما نشان می‌دهد که چگونه ساختارهای عقیدتی و باورهای ذهنی ما، واقعیت بیرونی‌مان را شکل می‌دهند. اما تفاوت بزرگ این کتاب با آثار روان‌شناسی عمومی این است که به شما یاد می‌دهد چطور مثل یک ماتریکس، باورهای خود را به صورت ارادی تغییر، دستکاری و بازنویسی کنید تا به قدرت جادویی و اهداف خود برسید.
+‏‎📌 محورهای اصلی کتاب:
+‏‎ باور به مثابه ابزار (Belief as a Tool): یادگیری اینکه چطور به طور موقت به چیزی دروناً باور پیدا کنید تا جادوی شما عمل کند، و سپس بدون وابستگی آن را رها کنید.
+‏‎ انعطاف‌پذیری روانی: تکنیک‌هایی برای شکستن دگم‌ها و تعصبات ذهنی که مانع پیشرفت هستند.
+‏‎ مهندسی واقعیت: چطور با تغییر عامدانه «فیلترهای ذهنی»، نتایج فیزیکی و بیرونی زندگی‌تان را دگرگون کنید.
+‏‎چرا این کتاب یک شاهکار کوچک است؟
+‏‎این اثر برای کسانی است که می‌خواهند از بندِ چارچوب‌های فکری تحمیلی رها شوند و یاد بگیرند که چطور با مدیریت ذهن و ناخودآگاه خود، واقعیت را آن‌طور که می‌خواهند بازآفرینی کنند. یک راهنمای سریع و کاربردی برای جادوگران مدرن!
+
+                                           ">
+                <img class="book-cover" src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781293734/Untitled_design_ccktbx.png" alt="نیروی حال">
                 <div class="book-info">
                     <div class="book-name">Belief Majic</div>
                     <div class="star-row"><div class="stars" data-rating="4.8"></div></div>
                 </div>
             </div>
 
+            <!-- کتاب ۴ -->
             <div class="book-card" onclick="openQuickView(this)"
                 data-title="هنر ظریف رهایی"
                 data-author="مارک منسون"
@@ -644,9 +646,16 @@
                 data-rating-count="۹۲۳"
                 data-is-paid="false"
                 data-lang="fa"
-                data-code="55555"
                 data-pdf-url=""
-                data-summary="مارک منسون می‌گوید انرژی‌ات را فقط روی چیزهایی بگذار که واقعاً اهمیت دارند.">
+                data-summary="
+مارک منسون می‌گوید انرژی‌ات را فقط روی چیزهایی بگذار🎨 جادوی هنر: تجلی خواسته با هنر مقدس و جادوی عملی
+کتاب «جادوی هنر» یک پل منحصربه‌فرد میان دو دنیای شگفت‌انگیز است: هنر خلّاقانه و علوم غریبه عملی. این کتاب به شما می‌آموزد که هنر چطور می‌تواند از یک فعالیت صرفاً زیباشناختی، به ابزاری قدرتمند برای دگرگونی واقعیت و گرفتن نتایج ملموس و همیشگی در زندگی تبدیل شود.
+نویسنده در این اثر، فرمول‌های پنهان «هنر مقدس» را رمزگشایی کرده و به شما یاد می‌دهد که چگونه فرآیند خلق اثر هنری را با تکنیک‌های جادویی ترکیب کنید تا به اهدافتان برسید.
+📌 آنچه در این کتاب خواهید آموخت:
+ کدگذاری نیت‌ها در هنر: چطور آرزوها، اهداف و جادوی خود را در قالب رنگ‌ها، خطوط، نمادها و آواها پنهان و زنده کنید.
+ جادوی عملی برای نتایج پایدار: فراتر رفتن از طلسم‌های موقت؛ این کتاب روی ساختار و متدهایی تمرکز دارد که خروجی و موفقیت شما را در زندگی پایدار و مستمر می‌کند.
+ خلسه خلاقیت: استفاده از وضعیت ذهنی هنرمند در حین خلق اثر (حالت غرقگی یا Flow) به عنوان بالاترین فرکانس برای بارور کردن ناخودآگاه و اجرای جادو.
+                ">
                 <img class="book-cover" src="https://picsum.photos/seed/book4/200/280" alt="هنر ظریف رهایی">
                 <div class="book-info">
                     <div class="book-name">هنر ظریف رهایی</div>
@@ -654,6 +663,7 @@
                 </div>
             </div>
 
+            <!-- کتاب ۵ -->
             <div class="book-card" onclick="openQuickView(this)"
                 data-title="Crafting Majick"
                 data-author="سوزان پزنکر"
@@ -662,16 +672,28 @@
                 data-rating-count="۶۷۴"
                 data-is-paid="false"
                 data-lang="fa"
-                data-code="55555"
                 data-pdf-url="https://drive.google.com/file/d/1ZMW_y2BGNkK9SBXvU7BE3eSIOgD4VXly/preview"
-                data-summary="✍️ جادوی قلم: خلق داستان‌ها، طلسم‌ها و آثار ماورایی">
-                <img class="book-cover" src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781328327/Untitled_design_xcdviu.png" alt="crafting majick">
+                data-summary="
+دانیل سیگل دوازده استراتژی عملی برای یکپارچه‌سازی✍️ جادوی قلم: خلق داستان‌ها، طلسم‌ها و آثار ماورایی با جادوی نویسندگی
+کتاب «خلق جادو با قلم و جوهر» اثر سوزان پزنکر، یک راهنمای بی‌نظیر برای تمام کسانی است که به قدرت کلمات ایمان دارند. این کتاب به شما نشان می‌دهد که نوشتن، صرفاً یک ابزار ارتباطی نیست، بلکه یکی از قدرتمندترین فرم‌های جادوی عملی است.
+پزنکر در این اثر به شما می‌آموزد که چگونه با ترکیب هنر نویسندگی و علوم غریبه، به کلمات خود قدرت ماورایی ببخشید تا بتوانید طلسم‌هایی بنویسید که واقعاً عمل می‌کنند و داستان‌هایی خلق کنید که واقعیت را تغییر می‌دهند.
+📌 سرفصل‌ها و آموزه‌های کلیدی کتاب:
+• کلمه به مثابه طلسم: چطور کلمات، جملات و اشعار را به گونه‌ای فرمول‌بندی کنید که فرکانس و نیروی جادویی خاصی آزاد کنند.
+• خلق مانیفست‌ها و طلسم‌های مکتوب: آموزش گام‌به‌گام نوشتن کتابچه‌های جادویی (Grimoires)، طلسم‌های شخصی و اوراد قدرتمند.
+• نویسندگی شهودی و خلاق: تکنیک‌هایی برای اتصال به ناخودآگاه و منبع الهام ماورایی جهت نوشتن داستان‌ها یا خاطره‌نویسی‌های جادویی.
+• ابزارهای فیزیکی جادو: بررسی تاثیر نوع کاغذ، رنگ جوهر و حتی زمان‌بندی‌های نجومی روی تاثیرگذاری نوشته‌های جادویی شما.
+
+برای چه کسانی مناسب است؟
+این کتاب یک گنجینه برای نویسندگان، شاعران، جادوگران مدرن و هر کسی است که می‌خواهد قدرتِ بیان و نوشتن خود را به یک ابزار تجلی (Manifestation) و ماورایی تبدیل کند. نیازی نیست نویسنده‌ای حرفه‌ای باشید؛ این کتاب به شما یاد می‌دهد چطور با جاری کردن جوهر روی کاغذ، جادو را در زندگی‌تان جاری کنید.
+                ">
+                <img class="book-cover" src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781328327/Untitled_design_xcdviu.png" alt="ذهن کامل">
                 <div class="book-info">
                     <div class="book-name">Craftin majick</div>
                     <div class="star-row"><div class="stars" data-rating="4.2"></div></div>
                 </div>
             </div>
 
+            <!-- کتاب ۶ — انگلیسی، اشتراکی -->
             <div class="book-card" onclick="openQuickView(this)"
                 data-title="Liber Null & Psychonaut"
                 data-author="Peter Carroll"
@@ -680,16 +702,27 @@
                 data-rating-count="۸۹۴"
                 data-is-paid="true"
                 data-lang="en"
-                data-code="3333"
                 data-pdf-url="https://api.cloudinary.com/v1_1/dshielkdt/image/download?api_key=884443113314115&public_id=Screenshot_2024-08-16_at_10.14.03_hkrxui&signature=e28c5226cf3b727a8e92ed12c29caac93e865939&timestamp=1780014362&type=upload"
-                data-summary="One of the most important texts in Chaos Magic.">
-                <img class="book-cover" src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780013257/Untitled_design_wyybit.png" alt="Liber Null">
+                data-summary="
+One of the most important texts in Chaos Magic,
+written by Peter Carroll.
+
+This dual volume lays the foundations of modern
+magical practice, including sigil work, gnosis,
+and practical will training.
+
+Rarely available — a true collector's text.
+                ">
+                <img class="book-cover"
+                    src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780013257/Untitled_design_wyybit.png"
+                    alt="Liber Null">
                 <div class="book-info">
                     <div class="book-name">Liber Null & Psychonaut</div>
                     <div class="star-row"><div class="stars" data-rating="4.8"></div></div>
                 </div>
             </div>
 
+            <!-- کتاب ۷ -->
             <div class="book-card" onclick="openQuickView(this)"
                 data-title="قدرت عادت — ویژه"
                 data-author="چارلز داهیگ"
@@ -698,18 +731,24 @@
                 data-rating-count="۱.۱k"
                 data-is-paid="true"
                 data-lang="fa"
-                data-code="3333"
                 data-pdf-url="https://drive.google.com/file/d/1i_JB7O0ROrYQhNJszA41J2If8EhXZMtt/preview"
-                data-summary="نسخه کامل و اشتراکی کتاب قدرت عادت.
+                data-summary="
+نسخه کامل و اشتراکی کتاب قدرت عادت.
 
-رازهای علمی پشت عادت‌های موفق را کشف کنید.">
-                <img class="book-cover" src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781278236/Untitled_design_igw3gz.png" alt="قدرت عادت ویژه">
+رازهای علمی پشت عادت‌های موفق را کشف کنید. این کتاب
+نشان می‌دهد که چطور با تغییر عادت‌های کوچک، زندگی
+بزرگ بسازید.
+                ">
+                <img class="book-cover"
+                    src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781278236/Untitled_design_igw3gz.png"
+                    alt="قدرت عادت ویژه">
                 <div class="book-info">
                     <div class="book-name">قدرت عادت — ویژه</div>
                     <div class="star-row"><div class="stars" data-rating="4.5"></div></div>
                 </div>
             </div>
 
+            <!-- کتاب ۸ -->
             <div class="book-card" onclick="openQuickView(this)"
                 data-title="فلسفه خوشبختی"
                 data-author="نویسنده ناشناس"
@@ -718,9 +757,14 @@
                 data-rating-count="۵۸۷"
                 data-is-paid="true"
                 data-lang="fa"
-                data-code="3333"
                 data-pdf-url=""
-                data-summary="نگاهی فلسفی به سعادت انسانی از دیدگاه فیلسوفان بزرگ تاریخ.">
+                data-summary="
+نگاهی فلسفی به سعادت انسانی از دیدگاه فیلسوفان بزرگ
+تاریخ، از ارسطو تا نیچه.
+
+سفری از اسپینوزا تا هایدگر در جستجوی پاسخ به این سؤال
+ابدی که خوشبختی واقعی چیست.
+                ">
                 <img class="book-cover" src="https://picsum.photos/seed/book10/200/280" alt="فلسفه خوشبختی">
                 <div class="book-info">
                     <div class="book-name">فلسفه خوشبختی</div>
@@ -728,6 +772,7 @@
                 </div>
             </div>
 
+            <!-- کتاب ۹ -->
             <div class="book-card" onclick="openQuickView(this)"
                 data-title="اتمیک هابیتس — ویژه"
                 data-author="جیمز کلیر"
@@ -736,9 +781,13 @@
                 data-rating-count="۲.۰k"
                 data-is-paid="true"
                 data-lang="fa"
-                data-code="3333"
                 data-pdf-url=""
-                data-summary="راهنمای عملی برای ایجاد تغییرات کوچک با تأثیرات بزرگ.">
+                data-summary="
+راهنمای عملی برای ایجاد تغییرات کوچک با تأثیرات بزرگ.
+
+سیستمی که دقیقاً نشان می‌دهد چگونه عادت‌های خوب
+بسازید، عادت‌های بد را بشکنید و به اهدافتان برسید.
+                ">
                 <img class="book-cover" src="https://picsum.photos/seed/paid4/200/280" alt="اتمیک هابیتس ویژه">
                 <div class="book-info">
                     <div class="book-name">اتمیک هابیتس — ویژه</div>
@@ -789,11 +838,10 @@
 <!-- ══════════ SUBSCRIPTION MODAL ══════════ -->
 <div class="sub-modal" id="sub-modal" onclick="handleBackdrop(event,'sub-modal')">
     <div class="sub-sheet">
-        <div class="sub-title">🔑 کد اشتراک</div>
-        <div class="sub-code-hint">کد اشتراک خود را وارد کنید</div>
-        <div class="sub-desc">برای مطالعه این کتاب، کد اشتراک خود را در زیر وارد کنید.</div>
-        <input type="text" id="code-input" placeholder="کد اشتراک را وارد کنید...">
-        <button class="sub-btn sub-btn-confirm" onclick="submitCode()">✓ تأیید</button>
+        <div class="sub-title" id="sub-book-name">کد اشتراک</div>
+        <div class="sub-desc">برای مطالعه این کتاب، کد اشتراک خود را وارد کنید.</div>
+        <input type="text" id="code-input" placeholder="کد اشتراک را وارد کنید">
+        <button class="sub-btn sub-btn-confirm" onclick="submitCode()">ارسال کد</button>
         <button class="sub-btn sub-btn-cancel"  onclick="showContact()">ارتباط با ما</button>
     </div>
 </div>
@@ -801,22 +849,21 @@
 <!-- ══════════ CONTACT MODAL ══════════ -->
 <div class="contact-modal" id="contact-modal" onclick="handleBackdrop(event,'contact-modal')">
     <div class="contact-sheet">
-        <div class="contact-title">🤝 ارتباط با ما</div>
-        <div class="contact-links">
-            <a href="https://t.me/planlifeir" target="_blank" class="contact-link telegram">
-                <span>📱 Telegram</span>
+        <h3 style="color:var(--gold);margin-bottom:20px;font-size:18px;font-weight:800;">ارتباط با ما</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:18px;">
+            <a href="https://t.me/planlifeir" target="_blank"
+               style="background:#0088cc;color:white;padding:14px;border-radius:14px;text-decoration:none;font-weight:700;display:block;font-family:'Vazirmatn',sans-serif;">
+               📱 تلگرام (@planlifeir)
             </a>
-            <a href="https://wa.me/00905437333582" target="_blank" class="contact-link whatsapp">
-                <span>💬 WhatsApp</span>
-            </a>
-            <a href="https://instagram.com/planlife.ir" target="_blank" class="contact-link instagram">
-                <span>📸 Instagram</span>
-            </a>
-            <a href="https://ble.ir/planlifeir" target="_blank" class="contact-link bale">
-                <span>💭 Bale</span>
+            <a href="https://ble.ir/planlifeir" target="_blank"
+               style="background:#00a000;color:white;padding:14px;border-radius:14px;text-decoration:none;font-weight:700;display:block;font-family:'Vazirmatn',sans-serif;">
+               💬 بله (@planlifeir)
             </a>
         </div>
-        <button onclick="closeContact()" class="contact-close">بستن</button>
+        <button onclick="closeContact()"
+                style="padding:10px 24px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.15);border-radius:12px;font-family:'Vazirmatn',sans-serif;cursor:pointer;font-size:14px;">
+            بستن
+        </button>
     </div>
 </div>
 
@@ -865,7 +912,10 @@ document.querySelectorAll('.stars[data-rating]').forEach(el=>{
     renderStars(el, Math.min(5, Math.max(3.5, parseFloat(el.dataset.rating)+(Math.random()*0.3-0.15))));
 });
 
-/* ════════ BADGE INJECTION ════════ */
+/* ════════ BADGE INJECTION (فقط در گرید همه کتاب‌ها) ════════
+   برچسب رایگان/اشتراکی → سمت چپ کارت (در RTL = ابتدای badge-row)
+   برچسب زبان           → سمت راست کارت (در RTL = انتهای badge-row)
+════════ */
 function injectBadges(){
     document.querySelectorAll('#all-books-grid .book-card').forEach(card=>{
         const isPaid = card.dataset.isPaid === 'true';
@@ -874,14 +924,17 @@ function injectBadges(){
         const row = document.createElement('div');
         row.className = 'badge-row';
 
+        /* برچسب چپ — رایگان یا اشتراکی */
         const pb = document.createElement('span');
         pb.className = 'bdg ' + (isPaid ? 'bdg-paid' : 'bdg-free');
         pb.textContent = isPaid ? 'اشتراکی' : 'رایگان';
 
+        /* برچسب راست — زبان */
         const lb = document.createElement('span');
         if(lang === 'en'){ lb.className='bdg bdg-en'; lb.textContent='English'; }
         else             { lb.className='bdg bdg-fa'; lb.textContent='فارسی'; }
 
+        /* در RTL: اولی = چپ، دومی = راست */
         row.appendChild(pb);
         row.appendChild(lb);
 
@@ -902,7 +955,6 @@ function openQuickView(card){
         cover:  d.cover,  rating: parseFloat(d.rating),
         rcount: d.ratingCount||'',
         paid:   d.isPaid==='true',
-        code:   d.code||'',
         pdf:    d.pdfUrl||'',
         summary: (d.summary||'').trim()
     };
@@ -929,6 +981,7 @@ function closeQuick(){ document.getElementById('quick-modal').classList.remove('
 function handleAction(){
     closeQuick();
     if(book.paid){
+        document.getElementById('sub-book-name').textContent = book.title;
         document.getElementById('code-input').value = '';
         document.getElementById('sub-modal').classList.add('active');
     } else {
@@ -950,13 +1003,12 @@ function closeSummary(){ document.getElementById('summary-modal').classList.remo
 function submitCode(){
     const code = document.getElementById('code-input').value.trim();
     if(!code){ alert('لطفاً کد اشتراک را وارد کنید.'); return; }
-    
-    if(code === book.code){
-        alert('✅ کد معتبر است!\nشما وارد شدید.');
+    if(code === '55555','3333'){
+        alert('✅ کد معتبر است!');
         closeSub();
         book.pdf && book.pdf.length > 4 && openPdf(book.pdf, book.title);
     } else {
-        alert('❌ کد شما نادرست است.\n\nلطفاً از قسمت ارتباط با ما به پشتیبان پیام دهید.');
+        alert('❌ کد اشتراک نامعتبر است.');
     }
 }
 function closeSub(){ document.getElementById('sub-modal').classList.remove('active'); }
