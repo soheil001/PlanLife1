@@ -227,8 +227,7 @@
         <div class="control-btn" onclick="seek(10)"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></div>
         <div class="control-btn" onclick="nextTrack()"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></div>
     </div>
-
-    <!-- بخش نظرات -->
+     <!-- بخش نظرات -->
     <div class="comments-section">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:0 4px;">
             <span style="font-size:19px;font-weight:700;">💬 نظرات</span>
@@ -251,25 +250,30 @@
 </div>
 
 <script>
-// ==================== JSONBin - persistent comment storage ====================
+// ==================== JSONBin Configuration ====================
 const JSONBIN_BIN_ID    = '6a2dfdc8da38895dfebc8402';
 const JSONBIN_MASTER_KEY = '$2a$10$70h70nTV7PY/TYic24xk/e6uouZltgW5eeKBzbxrpbAXHGfWp7cQi';
 const JSONBIN_URL        = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
 
-let remoteRecord = {};   // last snapshot from JSONBin
-let isSaving     = false;
+let allComments = {};
+let remoteRecord = {};
+let isSaving = false;
 
 async function fetchAllComments() {
     try {
         const res = await fetch(`${JSONBIN_URL}/latest`, {
             headers: { 'X-Master-Key': JSONBIN_MASTER_KEY }
         });
-        if (!res.ok) throw new Error('fetch ' + res.status);
+        if (!res.ok) throw new Error('fetch error: ' + res.status);
         const data = await res.json();
         remoteRecord = data.record || {};
-        Object.keys(remoteRecord).forEach(k => { allComments[k] = remoteRecord[k]; });
+        Object.assign(allComments, remoteRecord);
+        console.log('✅ کامنت‌ها بارگذاری شدند:', Object.keys(allComments).length);
         return true;
-    } catch(e) { console.warn('JSONBin fetch:', e); return false; }
+    } catch(e) { 
+        console.error('❌ خطا در بارگذاری:', e); 
+        return false; 
+    }
 }
 
 async function pushAllComments() {
@@ -282,10 +286,15 @@ async function pushAllComments() {
             headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_MASTER_KEY },
             body: JSON.stringify(payload)
         });
-        if (!res.ok) throw new Error('push ' + res.status);
-        remoteRecord = payload;
-    } catch(e) { console.warn('JSONBin push:', e); }
-    finally    { isSaving = false; }
+        if (!res.ok) throw new Error('push error: ' + res.status);
+        remoteRecord = Object.assign({}, payload);
+        console.log('✅ کامنت‌ها ذخیره شدند');
+    } catch(e) { 
+        console.error('❌ خطا در ذخیره:', e); 
+    }
+    finally { 
+        isSaving = false; 
+    }
 }
 
 // ==================== داده‌های دوره‌ها ====================
@@ -329,8 +338,6 @@ const courseData = [
     { title: "دوره احساس لیاقت", episode: 11, duration: "38:17", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
     { title: "دوره احساس لیاقت", episode: 12, duration: "25:33", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
 ];
-
-// ==================== کدهای اشتراک ====================
 const ADMIN_CODE = "admin2933";
 const subscriptionCodes = {
     "دوره کارگاه ثروتسازی":    ["77777", "BA777", "TH777", "Servat"],
@@ -340,12 +347,10 @@ const subscriptionCodes = {
     "دوره احساس لیاقت":        ["22222", "EL222", "Liyaghat"],
 };
 
-// ==================== وضعیت سراسری ====================
 let unlockedCategories = {};
 let isAdmin = false;
 let currentTrackIndex = 0;
 let currentTrackKey = null;
-let allComments = {};
 
 const audio = document.getElementById('mainAudio');
 const progressBar = document.getElementById('progressBar');
@@ -357,14 +362,12 @@ const playIcon = document.getElementById('playIcon');
 
 // ==================== کامنت‌ها ====================
 function commentKey(title, episode) { return `planlife_course_${title}_ep${episode}`; }
-
 function toPersianNum(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
 
 async function loadComments(title, episode) {
     const key = commentKey(title, episode);
     document.getElementById('commentsList').innerHTML = `<div class="loading-comments">⏳ در حال بارگذاری...</div>`;
     document.getElementById('commentCount').textContent = '...';
-    await fetchAllComments();
     if (!allComments[key]) allComments[key] = [];
     renderComments(key);
 }
@@ -417,6 +420,7 @@ async function addComment() {
     
     await pushAllComments();
     renderComments(currentTrackKey);
+    updateAllBadges();
     document.getElementById('commentText').value = '';
     document.getElementById('commentName').value = '';
     btn.textContent = 'ارسال نظر';
@@ -428,6 +432,7 @@ async function deleteComment(key, commentId) {
     allComments[key] = (allComments[key] || []).filter(c => c.id !== commentId);
     await pushAllComments();
     renderComments(key);
+    updateAllBadges();
 }
 
 function scrollToForm() {
@@ -435,6 +440,15 @@ function scrollToForm() {
         const f = document.getElementById('commentForm');
         if (f) f.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 320);
+}
+
+function updateAllBadges() {
+    courseData.forEach((item, idx) => {
+        const key = commentKey(item.title, item.episode);
+        const cnt = (allComments[key] || []).length;
+        const badge = document.getElementById(`badge-${idx}`);
+        if (badge) badge.textContent = toPersianNum(cnt);
+    });
 }
 
 // ==================== ادمین ====================
@@ -499,7 +513,6 @@ function doLogout() {
 async function loadPage() {
     const categories = ["دوره کارگاه ثروتسازی","دوره عشق و روابط","دوره تحول حال و احساس","دوره اعتماد به نفس","دوره احساس لیاقت"];
     
-    // بارگذاری کامنت‌ها از JSONBin
     await fetchAllComments();
     
     document.getElementById('categorySlides').innerHTML = categories.map(cat =>
@@ -508,7 +521,9 @@ async function loadPage() {
             <p style="font-size:14.5px;font-weight:600;">${cat}</p>
         </div>`
     ).join('');
+    
     loadItems(null);
+    updateAllBadges();
 }
 
 function selectCat(cat) {
@@ -532,7 +547,7 @@ function loadItems(cat) {
                     <div class="music-artist">قسمت ${item.episode}</div>
                     <div style="display:inline-flex;align-items:center;gap:4px;margin-top:4px;background:rgba(255,149,0,0.15);border-radius:999px;padding:3px 9px;">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="#ff9500"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
-                        <span id="list-badge-${idx}" style="font-size:12px;color:#ff9500;font-weight:700;">${cnt}</span>
+                        <span id="badge-${idx}" style="font-size:12px;color:#ff9500;font-weight:700;">${cnt}</span>
                     </div>
                 </div>
                 <div class="music-duration">${item.duration}</div>
@@ -616,18 +631,6 @@ function showSupportModal() {
                 <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" style="width:42px;height:42px;border-radius:50%;object-fit:cover;">
                 <div style="text-align:right;flex:1;"><div style="font-weight:600;">تلگرام</div><div style="font-size:15px;opacity:0.85;">@Planlifeir</div></div>
             </div>
-            <div onclick="window.open('https://instagram.com/mrravankav','_blank')" style="display:flex;align-items:center;gap:15px;background:rgba(255,255,255,0.08);padding:14px 18px;border-radius:16px;margin-bottom:12px;cursor:pointer;">
-                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" style="width:42px;height:42px;border-radius:12px;object-fit:cover;">
-                <div style="text-align:right;flex:1;"><div style="font-weight:600;">اینستاگرام</div><div style="font-size:15px;opacity:0.85;">mrravankav</div></div>
-            </div>
-            <div onclick="window.open('https://wa.me/905437333582','_blank')" style="display:flex;align-items:center;gap:15px;background:rgba(255,255,255,0.08);padding:14px 18px;border-radius:16px;margin-bottom:12px;cursor:pointer;">
-                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111705.png" style="width:42px;height:42px;border-radius:50%;object-fit:cover;">
-                <div style="text-align:right;flex:1;"><div style="font-weight:600;">واتس‌اپ</div><div style="font-size:15px;opacity:0.85;">00905437333582</div></div>
-            </div>
-            <div onclick="window.open('https://ble.ir/planlifeir','_blank')" style="display:flex;align-items:center;gap:15px;background:rgba(255,255,255,0.08);padding:14px 18px;border-radius:16px;margin-bottom:22px;cursor:pointer;">
-                <img src="https://cdn-icons-png.flaticon.com/512/5968/5968898.png" style="width:42px;height:42px;border-radius:50%;object-fit:cover;">
-                <div style="text-align:right;flex:1;"><div style="font-weight:600;">بله</div><div style="font-size:15px;opacity:0.85;">@planlifeir</div></div>
-            </div>
             <button onclick="closeModal()" class="modal-btn" style="background:rgba(255,255,255,0.15);color:white;">بستن</button>
         </div>`;
     document.getElementById('subscriptionModal').classList.add('active');
@@ -648,7 +651,6 @@ progressContainer.addEventListener('click', e => {
     const r = progressContainer.getBoundingClientRect();
     audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
 });
-
 function setPlayIcons(playing) {
     const icon = playing ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
     playIcon.innerHTML = icon;
