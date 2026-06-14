@@ -240,7 +240,7 @@
                    style="width:100%;background:rgba(0,0,0,0.4);border:1.5px solid rgba(255,255,255,0.1);border-radius:14px;padding:13px 16px;color:white;font-size:16px;margin-bottom:10px;outline:none;font-family:inherit;-webkit-appearance:none;">
             <textarea id="commentText" placeholder="نظر خود را اینجا بنویسید..." rows="3" onfocus="scrollToForm()"
                       style="width:100%;background:rgba(0,0,0,0.4);border:1.5px solid rgba(255,255,255,0.1);border-radius:14px;padding:13px 16px;color:white;font-size:16px;resize:none;height:80px;outline:none;font-family:inherit;line-height:1.5;display:block;-webkit-appearance:none;"></textarea>
-            <button onclick="addComment()"
+            <button id="submitCommentBtn" onclick="addComment()"
                     style="margin-top:12px;width:100%;background:#ff9500;color:#1a0033;border:none;border-radius:999px;padding:15px 0;font-weight:800;font-size:16px;cursor:pointer;font-family:inherit;box-shadow:0 4px 18px rgba(255,149,0,0.35);">
                 ارسال نظر
             </button>
@@ -251,6 +251,43 @@
 </div>
 
 <script>
+// ==================== JSONBin - persistent comment storage ====================
+const JSONBIN_BIN_ID    = '6a2dfdc8da38895dfebc8402';
+const JSONBIN_MASTER_KEY = '$2a$10$70h70nTV7PY/TYic24xk/e6uouZltgW5eeKBzbxrpbAXHGfWp7cQi';
+const JSONBIN_URL        = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
+
+let remoteRecord = {};   // last snapshot from JSONBin
+let isSaving     = false;
+
+async function fetchAllComments() {
+    try {
+        const res = await fetch(`${JSONBIN_URL}/latest`, {
+            headers: { 'X-Master-Key': JSONBIN_MASTER_KEY }
+        });
+        if (!res.ok) throw new Error('fetch ' + res.status);
+        const data = await res.json();
+        remoteRecord = data.record || {};
+        Object.keys(remoteRecord).forEach(k => { allComments[k] = remoteRecord[k]; });
+        return true;
+    } catch(e) { console.warn('JSONBin fetch:', e); return false; }
+}
+
+async function pushAllComments() {
+    if (isSaving) return;
+    isSaving = true;
+    try {
+        const payload = Object.assign({}, remoteRecord, allComments);
+        const res = await fetch(JSONBIN_URL, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_MASTER_KEY },
+            body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('push ' + res.status);
+        remoteRecord = payload;
+    } catch(e) { console.warn('JSONBin push:', e); }
+    finally    { isSaving = false; }
+}
+
 // ==================== داده‌های دوره‌ها ====================
 const courseData = [
     { title: "دوره کارگاه ثروتسازی", episode: 1,  duration: "32:45", cover: "https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779651755/Servat_-_dore_-_1_eu9z9o.m4a" },
@@ -323,17 +360,13 @@ function commentKey(title, episode) { return `planlife_course_${title}_ep${episo
 
 function toPersianNum(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
 
-function loadComments(title, episode) {
+async function loadComments(title, episode) {
     const key = commentKey(title, episode);
-    document.getElementById('commentsList').innerHTML = `<div class="loading-comments">در حال بارگذاری...</div>`;
+    document.getElementById('commentsList').innerHTML = `<div class="loading-comments">⏳ در حال بارگذاری...</div>`;
     document.getElementById('commentCount').textContent = '...';
-    try { const s = localStorage.getItem(key); allComments[key] = s ? JSON.parse(s) : []; }
-    catch(e) { allComments[key] = []; }
+    await fetchAllComments();
+    if (!allComments[key]) allComments[key] = [];
     renderComments(key);
-}
-
-function saveComments(key) {
-    try { localStorage.setItem(key, JSON.stringify(allComments[key] || [])); } catch(e) {}
 }
 
 function renderComments(key) {
@@ -365,27 +398,35 @@ function renderComments(key) {
     });
 }
 
-function addComment() {
+async function addComment() {
     if (!currentTrackKey) return;
     const name = document.getElementById('commentName').value.trim() || 'ناشناس';
     const text = document.getElementById('commentText').value.trim();
     if (!text) { alert('لطفاً متن نظر را وارد کنید.'); return; }
+    
+    const btn = document.getElementById('submitCommentBtn');
+    btn.textContent = '⏳ در حال ارسال...';
+    btn.disabled = true;
+
     if (!allComments[currentTrackKey]) allComments[currentTrackKey] = [];
     const now = new Date();
     allComments[currentTrackKey].unshift({
         id: Date.now(), name, text,
         time: `${now.toLocaleDateString('fa-IR',{year:'numeric',month:'short',day:'numeric'})} • ${now.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`
     });
-    saveComments(currentTrackKey);
+    
+    await pushAllComments();
     renderComments(currentTrackKey);
     document.getElementById('commentText').value = '';
     document.getElementById('commentName').value = '';
+    btn.textContent = 'ارسال نظر';
+    btn.disabled = false;
 }
 
-function deleteComment(key, commentId) {
+async function deleteComment(key, commentId) {
     if (!isAdmin || !confirm('این نظر حذف شود؟')) return;
     allComments[key] = (allComments[key] || []).filter(c => c.id !== commentId);
-    saveComments(key);
+    await pushAllComments();
     renderComments(key);
 }
 
@@ -455,13 +496,12 @@ function doLogout() {
 }
 
 // ==================== رندر صفحه ====================
-function loadPage() {
+async function loadPage() {
     const categories = ["دوره کارگاه ثروتسازی","دوره عشق و روابط","دوره تحول حال و احساس","دوره اعتماد به نفس","دوره احساس لیاقت"];
-    // پیش‌بارگذاری کامنت‌ها
-    courseData.forEach(item => {
-        const k = commentKey(item.title, item.episode);
-        try { const s = localStorage.getItem(k); allComments[k] = s ? JSON.parse(s) : []; } catch(e) { allComments[k] = []; }
-    });
+    
+    // بارگذاری کامنت‌ها از JSONBin
+    await fetchAllComments();
+    
     document.getElementById('categorySlides').innerHTML = categories.map(cat =>
         `<div class="slide-item" onclick="selectCat('${cat}')">
             <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg">
