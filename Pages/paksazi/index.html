@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>پاکسازی ذهن | PlanLife</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Vazirmatn:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--accent:#c4a0ff;--accent2:#7ee8fa;--text:#e8e0ff}
+  body{font-family:'Vazirmatn',sans-serif;min-height:100vh;overflow:hidden;background:#04020f;color:var(--text)}
+
+  #galaxy{position:fixed;inset:0;z-index:0;pointer-events:none}
+  #smoke-canvas{position:fixed;inset:0;z-index:10;pointer-events:none;opacity:0}
+
+  #main-page{
+    position:relative;z-index:1;min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:2rem 1.2rem;gap:1.6rem;transition:opacity 1.2s ease,filter 1.5s ease;
+  }
+
+  .eyebrow{font-size:0.78rem;letter-spacing:0.28em;color:var(--accent2);opacity:0.65;margin-bottom:0.6rem;text-align:center}
+
+  h1{
+    font-family:'Cinzel Decorative','Vazirmatn',serif;
+    font-size:clamp(2.8rem,9vw,5.2rem);font-weight:700;
+    background:linear-gradient(135deg,#fff 10%,var(--accent) 55%,var(--accent2) 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    line-height:1.15;filter:drop-shadow(0 0 32px rgba(160,120,255,0.6));
+    letter-spacing:0.03em;text-align:center;
+  }
+
+  .subtitle{
+    margin-top:1rem;font-size:clamp(0.95rem,2.5vw,1.08rem);font-weight:300;line-height:2;
+    color:rgba(230,220,255,0.7);max-width:500px;text-align:center;
+  }
+
+  .textarea-wrap{width:100%;max-width:600px}
+  textarea{
+    width:100%;min-height:180px;
+    background:rgba(255,255,255,0.055);border:1px solid rgba(255,255,255,0.16);
+    border-radius:20px;padding:1.4rem 1.6rem;
+    font-family:'Vazirmatn',sans-serif;font-size:1.05rem;color:#fff;
+    resize:vertical;outline:none;line-height:1.9;
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    box-shadow:0 8px 32px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,255,255,0.1);
+    transition:box-shadow .35s,border-color .35s;caret-color:var(--accent);
+  }
+  textarea::placeholder{color:rgba(200,185,255,0.32)}
+  textarea:focus{
+    border-color:rgba(180,140,255,0.5);
+    box-shadow:0 8px 40px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.13),0 0 0 3px rgba(160,120,255,0.18);
+  }
+
+  .btn-release{
+    position:relative;padding:1rem 3.2rem;
+    font-family:'Vazirmatn',sans-serif;font-size:1.12rem;font-weight:600;
+    color:#fff;border:none;border-radius:50px;cursor:pointer;
+    background:linear-gradient(135deg,#7c4dff,#a06bf7,#5fc8e8);
+    box-shadow:0 4px 24px rgba(120,70,255,0.5),inset 0 1px 0 rgba(255,255,255,0.15);
+    transition:transform .2s,filter .2s;overflow:hidden;
+  }
+  .btn-release::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.17),transparent);border-radius:inherit}
+  .btn-release:hover{transform:translateY(-2px) scale(1.03);filter:brightness(1.09)}
+  .btn-release:active{transform:scale(0.97)}
+
+  #result-modal{
+    position:fixed;inset:0;z-index:30;
+    display:flex;align-items:center;justify-content:center;padding:1.5rem;
+    opacity:0;pointer-events:none;transition:opacity 0.9s ease;
+  }
+  #result-modal.visible{opacity:1;pointer-events:all}
+  .result-backdrop{position:absolute;inset:0;background:rgba(4,2,16,0.6);backdrop-filter:blur(10px)}
+  .result-card{
+    position:relative;max-width:520px;width:100%;
+    background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.2);
+    border-radius:28px;padding:2.8rem 2.4rem 2.2rem;
+    backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+    box-shadow:0 24px 72px rgba(0,0,0,0.65),0 0 70px rgba(140,100,255,0.15),inset 0 1px 0 rgba(255,255,255,0.14);
+    text-align:center;
+    transform:scale(0.85) translateY(25px);
+    transition:transform 0.65s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  #result-modal.visible .result-card{transform:scale(1) translateY(0)}
+  .result-icon{font-size:3rem;margin-bottom:1rem;display:block;filter:drop-shadow(0 0 14px rgba(200,170,255,0.65))}
+  .result-title{font-family:'Cinzel Decorative','Vazirmatn',serif;font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:1.1rem;letter-spacing:0.04em}
+  .result-body{font-size:0.98rem;font-weight:300;line-height:2.1;color:rgba(230,218,255,0.82);margin-bottom:1.8rem}
+  .btn-close{
+    padding:0.8rem 2.5rem;font-family:'Vazirmatn',sans-serif;font-size:1rem;font-weight:600;
+    color:#fff;border:1px solid rgba(255,255,255,0.22);border-radius:50px;
+    background:rgba(255,255,255,0.09);cursor:pointer;backdrop-filter:blur(10px);
+    transition:background .25s,transform .2s;
+  }
+  .btn-close:hover{background:rgba(255,255,255,0.17);transform:scale(1.04)}
+  @media(max-width:480px){h1{font-size:2.6rem}.result-card{padding:2rem 1.4rem 1.6rem}}
+</style>
+</head>
+<body>
+<canvas id="galaxy"></canvas>
+<canvas id="smoke-canvas"></canvas>
+
+<div id="main-page">
+  <div class="title-group">
+    <p class="eyebrow">planlife.ir · پاکسازی ذهن</p>
+    <h1>رهایی</h1>
+    <p class="subtitle">فکرهایی که باعث آزار و اذیت شما می‌شوند را در باکس پایین تایپ کنید و گزینه‌ی «رهایش می‌کنم» را بزنید</p>
+  </div>
+  <div class="textarea-wrap">
+    <textarea id="thought-input" placeholder="فکرهایت را اینجا بنویس…" rows="6"></textarea>
+  </div>
+  <button class="btn-release" onclick="startRelease()">🕊️ رهایش می‌کنم</button>
+</div>
+
+<div id="result-modal">
+  <div class="result-backdrop"></div>
+  <div class="result-card">
+    <span class="result-icon">✨</span>
+    <div class="result-title">تمام شد</div>
+    <p class="result-body">
+      این فکرها از ذهن شما پاک شدند.<br>
+      دیگه لازم نیست به آن‌ها توجه کنید،<br>
+      چون همه‌ی آن‌ها یک مشت فکر بودند<br>
+      و واقعیتی در زندگی شما نداشتند.<br><br>
+      به زندگی‌تون ادامه بدید<br>
+      با ذهنی <strong>آرام</strong> و <strong>باز</strong> 🌿
+    </p>
+    <button class="btn-close" onclick="resetPage()">بستن</button>
+  </div>
+</div>
+
+<script>
+/* ══════════════ GALAXY ══════════════ */
+const gC = document.getElementById('galaxy');
+const gX = gC.getContext('2d');
+let stars = [];
+
+function resizeG(){
+  gC.width=innerWidth; gC.height=innerHeight;
+  stars=[];
+  const N=Math.floor(innerWidth*innerHeight/2000);
+  for(let i=0;i<N;i++) stars.push({
+    x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+    r:Math.random()*1.4+0.2,a:Math.random(),
+    sp:Math.random()*0.004+0.001,ph:Math.random()*Math.PI*2
+  });
+}
+function drawG(ts){
+  gX.clearRect(0,0,gC.width,gC.height);
+  const bg=gX.createRadialGradient(gC.width*.5,gC.height*.45,gC.height*.04,gC.width*.5,gC.height*.45,gC.height*.95);
+  bg.addColorStop(0,'#1a083a');bg.addColorStop(.4,'#0a0520');bg.addColorStop(1,'#04020f');
+  gX.fillStyle=bg;gX.fillRect(0,0,gC.width,gC.height);
+  [[.3,.3,200,'rgba(100,60,200,0.07)'],[.72,.55,240,'rgba(50,130,200,0.06)'],[.5,.85,170,'rgba(180,80,160,0.05)']].forEach(([cx,cy,r,c])=>{
+    const g=gX.createRadialGradient(gC.width*cx,gC.height*cy,0,gC.width*cx,gC.height*cy,r);
+    g.addColorStop(0,c);g.addColorStop(1,'transparent');
+    gX.fillStyle=g;gX.fillRect(0,0,gC.width,gC.height);
+  });
+  const t=ts*.001;
+  stars.forEach(s=>{
+    const a=s.a*(0.55+0.45*Math.sin(t*s.sp*60+s.ph));
+    gX.beginPath();gX.arc(s.x,s.y,s.r,0,Math.PI*2);
+    gX.fillStyle=`rgba(230,220,255,${a.toFixed(2)})`;gX.fill();
+  });
+  requestAnimationFrame(drawG);
+}
+window.addEventListener('resize',resizeG);
+resizeG();
+requestAnimationFrame(drawG);
+
+/* ══════════════ SMOKE SYSTEM ══════════════ */
+const sC = document.getElementById('smoke-canvas');
+const sX = sC.getContext('2d');
+let smokeActive = false;
+let particles = [];
+let smokeRaf = null;
+let smokeStart = 0;
+
+function resizeS(){ sC.width=innerWidth; sC.height=innerHeight; }
+window.addEventListener('resize',resizeS);
+resizeS();
+
+// مقادیر طبیعی دود: اندازه متوسط، کند، خاکستری
+function makeSmoke(x, y, tier){
+  // tier 0=زمین (تیره), 1=وسط, 2=بالا (روشن‌تر)
+  const speeds   = [0.55, 0.9, 1.3];
+  const sizes    = [22,   35,  50 ];
+  const greys    = [28,   48,  68 ];
+  const alphas   = [0.55, 0.42, 0.30];
+  const spread   = [0.5,  0.7, 0.9];
+
+  const angle = -Math.PI/2 + (Math.random()-0.5)*spread[tier];
+  const spd   = speeds[tier] * (0.7 + Math.random()*0.6);
+  const g     = greys[tier] + Math.floor(Math.random()*20);
+
+  return {
+    x, y,
+    vx: Math.cos(angle)*spd + (Math.random()-0.5)*0.25,
+    vy: Math.sin(angle)*spd,
+    size: sizes[tier] * (0.7 + Math.random()*0.6),
+    growRate: 0.18 + Math.random()*0.25,
+    life: 1,
+    decay: 0.0025 + Math.random()*0.003,
+    maxAlpha: alphas[tier] * (0.7+Math.random()*0.5),
+    grey: g,
+    rot: Math.random()*Math.PI*2,
+    rotSpd: (Math.random()-0.5)*0.008,
+    scaleX: 0.7 + Math.random()*0.6,
+    tier
+  };
+}
+
+function emitBurst(progress){
+  const W = sC.width;
+  const H = sC.height;
+
+  // تعداد ذرات بر اساس زمان
+  const count = Math.floor(2 + progress * 2.5);
+
+  for(let i=0;i<count;i++){
+    // از چند نقطه پایین صفحه بیاد بالا
+    const numSources = 3 + Math.floor(Math.random()*3);
+    for(let s=0;s<numSources;s++){
+      const srcX = W * (0.1 + (s/(numSources-1)) * 0.8) + (Math.random()-0.5)*W*0.12;
+      const srcY = H + 10 + Math.random()*20;
+      const tier = Math.random()<0.5 ? 0 : (Math.random()<0.5?1:2);
+      particles.push(makeSmoke(srcX, srcY, tier));
+    }
+  }
+}
+
+function drawSmoke(p){
+  const fadeIn  = Math.min(1, (1-p.life)/0.15);  // fade in سریع
+  const fadeOut = p.life < 0.35 ? p.life/0.35 : 1; // fade out آروم
+  const alpha   = p.maxAlpha * fadeIn * fadeOut;
+  if(alpha <= 0.005) return;
+
+  const g = p.grey;
+  const grad = sX.createRadialGradient(0,0,0, 0,0,p.size);
+  grad.addColorStop(0,   `rgba(${g},${g},${g},${(alpha*1.0).toFixed(3)})`);
+  grad.addColorStop(0.45,`rgba(${g},${g},${g},${(alpha*0.7).toFixed(3)})`);
+  grad.addColorStop(0.8, `rgba(${g},${g},${g},${(alpha*0.2).toFixed(3)})`);
+  grad.addColorStop(1,   `rgba(${g},${g},${g},0)`);
+
+  sX.save();
+  sX.translate(p.x, p.y);
+  sX.rotate(p.rot);
+  sX.scale(p.scaleX, 1);
+  sX.fillStyle = grad;
+  sX.beginPath();
+  sX.arc(0,0, p.size, 0, Math.PI*2);
+  sX.fill();
+  sX.restore();
+}
+
+function smokeLoop(ts){
+  if(!smokeActive) return;
+  const elapsed = (ts - smokeStart) / 1000; // ثانیه
+
+  // مرحله: 0-0.5s شروع، 0.5-3s اوج، 3-5s ختم
+  let progress = 0;
+  if     (elapsed < 0.4)  progress = elapsed/0.4;
+  else if(elapsed < 3.0)  progress = 1;
+  else if(elapsed < 5.2)  progress = 1 - (elapsed-3.0)/2.2;
+  else                    progress = 0;
+
+  if(progress > 0) emitBurst(progress);
+
+  // پاک کردن با trail بسیار سبک
+  sX.clearRect(0,0,sC.width,sC.height);
+
+  // رنگ پس‌زمینه تار - وقتی دود زیاد شد صفحه تار می‌شه
+  const blurAmount = Math.min(1, elapsed/1.8) * 0.85 * progress;
+  if(blurAmount > 0.05){
+    sX.fillStyle = `rgba(4,2,15,${(blurAmount*0.45).toFixed(3)})`;
+    sX.fillRect(0,0,sC.width,sC.height);
+  }
+
+  // مرتب از پشت به جلو (tier 0 آخر)
+  const sorted = [...particles].sort((a,b)=>b.tier-a.tier);
+  sorted.forEach(p=>{
+    p.x  += p.vx + Math.sin(p.rot*2)*0.12;
+    p.y  += p.vy;
+    p.vy -= 0.008 + p.tier*0.003; // کمی شتاب به بالا
+    p.vx += (Math.random()-0.5)*0.04;
+    p.size += p.growRate;
+    p.rot += p.rotSpd;
+    p.life -= p.decay;
+    if(p.life > 0) drawSmoke(p);
+  });
+  particles = particles.filter(p=>p.life>0);
+
+  // فیلتر blur روی کل canvas دود - حس واقعی‌تر
+  if(elapsed > 0.6 && elapsed < 5){
+    const bv = Math.min(8, elapsed*1.2) * progress;
+    sC.style.filter = `blur(${bv.toFixed(1)}px)`;
+  } else if(elapsed >= 5){
+    sC.style.filter = `blur(${Math.max(0, 8*(1-(elapsed-5)/0.5)).toFixed(1)}px)`;
+  }
+
+  // blur صفحه اصلی
+  const pageBlur = Math.min(12, elapsed*2.5) * Math.min(1,progress*1.5);
+  const mainPage = document.getElementById('main-page');
+  if(mainPage) mainPage.style.filter = `blur(${pageBlur.toFixed(1)}px)`;
+
+  if(elapsed >= 5.2 && particles.length === 0){
+    finishSequence();
+    return;
+  }
+  if(elapsed >= 7){ finishSequence(); return; }
+
+  smokeRaf = requestAnimationFrame(smokeLoop);
+}
+
+function finishSequence(){
+  smokeActive = false;
+  if(smokeRaf) cancelAnimationFrame(smokeRaf);
+  particles = [];
+  sX.clearRect(0,0,sC.width,sC.height);
+  sC.style.opacity = '0';
+  sC.style.filter = '';
+  const mp = document.getElementById('main-page');
+  if(mp) mp.style.filter='';
+  document.getElementById('result-modal').classList.add('visible');
+}
+
+/* ══════════════ TRIGGER ══════════════ */
+function startRelease(){
+  const text = document.getElementById('thought-input').value.trim();
+  if(!text){ document.getElementById('thought-input').focus(); return; }
+
+  const mp = document.getElementById('main-page');
+  mp.style.opacity = '0.25';
+  mp.style.pointerEvents = 'none';
+
+  sC.style.opacity = '1';
+  sC.style.transition = 'opacity 0.4s';
+  smokeActive = true;
+  particles = [];
+
+  requestAnimationFrame(ts=>{
+    smokeStart = ts;
+    smokeRaf = requestAnimationFrame(smokeLoop);
+  });
+}
+
+function resetPage(){
+  document.getElementById('result-modal').classList.remove('visible');
+  setTimeout(()=>{
+    document.getElementById('thought-input').value='';
+    const mp = document.getElementById('main-page');
+    mp.style.opacity='1';
+    mp.style.pointerEvents='all';
+    mp.style.filter='';
+    sC.style.opacity='0';
+    sC.style.filter='';
+    smokeActive=false;
+    if(smokeRaf) cancelAnimationFrame(smokeRaf);
+    particles=[];
+    sX.clearRect(0,0,sC.width,sC.height);
+  },500);
+}
+</script>
+</body>
+</html>
