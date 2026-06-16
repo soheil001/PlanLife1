@@ -1,0 +1,68 @@
+
+      <!-- مود چکر -->
+      <div class="row">
+        <div class="row-top">
+          <span class="row-label">احساس کلی من امروز</span>
+        </div>
+        <div class="mood-wrap">
+          <div class="mood-header">
+            <span class="mood-label">سطح انرژی و ارتعاش</span>
+            <span class="mood-value" id="moodVal">۵</span>
+          </div>
+          <div class="mood-emoji-row">
+            <span>😔 ۱</span>
+            <span>😐 ۵</span>
+            <span>۱۰ 🌟</span>
+          </div>
+          <input type="range" class="mood-slider" min="1" max="10" value="5" id="moodSlider" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-wrap">
+      <button class="submit-btn" onclick="handleSubmit()">✦ ثبت فرکانس امروز ✦</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 140; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.2 + 0.4;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      top:${Math.random()*100}%; left:${Math.random()*100}%;
+      --d:${(Math.random()*4+2).toFixed(1)}s;
+      --delay:-${(Math.random()*6).toFixed(1)}s;
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // Mood slider
+  const slider = document.getElementById('moodSlider');
+  const valEl  = document.getElementById('moodVal');
+  const persianNums = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹','۱۰'];
+  slider.addEventListener('input', () => {
+    valEl.textContent = persianNums[parseInt(slider.value)];
+  });
+
+  // Submit
+  function handleSubmit() {
+    const btn = document.querySelector('.submit-btn');
+    btn.textContent = '✓ فرکانس امروز با موفقیت ثبت شد';
+    btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+    btn.style.boxShadow = '0 4px 30px rgba(16,185,129,0.5)';
+    setTimeout(() => {
+      btn.textContent = '✦ ثبت فرکانس امروز ✦';
+      btn.style.background = '';
+      btn.style.boxShadow = '';
+    }, 3000);
+  }
+</script>
+</body>
+</html>
