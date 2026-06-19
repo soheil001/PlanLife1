@@ -59,6 +59,77 @@
         color: white;
     }
 
+    /* ===== باکس معرفی صوتی (دقیقاً با تم پلیر پادکست) ===== */
+    .intro-section {
+        width: 100%;
+        max-width: 720px;
+        margin-bottom: 36px;
+        display: flex;
+        flex-direction: column;
+    }
+    .intro-player-card {
+        width: 100%;
+        background: rgba(18, 18, 40, 0.72);
+        backdrop-filter: blur(28px) saturate(180%);
+        -webkit-backdrop-filter: blur(28px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 26px;
+        padding: 26px 24px 22px;
+        margin-bottom: 14px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .intro-player-info { text-align: center; margin-bottom: 20px; }
+    .intro-player-title { font-size: 19px; font-weight: 800; color: white; margin-bottom: 4px; }
+    .intro-player-subtitle { font-size: 13.5px; opacity: 0.65; }
+    .intro-progress-container { width: 100%; height: 5px; background: rgba(255,255,255,0.18); border-radius: 999px; cursor: pointer; margin-bottom: 8px; }
+    .intro-progress-bar { height: 100%; width: 0%; background: linear-gradient(to right, #ff9500, #ff6b00); border-radius: 999px; box-shadow: 0 0 12px #ff9500; transition: width 0.1s linear; }
+    .intro-time-display { display: flex; justify-content: space-between; font-size: 12.5px; opacity: 0.75; margin-bottom: 20px; }
+    .intro-main-controls { display: flex; align-items: center; justify-content: center; gap: 28px; }
+    .intro-control-btn { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .intro-control-btn svg { width: 26px; height: 26px; fill: #ddd; transition: all 0.2s; }
+    .intro-control-btn:active svg { fill: #ff9500; transform: scale(0.9); }
+    .intro-play-main { width: 64px; height: 64px; background: #ff9500; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(255,149,0,0.55); cursor: pointer; flex-shrink: 0; }
+    .intro-play-main svg { width: 28px; height: 28px; fill: #1a0033; }
+
+    /* ===== باکس توضیحات (آکاردئونی شیشه‌ای) ===== */
+    .desc-toggle {
+        width: 100%;
+        background: rgba(255,255,255,0.11);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(212, 175, 55, 0.55);
+        border-radius: 22px;
+        padding: 16px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        box-shadow: 0 6px 24px rgba(0,0,0,0.5), 0 0 18px rgba(212, 175, 55, 0.18);
+        transition: border-color 0.3s ease;
+    }
+    .desc-toggle:hover { border-color: #d4af37; }
+    .desc-toggle .label { font-size: 16.5px; font-weight: 800; color: #d4af37; text-shadow: 0 0 12px rgba(212,175,55,0.5); }
+    .desc-chevron { font-size: 18px; color: #d4af37; display: inline-block; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
+
+    .desc-panel {
+        width: 100%;
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+        margin-top: 0;
+        transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.4s ease, margin-top 0.5s cubic-bezier(0.4,0,0.2,1);
+    }
+    .desc-panel.open { opacity: 1; margin-top: 14px; }
+    .desc-panel-inner {
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        border-radius: 18px;
+        padding: 18px 20px;
+        font-size: 15px;
+        line-height: 2;
+        color: rgba(255,255,255,0.85);
+        text-align: right;
+    }
+
     .exercise-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -487,6 +558,47 @@
     <div onclick="window.location.href='https://planlife.ir'" class="back-btn">←</div>
     
     <div class="title">تمرینات مجازی 🧠</div>
+
+    <!-- ===== باکس معرفی صوتی (تم پلیر پادکست) + باکس توضیحات آکاردئونی ===== -->
+    <div class="intro-section">
+        <div class="intro-player-card">
+            <div class="intro-player-info">
+                <div class="intro-player-title">معرفی صوتی</div>
+                <div class="intro-player-subtitle">PlanLife</div>
+            </div>
+            <div class="intro-progress-container" id="introProgressContainer">
+                <div class="intro-progress-bar" id="introProgressBar"></div>
+            </div>
+            <div class="intro-time-display">
+                <span id="introCurrentTime">0:00</span>
+                <span id="introTotalTime">0:00</span>
+            </div>
+            <div class="intro-main-controls">
+                <div class="intro-control-btn" onclick="introSeek(-10)">
+                    <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                </div>
+                <div class="intro-play-main" id="introPlayBtn" onclick="introTogglePlay()">
+                    <svg id="introPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <div class="intro-control-btn" onclick="introSeek(10)">
+                    <svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg>
+                </div>
+            </div>
+            <audio id="introAudio" style="display:none;">
+                <source src="" type="audio/mpeg">
+            </audio>
+        </div>
+
+        <div class="desc-toggle" onclick="toggleDescription()">
+            <span class="label">توضیحات</span>
+            <span class="desc-chevron" id="descChevron">⌄</span>
+        </div>
+        <div class="desc-panel" id="descPanel">
+            <div class="desc-panel-inner">
+                اینجا متن معرفی و توضیحات قرار می‌گیرد. این بخش فعلاً ثابت است و بعداً با متن واقعی جایگزین می‌شود.
+            </div>
+        </div>
+    </div>
 
     <!-- دو کارت اصلی -->
     <div class="exercise-grid" id="main-grid">
@@ -983,6 +1095,62 @@ function closeMenu() {
     document.getElementById('menu-overlay').classList.remove('active');
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
+// ========== پلیر معرفی صوتی (بالای صفحه) ==========
+const introAudio = document.getElementById('introAudio');
+const introPlayIcon = document.getElementById('introPlayIcon');
+const introProgressBar = document.getElementById('introProgressBar');
+const introProgressContainer = document.getElementById('introProgressContainer');
+const introCurrentTimeEl = document.getElementById('introCurrentTime');
+const introTotalTimeEl = document.getElementById('introTotalTime');
+
+function formatIntroTime(s) {
+    if (!s || isNaN(s)) return '0:00';
+    return `${Math.floor(s / 60)}:${Math.floor(s % 60).toString().padStart(2, '0')}`;
+}
+function introTogglePlay() {
+    if (!introAudio.src) return;
+    if (introAudio.paused) {
+        introAudio.play();
+        introPlayIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+    } else {
+        introAudio.pause();
+        introPlayIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+    }
+}
+function introSeek(sec) { if (introAudio.src) introAudio.currentTime += sec; }
+introAudio.addEventListener('timeupdate', () => {
+    if (!introAudio.duration) return;
+    introProgressBar.style.width = `${(introAudio.currentTime / introAudio.duration) * 100}%`;
+    introCurrentTimeEl.textContent = formatIntroTime(introAudio.currentTime);
+});
+introAudio.addEventListener('loadedmetadata', () => {
+    introTotalTimeEl.textContent = formatIntroTime(introAudio.duration);
+});
+introAudio.addEventListener('ended', () => {
+    introPlayIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+});
+introProgressContainer.addEventListener('click', e => {
+    if (!introAudio.duration) return;
+    const r = introProgressContainer.getBoundingClientRect();
+    introAudio.currentTime = ((e.clientX - r.left) / r.width) * introAudio.duration;
+});
+
+// ========== باز/بسته شدن آکاردئونی باکس توضیحات ==========
+function toggleDescription() {
+    const panel = document.getElementById('descPanel');
+    const chevron = document.getElementById('descChevron');
+    const isOpen = panel.classList.contains('open');
+    if (isOpen) {
+        panel.style.maxHeight = '0px';
+        panel.classList.remove('open');
+        chevron.style.transform = 'rotate(0deg)';
+    } else {
+        panel.classList.add('open');
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+        chevron.style.transform = 'rotate(180deg)';
+    }
+}
 
 // ========== اجرای اولیه ==========
 window.onload = () => { loadHistory('all'); };
