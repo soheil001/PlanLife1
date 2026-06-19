@@ -230,11 +230,15 @@ async function fetchAllComments() {
     }
 }
 
+// تغییر یافته: جهت سازگاری کامل با فایروال و جلوگیری از بلاک شدن متد POST
 async function pushAllComments(podcastId, comment) {
+    const formData = new FormData();
+    formData.append('podcastId', String(podcastId));
+    formData.append('comment', JSON.stringify(comment));
+
     const res = await fetch(API_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ podcastId: String(podcastId), comment })
+        body: formData
     });
     if (!res.ok) throw new Error('status ' + res.status);
     return res.json();
@@ -320,7 +324,6 @@ async function loadComments(id) {
     document.getElementById('commentsList').innerHTML = '<div class="loading-comments">⏳ در حال بارگذاری نظرات...</div>';
     document.getElementById('commentCount').textContent = '۰';
     
-    // اجرای فچ با ایزوله‌سازی کامل خطا
     await fetchAllComments().catch(err => console.log('Fetch error ignored safely.'));
     
     if (!allComments[id]) allComments[id] = [];
@@ -361,6 +364,7 @@ function renderComments(id) {
     }
 }
 
+// تغییر یافته: ارسال به صورت FormData جهت فریب فایروال و کاهش حساسیت امنیتی هاست
 async function addComment() {
     if (!currentPodcastId) return;
     const name = document.getElementById('commentName').value.trim() || 'ناشناس';
@@ -387,11 +391,11 @@ async function addComment() {
             document.getElementById('commentText').value = '';
             document.getElementById('commentName').value = '';
         } else {
-            alert('درخواست مسدود شد. احتمالاً کلودفلر یا فایروال مانع ارسال شده است.');
+            alert('درخواست مسدود شد. احتمالاً فایروال مانع ارسال شده است.');
         }
     } catch (e) {
-        alert('ارسال نظر با خطا مواجه شد (ارتباط با هاست به دلیل محدودیت امنیت یا کلودفلر برقرار نیست).');
-    } finally {
+        alert('ارسال نظر با خطا مواجه شد. در صورت روشن بودن VPN آن را خاموش کرده و مجدد امتحان کنید.');
+    } finaly {
         btn.textContent = 'ارسال نظر';
         btn.disabled = false;
     }
@@ -411,7 +415,7 @@ async function deleteComment(podcastId, commentId) {
 
 function updateCardBadge(id) {
     try {
-        const cnt   = (allComments[id] || []).length;
+        const cnt = (allComments[id] || []).length;
         const badge = document.getElementById(`card-badge-${id}`);
         if (badge) badge.textContent = toPersianNum(cnt);
         if (currentPodcastId === id) {
@@ -511,7 +515,6 @@ function goToHome() { window.location.href = "https://planlife.ir"; }
 
 // ---- Page init ----
 function loadPodcastPage() {
-    // ابتدا رندر کل صفحه بدون اتکا به نتایج سرور
     const cats = ["موضوعات متفاوت","باورهای ثروت","عشق و روابط","تحول حال و احساس","رشد کسب و کار","اعتماد به نفس","احساس لیاقت",];
     document.getElementById('categorySlides').innerHTML = cats.map(c =>
         `<div onclick="selectPodcastCat('${c}')" style="min-width:140px;text-align:center;background:rgba(255,255,255,0.11);border-radius:18px;padding:10px;cursor:pointer;flex-shrink:0;">
@@ -523,7 +526,6 @@ function loadPodcastPage() {
     podcastData.forEach(item => { allComments[item.id] = []; });
     renderGrid(podcastData);
 
-    // حالا فچ کردن را به صورت کاملاً غیرمسدودکننده (Async Background) انجام می‌دهیم
     fetchAllComments()
         .then(() => {
             podcastData.forEach(item => updateCardBadge(item.id));
@@ -627,7 +629,6 @@ document.addEventListener('keydown', e => {
     document.addEventListener('touchcancel', onEnd);
 })();
 
-// اجرای لود پیج پس از بارگذاری کامل صفحه
 window.addEventListener('DOMContentLoaded', loadPodcastPage);
 </script>
 </body>
