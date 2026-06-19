@@ -1053,6 +1053,15 @@ function toFa(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d
 let gratitudeMaxVisible = 5; // تعداد باکس‌های نمایش‌داده‌شده
 
 function renderGratitudeRows() {
+    // ابتدا مقادیر فعلی رو ذخیره کن قبل از رندر
+    const savedValues = {};
+    for (let i = 1; i <= gratitudeMaxVisible; i++) {
+        const textarea = document.getElementById('grat-' + i);
+        if (textarea) {
+            savedValues[i] = textarea.value;
+        }
+    }
+    
     const list = document.getElementById('gratitude-list');
     list.innerHTML = '';
     
@@ -1068,6 +1077,14 @@ function renderGratitudeRows() {
     
     list.innerHTML = html;
     
+    // مقادیر ذخیره‌شده رو دوباره بریز توی textarea‌های نو
+    for (let i = 1; i <= gratitudeMaxVisible; i++) {
+        const textarea = document.getElementById('grat-' + i);
+        if (textarea && savedValues[i]) {
+            textarea.value = savedValues[i];
+        }
+    }
+    
     // اضافه کردن event listeners برای Enter key
     for (let i = 1; i <= gratitudeMaxVisible; i++) {
         const textarea = document.getElementById('grat-' + i);
@@ -1075,18 +1092,21 @@ function renderGratitudeRows() {
             textarea.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
-                    // رفتن به باکس بعدی
                     const nextIndex = i + 1;
-                    if (nextIndex <= gratitudeMaxVisible) {
-                        document.getElementById('grat-' + nextIndex).focus();
-                    } else if (nextIndex <= 200) {
-                        // اگر باکس بعدی هنوز رندر نشده، ابتدا اضافه کن
-                        gratitudeMaxVisible = Math.min(gratitudeMaxVisible + 1, 200);
+                    
+                    // اگر باکس بعدی هنوز رندر نشده، ۱۰ باکس بعدی رو اضافه کن
+                    if (nextIndex > gratitudeMaxVisible && nextIndex <= 200) {
+                        gratitudeMaxVisible = Math.min(nextIndex + 9, 200);
                         renderGratitudeRows();
-                        setTimeout(() => {
-                            document.getElementById('grat-' + nextIndex).focus();
-                        }, 50);
                     }
+                    
+                    // بعد از رندر، فوکوس به باکس بعدی
+                    setTimeout(() => {
+                        const nextTextarea = document.getElementById('grat-' + nextIndex);
+                        if (nextTextarea) {
+                            nextTextarea.focus();
+                        }
+                    }, 50);
                 }
             });
         }
@@ -1096,11 +1116,11 @@ function renderGratitudeRows() {
     if (gratitudeMaxVisible < 200) {
         const addBtn = document.createElement('button');
         addBtn.className = 'add-gratitude-btn';
-        addBtn.textContent = `➕ اضافه کردن گزینه ${toFa(gratitudeMaxVisible + 1)} تا ${toFa(Math.min(gratitudeMaxVisible + 5, 200))}`;
+        addBtn.textContent = `➕ اضافه کردن ${toFa(10)} باکس دیگه`;
         addBtn.type = 'button';
         addBtn.onclick = (e) => {
             e.preventDefault();
-            gratitudeMaxVisible = Math.min(gratitudeMaxVisible + 5, 200);
+            gratitudeMaxVisible = Math.min(gratitudeMaxVisible + 10, 200);
             renderGratitudeRows();
         };
         list.appendChild(addBtn);
