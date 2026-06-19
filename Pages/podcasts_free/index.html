@@ -208,7 +208,7 @@
 
 <script>
 // ============================================================
-// JSONBin — persistent comment storage
+// Backend PHP — persistent comment storage
 // ============================================================
 const API_URL = 'https://dl.planlife.ir/comments.php';
 
@@ -216,7 +216,7 @@ let allComments = {};
 
 async function fetchAllComments() {
     try {
-        const res = await fetch(API_URL);
+        const res = await fetch(API_URL, { cache: 'no-store' });
         if (!res.ok) throw new Error('fetch ' + res.status);
         allComments = await res.json();
         return true;
@@ -230,6 +230,17 @@ async function pushAllComments(podcastId, comment) {
         body: JSON.stringify({ podcastId: String(podcastId), comment })
     });
     if (!res.ok) throw new Error('push ' + res.status);
+    return res.json();
+}
+
+async function removeCommentRemote(podcastId, commentId) {
+    const res = await fetch(API_URL, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ podcastId: String(podcastId), commentId, adminPass: '12345' })
+    });
+    if (!res.ok) throw new Error('delete ' + res.status);
+    return res.json();
 }
 // ============================================================
 const podcastData = [
@@ -345,35 +356,40 @@ async function addComment() {
     btn.textContent = '⏳ در حال ارسال...';
     btn.disabled = true;
 
-    if (!allComments[currentPodcastId]) allComments[currentPodcastId] = [];
     const now = new Date();
-        const comment = {
+    const comment = {
         id: Date.now(), name, text,
         time: `${now.toLocaleDateString('fa-IR',{year:'numeric',month:'short',day:'numeric'})} • ${now.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`
     };
-    if (!allComments[currentPodcastId]) allComments[currentPodcastId] = [];
-    allComments[currentPodcastId].unshift(comment);
-    await pushAllComments(currentPodcastId, comment);
 
-    renderComments(currentPodcastId);
-    updateCardBadge(currentPodcastId);
-    document.getElementById('commentText').value = '';
-    document.getElementById('commentName').value = '';
-    btn.textContent = 'ارسال نظر';
-    btn.disabled = false;
+    try {
+        await pushAllComments(currentPodcastId, comment);
+        if (!allComments[currentPodcastId]) allComments[currentPodcastId] = [];
+        allComments[currentPodcastId].unshift(comment);
+        renderComments(currentPodcastId);
+        updateCardBadge(currentPodcastId);
+        document.getElementById('commentText').value = '';
+        document.getElementById('commentName').value = '';
+    } catch (e) {
+        alert('ارسال نظر با خطا مواجه شد. دوباره تلاش کنید.');
+        console.error(e);
+    } finally {
+        btn.textContent = 'ارسال نظر';
+        btn.disabled = false;
+    }
 }
 
 async function deleteComment(podcastId, commentId) {
     if (!isAdmin || !confirm('این نظر حذف شود؟')) return;
+    try {
+        await removeCommentRemote(podcastId, commentId);
         allComments[podcastId] = (allComments[podcastId] || []).filter(c => c.id !== commentId);
-    await fetch(API_URL, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ podcastId: String(podcastId), commentId, adminPass: '12345' })
-    });
-
-    renderComments(podcastId);
-    updateCardBadge(podcastId);
+        renderComments(podcastId);
+        updateCardBadge(podcastId);
+    } catch (e) {
+        alert('حذف نظر با خطا مواجه شد.');
+        console.error(e);
+    }
 }
 
 function updateCardBadge(id) {
@@ -486,7 +502,7 @@ async function loadPodcastPage() {
     podcastData.forEach(item => { if (!allComments[item.id]) allComments[item.id] = []; });
     renderGrid(podcastData);
 
-    // Load comment counts from JSONBin in background
+    // Load comment counts from backend in background
     await fetchAllComments();
     podcastData.forEach(item => updateCardBadge(item.id));
 }
