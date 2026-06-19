@@ -208,40 +208,46 @@
 
 <script>
 // ============================================================
-// Backend PHP — persistent comment storage
+// JSONBin — persistent comment storage
 // ============================================================
-const API_URL = 'https://dl.planlife.ir/comments.php';
+const JSONBIN_BIN_ID    = '6a257a88da38895dfe94f630';
+const JSONBIN_MASTER_KEY = '$2a$10$0LIPWu8zUHDSSPOGS0v5z.qSAdQB0ruLVwurkAvAHEEuk61021Xzi';
+const JSONBIN_URL        = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
 
-let allComments = {};
+let allComments  = {};   // { podcastId: [ {id, name, text, time}, ... ] }
+let remoteRecord = {};   // last snapshot from JSONBin
+let isSaving     = false;
 
 async function fetchAllComments() {
     try {
-        const res = await fetch(API_URL, { cache: 'no-store' });
+        const res = await fetch(`${JSONBIN_URL}/latest`, {
+            headers: { 'X-Master-Key': JSONBIN_MASTER_KEY }
+        });
         if (!res.ok) throw new Error('fetch ' + res.status);
-        allComments = await res.json();
+        const data = await res.json();
+        remoteRecord = data.record || {};
+        Object.keys(remoteRecord).forEach(k => { allComments[k] = remoteRecord[k]; });
         return true;
-    } catch(e) { console.warn('fetch comments error:', e); return false; }
+    } catch(e) { console.warn('JSONBin fetch:', e); return false; }
 }
 
-async function pushAllComments(podcastId, comment) {
-    const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ podcastId: String(podcastId), comment })
-    });
-    if (!res.ok) throw new Error('push ' + res.status);
-    return res.json();
+async function pushAllComments() {
+    if (isSaving) return;
+    isSaving = true;
+    try {
+        // Merge current allComments into remoteRecord then push
+        const payload = Object.assign({}, remoteRecord, allComments);
+        const res = await fetch(JSONBIN_URL, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_MASTER_KEY },
+            body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('push ' + res.status);
+        remoteRecord = payload;
+    } catch(e) { console.warn('JSONBin push:', e); }
+    finally    { isSaving = false; }
 }
 
-async function removeCommentRemote(podcastId, commentId) {
-    const res = await fetch(API_URL, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ podcastId: String(podcastId), commentId, adminPass: '12345' })
-    });
-    if (!res.ok) throw new Error('delete ' + res.status);
-    return res.json();
-}
 // ============================================================
 const podcastData = [
     {id:1,title:"باورهای ثروت",episode:"نشانه های ثروت",src:"https://res.cloudinary.com/dfthbclzi/video/upload/v1780854988/Bavar_free_w9yucc.m4a",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780855363/IMG_1658_gwxqtm.jpg"},
@@ -356,40 +362,28 @@ async function addComment() {
     btn.textContent = '⏳ در حال ارسال...';
     btn.disabled = true;
 
+    if (!allComments[currentPodcastId]) allComments[currentPodcastId] = [];
     const now = new Date();
-    const comment = {
+    allComments[currentPodcastId].unshift({
         id: Date.now(), name, text,
         time: `${now.toLocaleDateString('fa-IR',{year:'numeric',month:'short',day:'numeric'})} • ${now.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`
-    };
+    });
 
-    try {
-        await pushAllComments(currentPodcastId, comment);
-        if (!allComments[currentPodcastId]) allComments[currentPodcastId] = [];
-        allComments[currentPodcastId].unshift(comment);
-        renderComments(currentPodcastId);
-        updateCardBadge(currentPodcastId);
-        document.getElementById('commentText').value = '';
-        document.getElementById('commentName').value = '';
-    } catch (e) {
-        alert('ارسال نظر با خطا مواجه شد. دوباره تلاش کنید.');
-        console.error(e);
-    } finally {
-        btn.textContent = 'ارسال نظر';
-        btn.disabled = false;
-    }
+    await pushAllComments();
+    renderComments(currentPodcastId);
+    updateCardBadge(currentPodcastId);
+    document.getElementById('commentText').value = '';
+    document.getElementById('commentName').value = '';
+    btn.textContent = 'ارسال نظر';
+    btn.disabled = false;
 }
 
 async function deleteComment(podcastId, commentId) {
     if (!isAdmin || !confirm('این نظر حذف شود؟')) return;
-    try {
-        await removeCommentRemote(podcastId, commentId);
-        allComments[podcastId] = (allComments[podcastId] || []).filter(c => c.id !== commentId);
-        renderComments(podcastId);
-        updateCardBadge(podcastId);
-    } catch (e) {
-        alert('حذف نظر با خطا مواجه شد.');
-        console.error(e);
-    }
+    allComments[podcastId] = (allComments[podcastId] || []).filter(c => c.id !== commentId);
+    await pushAllComments();
+    renderComments(podcastId);
+    updateCardBadge(podcastId);
 }
 
 function updateCardBadge(id) {
@@ -502,7 +496,7 @@ async function loadPodcastPage() {
     podcastData.forEach(item => { if (!allComments[item.id]) allComments[item.id] = []; });
     renderGrid(podcastData);
 
-    // Load comment counts from backend in background
+    // Load comment counts from JSONBin in background
     await fetchAllComments();
     podcastData.forEach(item => updateCardBadge(item.id));
 }
