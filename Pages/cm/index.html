@@ -217,10 +217,17 @@ let allComments = {};
 async function fetchAllComments() {
     try {
         const res = await fetch(API_URL, { cache: 'no-store' });
-        if (!res.ok) throw new Error('fetch ' + res.status);
-        allComments = await res.json();
-        return true;
-    } catch(e) { console.warn('fetch comments error:', e); return false; }
+        if (!res.ok) return false;
+        const data = await res.json();
+        if (data && typeof data === 'object') {
+            allComments = data;
+            return true;
+        }
+        return false;
+    } catch(e) { 
+        console.warn('Comments fetch skipped or blocked:', e.message); 
+        return false; 
+    }
 }
 
 async function pushAllComments(podcastId, comment) {
@@ -229,7 +236,7 @@ async function pushAllComments(podcastId, comment) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ podcastId: String(podcastId), comment })
     });
-    if (!res.ok) throw new Error('push ' + res.status);
+    if (!res.ok) throw new Error('status ' + res.status);
     return res.json();
 }
 
@@ -239,7 +246,7 @@ async function removeCommentRemote(podcastId, commentId) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ podcastId: String(podcastId), commentId, adminPass: '12345' })
     });
-    if (!res.ok) throw new Error('delete ' + res.status);
+    if (!res.ok) throw new Error('status ' + res.status);
     return res.json();
 }
 // ============================================================
@@ -311,45 +318,47 @@ function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&l
 
 async function loadComments(id) {
     document.getElementById('commentsList').innerHTML = '<div class="loading-comments">⏳ در حال بارگذاری نظرات...</div>';
-    document.getElementById('commentCount').textContent = '...';
+    document.getElementById('commentCount').textContent = '۰';
     
-    try {
-        await fetchAllComments();
-    } catch(e) {
-        console.error("Cloudflare or Host connection failed for comments loading:", e);
-    }
+    // اجرای فچ با ایزوله‌سازی کامل خطا
+    await fetchAllComments().catch(err => console.log('Fetch error ignored safely.'));
     
     if (!allComments[id]) allComments[id] = [];
     renderComments(id);
-    podcastData.forEach(item => updateCardBadge(item.id));
 }
 
 function renderComments(id) {
-    const comments = allComments[id] || [];
-    const list     = document.getElementById('commentsList');
-    const countEl  = document.getElementById('commentCount');
-    const coverCnt = document.getElementById('coverCommentCount');
-    if (!list || !countEl) return;
-    countEl.textContent = comments.length;
-    if (coverCnt) coverCnt.textContent = toPersianNum(comments.length);
-    list.innerHTML = '';
-    if (comments.length === 0) {
-        list.innerHTML = '<p style="opacity:0.6;text-align:center;padding:22px 10px;font-size:14px;line-height:1.6;">هنوز نظری ثبت نشده.<br>اولین نفر باشید!</p>';
-        return;
-    }
-    comments.forEach(c => {
-        const div = document.createElement('div');
-        div.style.cssText = 'background:rgba(255,255,255,0.085);border-radius:14px;padding:13px 15px;margin-bottom:9px;border:1px solid rgba(255,255,255,0.06);';
-        div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
-            <strong style="color:#ffd700;font-size:14.5px;">${escapeHtml(c.name)}</strong>
-            <div style="display:flex;align-items:center;gap:8px;">
-                <span style="font-size:11.5px;opacity:0.55;white-space:nowrap;">${c.time}</span>
-                ${isAdmin ? `<button class="delete-btn" onclick="deleteComment(${id},${c.id})">🗑 حذف</button>` : ''}
+    try {
+        const comments = allComments[id] || [];
+        const list     = document.getElementById('commentsList');
+        const countEl  = document.getElementById('commentCount');
+        const coverCnt = document.getElementById('coverCommentCount');
+        if (!list || !countEl) return;
+        
+        countEl.textContent = toPersianNum(comments.length);
+        if (coverCnt) coverCnt.textContent = toPersianNum(comments.length);
+        list.innerHTML = '';
+        
+        if (comments.length === 0) {
+            list.innerHTML = '<p style="opacity:0.6;text-align:center;padding:22px 10px;font-size:14px;line-height:1.6;">هنوز نظری ثبت نشده.<br>اولین نفر باشید!</p>';
+            return;
+        }
+        comments.forEach(c => {
+            const div = document.createElement('div');
+            div.style.cssText = 'background:rgba(255,255,255,0.085);border-radius:14px;padding:13px 15px;margin-bottom:9px;border:1px solid rgba(255,255,255,0.06);';
+            div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+                <strong style="color:#ffd700;font-size:14.5px;">${escapeHtml(c.name)}</strong>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:11.5px;opacity:0.55;white-space:nowrap;">${c.time}</span>
+                    ${isAdmin ? `<button class="delete-btn" onclick="deleteComment(${id},${c.id})">🗑 حذف</button>` : ''}
+                </div>
             </div>
-        </div>
-        <p style="font-size:14.8px;line-height:1.55;margin:0;color:#f0f0f0;">${escapeHtml(c.text)}</p>`;
-        list.appendChild(div);
-    });
+            <p style="font-size:14.8px;line-height:1.55;margin:0;color:#f0f0f0;">${escapeHtml(c.text)}</p>`;
+            list.appendChild(div);
+        });
+    } catch (e) {
+        console.error('Error rendering comments safely ignored:', e);
+    }
 }
 
 async function addComment() {
@@ -370,7 +379,6 @@ async function addComment() {
 
     try {
         const responseData = await pushAllComments(currentPodcastId, comment);
-        
         if (responseData && responseData.ok) {
             if (!allComments[currentPodcastId]) allComments[currentPodcastId] = [];
             allComments[currentPodcastId].unshift(comment);
@@ -379,11 +387,10 @@ async function addComment() {
             document.getElementById('commentText').value = '';
             document.getElementById('commentName').value = '';
         } else {
-            alert('سرور درخواست را نپذیرفت. احتمالاً توسط فایروال یا کلودفلر مسدود شده است.');
+            alert('درخواست مسدود شد. احتمالاً کلودفلر یا فایروال مانع ارسال شده است.');
         }
     } catch (e) {
-        alert('ارسال نظر با خطا مواجه شد. خطای ارتباط با سرور (احتمال مسدودسازی توسط کلودفلر یا هاست وجود دارد).');
-        console.error(e);
+        alert('ارسال نظر با خطا مواجه شد (ارتباط با هاست به دلیل محدودیت امنیت یا کلودفلر برقرار نیست).');
     } finally {
         btn.textContent = 'ارسال نظر';
         btn.disabled = false;
@@ -399,18 +406,19 @@ async function deleteComment(podcastId, commentId) {
         updateCardBadge(podcastId);
     } catch (e) {
         alert('حذف نظر با خطا مواجه شد.');
-        console.error(e);
     }
 }
 
 function updateCardBadge(id) {
-    const cnt   = (allComments[id] || []).length;
-    const badge = document.getElementById(`card-badge-${id}`);
-    if (badge) badge.textContent = toPersianNum(cnt);
-    if (currentPodcastId === id) {
-        const cc = document.getElementById('coverCommentCount'); if (cc) cc.textContent = toPersianNum(cnt);
-        const mc = document.getElementById('commentCount');      if (mc) mc.textContent = cnt;
-    }
+    try {
+        const cnt   = (allComments[id] || []).length;
+        const badge = document.getElementById(`card-badge-${id}`);
+        if (badge) badge.textContent = toPersianNum(cnt);
+        if (currentPodcastId === id) {
+            const cc = document.getElementById('coverCommentCount'); if (cc) cc.textContent = toPersianNum(cnt);
+            const mc = document.getElementById('commentCount');      if (mc) mc.textContent = toPersianNum(cnt);
+        }
+    } catch (e) {}
 }
 
 // ---- Audio ----
@@ -502,7 +510,8 @@ function showMenu() { alert("منو (به زودی)"); }
 function goToHome() { window.location.href = "https://planlife.ir"; }
 
 // ---- Page init ----
-async function loadPodcastPage() {
+function loadPodcastPage() {
+    // ابتدا رندر کل صفحه بدون اتکا به نتایج سرور
     const cats = ["موضوعات متفاوت","باورهای ثروت","عشق و روابط","تحول حال و احساس","رشد کسب و کار","اعتماد به نفس","احساس لیاقت",];
     document.getElementById('categorySlides').innerHTML = cats.map(c =>
         `<div onclick="selectPodcastCat('${c}')" style="min-width:140px;text-align:center;background:rgba(255,255,255,0.11);border-radius:18px;padding:10px;cursor:pointer;flex-shrink:0;">
@@ -511,15 +520,17 @@ async function loadPodcastPage() {
         </div>`
     ).join('');
 
-    podcastData.forEach(item => { if (!allComments[item.id]) allComments[item.id] = []; });
+    podcastData.forEach(item => { allComments[item.id] = []; });
     renderGrid(podcastData);
 
-    try {
-        await fetchAllComments();
-    } catch(e) {
-        console.warn("Unable to initially fetch comments, continuing to render grid safely.");
-    }
-    podcastData.forEach(item => updateCardBadge(item.id));
+    // حالا فچ کردن را به صورت کاملاً غیرمسدودکننده (Async Background) انجام می‌دهیم
+    fetchAllComments()
+        .then(() => {
+            podcastData.forEach(item => updateCardBadge(item.id));
+        })
+        .catch(err => {
+            console.log("Initial comment connection failed, keeping grid safe without counts.");
+        });
 }
 
 function renderGrid(items) {
@@ -616,7 +627,8 @@ document.addEventListener('keydown', e => {
     document.addEventListener('touchcancel', onEnd);
 })();
 
-window.onload = loadPodcastPage;
+// اجرای لود پیج پس از بارگذاری کامل صفحه
+window.addEventListener('DOMContentLoaded', loadPodcastPage);
 </script>
 </body>
 </html>
