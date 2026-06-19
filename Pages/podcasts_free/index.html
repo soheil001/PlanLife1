@@ -210,44 +210,27 @@
 // ============================================================
 // JSONBin — persistent comment storage
 // ============================================================
-const JSONBIN_BIN_ID    = '6a257a88da38895dfe94f630';
-const JSONBIN_MASTER_KEY = '$2a$10$0LIPWu8zUHDSSPOGS0v5z.qSAdQB0ruLVwurkAvAHEEuk61021Xzi';
-const JSONBIN_URL        = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
+const API_URL = 'https://dl.planlife.ir/comments.php';
 
-let allComments  = {};   // { podcastId: [ {id, name, text, time}, ... ] }
-let remoteRecord = {};   // last snapshot from JSONBin
-let isSaving     = false;
+let allComments = {};
 
 async function fetchAllComments() {
     try {
-        const res = await fetch(`${JSONBIN_URL}/latest`, {
-            headers: { 'X-Master-Key': JSONBIN_MASTER_KEY }
-        });
+        const res = await fetch(API_URL);
         if (!res.ok) throw new Error('fetch ' + res.status);
-        const data = await res.json();
-        remoteRecord = data.record || {};
-        Object.keys(remoteRecord).forEach(k => { allComments[k] = remoteRecord[k]; });
+        allComments = await res.json();
         return true;
-    } catch(e) { console.warn('JSONBin fetch:', e); return false; }
+    } catch(e) { console.warn('fetch comments error:', e); return false; }
 }
 
-async function pushAllComments() {
-    if (isSaving) return;
-    isSaving = true;
-    try {
-        // Merge current allComments into remoteRecord then push
-        const payload = Object.assign({}, remoteRecord, allComments);
-        const res = await fetch(JSONBIN_URL, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_MASTER_KEY },
-            body: JSON.stringify(payload)
-        });
-        if (!res.ok) throw new Error('push ' + res.status);
-        remoteRecord = payload;
-    } catch(e) { console.warn('JSONBin push:', e); }
-    finally    { isSaving = false; }
+async function pushAllComments(podcastId, comment) {
+    const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ podcastId: String(podcastId), comment })
+    });
+    if (!res.ok) throw new Error('push ' + res.status);
 }
-
 // ============================================================
 const podcastData = [
     {id:1,title:"باورهای ثروت",episode:"نشانه های ثروت",src:"https://res.cloudinary.com/dfthbclzi/video/upload/v1780854988/Bavar_free_w9yucc.m4a",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780855363/IMG_1658_gwxqtm.jpg"},
@@ -364,12 +347,14 @@ async function addComment() {
 
     if (!allComments[currentPodcastId]) allComments[currentPodcastId] = [];
     const now = new Date();
-    allComments[currentPodcastId].unshift({
+        const comment = {
         id: Date.now(), name, text,
         time: `${now.toLocaleDateString('fa-IR',{year:'numeric',month:'short',day:'numeric'})} • ${now.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`
-    });
+    };
+    if (!allComments[currentPodcastId]) allComments[currentPodcastId] = [];
+    allComments[currentPodcastId].unshift(comment);
+    await pushAllComments(currentPodcastId, comment);
 
-    await pushAllComments();
     renderComments(currentPodcastId);
     updateCardBadge(currentPodcastId);
     document.getElementById('commentText').value = '';
@@ -380,8 +365,13 @@ async function addComment() {
 
 async function deleteComment(podcastId, commentId) {
     if (!isAdmin || !confirm('این نظر حذف شود؟')) return;
-    allComments[podcastId] = (allComments[podcastId] || []).filter(c => c.id !== commentId);
-    await pushAllComments();
+        allComments[podcastId] = (allComments[podcastId] || []).filter(c => c.id !== commentId);
+    await fetch(API_URL, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ podcastId: String(podcastId), commentId, adminPass: '12345' })
+    });
+
     renderComments(podcastId);
     updateCardBadge(podcastId);
 }
