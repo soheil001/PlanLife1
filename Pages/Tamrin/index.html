@@ -334,32 +334,66 @@
     .menu-item:hover { background: rgba(212,175,55,0.11); border-color: #d4af37; transform: translateX(-8px); box-shadow: 0 6px 20px rgba(212,175,55,0.22); }
     .menu-item .text { flex: 1; line-height: 1.35; }
 
+    /* ===== گرید اتفاقات جالب + شکرگذاری ===== */
+    .dual-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        width: 100%;
+        max-width: 720px;
+        margin-top: 20px;
+    }
+
     /* ===== کارت اتفاقات جالب ===== */
     .events-card {
         background: linear-gradient(135deg, rgba(34,197,94,0.07), rgba(255,255,255,0.04));
         backdrop-filter: blur(16px);
         border: 1px solid rgba(34,197,94,0.4);
-        border-radius: 28px;
-        padding: 32px 24px;
+        border-radius: 26px;
+        padding: 26px 16px;
         text-align: center;
         cursor: pointer;
         transition: all 0.4s cubic-bezier(0.25,0.1,0.25,1);
         box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 25px rgba(34,197,94,0.15);
         display: flex; flex-direction: column;
         align-items: center; justify-content: center;
-        gap: 20px;
-        width: 100%; max-width: 720px;
-        margin-top: 20px;
-        min-height: 180px;
+        gap: 14px;
+        min-height: 200px;
     }
     .events-card:hover {
         transform: translateY(-8px) scale(1.02);
         box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 35px rgba(34,197,94,0.3);
     }
     .events-card h2 {
-        font-size: 22px; font-weight: 900;
+        font-size: 18px; font-weight: 900;
         color: #4ade80;
         text-shadow: 0 0 15px rgba(74,222,128,0.5);
+    }
+
+    /* ===== کارت شکرگذاری روزانه ===== */
+    .gratitude-card {
+        background: linear-gradient(135deg, rgba(244,63,94,0.08), rgba(255,255,255,0.04));
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(244,63,94,0.4);
+        border-radius: 26px;
+        padding: 26px 16px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25,0.1,0.25,1);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 25px rgba(244,63,94,0.15);
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 14px;
+        min-height: 200px;
+    }
+    .gratitude-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 35px rgba(244,63,94,0.3);
+    }
+    .gratitude-card h2 {
+        font-size: 18px; font-weight: 900;
+        color: #fb7185;
+        text-shadow: 0 0 15px rgba(251,113,133,0.5);
     }
 
     /* فرم اتفاقات جالب */
@@ -384,7 +418,7 @@
         margin-bottom: 14px; line-height: 1.7;
     }
     #events-text {
-        width: 100%; min-height: 180px;
+        width: 100%; min-height: 260px;
         background: rgba(255,255,255,0.08);
         border: 1px solid rgba(34,197,94,0.4);
         border-radius: 16px; padding: 16px 20px;
@@ -403,11 +437,94 @@
     .events-save-btn:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(34,197,94,0.5); }
     .events-save-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
+    /* فرم شکرگذاری روزانه */
+    #gratitude-form {
+        display: none;
+        width: 100%; max-width: 720px;
+        background: rgba(255,255,255,0.09);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(244,63,94,0.4);
+        border-radius: 28px;
+        padding: 30px; margin-top: 20px;
+    }
+    .gratitude-heading { text-align: center; margin-bottom: 26px; }
+    .gratitude-heading h2 {
+        color: #fb7185; font-size: 24px; font-weight: 900;
+        text-shadow: 0 0 20px rgba(251,113,133,0.4);
+        margin-bottom: 14px;
+    }
+    .gratitude-subtitle {
+        font-size: 21px;
+        font-weight: 800;
+        line-height: 1.9;
+        background: linear-gradient(90deg, #fbbf24, #fb7185, #c084fc);
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent; color: transparent;
+        padding: 0 6px;
+    }
+    .gratitude-list { 
+        width: 100%; 
+        margin: 28px 0 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+    .gratitude-row {
+        display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+        animation: gratRowIn 0.35s ease;
+    }
+    @keyframes gratRowIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .gratitude-num {
+        min-width: 34px; height: 34px; border-radius: 50%;
+        background: rgba(244,63,94,0.16); border: 1px solid rgba(244,63,94,0.4);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 12.5px; font-weight: 800; color: #fb7185; flex-shrink: 0;
+    }
+    .gratitude-input {
+        flex: 1; background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(244,63,94,0.25); border-radius: 12px;
+        padding: calc(11px + 0.5cm) 16px; color: white; font-size: 15px;
+        font-family: inherit; outline: none; transition: border-color 0.2s;
+    }
+    .gratitude-input:focus { border-color: #fb7185; }
+    .add-gratitude-btn {
+        width: 100%;
+        text-align: center;
+        padding: 14px;
+        margin: 12px 0 20px;
+        border: 1.5px dashed rgba(244,63,94,0.5);
+        border-radius: 14px;
+        color: #fb7185;
+        font-weight: 700;
+        font-size: 15px;
+        cursor: pointer;
+        background: rgba(244,63,94,0.06);
+        transition: all 0.25s ease;
+        font-family: inherit;
+    }
+    .add-gratitude-btn:hover { background: rgba(244,63,94,0.13); border-color: #fb7185; }
+    .gratitude-save-btn {
+        background: linear-gradient(135deg, #fb7185, #e11d48);
+        color: white; border: none;
+        padding: 14px 36px; font-size: 17px;
+        font-weight: 900; border-radius: 50px;
+        cursor: pointer; transition: all 0.3s;
+        margin: 8px; font-family: inherit;
+        box-shadow: 0 4px 20px rgba(244,63,94,0.35);
+    }
+    .gratitude-save-btn:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(244,63,94,0.5); }
+    .gratitude-save-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
     /* تاریخچه فیلتر */
     .tab-btn-events {
         background: rgba(34,197,94,0.2) !important;
         border: 1px solid rgba(34,197,94,0.5) !important;
         color: #4ade80 !important;
+    }
+    .tab-btn-gratitude {
+        background: rgba(244,63,94,0.2) !important;
+        border: 1px solid rgba(244,63,94,0.5) !important;
+        color: #fb7185 !important;
     }
     .modal-overlay {
         position: fixed; inset: 0;
@@ -681,11 +798,19 @@
         </div>
     </div>
 
-    <!-- کارت اتفاقات جالب -->
-    <div class="events-card" id="events-card" onclick="openEventsForm()">
-        <div style="font-size:52px;">✨</div>
-        <h2>اتفاقات جالب امروزم</h2>
-        <p style="color:rgba(255,255,255,0.6);font-size:15px;">لحظه‌های خوبی که امروز تجربه کردی</p>
+    <!-- کارت اتفاقات جالب + کارت شکرگذاری روزانه -->
+    <div class="dual-grid" id="dual-grid">
+        <div class="events-card" id="events-card" onclick="openEventsForm()">
+            <div style="font-size:40px;">✨</div>
+            <h2>اتفاقات جالب امروزم</h2>
+            <p style="color:rgba(255,255,255,0.6);font-size:13px;">لحظه‌های خوبی که امروز تجربه کردی</p>
+        </div>
+
+        <div class="gratitude-card" id="gratitude-card" onclick="openGratitudeForm()">
+            <div style="font-size:40px;">🙏</div>
+            <h2>شکرگذاری روزانه</h2>
+            <p style="color:rgba(255,255,255,0.6);font-size:13px;">از چیزای کوچیک زندگیت شکرگذار باش</p>
+        </div>
     </div>
 
     <!-- فرم اتفاقات جالب -->
@@ -699,6 +824,19 @@
         </div>
     </div>
 
+    <!-- فرم شکرگذاری روزانه -->
+    <div id="gratitude-form">
+        <div class="gratitude-heading">
+            <h2>🙏 شکرگذاری روزانه</h2>
+            <p class="gratitude-subtitle">شروع کن و از چیزای خیلی کوچیک زندگیت شکرگذاری کن</p>
+        </div>
+        <div class="gratitude-list" id="gratitude-list"></div>
+        <div style="text-align:center; margin-top:10px;">
+            <button class="gratitude-save-btn" id="save-gratitude-btn" onclick="saveGratitude()">ثبت شکرگذاری امروز من ☁️</button>
+            <button class="btn" onclick="closeGratitudeForm()" style="background:rgba(255,255,255,0.2);">بازگشت</button>
+        </div>
+    </div>
+
     <!-- وضعیت همگام‌سازی -->
     <div class="sync-status" id="sync-status"></div>
 
@@ -709,6 +847,7 @@
             <button class="btn" onclick="showHistory('morning')" style="padding:10px 20px;font-size:15px;">صبح</button>
             <button class="btn" onclick="showHistory('night')" style="padding:10px 20px;font-size:15px;">شب</button>
             <button class="btn tab-btn-events" onclick="showHistory('events')" style="padding:10px 20px;font-size:15px;">✨ اتفاقات</button>
+            <button class="btn tab-btn-gratitude" onclick="showHistory('gratitude')" style="padding:10px 20px;font-size:15px;">🙏 شکرگذاری</button>
         </div>
         <h3>تاریخچه تمرینات</h3>
         <div id="history-list"><p style="text-align:center;opacity:0.6;padding:20px;">در حال بارگذاری... <span class="spinner"></span></p></div>
@@ -807,13 +946,24 @@ async function getUserHistory() {
     return { bin, entries, userKey };
 }
 
-// ========== باز کردن فرم ==========
-function openForm(type) {
+// ========== نمایش/مخفی‌سازی نمای اصلی ==========
+function showMainView() {
+    document.getElementById('main-grid').style.display = 'grid';
+    document.getElementById('dual-grid').style.display = 'grid';
+    document.getElementById('history-section').style.display = 'block';
+    document.getElementById('sync-status').style.display = 'flex';
+    loadHistory();
+}
+function hideMainView() {
     document.getElementById('main-grid').style.display = 'none';
-    document.getElementById('events-card').style.display = 'none';
+    document.getElementById('dual-grid').style.display = 'none';
     document.getElementById('history-section').style.display = 'none';
     document.getElementById('sync-status').style.display = 'none';
+}
 
+// ========== باز کردن فرم ==========
+function openForm(type) {
+    hideMainView();
     if (type === 'morning') {
         document.getElementById('morning-form').style.display = 'block';
     } else {
@@ -824,29 +974,18 @@ function openForm(type) {
 function closeForm() {
     document.getElementById('morning-form').style.display = 'none';
     document.getElementById('night-form').style.display = 'none';
-    document.getElementById('main-grid').style.display = 'grid';
-    document.getElementById('events-card').style.display = 'flex';
-    document.getElementById('history-section').style.display = 'block';
-    document.getElementById('sync-status').style.display = 'flex';
-    loadHistory();
+    showMainView();
 }
 
 // ========== فرم اتفاقات جالب ==========
 function openEventsForm() {
-    document.getElementById('main-grid').style.display = 'none';
-    document.getElementById('events-card').style.display = 'none';
-    document.getElementById('history-section').style.display = 'none';
-    document.getElementById('sync-status').style.display = 'none';
+    hideMainView();
     document.getElementById('events-form').style.display = 'block';
 }
 
 function closeEventsForm() {
     document.getElementById('events-form').style.display = 'none';
-    document.getElementById('main-grid').style.display = 'grid';
-    document.getElementById('events-card').style.display = 'flex';
-    document.getElementById('history-section').style.display = 'block';
-    document.getElementById('sync-status').style.display = 'flex';
-    loadHistory();
+    showMainView();
 }
 
 async function saveEvents() {
@@ -876,6 +1015,89 @@ async function saveEvents() {
     } catch(e) {
         btn.disabled = false;
         btn.innerHTML = 'ذخیره اتفاقات ☁️';
+        alert('❌ خطا در اتصال به سرور: ' + e.message);
+    }
+}
+
+// ========== فرم شکرگذاری روزانه ==========
+function toFa(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
+
+let gratitudeMaxVisible = 5; // تعداد باکس‌های نمایش‌داده‌شده
+
+function renderGratitudeRows() {
+    const list = document.getElementById('gratitude-list');
+    list.innerHTML = '';
+    
+    // رندر باکس‌های نمایش‌داده‌شده
+    let html = '';
+    for (let i = 1; i <= gratitudeMaxVisible; i++) {
+        html += `
+            <div class="gratitude-row">
+                <span class="gratitude-num">${toFa(i)}</span>
+                <input type="text" class="gratitude-input" id="grat-${i}" placeholder="بنویس...">
+            </div>`;
+    }
+    
+    list.innerHTML = html;
+    
+    // اضافه کردن دکمه اضافه کردن گزینه (اگر هنوز به ۲۰۰ نرسیده باشیم)
+    if (gratitudeMaxVisible < 200) {
+        const addBtn = document.createElement('button');
+        addBtn.className = 'add-gratitude-btn';
+        addBtn.textContent = `➕ اضافه کردن گزینه ${toFa(gratitudeMaxVisible + 1)} تا ${toFa(Math.min(gratitudeMaxVisible + 5, 200))}`;
+        addBtn.onclick = (e) => {
+            e.preventDefault();
+            gratitudeMaxVisible = Math.min(gratitudeMaxVisible + 5, 200);
+            renderGratitudeRows();
+        };
+        list.appendChild(addBtn);
+    }
+}
+
+function openGratitudeForm() {
+    gratitudeMaxVisible = 5; // ریست کردن تعداد باکس‌ها هر بار که فرم باز می‌شود
+    hideMainView();
+    renderGratitudeRows();
+    document.getElementById('gratitude-form').style.display = 'block';
+}
+
+function closeGratitudeForm() {
+    document.getElementById('gratitude-form').style.display = 'none';
+    showMainView();
+}
+
+async function saveGratitude() {
+    const btn = document.getElementById('save-gratitude-btn');
+    const items = [];
+    for (let i = 1; i <= gratitudeMaxVisible; i++) {
+        const val = document.getElementById('grat-' + i).value.trim();
+        if (val) items.push({ n: i, text: val });
+    }
+    if (items.length === 0) { alert('لطفاً حداقل یک مورد را بنویسید'); return; }
+
+    btn.disabled = true;
+    btn.innerHTML = 'در حال ذخیره... <span class="spinner"></span>';
+
+    const data = {
+        type: 'gratitude',
+        userId: USER_ID,
+        date: new Date().toLocaleDateString('fa-IR'),
+        timestamp: Date.now(),
+        expiresAt: Date.now() + ONE_WEEK_MS,
+        items: items
+    };
+
+    try {
+        const { bin, entries, userKey } = await getUserHistory();
+        entries.unshift(data);
+        bin[userKey] = entries;
+        await updateBin(bin);
+        btn.disabled = false;
+        btn.innerHTML = 'ثبت شکرگذاری امروز من ☁️';
+        showCloudModal();
+    } catch(e) {
+        btn.disabled = false;
+        btn.innerHTML = 'ثبت شکرگذاری امروز من ☁️';
         alert('❌ خطا در اتصال به سرور: ' + e.message);
     }
 }
@@ -939,11 +1161,8 @@ function closeCloudModal() {
     document.getElementById('morning-form').style.display = 'none';
     document.getElementById('night-form').style.display = 'none';
     document.getElementById('events-form').style.display = 'none';
-    document.getElementById('main-grid').style.display = 'grid';
-    document.getElementById('events-card').style.display = 'flex';
-    document.getElementById('history-section').style.display = 'block';
-    document.getElementById('sync-status').style.display = 'flex';
-    loadHistory();
+    document.getElementById('gratitude-form').style.display = 'none';
+    showMainView();
 }
 
 // ========== حذف یک ورودی ==========
@@ -999,6 +1218,18 @@ async function loadHistory(filter = currentFilter) {
                 return;
             }
 
+            if (entry.type === 'gratitude') {
+                const itemsHtml = (entry.items || []).map(it => `<p style="margin:4px 0;">${toFa(it.n)}. ${it.text}</p>`).join('');
+                html += `
+                    <div class="history-entry" style="border-color:rgba(244,63,94,0.35);">
+                        <button class="delete-btn" onclick="deleteEntry(${entry.timestamp})">حذف</button>
+                        <h4>${entry.date} — 🙏 شکرگذاری روزانه</h4>
+                        ${expBadge}
+                        <div style="margin-top:8px;line-height:1.7;">${itemsHtml || '—'}</div>
+                    </div>`;
+                return;
+            }
+
             const isMorning = entry.type === 'morning';
             html += `
                 <div class="history-entry">
@@ -1048,6 +1279,12 @@ async function downloadAllHistory() {
         if (entry.type === 'events') {
             text += `=== ${entry.date} — ✨ اتفاقات جالب ===\n\n`;
             text += `${entry.text || '—'}\n`;
+            text += '\n────────────────────────────\n\n';
+            return;
+        }
+        if (entry.type === 'gratitude') {
+            text += `=== ${entry.date} — 🙏 شکرگذاری روزانه ===\n\n`;
+            (entry.items || []).forEach(it => { text += `${toFa(it.n)}. ${it.text}\n`; });
             text += '\n────────────────────────────\n\n';
             return;
         }
