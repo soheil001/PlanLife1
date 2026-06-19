@@ -312,7 +312,9 @@ function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&l
 async function loadComments(id) {
     document.getElementById('commentsList').innerHTML = '<div class="loading-comments">⏳ در حال بارگذاری نظرات...</div>';
     document.getElementById('commentCount').textContent = '...';
+    
     await fetchAllComments();
+    
     if (!allComments[id]) allComments[id] = [];
     renderComments(id);
     podcastData.forEach(item => updateCardBadge(item.id));
@@ -363,17 +365,22 @@ async function addComment() {
     };
 
     try {
-        await pushAllComments(currentPodcastId, comment);
-        if (!allComments[currentPodcastId]) allComments[currentPodcastId] = [];
-        allComments[currentPodcastId].unshift(comment);
-        renderComments(currentPodcastId);
-        updateCardBadge(currentPodcastId);
-        document.getElementById('commentText').value = '';
-        document.getElementById('commentName').value = '';
+        const responseData = await pushAllComments(currentPodcastId, comment);
+        
+        if (responseData && responseData.ok) {
+            if (!allComments[currentPodcastId]) allComments[currentPodcastId] = [];
+            allComments[currentPodcastId].unshift(comment);
+            renderComments(currentPodcastId);
+            updateCardBadge(currentPodcastId);
+            document.getElementById('commentText').value = '';
+            document.getElementById('commentName').value = '';
+        } else {
+            alert('سرور درخواست را نپذیرفت. لطفاً ساختار فایل comments.json را بررسی کنید.');
+        }
     } catch (e) {
-        alert('ارسال نظر با خطا مواجه شد. دوباره تلاش کنید.');
+        alert('ارسال نظر با خطا مواجه شد. خطای ارتباط با سرور یا دسترسی هاست.');
         console.error(e);
-    } finally {
+    } finaly {
         btn.textContent = 'ارسال نظر';
         btn.disabled = false;
     }
@@ -439,6 +446,7 @@ function playAudio(title, episode, src, cover, id) {
     expandPlayer();
 }
 
+// ---- Window Controllers ----
 function expandPlayer() {
     const screen = document.getElementById('nowPlayingScreen');
     document.getElementById('miniPlayer').classList.remove('active');
@@ -502,7 +510,6 @@ async function loadPodcastPage() {
     podcastData.forEach(item => { if (!allComments[item.id]) allComments[item.id] = []; });
     renderGrid(podcastData);
 
-    // Load comment counts from backend in background
     await fetchAllComments();
     podcastData.forEach(item => updateCardBadge(item.id));
 }
