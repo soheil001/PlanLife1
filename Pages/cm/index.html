@@ -313,7 +313,11 @@ async function loadComments(id) {
     document.getElementById('commentsList').innerHTML = '<div class="loading-comments">⏳ در حال بارگذاری نظرات...</div>';
     document.getElementById('commentCount').textContent = '...';
     
-    await fetchAllComments();
+    try {
+        await fetchAllComments();
+    } catch(e) {
+        console.error("Cloudflare or Host connection failed for comments loading:", e);
+    }
     
     if (!allComments[id]) allComments[id] = [];
     renderComments(id);
@@ -375,10 +379,10 @@ async function addComment() {
             document.getElementById('commentText').value = '';
             document.getElementById('commentName').value = '';
         } else {
-            alert('سرور درخواست را نپذیرفت. لطفاً ساختار فایل comments.json را بررسی کنید.');
+            alert('سرور درخواست را نپذیرفت. احتمالاً توسط فایروال یا کلودفلر مسدود شده است.');
         }
     } catch (e) {
-        alert('ارسال نظر با خطا مواجه شد. خطای ارتباط با سرور یا دسترسی هاست.');
+        alert('ارسال نظر با خطا مواجه شد. خطای ارتباط با سرور (احتمال مسدودسازی توسط کلودفلر یا هاست وجود دارد).');
         console.error(e);
     } finally {
         btn.textContent = 'ارسال نظر';
@@ -510,7 +514,11 @@ async function loadPodcastPage() {
     podcastData.forEach(item => { if (!allComments[item.id]) allComments[item.id] = []; });
     renderGrid(podcastData);
 
-    await fetchAllComments();
+    try {
+        await fetchAllComments();
+    } catch(e) {
+        console.warn("Unable to initially fetch comments, continuing to render grid safely.");
+    }
     podcastData.forEach(item => updateCardBadge(item.id));
 }
 
