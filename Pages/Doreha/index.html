@@ -177,6 +177,26 @@
     }
     .pay-btn-gold:active { transform: scale(0.97); box-shadow: 0 4px 14px rgba(255,149,0,0.4); }
 
+    /* ===== individual "buy" button under each pricing box ===== */
+    .buy-btn-individual {
+        width: 100%;
+        padding: 13px 10px;
+        border: 1px solid rgba(255,200,0,0.45);
+        border-radius: 14px;
+        background: rgba(255,193,7,0.16);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        color: #ffd700;
+        font-size: 14.5px;
+        font-weight: 800;
+        cursor: pointer;
+        font-family: inherit;
+        margin: -2px 0 16px;
+        transition: transform 0.15s, background 0.2s;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+    .buy-btn-individual:active { transform: scale(0.97); background: rgba(255,193,7,0.32); }
+
     /* ===== card payment modal ===== */
     .card-modal-inner {
         background: linear-gradient(145deg, rgba(20,10,50,0.92) 0%, rgba(10,20,60,0.88) 100%);
@@ -289,7 +309,6 @@
         <div class="mini-progress-bar" id="miniProgressBar" style="width:0%"></div>
     </div>
 </div>
-
 <!-- پلیر بزرگ -->
 <div id="nowPlayingScreen" class="now-playing">
     <div class="drag-handle-wrap"><div class="drag-handle"></div></div>
@@ -740,9 +759,11 @@ function showPricingModal(category) {
         { name: "دوره احساس لیاقت",       ...coursePricing["دوره احساس لیاقت"] },
     ];
 
+    // برای هر دوره: باکس قیمت + زیر آن یک دکمه‌ی خرید مستقیم برای همان دوره
     let pricingHTML = allPricing.map(p => {
+        let box;
         if (p.hasDiscount) {
-            return `<div class="pricing-box">
+            box = `<div class="pricing-box">
                 <div class="course-name">📚 ${p.name}</div>
                 <div class="old-price">قیمت قبلی: ${p.old} تومان</div>
                 <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
@@ -751,11 +772,13 @@ function showPricingModal(category) {
                 </div>
             </div>`;
         } else {
-            return `<div class="pricing-box">
+            box = `<div class="pricing-box">
                 <div class="course-name">📚 ${p.name}</div>
                 <div style="font-size:18px;font-weight:900;color:#ffd700;margin-top:4px;">${p.price} تومان</div>
             </div>`;
         }
+        const buyBtn = `<button class="buy-btn-individual" onclick="showCardModal('${p.name}')">🛍️ خرید ${p.name}</button>`;
+        return box + buyBtn;
     }).join('');
 
     document.getElementById('pricingContent').innerHTML = `
@@ -763,16 +786,36 @@ function showPricingModal(category) {
             <h3 style="font-size:19px;font-weight:900;">💳 تهیه کد اشتراک</h3>
             <button onclick="closePricingModal()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:999px;color:white;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">بستن</button>
         </div>
-        ${pricingHTML}
-        <button class="pay-btn-gold" onclick="showCardModal()">💳 پرداخت نهایی</button>`;
+        ${pricingHTML}`;
     document.getElementById('pricingModal').classList.add('active');
 }
 
 function closePricingModal() { document.getElementById('pricingModal').classList.remove('active'); }
 
 // ==================== modal شماره کارت ====================
-function showCardModal() {
+function buildPriceBoxHTML(category) {
+    const p = coursePricing[category];
+    if (!p) return '';
+    if (p.hasDiscount) {
+        return `<div class="pricing-box" style="margin-bottom:16px;">
+            <div class="course-name">📚 ${category}</div>
+            <div class="old-price">قیمت قبلی: ${p.old} تومان</div>
+            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
+                <div class="new-price">${p.new} تومان</div>
+                <span class="discount-tag">با تخفیف</span>
+            </div>
+        </div>`;
+    }
+    return `<div class="pricing-box" style="margin-bottom:16px;">
+        <div class="course-name">📚 ${category}</div>
+        <div style="font-size:18px;font-weight:900;color:#ffd700;margin-top:4px;">${p.price} تومان</div>
+    </div>`;
+}
+
+function showCardModal(category) {
     closePricingModal();
+    window.currentPaymentCategory = category;
+    const priceBoxHTML = buildPriceBoxHTML(category);
     document.getElementById('cardContent').innerHTML = `
         <div class="card-modal-inner">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
@@ -780,8 +823,7 @@ function showCardModal() {
                 <button onclick="closeCardModal()" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:999px;color:white;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;backdrop-filter:blur(10px);">بستن</button>
             </div>
 
-            <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781634050/MagicEraser_260616_214927_tkegxm.png"
-                 class="receipt-img" alt="PlanLife" onerror="this.style.display='none'">
+            ${priceBoxHTML}
 
             <p style="font-size:13.5px;line-height:1.7;color:rgba(255,255,255,0.75);text-align:right;margin-bottom:8px;">
                 مبلغ دوره انتخابی را به شماره کارت زیر واریز کنید:
@@ -824,7 +866,6 @@ function copyCard() {
         if (btn) { btn.textContent = '✓ کپی شد'; setTimeout(() => { btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg> کپی'; }, 2000); }
     });
 }
-
 function showSupportModal() {
     closeModal();
     document.getElementById('modalContent').innerHTML = `
