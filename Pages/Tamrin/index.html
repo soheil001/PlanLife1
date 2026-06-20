@@ -466,7 +466,6 @@
        @media print — فیکس کامل PDF / پرینت
        ======================================== */
     @media print {
-        /* مخفی کردن عناصر غیرضروری */
         header,
         .stars,
         .hamburger,
@@ -495,7 +494,6 @@
             display: none !important;
         }
 
-        /* رنگ‌های پرینت */
         * {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
@@ -510,7 +508,6 @@
             width: 100% !important;
         }
 
-        /* کانتینر اصلی */
         .main-center {
             padding: 20px !important;
             min-height: auto !important;
@@ -518,7 +515,6 @@
             display: block !important;
         }
 
-        /* هدر پرینت */
         .print-header {
             display: block !important;
             text-align: center;
@@ -528,7 +524,6 @@
             font-family: 'Vazirmatn', Tahoma, sans-serif;
         }
 
-        /* عنوان */
         .title {
             font-size: 26px !important;
             margin-bottom: 16px !important;
@@ -539,7 +534,6 @@
             color: #fff !important;
         }
 
-        /* تاریخچه */
         .history {
             margin-top: 8px !important;
             width: 100% !important;
@@ -553,7 +547,6 @@
             color: #d4af37 !important;
         }
 
-        /* ورودی‌های تاریخچه */
         .history-entry {
             background: rgba(30,20,60,0.9) !important;
             border: 1px solid rgba(212,175,55,0.6) !important;
@@ -584,10 +577,8 @@
             color: #d4af37 !important;
         }
 
-        /* مخفی کردن badge انقضا در پرینت */
         .expiry-badge { display: none !important; }
 
-        /* تنظیمات صفحه A4 */
         @page {
             margin: 12mm 15mm;
             size: A4;
@@ -610,10 +601,10 @@
         <div class="modal-title">ذخیره‌سازی ابری فعال شد</div>
         <div class="modal-text">تمرین شما با موفقیت در فضای ابری ذخیره شد</div>
         <div class="modal-highlight">
-            <div>🔒 <strong>فقط شما</strong> می‌توانید این تمرینات را ببینید</div>
+            <div>🔒 این تمرینات <strong>فقط روی همین گوشی/مرورگر</strong> برای شما قابل مشاهده است</div>
+            <div>📱 اگر با <strong>گوشی یا مرورگر دیگری</strong> وارد شوید، این تاریخچه را نخواهید دید</div>
             <div>⏳ اطلاعات شما به مدت <strong>۱ هفته</strong> ذخیره می‌ماند</div>
-            <div>💾 می‌توانید آن‌ها را دانلود کنید</div>
-            <div>🔄 در هر دستگاهی قابل دسترس است</div>
+            <div>💾 می‌توانید آن‌ها را دانلود یا چاپ کنید</div>
         </div>
         <button class="modal-btn" onclick="closeCloudModal()">متوجه شدم ✓</button>
     </div>
@@ -799,11 +790,16 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-const JSONBIN_BIN_ID     = '6a257a88da38895dfe94f630';
-const JSONBIN_MASTER_KEY = '$2a$10$0LIPWu8zUHDSSPOGS0v5z.qSAdQB0ruLVwurkAvAHEEuk61021Xzi';
-const BASE_URL           = 'https://api.jsonbin.io/v3/b/' + JSONBIN_BIN_ID;
+// ============================================================
+// Supabase — persistent exercise storage (replaces JSONBin)
+// ============================================================
+const SUPABASE_URL      = 'https://hjzzvzxhrqovvducnxha.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
 const ONE_WEEK_MS        = 7 * 24 * 60 * 60 * 1000;
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function getUserId() {
     let uid = localStorage.getItem('planlife_uid');
@@ -820,28 +816,48 @@ function setSyncStatus(msg, loading, success, error) {
     el.innerHTML = icon + (msg ? '<span>' + msg + '</span>' : '') + (loading ? '<span class="spinner"></span>' : '');
 }
 
-async function fetchBin() {
-    try {
-        const res = await fetch(BASE_URL + '/latest', { headers: { 'X-Master-Key': JSONBIN_MASTER_KEY } });
-        if (!res.ok) return {};
-        const json = await res.json();
-        return json.record || {};
-    } catch(e) { return {}; }
+// Map a Supabase row back into the flat shape the rest of the app expects
+function rowToEntry(row) {
+    const entry = Object.assign({}, row.payload, {
+        id: row.id,
+        type: row.entry_type,
+        userId: row.user_id,
+        date: row.entry_date,
+        timestamp: new Date(row.created_at).getTime(),
+        expiresAt: new Date(row.expires_at).getTime()
+    });
+    return entry;
 }
 
-async function updateBin(data) {
-    const res = await fetch(BASE_URL, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_MASTER_KEY }, body: JSON.stringify(data) });
-    if (!res.ok) throw new Error('خطا در ذخیره‌سازی ابری');
-    return true;
+async function insertEntry(entryType, date, payload) {
+    const { data, error } = await supabaseClient
+        .from('exercise_entries')
+        .insert([{ user_id: USER_ID, entry_type: entryType, entry_date: date, payload: payload }])
+        .select();
+    if (error) throw new Error(error.message);
+    return data && data[0] ? rowToEntry(data[0]) : null;
 }
 
 async function getUserHistory() {
-    const bin = await fetchBin();
-    const userKey = 'exercises_' + USER_ID;
-    let entries = bin[userKey] || [];
-    const now = Date.now();
-    entries = entries.filter(e => (now - e.timestamp) < ONE_WEEK_MS);
-    return { bin, entries, userKey };
+    const { data, error } = await supabaseClient
+        .from('exercise_entries')
+        .select('*')
+        .eq('user_id', USER_ID)
+        .gt('expires_at', new Date().toISOString())
+        .order('created_at', { ascending: false });
+    if (error) throw new Error(error.message);
+    const entries = (data || []).map(rowToEntry);
+    return { entries };
+}
+
+async function deleteEntryRemote(rowId) {
+    const { error } = await supabaseClient
+        .from('exercise_entries')
+        .delete()
+        .eq('id', rowId)
+        .eq('user_id', USER_ID); // extra safety: only ever delete our own rows
+    if (error) throw new Error(error.message);
+    return true;
 }
 
 function showMainView() {
@@ -876,10 +892,8 @@ async function saveEvents() {
     const text = document.getElementById('events-text').value.trim();
     if (!text) { alert('لطفاً اتفاقات خود را بنویسید'); return; }
     btn.disabled = true; btn.innerHTML = 'در حال ذخیره... <span class="spinner"></span>';
-    const data = { type: 'events', userId: USER_ID, date: new Date().toLocaleDateString('fa-IR'), timestamp: Date.now(), expiresAt: Date.now() + ONE_WEEK_MS, text };
     try {
-        const { bin, entries, userKey } = await getUserHistory();
-        entries.unshift(data); bin[userKey] = entries; await updateBin(bin);
+        await insertEntry('events', new Date().toLocaleDateString('fa-IR'), { text });
         btn.disabled = false; btn.innerHTML = 'ذخیره اتفاقات ☁️'; showCloudModal();
     } catch(e) { btn.disabled = false; btn.innerHTML = 'ذخیره اتفاقات ☁️'; alert('❌ خطا در اتصال به سرور: ' + e.message); }
 }
@@ -929,10 +943,8 @@ async function saveGratitude() {
     for (let i = 1; i <= gratitudeMaxVisible; i++) { const val = document.getElementById('grat-' + i).value.trim(); if (val) items.push({ n: i, text: val }); }
     if (items.length === 0) { alert('لطفاً حداقل یک مورد را بنویسید'); return; }
     btn.disabled = true; btn.innerHTML = 'در حال ذخیره... <span class="spinner"></span>';
-    const data = { type: 'gratitude', userId: USER_ID, date: new Date().toLocaleDateString('fa-IR'), timestamp: Date.now(), expiresAt: Date.now() + ONE_WEEK_MS, items };
     try {
-        const { bin, entries, userKey } = await getUserHistory();
-        entries.unshift(data); bin[userKey] = entries; await updateBin(bin);
+        await insertEntry('gratitude', new Date().toLocaleDateString('fa-IR'), { items });
         btn.disabled = false; btn.innerHTML = 'ثبت شکرگذاری امروز من ☁️'; showCloudModal();
     } catch(e) { btn.disabled = false; btn.innerHTML = 'ثبت شکرگذاری امروز من ☁️'; alert('❌ خطا در اتصال به سرور: ' + e.message); }
 }
@@ -942,10 +954,7 @@ async function saveAnswers(type) {
     const btnId = type === 'morning' ? 'save-morning-btn' : 'save-night-btn';
     const btn = document.getElementById(btnId);
     btn.disabled = true; btn.innerHTML = 'در حال ذخیره... <span class="spinner"></span>';
-    const data = {
-        type, userId: USER_ID,
-        date: new Date().toLocaleDateString('fa-IR'),
-        timestamp: Date.now(), expiresAt: Date.now() + ONE_WEEK_MS,
+    const payload = {
         q1: document.getElementById(prefix + 'q1').value.trim(),
         q2: document.getElementById(prefix + 'q2').value.trim(),
         q3: document.getElementById(prefix + 'q3').value.trim(),
@@ -955,10 +964,9 @@ async function saveAnswers(type) {
         q7: document.getElementById(prefix + 'q7') ? document.getElementById(prefix + 'q7').value.trim() : '',
         q8: document.getElementById(prefix + 'q8').value.trim(),
     };
-    if (type === 'night') { data.q4note = document.getElementById('nq4note').value.trim(); data.q9 = document.getElementById('nq9').value.trim(); data.q10 = document.getElementById('nq10').value.trim(); }
+    if (type === 'night') { payload.q4note = document.getElementById('nq4note').value.trim(); payload.q9 = document.getElementById('nq9').value.trim(); payload.q10 = document.getElementById('nq10').value.trim(); }
     try {
-        const { bin, entries, userKey } = await getUserHistory();
-        entries.unshift(data); bin[userKey] = entries; await updateBin(bin);
+        await insertEntry(type, new Date().toLocaleDateString('fa-IR'), payload);
         btn.disabled = false; btn.innerHTML = type === 'morning' ? 'ذخیره تمرین صبح ☁️' : 'ذخیره تمرین شب ☁️';
         showCloudModal();
     } catch(e) {
@@ -977,13 +985,11 @@ function closeCloudModal() {
     showMainView();
 }
 
-async function deleteEntry(timestamp) {
+async function deleteEntry(rowId) {
     if (!confirm('آیا مطمئن هستید که می‌خواهید این تمرین را حذف کنید؟')) return;
     setSyncStatus('در حال حذف...', true);
     try {
-        const { bin, entries, userKey } = await getUserHistory();
-        bin[userKey] = entries.filter(e => e.timestamp !== timestamp);
-        await updateBin(bin);
+        await deleteEntryRemote(rowId);
         setSyncStatus('تمرین با موفقیت حذف شد', false, true);
         loadHistory();
     } catch(e) { setSyncStatus('خطا در حذف: ' + e.message, false, false, true); }
@@ -1008,16 +1014,16 @@ async function loadHistory(filter) {
             const remaining = entry.expiresAt ? Math.ceil((entry.expiresAt - now) / (1000*60*60*24)) : '?';
             const expBadge = '<span class="expiry-badge">⏳ ' + (remaining > 0 ? remaining + ' روز باقی‌مانده' : 'منقضی شده') + '</span>';
             if (entry.type === 'events') {
-                html += '<div class="history-entry" style="border-color:rgba(34,197,94,0.35);"><button class="delete-btn" onclick="deleteEntry(' + entry.timestamp + ')">حذف</button><h4>' + entry.date + ' — ✨ اتفاقات جالب</h4>' + expBadge + '<p style="margin-top:8px;line-height:1.9;">' + (entry.text || '—') + '</p></div>';
+                html += '<div class="history-entry" style="border-color:rgba(34,197,94,0.35);"><button class="delete-btn" onclick="deleteEntry(' + entry.id + ')">حذف</button><h4>' + entry.date + ' — ✨ اتفاقات جالب</h4>' + expBadge + '<p style="margin-top:8px;line-height:1.9;">' + (entry.text || '—') + '</p></div>';
                 return;
             }
             if (entry.type === 'gratitude') {
                 const itemsHtml = (entry.items || []).map(function(it) { return '<p style="margin:4px 0;">' + toFa(it.n) + '. ' + it.text + '</p>'; }).join('');
-                html += '<div class="history-entry" style="border-color:rgba(244,63,94,0.35);"><button class="delete-btn" onclick="deleteEntry(' + entry.timestamp + ')">حذف</button><h4>' + entry.date + ' — 🙏 شکرگذاری روزانه</h4>' + expBadge + '<div style="margin-top:8px;line-height:1.7;">' + (itemsHtml || '—') + '</div></div>';
+                html += '<div class="history-entry" style="border-color:rgba(244,63,94,0.35);"><button class="delete-btn" onclick="deleteEntry(' + entry.id + ')">حذف</button><h4>' + entry.date + ' — 🙏 شکرگذاری روزانه</h4>' + expBadge + '<div style="margin-top:8px;line-height:1.7;">' + (itemsHtml || '—') + '</div></div>';
                 return;
             }
             const isMorning = entry.type === 'morning';
-            html += '<div class="history-entry"><button class="delete-btn" onclick="deleteEntry(' + entry.timestamp + ')">حذف</button><h4>' + entry.date + ' — ' + (isMorning ? '🌅 صبح' : '🌙 شب') + '</h4>' + expBadge;
+            html += '<div class="history-entry"><button class="delete-btn" onclick="deleteEntry(' + entry.id + ')">حذف</button><h4>' + entry.date + ' — ' + (isMorning ? '🌅 صبح' : '🌙 شب') + '</h4>' + expBadge;
             html += '<p><strong>۱. حال خوب:</strong> ' + (entry.q1 || '—') + '</p>';
             html += '<p><strong>۲. اشخاص:</strong> ' + (entry.q2 || '—') + '</p>';
             if (isMorning) {
