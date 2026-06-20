@@ -206,46 +206,72 @@
     <audio id="mainAudio" style="display:none;"></audio>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 // ============================================================
-// JSONBin — persistent comment storage
+// Supabase — persistent comment storage
 // ============================================================
-const JSONBIN_BIN_ID    = '6a257a88da38895dfe94f630';
-const JSONBIN_MASTER_KEY = '$2a$10$0LIPWu8zUHDSSPOGS0v5z.qSAdQB0ruLVwurkAvAHEEuk61021Xzi';
-const JSONBIN_URL        = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
+const SUPABASE_URL      = 'https://hjzzvzxhrqovvducnxha.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
+const DELETE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/delete-comment`;
 
-let allComments  = {};   // { podcastId: [ {id, name, text, time}, ... ] }
-let remoteRecord = {};   // last snapshot from JSONBin
-let isSaving     = false;
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-async function fetchAllComments() {
+let allComments  = {};   // { podcastId: [ {id, name, text, created_at}, ... ] }
+
+async function fetchCommentsForPodcast(podcastId) {
     try {
-        const res = await fetch(`${JSONBIN_URL}/latest`, {
-            headers: { 'X-Master-Key': JSONBIN_MASTER_KEY }
-        });
-        if (!res.ok) throw new Error('fetch ' + res.status);
-        const data = await res.json();
-        remoteRecord = data.record || {};
-        Object.keys(remoteRecord).forEach(k => { allComments[k] = remoteRecord[k]; });
+        const { data, error } = await supabaseClient
+            .from('comments')
+            .select('*')
+            .eq('podcast_id', podcastId)
+            .order('created_at', { ascending: false });
+        if (error) throw error;
+        allComments[podcastId] = data || [];
         return true;
-    } catch(e) { console.warn('JSONBin fetch:', e); return false; }
+    } catch(e) { console.warn('Supabase fetch:', e); return false; }
 }
 
-async function pushAllComments() {
-    if (isSaving) return;
-    isSaving = true;
+async function fetchAllCommentCounts() {
     try {
-        // Merge current allComments into remoteRecord then push
-        const payload = Object.assign({}, remoteRecord, allComments);
-        const res = await fetch(JSONBIN_URL, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_MASTER_KEY },
-            body: JSON.stringify(payload)
+        const { data, error } = await supabaseClient
+            .from('comments')
+            .select('podcast_id');
+        if (error) throw error;
+        const counts = {};
+        (data || []).forEach(row => {
+            counts[row.podcast_id] = (counts[row.podcast_id] || 0) + 1;
         });
-        if (!res.ok) throw new Error('push ' + res.status);
-        remoteRecord = payload;
-    } catch(e) { console.warn('JSONBin push:', e); }
-    finally    { isSaving = false; }
+        return counts;
+    } catch(e) { console.warn('Supabase counts fetch:', e); return {}; }
+}
+
+async function insertComment(podcastId, name, text) {
+    try {
+        const { data, error } = await supabaseClient
+            .from('comments')
+            .insert([{ podcast_id: podcastId, name, text }])
+            .select();
+        if (error) throw error;
+        return data && data[0];
+    } catch(e) { console.warn('Supabase insert:', e); return null; }
+}
+
+async function deleteCommentRemote(commentId, adminPassword) {
+    try {
+        const res = await fetch(DELETE_FUNCTION_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'apikey': SUPABASE_ANON_KEY
+            },
+            body: JSON.stringify({ commentId, adminPassword })
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || ('HTTP ' + res.status));
+        return true;
+    } catch(e) { console.warn('Edge function delete:', e); alert('خطا در حذف نظر: ' + e.message); return false; }
 }
 
 // ============================================================
@@ -255,7 +281,7 @@ const podcastData = [
     {id:2,title:"عشق و روابط",episode:"وابسته ی ورود به رابطه",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Vabaste_rabete.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
     {id:3,title:"رشد کسب و کار",episode:"برای کارت ارزش قائل نیستی",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Nadashtan_bavar_be_arzesh.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
     {id:4,title:"باورهای ثروت",episode:"فقط با سختی کشیدن میشود ؟",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/servat/SakhTi keshidan - planlife Free.m4a",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449575/IMG_1063_vmk59h.jpg"},
-    {id:5,title:"کدگذاری ذهنی",episode:"موضوعات متفاوت",src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779530272/Khasis_bodan_-_planLife.ir_Free_sv3vbr.m4a",cover:"https://res.cloudinary.com/dshielkdt/image/uploadج/q_auto/f_auto/v1779449557/IMG_1064_uro694.jpg"},
+    {id:5,title:"کدگذاری ذهنی",episode:"موضوعات متفاوت",src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779530272/Khasis_bodan_-_planLife.ir_Free_sv3vbr.m4a",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449557/IMG_1064_uro694.jpg"},
     {id:5,title:"باورهای ثروت",episode:"خسیس بودن در زندگی",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/servat/Khasis bodan - planLife.ir Free.m4a",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449557/IMG_1064_uro694.jpg"},
     {id:6,title:"رشد کسب و کار",episode:"کمال گرایی افراطی",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Kamalgaraei.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
     {id:23,title:"باورهای ثروت",episode:"نشانه های ثروت",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/servat/Neshane - servat - Free.m4a",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449538/IMG_1059_eqlr5g.jpg"},
@@ -279,6 +305,7 @@ const podcastData = [
 
 let currentTrackIndex = 0, currentPodcastId = null, isAdmin = false;
 const ADMIN_USER = 'Admin', ADMIN_PASS = '12345';
+const ADMIN_API_PASSWORD = 'So@21072933@'; // sent to the delete-comment Edge Function for verification
 const audio = document.getElementById('mainAudio');
 const progressBarEl = document.getElementById('progressBar');
 const currentTimeEl = document.getElementById('currentTime');
@@ -301,10 +328,10 @@ function doLogin() {
     const p = document.getElementById('loginPassword').value;
     if (u === ADMIN_USER && p === ADMIN_PASS) {
         isAdmin = true; closeLogin(); updateAdminHeader();
-        if (currentPodcastId) renderComments(currentPodcastId);
+        if (currentPodcastId !== null) renderComments(currentPodcastId);
     } else { document.getElementById('loginError').style.display = 'block'; }
 }
-function doLogout() { isAdmin = false; updateAdminHeader(); if (currentPodcastId) renderComments(currentPodcastId); }
+function doLogout() { isAdmin = false; updateAdminHeader(); if (currentPodcastId !== null) renderComments(currentPodcastId); }
 function updateAdminHeader() {
     const area = document.getElementById('headerAuthArea');
     if (isAdmin) {
@@ -315,14 +342,17 @@ function updateAdminHeader() {
 // ---- Comments ----
 function toPersianNum(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
 function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function formatCommentTime(iso) {
+    const d = new Date(iso);
+    return `${d.toLocaleDateString('fa-IR',{year:'numeric',month:'short',day:'numeric'})} • ${d.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`;
+}
 
 async function loadComments(id) {
     document.getElementById('commentsList').innerHTML = '<div class="loading-comments">⏳ در حال بارگذاری نظرات...</div>';
     document.getElementById('commentCount').textContent = '...';
-    await fetchAllComments();
-    if (!allComments[id]) allComments[id] = [];
+    await fetchCommentsForPodcast(id);
     renderComments(id);
-    podcastData.forEach(item => updateCardBadge(item.id));
+    refreshAllCardBadges();
 }
 
 function renderComments(id) {
@@ -344,7 +374,7 @@ function renderComments(id) {
         div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
             <strong style="color:#ffd700;font-size:14.5px;">${escapeHtml(c.name)}</strong>
             <div style="display:flex;align-items:center;gap:8px;">
-                <span style="font-size:11.5px;opacity:0.55;white-space:nowrap;">${c.time}</span>
+                <span style="font-size:11.5px;opacity:0.55;white-space:nowrap;">${formatCommentTime(c.created_at)}</span>
                 ${isAdmin ? `<button class="delete-btn" onclick="deleteComment(${id},${c.id})">🗑 حذف</button>` : ''}
             </div>
         </div>
@@ -354,7 +384,7 @@ function renderComments(id) {
 }
 
 async function addComment() {
-    if (!currentPodcastId) return;
+    if (currentPodcastId === null) return;
     const name = document.getElementById('commentName').value.trim() || 'ناشناس';
     const text = document.getElementById('commentText').value.trim();
     if (!text) { alert('لطفاً متن نظر را وارد کنید.'); return; }
@@ -363,38 +393,43 @@ async function addComment() {
     btn.textContent = '⏳ در حال ارسال...';
     btn.disabled = true;
 
-    if (!allComments[currentPodcastId]) allComments[currentPodcastId] = [];
-    const now = new Date();
-    allComments[currentPodcastId].unshift({
-        id: Date.now(), name, text,
-        time: `${now.toLocaleDateString('fa-IR',{year:'numeric',month:'short',day:'numeric'})} • ${now.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`
-    });
+    const inserted = await insertComment(currentPodcastId, name, text);
+    if (inserted) {
+        if (!allComments[currentPodcastId]) allComments[currentPodcastId] = [];
+        allComments[currentPodcastId].unshift(inserted);
+        renderComments(currentPodcastId);
+        refreshAllCardBadges();
+        document.getElementById('commentText').value = '';
+        document.getElementById('commentName').value = '';
+    } else {
+        alert('ارسال نظر با خطا مواجه شد. لطفاً دوباره تلاش کنید.');
+    }
 
-    await pushAllComments();
-    renderComments(currentPodcastId);
-    updateCardBadge(currentPodcastId);
-    document.getElementById('commentText').value = '';
-    document.getElementById('commentName').value = '';
     btn.textContent = 'ارسال نظر';
     btn.disabled = false;
 }
 
 async function deleteComment(podcastId, commentId) {
     if (!isAdmin || !confirm('این نظر حذف شود؟')) return;
+    const ok = await deleteCommentRemote(commentId, ADMIN_API_PASSWORD);
+    if (!ok) return;
     allComments[podcastId] = (allComments[podcastId] || []).filter(c => c.id !== commentId);
-    await pushAllComments();
     renderComments(podcastId);
-    updateCardBadge(podcastId);
+    refreshAllCardBadges();
 }
 
-function updateCardBadge(id) {
-    const cnt   = (allComments[id] || []).length;
+function updateCardBadge(id, count) {
     const badge = document.getElementById(`card-badge-${id}`);
-    if (badge) badge.textContent = toPersianNum(cnt);
+    if (badge) badge.textContent = toPersianNum(count);
     if (currentPodcastId === id) {
-        const cc = document.getElementById('coverCommentCount'); if (cc) cc.textContent = toPersianNum(cnt);
-        const mc = document.getElementById('commentCount');      if (mc) mc.textContent = cnt;
+        const cc = document.getElementById('coverCommentCount'); if (cc) cc.textContent = toPersianNum(count);
+        const mc = document.getElementById('commentCount');      if (mc) mc.textContent = count;
     }
+}
+
+async function refreshAllCardBadges() {
+    const counts = await fetchAllCommentCounts();
+    podcastData.forEach(item => updateCardBadge(item.id, counts[item.id] || 0));
 }
 
 // ---- Audio ----
@@ -494,12 +529,10 @@ async function loadPodcastPage() {
         </div>`
     ).join('');
 
-    podcastData.forEach(item => { if (!allComments[item.id]) allComments[item.id] = []; });
     renderGrid(podcastData);
 
-    // Load comment counts from JSONBin in background
-    await fetchAllComments();
-    podcastData.forEach(item => updateCardBadge(item.id));
+    // Load real comment counts from Supabase in background
+    await refreshAllCardBadges();
 }
 
 function renderGrid(items) {
