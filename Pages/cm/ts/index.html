@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تست پخش MKV</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    background: #0a0a12;
+    color: #fff;
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    padding: 20px;
+    margin: 0;
+  }
+  h2 { font-size: 18px; margin-bottom: 4px; }
+  p.hint { color: #999; font-size: 13px; margin-bottom: 20px; }
+  .box {
+    margin-bottom: 24px;
+    border: 1px solid #2a2a3a;
+    padding: 14px;
+    border-radius: 14px;
+    background: #14141f;
+  }
+  h3 { margin: 0 0 8px; font-size: 15px; }
+  .status {
+    font-size: 13px;
+    color: #aaa;
+    margin-bottom: 10px;
+    line-height: 1.6;
+    direction: ltr;
+    text-align: left;
+  }
+  video {
+    width: 100%;
+    display: block;
+    border-radius: 8px;
+    background: #000;
+  }
+  .ok { color: #4ade80; }
+  .err { color: #f87171; }
+  code { background:#000; padding:2px 6px; border-radius:4px; font-size:11px; word-break: break-all; }
+</style>
+</head>
+<body>
+
+<h2>🎬 تست پخش مستقیم فایل MKV</h2>
+<p class="hint">این صفحه رو در گوشی یا مرورگری که سایت اصلی توشه باز کن و نتیجه رو ببین.</p>
+
+<div class="box">
+    <h3>لینک تست</h3>
+    <div class="status" id="status1">⏳ در حال بارگذاری...</div>
+    <video id="v1" controls preload="metadata">
+        <source src="https://t.tarahipro.ir/1404/11/17/Queen.of.Chess.2026.1080p.WEB-DL.SoftSub%20%281%29.mkv">
+    </video>
+</div>
+
+<script>
+function setupStatus(videoId, statusId) {
+    const v = document.getElementById(videoId);
+    const s = document.getElementById(statusId);
+    let messages = [];
+
+    function render() {
+        s.innerHTML = messages.join('<br>');
+    }
+
+    v.addEventListener('loadstart', () => { messages.push('🔄 شروع بارگذاری...'); render(); });
+    v.addEventListener('loadedmetadata', () => {
+        messages.push('<span class="ok">✅ متادیتا با موفقیت لود شد — مدت زمان: ' + v.duration.toFixed(1) + ' ثانیه</span>');
+        render();
+    });
+    v.addEventListener('canplay', () => {
+        messages.push('<span class="ok">✅ مرورگر می‌تواند این فایل را پخش کند</span>');
+        render();
+    });
+    v.addEventListener('playing', () => {
+        messages.push('<span class="ok">▶️ در حال پخش — موفقیت کامل!</span>');
+        render();
+    });
+    v.addEventListener('error', () => {
+        const err = v.error;
+        let msg = 'خطای ناشناخته';
+        if (err) {
+            switch(err.code) {
+                case 1: msg = 'MEDIA_ERR_ABORTED — درخواست لغو شد'; break;
+                case 2: msg = 'MEDIA_ERR_NETWORK — خطای شبکه یا دسترسی (CORS) به سرور'; break;
+                case 3: msg = 'MEDIA_ERR_DECODE — فایل لود شد ولی کدک داخلش قابل دیکود نیست'; break;
+                case 4: msg = 'MEDIA_ERR_SRC_NOT_SUPPORTED — مرورگر این فرمت/کانتینر (mkv) را اصلاً پشتیبانی نمی‌کند'; break;
+            }
+        }
+        messages.push('<span class="err">❌ خطا: ' + msg + '</span>');
+        render();
+    });
+}
+setupStatus('v1', 'status1');
+</script>
+
+</body>
+</html>
