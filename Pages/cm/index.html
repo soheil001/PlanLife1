@@ -3,12 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>پادکست‌های PlanLife</title>
+<meta name="theme-color" content="#1a0033">
+<title>دوره‌های PlanLife</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Vazirmatn', sans-serif; background: #030303; color: white; }
+    html, body { height: 100%; font-family: 'Vazirmatn', sans-serif; overflow-x: hidden; color: white; background: #030303; }
+    .stars { position: fixed; inset: 0; background: transparent; z-index: 1; pointer-events: none; }
+    .stars::before, .stars::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(white 1px, transparent 1px); background-size: 80px 80px; opacity: 0.45; animation: twinkle 10s infinite alternate; }
+    .stars::after { background-size: 140px 140px; opacity: 0.3; animation-duration: 16s; }
+    @keyframes twinkle { 0% { opacity: 0.35; } 100% { opacity: 0.65; } }
 
+    header { position: fixed; top: 0; left: 0; right: 0; height: 65px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 100; background: rgba(0,0,0,0.25); backdrop-filter: blur(10px); }
+
+    .main-center { position: relative; z-index: 5; min-height: 100vh; padding: 75px 20px 140px; }
+    h2 { font-size: 32px; margin-bottom: 15px; text-align: center; font-weight: 900; }
+    .section-title { font-size: 22px; margin: 20px 0 12px; padding: 0 5px; }
+
+    .horizontal-scroll { display: flex; gap: 15px; overflow-x: auto; padding: 12px 0 25px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .horizontal-scroll::-webkit-scrollbar { display: none; }
+
+    .slide-item { min-width: 140px; flex-shrink: 0; text-align: center; cursor: pointer; background: rgba(255,255,255,0.11); backdrop-filter: blur(12px); border-radius: 18px; padding: 10px 8px; }
+    .slide-item img { width: 130px; height: 130px; object-fit: cover; border-radius: 18px; margin-bottom: 8px; }
+
+    .podcast-item { background: rgba(255,255,255,0.1); backdrop-filter: blur(12px); border-radius: 18px; padding: 12px 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; cursor: pointer; }
+    .podcast-item img { width: 55px; height: 55px; object-fit: cover; border-radius: 12px; }
+    .music-info { flex: 1; }
+    .music-title { font-weight: 600; font-size: 16px; }
+    .music-artist { font-size: 14px; opacity: 0.8; }
+    .music-duration { font-size: 14px; opacity: 0.7; align-self: center; }
+    .play-circle { width: 42px; height: 42px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    /* ===== now playing ===== */
     .now-playing {
         position: fixed;
         top: 10px; left: 10px; right: 10px;
@@ -35,16 +61,25 @@
         transition: transform 0.52s cubic-bezier(0.32, 0.72, 0, 1),
                     border-radius 0.52s cubic-bezier(0.32, 0.72, 0, 1);
     }
+
     .drag-handle-wrap { width: 100%; display: flex; justify-content: center; padding: 6px 0 2px; flex-shrink: 0; cursor: grab; }
     .drag-handle { width: 44px; height: 5px; background: rgba(255,255,255,0.65); border-radius: 999px; box-shadow: 0 0 8px rgba(255,255,255,0.2); }
 
+    /* ===== mini player ===== */
     .mini-player {
-        position: fixed; bottom: 15px; left: 15px; right: 15px; height: 72px;
+        position: fixed;
+        bottom: 15px; left: 15px; right: 15px;
+        height: 72px;
         background: rgba(18, 18, 40, 0.72);
-        backdrop-filter: blur(28px) saturate(180%); -webkit-backdrop-filter: blur(28px) saturate(180%);
-        border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 22px;
+        backdrop-filter: blur(28px) saturate(180%);
+        -webkit-backdrop-filter: blur(28px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 22px;
         box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
-        z-index: 290; display: none; align-items: center; padding: 0 16px; gap: 12px; cursor: pointer; overflow: hidden;
+        z-index: 290;
+        display: none; align-items: center;
+        padding: 0 16px; gap: 12px;
+        cursor: pointer; overflow: hidden;
     }
     .mini-player.active { display: flex; }
     .mini-cover { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
@@ -59,6 +94,7 @@
 
     .player-topbar { width: 100%; max-width: 380px; display: flex; justify-content: space-between; align-items: center; padding: 8px 0 16px; flex-shrink: 0; }
     .player-status { font-size: 15px; font-weight: 600; opacity: 0.85; }
+
     .big-cover { width: 100%; max-width: 200px; margin: 6px 0 10px; position: relative; flex-shrink: 0; }
     .big-cover img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 20px; box-shadow: 0 15px 45px rgba(192,38,211,0.5); }
     .cover-comment-badge {
@@ -66,81 +102,206 @@
         background: rgba(20,20,40,0.92); border: 1px solid rgba(255,255,255,0.18);
         backdrop-filter: blur(10px); border-radius: 999px; padding: 5px 14px;
         display: flex; align-items: center; gap: 6px;
-        font-size: 13px; font-weight: 700; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+        font-size: 13px; font-weight: 700; white-space: nowrap;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.4);
     }
     .cover-comment-badge svg { width: 15px; height: 15px; fill: #ff9500; flex-shrink: 0; }
+
     .track-info { text-align: center; width: 100%; max-width: 360px; margin: 20px 0 10px; flex-shrink: 0; }
     .np-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
     .np-subtitle { font-size: 14.5px; opacity: 0.7; }
+
     .progress-section { width: 100%; max-width: 360px; margin-bottom: 28px; flex-shrink: 0; }
     .progress-container { width: 100%; height: 5px; background: rgba(255,255,255,0.18); border-radius: 999px; cursor: pointer; margin-bottom: 8px; }
     .progress-bar { height: 100%; background: linear-gradient(to right, #ff9500, #ff6b00); border-radius: 999px; box-shadow: 0 0 12px #ff9500; }
     .time-display { display: flex; justify-content: space-between; font-size: 13.5px; opacity: 0.75; }
+
     .main-controls { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 360px; padding: 0 10px; margin-bottom: 30px; flex-shrink: 0; }
     .control-btn { width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     .control-btn svg { width: 30px; height: 30px; fill: #ddd; transition: all 0.2s; }
     .control-btn:active svg { fill: #ff9500; transform: scale(0.9); }
     .play-main { width: 82px; height: 82px; background: #ff9500; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(255,149,0,0.65); cursor: pointer; }
     .play-main svg { width: 36px; height: 36px; fill: #1a0033; }
+
+    /* ===== comments ===== */
     .comments-section { width: 100%; max-width: 360px; margin-top: 10px; padding-bottom: 30px; }
     .comments-list { max-height: 240px; overflow-y: auto; padding-right: 4px; margin-bottom: 14px; }
     .comments-list::-webkit-scrollbar { width: 5px; }
     .comments-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 10px; }
-    .login-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(12px); z-index: 999; display: none; align-items: center; justify-content: center; }
-    .login-overlay.active { display: flex; }
-    .login-box { background: rgba(255,255,255,0.1); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.2); border-radius: 28px; padding: 36px 30px; width: 90%; max-width: 340px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); position: relative; }
-    .login-box h3 { font-size: 22px; font-weight: 800; text-align: center; margin-bottom: 6px; }
-    .login-box p { font-size: 13px; opacity: 0.6; text-align: center; margin-bottom: 24px; }
-    .login-field { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 13px 16px; color: white; font-size: 15px; outline: none; font-family: inherit; margin-bottom: 12px; transition: border 0.2s; }
-    .login-field:focus { border-color: #ff9500; }
-    .login-btn { width: 100%; background: #ff9500; color: #1a0033; border: none; border-radius: 999px; padding: 14px 0; font-weight: 800; font-size: 16px; cursor: pointer; margin-top: 4px; font-family: inherit; transition: opacity 0.2s; }
-    .login-btn:active { opacity: 0.8; }
-    .login-error { color: #ff4444; font-size: 13px; text-align: center; margin-top: 10px; display: none; }
-    .login-close { position: absolute; top: 14px; left: 16px; font-size: 22px; cursor: pointer; opacity: 0.6; background: none; border: none; color: white; }
-    .admin-badge { display: flex; align-items: center; gap: 6px; background: rgba(255,149,0,0.2); border: 1px solid rgba(255,149,0,0.5); border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 700; color: #ff9500; cursor: pointer; }
-    .delete-btn { background: rgba(255,50,50,0.2); border: 1px solid rgba(255,50,50,0.4); color: #ff6464; border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
-    .delete-btn:hover { background: rgba(255,50,50,0.4); }
+    .delete-btn { background: rgba(255,50,50,0.2); border: 1px solid rgba(255,50,50,0.4); color: #ff6464; border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer; font-family: inherit; }
+    .delete-btn:active { background: rgba(255,50,50,0.5); }
     .loading-comments { text-align: center; padding: 20px; opacity: 0.6; font-size: 14px; }
+
+    /* admin badge */
+    .admin-badge { display: flex; align-items: center; gap: 6px; background: rgba(255,149,0,0.2); border: 1px solid rgba(255,149,0,0.5); border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 700; color: #ff9500; cursor: pointer; font-family: inherit; }
+
+    /* modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 400; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.active { display: flex; }
+    .modal-box { background: rgba(255,255,255,0.11); backdrop-filter: blur(20px); border-radius: 24px; padding: 30px 25px; width: 90%; max-width: 360px; text-align: center; max-height: 90vh; overflow-y: auto; }
+    .modal-btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 15px; cursor: pointer; margin-top: 10px; font-family: inherit; }
+
+    /* ===== pricing modal ===== */
+    .pricing-box {
+        background: linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(160,120,255,0.08) 50%, rgba(255,149,0,0.06) 100%);
+        backdrop-filter: blur(22px) saturate(160%);
+        -webkit-backdrop-filter: blur(22px) saturate(160%);
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 20px;
+        padding: 18px 20px;
+        margin-bottom: 12px;
+        text-align: right;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+        position: relative;
+        overflow: hidden;
+    }
+    .pricing-box::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+    }
+    .pricing-box .course-name { font-size: 15px; font-weight: 800; margin-bottom: 10px; color: #fff; letter-spacing: 0.2px; }
+    .pricing-box .old-price { font-size: 13px; color: rgba(255,255,255,0.38); text-decoration: line-through; margin-bottom: 5px; }
+    .pricing-box .new-price { font-size: 20px; font-weight: 900; background: linear-gradient(135deg, #ffd700, #ff9500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .pricing-box .discount-tag { display: inline-block; background: rgba(255,149,0,0.18); border: 1px solid rgba(255,149,0,0.4); color: #ffb347; border-radius: 999px; padding: 3px 12px; font-size: 11.5px; font-weight: 800; margin-right: 8px; vertical-align: middle; }
+
+    .pay-btn-gold {
+        width: 100%; padding: 17px; border: none; border-radius: 16px;
+        background: linear-gradient(135deg, #ffd700 0%, #ffaa00 50%, #ff8c00 100%);
+        color: #1a0033; font-size: 16px; font-weight: 900;
+        cursor: pointer; font-family: inherit; margin-top: 16px;
+        box-shadow: 0 8px 28px rgba(255,149,0,0.55), 0 2px 8px rgba(255,149,0,0.3);
+        letter-spacing: 0.5px;
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .pay-btn-gold:active { transform: scale(0.97); box-shadow: 0 4px 14px rgba(255,149,0,0.4); }
+
+    /* ===== individual "buy" button under each pricing box ===== */
+    .buy-btn-individual {
+        width: 100%;
+        padding: 13px 10px;
+        border: 1px solid rgba(255,200,0,0.45);
+        border-radius: 14px;
+        background: rgba(255,193,7,0.16);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        color: #ffd700;
+        font-size: 14.5px;
+        font-weight: 800;
+        cursor: pointer;
+        font-family: inherit;
+        margin: -2px 0 16px;
+        transition: transform 0.15s, background 0.2s;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+    .buy-btn-individual:active { transform: scale(0.97); background: rgba(255,193,7,0.32); }
+
+    /* ===== card payment modal ===== */
+    .card-modal-inner {
+        background: linear-gradient(145deg, rgba(20,10,50,0.92) 0%, rgba(10,20,60,0.88) 100%);
+        backdrop-filter: blur(28px) saturate(180%);
+        -webkit-backdrop-filter: blur(28px) saturate(180%);
+        border: 1px solid rgba(120,100,255,0.28);
+        border-radius: 24px;
+        padding: 24px 20px;
+        box-shadow: 0 8px 40px rgba(80,40,200,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+        position: relative;
+        overflow: hidden;
+    }
+    .card-modal-inner::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(160,120,255,0.6), rgba(255,149,0,0.4), transparent);
+    }
+
+    .card-number-box {
+        display: flex; align-items: center; justify-content: space-between;
+        background: linear-gradient(135deg, rgba(80,60,200,0.22) 0%, rgba(120,80,255,0.18) 50%, rgba(60,40,160,0.22) 100%);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(140,100,255,0.35);
+        border-radius: 16px; padding: 12px 16px; margin: 12px 0;
+        direction: ltr;
+        box-shadow: 0 4px 20px rgba(80,40,200,0.2), inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+    .card-number-text { font-size: 15px; font-weight: 800; letter-spacing: 3px; background: linear-gradient(135deg, #c9b8ff, #9b7fff, #7b5fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .copy-btn {
+        background: rgba(120,80,255,0.22);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(140,100,255,0.4);
+        border-radius: 10px; padding: 7px 12px;
+        color: #c9b8ff; font-size: 13px; cursor: pointer; font-family: inherit;
+        display: flex; align-items: center; gap: 5px; white-space: nowrap;
+        transition: background 0.2s;
+    }
+    .copy-btn:active { background: rgba(120,80,255,0.42); }
+
+    .platform-btn {
+        width: 100%; padding: 13px 16px; border: none; border-radius: 14px;
+        font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit;
+        display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
+        backdrop-filter: blur(16px); transition: opacity 0.2s, transform 0.15s;
+    }
+    .platform-btn:active { opacity: 0.75; transform: scale(0.98); }
+    .platform-btn img { width: 28px; height: 28px; border-radius: 7px; object-fit: cover; flex-shrink: 0; }
+
+    .btn-telegram { background: linear-gradient(135deg, rgba(33,150,243,0.22), rgba(0,136,204,0.18)); border: 1px solid rgba(33,150,243,0.45); color: #82cbff; }
+    .btn-whatsapp { background: linear-gradient(135deg, rgba(37,211,102,0.18), rgba(18,183,84,0.14)); border: 1px solid rgba(37,211,102,0.4); color: #7fffc4; }
+    .btn-bale     { background: linear-gradient(135deg, rgba(130,80,255,0.22), rgba(100,60,200,0.18)); border: 1px solid rgba(130,80,255,0.45); color: #d4b3ff; }
+
+    .receipt-img { width: 160px; margin: 0 auto 18px; display: block; border-radius: 18px; box-shadow: 0 8px 28px rgba(0,0,0,0.4); }
 </style>
 </head>
 <body>
 
-<header style="position:fixed;top:0;left:0;right:0;height:65px;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:100;">
-    <div onclick="goToHome()" style="font-size:28px;cursor:pointer;">←</div>
+<div class="stars"></div>
+
+<header>
+    <div onclick="goToHome()"
+         style="font-size:15px; cursor:pointer; color:white;
+                background: rgba(255,255,255,0.12); backdrop-filter: blur(12px);
+                padding: 9px 22px; border-radius: 30px;
+                display: inline-flex; align-items: center; gap: 8px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        ← خانه
+    </div>
     <div id="headerAuthArea">
-        <button onclick="openLogin()" class="admin-badge">🔐 ورود</button>
+        <button onclick="openAdminModal()" class="admin-badge">🔐 ورود ادمین</button>
     </div>
 </header>
 
-<div id="loginOverlay" class="login-overlay">
-    <div class="login-box">
-        <button class="login-close" onclick="closeLogin()">✕</button>
-        <h3>🔐 ورود ادمین</h3>
-        <p>اطلاعات مدیریت را وارد کنید</p>
-        <input id="loginUsername" class="login-field" type="text" placeholder="user name" autocomplete="off">
-        <input id="loginPassword" class="login-field" type="password" placeholder="password">
-        <button class="login-btn" onclick="doLogin()">login</button>
-        <div id="loginError" class="login-error">نام کاربری یا رمز عبور اشتباه است</div>
-    </div>
+<div class="main-center">
+    <h2>دوره‌های PlanLife</h2>
+    <div class="section-title">دسته‌بندی‌ها</div>
+    <div class="horizontal-scroll" id="categorySlides"></div>
+    <div class="section-title" id="currentCategoryTitle">همه دوره‌ها</div>
+    <div id="podcastList"></div>
 </div>
 
-<div style="margin-top:80px;text-align:center;">
-    <h2 style="font-size:32px;font-weight:900;">پادکست‌های PlanLife</h2>
-</div>
-<div style="padding:0 20px;">
-    <div style="font-size:22px;margin:25px 0 12px;font-weight:700;">دسته‌بندی‌ها</div>
-    <div style="display:flex;gap:15px;overflow-x:auto;padding-bottom:25px;" id="categorySlides"></div>
-    <div id="currentCategoryTitle" style="font-size:22px;margin:25px 0 12px;font-weight:700;">همه پادکست‌ها</div>
-    <div id="podcastGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:18px;padding-bottom:120px;"></div>
+<!-- Modal اشتراک / ادمین -->
+<div id="subscriptionModal" class="modal-overlay">
+    <div class="modal-box" id="modalContent"></div>
 </div>
 
+<!-- modal پرداخت -->
+<div id="pricingModal" class="modal-overlay">
+    <div class="modal-box" id="pricingContent" style="max-width:400px;"></div>
+</div>
+
+<!-- modal شماره کارت -->
+<div id="cardModal" class="modal-overlay">
+    <div class="modal-box" id="cardContent" style="max-width:400px;"></div>
+</div>
+
+<!-- mini player -->
 <div id="miniPlayer" class="mini-player" onclick="expandPlayer()">
     <img id="miniCover" class="mini-cover" src="" alt="">
     <div class="mini-info">
         <div id="miniTitle" class="mini-title">در حال پخش</div>
         <div id="miniEp" class="mini-ep">PlanLife</div>
     </div>
-    <div class="mini-play-btn" id="miniPlayBtn" onclick="event.stopPropagation(); miniTogglePlay()">
+    <div class="mini-play-btn" onclick="event.stopPropagation(); miniTogglePlay()">
         <svg id="miniPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
     </div>
     <div class="mini-close" onclick="event.stopPropagation(); killPlayer()">✕</div>
@@ -148,16 +309,15 @@
         <div class="mini-progress-bar" id="miniProgressBar" style="width:0%"></div>
     </div>
 </div>
-
+<!-- پلیر بزرگ -->
 <div id="nowPlayingScreen" class="now-playing">
-    <div class="drag-handle-wrap" id="dragHandleWrap">
-        <div class="drag-handle"></div>
-    </div>
+    <div class="drag-handle-wrap"><div class="drag-handle"></div></div>
     <div class="player-topbar">
         <button onclick="closeNowPlaying()" style="font-size:26px;background:none;border:none;color:white;">←</button>
         <span id="playerStatus" class="player-status">در حال پخش</span>
         <button onclick="showMenu()" style="font-size:26px;background:none;border:none;color:white;">⋯</button>
     </div>
+
     <div class="big-cover">
         <img id="npCover" src="" alt="">
         <div class="cover-comment-badge" id="coverCommentBadge">
@@ -166,8 +326,9 @@
             <span style="opacity:0.7; font-weight:500;">نظر</span>
         </div>
     </div>
+
     <div class="track-info">
-        <h2 id="npTitle" class="np-title">عنوان پادکست</h2>
+        <h2 id="npTitle" class="np-title">عنوان دوره</h2>
         <p id="npSubtitle" class="np-subtitle">PlanLife</p>
     </div>
     <div class="progress-section">
@@ -182,52 +343,54 @@
     <div class="main-controls">
         <div class="control-btn" onclick="prevTrack()"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z"/></svg></div>
         <div class="control-btn" onclick="seek(-10)"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg></div>
-        <div onclick="togglePlay()" class="play-main" id="playBtn"><svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        <div onclick="togglePlay()" class="play-main"><svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         <div class="control-btn" onclick="seek(10)"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></div>
         <div class="control-btn" onclick="nextTrack()"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></div>
     </div>
+
+    <!-- بخش نظرات -->
     <div class="comments-section">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; padding:0 4px;">
-            <span style="font-size:19px; font-weight:700;">💬 نظرات</span>
-            <span id="commentCount" style="background:#ff9500; color:#1a0033; font-size:12.5px; font-weight:800; padding:3px 11px; border-radius:999px; min-width:22px; text-align:center;">0</span>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:0 4px;">
+            <span style="font-size:19px;font-weight:700;">💬 نظرات</span>
+            <span id="commentCount" style="background:#ff9500;color:#1a0033;font-size:12.5px;font-weight:800;padding:3px 11px;border-radius:999px;min-width:22px;text-align:center;">0</span>
         </div>
         <div id="commentsList" class="comments-list"></div>
-        <div id="commentForm" style="background:rgba(255,255,255,0.09); border-radius:18px; padding:16px 16px 18px;">
+        <div id="commentForm" style="background:rgba(255,255,255,0.09);border-radius:18px;padding:16px 16px 18px;">
             <input id="commentName" type="text" placeholder="نام شما (اختیاری)" onfocus="scrollToForm()"
-                   style="width:100%; background:rgba(0,0,0,0.4); border:1.5px solid rgba(255,255,255,0.1); border-radius:14px; padding:13px 16px; color:white; font-size:16px; margin-bottom:10px; outline:none; font-family:inherit; -webkit-appearance:none; appearance:none;">
+                   style="width:100%;background:rgba(0,0,0,0.4);border:1.5px solid rgba(255,255,255,0.1);border-radius:14px;padding:13px 16px;color:white;font-size:16px;margin-bottom:10px;outline:none;font-family:inherit;-webkit-appearance:none;">
             <textarea id="commentText" placeholder="نظر خود را اینجا بنویسید..." rows="3" onfocus="scrollToForm()"
-                      style="width:100%; background:rgba(0,0,0,0.4); border:1.5px solid rgba(255,255,255,0.1); border-radius:14px; padding:13px 16px; color:white; font-size:16px; resize:none; height:80px; outline:none; font-family:inherit; line-height:1.5; display:block; -webkit-appearance:none; appearance:none;"></textarea>
+                      style="width:100%;background:rgba(0,0,0,0.4);border:1.5px solid rgba(255,255,255,0.1);border-radius:14px;padding:13px 16px;color:white;font-size:16px;resize:none;height:80px;outline:none;font-family:inherit;line-height:1.5;display:block;-webkit-appearance:none;"></textarea>
             <button id="submitCommentBtn" onclick="addComment()"
-                    style="margin-top:12px; width:100%; background:#ff9500; color:#1a0033; border:none; border-radius:999px; padding:15px 0; font-weight:800; font-size:16px; cursor:pointer; font-family:inherit; box-shadow:0 4px 18px rgba(255,149,0,0.35); -webkit-tap-highlight-color:transparent;">
+                    style="margin-top:12px;width:100%;background:#ff9500;color:#1a0033;border:none;border-radius:999px;padding:15px 0;font-weight:800;font-size:16px;cursor:pointer;font-family:inherit;box-shadow:0 4px 18px rgba(255,149,0,0.35);">
                 ارسال نظر
             </button>
         </div>
     </div>
+
     <audio id="mainAudio" style="display:none;"></audio>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-// ============================================================
-// Supabase — persistent comment storage
-// ============================================================
+// ==================== Supabase ====================
 const SUPABASE_URL      = 'https://hjzzvzxhrqovvducnxha.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
-const DELETE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/delete-comment`;
+const DELETE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/delete-course-comment`;
+const ADMIN_API_PASSWORD = 'So@21072933@'; // sent to the delete-course-comment Edge Function for verification
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let allComments  = {};   // { podcastId: [ {id, name, text, created_at}, ... ] }
+let allComments = {};   // { commentKey: [ {id, name, text, created_at}, ... ] }
 
-async function fetchCommentsForPodcast(podcastId) {
+async function fetchCommentsForKey(key) {
     try {
         const { data, error } = await supabaseClient
-            .from('comments')
+            .from('course_comments')
             .select('*')
-            .eq('podcast_id', podcastId)
+            .eq('comment_key', key)
             .order('created_at', { ascending: false });
         if (error) throw error;
-        allComments[podcastId] = data || [];
+        allComments[key] = data || [];
         return true;
     } catch(e) { console.warn('Supabase fetch:', e); return false; }
 }
@@ -235,29 +398,29 @@ async function fetchCommentsForPodcast(podcastId) {
 async function fetchAllCommentCounts() {
     try {
         const { data, error } = await supabaseClient
-            .from('comments')
-            .select('podcast_id');
+            .from('course_comments')
+            .select('comment_key');
         if (error) throw error;
         const counts = {};
         (data || []).forEach(row => {
-            counts[row.podcast_id] = (counts[row.podcast_id] || 0) + 1;
+            counts[row.comment_key] = (counts[row.comment_key] || 0) + 1;
         });
         return counts;
     } catch(e) { console.warn('Supabase counts fetch:', e); return {}; }
 }
 
-async function insertComment(podcastId, name, text) {
+async function insertCourseComment(key, name, text) {
     try {
         const { data, error } = await supabaseClient
-            .from('comments')
-            .insert([{ podcast_id: podcastId, name, text }])
+            .from('course_comments')
+            .insert([{ comment_key: key, name, text }])
             .select();
         if (error) throw error;
         return data && data[0];
     } catch(e) { console.warn('Supabase insert:', e); return null; }
 }
 
-async function deleteCommentRemote(commentId, adminPassword) {
+async function deleteCourseCommentRemote(commentId) {
     try {
         const res = await fetch(DELETE_FUNCTION_URL, {
             method: 'POST',
@@ -266,7 +429,7 @@ async function deleteCommentRemote(commentId, adminPassword) {
                 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
                 'apikey': SUPABASE_ANON_KEY
             },
-            body: JSON.stringify({ commentId, adminPassword })
+            body: JSON.stringify({ commentId, adminPassword: ADMIN_API_PASSWORD })
         });
         const json = await res.json();
         if (!res.ok) throw new Error(json.error || ('HTTP ' + res.status));
@@ -274,72 +437,94 @@ async function deleteCommentRemote(commentId, adminPassword) {
     } catch(e) { console.warn('Edge function delete:', e); alert('خطا در حذف نظر: ' + e.message); return false; }
 }
 
-// ============================================================
-const podcastData = [
-    {id:0,title:"موضوعات متفاوت",episode:"کد نویسی ذهن",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/codenevisi/Codenevisizehn_free.m4a",cover:"http://fs3.centraldnserver.com/~planlife/pics/Podcastfree/IMG_2187.jpeg"},
-    {id:1,title:"باورهای ثروت",episode:"نشانه های ثروت",src:"https://res.cloudinary.com/dfthbclzi/video/upload/v1780854988/Bavar_free_w9yucc.m4a",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780855363/IMG_1658_gwxqtm.jpg"},
-    {id:2,title:"عشق و روابط",episode:"وابسته ی ورود به رابطه",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Vabaste_rabete.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
-    {id:3,title:"رشد کسب و کار",episode:"برای کارت ارزش قائل نیستی",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Nadashtan_bavar_be_arzesh.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
-    {id:4,title:"باورهای ثروت",episode:"فقط با سختی کشیدن میشود ؟",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/servat/SakhTi keshidan - planlife Free.m4a",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449575/IMG_1063_vmk59h.jpg"},
-    {id:5,title:"کدگذاری ذهنی",episode:"موضوعات متفاوت",src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779530272/Khasis_bodan_-_planLife.ir_Free_sv3vbr.m4a",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449557/IMG_1064_uro694.jpg"},
-    {id:5,title:"باورهای ثروت",episode:"خسیس بودن در زندگی",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/servat/Khasis bodan - planLife.ir Free.m4a",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449557/IMG_1064_uro694.jpg"},
-    {id:6,title:"رشد کسب و کار",episode:"کمال گرایی افراطی",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Kamalgaraei.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
-    {id:23,title:"باورهای ثروت",episode:"نشانه های ثروت",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/servat/Neshane - servat - Free.m4a",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449538/IMG_1059_eqlr5g.jpg"},
-    {id:7,title:"رشد کسب و کار",episode:"ترس از قضاوت دیگران",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Tars_az_ghezavat.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
-    {id:8,title:"باورهای ثروت",episode:"ارزش من به حساب بانکیمه ؟",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/servat/Arzeshmandi - liyaghat free planlife.ir.m4a",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449549/IMG_1062_qhryxk.jpg"},
-    {id:9,title:"عشق و روابط",episode:"خودم باشم مردم قضاوتم میکنند",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Khodambasham_ghezavat_misham.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
-    {id:10,title:"رشد کسب و کار",episode:"ترس از شکست",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Tars_az_shekast.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
-    {id:11,title:"عشق و روابط",episode:"خودم باشم ترکم میکنند طرد میشم",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Khodam basham_tard_misham.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
-    {id:12,title:"رشد کسب و کار",episode:"بازار پر شده دست زیاده",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Eshbah_bazar.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
-    {id:13,title:"عشق و روابط",episode:"مهارت ارتباطی ندارم",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Maharat_ertebati_nadaram.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
-    {id:14,title:"رشد کسب و کار",episode:"برای کارت ارزش قائل نیستی",src:"https://res.cloudinary.com/dfthbclzi/video/upload/v1780662264/Nadashtan_bavar_be_arzesh_yrqvol.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
-    {id:15,title:"عشق و روابط",episode:"من فکر میکنم جذاب نیستم",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Man_jazab_nistam.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
-    {id:16,title:"عشق و روابط",episode:"اشتباهاتم باعث شده کسی منو دوست نداشته باشه",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Eshtebahate_gozashte.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
-    {id:17,title:"عشق و روابط",episode:"مقاومت ۲",src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
-    {id:18,title:"تحول حال و احساس",episode:"قسمت ۱",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/haloehsas/Hale khub free.m4a",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780691121/IMG_1553_o6uguf.jpg"},
-    {id:19,title:"اعتماد به نفس",episode:"قسمت ۱",src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449505/IMG_1058_knikds.jpg"},
-    {id:20,title:"احساس لیاقت",episode:"قسمت ۱",src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449497/IMG_1057_u4yheu.jpg"},
-    {id:21,title:"عشق و روابط",episode:"لیاقت رابطه خوب ندارم",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Liyaghate_rabete_nadaram.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
-    {id:22,title:"رشد کسب و کار",episode:"منابع کمه ( کمبود )",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Kambod_manabe.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
+// ==================== داده‌های دوره‌ها ====================
+const courseData = [
+    { title: "دوره کدهای پشت‌ پرده پول", episode: 1,  duration: "32:45", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/Servat - dore - 1.m4a" },
+    { title: "دوره کدهای پشت‌ پرده پول", episode: 2,  duration: "43:12", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/Kargah servatsazi - 2.m4a" },
+    { title: "دوره کدهای پشت‌ پرده پول", episode: 3,  duration: "43:06", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/Planlife Kargah- servat - 3.m4a" },
+    { title: "دوره کدهای پشت‌ پرده پول", episode: 4,  duration: "31:50", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/Planlife Kargah- servat - 4.m4a" },
+    { title: "دوره کدهای پشت‌ پرده پول", episode: 5,  duration: "33:30", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "" },
+    { title: "دوره کدهای پشت‌ پرده پول", episode: 6,  duration: "28:44", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "" },
+    { title: "دوره کدهای پشت‌ پرده پول", episode: 7,  duration: "37:21", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "" },
+    { title: "دوره کدهای پشت‌ پرده پول", episode: 8,  duration: "41:10", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "" },
+    { title: "دوره کدهای پشت‌ پرده پول", episode: 9,  duration: "29:55", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "" },
+    { title: "دوره کدهای پشت‌ پرده پول", episode: 10, duration: "44:00", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "" },
+    { title: "دوره کدهای پشت‌ پرده پول", episode: 11, duration: "38:17", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "" },
+    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 1,  duration: "32:45", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 2,  duration: "43:12", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408669file_17524.mpeg" },
+    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 3,  duration: "21:58", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 4,  duration: "35:05", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 5,  duration: "33:30", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 6,  duration: "28:44", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 7,  duration: "37:21", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 8,  duration: "41:10", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 9,  duration: "29:55", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+    { title: "دوره چطور حالم خوب باشه ؟", episode: 1, duration: "32:10", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a" },
+    { title: "دوره چطور حالم خوب باشه ؟", episode: 2, duration: "36:56", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 2.m4a" },
+    { title: "دوره چطور حالم خوب باشه ؟", episode: 3, duration: "27:20", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 3.m4a" }, 
+    { title: "دوره چطور حالم خوب باشه ؟", episode: 4, duration: "24:35", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-tahavol halo ehsas 4.m4a" },
+    { title: "دوره چطور حالم خوب باشه ؟", episode: 5, duration: "21:28", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Project-Dore-tahavol halo ehsas 5.m4a" },
+    { title: "دوره خود باوری (اعتماد به نفس)", episode: 1, duration: "32:45", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://res.cloudinary.com/dzgyndusa/video/upload/v1781607528/Etemad_be_nafs-ghesmate_1_neaq3v.m4a" },
+    { title: "دوره خود باوری (اعتماد به نفس)", episode: 2, duration: "43:12", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره خود باوری (اعتماد به نفس)", episode: 3, duration: "21:58", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره خود باوری (اعتماد به نفس)", episode: 4, duration: "35:05", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره خود باوری (اعتماد به نفس)", episode: 5, duration: "33:30", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+    { title: "دوره پذیرش احساس لیاقت", episode: 1,  duration: "32:45", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره پذیرش احساس لیاقت", episode: 2,  duration: "43:12", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره پذیرش احساس لیاقت", episode: 3,  duration: "21:58", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره پذیرش احساس لیاقت", episode: 4,  duration: "35:05", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره پذیرش احساس لیاقت", episode: 5,  duration: "33:30", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره پذیرش احساس لیاقت", episode: 6,  duration: "28:44", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره پذیرش احساس لیاقت", episode: 7,  duration: "37:21", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره پذیرش احساس لیاقت", episode: 8,  duration: "41:10", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره پذیرش احساس لیاقت", episode: 9,  duration: "29:55", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره پذیرش احساس لیاقت", episode: 10, duration: "44:00", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره پذیرش احساس لیاقت", episode: 11, duration: "38:17", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره پذیرش احساس لیاقت", episode: 12, duration: "25:33", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+    { title: "دوره نفوذ به لایه‌های پنهانِ ذهن", episode: 1, duration: "00:00", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "" },
+    { title: "دوره نفوذ به لایه‌های پنهانِ ذهن", episode: 2, duration: "00:00", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "" },
+    { title: "دوره نفوذ به لایه‌های پنهانِ ذهن", episode: 3, duration: "00:00", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "" },
+    { title: "دوره نفوذ به لایه‌های پنهانِ ذهن", episode: 4, duration: "00:00", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "" },
+    { title: "دوره نفوذ به لایه‌های پنهانِ ذهن", episode: 5, duration: "00:00", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "" },
 ];
 
-let currentTrackIndex = 0, currentPodcastId = null, isAdmin = false;
-const ADMIN_USER = 'Admin', ADMIN_PASS = '12345';
-const ADMIN_API_PASSWORD = 'So@21072933@'; // sent to the delete-comment Edge Function for verification
+// ==================== کدهای اشتراک ====================
+const ADMIN_CODE = "admin2933";
+const subscriptionCodes = {
+    "دوره کدهای پشت‌ پرده پول":         ["77777", "BA777", "TH777", "Servat", "2933"],
+    "دوره کلیدِ پنهانِ ارتباطات":         ["88888", "ESH88", "Love"],
+    "دوره چطور حالم خوب باشه ؟":         ["99999", "TA999", "Ehsas"],
+    "دوره خود باوری (اعتماد به نفس)":    ["11111", "ET111", "Etemad"],
+    "دوره پذیرش احساس لیاقت":            ["22222", "EL222", "Liyaghat"],
+    "دوره نفوذ به لایه‌های پنهانِ ذهن":   ["33333", "ZE333", "Zehn"],
+};
+
+// ==================== قیمت‌گذاری ====================
+const coursePricing = {
+    "دوره کدهای پشت‌ پرده پول":        { old: "۸،۶۵۰،۰۰۰", new: "۳،۹۶۰،۰۰۰", hasDiscount: true },
+    "دوره کلیدِ پنهانِ ارتباطات":        { old: "۷،۳۵۰،۰۰۰", new: "۳،۹۶۰،۰۰۰", hasDiscount: true },
+    "دوره خود باوری (اعتماد به نفس)":   { old: "۶،۵۸۰،۰۰۰", new: "۲،۹۶۰،۰۰۰", hasDiscount: true },
+    "دوره چطور حالم خوب باشه ؟":        { price: "۲،۹۵۰،۰۰۰", hasDiscount: false },
+    "دوره پذیرش احساس لیاقت":           { old: "۵،۶۸۰،۰۰۰", new: "۳،۳۵۰،۰۰۰", hasDiscount: true },
+    "دوره نفوذ به لایه‌های پنهانِ ذهن":  { price: "۲،۹۵۰،۰۰۰", hasDiscount: false },
+};
+
+// ==================== وضعیت سراسری ====================
+let unlockedCategories = {};
+let isAdmin = false;
+let currentTrackIndex = 0;
+let currentTrackKey = null;
+
 const audio = document.getElementById('mainAudio');
-const progressBarEl = document.getElementById('progressBar');
+const progressBar = document.getElementById('progressBar');
 const currentTimeEl = document.getElementById('currentTime');
-const totalTimeEl   = document.getElementById('totalTime');
+const totalTimeEl = document.getElementById('totalTime');
 const progressContainer = document.getElementById('progressContainer');
 const statusEl = document.getElementById('playerStatus');
 const playIcon = document.getElementById('playIcon');
 
-// ---- Auth ----
-function openLogin() {
-    document.getElementById('loginOverlay').classList.add('active');
-    document.getElementById('loginError').style.display = 'none';
-    document.getElementById('loginUsername').value = '';
-    document.getElementById('loginPassword').value = '';
-    setTimeout(() => document.getElementById('loginUsername').focus(), 100);
-}
-function closeLogin() { document.getElementById('loginOverlay').classList.remove('active'); }
-function doLogin() {
-    const u = document.getElementById('loginUsername').value.trim();
-    const p = document.getElementById('loginPassword').value;
-    if (u === ADMIN_USER && p === ADMIN_PASS) {
-        isAdmin = true; closeLogin(); updateAdminHeader();
-        if (currentPodcastId !== null) renderComments(currentPodcastId);
-    } else { document.getElementById('loginError').style.display = 'block'; }
-}
-function doLogout() { isAdmin = false; updateAdminHeader(); if (currentPodcastId !== null) renderComments(currentPodcastId); }
-function updateAdminHeader() {
-    const area = document.getElementById('headerAuthArea');
-    if (isAdmin) {
-        area.innerHTML = `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:13px;opacity:0.7;">👑 Admin</span><button onclick="doLogout()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:999px;color:white;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">خروج</button></div>`;
-    } else { area.innerHTML = `<button onclick="openLogin()" class="admin-badge">🔐 ورود</button>`; }
-}
-
-// ---- Comments ----
+// ==================== کلید کامنت ====================
+function commentKey(title, episode) { return `course_${title}_ep${episode}`; }
 function toPersianNum(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
 function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function formatCommentTime(iso) {
@@ -347,22 +532,25 @@ function formatCommentTime(iso) {
     return `${d.toLocaleDateString('fa-IR',{year:'numeric',month:'short',day:'numeric'})} • ${d.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`;
 }
 
-async function loadComments(id) {
+// ==================== بارگذاری کامنت‌ها ====================
+async function loadComments(title, episode) {
+    const key = commentKey(title, episode);
+    currentTrackKey = key;
     document.getElementById('commentsList').innerHTML = '<div class="loading-comments">⏳ در حال بارگذاری نظرات...</div>';
     document.getElementById('commentCount').textContent = '...';
-    await fetchCommentsForPodcast(id);
-    renderComments(id);
-    refreshAllCardBadges();
+    await fetchCommentsForKey(key);
+    renderComments(key);
+    refreshAllListBadges();
 }
 
-function renderComments(id) {
-    const comments = allComments[id] || [];
-    const list     = document.getElementById('commentsList');
-    const countEl  = document.getElementById('commentCount');
-    const coverCnt = document.getElementById('coverCommentCount');
+function renderComments(key) {
+    const comments = allComments[key] || [];
+    const list = document.getElementById('commentsList');
+    const countEl = document.getElementById('commentCount');
+    const coverCount = document.getElementById('coverCommentCount');
     if (!list || !countEl) return;
     countEl.textContent = comments.length;
-    if (coverCnt) coverCnt.textContent = toPersianNum(comments.length);
+    if (coverCount) coverCount.textContent = toPersianNum(comments.length);
     list.innerHTML = '';
     if (comments.length === 0) {
         list.innerHTML = '<p style="opacity:0.6;text-align:center;padding:22px 10px;font-size:14px;line-height:1.6;">هنوز نظری ثبت نشده.<br>اولین نفر باشید!</p>';
@@ -371,34 +559,34 @@ function renderComments(id) {
     comments.forEach(c => {
         const div = document.createElement('div');
         div.style.cssText = 'background:rgba(255,255,255,0.085);border-radius:14px;padding:13px 15px;margin-bottom:9px;border:1px solid rgba(255,255,255,0.06);';
-        div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
-            <strong style="color:#ffd700;font-size:14.5px;">${escapeHtml(c.name)}</strong>
-            <div style="display:flex;align-items:center;gap:8px;">
-                <span style="font-size:11.5px;opacity:0.55;white-space:nowrap;">${formatCommentTime(c.created_at)}</span>
-                ${isAdmin ? `<button class="delete-btn" onclick="deleteComment(${id},${c.id})">🗑 حذف</button>` : ''}
+        div.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+                <strong style="color:#ffd700;font-size:14.5px;">${escapeHtml(c.name)}</strong>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:11.5px;opacity:0.55;white-space:nowrap;">${formatCommentTime(c.created_at)}</span>
+                    ${isAdmin ? `<button class="delete-btn" onclick="deleteComment('${key}',${c.id})">🗑 حذف</button>` : ''}
+                </div>
             </div>
-        </div>
-        <p style="font-size:14.8px;line-height:1.55;margin:0;color:#f0f0f0;">${escapeHtml(c.text)}</p>`;
+            <p style="font-size:14.8px;line-height:1.55;margin:0;color:#f0f0f0;">${escapeHtml(c.text)}</p>`;
         list.appendChild(div);
     });
 }
 
 async function addComment() {
-    if (currentPodcastId === null) return;
+    if (!currentTrackKey) return;
     const name = document.getElementById('commentName').value.trim() || 'ناشناس';
     const text = document.getElementById('commentText').value.trim();
     if (!text) { alert('لطفاً متن نظر را وارد کنید.'); return; }
-
     const btn = document.getElementById('submitCommentBtn');
     btn.textContent = '⏳ در حال ارسال...';
     btn.disabled = true;
 
-    const inserted = await insertComment(currentPodcastId, name, text);
+    const inserted = await insertCourseComment(currentTrackKey, name, text);
     if (inserted) {
-        if (!allComments[currentPodcastId]) allComments[currentPodcastId] = [];
-        allComments[currentPodcastId].unshift(inserted);
-        renderComments(currentPodcastId);
-        refreshAllCardBadges();
+        if (!allComments[currentTrackKey]) allComments[currentTrackKey] = [];
+        allComments[currentTrackKey].unshift(inserted);
+        renderComments(currentTrackKey);
+        refreshAllListBadges();
         document.getElementById('commentText').value = '';
         document.getElementById('commentName').value = '';
     } else {
@@ -409,34 +597,357 @@ async function addComment() {
     btn.disabled = false;
 }
 
-async function deleteComment(podcastId, commentId) {
+async function deleteComment(key, commentId) {
     if (!isAdmin || !confirm('این نظر حذف شود؟')) return;
-    const ok = await deleteCommentRemote(commentId, ADMIN_API_PASSWORD);
+    const ok = await deleteCourseCommentRemote(commentId);
     if (!ok) return;
-    allComments[podcastId] = (allComments[podcastId] || []).filter(c => c.id !== commentId);
-    renderComments(podcastId);
-    refreshAllCardBadges();
+    allComments[key] = (allComments[key] || []).filter(c => c.id !== commentId);
+    renderComments(key);
+    refreshAllListBadges();
 }
 
-function updateCardBadge(id, count) {
-    const badge = document.getElementById(`card-badge-${id}`);
-    if (badge) badge.textContent = toPersianNum(count);
-    if (currentPodcastId === id) {
-        const cc = document.getElementById('coverCommentCount'); if (cc) cc.textContent = toPersianNum(count);
-        const mc = document.getElementById('commentCount');      if (mc) mc.textContent = count;
+function updateListBadge(idx, count) {
+    const el = document.getElementById(`list-badge-${idx}`);
+    if (el) el.textContent = toPersianNum(count);
+}
+
+async function refreshAllListBadges() {
+    const counts = await fetchAllCommentCounts();
+    courseData.forEach((item, idx) => {
+        const key = commentKey(item.title, item.episode);
+        updateListBadge(idx, counts[key] || 0);
+    });
+    if (currentTrackKey) {
+        const cc = document.getElementById('coverCommentCount');
+        const mc = document.getElementById('commentCount');
+        const cnt = counts[currentTrackKey] || 0;
+        if (cc) cc.textContent = toPersianNum(cnt);
+        if (mc) mc.textContent = cnt;
     }
 }
 
-async function refreshAllCardBadges() {
-    const counts = await fetchAllCommentCounts();
-    podcastData.forEach(item => updateCardBadge(item.id, counts[item.id] || 0));
+function scrollToForm() {
+    setTimeout(() => {
+        const f = document.getElementById('commentForm');
+        if (f) f.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 320);
 }
 
-// ---- Audio ----
+// ==================== ادمین ====================
+function openAdminModal() {
+    document.getElementById('modalContent').innerHTML = `
+        <h3 style="margin-bottom:15px;">👑 ورود ادمین</h3>
+        <p style="margin-bottom:20px;opacity:0.8;font-size:14px;">کد ادمین را وارد کنید تا دسترسی کامل داشته باشید</p>
+        <input id="adminCodeInput" type="password" maxlength="15" placeholder="کد ادمین"
+               style="width:100%;padding:14px;border-radius:12px;border:none;text-align:center;font-size:22px;
+                      margin-bottom:14px;background:rgba(255,255,255,0.1);color:white;font-family:inherit;outline:none;letter-spacing:2px;">
+        <button onclick="checkAdminCode()" class="modal-btn" style="background:#ff9500;color:#1a0033;font-weight:bold;">تأیید</button>
+        <button onclick="closeModal()" class="modal-btn" style="background:rgba(255,255,255,0.15);color:white;margin-top:8px;">بستن</button>`;
+    document.getElementById('subscriptionModal').classList.add('active');
+    setTimeout(() => document.getElementById('adminCodeInput') && document.getElementById('adminCodeInput').focus(), 200);
+}
+
+function checkAdminCode() {
+    const code = document.getElementById('adminCodeInput').value.trim();
+    if (code === ADMIN_CODE) {
+        isAdmin = true;
+        const allCats = Object.keys(subscriptionCodes);
+        allCats.forEach(c => unlockedCategories[c] = true);
+        updateAdminHeader();
+        document.getElementById('modalContent').innerHTML = `
+            <div style="font-size:70px;">👑</div>
+            <h3 style="color:#ffd700;margin:10px 0;">ورود ادمین موفق</h3>
+            <p style="opacity:0.8;margin-bottom:18px;">دسترسی کامل به همه دوره‌ها فعال شد.<br>می‌توانید نظرات را حذف کنید.</p>
+            <button onclick="closeModal()" class="modal-btn" style="background:#ff9500;color:#1a0033;font-weight:bold;">بستن</button>`;
+        if (currentTrackKey) renderComments(currentTrackKey);
+    } else {
+        document.getElementById('adminCodeInput').style.border = '2px solid #ff4444';
+        document.getElementById('adminCodeInput').value = '';
+        document.getElementById('adminCodeInput').placeholder = '❌ کد اشتباه است';
+        setTimeout(() => {
+            if (document.getElementById('adminCodeInput')) {
+                document.getElementById('adminCodeInput').style.border = 'none';
+                document.getElementById('adminCodeInput').placeholder = 'کد ادمین';
+            }
+        }, 1800);
+    }
+}
+
+function updateAdminHeader() {
+    const area = document.getElementById('headerAuthArea');
+    if (isAdmin) {
+        area.innerHTML = `<div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:13px;opacity:0.7;">👑 Admin</span>
+            <button onclick="doLogout()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:999px;color:white;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">خروج</button>
+        </div>`;
+    } else {
+        area.innerHTML = `<button onclick="openAdminModal()" class="admin-badge">🔐 ورود ادمین</button>`;
+    }
+}
+
+function doLogout() {
+    isAdmin = false;
+    updateAdminHeader();
+    if (currentTrackKey) renderComments(currentTrackKey);
+}
+
+// ==================== رندر صفحه ====================
+async function loadPage() {
+    const categories = Object.keys(subscriptionCodes);
+    document.getElementById('categorySlides').innerHTML = categories.map(cat =>
+        `<div class="slide-item" onclick="selectCat('${cat}')">
+            <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg">
+            <p style="font-size:14.5px;font-weight:600;">${cat}</p>
+        </div>`
+    ).join('');
+    loadItems(null);
+    await refreshAllListBadges();
+}
+
+function selectCat(cat) {
+    document.getElementById('currentCategoryTitle').textContent = cat;
+    loadItems(cat);
+}
+
+function loadItems(cat) {
+    const cats = cat ? [cat] : Object.keys(subscriptionCodes);
+    let html = '';
+    cats.forEach(c => {
+        courseData.filter(item => item.title === c).forEach(item => {
+            const idx = courseData.indexOf(item);
+            const key = commentKey(item.title, item.episode);
+            const cnt = toPersianNum((allComments[key] || []).length);
+            html += `
+            <div class="podcast-item" onclick="playCourse(${idx})">
+                <img src="${item.cover}" alt="">
+                <div class="music-info">
+                    <div class="music-title">${item.title}</div>
+                    <div class="music-artist">قسمت ${item.episode}</div>
+                    <div style="display:inline-flex;align-items:center;gap:4px;margin-top:4px;background:rgba(255,149,0,0.15);border-radius:999px;padding:3px 9px;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="#ff9500"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
+                        <span id="list-badge-${idx}" style="font-size:12px;color:#ff9500;font-weight:700;">${cnt}</span>
+                    </div>
+                </div>
+                <div class="music-duration">${item.duration}</div>
+                <div class="play-circle">
+                    <div style="width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-left:14px solid white;margin-left:3px;"></div>
+                </div>
+            </div>`;
+        });
+    });
+    document.getElementById('podcastList').innerHTML = html || '<p style="text-align:center;padding:40px;opacity:0.7;">موردی یافت نشد</p>';
+}
+
+// ==================== اشتراک ====================
+function playCourse(index) {
+    const item = courseData[index];
+    if (isAdmin || unlockedCategories[item.title]) {
+        playAudio(item);
+    } else {
+        showSubscriptionModal(item.title);
+    }
+}
+
+function showSubscriptionModal(category) {
+    window.currentUnlockCategory = category;
+    document.getElementById('modalContent').innerHTML = `
+        <h3 style="margin-bottom:15px;">🔐 نیاز به اشتراک دارید</h3>
+        <p style="margin-bottom:20px;opacity:0.9;">دسته‌بندی: <strong>${category}</strong></p>
+        <p style="margin:20px 0 10px;">کد اشتراک را وارد کنید:</p>
+        <input id="unlockCode" type="text" maxlength="10" placeholder="*****"
+               style="width:100%;padding:14px;border-radius:12px;border:none;text-align:center;font-size:28px;
+                      margin-bottom:14px;background:rgba(255,255,255,0.1);color:white;font-family:inherit;outline:none;letter-spacing:2px;">
+        <button onclick="checkUnlockCode()" class="modal-btn" style="background:#00ff88;color:black;font-weight:bold;">فعال‌سازی</button>
+        <button onclick="showPricingModal('${category}')" class="modal-btn" style="background:linear-gradient(135deg,rgba(255,215,0,0.18) 0%,rgba(200,120,255,0.18) 50%,rgba(255,149,0,0.18) 100%);backdrop-filter:blur(16px);border:1px solid rgba(255,215,0,0.45);color:#ffd700;font-weight:800;box-shadow:0 4px 18px rgba(255,200,0,0.2),inset 0 1px 0 rgba(255,255,255,0.12);border-radius:14px;letter-spacing:0.3px;">💳 تهیه کد اشتراک</button>
+        <button onclick="showSupportModal()" class="modal-btn" style="background:rgba(255,255,255,0.2);color:white;">ارتباط با پشتیبانی 🔓</button>
+        <button onclick="closeModal()" class="modal-btn" style="background:rgba(255,255,255,0.15);color:white;">بستن</button>`;
+    document.getElementById('subscriptionModal').classList.add('active');
+}
+
+function checkUnlockCode() {
+    const code = document.getElementById('unlockCode').value.trim();
+    const category = window.currentUnlockCategory;
+    if (code === ADMIN_CODE) {
+        isAdmin = true;
+        Object.keys(subscriptionCodes).forEach(c => unlockedCategories[c] = true);
+        updateAdminHeader();
+        document.getElementById('modalContent').innerHTML = `
+            <div style="font-size:70px;">👑</div>
+            <h3 style="color:#ffd700;margin:10px 0;">ورود ادمین</h3>
+            <p style="opacity:0.8;margin-bottom:18px;">دسترسی کامل به همه دوره‌ها فعال شد.</p>
+            <button onclick="closeModal()" class="modal-btn" style="background:#ff9500;color:#1a0033;font-weight:bold;">بستن</button>`;
+        if (currentTrackKey) renderComments(currentTrackKey);
+        return;
+    }
+    if (subscriptionCodes[category] && subscriptionCodes[category].includes(code)) {
+        unlockedCategories[category] = true;
+        document.getElementById('modalContent').innerHTML = `
+            <div style="font-size:70px;color:#00ff88;">✅</div>
+            <h3 style="color:#00ff88;">اشتراک فعال شد!</h3>
+            <p>حالا می‌توانید به این دوره دسترسی داشته باشید.</p>
+            <button onclick="closeModal()" class="modal-btn" style="background:#00ff88;color:black;font-weight:bold;margin-top:16px;">بستن</button>`;
+    } else {
+        document.getElementById('modalContent').innerHTML = `
+            <div style="font-size:70px;color:#ff3366;">✕</div>
+            <h3>کد اشتباه است</h3>
+            <p>لطفاً کد صحیح را وارد کنید یا با پشتیبانی تماس بگیرید.</p>
+            <button onclick="showSubscriptionModal('${category}')" class="modal-btn" style="background:rgba(255,255,255,0.2);color:white;margin-top:16px;">تلاش مجدد</button>
+            <button onclick="closeModal()" class="modal-btn" style="background:rgba(255,255,255,0.1);color:white;">بستن</button>`;
+    }
+}
+
+function closeModal() { document.getElementById('subscriptionModal').classList.remove('active'); }
+
+// ==================== modal قیمت‌ها ====================
+function showPricingModal(category) {
+    closeModal();
+    const allPricing = [
+        { name: "دوره کدهای پشت‌ پرده پول",        ...coursePricing["دوره کدهای پشت‌ پرده پول"] },
+        { name: "دوره کلیدِ پنهانِ ارتباطات",        ...coursePricing["دوره کلیدِ پنهانِ ارتباطات"] },
+        { name: "دوره خود باوری (اعتماد به نفس)",   ...coursePricing["دوره خود باوری (اعتماد به نفس)"] },
+        { name: "دوره چطور حالم خوب باشه ؟",        ...coursePricing["دوره چطور حالم خوب باشه ؟"] },
+        { name: "دوره پذیرش احساس لیاقت",           ...coursePricing["دوره پذیرش احساس لیاقت"] },
+        { name: "دوره نفوذ به لایه‌های پنهانِ ذهن",  ...coursePricing["دوره نفوذ به لایه‌های پنهانِ ذهن"] },
+    ];
+
+    let pricingHTML = allPricing.map(p => {
+        let box;
+        if (p.hasDiscount) {
+            box = `<div class="pricing-box">
+                <div class="course-name">📚 ${p.name}</div>
+                <div class="old-price">قیمت قبلی: ${p.old} تومان</div>
+                <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
+                    <div class="new-price">${p.new} تومان</div>
+                    <span class="discount-tag">با تخفیف</span>
+                </div>
+            </div>`;
+        } else {
+            box = `<div class="pricing-box">
+                <div class="course-name">📚 ${p.name}</div>
+                <div style="font-size:18px;font-weight:900;color:#ffd700;margin-top:4px;">${p.price} تومان</div>
+            </div>`;
+        }
+        const buyBtn = `<button class="buy-btn-individual" onclick="showCardModal('${p.name}')"> خرید ${p.name}</button>`;
+        return box + buyBtn;
+    }).join('');
+
+    document.getElementById('pricingContent').innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <h3 style="font-size:19px;font-weight:900;">💳 تهیه کد اشتراک</h3>
+            <button onclick="closePricingModal()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:999px;color:white;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">بستن</button>
+        </div>
+        ${pricingHTML}`;
+    document.getElementById('pricingModal').classList.add('active');
+}
+
+function closePricingModal() { document.getElementById('pricingModal').classList.remove('active'); }
+
+// ==================== modal شماره کارت ====================
+function buildPriceBoxHTML(category) {
+    const p = coursePricing[category];
+    if (!p) return '';
+    if (p.hasDiscount) {
+        return `<div class="pricing-box" style="margin-bottom:16px;">
+            <div class="course-name">📚 ${category}</div>
+            <div class="old-price">قیمت قبلی: ${p.old} تومان</div>
+            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
+                <div class="new-price">${p.new} تومان</div>
+                <span class="discount-tag">با تخفیف</span>
+            </div>
+        </div>`;
+    }
+    return `<div class="pricing-box" style="margin-bottom:16px;">
+        <div class="course-name">📚 ${category}</div>
+        <div style="font-size:18px;font-weight:900;color:#ffd700;margin-top:4px;">${p.price} تومان</div>
+    </div>`;
+}
+
+function showCardModal(category) {
+    closePricingModal();
+    window.currentPaymentCategory = category;
+    const priceBoxHTML = buildPriceBoxHTML(category);
+    document.getElementById('cardContent').innerHTML = `
+        <div class="card-modal-inner">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+                <h3 style="font-size:18px;font-weight:900;background:linear-gradient(135deg,#fff,#c9b8ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">اطلاعات پرداخت</h3>
+                <button onclick="closeCardModal()" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:999px;color:white;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;backdrop-filter:blur(10px);">بستن</button>
+            </div>
+
+            ${priceBoxHTML}
+
+            <p style="font-size:13.5px;line-height:1.7;color:rgba(255,255,255,0.75);text-align:right;margin-bottom:8px;">
+                مبلغ دوره انتخابی را به شماره کارت زیر واریز کنید:
+            </p>
+
+            <div class="card-number-box">
+                <span class="card-number-text">6219-8618-8152-9910</span>
+                <button class="copy-btn" onclick="copyCard()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                    کپی
+                </button>
+            </div>
+            <p style="font-size:12.5px;color:rgba(180,160,255,0.65);margin-bottom:20px;text-align:right;">به نام: سهیل باغبانی</p>
+
+            <p style="font-size:13.5px;line-height:1.75;color:rgba(255,255,255,0.75);text-align:right;margin-bottom:14px;">
+                پس از واریز، عکس رسید پرداختی را در یکی از پلتفرم‌های زیر برای پشتیبانی ارسال کنید تا کد در اختیار شما قرار گیرد:
+            </p>
+
+            <button class="platform-btn btn-telegram" onclick="window.open('https://t.me/Planlifeir','_blank')">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="">
+                تلگرام
+            </button>
+            <button class="platform-btn btn-whatsapp" onclick="window.open('https://wa.me/905437333582','_blank')">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111705.png" alt="">
+                واتس‌اپ
+            </button>
+            <button class="platform-btn btn-bale" onclick="window.open('https://ble.ir/planlifeir','_blank')">
+                <img src="https://cdn-icons-png.flaticon.com/512/5968/5968898.png" alt="">
+                بله
+            </button>
+        </div>`;
+    document.getElementById('cardModal').classList.add('active');
+}
+
+function closeCardModal() { document.getElementById('cardModal').classList.remove('active'); }
+
+function copyCard() {
+    navigator.clipboard.writeText('6219861881529910').then(() => {
+        const btn = document.querySelector('.copy-btn');
+        if (btn) { btn.textContent = '✓ کپی شد'; setTimeout(() => { btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg> کپی'; }, 2000); }
+    });
+}
+function showSupportModal() {
+    closeModal();
+    document.getElementById('modalContent').innerHTML = `
+        <div style="text-align:center;">
+            <h3 style="margin-bottom:22px;font-size:22px;">ارتباط با پشتیبانی</h3>
+            <div onclick="window.open('https://t.me/Planlifeir','_blank')" style="display:flex;align-items:center;gap:15px;background:rgba(255,255,255,0.08);padding:14px 18px;border-radius:16px;margin-bottom:12px;cursor:pointer;">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" style="width:42px;height:42px;border-radius:50%;object-fit:cover;">
+                <div style="text-align:right;flex:1;"><div style="font-weight:600;">تلگرام</div><div style="font-size:15px;opacity:0.85;">@Planlifeir</div></div>
+            </div>
+            <div onclick="window.open('https://instagram.com/mrravankav','_blank')" style="display:flex;align-items:center;gap:15px;background:rgba(255,255,255,0.08);padding:14px 18px;border-radius:16px;margin-bottom:12px;cursor:pointer;">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" style="width:42px;height:42px;border-radius:12px;object-fit:cover;">
+                <div style="text-align:right;flex:1;"><div style="font-weight:600;">اینستاگرام</div><div style="font-size:15px;opacity:0.85;">mrravankav</div></div>
+            </div>
+            <div onclick="window.open('https://wa.me/905437333582','_blank')" style="display:flex;align-items:center;gap:15px;background:rgba(255,255,255,0.08);padding:14px 18px;border-radius:16px;margin-bottom:12px;cursor:pointer;">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111705.png" style="width:42px;height:42px;border-radius:50%;object-fit:cover;">
+                <div style="text-align:right;flex:1;"><div style="font-weight:600;">واتس‌اپ</div><div style="font-size:15px;opacity:0.85;">00905437333582</div></div>
+            </div>
+            <div onclick="window.open('https://ble.ir/planlifeir','_blank')" style="display:flex;align-items:center;gap:15px;background:rgba(255,255,255,0.08);padding:14px 18px;border-radius:16px;margin-bottom:22px;cursor:pointer;">
+                <img src="https://cdn-icons-png.flaticon.com/512/5968/5968898.png" style="width:42px;height:42px;border-radius:50%;object-fit:cover;">
+                <div style="text-align:right;flex:1;"><div style="font-weight:600;">بله</div><div style="font-size:15px;opacity:0.85;">@planlifeir</div></div>
+            </div>
+            <button onclick="closeModal()" class="modal-btn" style="background:rgba(255,255,255,0.15);color:white;">بستن</button>
+        </div>`;
+    document.getElementById('subscriptionModal').classList.add('active');
+}
+
+// ==================== پلیر ====================
 function formatTime(s) { if (!s || isNaN(s)) return "0:00"; return `${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,'0')}`; }
+
 audio.addEventListener('timeupdate', () => {
     if (!audio.duration) return;
-    progressBarEl.style.width = `${(audio.currentTime/audio.duration)*100}%`;
+    progressBar.style.width = `${(audio.currentTime/audio.duration)*100}%`;
     currentTimeEl.textContent = formatTime(audio.currentTime);
     const mpb = document.getElementById('miniProgressBar');
     if (mpb) mpb.style.width = `${(audio.currentTime/audio.duration)*100}%`;
@@ -454,18 +965,17 @@ function setPlayIcons(playing) {
     statusEl.textContent = playing ? 'در حال پخش' : 'متوقف شده';
 }
 
-function playAudio(title, episode, src, cover, id) {
-    document.getElementById('npTitle').textContent    = title;
-    document.getElementById('npSubtitle').textContent = episode;
-    document.getElementById('npCover').src            = cover;
-    document.getElementById('miniTitle').textContent  = title;
-    document.getElementById('miniEp').textContent     = episode;
-    document.getElementById('miniCover').src          = cover;
-    currentPodcastId   = id;
-    currentTrackIndex  = podcastData.findIndex(item => item.id === id);
-    audio.src = src;
+function playAudio(item) {
+    currentTrackIndex = courseData.indexOf(item);
+    document.getElementById('npTitle').textContent = item.title;
+    document.getElementById('npSubtitle').textContent = `قسمت ${item.episode}`;
+    document.getElementById('npCover').src = item.cover;
+    document.getElementById('miniTitle').textContent = item.title;
+    document.getElementById('miniEp').textContent = `قسمت ${item.episode}`;
+    document.getElementById('miniCover').src = item.cover;
+    audio.src = item.src;
     audio.play().then(() => setPlayIcons(true)).catch(() => setPlayIcons(false));
-    loadComments(id);
+    loadComments(item.title, item.episode);
     expandPlayer();
 }
 
@@ -473,32 +983,35 @@ function expandPlayer() {
     const screen = document.getElementById('nowPlayingScreen');
     document.getElementById('miniPlayer').classList.remove('active');
     screen.style.transition = 'none';
-    screen.style.transform  = 'translateY(110%)';
+    screen.style.transform = 'translateY(110%)';
     screen.style.borderRadius = '22px 22px 0 0';
     screen.scrollTop = 0;
     screen.classList.add('active');
     requestAnimationFrame(() => requestAnimationFrame(() => {
-        screen.style.transition   = 'transform 0.52s cubic-bezier(0.32,0.72,0,1), border-radius 0.52s cubic-bezier(0.32,0.72,0,1)';
-        screen.style.transform    = 'translateY(0%)';
+        screen.style.transition = 'transform 0.52s cubic-bezier(0.32,0.72,0,1), border-radius 0.52s cubic-bezier(0.32,0.72,0,1)';
+        screen.style.transform = 'translateY(0%)';
         screen.style.borderRadius = '22px 22px 0 0';
     }));
 }
+
 function minimizePlayer() {
     const screen = document.getElementById('nowPlayingScreen');
-    screen.style.transition   = 'transform 0.48s cubic-bezier(0.32,0.72,0,1), border-radius 0.48s cubic-bezier(0.32,0.72,0,1)';
-    screen.style.transform    = 'translateY(110%)';
+    screen.style.transition = 'transform 0.48s cubic-bezier(0.32,0.72,0,1), border-radius 0.48s cubic-bezier(0.32,0.72,0,1)';
+    screen.style.transform = 'translateY(110%)';
     screen.style.borderRadius = '22px 22px 0 0';
     setTimeout(() => {
         screen.classList.remove('active');
-        screen.style.transform = screen.style.borderRadius = screen.style.transition = '';
+        screen.style.transform = '';
+        screen.style.borderRadius = '';
+        screen.style.transition = '';
         if (audio.src) document.getElementById('miniPlayer').classList.add('active');
     }, 480);
 }
+
 function killPlayer() {
     const screen = document.getElementById('nowPlayingScreen');
-    screen.style.transition   = 'transform 0.38s cubic-bezier(0.32,0.72,0,1), border-radius 0.38s ease';
-    screen.style.transform    = 'translateY(100%)';
-    screen.style.borderRadius = '28px 28px 0 0';
+    screen.style.transition = 'transform 0.38s cubic-bezier(0.32,0.72,0,1)';
+    screen.style.transform = 'translateY(100%)';
     setTimeout(() => {
         screen.classList.remove('active');
         screen.style.cssText = '';
@@ -507,71 +1020,24 @@ function killPlayer() {
     }, 380);
     setPlayIcons(false);
 }
+
 function miniTogglePlay() {
     if (audio.paused) { audio.play(); setPlayIcons(true); }
-    else              { audio.pause(); setPlayIcons(false); }
+    else { audio.pause(); setPlayIcons(false); }
 }
 function togglePlay() { miniTogglePlay(); }
 function seek(sec) { if (audio.src) audio.currentTime += sec; }
-function prevTrack() { if (currentTrackIndex > 0) { const p = podcastData[currentTrackIndex-1]; playAudio(p.title,p.episode,p.src,p.cover,p.id); } }
-function nextTrack() { if (currentTrackIndex < podcastData.length-1) { const n = podcastData[currentTrackIndex+1]; playAudio(n.title,n.episode,n.src,n.cover,n.id); } }
+function prevTrack() { if (currentTrackIndex > 0) playAudio(courseData[currentTrackIndex-1]); }
+function nextTrack() { if (currentTrackIndex < courseData.length-1) playAudio(courseData[currentTrackIndex+1]); }
 function closeNowPlaying() { minimizePlayer(); }
 function showMenu() { alert("منو (به زودی)"); }
 function goToHome() { window.location.href = "https://planlife.ir"; }
 
-// ---- Page init ----
-async function loadPodcastPage() {
-    const cats = ["موضوعات متفاوت","باورهای ثروت","عشق و روابط","تحول حال و احساس","رشد کسب و کار","اعتماد به نفس","احساس لیاقت",];
-    document.getElementById('categorySlides').innerHTML = cats.map(c =>
-        `<div onclick="selectPodcastCat('${c}')" style="min-width:140px;text-align:center;background:rgba(255,255,255,0.11);border-radius:18px;padding:10px;cursor:pointer;flex-shrink:0;">
-            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" style="width:130px;height:130px;border-radius:18px;object-fit:cover;">
-            <p style="margin-top:10px;font-size:14.5px;font-weight:600;">${c}</p>
-        </div>`
-    ).join('');
-
-    renderGrid(podcastData);
-
-    // Load real comment counts from Supabase in background
-    await refreshAllCardBadges();
-}
-
-function renderGrid(items) {
-    document.getElementById('podcastGrid').innerHTML = items.map(item => {
-        const cnt = toPersianNum((allComments[item.id]||[]).length);
-        const st  = item.title.replace(/'/g,"\\'"), se = item.episode.replace(/'/g,"\\'");
-        return `<div onclick="playAudio('${st}','${se}','${item.src}','${item.cover}',${item.id})"
-                     style="background:rgba(255,255,255,0.11);border-radius:22px;padding:12px;text-align:center;cursor:pointer;">
-            <div style="position:relative;">
-                <img src="${item.cover}" style="width:100%;aspect-ratio:1/1;border-radius:18px;object-fit:cover;">
-                <div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.62);backdrop-filter:blur(6px);border-radius:999px;padding:4px 9px;display:flex;align-items:center;gap:5px;">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#ff9500"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
-                    <span id="card-badge-${item.id}" style="font-size:12px;font-weight:700;color:white;">${cnt}</span>
-                </div>
-            </div>
-            <div style="font-size:15.5px;font-weight:600;margin:10px 0 6px;">${item.episode}<br><small style="opacity:0.75;font-weight:400;">${item.title}</small></div>
-            <div style="width:48px;height:48px;background:#ffd700;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;">
-                <div style="width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:16px solid #1a0033;margin-left:3px;"></div>
-            </div>
-        </div>`;
-    }).join('');
-}
-
-function selectPodcastCat(cat) {
-    document.getElementById('currentCategoryTitle').textContent = cat;
-    renderGrid(podcastData.filter(item => item.title === cat));
-}
-function scrollToForm() { setTimeout(() => { const f = document.getElementById('commentForm'); if (f) f.scrollIntoView({behavior:'smooth',block:'center'}); }, 320); }
-
-document.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && document.getElementById('loginOverlay').classList.contains('active')) doLogin();
-});
-
-// ---- Drag to minimize ----
+// ==================== swipe gesture ====================
 (function() {
     const screen = document.getElementById('nowPlayingScreen');
     let startY = 0, startX = 0, lastY = 0, velocity = 0, lastTime = 0;
     let intentDecided = false, isMinimizing = false;
-
     function onStart(e) {
         const t = e.touches[0];
         startY = t.clientY; startX = t.clientX;
@@ -580,8 +1046,8 @@ document.addEventListener('keydown', e => {
         screen.style.transition = 'none';
     }
     function onMove(e) {
-        const t   = e.touches[0];
-        const dy  = t.clientY - startY;
+        const t = e.touches[0];
+        const dy = t.clientY - startY;
         const adx = Math.abs(t.clientX - startX);
         const now = Date.now(), dt = now - lastTime;
         if (dt > 0) velocity = (t.clientY - lastY) / dt;
@@ -594,42 +1060,42 @@ document.addEventListener('keydown', e => {
         }
         if (!isMinimizing || dy <= 0) return;
         e.preventDefault();
-        const progress   = Math.min(dy / 380, 1);
+        const progress = Math.min(dy / 380, 1);
         const resistance = dy * (1 - progress * 0.3);
-        screen.style.transform    = `translateY(${resistance}px) scale(${1 - progress * 0.08})`;
+        screen.style.transform = `translateY(${resistance}px) scale(${1 - progress * 0.08})`;
         screen.style.borderRadius = `${progress * 28}px ${progress * 28}px 0 0`;
-        screen.style.opacity      = 1 - progress * 0.15;
+        screen.style.opacity = 1 - progress * 0.15;
     }
     function onEnd() {
         if (!isMinimizing) return;
         isMinimizing = false;
         screen.style.willChange = '';
         const dy = lastY - startY;
-        const shouldMin = velocity > 0.4 || dy > 130;
+        const shouldMinimize = velocity > 0.4 || dy > 130;
         screen.style.transition = 'transform 0.46s cubic-bezier(0.32,0.72,0,1), border-radius 0.46s cubic-bezier(0.32,0.72,0,1), opacity 0.46s ease';
-        if (shouldMin) {
-            screen.style.transform    = 'translateY(100%) scale(0.92)';
+        if (shouldMinimize) {
+            screen.style.transform = 'translateY(100%) scale(0.92)';
             screen.style.borderRadius = '28px 28px 0 0';
-            screen.style.opacity      = '0.6';
+            screen.style.opacity = '0.6';
             setTimeout(() => {
                 screen.classList.remove('active');
                 screen.style.cssText = '';
                 if (audio.src) document.getElementById('miniPlayer').classList.add('active');
             }, 460);
         } else {
-            screen.style.transform    = 'translateY(0) scale(1)';
+            screen.style.transform = 'translateY(0) scale(1)';
             screen.style.borderRadius = '0px';
-            screen.style.opacity      = '1';
-            setTimeout(() => { screen.style.transition = screen.style.transform = screen.style.borderRadius = screen.style.opacity = ''; }, 460);
+            screen.style.opacity = '1';
+            setTimeout(() => { screen.style.transition = ''; screen.style.transform = ''; screen.style.borderRadius = ''; screen.style.opacity = ''; }, 460);
         }
     }
     screen.addEventListener('touchstart', onStart, { passive: true });
-    screen.addEventListener('touchmove',  onMove,  { passive: false });
-    document.addEventListener('touchend',    onEnd);
+    screen.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend', onEnd);
     document.addEventListener('touchcancel', onEnd);
 })();
 
-window.onload = loadPodcastPage;
+window.onload = loadPage;
 </script>
 </body>
 </html>
