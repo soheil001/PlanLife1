@@ -206,81 +206,83 @@
     <audio id="mainAudio" style="display:none;"></audio>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 // ============================================================
-// Supabase Persistent Cloud Database Config
+// Supabase — persistent comment storage
 // ============================================================
-const SUPABASE_URL = 'https://hjzzvzxhrqovvducnxha.supabase.co';
-const SUPABASE_KEY = 'YOUR_ANON_KEY_HERE'; // <--- کلید کپی شده را دقیقاً اینجا پیست کنید
+const SUPABASE_URL      = 'https://hjzzvzxhrqovvducnxha.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
+const DELETE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/delete-comment`;
 
-let allComments = {};
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-async function fetchAllComments() {
+let allComments  = {};   // { podcastId: [ {id, name, text, created_at}, ... ] }
+
+async function fetchCommentsForPodcast(podcastId) {
     try {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/comments?select=*`, {
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-        });
-        if (!res.ok) return false;
-        const data = await res.json();
-        
-        allComments = {};
-        podcastData.forEach(p => { allComments[p.id] = []; });
-        
-        if (Array.isArray(data)) {
-            data.forEach(c => {
-                const pid = parseInt(c.podcast_id);
-                if (!allComments[pid]) allComments[pid] = [];
-                allComments[pid].push({
-                    id: c.id,
-                    name: c.name,
-                    text: c.text,
-                    time: new Date(c.created_at).toLocaleDateString('fa-IR')
-                });
-            });
-        }
+        const { data, error } = await supabaseClient
+            .from('comments')
+            .select('*')
+            .eq('podcast_id', podcastId)
+            .order('created_at', { ascending: false });
+        if (error) throw error;
+        allComments[podcastId] = data || [];
         return true;
-    } catch(e) {
-        console.warn('Comments fetch error:', e.message);
-        return false;
-    }
+    } catch(e) { console.warn('Supabase fetch:', e); return false; }
 }
 
-async function pushAllComments(podcastId, comment) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/comments`, {
-        method: 'POST',
-        headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json',
-            'Prefer': 'return=representation'
-        },
-        body: JSON.stringify({
-            podcast_id: String(podcastId),
-            name: comment.name,
-            text: comment.text
-        })
-    });
-    if (!res.ok) throw new Error('status ' + res.status);
-    return { ok: true };
+async function fetchAllCommentCounts() {
+    try {
+        const { data, error } = await supabaseClient
+            .from('comments')
+            .select('podcast_id');
+        if (error) throw error;
+        const counts = {};
+        (data || []).forEach(row => {
+            counts[row.podcast_id] = (counts[row.podcast_id] || 0) + 1;
+        });
+        return counts;
+    } catch(e) { console.warn('Supabase counts fetch:', e); return {}; }
 }
 
-async function removeCommentRemote(podcastId, commentId) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/comments?id=eq.${commentId}`, {
-        method: 'DELETE',
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-    });
-    if (!res.ok) throw new Error('status ' + res.status);
-    return { ok: true };
+async function insertComment(podcastId, name, text) {
+    try {
+        const { data, error } = await supabaseClient
+            .from('comments')
+            .insert([{ podcast_id: podcastId, name, text }])
+            .select();
+        if (error) throw error;
+        return data && data[0];
+    } catch(e) { console.warn('Supabase insert:', e); return null; }
 }
+
+async function deleteCommentRemote(commentId, adminPassword) {
+    try {
+        const res = await fetch(DELETE_FUNCTION_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'apikey': SUPABASE_ANON_KEY
+            },
+            body: JSON.stringify({ commentId, adminPassword })
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || ('HTTP ' + res.status));
+        return true;
+    } catch(e) { console.warn('Edge function delete:', e); alert('خطا در حذف نظر: ' + e.message); return false; }
+}
+
 // ============================================================
-
 const podcastData = [
+    {id:0,title:"موضوعات متفاوت",episode:"کد نویسی ذهن",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/codenevisi/Codenevisizehn_free.m4a",cover:"http://fs3.centraldnserver.com/~planlife/pics/Podcastfree/IMG_2187.jpeg"},
     {id:1,title:"باورهای ثروت",episode:"نشانه های ثروت",src:"https://res.cloudinary.com/dfthbclzi/video/upload/v1780854988/Bavar_free_w9yucc.m4a",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780855363/IMG_1658_gwxqtm.jpg"},
     {id:2,title:"عشق و روابط",episode:"وابسته ی ورود به رابطه",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Vabaste_rabete.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
     {id:3,title:"رشد کسب و کار",episode:"برای کارت ارزش قائل نیستی",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Nadashtan_bavar_be_arzesh.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
     {id:4,title:"باورهای ثروت",episode:"فقط با سختی کشیدن میشود ؟",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/servat/SakhTi keshidan - planlife Free.m4a",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449575/IMG_1063_vmk59h.jpg"},
     {id:5,title:"کدگذاری ذهنی",episode:"موضوعات متفاوت",src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779530272/Khasis_bodan_-_planLife.ir_Free_sv3vbr.m4a",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449557/IMG_1064_uro694.jpg"},
-    {id:24,title:"باورهای ثروت",episode:"خسیس بودن در زندگی",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/servat/Khasis bodan - planLife.ir Free.m4a",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449557/IMG_1064_uro694.jpg"},
+    {id:5,title:"باورهای ثروت",episode:"خسیس بودن در زندگی",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/servat/Khasis bodan - planLife.ir Free.m4a",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449557/IMG_1064_uro694.jpg"},
     {id:6,title:"رشد کسب و کار",episode:"کمال گرایی افراطی",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Kamalgaraei.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
     {id:23,title:"باورهای ثروت",episode:"نشانه های ثروت",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/servat/Neshane - servat - Free.m4a",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449538/IMG_1059_eqlr5g.jpg"},
     {id:7,title:"رشد کسب و کار",episode:"ترس از قضاوت دیگران",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Tars_az_ghezavat.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
@@ -303,6 +305,7 @@ const podcastData = [
 
 let currentTrackIndex = 0, currentPodcastId = null, isAdmin = false;
 const ADMIN_USER = 'Admin', ADMIN_PASS = '12345';
+const ADMIN_API_PASSWORD = 'So@21072933@'; // sent to the delete-comment Edge Function for verification
 const audio = document.getElementById('mainAudio');
 const progressBarEl = document.getElementById('progressBar');
 const currentTimeEl = document.getElementById('currentTime');
@@ -325,10 +328,10 @@ function doLogin() {
     const p = document.getElementById('loginPassword').value;
     if (u === ADMIN_USER && p === ADMIN_PASS) {
         isAdmin = true; closeLogin(); updateAdminHeader();
-        if (currentPodcastId) renderComments(currentPodcastId);
+        if (currentPodcastId !== null) renderComments(currentPodcastId);
     } else { document.getElementById('loginError').style.display = 'block'; }
 }
-function doLogout() { isAdmin = false; updateAdminHeader(); if (currentPodcastId) renderComments(currentPodcastId); }
+function doLogout() { isAdmin = false; updateAdminHeader(); if (currentPodcastId !== null) renderComments(currentPodcastId); }
 function updateAdminHeader() {
     const area = document.getElementById('headerAuthArea');
     if (isAdmin) {
@@ -339,53 +342,49 @@ function updateAdminHeader() {
 // ---- Comments ----
 function toPersianNum(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
 function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function formatCommentTime(iso) {
+    const d = new Date(iso);
+    return `${d.toLocaleDateString('fa-IR',{year:'numeric',month:'short',day:'numeric'})} • ${d.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`;
+}
 
 async function loadComments(id) {
     document.getElementById('commentsList').innerHTML = '<div class="loading-comments">⏳ در حال بارگذاری نظرات...</div>';
-    document.getElementById('commentCount').textContent = '۰';
-    
-    await fetchAllComments().catch(err => console.log('Fetch error ignored safely.'));
-    
-    if (!allComments[id]) allComments[id] = [];
+    document.getElementById('commentCount').textContent = '...';
+    await fetchCommentsForPodcast(id);
     renderComments(id);
+    refreshAllCardBadges();
 }
 
 function renderComments(id) {
-    try {
-        const comments = allComments[id] || [];
-        const list     = document.getElementById('commentsList');
-        const countEl  = document.getElementById('commentCount');
-        const coverCnt = document.getElementById('coverCommentCount');
-        if (!list || !countEl) return;
-        
-        countEl.textContent = toPersianNum(comments.length);
-        if (coverCnt) coverCnt.textContent = toPersianNum(comments.length);
-        list.innerHTML = '';
-        
-        if (comments.length === 0) {
-            list.innerHTML = '<p style="opacity:0.6;text-align:center;padding:22px 10px;font-size:14px;line-height:1.6;">هنوز نظری ثبت نشده.<br>اولین نفر باشید!</p>';
-            return;
-        }
-        comments.forEach(c => {
-            const div = document.createElement('div');
-            div.style.cssText = 'background:rgba(255,255,255,0.085);border-radius:14px;padding:13px 15px;margin-bottom:9px;border:1px solid rgba(255,255,255,0.06);';
-            div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
-                <strong style="color:#ffd700;font-size:14.5px;">${escapeHtml(c.name)}</strong>
-                <div style="display:flex;align-items:center;gap:8px;">
-                    <span style="font-size:11.5px;opacity:0.55;white-space:nowrap;">${c.time}</span>
-                    ${isAdmin ? `<button class="delete-btn" onclick="deleteComment(${id},${c.id})">🗑 حذف</button>` : ''}
-                </div>
-            </div>
-            <p style="font-size:14.8px;line-height:1.55;margin:0;color:#f0f0f0;">${escapeHtml(c.text)}</p>`;
-            list.appendChild(div);
-        });
-    } catch (e) {
-        console.error('Error rendering comments safely ignored:', e);
+    const comments = allComments[id] || [];
+    const list     = document.getElementById('commentsList');
+    const countEl  = document.getElementById('commentCount');
+    const coverCnt = document.getElementById('coverCommentCount');
+    if (!list || !countEl) return;
+    countEl.textContent = comments.length;
+    if (coverCnt) coverCnt.textContent = toPersianNum(comments.length);
+    list.innerHTML = '';
+    if (comments.length === 0) {
+        list.innerHTML = '<p style="opacity:0.6;text-align:center;padding:22px 10px;font-size:14px;line-height:1.6;">هنوز نظری ثبت نشده.<br>اولین نفر باشید!</p>';
+        return;
     }
+    comments.forEach(c => {
+        const div = document.createElement('div');
+        div.style.cssText = 'background:rgba(255,255,255,0.085);border-radius:14px;padding:13px 15px;margin-bottom:9px;border:1px solid rgba(255,255,255,0.06);';
+        div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+            <strong style="color:#ffd700;font-size:14.5px;">${escapeHtml(c.name)}</strong>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:11.5px;opacity:0.55;white-space:nowrap;">${formatCommentTime(c.created_at)}</span>
+                ${isAdmin ? `<button class="delete-btn" onclick="deleteComment(${id},${c.id})">🗑 حذف</button>` : ''}
+            </div>
+        </div>
+        <p style="font-size:14.8px;line-height:1.55;margin:0;color:#f0f0f0;">${escapeHtml(c.text)}</p>`;
+        list.appendChild(div);
+    });
 }
 
 async function addComment() {
-    if (!currentPodcastId) return;
+    if (currentPodcastId === null) return;
     const name = document.getElementById('commentName').value.trim() || 'ناشناس';
     const text = document.getElementById('commentText').value.trim();
     if (!text) { alert('لطفاً متن نظر را وارد کنید.'); return; }
@@ -394,53 +393,43 @@ async function addComment() {
     btn.textContent = '⏳ در حال ارسال...';
     btn.disabled = true;
 
-    const now = new Date();
-    const comment = {
-        name, text,
-        time: `${now.toLocaleDateString('fa-IR')}`
-    };
-
-    try {
-        const responseData = await pushAllComments(currentPodcastId, comment);
-        if (responseData && responseData.ok) {
-            await fetchAllComments();
-            renderComments(currentPodcastId);
-            updateCardBadge(currentPodcastId);
-            document.getElementById('commentText').value = '';
-            document.getElementById('commentName').value = '';
-        } else {
-            alert('درخواست مسدود شد.');
-        }
-    } catch (e) {
-        alert('ارسال نظر با خطا مواجه شد.');
-    } finally {
-        btn.textContent = 'ارسال نظر';
-        btn.disabled = false;
+    const inserted = await insertComment(currentPodcastId, name, text);
+    if (inserted) {
+        if (!allComments[currentPodcastId]) allComments[currentPodcastId] = [];
+        allComments[currentPodcastId].unshift(inserted);
+        renderComments(currentPodcastId);
+        refreshAllCardBadges();
+        document.getElementById('commentText').value = '';
+        document.getElementById('commentName').value = '';
+    } else {
+        alert('ارسال نظر با خطا مواجه شد. لطفاً دوباره تلاش کنید.');
     }
+
+    btn.textContent = 'ارسال نظر';
+    btn.disabled = false;
 }
 
 async function deleteComment(podcastId, commentId) {
     if (!isAdmin || !confirm('این نظر حذف شود؟')) return;
-    try {
-        await removeCommentRemote(podcastId, commentId);
-        await fetchAllComments();
-        renderComments(podcastId);
-        updateCardBadge(podcastId);
-    } catch (e) {
-        alert('حذف نظر با خطا مواجه شد.');
+    const ok = await deleteCommentRemote(commentId, ADMIN_API_PASSWORD);
+    if (!ok) return;
+    allComments[podcastId] = (allComments[podcastId] || []).filter(c => c.id !== commentId);
+    renderComments(podcastId);
+    refreshAllCardBadges();
+}
+
+function updateCardBadge(id, count) {
+    const badge = document.getElementById(`card-badge-${id}`);
+    if (badge) badge.textContent = toPersianNum(count);
+    if (currentPodcastId === id) {
+        const cc = document.getElementById('coverCommentCount'); if (cc) cc.textContent = toPersianNum(count);
+        const mc = document.getElementById('commentCount');      if (mc) mc.textContent = count;
     }
 }
 
-function updateCardBadge(id) {
-    try {
-        const cnt = (allComments[id] || []).length;
-        const badge = document.getElementById(`card-badge-${id}`);
-        if (badge) badge.textContent = toPersianNum(cnt);
-        if (currentPodcastId === id) {
-            const cc = document.getElementById('coverCommentCount'); if (cc) cc.textContent = toPersianNum(cnt);
-            const mc = document.getElementById('commentCount');      if (mc) mc.textContent = toPersianNum(cnt);
-        }
-    } catch (e) {}
+async function refreshAllCardBadges() {
+    const counts = await fetchAllCommentCounts();
+    podcastData.forEach(item => updateCardBadge(item.id, counts[item.id] || 0));
 }
 
 // ---- Audio ----
@@ -480,7 +469,6 @@ function playAudio(title, episode, src, cover, id) {
     expandPlayer();
 }
 
-// ---- Window Controllers ----
 function expandPlayer() {
     const screen = document.getElementById('nowPlayingScreen');
     document.getElementById('miniPlayer').classList.remove('active');
@@ -532,7 +520,7 @@ function showMenu() { alert("منو (به زودی)"); }
 function goToHome() { window.location.href = "https://planlife.ir"; }
 
 // ---- Page init ----
-function loadPodcastPage() {
+async function loadPodcastPage() {
     const cats = ["موضوعات متفاوت","باورهای ثروت","عشق و روابط","تحول حال و احساس","رشد کسب و کار","اعتماد به نفس","احساس لیاقت",];
     document.getElementById('categorySlides').innerHTML = cats.map(c =>
         `<div onclick="selectPodcastCat('${c}')" style="min-width:140px;text-align:center;background:rgba(255,255,255,0.11);border-radius:18px;padding:10px;cursor:pointer;flex-shrink:0;">
@@ -541,16 +529,10 @@ function loadPodcastPage() {
         </div>`
     ).join('');
 
-    podcastData.forEach(item => { allComments[item.id] = []; });
     renderGrid(podcastData);
 
-    fetchAllComments()
-        .then(() => {
-            podcastData.forEach(item => updateCardBadge(item.id));
-        })
-        .catch(err => {
-            console.log("Initial comment connection failed.");
-        });
+    // Load real comment counts from Supabase in background
+    await refreshAllCardBadges();
 }
 
 function renderGrid(items) {
@@ -647,7 +629,7 @@ document.addEventListener('keydown', e => {
     document.addEventListener('touchcancel', onEnd);
 })();
 
-window.addEventListener('DOMContentLoaded', loadPodcastPage);
+window.onload = loadPodcastPage;
 </script>
 </body>
 </html>
