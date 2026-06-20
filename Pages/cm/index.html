@@ -208,52 +208,72 @@
 
 <script>
 // ============================================================
-// Backend PHP — persistent comment storage
+// Supabase Persistent Cloud Database Config
 // ============================================================
-const API_URL = 'https://dl.planlife.ir/comments.php';
+const SUPABASE_URL = 'https://hjzzvzxhrqovvducnxha.supabase.co';
+const SUPABASE_KEY = 'YOUR_ANON_KEY_HERE'; // <--- کلید کپی شده را دقیقاً اینجا پیست کنید
 
 let allComments = {};
 
 async function fetchAllComments() {
     try {
-        const res = await fetch(API_URL, { cache: 'no-store' });
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/comments?select=*`, {
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
         if (!res.ok) return false;
         const data = await res.json();
-        if (data && typeof data === 'object') {
-            allComments = data;
-            return true;
+        
+        allComments = {};
+        podcastData.forEach(p => { allComments[p.id] = []; });
+        
+        if (Array.isArray(data)) {
+            data.forEach(c => {
+                const pid = parseInt(c.podcast_id);
+                if (!allComments[pid]) allComments[pid] = [];
+                allComments[pid].push({
+                    id: c.id,
+                    name: c.name,
+                    text: c.text,
+                    time: new Date(c.created_at).toLocaleDateString('fa-IR')
+                });
+            });
         }
+        return true;
+    } catch(e) {
+        console.warn('Comments fetch error:', e.message);
         return false;
-    } catch(e) { 
-        console.warn('Comments fetch skipped or blocked:', e.message); 
-        return false; 
     }
 }
 
-// تغییر یافته: جهت سازگاری کامل با فایروال و جلوگیری از بلاک شدن متد POST
 async function pushAllComments(podcastId, comment) {
-    const formData = new FormData();
-    formData.append('podcastId', String(podcastId));
-    formData.append('comment', JSON.stringify(comment));
-
-    const res = await fetch(API_URL, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/comments`, {
         method: 'POST',
-        body: formData
+        headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+        },
+        body: JSON.stringify({
+            podcast_id: String(podcastId),
+            name: comment.name,
+            text: comment.text
+        })
     });
     if (!res.ok) throw new Error('status ' + res.status);
-    return res.json();
+    return { ok: true };
 }
 
 async function removeCommentRemote(podcastId, commentId) {
-    const res = await fetch(API_URL, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/comments?id=eq.${commentId}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ podcastId: String(podcastId), commentId, adminPass: '12345' })
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
     if (!res.ok) throw new Error('status ' + res.status);
-    return res.json();
+    return { ok: true };
 }
 // ============================================================
+
 const podcastData = [
     {id:1,title:"باورهای ثروت",episode:"نشانه های ثروت",src:"https://res.cloudinary.com/dfthbclzi/video/upload/v1780854988/Bavar_free_w9yucc.m4a",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780855363/IMG_1658_gwxqtm.jpg"},
     {id:2,title:"عشق و روابط",episode:"وابسته ی ورود به رابطه",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Vabaste_rabete.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
@@ -364,7 +384,6 @@ function renderComments(id) {
     }
 }
 
-// تغییر یافته: ارسال به صورت FormData جهت فریب فایروال و کاهش حساسیت امنیتی هاست
 async function addComment() {
     if (!currentPodcastId) return;
     const name = document.getElementById('commentName').value.trim() || 'ناشناس';
@@ -377,25 +396,24 @@ async function addComment() {
 
     const now = new Date();
     const comment = {
-        id: Date.now(), name, text,
-        time: `${now.toLocaleDateString('fa-IR',{year:'numeric',month:'short',day:'numeric'})} • ${now.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`
+        name, text,
+        time: `${now.toLocaleDateString('fa-IR')}`
     };
 
     try {
         const responseData = await pushAllComments(currentPodcastId, comment);
         if (responseData && responseData.ok) {
-            if (!allComments[currentPodcastId]) allComments[currentPodcastId] = [];
-            allComments[currentPodcastId].unshift(comment);
+            await fetchAllComments();
             renderComments(currentPodcastId);
             updateCardBadge(currentPodcastId);
             document.getElementById('commentText').value = '';
             document.getElementById('commentName').value = '';
         } else {
-            alert('درخواست مسدود شد. احتمالاً فایروال مانع ارسال شده است.');
+            alert('درخواست مسدود شد.');
         }
     } catch (e) {
-        alert('ارسال نظر با خطا مواجه شد. در صورت روشن بودن VPN آن را خاموش کرده و مجدد امتحان کنید.');
-    } finaly {
+        alert('ارسال نظر با خطا مواجه شد.');
+    } finally {
         btn.textContent = 'ارسال نظر';
         btn.disabled = false;
     }
@@ -405,7 +423,7 @@ async function deleteComment(podcastId, commentId) {
     if (!isAdmin || !confirm('این نظر حذف شود؟')) return;
     try {
         await removeCommentRemote(podcastId, commentId);
-        allComments[podcastId] = (allComments[podcastId] || []).filter(c => c.id !== commentId);
+        await fetchAllComments();
         renderComments(podcastId);
         updateCardBadge(podcastId);
     } catch (e) {
@@ -531,7 +549,7 @@ function loadPodcastPage() {
             podcastData.forEach(item => updateCardBadge(item.id));
         })
         .catch(err => {
-            console.log("Initial comment connection failed, keeping grid safe without counts.");
+            console.log("Initial comment connection failed.");
         });
 }
 
