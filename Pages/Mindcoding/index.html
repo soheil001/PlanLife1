@@ -43,7 +43,7 @@ body::after {
     position: fixed; inset: 0; z-index: 0; opacity: 0.06;
 }
 
-/* Brain Scanner Container */
+/* ============ Brain Scanner Container ============ */
 #brain-scanner {
     position: fixed;
     top: 50%;
@@ -56,7 +56,7 @@ body::after {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
+    gap: 22px;
 }
 
 #brain-scanner.active {
@@ -65,18 +65,31 @@ body::after {
 
 #scan-status {
     color: #00ff41;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: bold;
     text-shadow: 0 0 15px #00ff41;
     font-family: 'Vazirmatn', sans-serif;
     direction: rtl;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
+}
+
+#scan-readout {
+    display: flex;
+    gap: 18px;
+    font-size: 10px;
+    color: #00ff4188;
+    letter-spacing: 1px;
+}
+
+#scan-readout span b {
+    color: #00ff41;
+    text-shadow: 0 0 6px #00ff41;
 }
 
 #brain-container {
     position: relative;
-    width: 280px;
-    height: 280px;
+    width: 300px;
+    height: 300px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -85,15 +98,96 @@ body::after {
 #brain-svg {
     width: 100%;
     height: 100%;
-    filter: drop-shadow(0 0 30px #00ff4155);
+    filter: drop-shadow(0 0 25px #00ff4166) drop-shadow(0 0 50px #00ff4122);
 }
 
-.brain-path {
+/* Realistic brain silhouette (filled, organic) */
+.brain-fill {
+    fill: #021a07;
+    stroke: none;
+}
+
+.brain-outline {
     fill: none;
     stroke: #00ff41;
-    stroke-width: 2;
+    stroke-width: 1.6;
     stroke-linecap: round;
     stroke-linejoin: round;
+    opacity: 0.95;
+}
+
+.brain-sulci {
+    fill: none;
+    stroke: #00ff41;
+    stroke-width: 0.9;
+    stroke-linecap: round;
+    opacity: 0.55;
+}
+
+/* Hacker wireframe mesh laid over the organic brain */
+.brain-wiremesh {
+    fill: none;
+    stroke: #00ff41;
+    stroke-width: 0.45;
+    opacity: 0.4;
+}
+
+.brain-node {
+    fill: #00ff41;
+    opacity: 0.85;
+}
+
+.brain-node-pulse {
+    fill: none;
+    stroke: #00ff41;
+    stroke-width: 1;
+}
+
+/* Hex/data overlay tags around the brain */
+.brain-tag {
+    font-family: 'Share Tech Mono', monospace;
+    fill: #00ff41;
+    opacity: 0.5;
+}
+
+@keyframes node-blink {
+    0%, 100% { opacity: 0.25; }
+    50% { opacity: 1; }
+}
+
+@keyframes mesh-flicker {
+    0%, 100% { opacity: 0.25; }
+    45% { opacity: 0.55; }
+    50% { opacity: 0.15; }
+    55% { opacity: 0.5; }
+}
+
+@keyframes rotate-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes rotate-slow-rev {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+}
+
+#brain-ring-outer {
+    position: absolute;
+    width: 112%;
+    height: 112%;
+    border: 1px dashed #00ff4144;
+    border-radius: 50%;
+    animation: rotate-slow 18s linear infinite;
+}
+
+#brain-ring-inner {
+    position: absolute;
+    width: 122%;
+    height: 122%;
+    border: 1px dotted #00ff4133;
+    border-radius: 50%;
+    animation: rotate-slow-rev 26s linear infinite;
 }
 
 .brain-scan-line {
@@ -104,7 +198,7 @@ body::after {
     box-shadow: 0 0 15px #00ff41;
     left: 0;
     opacity: 0;
-    animation: scan-down 3s ease-in-out infinite;
+    animation: scan-down 2.4s ease-in-out infinite;
 }
 
 @keyframes scan-down {
@@ -202,6 +296,18 @@ body::after {
     margin-top: 3px; direction: rtl;
 }
 
+.header-prompt .prompt-keys {
+    font-size: 11px; color: #00ff4177;
+    font-family: 'Vazirmatn', sans-serif;
+    margin-top: 7px; direction: rtl;
+    line-height: 1.9;
+}
+
+.header-prompt .prompt-keys b {
+    color: #00ff41cc;
+    font-weight: 700;
+}
+
 .terminal-body {
     flex: 1;
     background: #020802;
@@ -237,6 +343,8 @@ body::after {
 .line.result-line .text { color: #00ff41; font-family: 'Vazirmatn', sans-serif; font-size: 13px; line-height: 2; direction: rtl; font-weight: 700; text-shadow: 0 0 10px #00ff4177; }
 .line.final-line .text { color: #ffd700; font-family: 'Vazirmatn', sans-serif; font-size: 13px; line-height: 2; direction: rtl; font-weight: 900; text-shadow: 0 0 12px #ffd70088; }
 .line.link-line .text { color: #00ffff; text-decoration: underline; cursor: pointer; text-shadow: 0 0 8px #00ffff88; }
+.line.summary-line .text { color: #b9ffcf; font-family: 'Vazirmatn', sans-serif; font-size: 12.5px; line-height: 2; direction: rtl; }
+.line.summary-title .text { color: #ffd700; font-family: 'Vazirmatn', sans-serif; font-size: 13px; line-height: 2; direction: rtl; font-weight: 900; }
 
 .terminal-input-area {
     background: #030f03;
@@ -359,6 +467,16 @@ body::after {
     color: #ff4444;
     font-family: monospace;
 }
+
+.summary-box {
+    border: 1px solid #ffd70055;
+    background: #ffd70008;
+    padding: 12px 16px;
+    margin: 6px 0;
+    border-radius: 4px;
+    animation: fadein 0.2s ease both;
+    box-shadow: 0 0 14px #ffd70022;
+}
 </style>
 </head>
 <body>
@@ -370,30 +488,133 @@ body::after {
 <div id="brain-scanner">
     <div id="scan-status">در حال اسکن ذهن شما...</div>
     <div id="brain-container">
+        <div id="brain-ring-outer"></div>
+        <div id="brain-ring-inner"></div>
         <div class="brain-glow"></div>
-        <svg id="brain-svg" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
-            <!-- Brain outline -->
-            <path class="brain-path" d="M 50 100 Q 40 80 50 60 Q 70 40 100 35 Q 130 40 150 60 Q 160 80 150 100"/>
-            <path class="brain-path" d="M 50 100 Q 45 120 50 140 Q 70 160 100 165 Q 130 160 150 140 Q 155 120 150 100"/>
-            <path class="brain-path" d="M 70 70 Q 85 65 100 65 Q 115 65 130 70"/>
-            <path class="brain-path" d="M 70 85 Q 85 82 100 82 Q 115 82 130 85"/>
-            <path class="brain-path" d="M 70 100 Q 85 98 100 98 Q 115 98 130 100"/>
-            <path class="brain-path" d="M 70 115 Q 85 112 100 112 Q 115 112 130 115"/>
-            <path class="brain-path" d="M 70 130 Q 85 128 100 128 Q 115 128 130 130"/>
-            <path class="brain-path" d="M 60 145 Q 100 148 140 145"/>
-            <!-- Brain hemispheres -->
-            <path class="brain-path" d="M 100 70 L 100 130"/>
-            <!-- Neurons/connections -->
-            <circle cx="85" cy="90" r="3" fill="#00ff41"/>
-            <circle cx="115" cy="90" r="3" fill="#00ff41"/>
-            <circle cx="85" cy="110" r="3" fill="#00ff41"/>
-            <circle cx="115" cy="110" r="3" fill="#00ff41"/>
-            <path class="brain-path" d="M 85 90 L 115 90"/>
-            <path class="brain-path" d="M 85 110 L 115 110"/>
-            <path class="brain-path" d="M 85 90 L 115 110"/>
-            <path class="brain-path" d="M 115 90 L 85 110"/>
+
+        <svg id="brain-svg" viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <clipPath id="brain-clip">
+                    <path d="M 108 14
+                             C 90 6, 68 8, 54 20
+                             C 48 14, 36 16, 30 26
+                             C 18 28, 10 40, 13 52
+                             C 4 60, 2 76, 10 87
+                             C 3 98, 5 114, 16 122
+                             C 12 136, 20 150, 33 154
+                             C 33 168, 46 180, 61 179
+                             C 66 190, 82 195, 94 188
+                             C 102 194, 112 194, 119 188
+                             C 130 195, 146 191, 152 180
+                             C 167 182, 180 171, 181 157
+                             C 195 152, 203 138, 198 124
+                             C 209 116, 211 100, 203 89
+                             C 211 78, 209 62, 198 53
+                             C 201 41, 193 28, 181 25
+                             C 177 14, 165 7, 153 11
+                             C 144 4, 130 2, 120 9
+                             C 116 6, 112 6, 108 14 Z"/>
+                </clipPath>
+            </defs>
+
+            <!-- organic filled brain silhouette -->
+            <path class="brain-fill" d="M 108 14
+                             C 90 6, 68 8, 54 20
+                             C 48 14, 36 16, 30 26
+                             C 18 28, 10 40, 13 52
+                             C 4 60, 2 76, 10 87
+                             C 3 98, 5 114, 16 122
+                             C 12 136, 20 150, 33 154
+                             C 33 168, 46 180, 61 179
+                             C 66 190, 82 195, 94 188
+                             C 102 194, 112 194, 119 188
+                             C 130 195, 146 191, 152 180
+                             C 167 182, 180 171, 181 157
+                             C 195 152, 203 138, 198 124
+                             C 209 116, 211 100, 203 89
+                             C 211 78, 209 62, 198 53
+                             C 201 41, 193 28, 181 25
+                             C 177 14, 165 7, 153 11
+                             C 144 4, 130 2, 120 9
+                             C 116 6, 112 6, 108 14 Z"/>
+
+            <!-- wireframe hacker mesh clipped to brain shape -->
+            <g clip-path="url(#brain-clip)">
+                <g class="brain-wiremesh" id="mesh-group">
+                    <!-- generated by JS: grid lines + triangulated mesh -->
+                </g>
+            </g>
+
+            <!-- outer organic outline -->
+            <path class="brain-outline" d="M 108 14
+                             C 90 6, 68 8, 54 20
+                             C 48 14, 36 16, 30 26
+                             C 18 28, 10 40, 13 52
+                             C 4 60, 2 76, 10 87
+                             C 3 98, 5 114, 16 122
+                             C 12 136, 20 150, 33 154
+                             C 33 168, 46 180, 61 179
+                             C 66 190, 82 195, 94 188
+                             C 102 194, 112 194, 119 188
+                             C 130 195, 146 191, 152 180
+                             C 167 182, 180 171, 181 157
+                             C 195 152, 203 138, 198 124
+                             C 209 116, 211 100, 203 89
+                             C 211 78, 209 62, 198 53
+                             C 201 41, 193 28, 181 25
+                             C 177 14, 165 7, 153 11
+                             C 144 4, 130 2, 120 9
+                             C 116 6, 112 6, 108 14 Z"/>
+
+            <!-- central longitudinal fissure -->
+            <path class="brain-outline" d="M 106 9 C 100 50, 104 100, 106 191" style="stroke-width:1.3;"/>
+
+            <!-- gyri / sulci texture — left hemisphere (organic folds, following real cortical curvature) -->
+            <path class="brain-sulci" d="M 38 28 C 50 22, 64 24, 74 32"/>
+            <path class="brain-sulci" d="M 24 44 C 38 38, 54 40, 66 48"/>
+            <path class="brain-sulci" d="M 16 62 C 32 56, 48 58, 62 66"/>
+            <path class="brain-sulci" d="M 12 82 C 28 76, 46 78, 60 86"/>
+            <path class="brain-sulci" d="M 12 102 C 28 96, 46 98, 60 106"/>
+            <path class="brain-sulci" d="M 18 122 C 32 117, 48 119, 60 126"/>
+            <path class="brain-sulci" d="M 26 140 C 38 136, 50 138, 60 144"/>
+            <path class="brain-sulci" d="M 40 158 C 50 154, 60 156, 68 162"/>
+            <path class="brain-sulci" d="M 56 174 C 64 171, 74 172, 80 177"/>
+
+            <!-- gyri / sulci texture — right hemisphere (mirrored organic folds) -->
+            <path class="brain-sulci" d="M 178 28 C 166 22, 152 24, 142 32"/>
+            <path class="brain-sulci" d="M 192 44 C 178 38, 162 40, 150 48"/>
+            <path class="brain-sulci" d="M 200 62 C 184 56, 168 58, 154 66"/>
+            <path class="brain-sulci" d="M 204 82 C 188 76, 170 78, 156 86"/>
+            <path class="brain-sulci" d="M 204 102 C 188 96, 170 98, 156 106"/>
+            <path class="brain-sulci" d="M 198 122 C 184 117, 168 119, 156 126"/>
+            <path class="brain-sulci" d="M 190 140 C 178 136, 166 138, 156 144"/>
+            <path class="brain-sulci" d="M 176 158 C 166 154, 156 156, 148 162"/>
+            <path class="brain-sulci" d="M 160 174 C 152 171, 142 172, 136 177"/>
+
+            <!-- frontal lobe ridge lines -->
+            <path class="brain-sulci" d="M 60 22 C 76 14, 94 12, 108 16"/>
+            <path class="brain-sulci" d="M 152 22 C 136 14, 118 12, 106 16"/>
+
+            <!-- cerebellum / brainstem hint at base -->
+            <path class="brain-sulci" d="M 74 184 C 88 192, 106 194, 122 188" style="stroke-width:1.1;"/>
+            <path class="brain-sulci" d="M 80 178 C 92 184, 104 186, 116 182"/>
+
+            <!-- glowing data nodes scattered over brain -->
+            <g id="node-group"></g>
+
+            <!-- hex tag readouts -->
+            <text class="brain-tag" x="6" y="14" font-size="6">0x4F2A</text>
+            <text class="brain-tag" x="186" y="14" font-size="6" text-anchor="end">SYN::OK</text>
+            <text class="brain-tag" x="6" y="196" font-size="6">CTX_SCAN</text>
+            <text class="brain-tag" x="186" y="196" font-size="6" text-anchor="end">0xBE11EF</text>
         </svg>
+
         <div class="brain-scan-line"></div>
+    </div>
+    <div id="scan-readout">
+        <span>FREQ <b id="readout-freq">432Hz</b></span>
+        <span>DEPTH <b id="readout-depth">87%</b></span>
+        <span>NODES <b id="readout-nodes">0</b></span>
     </div>
 </div>
 
@@ -402,7 +623,7 @@ body::after {
         <div class="dot red"></div>
         <div class="dot yellow"></div>
         <div class="dot green"></div>
-        <span class="terminal-title">PLANLIFE_MIND_SCANNER v4.5.0</span>
+        <span class="terminal-title">PLANLIFE_MIND_SCANNER v5.0.0</span>
         <div class="signal-bars">
             <span></span><span></span><span></span><span></span>
         </div>
@@ -411,11 +632,14 @@ body::after {
     <div class="header-prompt">
         <div class="prompt-line">>> WISH DECODER & BELIEF SCANNER ONLINE <<<</div>
         <div class="prompt-main">خواسته‌ات رو بنویس — ذهنت رو اسکن می‌کنیم</div>
-        <div class="prompt-sub">مثال: خونه، پول، ازدواج، موفقیت، سلامتی...</div>
+        <div class="prompt-sub">یکی از این موضوع‌ها رو تایپ کن تا اسکن دقیق انجام شه</div>
+        <div class="prompt-keys">
+            <b>خونه</b> · <b>پول</b> · <b>ازدواج</b> · <b>روابط</b> · <b>ماشین</b> · <b>موفقیت</b> · <b>سلامتی</b> · <b>کار</b> · <b>آرامش</b> · <b>استقلال</b> · <b>تحصیل</b> · <b>سفر</b>
+        </div>
     </div>
 
     <div class="terminal-body" id="terminal-output">
-        <div class="line cyan-line"><span class="prefix">[INIT]</span><span class="text">PlanLife Mind Scanner v4.5.0 — LOADED</span></div>
+        <div class="line cyan-line"><span class="prefix">[INIT]</span><span class="text">PlanLife Mind Scanner v5.0.0 — LOADED</span></div>
         <div class="line"><span class="prefix">[OK]</span><span class="text">Neural wish decoder: READY</span></div>
         <div class="line"><span class="prefix">[OK]</span><span class="text">Brain visualization engine: READY</span></div>
         <div class="line"><span class="prefix">[OK]</span><span class="text">Limiting belief detector: ARMED</span></div>
@@ -436,7 +660,7 @@ body::after {
 </div>
 
 <script>
-// Matrix Rain
+// ============== Matrix Rain ==============
 const canvas = document.getElementById('matrix-canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
@@ -463,57 +687,139 @@ window.addEventListener('resize', () => {
     canvas.height = window.innerHeight;
 });
 
-// Wishes database
+// ============== Brain wireframe mesh generator ==============
+// Builds a triangulated "hacker scan" grid clipped to the brain silhouette,
+// plus glowing data nodes scattered across it.
+function buildBrainMesh() {
+    const meshGroup = document.getElementById('mesh-group');
+    const nodeGroup = document.getElementById('node-group');
+    meshGroup.innerHTML = '';
+    nodeGroup.innerHTML = '';
+
+    const minX = 4, maxX = 211, minY = 2, maxY = 195;
+    const stepX = 11, stepY = 11;
+    const pts = [];
+
+    for (let y = minY, row = 0; y <= maxY; y += stepY, row++) {
+        const rowPts = [];
+        for (let x = minX, col = 0; x <= maxX; x += stepX, col++) {
+            const jitterX = (Math.sin(row * 12.9 + col * 4.3) * 1.6);
+            const jitterY = (Math.cos(col * 7.7 + row * 3.1) * 1.6);
+            rowPts.push([x + jitterX, y + jitterY]);
+        }
+        pts.push(rowPts);
+    }
+
+    let pathD = '';
+    for (let r = 0; r < pts.length; r++) {
+        for (let c = 0; c < pts[r].length; c++) {
+            const [x, y] = pts[r][c];
+            if (c < pts[r].length - 1) {
+                pathD += `M ${x.toFixed(1)} ${y.toFixed(1)} L ${pts[r][c+1][0].toFixed(1)} ${pts[r][c+1][1].toFixed(1)} `;
+            }
+            if (r < pts.length - 1) {
+                pathD += `M ${x.toFixed(1)} ${y.toFixed(1)} L ${pts[r+1][c][0].toFixed(1)} ${pts[r+1][c][1].toFixed(1)} `;
+            }
+            // diagonal triangulation lines (sparse, for the "wireframe mesh" feel)
+            if (r < pts.length - 1 && c < pts[r].length - 1 && (r + c) % 2 === 0) {
+                pathD += `M ${x.toFixed(1)} ${y.toFixed(1)} L ${pts[r+1][c+1][0].toFixed(1)} ${pts[r+1][c+1][1].toFixed(1)} `;
+            }
+        }
+    }
+
+    const meshPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    meshPath.setAttribute('d', pathD);
+    meshPath.setAttribute('class', 'brain-wiremesh');
+    meshPath.style.animation = 'mesh-flicker 2.6s ease-in-out infinite';
+    meshGroup.appendChild(meshPath);
+
+    // glowing nodes at random mesh intersections
+    const nodeCount = 22;
+    let nodesHtml = '';
+    for (let i = 0; i < nodeCount; i++) {
+        const r = Math.floor(Math.random() * pts.length);
+        const c = Math.floor(Math.random() * pts[r].length);
+        const [x, y] = pts[r][c];
+        const delay = (Math.random() * 2).toFixed(2);
+        nodesHtml += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(1.2 + Math.random()*1.3).toFixed(1)}" class="brain-node" style="animation: node-blink ${1.4 + Math.random()}s ease-in-out infinite; animation-delay:${delay}s;"></circle>`;
+    }
+    nodeGroup.innerHTML = nodesHtml;
+
+    document.getElementById('readout-nodes').textContent = nodeCount;
+}
+
+function animateReadouts() {
+    const freqEl = document.getElementById('readout-freq');
+    const depthEl = document.getElementById('readout-depth');
+    let t = setInterval(() => {
+        if (!document.getElementById('brain-scanner').classList.contains('active')) return;
+        freqEl.textContent = (380 + Math.floor(Math.random()*120)) + 'Hz';
+        depthEl.textContent = (70 + Math.floor(Math.random()*29)) + '%';
+    }, 350);
+    return t;
+}
+
+// ============== Wishes database ==============
 const WISHES = [
   {
     keys: ['خونه','خانه','ملک','مسکن','آپارتمان'],
     wish: 'داشتن خانه',
-    beliefs: ['خونه خریدن تو این شرایط اقتصادی محاله', 'من هیچ‌وقت پول کافی برای خانه جمع نمی‌کنم', 'آدم‌هایی مثل من هیچ‌وقت صاحب خانه نمی‌شن', 'بازار مسکن فقط برای پول‌دارهاست', 'اگه یه جا خوندم باید بمونم', 'ریسک وام گرفتن خیلی زیاده', 'من شانس خونه‌دار شدن ندارم', 'خونه داشتن یعنی گیر افتادن', 'هر بار که پس‌انداز می‌کنم اتفاقی میفته', 'لیاقت داشتن خونه قشنگ رو ندارم']
+    beliefs: ['خونه خریدن تو این شرایط اقتصادی محاله', 'من هیچ‌وقت پول کافی برای خانه جمع نمی‌کنم', 'آدم‌هایی مثل من هیچ‌وقت صاحب خانه نمی‌شن', 'بازار مسکن فقط برای پول‌دارهاست', 'اگه یه جا خوندم باید بمونم', 'ریسک وام گرفتن خیلی زیاده', 'من شانس خونه‌دار شدن ندارم', 'خونه داشتن یعنی گیر افتادن', 'هر بار که پس‌انداز می‌کنم اتفاقی میفته', 'لیاقت داشتن خونه قشنگ رو ندارم', 'قیمت مسکن همیشه از درآمدم جلوتره', 'من بلد نیستم پول رو مدیریت کنم برای خونه', 'خریدن خونه یعنی قید همه چی رو زدن', 'تا آخر عمر باید اجاره‌نشین بمونم', 'وام گرفتن یعنی یه عمر بدهکار بودن']
   },
   {
     keys: ['پول','ثروت','درآمد','مالی'],
     wish: 'ثروت و درآمد بالا',
-    beliefs: ['پول درآوردن سخت و طاقت‌فرساست', 'آدم‌های پولدار همه کلاهبردارند', 'من برای پول‌دار بودن ساخته نشدم', 'عشق به پول ریشه همه بدی‌هاست', 'داشتن پول زیاد آدم رو خراب می‌کنه', 'رزق هر کسی مشخصه', 'ثروتمند شدن بدون شانس غیرممکنه', 'اگه پول‌دار بشم مردم دورم رو می‌گیرن', 'من استحقاق درآمد بالا رو ندارم', 'ثروت نصیب آدم‌های باهوش‌تر میشه']
+    beliefs: ['پول درآوردن سخت و طاقت‌فرساست', 'آدم‌های پولدار همه کلاهبردارند', 'من برای پول‌دار بودن ساخته نشدم', 'عشق به پول ریشه همه بدی‌هاست', 'داشتن پول زیاد آدم رو خراب می‌کنه', 'رزق هر کسی مشخصه', 'ثروتمند شدن بدون شانس غیرممکنه', 'اگه پول‌دار بشم مردم دورم رو می‌گیرن', 'من استحقاق درآمد بالا رو ندارم', 'ثروت نصیب آدم‌های باهوش‌تر میشه', 'پول زیاد یعنی استرس زیاد', 'هر چی بیشتر پول دربیارم بیشتر از دستم میره', 'پول‌دار شدن با ارزش‌های من جور نیست', 'من تو خرج کردن مهارت دارم نه پس‌انداز', 'فرصت‌های پول‌سازی همیشه از کنارم رد میشن']
   },
   {
-    keys: ['ازدواج','همسر','شریک','عروسی'],
+    keys: ['ازدواج','همسر','عروسی'],
     wish: 'ازدواج و تشکیل خانواده',
-    beliefs: ['آدم مناسب برای من وجود نداره', 'همه ازدواج‌ها به طلاق ختم میشه', 'من برای زندگی مشترک ساخته نشدم', 'اگه ازدواج کنم آزادیم رو از دست میدم', 'کسی که دوستش دارم منو دوست نداره', 'سن من برای ازدواج گذشته', 'من خیلی عیب دارم', 'رابطه‌های پایدار دروغه', 'عشق واقعی فقط تو فیلمه', 'من بدشانسم در رابطه']
+    beliefs: ['آدم مناسب برای من وجود نداره', 'همه ازدواج‌ها به طلاق ختم میشه', 'من برای زندگی مشترک ساخته نشدم', 'اگه ازدواج کنم آزادیم رو از دست میدم', 'کسی که دوستش دارم منو دوست نداره', 'سن من برای ازدواج گذشته', 'من خیلی عیب دارم', 'رابطه‌های پایدار دروغه', 'عشق واقعی فقط تو فیلمه', 'من بدشانسم در رابطه', 'ازدواج یعنی پایان شادی‌های فردی', 'خانواده‌هامون هیچ‌وقت کنار هم نمیان', 'من نمی‌تونم به کسی واقعاً اعتماد کنم', 'تعهد دادن یعنی گیر افتادن تا آخر عمر', 'هیچ‌کس عاشق آدم واقعی من نمیشه']
+  },
+  {
+    keys: ['رابطه','روابط','پارتنر','دوست پسر','دوست دختر'],
+    wish: 'روابط سالم و عاشقانه',
+    beliefs: ['من تو روابط همیشه طرف بازنده‌ام', 'هر کی رو دوست دارم بالاخره ولم می‌کنه', 'من لایق عشق بی‌قید و شرط نیستم', 'صمیمیت واقعی یعنی آسیب‌پذیر شدن و خطرناکه', 'اگه واقعیتم رو نشون بدم طرف فرار می‌کنه', 'روابط طولانی فقط عادت میشن نه عشق', 'من خیلی نیازمند یا خیلی سرد به‌نظر میام', 'اعتماد کردن یعنی دیر یا زود ضربه خوردن', 'باید خودم رو عوض کنم تا کسی بمونه', 'آدم‌های خوب همه رفته‌ن یا گرفته‌ن', 'من تو ابراز احساسات بلد نیستم', 'رابطه خوب فقط برای بقیه اتفاق میفته', 'هر رابطه‌ای که شروع میشه یه جای کار می‌لنگه', 'من ترسناک یا زیادی پیچیده‌ام برای رابطه', 'تنهایی امن‌تر از ریسک یه رابطه جدیده']
+  },
+  {
+    keys: ['ماشین','خودرو','اتومبیل'],
+    wish: 'داشتن خودروی دلخواه',
+    beliefs: ['ماشین خوب فقط برای پول‌دارهاست', 'من هیچ‌وقت نمی‌تونم نقد یه ماشین بخرم', 'قیمت ماشین هر روز از من جلوتره', 'وام ماشین یعنی چند سال گرفتاری', 'اگه ماشین خوب بخرم حسود پیدا می‌کنم', 'من لایق ماشین رویایی‌م نیستم', 'بازار ماشین همیشه به ضرر منه', 'تعمیر و نگهداری ماشین خوب از پسم برنمیاد', 'من تو پس‌انداز برای ماشین شکست خوردم', 'ماشین گرفتن یعنی پول رو دور ریختن', 'هر وقت پول جمع می‌کنم یه چیزی پیش میاد', 'صاحب ماشین خوب شدن نصیب شانسی‌هاست', 'من بلد نیستم قیمت خوب چک‌وچانه کنم', 'ماشین خریدن با درآمد من فقط رویاست', 'لیاقت رانندگی با چیزی که دوست دارم رو ندارم']
   },
   {
     keys: ['موفقیت','موفق','پیشرفت','رشد'],
     wish: 'موفقیت در زندگی',
-    beliefs: ['من به اندازه کافی باهوش نیستم', 'موفقیت فقط برای آدم‌های خاصه', 'شانس میزان موفقیت رو مشخص می‌کنه', 'اگه سعی کنم و شکست بخورم همه می‌خندن', 'من خیلی دیر شروع کردم', 'پشتکار من کافی نیست', 'محیطم اجازه رشد نمیده', 'موفقیت یعنی زیر پا گذاشتن', 'من هیچ استعداد خاصی ندارم', 'قبلاً شکست خوردم پس دوباره شکست می‌خورم']
+    beliefs: ['من به اندازه کافی باهوش نیستم', 'موفقیت فقط برای آدم‌های خاصه', 'شانس میزان موفقیت رو مشخص می‌کنه', 'اگه سعی کنم و شکست بخورم همه می‌خندن', 'من خیلی دیر شروع کردم', 'پشتکار من کافی نیست', 'محیطم اجازه رشد نمیده', 'موفقیت یعنی زیر پا گذاشتن', 'من هیچ استعداد خاصی ندارم', 'قبلاً شکست خوردم پس دوباره شکست می‌خورم', 'موفق‌ها همه از اول شرایط بهتری داشتن', 'هر چی پیشرفت کنم بازم کافی نیست', 'من حواسم زود پرت میشه و ادامه نمیدم', 'موفقیت من رو از آدمای نزدیکم دور می‌کنه', 'برای موفق شدن باید آدم دیگه‌ای بشم']
   },
   {
-    keys: ['سلامتی','سلامت','بدن','وزن','ورزش'],
+    keys: ['سلامتی','سلامت','تناسب اندام'],
     wish: 'سلامتی و تناسب اندام',
-    beliefs: ['ژنتیک من این اجازه نمیده', 'من اراده برای رژیم ندارم', 'بدن من هیچ‌وقت تغییر نمی‌کنه', 'ورزش برای من حال خوبی نداره', 'سالم بودن خیلی گرون‌قیمته', 'من وقت کافی برای ورزش ندارم', 'همه تو خانواده‌مون اضافه وزن دارند', 'من انگیزه‌ام رو حفظ نمی‌کنم', 'دردها و بیماری‌های من دائمی‌ان', 'من خیلی پیر شدم برای تغییر']
+    beliefs: ['ژنتیک من این اجازه نمیده', 'من اراده برای رژیم ندارم', 'بدن من هیچ‌وقت تغییر نمی‌کنه', 'ورزش برای من حال خوبی نداره', 'سالم بودن خیلی گرون‌قیمته', 'من وقت کافی برای ورزش ندارم', 'همه تو خانواده‌مون اضافه وزن دارند', 'من انگیزه‌ام رو حفظ نمی‌کنم', 'دردها و بیماری‌های من دائمی‌ان', 'من خیلی پیر شدم برای تغییر', 'بدنم همیشه به من خیانت می‌کنه', 'هر رژیمی که میرم بعد چند روز ولش می‌کنم', 'استرس زندگیم اجازه سالم زندگی کردن نمیده', 'تناسب اندام یعنی محرومیت دائمی', 'من از باشگاه و محیط ورزشی خوشم نمیاد']
   },
   {
     keys: ['کار','شغل','کسب','بیزینس','استارتاپ'],
     wish: 'کار و کسب‌وکار موفق',
-    beliefs: ['من توانایی کارآفرین شدن ندارم', 'بازار ایران برای کسب‌وکار جدید نیست', 'ایده‌هام خوب نیستن', 'سرمایه اولیه ندارم', 'رقبا خیلی قوی‌ترند', 'اگه شکست بخورم آبروم میره', 'کارمند بودن امن‌تره', 'من مهارت‌های کافی ندارم', 'اقتصاد اجازه نمیده', 'من برای فروش استعداد ندارم']
+    beliefs: ['من توانایی کارآفرین شدن ندارم', 'بازار ایران برای کسب‌وکار جدید نیست', 'ایده‌هام خوب نیستن', 'سرمایه اولیه ندارم', 'رقبا خیلی قوی‌ترند', 'اگه شکست بخورم آبروم میره', 'کارمند بودن امن‌تره', 'من مهارت‌های کافی ندارم', 'اقتصاد اجازه نمیده', 'من برای فروش استعداد ندارم', 'شبکه ارتباطی کافی برای رشد کار ندارم', 'هر کاری که شروع می‌کنم نصفه می‌مونه', 'مدیر خوب بودن از من برنمیاد', 'بازار همیشه یه قدم از من جلوتره', 'موفقیت در کار یعنی فدا کردن زندگی شخصی']
   },
   {
     keys: ['آرامش','شادی','خوشبختی','آسودگی'],
     wish: 'آرامش و شادی درونی',
-    beliefs: ['من آدم شادی نیستم', 'با این زندگی نمیشه شاد بود', 'آرامش پایدار نمیمونه', 'شادی احساس سطحیه', 'باید رنج بکشم', 'نگرانی بخشی از شخصیتمه', 'اگه شاد باشم بدبختی میاد', 'کمال‌گراییم اجازه استراحت نمیده', 'خوشحالی نشان دادن ضعفه', 'لیاقت آرامش واقعی رو ندارم']
+    beliefs: ['من آدم شادی نیستم', 'با این زندگی نمیشه شاد بود', 'آرامش پایدار نمیمونه', 'شادی احساس سطحیه', 'باید رنج بکشم', 'نگرانی بخشی از شخصیتمه', 'اگه شاد باشم بدبختی میاد', 'کمال‌گراییم اجازه استراحت نمیده', 'خوشحالی نشان دادن ضعفه', 'لیاقت آرامش واقعی رو ندارم', 'ذهنم هیچ‌وقت ساکت نمیشه', 'آرامش یعنی بی‌خیال هدف‌هام شدن', 'هر آرامشی که پیدا می‌کنم یه چیزی به‌هم می‌زنه', 'من بلد نیستم لحظه رو زندگی کنم', 'شادی واقعی فقط مال بچگی بود']
   },
   {
     keys: ['استقلال','آزادی','مستقل'],
     wish: 'استقلال و آزادی',
-    beliefs: ['بدون کمک نمی‌تونم کنار بیام', 'استقلال یعنی تنهایی', 'برای تصمیم‌گیری قوی نیستم', 'اگه استقلال داشته باشم ناراحت میشن', 'آزادی نسبی‌ست', 'وابستگی طبیعیه', 'همیشه به تایید نیاز دارم', 'مستقل بودن خودخواهیه', 'مراقبت از خودم ندارم', 'کنترل زندگیم دست خودم نیست']
+    beliefs: ['بدون کمک نمی‌تونم کنار بیام', 'استقلال یعنی تنهایی', 'برای تصمیم‌گیری قوی نیستم', 'اگه استقلال داشته باشم ناراحت میشن', 'آزادی نسبی‌ست', 'وابستگی طبیعیه', 'همیشه به تایید نیاز دارم', 'مستقل بودن خودخواهیه', 'مراقبت از خودم بلد نیستم', 'کنترل زندگیم دست خودم نیست', 'اگه مستقل شم خانواده طردم می‌کنه', 'تنها زندگی کردن از پسم برنمیاد', 'استقلال مالی برای من خیلی دوره', 'من عادت کرده‌م همیشه یکی برام تصمیم بگیره', 'آزادی واقعی فقط تو ذهن من وجود داره']
   },
   {
     keys: ['تحصیل','دانشگاه','مدرک','یادگیری'],
     wish: 'تحصیل و دانش',
-    beliefs: ['باهوشی کافی ندارم', 'دیگه دیر شده', 'مدرک فایده نداره', 'تحصیل گرونه', 'حافظه خوبی ندارم', 'بدون اتصالات بیهوده', 'برای یادگیری تنبل هستم', 'بازار کار نداره', 'تجربه مهم‌تره', 'در محیط آموزشی راحت نیستم']
+    beliefs: ['باهوشی کافی ندارم', 'دیگه دیر شده', 'مدرک فایده نداره', 'تحصیل گرونه', 'حافظه خوبی ندارم', 'بدون اتصالات بیهوده', 'برای یادگیری تنبل هستم', 'بازار کار نداره', 'تجربه مهم‌تره', 'در محیط آموزشی راحت نیستم', 'من تو امتحان همیشه ضعیف عمل می‌کنم', 'مغزم برای مطالب سخت نمی‌کشه', 'هر چی بخونم بازم یادم میره', 'رشته‌ای که دوست دارم برام مناسب نیست', 'مدرسه و دانشگاه فقط استرس داده به من']
   },
   {
-    keys: ['سفر','مسافرت','خارج','دنیا'],
+    keys: ['سفر','مسافرت','خارج'],
     wish: 'سفر و دیدن دنیا',
-    beliefs: ['سفر خارجی لوکسه', 'ویزا نمی‌دن', 'تنها نمی‌تونم سفر کنم', 'پول سفر هدر دادنه', 'شجاعت برای سفر تنها ندارم', 'زبانم کافی نیست', 'فقط کسایی که وقت دارن', 'دنیا ناامنه', 'هیچ‌وقت پول‌م کافی نیست', 'برای آدم‌های جدید جالب نیستم']
+    beliefs: ['سفر خارجی لوکسه', 'ویزا نمی‌دن', 'تنها نمی‌تونم سفر کنم', 'پول سفر هدر دادنه', 'شجاعت برای سفر تنها ندارم', 'زبانم کافی نیست', 'فقط کسایی که وقت دارن', 'دنیا ناامنه', 'هیچ‌وقت پول‌م کافی نیست', 'برای آدم‌های جدید جالب نیستم', 'برنامه‌ریزی سفر برام خیلی پیچیده‌ست', 'من همیشه یه چیزی رو سفر خراب می‌کنم', 'ترس از ناشناخته اجازه نمیده حرکت کنم', 'مسئولیت‌های زندگی هیچ‌وقت اجازه سفر نمیدن', 'رفتن به جای جدید یعنی ریسک بی‌فایده']
   }
 ];
 
@@ -543,7 +849,43 @@ const SCAN_CODES = [
   'verify RAS.filter = anti_wish_mode',
   'scan mirror_neuron_network(role_models)',
   'read failure_memory.weight = HIGH',
-  'check growth_mindset.installed = FALSE'
+  'check growth_mindset.installed = FALSE',
+  'decrypt hippocampus.memory_block[wish]',
+  'render synaptic_map.overlay(wireframe)',
+  'ping default_mode_network... timeout',
+  'bruteforce self_image.password → weak',
+  'mount belief_partition[read_only] → false',
+  'index emotional_memory.tags(fear, shame, doubt)',
+  'sync limbic_system.cache → stale',
+  'parse internal_dialogue.log(last_30d)',
+  'calculate confidence_index = 0.18',
+  'trace avoidance_loop.depth = 7',
+  'scan visualization_module.access → denied',
+  'load belief_inheritance.tree(family_line)',
+  'detect cognitive_dissonance.spike',
+  'query future_self.projection → corrupted',
+  'rebuild neural_pathway.map(failed_attempts)',
+  'check self_sabotage.trigger_list',
+  'scan emotional_firewall.rules',
+  'trace negative_bias.weight = 0.74',
+  'fetch comparison_engine.targets[social_media]',
+  'analyze procrastination_pattern.frequency',
+  'log inner_critic.voice_volume = MAX',
+  'scan body_memory.tension_zones',
+  'verify identity_statement.consistency',
+  'cross_check belief vs evidence.ratio',
+  'flag outdated_program[scarcity_mindset]',
+  'decode emotional_response.delay = 0.4s',
+  'sample stress_hormone.cortisol_level',
+  'trace decision_paralysis.root_cause',
+  'scan self_doubt.recursive_loop',
+  'check belief_update.last_modified',
+  'render fear_response.heatmap',
+  'analyze trust_threshold.calibration',
+  'query childhood_memory.cluster(wish_related)',
+  'detect limiting_pattern.signature_match',
+  'compile resistance_map.full_scan',
+  'finalize belief_cluster.extraction'
 ];
 
 function addLine(text, type = '', delay = 0) {
@@ -556,7 +898,7 @@ function addLine(text, type = '', delay = 0) {
                 '': '[>>]', 'yellow-line': '[SYS]', 'red-line': '[ERR]',
                 'cyan-line': '[INF]', 'white-line': '[DAT]', 'result-line': '[OUT]',
                 'dim-line': '[...]', 'error-line': '[ERR]', 'final-line': '[!!!]',
-                'link-line': '[LNK]'
+                'link-line': '[LNK]', 'summary-line': '[SUM]', 'summary-title': '[SUM]'
             };
             div.innerHTML = `<span class="prefix">${prefixes[type] || '[>>]'}</span><span class="text">${text}</span>`;
             out.appendChild(div);
@@ -585,9 +927,9 @@ function addProgress(duration) {
             w = Math.min(100, w + step + Math.random() * step * 0.6);
             fill.style.width = w + '%';
             out.scrollTop = out.scrollHeight;
-            if (w >= 100) { 
-                clearInterval(t); 
-                setTimeout(resolve, 100); 
+            if (w >= 100) {
+                clearInterval(t);
+                setTimeout(resolve, 100);
             }
         }, 60);
     });
@@ -602,7 +944,7 @@ function addErrorBox(beliefs) {
         beliefs.forEach((b, i) => {
             const item = document.createElement('div');
             item.className = 'error-item';
-            item.style.animationDelay = (i * 0.08) + 's';
+            item.style.animationDelay = (i * 0.06) + 's';
             item.textContent = b;
             box.appendChild(item);
         });
@@ -612,9 +954,26 @@ function addErrorBox(beliefs) {
     });
 }
 
+function addSummaryBox(wishLabel) {
+    return new Promise(resolve => {
+        const out = document.getElementById('terminal-output');
+        const box = document.createElement('div');
+        box.className = 'summary-box';
+        box.innerHTML = `
+            <div class="line summary-title"><span class="prefix">[SUM]</span><span class="text">خلاصه اسکن — ${wishLabel}</span></div>
+            <div class="line summary-line"><span class="prefix"></span><span class="text">این باورها برنامه‌های ذهنی قدیمی هستن، نه واقعیت ثابت. ذهن ناخودآگاه تو برای محافظت از تو این الگوها رو ساخته، اما همین الگوها الان دارن مسیر رسیدن به «${wishLabel}» رو مسدود می‌کنن.</span></div>
+            <div class="line summary-line"><span class="prefix"></span><span class="text">قدم بعدی: شناسایی ریشه هر باور → بازنویسی آگاهانه‌ش → تکرار و تمرین تا تبدیل به باور جدید بشه.</span></div>
+        `;
+        out.appendChild(box);
+        out.scrollTop = out.scrollHeight;
+        setTimeout(resolve, 200);
+    });
+}
+
 function showBrainScanner(show) {
     const scanner = document.getElementById('brain-scanner');
     if (show) {
+        buildBrainMesh();
         scanner.classList.add('active');
     } else {
         scanner.classList.remove('active');
@@ -634,6 +993,7 @@ function findWish(text) {
 }
 
 let isRunning = false;
+let readoutTimer = null;
 
 async function runScan() {
     if (isRunning) return;
@@ -660,33 +1020,51 @@ async function runScan() {
     await addLine('Initializing deep neural scan...', '', 80);
     await addProgress(1000);
 
-    const shuffled = [...SCAN_CODES].sort(() => Math.random() - 0.5).slice(0, 18);
-    for (let i = 0; i < shuffled.length; i++) {
+    // دسته اول کدهای ترمینال (قبل از نمایش مغز)
+    const shuffled = [...SCAN_CODES].sort(() => Math.random() - 0.5);
+    const firstBatch = shuffled.slice(0, 26);
+    for (let i = 0; i < firstBatch.length; i++) {
         const types = ['', '', 'cyan-line', 'dim-line', 'white-line', ''];
         const t = types[Math.floor(Math.random() * types.length)];
-        await addLine(shuffled[i], t, 70 + Math.random() * 110);
+        await addLine(firstBatch[i], t, 60 + Math.random() * 90);
     }
 
     await addLine('Compiling wish execution path...', 'yellow-line', 150);
     await addProgress(1200);
 
-    // نمایش مغز
+    // ====== نمایش مغز و اسکن — هیچ باوری در این مرحله نوشته نمیشه ======
     showBrainScanner(true);
+    readoutTimer = animateReadouts();
     await addLine('', '', 500);
     await addLine('wish.run() → EXECUTING IN SUBCONSCIOUS MIND', 'cyan-line', 200);
     await addLine('vvvvvvvvvvvvv SCANNING NEURAL PATTERNS vvvvvvvvvvvvv', 'dim-line', 100);
 
-    // اسکن در حال انجام
-    await addProgress(2000);
+    // دسته دوم کدهای ترمینال (همزمان با اسکن مغز، اما بدون اشاره به باورهای خاص)
+    const secondBatch = shuffled.slice(26, 44);
+    for (let i = 0; i < secondBatch.length; i++) {
+        const types = ['', '', 'cyan-line', 'dim-line', 'white-line', ''];
+        const t = types[Math.floor(Math.random() * types.length)];
+        await addLine(secondBatch[i], t, 55 + Math.random() * 80);
+    }
+    await addProgress(1800);
 
-    // خطای باور محدودکننده
-    await addLine('', '', 100);
+    // ====== پایان اسکن مغز — محو شدن مغز قبل از نمایش باورها ======
+    await addLine('^^^^^^^^^^^^^ NEURAL SCAN COMPLETE ^^^^^^^^^^^^^', 'dim-line', 150);
+    await addLine('', '', 300);
+    showBrainScanner(false);
+    if (readoutTimer) clearInterval(readoutTimer);
+    await addLine('Brain scan completed. Compiling results...', 'cyan-line', 250);
+    await addProgress(700);
+
+    // خطای باور محدودکننده (حالا که مغز دیگه روی صفحه نیست)
+    await addLine('', '', 150);
     await addLine('RUNTIME_ERROR: Critical bugs detected in belief_system.core', 'error-line', 200);
     await addLine('ERROR_CODE: 0xBELIEF — Limiting belief cluster blocking execution', 'error-line', 150);
     await addLine('STACK_TRACE: wish_execution → belief_filter → BLOCKED', 'error-line', 150);
     await addLine('', '', 100);
 
     // نمایش باورهای محدودکننده
+    let wishLabel = found ? found.wish : text;
     if (found) {
         await addLine(`باورهای محدودکننده برای خواسته: "${found.wish}"`, 'result-line', 200);
         await addLine('', '', 100);
@@ -707,10 +1085,12 @@ async function runScan() {
         await addErrorBox(generic);
     }
 
-    // خاموشی اسکن
-    await addLine('', '', 500);
-    showBrainScanner(false);
-    await addLine('Brain scan completed.', 'cyan-line', 200);
+    // خلاصه برای مخاطب
+    await addLine('', '', 300);
+    await addSummaryBox(wishLabel);
+
+    // پیام نهایی برند
+    await addLine('', '', 400);
     await addLine('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'cyan-line', 150);
     await addLine('برای تغییر این باورهای محدودکننده:', 'final-line', 250);
     await addLine('PLANLIFE.IR — باورهات رو از نو بنویس', 'final-line', 200);
