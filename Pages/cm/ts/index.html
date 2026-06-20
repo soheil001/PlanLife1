@@ -20,12 +20,25 @@
     h2 { font-size: 28px; margin-bottom: 6px; text-align: center; font-weight: 900; }
     .page-subtitle { text-align: center; font-size: 13px; opacity: 0.5; margin-bottom: 24px; }
 
-    /* ===== گرید ۲ ستونه دسته‌بندی‌ها ===== */
-    .categories-grid {
+    /* ===== wrapper برای هر ردیف ===== */
+    .categories-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    /* هر ردیف: ۲ کارت + accordion زیرشون */
+    .cat-row {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .cat-row-cards {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 14px;
-        margin-bottom: 10px;
+        margin-bottom: 0;
     }
 
     .cat-card {
@@ -45,6 +58,7 @@
             0 2px 8px rgba(0,0,0,0.2),
             inset 0 1px 0 rgba(255,255,255,0.18);
         transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+        margin-bottom: 14px;
     }
     .cat-card::before {
         content: '';
@@ -69,7 +83,6 @@
         object-fit: cover;
         display: block;
     }
-    /* gradient overlay روی عکس */
     .cat-cover-wrap::after {
         content: '';
         position: absolute;
@@ -77,7 +90,6 @@
         background: linear-gradient(to bottom, transparent 40%, rgba(5,0,20,0.82) 100%);
     }
 
-    /* آیکون پوشه */
     .folder-icon {
         position: absolute;
         bottom: 10px;
@@ -111,13 +123,11 @@
     }
     .cat-name {
         font-size: 13px;
-        font-weight: 800;
+        font-weight: 900;
         line-height: 1.4;
-        background: linear-gradient(135deg, #ffd700, #ffaa00);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        color: #ffffff;
         margin-bottom: 5px;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.5);
     }
     .cat-meta {
         display: flex;
@@ -140,14 +150,17 @@
     }
     .cat-card.open .cat-arrow { transform: rotate(90deg); }
 
-    /* ===== accordion قسمت‌ها ===== */
+    /* ===== accordion ===== */
     .episodes-accordion {
-        grid-column: 1 / -1;
         overflow: hidden;
         max-height: 0;
         transition: max-height 0.42s cubic-bezier(0.4,0,0.2,1);
+        margin-bottom: 0;
     }
-    .episodes-accordion.open { max-height: 4000px; }
+    .episodes-accordion.open {
+        max-height: 4000px;
+        margin-bottom: 14px;
+    }
 
     .episodes-inner {
         background: rgba(255,255,255,0.04);
@@ -177,7 +190,6 @@
     .music-duration { font-size: 12px; opacity: 0.65; align-self: center; flex-shrink: 0; }
     .play-circle { width: 36px; height: 36px; background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-    /* badge کامنت */
     .podcast-comment-badge {
         display: inline-flex; align-items: center; gap: 4px; margin-top: 4px;
         background: rgba(255,149,0,0.15); border-radius: 999px; padding: 2px 8px;
@@ -185,7 +197,6 @@
     .podcast-comment-badge svg { width: 11px; height: 11px; fill: #ff9500; }
     .podcast-comment-badge span { font-size: 11px; color: #ff9500; font-weight: 700; }
 
-    /* badge معرفی */
     .intro-badge {
         display: inline-flex; align-items: center; gap: 5px;
         background: rgba(0,255,136,0.13); border: 1px solid rgba(0,255,136,0.32);
@@ -266,7 +277,6 @@
     }
     .cover-comment-badge svg { width: 15px; height: 15px; fill: #ff9500; flex-shrink: 0; }
 
-    /* ستاره‌ها */
     .stars-section {
         width: 100%; max-width: 360px; margin: 18px 0; padding: 12px 16px;
         background: rgba(255,215,0,0.08); backdrop-filter: blur(14px);
@@ -303,7 +313,6 @@
     .play-main { width: 82px; height: 82px; background: #ff9500; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(255,149,0,0.65); cursor: pointer; }
     .play-main svg { width: 36px; height: 36px; fill: #1a0033; }
 
-    /* comments */
     .comments-section { width: 100%; max-width: 360px; margin-top: 10px; padding-bottom: 30px; }
     .comments-list { max-height: 240px; overflow-y: auto; padding-right: 4px; margin-bottom: 14px; }
     .comments-list::-webkit-scrollbar { width: 5px; }
@@ -312,16 +321,13 @@
     .delete-btn:active { background: rgba(255,50,50,0.5); }
     .loading-comments { text-align: center; padding: 20px; opacity: 0.6; font-size: 14px; }
 
-    /* admin badge */
     .admin-badge { display: flex; align-items: center; gap: 6px; background: rgba(255,149,0,0.2); border: 1px solid rgba(255,149,0,0.5); border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 700; color: #ff9500; cursor: pointer; font-family: inherit; }
 
-    /* modal */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 400; display: none; align-items: center; justify-content: center; }
     .modal-overlay.active { display: flex; }
     .modal-box { background: rgba(255,255,255,0.11); backdrop-filter: blur(20px); border-radius: 24px; padding: 30px 25px; width: 90%; max-width: 360px; text-align: center; max-height: 90vh; overflow-y: auto; }
     .modal-btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 15px; cursor: pointer; margin-top: 10px; font-family: inherit; }
 
-    /* pricing modal */
     .pricing-box {
         background: linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(160,120,255,0.08) 50%, rgba(255,149,0,0.06) 100%);
         backdrop-filter: blur(22px) saturate(160%);
@@ -340,7 +346,6 @@
     .buy-btn-individual { width: 100%; padding: 13px 10px; border: 1px solid rgba(255,200,0,0.45); border-radius: 14px; background: rgba(255,193,7,0.16); backdrop-filter: blur(14px); color: #ffd700; font-size: 14.5px; font-weight: 800; cursor: pointer; font-family: inherit; margin: -2px 0 16px; transition: transform 0.15s, background 0.2s; }
     .buy-btn-individual:active { transform: scale(0.97); background: rgba(255,193,7,0.32); }
 
-    /* card modal */
     .card-modal-inner { background: linear-gradient(145deg, rgba(20,10,50,0.92), rgba(10,20,60,0.88)); backdrop-filter: blur(28px) saturate(180%); border: 1px solid rgba(120,100,255,0.28); border-radius: 24px; padding: 24px 20px; box-shadow: 0 8px 40px rgba(80,40,200,0.25), inset 0 1px 0 rgba(255,255,255,0.1); position: relative; overflow: hidden; }
     .card-modal-inner::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(160,120,255,0.6), rgba(255,149,0,0.4), transparent); }
     .card-number-box { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, rgba(80,60,200,0.22), rgba(120,80,255,0.18), rgba(60,40,160,0.22)); border: 1px solid rgba(140,100,255,0.35); border-radius: 16px; padding: 12px 16px; margin: 12px 0; direction: ltr; }
@@ -376,7 +381,7 @@
 <div class="main-center">
     <h2>دوره‌های PlanLife</h2>
     <p class="page-subtitle">یک دوره را انتخاب کنید تا قسمت‌ها نمایش داده شود</p>
-    <div class="categories-grid" id="categoriesGrid"></div>
+    <div class="categories-wrapper" id="categoriesWrapper"></div>
 </div>
 
 <!-- Modal اشتراک / ادمین -->
@@ -479,7 +484,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-// ==================== Supabase ====================
 const SUPABASE_URL      = 'https://hjzzvzxhrqovvducnxha.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
 const DELETE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/delete-course-comment`;
@@ -529,7 +533,6 @@ async function deleteCourseCommentRemote(commentId) {
     } catch(e) { console.warn('Edge function delete:', e); alert('خطا در حذف نظر: ' + e.message); return false; }
 }
 
-// ==================== داده‌های دوره‌ها ====================
 const courseData = [
     { title: "🎙️ معرفی: کدهای پشت پرده پول", episode: 0, duration: "05:30", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", isIntro: true, category: "دوره کدهای پشت‌ پرده پول" },
     { title: "دوره کدهای پشت‌ پرده پول", episode: 1,  duration: "32:45", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/Servat - dore - 1.m4a", category: "دوره کدهای پشت‌ پرده پول" },
@@ -554,7 +557,7 @@ const courseData = [
     { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 7,  duration: "37:21", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", category: "دوره کلیدِ پنهانِ ارتباطات" },
     { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 8,  duration: "41:10", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", category: "دوره کلیدِ پنهانِ ارتباطات" },
     { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 9,  duration: "29:55", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", category: "دوره کلیدِ پنهانِ ارتباطات" },
-{ title: "🎙️ معرفی: چطور حالم خوب باشه", episode: 0, duration: "04:45", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a", isIntro: true, category: "دوره چطور حالم خوب باشه ؟" },
+    { title: "🎙️ معرفی: چطور حالم خوب باشه", episode: 0, duration: "04:45", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a", isIntro: true, category: "دوره چطور حالم خوب باشه ؟" },
     { title: "دوره چطور حالم خوب باشه ؟", episode: 1, duration: "32:10", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a", category: "دوره چطور حالم خوب باشه ؟" },
     { title: "دوره چطور حالم خوب باشه ؟", episode: 2, duration: "36:56", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 2.m4a", category: "دوره چطور حالم خوب باشه ؟" },
     { title: "دوره چطور حالم خوب باشه ؟", episode: 3, duration: "27:20", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 3.m4a", category: "دوره چطور حالم خوب باشه ؟" },
@@ -614,7 +617,6 @@ let isAdmin = false;
 let currentTrackIndex = 0;
 let currentTrackKey = null;
 let userRatings = {};
-let openCategory = null; // کدام accordion باز است
 
 const audio = document.getElementById('mainAudio');
 const progressBar = document.getElementById('progressBar');
@@ -632,80 +634,95 @@ function formatCommentTime(iso) {
     return `${d.toLocaleDateString('fa-IR',{year:'numeric',month:'short',day:'numeric'})} • ${d.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`;
 }
 
-// ==================== رندر گرید دسته‌بندی‌ها ====================
+// ==================== رندر — ساختار جدید: ردیف‌های ۲تایی ====================
 function loadPage() {
     const categories = Object.keys(subscriptionCodes);
-    const grid = document.getElementById('categoriesGrid');
-    grid.innerHTML = '';
+    const wrapper = document.getElementById('categoriesWrapper');
+    wrapper.innerHTML = '';
 
-    categories.forEach((cat, i) => {
-        const items = courseData.filter(x => x.category === cat && !x.isIntro);
-        const epCount = items.length;
-        const coverSrc = courseData.find(x => x.category === cat)?.cover || '';
+    // ردیف‌های ۲تایی
+    for (let i = 0; i < categories.length; i += 2) {
+        const row = document.createElement('div');
+        row.className = 'cat-row';
 
-        // کارت دسته‌بندی
-        const card = document.createElement('div');
-        card.className = 'cat-card';
-        card.id = `cat-card-${i}`;
-        card.innerHTML = `
-            <div class="cat-cover-wrap">
-                <img src="${coverSrc}" alt="${cat}" loading="lazy">
-                <div class="folder-icon">
-                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6 14C6 11.79 7.79 10 10 10H19.17C20.23 10 21.24 10.44 21.95 11.2L24 13.5H38C40.21 13.5 42 15.29 42 17.5V34C42 36.21 40.21 38 38 38H10C7.79 38 6 36.21 6 34V14Z" fill="url(#fg1)"/>
-                        <path d="M6 20H42V34C42 36.21 40.21 38 38 38H10C7.79 38 6 36.21 6 34V20Z" fill="url(#fg2)"/>
-                        <defs>
-                            <linearGradient id="fg1" x1="6" y1="10" x2="42" y2="38" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#FFD700"/>
-                                <stop offset="1" stop-color="#FF8C00"/>
-                            </linearGradient>
-                            <linearGradient id="fg2" x1="6" y1="20" x2="42" y2="38" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#FFB300"/>
-                                <stop offset="1" stop-color="#FF6000"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                    <span class="folder-ep-count">${toPersianNum(epCount)} قسمت</span>
+        // بخش کارت‌ها
+        const cardsRow = document.createElement('div');
+        cardsRow.className = 'cat-row-cards';
+
+        const cats = [categories[i], categories[i+1]].filter(Boolean);
+        cats.forEach((cat, j) => {
+            const catIdx = i + j; // ایندکس کلی
+            const items = courseData.filter(x => x.category === cat && !x.isIntro);
+            const epCount = items.length;
+            const coverSrc = courseData.find(x => x.category === cat)?.cover || '';
+
+            const card = document.createElement('div');
+            card.className = 'cat-card';
+            card.id = `cat-card-${catIdx}`;
+            card.innerHTML = `
+                <div class="cat-cover-wrap">
+                    <img src="${coverSrc}" alt="${cat}" loading="lazy">
+                    <div class="folder-icon">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 14C6 11.79 7.79 10 10 10H19.17C20.23 10 21.24 10.44 21.95 11.2L24 13.5H38C40.21 13.5 42 15.29 42 17.5V34C42 36.21 40.21 38 38 38H10C7.79 38 6 36.21 6 34V14Z" fill="url(#fg1_${catIdx})"/>
+                            <path d="M6 20H42V34C42 36.21 40.21 38 38 38H10C7.79 38 6 36.21 6 34V20Z" fill="url(#fg2_${catIdx})"/>
+                            <defs>
+                                <linearGradient id="fg1_${catIdx}" x1="6" y1="10" x2="42" y2="38" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#FFD700"/><stop offset="1" stop-color="#FF8C00"/>
+                                </linearGradient>
+                                <linearGradient id="fg2_${catIdx}" x1="6" y1="20" x2="42" y2="38" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#FFB300"/><stop offset="1" stop-color="#FF6000"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <span class="folder-ep-count">${toPersianNum(epCount)} قسمت</span>
+                    </div>
                 </div>
-            </div>
-            <div class="cat-info">
-                <div class="cat-name">${cat}</div>
-                <div class="cat-meta">
-                    <span class="cat-ep-label">کلیک کنید</span>
-                    <span class="cat-arrow">›</span>
-                </div>
-            </div>`;
-        card.onclick = () => toggleAccordion(cat, i);
-        grid.appendChild(card);
+                <div class="cat-info">
+                    <div class="cat-name">${cat}</div>
+                    <div class="cat-meta">
+                        <span class="cat-ep-label">کلیک کنید</span>
+                        <span class="cat-arrow">›</span>
+                    </div>
+                </div>`;
+            card.onclick = () => toggleAccordion(cat, catIdx, i);
+            cardsRow.appendChild(card);
+        });
 
-        // accordion قسمت‌ها — span کامل
+        row.appendChild(cardsRow);
+
+        // یک accordion مشترک برای هر ردیف، که بعد از هر دو کارت باز می‌شه
         const acc = document.createElement('div');
         acc.className = 'episodes-accordion';
-        acc.id = `acc-${i}`;
-        acc.innerHTML = buildEpisodesHTML(cat);
-        grid.appendChild(acc);
-    });
+        acc.id = `acc-row-${i}`;
+        row.appendChild(acc);
+
+        wrapper.appendChild(row);
+    }
 
     refreshAllListBadges();
 }
 
-function toggleAccordion(cat, i) {
-    const acc = document.getElementById(`acc-${i}`);
-    const card = document.getElementById(`cat-card-${i}`);
-    const isOpen = acc.classList.contains('open');
+let openCatIdx = null;
+
+function toggleAccordion(cat, catIdx, rowStart) {
+    const accId = `acc-row-${rowStart}`;
+    const acc = document.getElementById(accId);
+    const card = document.getElementById(`cat-card-${catIdx}`);
+    const isSameCat = openCatIdx === catIdx && acc.classList.contains('open');
 
     // بستن همه
-    document.querySelectorAll('.episodes-accordion').forEach(el => el.classList.remove('open'));
+    document.querySelectorAll('.episodes-accordion').forEach(el => { el.classList.remove('open'); el.innerHTML = ''; });
     document.querySelectorAll('.cat-card').forEach(el => el.classList.remove('open'));
 
-    if (!isOpen) {
+    if (!isSameCat) {
+        acc.innerHTML = buildEpisodesHTML(cat);
         acc.classList.add('open');
         card.classList.add('open');
-        openCategory = cat;
-        // اسکرول به کارت
+        openCatIdx = catIdx;
         setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
     } else {
-        openCategory = null;
+        openCatIdx = null;
     }
 }
 
@@ -713,7 +730,6 @@ function buildEpisodesHTML(cat) {
     const items = courseData.filter(x => x.category === cat);
     let html = `<div class="episodes-inner"><div class="episodes-header">📂 ${cat}</div>`;
 
-    // معرفی
     const intro = items.find(x => x.isIntro);
     if (intro) {
         const idx = courseData.indexOf(intro);
@@ -729,7 +745,6 @@ function buildEpisodesHTML(cat) {
         </div>`;
     }
 
-    // قسمت‌های معمولی
     items.filter(x => !x.isIntro).forEach(item => {
         const idx = courseData.indexOf(item);
         const key = commentKey(item.title, item.episode);
@@ -754,7 +769,6 @@ function buildEpisodesHTML(cat) {
     return html;
 }
 
-// ==================== ستاره‌ها ====================
 function renderStars() {
     const container = document.getElementById('starsContainer');
     container.innerHTML = '';
@@ -767,7 +781,6 @@ function renderStars() {
     }
 }
 
-// ==================== کامنت‌ها ====================
 async function loadComments(title, episode) {
     const key = commentKey(title, episode);
     currentTrackKey = key;
@@ -864,7 +877,6 @@ function scrollToForm() {
     }, 320);
 }
 
-// ==================== ادمین ====================
 function openAdminModal() {
     document.getElementById('modalContent').innerHTML = `
         <h3 style="margin-bottom:15px;">👑 ورود ادمین</h3>
@@ -920,13 +932,13 @@ function doLogout() {
     if (currentTrackKey) loadComments(courseData[currentTrackIndex].title, courseData[currentTrackIndex].episode);
 }
 
-// ==================== اشتراک ====================
 function playCourse(index) {
     const item = courseData[index];
     if (item.isIntro) { playAudio(item); }
     else if (isAdmin || unlockedCategories[item.category]) { playAudio(item); }
     else { showSubscriptionModal(item.category); }
 }
+
 function showSubscriptionModal(category) {
     window.currentUnlockCategory = category;
     document.getElementById('modalContent').innerHTML = `
@@ -977,7 +989,6 @@ function checkUnlockCode() {
 
 function closeModal() { document.getElementById('subscriptionModal').classList.remove('active'); }
 
-// ==================== modal قیمت‌ها ====================
 function showPricingModal(category) {
     closeModal();
     const allPricing = Object.keys(coursePricing).map(name => ({ name, ...coursePricing[name] }));
@@ -1011,7 +1022,6 @@ function showPricingModal(category) {
 
 function closePricingModal() { document.getElementById('pricingModal').classList.remove('active'); }
 
-// ==================== modal شماره کارت ====================
 function buildPriceBoxHTML(category) {
     const p = coursePricing[category];
     if (!p) return '';
@@ -1098,7 +1108,6 @@ function showSupportModal() {
     document.getElementById('subscriptionModal').classList.add('active');
 }
 
-// ==================== پلیر ====================
 function formatTime(s) { if (!s || isNaN(s)) return "0:00"; return `${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,'0')}`; }
 
 audio.addEventListener('timeupdate', () => {
@@ -1189,7 +1198,6 @@ function closeNowPlaying() { minimizePlayer(); }
 function showMenu() { alert("منو (به زودی)"); }
 function goToHome() { window.location.href = "https://planlife.ir"; }
 
-// ==================== swipe gesture ====================
 (function() {
     const screen = document.getElementById('nowPlayingScreen');
     let startY = 0, startX = 0, lastY = 0, velocity = 0, lastTime = 0;
