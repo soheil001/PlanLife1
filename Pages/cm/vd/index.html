@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ویدیوهای ماورایی • PlanLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --gold: #d4af37;
+        --gold-light: #f0d060;
+        --gold-glow: rgba(212,175,55,0.35);
+        --glass-bg: rgba(255,255,255,0.07);
+        --glass-border: rgba(255,255,255,0.15);
+        --reel-w: 148px;
+        --reel-h: 263px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+        min-height: 100%;
+        font-family: 'Vazirmatn', sans-serif;
+        color: white;
+        background: #02000d;
+        overflow-x: hidden;
+    }
+
+    /* ===== GALAXY BACKGROUND ===== */
+    .galaxy { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .galaxy::before {
+        content: '';
+        position: absolute; inset: 0;
+        background:
+            radial-gradient(ellipse 120% 80% at 60% -10%, rgba(80,20,180,0.6) 0%, transparent 55%),
+            radial-gradient(ellipse 80% 60% at -10% 40%, rgba(140,40,220,0.4) 0%, transparent 50%),
+            radial-gradient(ellipse 60% 50% at 100% 70%, rgba(180,50,120,0.35) 0%, transparent 50%),
+            radial-gradient(ellipse 40% 40% at 50% 100%, rgba(60,10,140,0.5) 0%, transparent 60%),
+            radial-gradient(ellipse 100% 100% at 50% 50%, rgba(5,0,25,0.95) 0%, transparent 100%);
+    }
+    .galaxy-arm {
+        position: absolute; width: 200%; height: 300px; top: 20%; left: -50%;
+        background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(180,140,255,0.12) 0%, rgba(120,80,220,0.06) 40%, transparent 70%);
+        transform: rotate(-20deg); filter: blur(30px);
+        animation: armPulse 12s ease-in-out infinite alternate;
+    }
+    @keyframes armPulse {
+        0% { opacity: 0.6; transform: rotate(-20deg) scaleY(1); }
+        100% { opacity: 1; transform: rotate(-18deg) scaleY(1.1); }
+    }
+    .nebula { position: absolute; border-radius: 50%; filter: blur(60px); animation: nebulaDrift 18s ease-in-out infinite alternate; }
+    .nebula-1 { width: 500px; height: 300px; background: rgba(120,40,200,0.28); top: -80px; left: -100px; animation-delay: 0s; }
+    .nebula-2 { width: 400px; height: 400px; background: rgba(200,60,140,0.2); top: 30%; right: -100px; animation-delay: -6s; }
+    .nebula-3 { width: 350px; height: 250px; background: rgba(40,80,200,0.22); bottom: 10%; left: 10%; animation-delay: -12s; }
+    .nebula-4 { width: 250px; height: 250px; background: rgba(212,175,55,0.12); top: 55%; left: 40%; animation-delay: -4s; }
+    @keyframes nebulaDrift {
+        0% { transform: translate(0,0) scale(1); opacity: 0.7; }
+        100% { transform: translate(15px,-25px) scale(1.06); opacity: 1; }
+    }
+    #stars { position: absolute; inset: 0; }
+
+    /* ===== HEADER ===== */
+    .header {
+        position: relative; z-index: 2;
+        padding: 52px 24px 20px;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-icon {
+        width: 42px; height: 42px; border-radius: 12px;
+        background: linear-gradient(135deg, rgba(212,175,55,0.5), rgba(212,175,55,0.15));
+        border: 1px solid rgba(212,175,55,0.5);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 0 20px rgba(212,175,55,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+        font-size: 20px;
+    }
+    .logo-text {
+        font-size: 26px; font-weight: 900; letter-spacing: 2px;
+        background: linear-gradient(135deg, #ffffff 0%, var(--gold-light) 45%, var(--gold) 100%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        filter: drop-shadow(0 0 16px rgba(212,175,55,0.5)); text-transform: uppercase;
+    }
+    .back-btn {
+        position: absolute; left: 24px; top: 50%; transform: translateY(-50%);
+        display: flex; align-items: center; gap: 7px;
+        background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        padding: 9px 16px 9px 12px; border-radius: 50px;
+        cursor: pointer; text-decoration: none; color: rgba(255,255,255,0.8);
+        font-size: 13px; font-weight: 600; font-family: 'Vazirmatn', sans-serif;
+        transition: all 0.3s ease; box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+    .back-btn:hover {
+        background: rgba(255,255,255,0.14); border-color: rgba(212,175,55,0.5); color: var(--gold-light);
+        box-shadow: 0 0 18px rgba(212,175,55,0.2), inset 0 1px 0 rgba(255,255,255,0.2);
+        transform: translateY(-50%) scale(1.04);
+    }
+    .back-arrow { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .back-arrow svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ===== LAYOUT ===== */
+    .main { position: relative; z-index: 1; padding: 0 0 80px; }
+
+    /* ===== PAGE TITLE ===== */
+    .page-title {
+        font-size: 22px; font-weight: 800; text-align: center;
+        margin-bottom: 28px; padding: 0 20px;
+        color: rgba(255,255,255,0.75); letter-spacing: -0.3px;
+    }
+
+    /* ===== SECTION LABEL ===== */
+    .section-label {
+        font-size: 19px; font-weight: 900;
+        color: rgba(255,255,255,0.55); letter-spacing: 0.5px;
+        margin-bottom: 16px;
+        padding: 0 20px;
+        font-family: 'Vazirmatn', sans-serif;
+    }
+    .section-label span { color: var(--gold); }
+    .section-label em { color: rgba(255,255,255,0.3); font-style: normal; font-size: 14px; font-weight: 500; }
+
+    /* ===== DOCS SECTION ===== */
+    .docs-scroll {
+        display: grid;
+        grid-template-rows: repeat(2, auto);
+        grid-auto-flow: column;
+        grid-auto-columns: 195px;
+        gap: 14px 16px;
+        overflow-x: auto;
+        padding: 6px 20px 20px;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .docs-scroll::-webkit-scrollbar { display: none; }
+
+    .dcard {
+        flex-shrink: 0;
+        width: 195px;
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.15);
+        backdrop-filter: blur(28px);
+        -webkit-backdrop-filter: blur(28px);
+        border-radius: 22px;
+        padding: 12px;
+        cursor: pointer;
+        transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.14);
+        position: relative;
+        overflow: hidden;
+    }
+    .dcard::before {
+        content: '';
+        position: absolute; top: 0; left: 0; right: 0; height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        pointer-events: none;
+    }
+    .dcard:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 40px var(--gold-glow), inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+    .dcard:hover .play-overlay { opacity: 1; }
+    .dcard:hover .play-btn-lg { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+
+    .dcard-thumb-wrap {
+        position: relative;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+    .dcard-thumb {
+        width: 100%;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+        display: block;
+        border-radius: 14px;
+    }
+    .play-overlay {
+        position: absolute; inset: 0; border-radius: 14px;
+        background: rgba(0,0,0,0.3);
+        opacity: 0; transition: opacity 0.25s;
+    }
+    .play-btn-lg {
+        position: absolute; top: 50%; left: 50%;
+        transform: translate(-50%,-50%) scale(0.75);
+        opacity: 0;
+        width: 52px; height: 52px; border-radius: 50%;
+        background: rgba(255,255,255,0.16);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        border: 1.5px solid rgba(255,255,255,0.4);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.35), 0 0 0 8px rgba(255,255,255,0.05);
+        display: flex; align-items: center; justify-content: center;
+        transition: transform 0.32s cubic-bezier(0.34,1.56,0.64,1), opacity 0.28s ease;
+        z-index: 5;
+    }
+    .play-btn-lg::before {
+        content: '';
+        position: absolute; inset: 0; border-radius: 50%;
+        background: radial-gradient(circle at 35% 28%, rgba(255,255,255,0.3) 0%, transparent 65%);
+    }
+    .play-tri-lg {
+        width: 0; height: 0;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-left: 18px solid rgba(255,255,255,0.95);
+        margin-left: 4px; position: relative; z-index: 1;
+        filter: drop-shadow(0 0 6px rgba(255,255,255,0.5));
+    }
+
+    .dcard-info { padding: 10px 4px 2px; }
+    .dcard-title { font-size: 13.5px; font-weight: 700; margin-bottom: 3px; line-height: 1.3; }
+    .dcard-sub font-size: 11px; color: rgba(255,255,255,0.5); }
+
+    /* ===== SECTION DIVIDER ===== */
+    .section-gap { height: 36px; }
+
+    /* ===== PLANLIFE REELS SECTION ===== */
+    .reel-row-wrap {
+        margin-bottom: 14px;
+        overflow: hidden;
+    }
+    .reel-row {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding: 4px 20px 12px;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .reel-row::-webkit-scrollbar { display: none; }
+
+    .rcard {
+        flex-shrink: 0;
+        width: var(--reel-w);
+        height: var(--reel-h);
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        border: 1px solid rgba(255,255,255,0.13);
+        box-shadow: 0 6px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12);
+        transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
+        background: #0a0618;
+    }
+    .rcard::before {
+        content: '';
+        position: absolute; top: 0; left: 0; right: 0; height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+        z-index: 10; pointer-events: none;
+    }
+    .rcard:hover {
+        transform: translateY(-8px) scale(1.03);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px var(--gold-glow);
+    }
+    .rcard:hover .rplay { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+    .rcard:hover .roverlay { opacity: 1; }
+
+    .rcard-img {
+        width: 100%; height: 100%;
+        object-fit: cover; display: block;
+    }
+    .roverlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, transparent 35%, rgba(3,0,18,0.85) 80%);
+        opacity: 0.7;
+        transition: opacity 0.25s;
+    }
+    .rplay {
+        position: absolute; top: 50%; left: 50%;
+        transform: translate(-50%,-50%) scale(0.78);
+        opacity: 0;
+        width: 52px; height: 52px; border-radius: 50%;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+        border: 1.5px solid rgba(255,255,255,0.42);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.4), 0 0 0 10px rgba(255,255,255,0.04);
+        display: flex; align-items: center; justify-content: center;
+        transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s;
+        z-index: 10;
+    }
+    .rplay::before {
+        content: '';
+        position: absolute; inset: 0; border-radius: 50%;
+        background: radial-gradient(circle at 35% 28%, rgba(255,255,255,0.3) 0%, transparent 65%);
+    }
+    .rplay-tri {
+        width: 0; height: 0;
+        border-top: 9px solid transparent;
+        border-bottom: 9px solid transparent;
+        border-left: 16px solid rgba(255,255,255,0.95);
+        margin-left: 3px; position: relative; z-index: 1;
+        filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+    }
+    .rcard-num {
+        position: absolute; top: 9px; right: 9px;
+        background: rgba(0,0,0,0.4);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 20px;
+        font-size: 10px; font-weight: 700;
+        color: rgba(255,255,255,0.8);
+        padding: 3px 8px;
+        z-index: 11;
+        letter-spacing: 0.5px;
+    }
+    .rcard-bottom {
+        position: absolute; bottom: 0; left: 0; right: 0;
+        padding: 10px 10px;
+        z-index: 10;
+    }
+    .rcard-title { font-size: 12px; font-weight: 700; line-height: 1.3; margin-bottom: 1px; }
+    .rcard-sub { font-size: 10px; color: rgba(255,255,255,0.5); }
+
+    /* ===== BELIEF / TAQVIYAT SECTION ===== */
+    .belief-row-wrap { margin-bottom: 14px; }
+    .belief-row {
+        display: flex; gap: 10px;
+        overflow-x: auto;
+        padding: 4px 20px 12px;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .belief-row::-webkit-scrollbar { display: none; }
+
+    .bcard {
+        flex-shrink: 0;
+        width: var(--reel-w);
+        height: var(--reel-h);
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        border: 1px solid rgba(255,255,255,0.13);
+        box-shadow: 0 6px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12);
+        transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
+        background: #06030f;
+    }
+    .bcard::before {
+        content: '';
+        position: absolute; top: 0; left: 0; right: 0; height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(212,175,55,0.35), transparent);
+        z-index: 10; pointer-events: none;
+    }
+    .bcard:hover {
+        transform: translateY(-8px) scale(1.03);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(212,175,55,0.25);
+    }
+    .bcard:hover .bplay { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+
+    .bcard-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .boverlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, transparent 35%, rgba(3,0,18,0.88) 80%);
+    }
+    .bplay {
+        position: absolute; top: 50%; left: 50%;
+        transform: translate(-50%,-50%) scale(0.78);
+        opacity: 0;
+        width: 52px; height: 52px; border-radius: 50%;
+        background: rgba(212,175,55,0.18);
+        backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+        border: 1.5px solid rgba(212,175,55,0.55);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3), 0 0 0 10px rgba(212,175,55,0.06);
+        display: flex; align-items: center; justify-content: center;
+        transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s;
+        z-index: 10;
+    }
+    .bplay::before {
+        content: '';
+        position: absolute; inset: 0; border-radius: 50%;
+        background: radial-gradient(circle at 35% 28%, rgba(255,220,100,0.3) 0%, transparent 65%);
+    }
+    .bplay-tri {
+        width: 0; height: 0;
+        border-top: 9px solid transparent;
+        border-bottom: 9px solid transparent;
+        border-left: 16px solid rgba(255,230,120,0.95);
+        margin-left: 3px; position: relative; z-index: 1;
+        filter: drop-shadow(0 0 5px rgba(212,175,55,0.6));
+    }
+    .bcard-num {
+        position: absolute; top: 9px; right: 9px;
+        background: rgba(212,175,55,0.18);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(212,175,55,0.35);
+        border-radius: 20px;
+        font-size: 10px; font-weight: 700;
+        color: var(--gold-light);
+        padding: 3px 8px;
+        z-index: 11;
+        letter-spacing: 0.5px;
+    }
+    .bcard-bottom {
+        position: absolute; bottom: 0; left: 0; right: 0;
+        padding: 10px 10px; z-index: 10;
+    }
+    .bcard-title { font-size: 12px; font-weight: 700; line-height: 1.3; margin-bottom: 1px; }
+    .bcard-sub { font-size: 10px; color: rgba(255,255,255,0.5); }
+
+    /* ===== MODAL ===== */
+    #modal {
+        position: fixed; inset: 0;
+        background: rgba(0,0,8,0.92);
+        backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+        z-index: 999; display: none; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-box {
+        width: 100%; max-width: 780px;
+        background: rgba(15,8,40,0.88);
+        border: 1px solid rgba(255,255,255,0.13); border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 40px 100px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.13);
+        backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+    }
+    .modal-top {
+        padding: 15px 18px; display: flex; justify-content: space-between; align-items: center;
+        border-bottom: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.03);
+    }
+    .modal-title-text { font-size: 16px; font-weight: 700; }
+    .modal-close {
+        width: 30px; height: 30px; border-radius: 50%;
+        background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18);
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; font-size: 15px; color: rgba(255,255,255,0.8); transition: background 0.2s;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.18); }
+    video { width: 100%; display: block; }
+</style>
+</head>
+<body>
+
+<div class="galaxy">
+    <canvas id="stars"></canvas>
+    <div class="galaxy-arm"></div>
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+    <div class="nebula nebula-3"></div>
+    <div class="nebula nebula-4"></div>
+</div>
+
+<div class="header">
+    <a class="back-btn" href="https://planlife.ir">
+        <div class="back-arrow">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+        بازگشت
+    </a>
+    <div class="logo">
+        <div class="logo-icon">✦</div>
+        <div class="logo-text">PlanLife</div>
+    </div>
+</div>
+
+<div class="main">
+    <h1 class="page-title">ویدیوهای ماورایی 🎥</h1>
+
+    <div class="section-label"><span>مستندها</span></div>
+    <div class="docs-scroll" id="docsRow"></div>
+
+    <div class="section-gap"></div>
+
+    <div class="section-label"><span>PlanLife</span> <em>· ۲ ردیف</em></div>
+    <div class="reel-row-wrap">
+        <div class="reel-row" id="reelRow1"></div>
+    </div>
+    <div class="reel-row-wrap">
+        <div class="reel-row" id="reelRow2"></div>
+    </div>
+
+    <div class="section-gap"></div>
+
+    <div class="section-label"><span>باورسازی و تقویت</span> <em>· ۴ ردیف</em></div>
+    <div class="belief-row-wrap"><div class="belief-row" id="beliefRow1"></div></div>
+    <div class="belief-row-wrap"><div class="belief-row" id="beliefRow2"></div></div>
+    <div class="belief-row-wrap"><div class="belief-row" id="beliefRow3"></div></div>
+    <div class="belief-row-wrap"><div class="belief-row" id="beliefRow4"></div></div>
+</div>
+
+<div id="modal">
+    <div class="modal-box">
+        <div class="modal-top">
+            <div class="modal-title-text" id="mTitle"></div>
+            <div class="modal-close" onclick="closeModal()">✕</div>
+        </div>
+        <video id="vPlayer" controls autoplay></video>
+    </div>
+</div>
+
+<script>
+/* ===== STARS ===== */
+(function() {
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    function createStars() {
+        stars = [];
+        const count = Math.floor((canvas.width * canvas.height) / 3000);
+        for (let i = 0; i < count; i++) {
+            stars.push({
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                r: Math.random() * 1.4 + 0.2, alpha: Math.random() * 0.7 + 0.2,
+                speed: Math.random() * 0.008 + 0.002, offset: Math.random() * Math.PI * 2,
+                color: Math.random() > 0.85 ? 'gold' : (Math.random() > 0.7 ? 'purple' : 'white')
+            });
+        }
+    }
+    let t = 0;
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        t += 0.012;
+        stars.forEach(s => {
+            const a = s.alpha * (0.6 + 0.4 * Math.sin(t * s.speed * 60 + s.offset));
+            const colors = { gold: `rgba(255,208,128,${a})`, purple: `rgba(192,176,255,${a})`, white: `rgba(255,255,255,${a})` };
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fillStyle = colors[s.color];
+            ctx.fill();
+        });
+        requestAnimationFrame(draw);
+    }
+    resize(); createStars(); draw();
+    window.addEventListener('resize', () => { resize(); createStars(); });
+})();
+
+/* ===== DATA ===== */
+
+// ---- DOCS ----
+const docsData = [
+    { id:1, title:"نیکولا تسلا", sub:"ماورایی", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779986672/IMG_1221_jqjhpq.jpg", src:"https://persian1.cdn.asset.aparat.com/aparat-video/c68fc7d5a81c80e58251480982b2093347709199-720p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjA2NzhiYmExNjY4MTk2YjU0MDNkNzA1ODc5NjhjMDA2IiwiZXhwIjoxNzgwMDUyNjI1LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.WEP2EFns_jZ9RHgR-aO_PuBVStaNA7CUFosfGhvOmRs" },
+    { id:2, title:"استرهیکس سمینار", sub:"ماورایی", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779987179/IMG_1222_adwrqu.jpg", src:"https://hw17.cdn.asset.aparat.com/aparat-video/47af1a7ef3892943248663f1a334dd9c21946381-360p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImEzN2FhNTA2NjAzZDlmMjg5MWI4NWY3MTQwYzRjZDFmIiwiZXhwIjoxNzgwMDA0OTQ4LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.ZJyGHnfwoZoOPPkGN8zFHlnXZrdR5GqcysPVfzfChog" },
+    { id:3, title:"از غم به شادی", sub:"استرهیکس", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779987770/IMG_1223_rbor7c.jpg", src:"https://aspb26.cdn.asset.aparat.com/aparat-video/130cd5a8ef41176dbea488e96984ef1e16918897-360p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6Ijg3MTNlMTJmNjJkNzdmODZhMzI1MzE1YmE2NzEyOWQ5IiwiZXhwIjoxNzgwMDUyMzIyLCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.I9TnnkqfV-uYaQBtCUpqlupqyERm-LAmT5Ing5b7V5Q" },
+    { id:4, title:"فیلم زندگی وارن بافت", sub:"سرگذشت", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779994484/IMG_1228_altecx.jpg", src:"https://dl.farachart.com/mostanad/Warren_Buffett.mp4" },
+    { id:5, title:"راز ابر موفق‌ها", sub:"دارن هاردی", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779995682/IMG_1229_d6nbjf.jpg", src:"https://persian19.asset.aparat.com/aparat-video/aa41f62267d2d700395fdd0440f7799b62047924-360p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImRiZDNhYjhmNTM3ZTIwZDQ4MzZlZmM2NTNiZjRiOGZhIiwiZXhwIjoxNzgwMDEzNTU5LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.wL9WZKzilO8Oyv2L9i3QuZCuLcExqc4B6_Ey-SxkQpI" },
+    { id:6, title:"احساس لیاقت", sub:"شایسته بهترین‌ها", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779657211/IMG_1151_zqcux9.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" }
+];
+
+// ---- PLANLIFE REELS ----
+const reelRow1Data = [
+    { id: 'r1-1', num: '۱', title: "پیدایش هوش", sub: "ماورایی", cover: "https://res.cloudinary.com/dfthbclzi/image/upload/v1780867337/IMG_1702_h6oq8f.jpg", src: "https://docs.google.com/uc?api=1&confirm=no_antivirus&id=1-jjlPSSXazr5owetkEjuu_gQO3zTKB8w" },
+    { id:'r1-2', num:'۲', title:"فیزیک کوانتوم", sub:"planlife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867335/IMG_1699_gxdcc4.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" },
+    { id:'r1-3', num:'۳', title:"ایلان ماسک", sub:"ماورایی", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867332/IMG_1692_yjy5qg.jpg", src:"https://t.tarahipro.ir/1405/02/22/Inside.the.Rage.Machine.2026.1080p.WEB-DL.SoftSub.mkv" },
+    { id:'r1-4', num:'۴', title:"قانون پنهان شده", sub:"ماورایی", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867331/IMG_1689_eqanx8.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Tears_of_Steel.mp4" },
+    { id:'r1-5', num:'۵', title:"قدرت انتخاب", sub:"تحول ذهن", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867330/IMG_1688_losrg8.jpg", src:"https://dl.farachart.com/mostanad/The_Wall_Street_Code.mp4" }
+];
+
+const reelRow2Data = [
+    { id:'r2-1', num:'۱', title:"ذهن انعطاف پذیر", sub:"planlife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867327/IMG_1682_rsyhm8.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4" },
+    { id:'r2-2', num:'۲', title:"باور شما = واقعیت شما", sub:"planlife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867329/IMG_1686_ppfmsu.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" },
+    { id:'r2-3', num:'۳', title:"باور", sub:"planlife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867330/IMG_1685_telr12.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4" },
+    { id:'r2-4', num:'۴', title:"فکر کنید و ثروتمند شوید", sub:"planlife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867330/IMG_1684_ikm6wu.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" },
+    { id:'r2-5', num:'۵', title:"فقط نتیجه", sub:"planlife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867326/IMG_1677_xjelbm.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4" }
+];
+
+// ---- BELIEF ROWS ----
+const beliefRowsData = [
+    [
+        { id:'b1-1', num:'۱', title:"nikola Tesla", sub:"planLife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867333/IMG_1691_fau3io.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" },
+        { id:'b1-2', num:'۲', title:"آلبرت انیشتین", sub:"planlife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867333/IMG_1693_xgwjoa.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" },
+        { id:'b1-3', num:'۳', title:"ادیسون", sub:"planlife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867332/IMG_1690_eqmtot.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" },
+        { id:'b1-4', num:'۴', title:"بروس لی", sub:"planLife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867334/IMG_1695_iblwht.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" },
+        { id:'b1-5', num:'۵', title:"نیوتون", sub:"planLife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867335/IMG_1697_qrdj4t.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" },
+        { id:'b1-6', num:'۶', title:"ننسون ماندلا", sub:"planLife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867335/IMG_1698_ajszr4.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample//BigBuckBunny.mp4" }
+    ],
+    [
+        { id:'b2-1', num:'۱', title:"قدرت کلمات", sub:"باورسازی", cover:"https://picsum.photos/seed/b21/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4" },
+        { id:'b2-2', num:'۲', title:"جذب عشق", sub:"تقویت", cover:"https://picsum.photos/seed/b22/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Tears_of_Steel.mp4" },
+        { id:'b2-3', num:'۳', title:"اعتماد عمیق", sub:"به خود باور داشته باش", cover:"https://picsum.photos/seed/b23/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" },
+        { id:'b2-4', num:'۴', title:"انرژی درمان", sub:"باورسازی", cover:"https://picsum.photos/seed/b24/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" }
+    ],
+    [
+        { id:'b3-1', num:'۱', title:"نیرو درون", sub:"کشف قدرت", cover:"https://picsum.photos/seed/b31/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4" },
+        { id:'b3-2', num:'۲', title:"تحول باور", sub:"تقویت ذهن", cover:"https://picsum.photos/seed/b32/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4" },
+        { id:'b3-3', num:'۳', title:"جادوی شادی", sub:"باورسازی", cover:"https://picsum.photos/seed/b33/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" },
+        { id:'b3-4', num:'۴', title:"ذهن موفق", sub:"برنامه ریزی", cover:"https://picsum.photos/seed/b34/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4" }
+    ],
+    [
+        { id:'b4-1', num:'۱', title:"باور بی‌نهایت", sub:"تقویت", cover:"https://picsum.photos/seed/b41/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" },
+        { id:'b4-2', num:'۲', title:"قانون جذب", sub:"باورسازی عمیق", cover:"https://picsum.photos/seed/b42/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" },
+        { id:'b4-3', num:'۳', title:"شفای درون", sub:"تقویت", cover:"https://picsum.photos/seed/b43/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" },
+        { id:'b4-4', num:'۴', title:"راه تحول", sub:"باورسازی", cover:"https://picsum.photos/seed/b44/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" }
+    ]
+];
+
+/* ===== PLAY & DOWNLOAD MANAGER ===== */
+function play(src, title) {
+    // هوشمندسازی برای فرمت MKV و تداخل امنیتی مرورگر
+    if (src.toLowerCase().endsWith('.mkv')) {
+        const downloadLink = document.createElement('a');
+        downloadLink.href = src;
+        downloadLink.target = '_blank';
+        downloadLink.download = title || 'video';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        return;
+    }
+
+    // باز کردن ویدیوهای استاندارد وب به صورت پخش آنلاین
+    document.getElementById('mTitle').textContent = title;
+    document.getElementById('vPlayer').src = src;
+    document.getElementById('modal').style.display = 'flex';
+    document.getElementById('vPlayer').play();
+}
+
+function closeModal() {
+    const p = document.getElementById('vPlayer');
+    p.pause(); p.src = '';
+    document.getElementById('modal').style.display = 'none';
+}
+document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+
+/* ===== RENDER DOCS ===== */
+function renderDocs() {
+    const row = document.getElementById('docsRow');
+    docsData.forEach(v => {
+        const d = document.createElement('div');
+        d.className = 'dcard';
+        d.innerHTML = `
+            <div class="dcard-thumb-wrap">
+                <img src="${v.cover}" class="dcard-thumb" alt="${v.title}" loading="lazy">
+                <div class="play-overlay"></div>
+                <div class="play-btn-lg"><div class="play-tri-lg"></div></div>
+            </div>
+            <div class="dcard-info">
+                <div class="dcard-title">${v.title}</div>
+                <div class="dcard-sub">${v.sub}</div>
+            </div>`;
+        d.onclick = () => play(v.src, v.title);
+        row.appendChild(d);
+    });
+}
+
+/* ===== RENDER REELS ===== */
+function renderReels() {
+    const r1 = document.getElementById('reelRow1');
+    const r2 = document.getElementById('reelRow2');
+    reelRow1Data.forEach(v => {
+        const d = document.createElement('div');
+        d.className = 'rcard';
+        d.innerHTML = `
+            <img src="${v.cover}" class="rcard-img" alt="${v.title}" loading="lazy">
+            <div class="roverlay"></div>
+            <div class="rplay"><div class="rplay-tri"></div></div>
+            <div class="rcard-num">#${v.num}</div>
+            <div class="rcard-bottom">
+                <div class="rcard-title">${v.title}</div>
+                <div class="rcard-sub">${v.sub}</div>
+            </div>`;
+        d.onclick = () => play(v.src, v.title);
+        r1.appendChild(d);
+    });
+    reelRow2Data.forEach(v => {
+        const d = document.createElement('div');
+        d.className = 'rcard';
+        d.innerHTML = `
+            <img src="${v.cover}" class="rcard-img" alt="${v.title}" loading="lazy">
+            <div class="roverlay"></div>
+            <div class="rplay"><div class="rplay-tri"></div></div>
+            <div class="rcard-num">#${v.num}</div>
+            <div class="rcard-bottom">
+                <div class="rcard-title">${v.title}</div>
+                <div class="rcard-sub">${v.sub}</div>
+            </div>`;
+        d.onclick = () => play(v.src, v.title);
+        r2.appendChild(d);
+    });
+}
+
+/* ===== RENDER BELIEF ROWS ===== */
+function renderBelief() {
+    beliefRowsData.forEach((rowData, ri) => {
+        const row = document.getElementById(`beliefRow${ri+1}`);
+        rowData.forEach(v => {
+            const d = document.createElement('div');
+            d.className = 'bcard';
+            d.innerHTML = `
+                <img src="${v.cover}" class="bcard-img" alt="${v.title}" loading="lazy">
+                <div class="boverlay"></div>
+                <div class="bplay"><div class="bplay-tri"></div></div>
+                <div class="bcard-num">#${v.num}</div>
+                <div class="bcard-bottom">
+                    <div class="bcard-title">${v.title}</div>
+                    <div class="bcard-sub">${v.sub}</div>
+                </div>`;
+            d.onclick = () => play(v.src, v.title);
+            row.appendChild(d);
+        });
+    });
+}
+
+/* ===== INIT ===== */
+renderDocs();
+renderReels();
+renderBelief();
+</script>
+</body>
+</html>
