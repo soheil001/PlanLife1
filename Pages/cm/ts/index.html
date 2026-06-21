@@ -17,17 +17,14 @@
     header { position: fixed; top: 0; left: 0; right: 0; height: 65px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 100; background: rgba(0,0,0,0.25); backdrop-filter: blur(10px); }
 
     .main-center { position: relative; z-index: 5; min-height: 100vh; padding: 85px 16px 140px; }
-    h2 { font-size: 28px; margin-bottom: 6px; text-align: center; font-weight: 900; }
-    .page-subtitle { text-align: center; font-size: 13px; opacity: 0.5; margin-bottom: 24px; }
+    h2 { font-size: 28px; margin-bottom: 24px; text-align: center; font-weight: 900; }
 
-    /* ===== wrapper برای هر ردیف ===== */
     .categories-wrapper {
         display: flex;
         flex-direction: column;
         gap: 0;
     }
 
-    /* هر ردیف: ۲ کارت + accordion زیرشون */
     .cat-row {
         display: flex;
         flex-direction: column;
@@ -90,34 +87,6 @@
         background: linear-gradient(to bottom, transparent 40%, rgba(5,0,20,0.82) 100%);
     }
 
-    .folder-icon {
-        position: absolute;
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 2;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 3px;
-    }
-    .folder-icon svg {
-        width: 38px;
-        height: 38px;
-        filter: drop-shadow(0 2px 8px rgba(255,200,0,0.55));
-    }
-    .folder-ep-count {
-        background: rgba(255,149,0,0.22);
-        border: 1px solid rgba(255,149,0,0.5);
-        border-radius: 999px;
-        padding: 2px 9px;
-        font-size: 11px;
-        font-weight: 800;
-        color: #ffb347;
-        white-space: nowrap;
-        backdrop-filter: blur(8px);
-    }
-
     .cat-info {
         padding: 10px 12px 13px;
     }
@@ -150,7 +119,6 @@
     }
     .cat-card.open .cat-arrow { transform: rotate(90deg); }
 
-    /* ===== accordion ===== */
     .episodes-accordion {
         overflow: hidden;
         max-height: 0;
@@ -204,7 +172,6 @@
         font-size: 11px; font-weight: 700; color: #00ff88; margin-top: 3px;
     }
 
-    /* ===== now playing ===== */
     .now-playing {
         position: fixed;
         top: 10px; left: 10px; right: 10px;
@@ -235,7 +202,6 @@
     .drag-handle-wrap { width: 100%; display: flex; justify-content: center; padding: 6px 0 2px; flex-shrink: 0; cursor: grab; }
     .drag-handle { width: 44px; height: 5px; background: rgba(255,255,255,0.65); border-radius: 999px; box-shadow: 0 0 8px rgba(255,255,255,0.2); }
 
-    /* ===== mini player ===== */
     .mini-player {
         position: fixed;
         bottom: 15px; left: 15px; right: 15px;
@@ -379,8 +345,7 @@
 </header>
 
 <div class="main-center">
-    <h2>دوره‌های PlanLife</h2>
-    <p class="page-subtitle">یک دوره را انتخاب کنید تا قسمت‌ها نمایش داده شود</p>
+    <h2>دوره‌های آنلاین PlanLife.ir</h2>
     <div class="categories-wrapper" id="categoriesWrapper"></div>
 </div>
 
@@ -484,6 +449,134 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+
+// =====================================================
+// ✅ تنظیمات دسته‌بندی‌ها — فقط اینجا تغییر بده
+// =====================================================
+const categoryConfig = {
+    "دوره کدهای پشت‌ پرده پول": {
+        cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
+        codes: ["77777", "BA777", "TH777", "Servat", "2933"],
+        pricing: { old: "۸،۶۵۰،۰۰۰", new: "۳،۹۶۰،۰۰۰", hasDiscount: true },
+        episodes: [
+            { episode: 0, duration: "05:30", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", isIntro: true },
+            { episode: 1,  duration: "32:45", src: "http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/Servat - dore - 1.m4a" },
+            { episode: 2,  duration: "43:12", src: "http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/Kargah servatsazi - 2.m4a" },
+            { episode: 3,  duration: "43:06", src: "http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/Planlife Kargah- servat - 3.m4a" },
+            { episode: 4,  duration: "31:50", src: "http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/Planlife Kargah- servat - 4.m4a" },
+            { episode: 5,  duration: "33:30", src: "" },
+            { episode: 6,  duration: "28:44", src: "" },
+            { episode: 7,  duration: "37:21", src: "" },
+            { episode: 8,  duration: "41:10", src: "" },
+            { episode: 9,  duration: "29:55", src: "" },
+            { episode: 10, duration: "44:00", src: "" },
+            { episode: 11, duration: "38:17", src: "" },
+        ]
+    },
+    "دوره کلیدِ پنهانِ ارتباطات": {
+        cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
+        codes: ["88888", "ESH88", "Love"],
+        pricing: { old: "۷،۳۵۰،۰۰۰", new: "۳،۹۶۰،۰۰۰", hasDiscount: true },
+        episodes: [
+            { episode: 0, duration: "06:15", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", isIntro: true },
+            { episode: 1,  duration: "32:45", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+            { episode: 2,  duration: "43:12", src: "https://tools.irbots.com/uploads/1779408669file_17524.mpeg" },
+            { episode: 3,  duration: "21:58", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+            { episode: 4,  duration: "35:05", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+            { episode: 5,  duration: "33:30", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+            { episode: 6,  duration: "28:44", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+            { episode: 7,  duration: "37:21", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+            { episode: 8,  duration: "41:10", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+            { episode: 9,  duration: "29:55", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+        ]
+    },
+    "دوره چطور حالم خوب باشه ؟": {
+        cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
+        codes: ["99999", "TA999", "Ehsas"],
+        pricing: { price: "۲،۹۵۰،۰۰۰", hasDiscount: false },
+        episodes: [
+            { episode: 0, duration: "04:45", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a", isIntro: true },
+            { episode: 1, duration: "32:10", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a" },
+            { episode: 2, duration: "36:56", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 2.m4a" },
+            { episode: 3, duration: "27:20", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 3.m4a" },
+            { episode: 4, duration: "24:35", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-tahavol halo ehsas 4.m4a" },
+            { episode: 5, duration: "21:28", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Project-Dore-tahavol halo ehsas 5.m4a" },
+        ]
+    },
+    "دوره خود باوری (اعتماد به نفس)": {
+        cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
+        codes: ["11111", "ET111", "Etemad"],
+        pricing: { old: "۶،۵۸۰،۰۰۰", new: "۲،۹۶۰،۰۰۰", hasDiscount: true },
+        episodes: [
+            { episode: 0, duration: "07:20", src: "https://res.cloudinary.com/dzgyndusa/video/upload/v1781607528/Etemad_be_nafs-ghesmate_1_neaq3v.m4a", isIntro: true },
+            { episode: 1, duration: "32:45", src: "https://res.cloudinary.com/dzgyndusa/video/upload/v1781607528/Etemad_be_nafs-ghesmate_1_neaq3v.m4a" },
+            { episode: 2, duration: "43:12", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+            { episode: 3, duration: "21:58", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+            { episode: 4, duration: "35:05", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+            { episode: 5, duration: "33:30", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3" },
+        ]
+    },
+    "دوره پذیرش احساس لیاقت": {
+        cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
+        codes: ["22222", "EL222", "Liyaghat"],
+        pricing: { old: "۵،۶۸۰،۰۰۰", new: "۳،۳۵۰،۰۰۰", hasDiscount: true },
+        episodes: [
+            { episode: 0,  duration: "05:50", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", isIntro: true },
+            { episode: 1,  duration: "32:45", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+            { episode: 2,  duration: "43:12", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+            { episode: 3,  duration: "21:58", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+            { episode: 4,  duration: "35:05", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+            { episode: 5,  duration: "33:30", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+            { episode: 6,  duration: "28:44", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+            { episode: 7,  duration: "37:21", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+            { episode: 8,  duration: "41:10", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+            { episode: 9,  duration: "29:55", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+            { episode: 10, duration: "44:00", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+            { episode: 11, duration: "38:17", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+            { episode: 12, duration: "25:33", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
+        ]
+    },
+    "دوره نفوذ به لایه‌های پنهانِ ذهن": {
+        cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
+        codes: ["33333", "ZE333", "Zehn"],
+        pricing: { price: "۲،۹۵۰،۰۰۰", hasDiscount: false },
+        episodes: [
+            { episode: 0, duration: "06:10", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", isIntro: true },
+            { episode: 1, duration: "00:00", src: "" },
+            { episode: 2, duration: "00:00", src: "" },
+            { episode: 3, duration: "00:00", src: "" },
+            { episode: 4, duration: "00:00", src: "" },
+            { episode: 5, duration: "00:00", src: "" },
+        ]
+    },
+};
+// =====================================================
+
+// ساختن courseData و بقیه‌ی آبجکت‌ها از categoryConfig
+const courseData = [];
+Object.entries(categoryConfig).forEach(([catName, cfg]) => {
+    cfg.episodes.forEach(ep => {
+        courseData.push({
+            title: ep.isIntro ? `🎙️ معرفی: ${catName.replace('دوره ', '')}` : catName,
+            episode: ep.episode,
+            duration: ep.duration,
+            cover: cfg.cover,
+            src: ep.src,
+            isIntro: !!ep.isIntro,
+            category: catName,
+        });
+    });
+});
+
+const subscriptionCodes = {};
+const coursePricing = {};
+Object.entries(categoryConfig).forEach(([name, cfg]) => {
+    subscriptionCodes[name] = cfg.codes;
+    coursePricing[name] = cfg.pricing;
+});
+
+// =====================================================
+
 const SUPABASE_URL      = 'https://hjzzvzxhrqovvducnxha.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
 const DELETE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/delete-course-comment`;
@@ -533,85 +626,7 @@ async function deleteCourseCommentRemote(commentId) {
     } catch(e) { console.warn('Edge function delete:', e); alert('خطا در حذف نظر: ' + e.message); return false; }
 }
 
-const courseData = [
-    { title: "🎙️ معرفی: کدهای پشت پرده پول", episode: 0, duration: "05:30", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", isIntro: true, category: "دوره کدهای پشت‌ پرده پول" },
-    { title: "دوره کدهای پشت‌ پرده پول", episode: 1,  duration: "32:45", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/Servat - dore - 1.m4a", category: "دوره کدهای پشت‌ پرده پول" },
-    { title: "دوره کدهای پشت‌ پرده پول", episode: 2,  duration: "43:12", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/Kargah servatsazi - 2.m4a", category: "دوره کدهای پشت‌ پرده پول" },
-    { title: "دوره کدهای پشت‌ پرده پول", episode: 3,  duration: "43:06", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/Planlife Kargah- servat - 3.m4a", category: "دوره کدهای پشت‌ پرده پول" },
-    { title: "دوره کدهای پشت‌ پرده پول", episode: 4,  duration: "31:50", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/Planlife Kargah- servat - 4.m4a", category: "دوره کدهای پشت‌ پرده پول" },
-    { title: "دوره کدهای پشت‌ پرده پول", episode: 5,  duration: "33:30", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "", category: "دوره کدهای پشت‌ پرده پول" },
-    { title: "دوره کدهای پشت‌ پرده پول", episode: 6,  duration: "28:44", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "", category: "دوره کدهای پشت‌ پرده پول" },
-    { title: "دوره کدهای پشت‌ پرده پول", episode: 7,  duration: "37:21", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "", category: "دوره کدهای پشت‌ پرده پول" },
-    { title: "دوره کدهای پشت‌ پرده پول", episode: 8,  duration: "41:10", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "", category: "دوره کدهای پشت‌ پرده پول" },
-    { title: "دوره کدهای پشت‌ پرده پول", episode: 9,  duration: "29:55", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "", category: "دوره کدهای پشت‌ پرده پول" },
-    { title: "دوره کدهای پشت‌ پرده پول", episode: 10, duration: "44:00", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "", category: "دوره کدهای پشت‌ پرده پول" },
-    { title: "دوره کدهای پشت‌ پرده پول", episode: 11, duration: "38:17", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "", category: "دوره کدهای پشت‌ پرده پول" },
-
-    { title: "🎙️ معرفی: کلیدِ پنهانِ ارتباطات", episode: 0, duration: "06:15", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", isIntro: true, category: "دوره کلیدِ پنهانِ ارتباطات" },
-    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 1,  duration: "32:45", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", category: "دوره کلیدِ پنهانِ ارتباطات" },
-    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 2,  duration: "43:12", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408669file_17524.mpeg", category: "دوره کلیدِ پنهانِ ارتباطات" },
-    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 3,  duration: "21:58", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", category: "دوره کلیدِ پنهانِ ارتباطات" },
-    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 4,  duration: "35:05", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", category: "دوره کلیدِ پنهانِ ارتباطات" },
-    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 5,  duration: "33:30", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", category: "دوره کلیدِ پنهانِ ارتباطات" },
-    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 6,  duration: "28:44", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", category: "دوره کلیدِ پنهانِ ارتباطات" },
-    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 7,  duration: "37:21", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", category: "دوره کلیدِ پنهانِ ارتباطات" },
-    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 8,  duration: "41:10", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", category: "دوره کلیدِ پنهانِ ارتباطات" },
-    { title: "دوره کلیدِ پنهانِ ارتباطات", episode: 9,  duration: "29:55", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", category: "دوره کلیدِ پنهانِ ارتباطات" },
-    { title: "🎙️ معرفی: چطور حالم خوب باشه", episode: 0, duration: "04:45", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a", isIntro: true, category: "دوره چطور حالم خوب باشه ؟" },
-    { title: "دوره چطور حالم خوب باشه ؟", episode: 1, duration: "32:10", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a", category: "دوره چطور حالم خوب باشه ؟" },
-    { title: "دوره چطور حالم خوب باشه ؟", episode: 2, duration: "36:56", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 2.m4a", category: "دوره چطور حالم خوب باشه ؟" },
-    { title: "دوره چطور حالم خوب باشه ؟", episode: 3, duration: "27:20", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 3.m4a", category: "دوره چطور حالم خوب باشه ؟" },
-    { title: "دوره چطور حالم خوب باشه ؟", episode: 4, duration: "24:35", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-tahavol halo ehsas 4.m4a", category: "دوره چطور حالم خوب باشه ؟" },
-    { title: "دوره چطور حالم خوب باشه ؟", episode: 5, duration: "21:28", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Project-Dore-tahavol halo ehsas 5.m4a", category: "دوره چطور حالم خوب باشه ؟" },
-
-    { title: "🎙️ معرفی: خود باوری", episode: 0, duration: "07:20", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://res.cloudinary.com/dzgyndusa/video/upload/v1781607528/Etemad_be_nafs-ghesmate_1_neaq3v.m4a", isIntro: true, category: "دوره خود باوری (اعتماد به نفس)" },
-    { title: "دوره خود باوری (اعتماد به نفس)", episode: 1, duration: "32:45", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://res.cloudinary.com/dzgyndusa/video/upload/v1781607528/Etemad_be_nafs-ghesmate_1_neaq3v.m4a", category: "دوره خود باوری (اعتماد به نفس)" },
-    { title: "دوره خود باوری (اعتماد به نفس)", episode: 2, duration: "43:12", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", category: "دوره خود باوری (اعتماد به نفس)" },
-    { title: "دوره خود باوری (اعتماد به نفس)", episode: 3, duration: "21:58", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", category: "دوره خود باوری (اعتماد به نفس)" },
-    { title: "دوره خود باوری (اعتماد به نفس)", episode: 4, duration: "35:05", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", category: "دوره خود باوری (اعتماد به نفس)" },
-    { title: "دوره خود باوری (اعتماد به نفس)", episode: 5, duration: "33:30", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3", category: "دوره خود باوری (اعتماد به نفس)" },
-
-    { title: "🎙️ معرفی: پذیرش احساس لیاقت", episode: 0, duration: "05:50", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", isIntro: true, category: "دوره پذیرش احساس لیاقت" },
-    { title: "دوره پذیرش احساس لیاقت", episode: 1,  duration: "32:45", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", category: "دوره پذیرش احساس لیاقت" },
-    { title: "دوره پذیرش احساس لیاقت", episode: 2,  duration: "43:12", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", category: "دوره پذیرش احساس لیاقت" },
-    { title: "دوره پذیرش احساس لیاقت", episode: 3,  duration: "21:58", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", category: "دوره پذیرش احساس لیاقت" },
-    { title: "دوره پذیرش احساس لیاقت", episode: 4,  duration: "35:05", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", category: "دوره پذیرش احساس لیاقت" },
-    { title: "دوره پذیرش احساس لیاقت", episode: 5,  duration: "33:30", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", category: "دوره پذیرش احساس لیاقت" },
-    { title: "دوره پذیرش احساس لیاقت", episode: 6,  duration: "28:44", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", category: "دوره پذیرش احساس لیاقت" },
-    { title: "دوره پذیرش احساس لیاقت", episode: 7,  duration: "37:21", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", category: "دوره پذیرش احساس لیاقت" },
-    { title: "دوره پذیرش احساس لیاقت", episode: 8,  duration: "41:10", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", category: "دوره پذیرش احساس لیاقت" },
-    { title: "دوره پذیرش احساس لیاقت", episode: 9,  duration: "29:55", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", category: "دوره پذیرش احساس لیاقت" },
-    { title: "دوره پذیرش احساس لیاقت", episode: 10, duration: "44:00", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", category: "دوره پذیرش احساس لیاقت" },
-    { title: "دوره پذیرش احساس لیاقت", episode: 11, duration: "38:17", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", category: "دوره پذیرش احساس لیاقت" },
-    { title: "دوره پذیرش احساس لیاقت", episode: 12, duration: "25:33", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", category: "دوره پذیرش احساس لیاقت" },
-
-    { title: "🎙️ معرفی: نفوذ به لایه‌های پنهان", episode: 0, duration: "06:10", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", isIntro: true, category: "دوره نفوذ به لایه‌های پنهانِ ذهن" },
-    { title: "دوره نفوذ به لایه‌های پنهانِ ذهن", episode: 1, duration: "00:00", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "", category: "دوره نفوذ به لایه‌های پنهانِ ذهن" },
-    { title: "دوره نفوذ به لایه‌های پنهانِ ذهن", episode: 2, duration: "00:00", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "", category: "دوره نفوذ به لایه‌های پنهانِ ذهن" },
-    { title: "دوره نفوذ به لایه‌های پنهانِ ذهن", episode: 3, duration: "00:00", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "", category: "دوره نفوذ به لایه‌های پنهانِ ذهن" },
-    { title: "دوره نفوذ به لایه‌های پنهانِ ذهن", episode: 4, duration: "00:00", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "", category: "دوره نفوذ به لایه‌های پنهانِ ذهن" },
-    { title: "دوره نفوذ به لایه‌های پنهانِ ذهن", episode: 5, duration: "00:00", cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg", src: "", category: "دوره نفوذ به لایه‌های پنهانِ ذهن" },
-];
-
 const ADMIN_CODE = "admin2933";
-const subscriptionCodes = {
-    "دوره کدهای پشت‌ پرده پول":         ["77777", "BA777", "TH777", "Servat", "2933"],
-    "دوره کلیدِ پنهانِ ارتباطات":         ["88888", "ESH88", "Love"],
-    "دوره چطور حالم خوب باشه ؟":         ["99999", "TA999", "Ehsas"],
-    "دوره خود باوری (اعتماد به نفس)":    ["11111", "ET111", "Etemad"],
-    "دوره پذیرش احساس لیاقت":            ["22222", "EL222", "Liyaghat"],
-    "دوره نفوذ به لایه‌های پنهانِ ذهن":   ["33333", "ZE333", "Zehn"],
-};
-
-const coursePricing = {
-    "دوره کدهای پشت‌ پرده پول":        { old: "۸،۶۵۰،۰۰۰", new: "۳،۹۶۰،۰۰۰", hasDiscount: true },
-    "دوره کلیدِ پنهانِ ارتباطات":        { old: "۷،۳۵۰،۰۰۰", new: "۳،۹۶۰،۰۰۰", hasDiscount: true },
-    "دوره خود باوری (اعتماد به نفس)":   { old: "۶،۵۸۰،۰۰۰", new: "۲،۹۶۰،۰۰۰", hasDiscount: true },
-    "دوره چطور حالم خوب باشه ؟":        { price: "۲،۹۵۰،۰۰۰", hasDiscount: false },
-    "دوره پذیرش احساس لیاقت":           { old: "۵،۶۸۰،۰۰۰", new: "۳،۳۵۰،۰۰۰", hasDiscount: true },
-    "دوره نفوذ به لایه‌های پنهانِ ذهن":  { price: "۲،۹۵۰،۰۰۰", hasDiscount: false },
-};
-
 let unlockedCategories = {};
 let isAdmin = false;
 let currentTrackIndex = 0;
@@ -634,27 +649,24 @@ function formatCommentTime(iso) {
     return `${d.toLocaleDateString('fa-IR',{year:'numeric',month:'short',day:'numeric'})} • ${d.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`;
 }
 
-// ==================== رندر — ساختار جدید: ردیف‌های ۲تایی ====================
 function loadPage() {
-    const categories = Object.keys(subscriptionCodes);
+    const categories = Object.keys(categoryConfig);
     const wrapper = document.getElementById('categoriesWrapper');
     wrapper.innerHTML = '';
 
-    // ردیف‌های ۲تایی
     for (let i = 0; i < categories.length; i += 2) {
         const row = document.createElement('div');
         row.className = 'cat-row';
 
-        // بخش کارت‌ها
         const cardsRow = document.createElement('div');
         cardsRow.className = 'cat-row-cards';
 
         const cats = [categories[i], categories[i+1]].filter(Boolean);
         cats.forEach((cat, j) => {
-            const catIdx = i + j; // ایندکس کلی
-            const items = courseData.filter(x => x.category === cat && !x.isIntro);
-            const epCount = items.length;
-            const coverSrc = courseData.find(x => x.category === cat)?.cover || '';
+            const catIdx = i + j;
+            const cfg = categoryConfig[cat];
+            const epCount = cfg.episodes.filter(e => !e.isIntro).length;
+            const coverSrc = cfg.cover;
 
             const card = document.createElement('div');
             card.className = 'cat-card';
@@ -662,26 +674,11 @@ function loadPage() {
             card.innerHTML = `
                 <div class="cat-cover-wrap">
                     <img src="${coverSrc}" alt="${cat}" loading="lazy">
-                    <div class="folder-icon">
-                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6 14C6 11.79 7.79 10 10 10H19.17C20.23 10 21.24 10.44 21.95 11.2L24 13.5H38C40.21 13.5 42 15.29 42 17.5V34C42 36.21 40.21 38 38 38H10C7.79 38 6 36.21 6 34V14Z" fill="url(#fg1_${catIdx})"/>
-                            <path d="M6 20H42V34C42 36.21 40.21 38 38 38H10C7.79 38 6 36.21 6 34V20Z" fill="url(#fg2_${catIdx})"/>
-                            <defs>
-                                <linearGradient id="fg1_${catIdx}" x1="6" y1="10" x2="42" y2="38" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#FFD700"/><stop offset="1" stop-color="#FF8C00"/>
-                                </linearGradient>
-                                <linearGradient id="fg2_${catIdx}" x1="6" y1="20" x2="42" y2="38" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#FFB300"/><stop offset="1" stop-color="#FF6000"/>
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                        <span class="folder-ep-count">${toPersianNum(epCount)} قسمت</span>
-                    </div>
                 </div>
                 <div class="cat-info">
                     <div class="cat-name">${cat}</div>
                     <div class="cat-meta">
-                        <span class="cat-ep-label">کلیک کنید</span>
+                        <span class="cat-ep-label">${toPersianNum(epCount)} قسمت</span>
                         <span class="cat-arrow">›</span>
                     </div>
                 </div>`;
@@ -691,7 +688,6 @@ function loadPage() {
 
         row.appendChild(cardsRow);
 
-        // یک accordion مشترک برای هر ردیف، که بعد از هر دو کارت باز می‌شه
         const acc = document.createElement('div');
         acc.className = 'episodes-accordion';
         acc.id = `acc-row-${i}`;
@@ -711,7 +707,6 @@ function toggleAccordion(cat, catIdx, rowStart) {
     const card = document.getElementById(`cat-card-${catIdx}`);
     const isSameCat = openCatIdx === catIdx && acc.classList.contains('open');
 
-    // بستن همه
     document.querySelectorAll('.episodes-accordion').forEach(el => { el.classList.remove('open'); el.innerHTML = ''; });
     document.querySelectorAll('.cat-card').forEach(el => el.classList.remove('open'));
 
