@@ -245,23 +245,21 @@
 
     .stars-section {
         width: 100%; max-width: 360px; margin: 18px 0; padding: 12px 16px;
-        background: rgba(255,215,0,0.08); backdrop-filter: blur(14px);
-        border: 1px solid rgba(255,215,0,0.25);
         border-radius: 16px;
         display: none;
     }
     .stars-section.active { display: block; }
-    .stars-label { font-size: 13px; opacity: 0.8; margin-bottom: 8px; display: block; }
-    .stars-container { display: flex; gap: 8px; align-items: center; justify-content: center; }
+    .stars-label { font-size: 13px; opacity: 0.8; margin-bottom: 8px; display: block; text-align: center; }
+    .stars-container { display: flex; gap: 6px; align-items: center; justify-content: center; direction: ltr; }
     .star-btn {
-        width: 42px; height: 42px; border: none; background: rgba(255,215,0,0.12);
-        border: 1px solid rgba(255,215,0,0.3); border-radius: 10px;
-        color: #ffd700; font-size: 20px; cursor: pointer; font-family: inherit;
-        transition: all 0.2s;
+        width: 42px; height: 42px; border: none; background: none;
+        color: rgba(255,215,0,0.25); font-size: 32px; cursor: pointer; font-family: inherit;
+        transition: color 0.2s, transform 0.15s;
         display: flex; align-items: center; justify-content: center;
+        padding: 0; line-height: 1;
     }
-    .star-btn:active { background: rgba(255,215,0,0.28); transform: scale(0.92); }
-    .star-btn.filled { background: rgba(255,215,0,0.3); border-color: rgba(255,215,0,0.6); }
+    .star-btn:active { transform: scale(0.88); }
+    .star-btn.filled { color: #ffd700; }
 
     .track-info { text-align: center; width: 100%; max-width: 360px; margin: 20px 0 10px; flex-shrink: 0; }
     .np-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
@@ -767,9 +765,10 @@ function buildEpisodesHTML(cat) {
 function renderStars() {
     const container = document.getElementById('starsContainer');
     container.innerHTML = '';
+    const rating = userRatings[currentTrackKey] || 0;
     for (let i = 1; i <= 5; i++) {
         const btn = document.createElement('button');
-        btn.className = `star-btn ${(userRatings[currentTrackKey] || 0) >= i ? 'filled' : ''}`;
+        btn.className = `star-btn ${rating >= i ? 'filled' : ''}`;
         btn.textContent = '★';
         btn.onclick = (e) => { e.preventDefault(); userRatings[currentTrackKey] = i; renderStars(); };
         container.appendChild(btn);
