@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اهرم رنج و لذت | PlanLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07070F;
+    --orange: #FF6B35;
+    --orange-dim: rgba(255,107,53,0.15);
+    --gold: #FFB347;
+    --glass: rgba(255,255,255,0.06);
+    --glass-border: rgba(255,255,255,0.12);
+    --pain: rgba(220,38,38,0.08);
+    --pain-accent: #EF4444;
+    --pleasure: rgba(34,197,94,0.08);
+    --pleasure-accent: #22C55E;
+    --text: #F0EEF6;
+    --text-dim: rgba(240,238,246,0.55);
+  }
+
+  body {
+    font-family: 'Vazirmatn', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 20%, rgba(255,107,53,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 80% 80%, rgba(255,179,71,0.05) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* MODAL OVERLAY */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(18px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.hidden { display: none; }
+
+  .modal-box {
+    width: 100%; max-width: 520px;
+    background: rgba(15,15,28,0.92);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 36px 32px 32px;
+    backdrop-filter: blur(30px);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,107,53,0.1);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .modal-box::before {
+    content: '';
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 200px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--orange), transparent);
+  }
+
+  /* Audio player area */
+  .audio-zone {
+    background: rgba(255,107,53,0.06);
+    border: 1px solid rgba(255,107,53,0.2);
+    border-radius: 18px;
+    padding: 22px 20px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+
+  .audio-icon {
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, var(--orange), var(--gold));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 14px;
+    box-shadow: 0 0 24px rgba(255,107,53,0.4);
+  }
+
+  .audio-icon svg { width: 26px; height: 26px; fill: white; }
+
+  .audio-title {
+    font-size: 13px; font-weight: 600; letter-spacing: 0.06em;
+    color: var(--orange); margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+
+  .custom-audio {
+    width: 100%; display: flex; align-items: center; gap: 10px;
+  }
+
+  .play-btn {
+    width: 42px; height: 42px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--orange), var(--gold));
+    border: none; border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(255,107,53,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .play-btn:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(255,107,53,0.5); }
+  .play-btn svg { width: 16px; height: 16px; fill: white; margin-right: -1px; }
+  .play-btn.playing .play-icon { display: none; }
+  .play-btn.playing .pause-icon { display: block !important; }
+
+  .audio-progress-wrap {
+    flex: 1; display: flex; flex-direction: column; gap: 5px;
+  }
+
+  .progress-bar {
+    width: 100%; height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px; cursor: pointer; position: relative;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--orange), var(--gold));
+    border-radius: 4px; width: 0%; transition: width 0.1s linear;
+  }
+  .audio-times {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--text-dim);
+  }
+
+  /* Modal headline */
+  .modal-headline {
+    font-size: 26px; font-weight: 800;
+    background: linear-gradient(135deg, #fff 40%, var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    line-height: 1.4; margin-bottom: 8px;
+  }
+
+  .modal-sub {
+    font-size: 14px; color: var(--text-dim); margin-bottom: 28px; line-height: 1.7;
+  }
+
+  .habit-input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 16px 18px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 16px; font-weight: 500;
+    color: var(--text);
+    text-align: right;
+    outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    margin-bottom: 10px;
+  }
+  .habit-input:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(255,107,53,0.18);
+  }
+  .habit-input.known-pos {
+    border-color: var(--pleasure-accent) !important;
+    background: rgba(34,197,94,0.06) !important;
+    box-shadow: 0 0 0 3px rgba(34,197,94,0.14) !important;
+  }
+  .habit-input.known-neg {
+    border-color: var(--pain-accent) !important;
+    background: rgba(239,68,68,0.06) !important;
+    box-shadow: 0 0 0 3px rgba(239,68,68,0.14) !important;
+  }
+  .habit-input.unknown-input {
+    border-color: #F97316 !important;
+    background: rgba(249,115,22,0.06) !important;
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.16) !important;
+  }
+  .habit-input::placeholder { color: rgba(255,255,255,0.25); }
+
+  .word-hint { font-size: 12px; color: var(--text-dim); margin-bottom: 14px; text-align: right; }
+
+  /* Manual type selection — hidden by default, shown only when unknown */
+  .type-override {
+    display: none;
+    align-items: center; gap: 8px;
+    margin-bottom: 18px; flex-wrap: wrap;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+  .type-override.visible { display: flex; }
+
+  .type-override-label {
+    font-size: 13px; color: var(--text-dim); width: 100%; text-align: right;
+    margin-bottom: 6px;
+  }
+
+  .type-mini {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 7px 16px;
+    font-family: "Vazirmatn", sans-serif;
+    font-size: 13px; font-weight: 600;
+    color: rgba(240,238,246,0.5); cursor: pointer;
+    transition: all 0.2s;
+    flex: 1;
+  }
+  .type-mini.active-pos {
+    border-color: var(--pleasure-accent);
+    background: rgba(34,197,94,0.14);
+    color: var(--pleasure-accent);
+  }
+  .type-mini.active-neg {
+    border-color: var(--pain-accent);
+    background: rgba(239,68,68,0.14);
+    color: var(--pain-accent);
+  }
+
+  .start-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--orange), var(--gold));
+    border: none; border-radius: 14px;
+    padding: 16px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 17px; font-weight: 700;
+    color: white; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(255,107,53,0.35);
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(255,107,53,0.45); }
+  .start-btn:active { transform: translateY(0); }
+
+  /* MAIN PAGE */
+  .main-page { display: none; min-height: 100vh; position: relative; z-index: 1; }
+  .main-page.visible { display: block; }
+
+  .page-header {
+    text-align: center;
+    padding: 48px 24px 32px;
+    position: relative;
+  }
+
+  .brand-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,107,53,0.1);
+    border: 1px solid rgba(255,107,53,0.25);
+    border-radius: 50px; padding: 6px 16px;
+    font-size: 12px; font-weight: 600; color: var(--orange);
+    letter-spacing: 0.08em; margin-bottom: 20px;
+  }
+
+  .page-title {
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 900; line-height: 1.3;
+    background: linear-gradient(135deg, #fff 30%, var(--gold) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+  }
+
+  .habit-tag {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--orange), var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .page-desc {
+    font-size: 15px; color: var(--text-dim); max-width: 560px; margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* COLUMNS */
+  .columns-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 40px;
+  }
+
+  @media (max-width: 768px) {
+    .columns-wrap { grid-template-columns: 1fr; }
+  }
+
+  .col {
+    border-radius: 24px;
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .col::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+
+  .col-pain {
+    background: linear-gradient(160deg, rgba(220,38,38,0.07), rgba(15,15,28,0.8));
+    border: 1px solid rgba(239,68,68,0.18);
+  }
+  .col-pain::before { background: linear-gradient(90deg, transparent, var(--pain-accent), transparent); }
+
+  .col-pleasure {
+    background: linear-gradient(160deg, rgba(34,197,94,0.07), rgba(15,15,28,0.8));
+    border: 1px solid rgba(34,197,94,0.18);
+  }
+  .col-pleasure::before { background: linear-gradient(90deg, transparent, var(--pleasure-accent), transparent); }
+
+  .col-header {
+    display: flex; align-items: flex-start; gap: 12px; margin-bottom: 24px;
+    flex-direction: row-reverse;
+  }
+
+  .col-icon {
+    width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+    margin-top: 2px;
+  }
+
+  .col-pain .col-icon { background: rgba(239,68,68,0.15); }
+  .col-pleasure .col-icon { background: rgba(34,197,94,0.15); }
+
+  .col-question {
+    font-size: clamp(13px, 1.8vw, 15px); font-weight: 700; line-height: 1.7;
+    word-break: keep-all; overflow-wrap: break-word;
+  }
+
+  .col-pain .col-question { color: #FCA5A5; }
+  .col-pleasure .col-question { color: #86EFAC; }
+
+  /* Textboxes */
+  .items-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .item-row {
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .item-num {
+    width: 26px; height: 26px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+
+  .col-pain .item-num { background: rgba(239,68,68,0.2); color: var(--pain-accent); }
+  .col-pleasure .item-num { background: rgba(34,197,94,0.2); color: var(--pleasure-accent); }
+
+  .item-input {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 14px; color: var(--text);
+    outline: none; transition: all 0.2s;
+    text-align: right;
+  }
+
+  .col-pain .item-input:focus {
+    border-color: rgba(239,68,68,0.4);
+    background: rgba(239,68,68,0.05);
+  }
+  .col-pleasure .item-input:focus {
+    border-color: rgba(34,197,94,0.4);
+    background: rgba(34,197,94,0.05);
+  }
+  .item-input::placeholder { color: rgba(255,255,255,0.18); font-size: 13px; }
+
+  .add-more-btn {
+    margin-top: 12px; width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px dashed rgba(255,255,255,0.14);
+    border-radius: 10px; padding: 10px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 13px; color: var(--text-dim);
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    backdrop-filter: blur(8px);
+  }
+  .add-more-btn:hover {
+    background: rgba(255,255,255,0.09);
+    border-color: rgba(255,255,255,0.25);
+    color: var(--text);
+  }
+
+  /* SAVE SECTION */
+  .save-section {
+    text-align: center; padding: 0 24px 60px;
+    max-width: 600px; margin: 0 auto;
+  }
+
+  .save-btn {
+    background: linear-gradient(135deg, var(--orange), var(--gold));
+    border: none; border-radius: 16px;
+    padding: 18px 56px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 18px; font-weight: 800;
+    color: white; cursor: pointer;
+    box-shadow: 0 12px 32px rgba(255,107,53,0.4);
+    transition: all 0.25s;
+    letter-spacing: 0.03em;
+  }
+  .save-btn:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(255,107,53,0.5); }
+
+  /* SUCCESS MODAL */
+  .success-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.88);
+    backdrop-filter: blur(20px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .success-overlay.hidden { display: none; }
+
+  .success-box {
+    width: 100%; max-width: 560px;
+    background: rgba(12,12,24,0.96);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 28px;
+    padding: 40px 36px;
+    backdrop-filter: blur(40px);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,179,71,0.15);
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+
+  .success-box::before {
+    content: '';
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 300px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .success-icon {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, var(--orange), var(--gold));
+    border-radius: 50%; margin: 0 auto 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    box-shadow: 0 0 40px rgba(255,107,53,0.4);
+    animation: pulse-glow 2s ease infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 30px rgba(255,107,53,0.4); }
+    50% { box-shadow: 0 0 60px rgba(255,107,53,0.6); }
+  }
+
+  .success-title {
+    font-size: 24px; font-weight: 800;
+    background: linear-gradient(135deg, #fff, var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+  }
+
+  .success-desc {
+    font-size: 15px; color: var(--text-dim); line-height: 1.8;
+    margin-bottom: 32px;
+  }
+
+  .success-desc strong { color: var(--orange); font-weight: 700; }
+
+  .days-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--orange), var(--gold));
+    border-radius: 50px; padding: 8px 22px;
+    font-size: 22px; font-weight: 900; color: white;
+    margin: 0 auto 8px;
+    box-shadow: 0 8px 20px rgba(255,107,53,0.35);
+  }
+
+  .download-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--orange), var(--gold));
+    border: none; border-radius: 14px; padding: 16px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 17px; font-weight: 700; color: white; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(255,107,53,0.35);
+    transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .download-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(255,107,53,0.45); }
+
+  /* Logo top */
+  .top-logo {
+    position: fixed; top: 20px; right: 28px; z-index: 50;
+    font-size: 14px; font-weight: 800; color: var(--orange);
+    letter-spacing: 0.05em; text-decoration: none;
+    opacity: 0.7; transition: opacity 0.2s;
+  }
+  .top-logo:hover { opacity: 1; }
+
+  /* Col icon text style — no emoji */
+  .col-icon-label {
+    font-size: 11px; font-weight: 800; letter-spacing: 0.04em;
+  }
+  .col-pain .col-icon-label { color: var(--pain-accent); }
+  .col-pleasure .col-icon-label { color: var(--pleasure-accent); }
+</style>
+</head>
+<body>
+
+<a href="https://planlife.ir" class="top-logo" target="_blank">PlanLife.ir</a>
+
+<!-- INTRO MODAL -->
+<div class="modal-overlay" id="introModal">
+  <div class="modal-box">
+
+    <div class="audio-zone">
+      <div class="audio-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+      </div>
+      <div class="audio-title">راهنمای صوتی</div>
+      <div class="custom-audio">
+        <button class="play-btn" id="playBtn" onclick="togglePlay()">
+          <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <svg class="pause-icon" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+        <div class="audio-progress-wrap">
+          <div class="progress-bar" onclick="seekAudio(event)">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div class="audio-times">
+            <span id="currentTime">۰:۰۰</span>
+            <span id="duration">--:--</span>
+          </div>
+        </div>
+      </div>
+      <audio id="audioPlayer">
+        <source src="intro-audio.mp3" type="audio/mpeg">
+      </audio>
+    </div>
+
+    <h1 class="modal-headline">اهرم رنج و لذت</h1>
+    <p class="modal-sub">ابزاری قدرتمند برای ترک عادت‌های مخرب و ساختن آینده‌ای متفاوت<br>با نوشتن، احساس می‌کنی — با احساس، تغییر می‌کنی</p>
+
+    <input
+      class="habit-input"
+      id="habitInput"
+      type="text"
+      placeholder="مثال: ورزش، سیگار، تنبلی، مطالعه..."
+      maxlength="80"
+      oninput="limitWords(this); liveDetect(this.value)"
+      onkeydown="if(event.key==='Enter') startJourney()"
+    />
+    <div class="word-hint" id="wordHint">حداکثر ۴ کلمه بنویسید</div>
+
+    <!-- فقط وقتی کلمه در دیکشنری نباشد نشان داده می‌شود -->
+    <div class="type-override" id="typeOverride">
+      <div class="type-override-label">این عادت برای شما مثبت است یا منفی؟</div>
+      <button class="type-mini" id="typeBtnPos" onclick="selectType('positive')">عادت مثبت</button>
+      <button class="type-mini" id="typeBtnNeg" onclick="selectType('negative')">عادت منفی</button>
+    </div>
+
+    <button class="start-btn" onclick="startJourney()">شروع تحلیل رنج و لذت</button>
+  </div>
+</div>
+
+<!-- MAIN PAGE -->
+<div class="main-page" id="mainPage">
+
+  <div class="page-header">
+    <div class="brand-badge">PlanLife — اهرم تغییر</div>
+    <h1 class="page-title">
+      تصویر <span class="habit-tag" id="habitDisplay"></span><br>در ۵ سال آینده
+    </h1>
+    <p class="page-desc">با صداقت بنویسید. این جملات آینه‌ی ذهن شما خواهند شد.</p>
+  </div>
+
+  <div class="columns-wrap">
+
+    <!-- PAIN COLUMN -->
+    <div class="col col-pain">
+      <div class="col-header">
+        <div class="col-icon"><span class="col-icon-label">رنج</span></div>
+        <div class="col-question" id="painQuestion"></div>
+      </div>
+      <div class="items-list" id="painList"></div>
+      <button class="add-more-btn" onclick="addItem('pain')">
+        <span>+</span> افزودن مورد جدید
+      </button>
+    </div>
+
+    <!-- PLEASURE COLUMN -->
+    <div class="col col-pleasure">
+      <div class="col-header">
+        <div class="col-icon"><span class="col-icon-label">لذت</span></div>
+        <div class="col-question" id="pleasureQuestion"></div>
+      </div>
+      <div class="items-list" id="pleasureList"></div>
+      <button class="add-more-btn" onclick="addItem('pleasure')">
+        <span>+</span> افزودن مورد جدید
+      </button>
+    </div>
+
+  </div>
+
+  <div class="save-section">
+    <button class="save-btn" onclick="saveAndShow()">ذخیره و دریافت برنامه ۲۱ روزه</button>
+  </div>
+
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="success-overlay hidden" id="successModal">
+  <div class="success-box">
+    <div class="success-icon">★</div>
+    <div class="days-badge">۲۱ روز</div>
+    <h2 class="success-title">برنامه‌ی تغییر شما آماده است</h2>
+    <p class="success-desc">
+      این نوشته‌ها را به مدت <strong>۲۱ روز متوالی</strong> — به محض بیدار شدن از خواب — با صدای بلند بخوانید.<br><br>
+      مغز انسان برای شکل‌گیری یک عادت جدید به <strong>حداقل ۲۱ تکرار</strong> نیاز دارد. صبح‌ها قوی‌ترین لحظه برای برنامه‌ریزی ذهن است. هر روز که این تمرین را انجام می‌دهید، یک قدم به نسخه‌ی بهتر خود نزدیک‌تر می‌شوید.
+    </p>
+    <button class="download-btn" onclick="downloadPDF()">
+      دانلود PDF — برنامه ۲۱ روزه
+    </button>
+  </div>
+</div>
+
+<script>
+// Audio Player
+const audio = document.getElementById('audioPlayer');
+const playBtn = document.getElementById('playBtn');
+const progressFill = document.getElementById('progressFill');
+const currentTimeEl = document.getElementById('currentTime');
+const durationEl = document.getElementById('duration');
+
+function toPersianNums(str) {
+  return str.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+}
+
+function formatTime(s) {
+  if (isNaN(s)) return '--:--';
+  const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+  return toPersianNums(`${m}:${sec < 10 ? '0'+sec : sec}`);
+}
+
+audio.addEventListener('loadedmetadata', () => {
+  durationEl.textContent = formatTime(audio.duration);
+});
+
+audio.addEventListener('timeupdate', () => {
+  const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+  progressFill.style.width = pct + '%';
+  currentTimeEl.textContent = formatTime(audio.currentTime);
+});
+
+audio.addEventListener('ended', () => {
+  playBtn.classList.remove('playing');
+});
+
+function togglePlay() {
+  if (audio.paused) {
+    audio.play().catch(() => {});
+    playBtn.classList.add('playing');
+  } else {
+    audio.pause();
+    playBtn.classList.remove('playing');
+  }
+}
+
+function seekAudio(e) {
+  const bar = e.currentTarget;
+  const rect = bar.getBoundingClientRect();
+  const clickX = rect.right - e.clientX;
+  const pct = clickX / rect.width;
+  if (audio.duration) audio.currentTime = pct * audio.duration;
+}
+
+// Word Limit
+function limitWords(input) {
+  const words = input.value.trim().split(/\s+/).filter(w => w.length > 0);
+  if (words.length > 4) {
+    input.value = words.slice(0, 4).join(' ');
+  }
+  const count = input.value.trim() === '' ? 0 : input.value.trim().split(/\s+/).filter(w => w).length;
+  const hint = document.getElementById('wordHint');
+  hint.textContent = `${toPersianNums(count.toString())} از ۴ کلمه`;
+  hint.style.color = count === 4 ? 'var(--orange)' : 'var(--text-dim)';
+}
+
+// ─── Habit Dictionary ─────────────────────────
+// فقط کلمه کلیدی استخراج می‌شود و در جدول قرار می‌گیرد
+// ترتیب مهم است: کلیدهای طولانی‌تر اول بیایند تا تشخیص درست‌تر باشد
+const HABITS = {
+  // ── عادات مثبت ──
+  'ورزش صبحگاهی':       { type: 'positive' },
+  'دوچرخه سواری':       { type: 'positive' },
+  'دوچرخه‌سواری':       { type: 'positive' },
+  'کتاب خواندن':        { type: 'positive' },
+  'پادکست آموزشی':      { type: 'positive' },
+  'یادگیری مهارت':      { type: 'positive' },
+  'پس انداز':           { type: 'positive' },
+  'پس‌انداز':           { type: 'positive' },
+  'سرمایه گذاری':       { type: 'positive' },
+  'سرمایه‌گذاری':       { type: 'positive' },
+  'مدیریت مالی':        { type: 'positive' },
+  'بودجه بندی':         { type: 'positive' },
+  'بودجه‌بندی':         { type: 'positive' },
+  'برنامه ریزی':        { type: 'positive' },
+  'برنامه‌ریزی':        { type: 'positive' },
+  'چک لیست':            { type: 'positive' },
+  'چک‌لیست':            { type: 'positive' },
+  'تقویم کاری':         { type: 'positive' },
+  'نظم روزانه':         { type: 'positive' },
+  'صبح زود':            { type: 'positive' },
+  'سحرخیزی':            { type: 'positive' },
+  'بیدارباش':           { type: 'positive' },
+  'نظم خواب':           { type: 'positive' },
+  'تغذیه سالم':         { type: 'positive' },
+  'رژیم فیبر':          { type: 'positive' },
+  'غذای خانگی':         { type: 'positive' },
+  'سبزیجات':            { type: 'positive' },
+  'اعتماد به نفس':      { type: 'positive' },
+  'مثبت اندیشی':        { type: 'positive' },
+  'مثبت‌اندیشی':        { type: 'positive' },
+  'مسئولیت پذیری':      { type: 'positive' },
+  'مسئولیت‌پذیری':      { type: 'positive' },
+  'کمک به دیگران':      { type: 'positive' },
+  'وقت شناسی':          { type: 'positive' },
+  'وقت‌شناسی':          { type: 'positive' },
+  'هدف گذاری':          { type: 'positive' },
+  'هدف‌گذاری':          { type: 'positive' },
+  'صرفه جویی':          { type: 'positive' },
+  'صرفه‌جویی':          { type: 'positive' },
+  'گوش دادن':           { type: 'positive' },
+  'گوش دادن فعال':      { type: 'positive' },
+  'کنترل خشم':          { type: 'positive' },
+  'تنفس عمیق':          { type: 'positive' },
+  'ذهن آگاهی':          { type: 'positive' },
+  'ذهن‌آگاهی':          { type: 'positive' },
+  'آرام سازی ذهن':      { type: 'positive' },
+  'نه گفتن':            { type: 'positive' },
+  'عزت نفس':            { type: 'positive' },
+  'اتمام کارها':        { type: 'positive' },
+  'پیگیری تا پایان':    { type: 'positive' },
+  'مرتب کردن':          { type: 'positive' },
+  'مینیمالیسم':         { type: 'positive' },
+  'تمیزی':              { type: 'positive' },
+  'بدنسازی':            { type: 'positive' },
+  'ورزش':               { type: 'positive' },
+  'دویدن':              { type: 'positive' },
+  'پیاده روی':          { type: 'positive' },
+  'پیاده‌روی':          { type: 'positive' },
+  'شنا':                { type: 'positive' },
+  'یوگا':               { type: 'positive' },
+  'مدیتیشن':            { type: 'positive' },
+  'مطالعه':             { type: 'positive' },
+  'یادگیری':            { type: 'positive' },
+  'نوشتن':              { type: 'positive' },
+  'یادداشت':            { type: 'positive' },
+  'شکرگزاری':           { type: 'positive' },
+  'تمرکز':              { type: 'positive' },
+  'خلاقیت':             { type: 'positive' },
+  'تنفس':               { type: 'positive' },
+  'نظم':                { type: 'positive' },
+  'اراده':              { type: 'positive' },
+  'انعطاف':             { type: 'positive' },
+  'صبر':                { type: 'positive' },
+  'صبوری':              { type: 'positive' },
+  'سکوت':               { type: 'positive' },
+  'تغذیه':              { type: 'positive' },
+  'آب':                 { type: 'positive' },
+  'کتاب':               { type: 'positive' },
+  'زبان':               { type: 'positive' },
+  'قاطعیت':             { type: 'positive' },
+
+  // ── عادات منفی ──
+  'لفت دادن کارها':     { type: 'negative' },
+  'پشت گوش انداختن':    { type: 'negative' },
+  'اهمال کاری':         { type: 'negative' },
+  'اهمال‌کاری':         { type: 'negative' },
+  'اسکرول بی هدف':      { type: 'negative' },
+  'اسکرول بی‌هدف':      { type: 'negative' },
+  'اعتیاد به گوشی':     { type: 'negative' },
+  'یوتیوب گردی':        { type: 'negative' },
+  'یوتیوب‌گردی':        { type: 'negative' },
+  'اینستاگرام گردی':    { type: 'negative' },
+  'اینستاگرام‌گردی':    { type: 'negative' },
+  'شبکه اجتماعی':       { type: 'negative' },
+  'شبکه‌های اجتماعی':   { type: 'negative' },
+  'خرید پاساژی':        { type: 'negative' },
+  'خریدهای بدون فکر':   { type: 'negative' },
+  'خرج بی رویه':        { type: 'negative' },
+  'پرخوری عصبی':        { type: 'negative' },
+  'ریزه خواری شبانه':   { type: 'negative' },
+  'ریزه‌خواری شبانه':   { type: 'negative' },
+  'پرخوری جلوی تلویزیون': { type: 'negative' },
+  'شب زنده داری':       { type: 'negative' },
+  'شب‌زنده‌داری':       { type: 'negative' },
+  'بیدار ماندن تا صبح': { type: 'negative' },
+  'دیر خوابیدن':        { type: 'negative' },
+  'زیاد خوابیدن':       { type: 'negative' },
+  'دیر بیدار شدن':      { type: 'negative' },
+  'خودسرزنش گری':       { type: 'negative' },
+  'خودسرزنش‌گری':       { type: 'negative' },
+  'خودکم بینی':         { type: 'negative' },
+  'خودکم‌بینی':         { type: 'negative' },
+  'افکار منفی':         { type: 'negative' },
+  'نق زدن':             { type: 'negative' },
+  'ناخن جویدن':         { type: 'negative' },
+  'کندن پوست لب':       { type: 'negative' },
+  'شلختگی':             { type: 'negative' },
+  'انباشتگی وسایل':     { type: 'negative' },
+  'اتاق شلوغ':          { type: 'negative' },
+  'مهرطلبی':            { type: 'negative' },
+  'باج دادن عاطفی':     { type: 'negative' },
+  'پریدن وسط حرف':      { type: 'negative' },
+  'قطع کردن صحبت':      { type: 'negative' },
+  'پرخاشگری':           { type: 'negative' },
+  'داد زدن':            { type: 'negative' },
+  'زود جوش آوردن':      { type: 'negative' },
+  'فحاشی':              { type: 'negative' },
+  'بدقولی':             { type: 'negative' },
+  'دیر رسیدن':          { type: 'negative' },
+  'تعویق ملاقات':       { type: 'negative' },
+  'غیبت':               { type: 'negative' },
+  'پشت سر صحبت کردن':   { type: 'negative' },
+  'قضاوت دیگران':       { type: 'negative' },
+  'سخن چینی':           { type: 'negative' },
+  'سخن‌چینی':           { type: 'negative' },
+  'سیگار کشیدن':        { type: 'negative' },
+  'فست فود':            { type: 'negative' },
+  'فست‌فود':            { type: 'negative' },
+  'بازی موبایل':        { type: 'negative' },
+  'منفی بافی':          { type: 'negative' },
+  'منفی‌بافی':          { type: 'negative' },
+  'بهانه آوردن':        { type: 'negative' },
+  'گوشه نشینی':         { type: 'negative' },
+  'بی خوابی':           { type: 'negative' },
+  'بی‌خوابی':           { type: 'negative' },
+  'چای زیاد':           { type: 'negative' },
+  'قهوه زیاد':          { type: 'negative' },
+  'سیگار':              { type: 'negative' },
+  'قلیان':              { type: 'negative' },
+  'ویپ':                { type: 'negative' },
+  'ماریجوانا':          { type: 'negative' },
+  'تریاک':              { type: 'negative' },
+  'گل':                 { type: 'negative' },
+  'تنبلی':              { type: 'negative' },
+  'اهمال':              { type: 'negative' },
+  'پرخوری':             { type: 'negative' },
+  'چیپس':               { type: 'negative' },
+  'پفک':                { type: 'negative' },
+  'نوشابه':             { type: 'negative' },
+  'شیرینی':             { type: 'negative' },
+  'شکر':                { type: 'negative' },
+  'موبایل':             { type: 'negative' },
+  'گوشی':               { type: 'negative' },
+  'اینستاگرام':         { type: 'negative' },
+  'تیک تاک':            { type: 'negative' },
+  'یوتیوب':             { type: 'negative' },
+  'الکل':               { type: 'negative' },
+  'قمار':               { type: 'negative' },
+  'دروغ':               { type: 'negative' },
+  'خشم':                { type: 'negative' },
+  'عصبانیت':            { type: 'negative' },
+  'بدبینی':             { type: 'negative' },
+  'وام':                { type: 'negative' },
+  'قرض':                { type: 'negative' },
+  'ولخرجی':             { type: 'negative' },
+  'اسراف':              { type: 'negative' },
+  'تعلل':               { type: 'negative' },
+  'حسادت':              { type: 'negative' },
+  'کینه':               { type: 'negative' },
+  'شکایت':              { type: 'negative' },
+  'بهانه':              { type: 'negative' },
+  'انزوا':              { type: 'negative' },
+  'پرحرفی':             { type: 'negative' },
+  'بازی':               { type: 'negative' },
+  'سریال':              { type: 'negative' },
+  'نتفلیکس':            { type: 'negative' },
+  'قند':                { type: 'negative' },
+  'تنقلات':             { type: 'negative' },
+  'کافئین':             { type: 'negative' },
+  'دود':                { type: 'negative' },
+
+  // ─── کلمات کلیدی جدید ───
+  // گروه ۱: ورزش (مثبت)
+  'بدنسازی':            { type: 'positive' },
+  'شنا':                { type: 'positive' },
+  'ورزش صبحگاهی':       { type: 'positive' },
+  'دوچرخه سواری':       { type: 'positive' },
+  'دوچرخه‌سواری':       { type: 'positive' },
+
+  // گروه ۲: تنبلی / اهمال (منفی)
+  'لفت دادن':           { type: 'negative' },
+  'پشت گوش انداختن':    { type: 'negative' },
+  'اهمال کاری':         { type: 'negative' },
+  'اهمال‌کاری':         { type: 'negative' },
+
+  // گروه ۳: سیگار و دخانیات (منفی)
+  'ویپ':                { type: 'negative' },
+  'گل':                 { type: 'negative' },
+  'ماریجوانا':          { type: 'negative' },
+  'تریاک':              { type: 'negative' },
+
+  // گروه ۴: مطالعه و یادگیری (مثبت)
+  'کتاب‌خوانی':         { type: 'positive' },
+  'کتاب خوانی':         { type: 'positive' },
+  'پادکست آموزشی':      { type: 'positive' },
+  'یادگیری مهارت':      { type: 'positive' },
+
+  // گروه ۵: فست‌فود و تنقلات (منفی)
+  'پفک':                { type: 'negative' },
+  'نوشابه':             { type: 'negative' },
+  'شیرینی':             { type: 'negative' },
+  'شکر زیاد':           { type: 'negative' },
+
+  // گروه ۶: سحرخیزی (مثبت)
+  'سحرخیزی':            { type: 'positive' },
+  'بیدارباش':           { type: 'positive' },
+  'نظم خواب':           { type: 'positive' },
+
+  // گروه ۷: اسکرول و گوشی (منفی)
+  'اسکرول بی‌هدف':      { type: 'negative' },
+  'اسکرول بی هدف':      { type: 'negative' },
+  'اعتیاد به گوشی':     { type: 'negative' },
+  'اینستاگرام‌گردی':    { type: 'negative' },
+  'یوتیوب‌گردی':        { type: 'negative' },
+
+  // گروه ۸: مالی (مثبت)
+  'بودجه‌بندی':         { type: 'positive' },
+  'بودجه بندی':         { type: 'positive' },
+  'مدیریت مالی':        { type: 'positive' },
+
+  // گروه ۹: ولخرجی (منفی)
+  'خرید پاساژی':        { type: 'negative' },
+  'خریدهای بدون فکر':   { type: 'negative' },
+
+  // گروه ۱۰: ذهن‌آگاهی (مثبت)
+  'ذهن‌آگاهی':          { type: 'positive' },
+  'ذهن آگاهی':          { type: 'positive' },
+  'سکوت':               { type: 'positive' },
+  'آرام‌سازی ذهن':      { type: 'positive' },
+  'آرام سازی ذهن':      { type: 'positive' },
+
+  // گروه ۱۱: خودسرزنش (منفی)
+  'خودسرزنش‌گری':       { type: 'negative' },
+  'خودسرزنش گری':       { type: 'negative' },
+  'خودکم‌بینی':         { type: 'negative' },
+  'خودکم بینی':         { type: 'negative' },
+
+  // گروه ۱۲: نظم روزانه (مثبت)
+  'چک‌لیست':            { type: 'positive' },
+  'چک لیست':            { type: 'positive' },
+  'تقویم کاری':         { type: 'positive' },
+  'نظم روزانه':         { type: 'positive' },
+
+  // گروه ۱۳: عادت‌های عصبی (منفی)
+  'ناخن جویدن':         { type: 'negative' },
+  'کندن پوست لب':       { type: 'negative' },
+  'تکان دادن پا':       { type: 'negative' },
+
+  // گروه ۱۴: تغذیه سالم (مثبت)
+  'رژیم فیبر':          { type: 'positive' },
+  'سبزیجات':            { type: 'positive' },
+  'سالاد':              { type: 'positive' },
+  'غذای خانگی':         { type: 'positive' },
+  'تغذیه سالم':         { type: 'positive' },
+
+  // گروه ۱۵: پرخوری (منفی)
+  'پرخوری عصبی':        { type: 'negative' },
+  'ریزه‌خواری':         { type: 'negative' },
+  'ریزه خواری':         { type: 'negative' },
+  'پرخوری جلوی تلویزیون': { type: 'negative' },
+
+  // گروه ۱۶: آب و مایعات (مثبت)
+  'آب خوردن':           { type: 'positive' },
+  'هیدراته بودن':       { type: 'positive' },
+  'مایعات سالم':        { type: 'positive' },
+
+  // گروه ۱۷: دیر خوابیدن (منفی)
+  'شب‌زنده‌داری':       { type: 'negative' },
+  'شب زنده داری':       { type: 'negative' },
+  'بیدار ماندن تا صبح': { type: 'negative' },
+  'دیر خوابیدن':        { type: 'negative' },
+
+  // گروه ۱۸: تمیزی و نظم محیط (مثبت)
+  'مرتب کردن':          { type: 'positive' },
+  'مینیمالیسم':         { type: 'positive' },
+  'شستشوی به موقع':     { type: 'positive' },
+  'تمیزی':              { type: 'positive' },
+
+  // گروه ۱۹: شلختگی (منفی)
+  'شلختگی':             { type: 'negative' },
+  'انباشتگی وسایل':     { type: 'negative' },
+  'اتاق شلوغ':          { type: 'negative' },
+  'میز کار به‌هم‌ریخته': { type: 'negative' },
+
+  // گروه ۲۰: قاطعیت (مثبت)
+  'نه گفتن':            { type: 'positive' },
+  'قاطعیت':             { type: 'positive' },
+  'عزت نفس':            { type: 'positive' },
+  'بیان محترمانه نظر':  { type: 'positive' },
+};
+
+// ─── State ─────────────────────────────────────
+let habitText = '';
+let habitType = 'positive'; // default
+let manualTypeSelected = false;
+let painItems = [];
+let pleasureItems = [];
+
+function detectHabitType(text) {
+  const lower = text.trim().toLowerCase();
+  for (const [keyword, data] of Object.entries(HABITS)) {
+    if (lower.includes(keyword)) {
+      return data.type;
+    }
+  }
+  return null; // unknown
+}
+
+// کلمه کلیدی را از ورودی استخراج می‌کند
+function extractKeyword(text) {
+  const lower = text.trim().toLowerCase();
+  for (const keyword of Object.keys(HABITS)) {
+    if (lower.includes(keyword)) {
+      return keyword;
+    }
+  }
+  // اگر کلمه در دیکشنری نبود، متن اصلی را برمی‌گرداند
+  return text.trim();
+}
+
+function liveDetect(value) {
+  const detected = detectHabitType(value);
+  const overrideEl = document.getElementById('typeOverride');
+  const btnPos = document.getElementById('typeBtnPos');
+  const btnNeg = document.getElementById('typeBtnNeg');
+  const inputEl = document.getElementById('habitInput');
+
+  // Reset border classes
+  inputEl.classList.remove('known-pos', 'known-neg', 'unknown-input');
+
+  if (!value.trim()) {
+    overrideEl.classList.remove('visible');
+    manualTypeSelected = false;
+    return;
+  }
+
+  if (detected !== null) {
+    // اتوماتیک تشخیص داده شد — border سبز یا قرمز + پنهان کردن سوال
+    overrideEl.classList.remove('visible');
+    habitType = detected;
+    manualTypeSelected = false;
+    btnPos.classList.remove('active-pos', 'active-neg');
+    btnNeg.classList.remove('active-pos', 'active-neg');
+    inputEl.classList.add(detected === 'positive' ? 'known-pos' : 'known-neg');
+  } else {
+    // ناشناخته — border نارنجی + نشان دادن سوال
+    inputEl.classList.add('unknown-input');
+    overrideEl.classList.add('visible');
+    if (!manualTypeSelected) {
+      btnPos.classList.remove('active-pos');
+      btnNeg.classList.remove('active-neg');
+    }
+  }
+}
+
+function selectType(type) {
+  habitType = type;
+  manualTypeSelected = true;
+  const btnPos = document.getElementById('typeBtnPos');
+  const btnNeg = document.getElementById('typeBtnNeg');
+  btnPos.classList.remove('active-pos', 'active-neg');
+  btnNeg.classList.remove('active-pos', 'active-neg');
+  if (type === 'positive') btnPos.classList.add('active-pos');
+  else btnNeg.classList.add('active-neg');
+}
+
+function renderItems(type) {
+  const list = type === 'pain' ? painItems : pleasureItems;
+  const containerId = type === 'pain' ? 'painList' : 'pleasureList';
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+
+  list.forEach((val, i) => {
+    const row = document.createElement('div');
+    row.className = 'item-row';
+    row.innerHTML = `
+      <div class="item-num">${toPersianNums((i+1).toString())}</div>
+      <input
+        class="item-input"
+        type="text"
+        placeholder="بنویسید..."
+        value="${val}"
+        oninput="updateItem('${type}', ${i}, this.value)"
+        dir="rtl"
+      />
+    `;
+    container.appendChild(row);
+  });
+}
+
+function updateItem(type, index, value) {
+  if (type === 'pain') painItems[index] = value;
+  else pleasureItems[index] = value;
+}
+
+function addItem(type) {
+  if (type === 'pain') painItems.push('');
+  else pleasureItems.push('');
+  renderItems(type);
+  const listId = type === 'pain' ? 'painList' : 'pleasureList';
+  const inputs = document.getElementById(listId).querySelectorAll('.item-input');
+  if (inputs.length) inputs[inputs.length - 1].focus();
+}
+
+// ─── Start ─────────────────────────────────────
+function startJourney() {
+  const input = document.getElementById('habitInput').value.trim();
+  if (!input) {
+    document.getElementById('habitInput').style.borderColor = 'var(--orange)';
+    document.getElementById('habitInput').focus();
+    return;
+  }
+
+  // اگر کلمه ناشناخته بود و کاربر نوع را انتخاب نکرده
+  const detected = detectHabitType(input);
+  if (detected === null && !manualTypeSelected) {
+    document.getElementById('typeOverride').classList.add('visible');
+    return;
+  }
+
+  if (detected !== null) habitType = detected;
+
+  // فقط کلمه کلیدی را بگیر
+  habitText = extractKeyword(input);
+
+  document.getElementById('habitDisplay').textContent = habitText;
+
+  let painQ, pleasureQ;
+
+  if (habitType === 'positive') {
+    painQ = `اگر <span style="color:#FCA5A5;font-weight:800">${habitText}</span> را ادامه <b style="color:#FCA5A5">ندهم</b>، ۵ سال دیگر چه اتفاقات بدی در زندگی‌ام تجربه می‌کنم؟`;
+    pleasureQ = `اگر <span style="color:#86EFAC;font-weight:800">${habitText}</span> را ادامه <b style="color:#86EFAC">بدهم</b>، ۵ سال دیگر چه موفقیت‌ها و تجربیات خوبی کسب می‌کنم؟`;
+  } else {
+    painQ = `اگر <span style="color:#FCA5A5;font-weight:800">${habitText}</span> را ادامه <b style="color:#FCA5A5">بدهم</b>، ۵ سال دیگر چه اتفاقات بدی برایم رخ می‌دهد؟`;
+    pleasureQ = `اگر <span style="color:#86EFAC;font-weight:800">${habitText}</span> را <b style="color:#86EFAC">ترک کنم</b>، ۵ سال دیگر چه موفقیت‌ها و تجربیات خوبی کسب می‌کنم؟`;
+  }
+
+  document.getElementById('painQuestion').innerHTML = painQ + ' <span style="font-size:11px;opacity:0.5">(بزرگنمایی کنید و بنویسید)</span>';
+  document.getElementById('pleasureQuestion').innerHTML = pleasureQ + ' <span style="font-size:11px;opacity:0.5">(بزرگنمایی کنید و بنویسید)</span>';
+
+  painItems = ['', '', '', '', ''];
+  pleasureItems = ['', '', '', '', ''];
+  renderItems('pain');
+  renderItems('pleasure');
+
+  document.getElementById('introModal').classList.add('hidden');
+  document.getElementById('mainPage').classList.add('visible');
+}
+
+// ─── Save ──────────────────────────────────────
+function saveAndShow() {
+  document.querySelectorAll('#painList .item-input').forEach((el, i) => {
+    if (i < painItems.length) painItems[i] = el.value;
+  });
+  document.querySelectorAll('#pleasureList .item-input').forEach((el, i) => {
+    if (i < pleasureItems.length) pleasureItems[i] = el.value;
+  });
+  document.getElementById('successModal').classList.remove('hidden');
+}
+
+// ─── PDF ───────────────────────────────────────
+function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+  const W = 210, H = 297;
+  const margin = 18;
+
+  doc.setFillColor(7, 7, 15);
+  doc.rect(0, 0, W, H, 'F');
+
+  doc.setDrawColor(255, 107, 53);
+  doc.setLineWidth(1);
+  doc.line(margin, 14, W - margin, 14);
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(22);
+  doc.setTextColor(255, 179, 71);
+  doc.text('PlanLife.ir', W / 2, 24, { align: 'center' });
+
+  doc.setFontSize(15);
+  doc.setTextColor(255, 255, 255);
+  doc.text('Pain & Pleasure Leverage', W / 2, 33, { align: 'center' });
+
+  doc.setFontSize(11);
+  doc.setTextColor(200, 200, 220);
+  doc.text(`Habit: ${habitText}`, W / 2, 41, { align: 'center' });
+
+  doc.setDrawColor(255, 107, 53);
+  doc.setLineWidth(0.5);
+  doc.line(margin, 46, W - margin, 46);
+
+  doc.setFontSize(9);
+  doc.setTextColor(150, 150, 180);
+  doc.text('21-Day Morning Reading Program', W / 2, 52, { align: 'center' });
+
+  let y = 62;
+
+  function drawSection(title, items, accentColor, x, colW) {
+    const rgb = accentColor === 'red' ? [239, 68, 68] : [34, 197, 94];
+
+    doc.setFillColor(rgb[0], rgb[1], rgb[2], 0.15);
+    doc.roundedRect(x, y - 4, colW - 4, 12, 2, 2, 'F');
+
+    doc.setTextColor(rgb[0], rgb[1], rgb[2]);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.text(title, x + (colW - 4) / 2, y + 4, { align: 'center' });
+
+    let itemY = y + 14;
+
+    items.filter(v => v.trim()).forEach((item, idx) => {
+      doc.setFillColor(20, 20, 35);
+      doc.roundedRect(x, itemY, colW - 4, 14, 2, 2, 'F');
+
+      doc.setDrawColor(rgb[0], rgb[1], rgb[2], 0.3);
+      doc.setLineWidth(0.4);
+      doc.roundedRect(x, itemY, colW - 4, 14, 2, 2, 'S');
+
+      doc.setTextColor(rgb[0], rgb[1], rgb[2]);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.text(`${idx + 1}.`, x + 4, itemY + 8);
+
+      doc.setTextColor(230, 230, 245);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      const lines = doc.splitTextToSize(item, colW - 20);
+      doc.text(lines, x + 10, itemY + 8);
+
+      itemY += 16;
+    });
+
+    return itemY;
+  }
+
+  const halfW = (W - margin * 2 - 8) / 2;
+  const xLeft = margin;
+  const xRight = margin + halfW + 8;
+
+  const painTitle = habitType === 'negative'
+    ? `IF I CONTINUE: ${habitText.toUpperCase()}`
+    : `IF I STOP: ${habitText.toUpperCase()}`;
+  const pleasureTitle = habitType === 'negative'
+    ? `IF I QUIT: ${habitText.toUpperCase()}`
+    : `IF I KEEP: ${habitText.toUpperCase()}`;
+
+  const yAfterPain = drawSection(painTitle, painItems, 'red', xLeft, halfW);
+  const yAfterPleasure = drawSection(pleasureTitle, pleasureItems, 'green', xRight, halfW);
+
+  const yAfter = Math.max(yAfterPain, yAfterPleasure) + 10;
+
+  doc.setDrawColor(255, 107, 53);
+  doc.setLineWidth(0.6);
+  doc.line(margin, yAfter, W - margin, yAfter);
+
+  doc.setFillColor(30, 18, 8);
+  doc.roundedRect(margin, yAfter + 6, W - margin * 2, 38, 4, 4, 'F');
+  doc.setDrawColor(255, 107, 53, 0.4);
+  doc.setLineWidth(0.4);
+  doc.roundedRect(margin, yAfter + 6, W - margin * 2, 38, 4, 4, 'S');
+
+  doc.setTextColor(255, 179, 71);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(12);
+  doc.text('21-Day Challenge — Your Morning Ritual', W / 2, yAfter + 16, { align: 'center' });
+
+  doc.setTextColor(200, 200, 220);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  const msg = 'Read these statements out loud every morning for 21 consecutive days immediately upon waking. Your brain needs 21 repetitions to form a new neural pattern. Morning is the most powerful time to program your mind. Each day you practice this ritual, you move one step closer to becoming your best self.';
+  const msgLines = doc.splitTextToSize(msg, W - margin * 2 - 16);
+  doc.text(msgLines, W / 2, yAfter + 24, { align: 'center' });
+
+  doc.setTextColor(80, 80, 120);
+  doc.setFontSize(8);
+  doc.text('PlanLife.ir — Pain & Pleasure Leverage Tool', W / 2, H - 10, { align: 'center' });
+
+  doc.save(`planlife-${habitText.replace(/\s+/g, '-')}-21days.pdf`);
+}
+</script>
+</body>
+</html>
