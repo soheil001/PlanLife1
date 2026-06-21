@@ -101,6 +101,28 @@
     .delete-btn { background: rgba(255,50,50,0.2); border: 1px solid rgba(255,50,50,0.4); color: #ff6464; border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
     .delete-btn:hover { background: rgba(255,50,50,0.4); }
     .loading-comments { text-align: center; padding: 20px; opacity: 0.6; font-size: 14px; }
+
+    /* ══════════════════════════════════
+       بج "جدید"
+       سمت چپ کاور، دقیقاً روبروی بج کامنت
+       همرنگ آیکون کامنت (#ff9500)
+    ══════════════════════════════════ */
+    .new-badge {
+        position: absolute;
+        top: 8px;
+        left: 8px;                               /* سمت چپ کاور */
+        background: #ff9500;                     /* همرنگ آیکون کامنت */
+        color: #1a0033;
+        font-size: 11px;
+        font-weight: 900;
+        padding: 3px 9px;
+        border-radius: 999px;
+        letter-spacing: 0.3px;
+        box-shadow: 0 2px 8px rgba(255,149,0,0.55);
+        white-space: nowrap;
+        font-family: 'Vazirmatn', sans-serif;
+        pointer-events: none;
+    }
 </style>
 </head>
 <body>
@@ -208,64 +230,41 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-// ============================================================
-// Supabase — persistent comment storage
-// ============================================================
 const SUPABASE_URL      = 'https://hjzzvzxhrqovvducnxha.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
 const DELETE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/delete-comment`;
-
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-let allComments  = {};   // { podcastId: [ {id, name, text, created_at}, ... ] }
+let allComments = {};
 
 async function fetchCommentsForPodcast(podcastId) {
     try {
-        const { data, error } = await supabaseClient
-            .from('comments')
-            .select('*')
-            .eq('podcast_id', podcastId)
-            .order('created_at', { ascending: false });
+        const { data, error } = await supabaseClient.from('comments').select('*').eq('podcast_id', podcastId).order('created_at', { ascending: false });
         if (error) throw error;
         allComments[podcastId] = data || [];
         return true;
     } catch(e) { console.warn('Supabase fetch:', e); return false; }
 }
-
 async function fetchAllCommentCounts() {
     try {
-        const { data, error } = await supabaseClient
-            .from('comments')
-            .select('podcast_id');
+        const { data, error } = await supabaseClient.from('comments').select('podcast_id');
         if (error) throw error;
         const counts = {};
-        (data || []).forEach(row => {
-            counts[row.podcast_id] = (counts[row.podcast_id] || 0) + 1;
-        });
+        (data || []).forEach(row => { counts[row.podcast_id] = (counts[row.podcast_id] || 0) + 1; });
         return counts;
     } catch(e) { console.warn('Supabase counts fetch:', e); return {}; }
 }
-
 async function insertComment(podcastId, name, text) {
     try {
-        const { data, error } = await supabaseClient
-            .from('comments')
-            .insert([{ podcast_id: podcastId, name, text }])
-            .select();
+        const { data, error } = await supabaseClient.from('comments').insert([{ podcast_id: podcastId, name, text }]).select();
         if (error) throw error;
         return data && data[0];
     } catch(e) { console.warn('Supabase insert:', e); return null; }
 }
-
 async function deleteCommentRemote(commentId, adminPassword) {
     try {
         const res = await fetch(DELETE_FUNCTION_URL, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                'apikey': SUPABASE_ANON_KEY
-            },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'apikey': SUPABASE_ANON_KEY },
             body: JSON.stringify({ commentId, adminPassword })
         });
         const json = await res.json();
@@ -274,39 +273,44 @@ async function deleteCommentRemote(commentId, adminPassword) {
     } catch(e) { console.warn('Edge function delete:', e); alert('خطا در حذف نظر: ' + e.message); return false; }
 }
 
-// ============================================================
+// ══════════════════════════════════════════════════════════════
+//  podcastData
+//  ─────────────────────────────────────────────────────────────
+//  isNew: true   →  لیبل نارنجی "جدید" سمت چپ کاور نمایش داده میشه
+//  isNew: false  →  بدون لیبل
+// ══════════════════════════════════════════════════════════════
 const podcastData = [
-   {id:0,title:"موضوعات متفاوت",episode:"کد نویسی ذهن",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/codenevisi/Codenevisizehn_free.m4a",cover:"http://fs3.centraldnserver.com/~planlife/pics/Podcastfree/IMG_2187.jpeg"},
-   {id:24,title:"موضوعات متفاوت",episode:"به خودت حق بده",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/Mozoatdigar/PlanLife.ir-Hagh nadadan be khod.m4a",cover:"http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2254.jpeg"},
-   {id:1,title:"باورهای ثروت",episode:"کار کردن روی باورها",src:"https://res.cloudinary.com/dfthbclzi/video/upload/v1780854988/Bavar_free_w9yucc.m4a",cover:"http://fs3.centraldnserver.com/~planlife/pics/Servat/IMG_1053.JPG"},
-        {id:25,title:"عشق و روابط",episode:"از نظر همه باید جذاب باشم",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/PlanLife.ir-jazab bodan az nazare hame.m4a",cover:"http://fs3.centraldnserver.com/~planlife/pics/ravabet/IMG_2269.jpeg"},
-   {id:2,title:"عشق و روابط",episode:"وابسته ی ورود به رابطه",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Vabaste_rabete.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
-    {id:3,title:"رشد کسب و کار",episode:"برای کارت ارزش قائل نیستی",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Nadashtan_bavar_be_arzesh.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
-    {id:4,title:"باورهای ثروت",episode:"فقط با سختی کشیدن میشود ؟",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/servat/SakhTi keshidan - planlife Free.m4a",cover:"http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2318.JPG"},
-    {id:5,title:"باورهای ثروت",episode:"خسیس بودن در زندگی",src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779530272/Khasis_bodan_-_planLife.ir_Free_sv3vbr.m4a",cover:"http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2223.jpeg"},
-    {id:6,title:"رشد کسب و کار",episode:"کمال گرایی افراطی",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Kamalgaraei.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
-    {id:23,title:"باورهای ثروت",episode:"نشانه های ثروت",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/servat/Neshane - servat - Free.m4a",cover:"http://fs3.centraldnserver.com/~planlife/pics/Servat/IMG_1053.JPG"},
-    {id:7,title:"رشد کسب و کار",episode:"ترس از قضاوت دیگران",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Tars_az_ghezavat.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
-    {id:8,title:"باورهای ثروت",episode:"ارزش من به حساب بانکیمه ؟",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/servat/Arzeshmandi - liyaghat free planlife.ir.m4a",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449549/IMG_1062_qhryxk.jpg"},
-    {id:9,title:"عشق و روابط",episode:"خودم باشم مردم قضاوتم میکنند",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Khodambasham_ghezavat_misham.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
-    {id:10,title:"رشد کسب و کار",episode:"ترس از شکست",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Tars_az_shekast.mp3",cover:"http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2231.jpeg"},
-    {id:11,title:"عشق و روابط",episode:"خودم باشم ترکم میکنند طرد میشم",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Khodam basham_tard_misham.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
-    {id:12,title:"رشد کسب و کار",episode:"بازار پر شده دست زیاده",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Eshbah_bazar.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
-    {id:13,title:"عشق و روابط",episode:"مهارت ارتباطی ندارم",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Maharat_ertebati_nadaram.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
-    {id:14,title:"رشد کسب و کار",episode:"برای کارت ارزش قائل نیستی",src:"https://res.cloudinary.com/dfthbclzi/video/upload/v1780662264/Nadashtan_bavar_be_arzesh_yrqvol.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
-    {id:15,title:"عشق و روابط",episode:"من فکر میکنم جذاب نیستم",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Man_jazab_nistam.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
-    {id:16,title:"عشق و روابط",episode:"اشتباهاتم باعث شده کسی منو دوست نداشته باشه",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Eshtebahate_gozashte.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
-    {id:17,title:"عشق و روابط",episode:"مقاومت ۲",src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
-    {id:18,title:"تحول حال و احساس",episode:"قسمت ۱",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/haloehsas/Hale khub free.m4a",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780691121/IMG_1553_o6uguf.jpg"},
-    {id:19,title:"اعتماد به نفس",episode:"قسمت ۱",src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449505/IMG_1058_knikds.jpg"},
-    {id:20,title:"احساس لیاقت",episode:"قسمت ۱",src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3",cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449497/IMG_1057_u4yheu.jpg"},
-    {id:21,title:"عشق و روابط",episode:"لیاقت رابطه خوب ندارم",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Liyaghate_rabete_nadaram.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
-    {id:22,title:"رشد کسب و کار",episode:"منابع کمه ( کمبود )",src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Kambod_manabe.mp3",cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
+   {id:0,  isNew:true,  title:"موضوعات متفاوت", episode:"کد نویسی ذهن",                               src:"http://fs3.centraldnserver.com/~planlife/podcast_free/codenevisi/Codenevisizehn_free.m4a",                                                          cover:"http://fs3.centraldnserver.com/~planlife/pics/Podcastfree/IMG_2187.jpeg"},
+   {id:24, isNew:false, title:"موضوعات متفاوت", episode:"به خودت حق بده",                              src:"http://fs3.centraldnserver.com/~planlife/podcast_free/Mozoatdigar/PlanLife.ir-Hagh nadadan be khod.m4a",                                           cover:"http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2254.jpeg"},
+   {id:1,  isNew:false, title:"باورهای ثروت",    episode:"کار کردن روی باورها",                         src:"https://res.cloudinary.com/dfthbclzi/video/upload/v1780854988/Bavar_free_w9yucc.m4a",                                                               cover:"http://fs3.centraldnserver.com/~planlife/pics/Servat/IMG_1053.JPG"},
+   {id:25, isNew:true,  title:"عشق و روابط",      episode:"از نظر همه باید جذاب باشم",                  src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/PlanLife.ir-jazab bodan az nazare hame.m4a",                                          cover:"http://fs3.centraldnserver.com/~planlife/pics/ravabet/IMG_2269.jpeg"},
+   {id:2,  isNew:false, title:"عشق و روابط",      episode:"وابسته ی ورود به رابطه",                     src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Vabaste_rabete.mp3",                                                                    cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
+   {id:3,  isNew:false, title:"رشد کسب و کار",    episode:"برای کارت ارزش قائل نیستی",                  src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Nadashtan_bavar_be_arzesh.mp3",                                                       cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
+   {id:4,  isNew:false, title:"باورهای ثروت",    episode:"فقط با سختی کشیدن میشود ؟",                   src:"http://fs3.centraldnserver.com/~planlife/podcast_free/servat/SakhTi keshidan - planlife Free.m4a",                                                    cover:"http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2318.JPG"},
+   {id:5,  isNew:false, title:"باورهای ثروت",    episode:"خسیس بودن در زندگی",                          src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779530272/Khasis_bodan_-_planLife.ir_Free_sv3vbr.m4a",                            cover:"http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2223.jpeg"},
+   {id:6,  isNew:false, title:"رشد کسب و کار",    episode:"کمال گرایی افراطی",                          src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Kamalgaraei.mp3",                                                                       cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
+   {id:23, isNew:false, title:"باورهای ثروت",    episode:"نشانه های ثروت",                               src:"http://fs3.centraldnserver.com/~planlife/podcast_free/servat/Neshane - servat - Free.m4a",                                                            cover:"http://fs3.centraldnserver.com/~planlife/pics/Servat/IMG_1053.JPG"},
+   {id:7,  isNew:false, title:"رشد کسب و کار",    episode:"ترس از قضاوت دیگران",                        src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Tars_az_ghezavat.mp3",                                                                 cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
+   {id:8,  isNew:false, title:"باورهای ثروت",    episode:"ارزش من به حساب بانکیمه ؟",                   src:"http://fs3.centraldnserver.com/~planlife/podcast_free/servat/Arzeshmandi - liyaghat free planlife.ir.m4a",                                           cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449549/IMG_1062_qhryxk.jpg"},
+   {id:9,  isNew:false, title:"عشق و روابط",      episode:"خودم باشم مردم قضاوتم میکنند",               src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Khodambasham_ghezavat_misham.mp3",                                                     cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
+   {id:10, isNew:false, title:"رشد کسب و کار",    episode:"ترس از شکست",                                src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Tars_az_shekast.mp3",                                                                   cover:"http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2231.jpeg"},
+   {id:11, isNew:false, title:"عشق و روابط",      episode:"خودم باشم ترکم میکنند طرد میشم",             src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Khodam basham_tard_misham.mp3",                                                         cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
+   {id:12, isNew:false, title:"رشد کسب و کار",    episode:"بازار پر شده دست زیاده",                     src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Eshbah_bazar.mp3",                                                                      cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
+   {id:13, isNew:false, title:"عشق و روابط",      episode:"مهارت ارتباطی ندارم",                        src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Maharat_ertebati_nadaram.mp3",                                                          cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
+   {id:14, isNew:false, title:"رشد کسب و کار",    episode:"برای کارت ارزش قائل نیستی",                  src:"https://res.cloudinary.com/dfthbclzi/video/upload/v1780662264/Nadashtan_bavar_be_arzesh_yrqvol.mp3",                                                  cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
+   {id:15, isNew:false, title:"عشق و روابط",      episode:"من فکر میکنم جذاب نیستم",                    src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Man_jazab_nistam.mp3",                                                                   cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
+   {id:16, isNew:false, title:"عشق و روابط",      episode:"اشتباهاتم باعث شده کسی منو دوست نداشته باشه", src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Eshtebahate_gozashte.mp3",                                                           cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
+   {id:17, isNew:false, title:"عشق و روابط",      episode:"مقاومت ۲",                                    src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3",                  cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
+   {id:18, isNew:false, title:"تحول حال و احساس", episode:"قسمت ۱",                                      src:"http://fs3.centraldnserver.com/~planlife/podcast_free/haloehsas/Hale khob free.m4a",                                                                   cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780691121/IMG_1553_o6uguf.jpg"},
+   {id:19, isNew:false, title:"اعتماد به نفس",    episode:"قسمت ۱",                                      src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3",                  cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449505/IMG_1058_knikds.jpg"},
+   {id:20, isNew:false, title:"احساس لیاقت",      episode:"قسمت ۱",                                      src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779205048/YTDown_YouTube_Media_jrK9TiZ251M_008_128k_jxdssu.mp3",                  cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779449497/IMG_1057_u4yheu.jpg"},
+   {id:21, isNew:false, title:"عشق و روابط",      episode:"لیاقت رابطه خوب ندارم",                      src:"http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/Liyaghate_rabete_nadaram.mp3",                                                          cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780660589/IMG_0241_bm5c9j.png"},
+   {id:22, isNew:false, title:"رشد کسب و کار",    episode:"منابع کمه ( کمبود )",                        src:"http://fs3.centraldnserver.com/~planlife/podcast_free/kasbokar/Kambod_manabe.mp3",                                                                      cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780669597/IMG_1533_rhz6lw.jpg"},
 ];
 
 let currentTrackIndex = 0, currentPodcastId = null, isAdmin = false;
 const ADMIN_USER = 'Admin', ADMIN_PASS = '12345';
-const ADMIN_API_PASSWORD = 'So@21072933@'; // sent to the delete-comment Edge Function for verification
+const ADMIN_API_PASSWORD = 'So@21072933@';
 const audio = document.getElementById('mainAudio');
 const progressBarEl = document.getElementById('progressBar');
 const currentTimeEl = document.getElementById('currentTime');
@@ -315,7 +319,6 @@ const progressContainer = document.getElementById('progressContainer');
 const statusEl = document.getElementById('playerStatus');
 const playIcon = document.getElementById('playIcon');
 
-// ---- Auth ----
 function openLogin() {
     document.getElementById('loginOverlay').classList.add('active');
     document.getElementById('loginError').style.display = 'none';
@@ -340,7 +343,6 @@ function updateAdminHeader() {
     } else { area.innerHTML = `<button onclick="openLogin()" class="admin-badge">🔐 ورود</button>`; }
 }
 
-// ---- Comments ----
 function toPersianNum(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
 function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function formatCommentTime(iso) {
@@ -389,25 +391,17 @@ async function addComment() {
     const name = document.getElementById('commentName').value.trim() || 'ناشناس';
     const text = document.getElementById('commentText').value.trim();
     if (!text) { alert('لطفاً متن نظر را وارد کنید.'); return; }
-
     const btn = document.getElementById('submitCommentBtn');
-    btn.textContent = '⏳ در حال ارسال...';
-    btn.disabled = true;
-
+    btn.textContent = '⏳ در حال ارسال...'; btn.disabled = true;
     const inserted = await insertComment(currentPodcastId, name, text);
     if (inserted) {
         if (!allComments[currentPodcastId]) allComments[currentPodcastId] = [];
         allComments[currentPodcastId].unshift(inserted);
-        renderComments(currentPodcastId);
-        refreshAllCardBadges();
+        renderComments(currentPodcastId); refreshAllCardBadges();
         document.getElementById('commentText').value = '';
         document.getElementById('commentName').value = '';
-    } else {
-        alert('ارسال نظر با خطا مواجه شد. لطفاً دوباره تلاش کنید.');
-    }
-
-    btn.textContent = 'ارسال نظر';
-    btn.disabled = false;
+    } else { alert('ارسال نظر با خطا مواجه شد. لطفاً دوباره تلاش کنید.'); }
+    btn.textContent = 'ارسال نظر'; btn.disabled = false;
 }
 
 async function deleteComment(podcastId, commentId) {
@@ -415,8 +409,7 @@ async function deleteComment(podcastId, commentId) {
     const ok = await deleteCommentRemote(commentId, ADMIN_API_PASSWORD);
     if (!ok) return;
     allComments[podcastId] = (allComments[podcastId] || []).filter(c => c.id !== commentId);
-    renderComments(podcastId);
-    refreshAllCardBadges();
+    renderComments(podcastId); refreshAllCardBadges();
 }
 
 function updateCardBadge(id, count) {
@@ -427,13 +420,11 @@ function updateCardBadge(id, count) {
         const mc = document.getElementById('commentCount');      if (mc) mc.textContent = count;
     }
 }
-
 async function refreshAllCardBadges() {
     const counts = await fetchAllCommentCounts();
     podcastData.forEach(item => updateCardBadge(item.id, counts[item.id] || 0));
 }
 
-// ---- Audio ----
 function formatTime(s) { if (!s || isNaN(s)) return "0:00"; return `${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,'0')}`; }
 audio.addEventListener('timeupdate', () => {
     if (!audio.duration) return;
@@ -462,8 +453,8 @@ function playAudio(title, episode, src, cover, id) {
     document.getElementById('miniTitle').textContent  = title;
     document.getElementById('miniEp').textContent     = episode;
     document.getElementById('miniCover').src          = cover;
-    currentPodcastId   = id;
-    currentTrackIndex  = podcastData.findIndex(item => item.id === id);
+    currentPodcastId  = id;
+    currentTrackIndex = podcastData.findIndex(item => item.id === id);
     audio.src = src;
     audio.play().then(() => setPlayIcons(true)).catch(() => setPlayIcons(false));
     loadComments(id);
@@ -520,19 +511,15 @@ function closeNowPlaying() { minimizePlayer(); }
 function showMenu() { alert("منو (به زودی)"); }
 function goToHome() { window.location.href = "https://planlife.ir"; }
 
-// ---- Page init ----
 async function loadPodcastPage() {
-    const cats = ["موضوعات متفاوت","باورهای ثروت","عشق و روابط","تحول حال و احساس","رشد کسب و کار","اعتماد به نفس","احساس لیاقت",];
+    const cats = ["موضوعات متفاوت","باورهای ثروت","عشق و روابط","تحول حال و احساس","رشد کسب و کار","اعتماد به نفس","احساس لیاقت"];
     document.getElementById('categorySlides').innerHTML = cats.map(c =>
         `<div onclick="selectPodcastCat('${c}')" style="min-width:140px;text-align:center;background:rgba(255,255,255,0.11);border-radius:18px;padding:10px;cursor:pointer;flex-shrink:0;">
             <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" style="width:130px;height:130px;border-radius:18px;object-fit:cover;">
             <p style="margin-top:10px;font-size:14.5px;font-weight:600;">${c}</p>
         </div>`
     ).join('');
-
     renderGrid(podcastData);
-
-    // Load real comment counts from Supabase in background
     await refreshAllCardBadges();
 }
 
@@ -540,14 +527,23 @@ function renderGrid(items) {
     document.getElementById('podcastGrid').innerHTML = items.map(item => {
         const cnt = toPersianNum((allComments[item.id]||[]).length);
         const st  = item.title.replace(/'/g,"\\'"), se = item.episode.replace(/'/g,"\\'");
+
+        // لیبل "جدید" — فقط وقتی isNew: true باشه
+        const newBadge = item.isNew
+            ? `<div class="new-badge">جدید</div>`
+            : '';
+
         return `<div onclick="playAudio('${st}','${se}','${item.src}','${item.cover}',${item.id})"
                      style="background:rgba(255,255,255,0.11);border-radius:22px;padding:12px;text-align:center;cursor:pointer;">
             <div style="position:relative;">
                 <img src="${item.cover}" style="width:100%;aspect-ratio:1/1;border-radius:18px;object-fit:cover;">
+                <!-- بج کامنت — سمت راست -->
                 <div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.62);backdrop-filter:blur(6px);border-radius:999px;padding:4px 9px;display:flex;align-items:center;gap:5px;">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="#ff9500"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
                     <span id="card-badge-${item.id}" style="font-size:12px;font-weight:700;color:white;">${cnt}</span>
                 </div>
+                <!-- لیبل "جدید" — سمت چپ، روبروی بج کامنت -->
+                ${newBadge}
             </div>
             <div style="font-size:15.5px;font-weight:600;margin:10px 0 6px;">${item.episode}<br><small style="opacity:0.75;font-weight:400;">${item.title}</small></div>
             <div style="width:48px;height:48px;background:#ffd700;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;">
@@ -567,12 +563,10 @@ document.addEventListener('keydown', e => {
     if (e.key === 'Enter' && document.getElementById('loginOverlay').classList.contains('active')) doLogin();
 });
 
-// ---- Drag to minimize ----
 (function() {
     const screen = document.getElementById('nowPlayingScreen');
     let startY = 0, startX = 0, lastY = 0, velocity = 0, lastTime = 0;
     let intentDecided = false, isMinimizing = false;
-
     function onStart(e) {
         const t = e.touches[0];
         startY = t.clientY; startX = t.clientX;
@@ -603,24 +597,21 @@ document.addEventListener('keydown', e => {
     }
     function onEnd() {
         if (!isMinimizing) return;
-        isMinimizing = false;
-        screen.style.willChange = '';
+        isMinimizing = false; screen.style.willChange = '';
         const dy = lastY - startY;
         const shouldMin = velocity > 0.4 || dy > 130;
         screen.style.transition = 'transform 0.46s cubic-bezier(0.32,0.72,0,1), border-radius 0.46s cubic-bezier(0.32,0.72,0,1), opacity 0.46s ease';
         if (shouldMin) {
-            screen.style.transform    = 'translateY(100%) scale(0.92)';
+            screen.style.transform = 'translateY(100%) scale(0.92)';
             screen.style.borderRadius = '28px 28px 0 0';
-            screen.style.opacity      = '0.6';
+            screen.style.opacity = '0.6';
             setTimeout(() => {
-                screen.classList.remove('active');
-                screen.style.cssText = '';
+                screen.classList.remove('active'); screen.style.cssText = '';
                 if (audio.src) document.getElementById('miniPlayer').classList.add('active');
             }, 460);
         } else {
-            screen.style.transform    = 'translateY(0) scale(1)';
-            screen.style.borderRadius = '0px';
-            screen.style.opacity      = '1';
+            screen.style.transform = 'translateY(0) scale(1)';
+            screen.style.borderRadius = '0px'; screen.style.opacity = '1';
             setTimeout(() => { screen.style.transition = screen.style.transform = screen.style.borderRadius = screen.style.opacity = ''; }, 460);
         }
     }
