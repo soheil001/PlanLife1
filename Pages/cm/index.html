@@ -3,793 +3,633 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#1a0033">
-<title>PlanLife</title>
+<title>پاسخ سوالات ذهنی شما</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-        height: 100%;
-        font-family: 'Vazirmatn', sans-serif;
-        overflow-x: hidden;
-        color: white;
-        background: #030303;
-    }
+    body { font-family: 'Vazirmatn', sans-serif; background: #030303; color: white; }
 
-    .stars { position: fixed; top:0;left:0;right:0;bottom:0; background: transparent; z-index: 1; pointer-events: none; }
-    .stars::before, .stars::after {
-        content: ''; position: absolute; top:0;left:0;right:0;bottom:0;
-        background-image: radial-gradient(white 1px, transparent 1px);
-        background-size: 80px 80px; opacity: 0.45;
-        -webkit-animation: twinkle 10s infinite alternate, stars-move 20s linear infinite;
-        animation: twinkle 10s infinite alternate, stars-move 20s linear infinite;
-    }
-    .stars::after {
-        background-size: 140px 140px; opacity: 0.3;
-        -webkit-animation: twinkle 16s infinite alternate, stars-move-diagonal 32s linear infinite;
-        animation: twinkle 16s infinite alternate, stars-move-diagonal 32s linear infinite;
-    }
-    @-webkit-keyframes twinkle { 0% { opacity: 0.35; } 100% { opacity: 0.65; } }
-    @keyframes twinkle { 0% { opacity: 0.35; } 100% { opacity: 0.65; } }
-    @-webkit-keyframes stars-move { from { background-position: 0 0; } to { background-position: 22px -480px; } }
-    @keyframes stars-move { from { background-position: 0 0; } to { background-position: 22px -480px; } }
-    @-webkit-keyframes stars-move-diagonal { from { background-position: 0 0; } to { background-position: -35px -550px; } }
-    @keyframes stars-move-diagonal { from { background-position: 0 0; } to { background-position: -35px -550px; } }
-
-    header {
-        position: fixed; top: 0; left: 0; right: 0; height: 65px;
-        display: -webkit-flex; display: flex;
-        -webkit-align-items: center; align-items: center;
-        padding: 0 20px; z-index: 100;
-        background: rgba(0,0,0,0.25);
-        -webkit-backdrop-filter: blur(10px);
-        backdrop-filter: blur(10px);
-    }
-    .hamburger {
-        font-size: 28px; cursor: pointer; width: 50px; height: 50px;
-        border-radius: 50%; background: rgba(255,255,255,0.1);
-        display: -webkit-flex; display: flex;
-        -webkit-align-items: center; align-items: center;
-        -webkit-justify-content: center; justify-content: center;
-        -webkit-transition: all 0.2s ease; transition: all 0.2s ease;
-    }
-
-    .main-center {
-        position: relative; z-index: 5; min-height: 100vh;
-        padding: 75px 20px 120px;
-        display: -webkit-flex; display: flex;
-        -webkit-flex-direction: column; flex-direction: column;
-        -webkit-align-items: center; align-items: center;
-        -webkit-transition: filter 0.5s ease; transition: filter 0.5s ease;
-    }
-    .main-center.blurred { -webkit-filter: blur(7px); filter: blur(7px); pointer-events: none; }
-
-    .title {
-        font-size: 42px; font-weight: 900;
-        font-family: 'Cinzel', 'Vazirmatn', serif;
-        text-shadow: 0 0 30px rgba(212,175,55,0.9), 0 0 60px rgba(160,240,255,0.4);
-        margin-bottom: 25px; color: white; letter-spacing: 3px;
-    }
-
-    /* چت باکس */
-    .chat-container {
-        width: 100%; max-width: 360px; height: 390px;
-        background: rgba(255,255,255,0.11);
-        -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-        border-radius: 28px;
-        border: 1px solid rgba(212,175,55,0.55);
-        box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 25px rgba(212,175,55,0.25);
-        display: -webkit-flex; display: flex;
-        -webkit-flex-direction: column; flex-direction: column;
-        padding: 12px; margin-bottom: 35px;
-    }
-    #chat-output {
-        -webkit-flex: 1; flex: 1; overflow-y: auto;
-        padding: 8px 6px;
-        display: -webkit-flex; display: flex;
-        -webkit-flex-direction: column; flex-direction: column;
-        gap: 10px; scroll-behavior: smooth;
-    }
-    #chat-output::-webkit-scrollbar { width: 3px; }
-    #chat-output::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 10px; }
-
-    .msg-bot {
-        -webkit-align-self: flex-start; align-self: flex-start;
-        background: rgba(255,255,255,0.12);
-        border: 1px solid rgba(212,175,55,0.2);
-        padding: 10px 14px;
-        border-radius: 4px 18px 18px 18px;
-        max-width: 84%; line-height: 1.8; font-size: 13.5px;
-        font-weight: 500; color: rgba(255,255,255,0.95);
-        -webkit-animation: slideFromLeft 0.38s ease both;
-        animation: slideFromLeft 0.38s ease both;
-    }
-    .msg-user {
-        -webkit-align-self: flex-end; align-self: flex-end;
-        background: -webkit-linear-gradient(135deg, rgba(110,70,240,0.88), rgba(75,35,190,0.92));
-        background: linear-gradient(135deg, rgba(110,70,240,0.88), rgba(75,35,190,0.92));
-        border: 1px solid rgba(150,110,255,0.35);
-        padding: 10px 14px;
-        border-radius: 18px 4px 18px 18px;
-        max-width: 84%; line-height: 1.8; font-size: 13.5px;
-        font-weight: 600; color: white;
-        -webkit-animation: slideFromRight 0.32s ease both;
-        animation: slideFromRight 0.32s ease both;
-    }
-    @-webkit-keyframes slideFromLeft {
-        from { opacity: 0; -webkit-transform: translateX(-12px); transform: translateX(-12px); }
-        to   { opacity: 1; -webkit-transform: translateX(0); transform: translateX(0); }
-    }
-    @keyframes slideFromLeft {
-        from { opacity: 0; transform: translateX(-12px); }
-        to   { opacity: 1; transform: translateX(0); }
-    }
-    @-webkit-keyframes slideFromRight {
-        from { opacity: 0; -webkit-transform: translateX(12px); transform: translateX(12px); }
-        to   { opacity: 1; -webkit-transform: translateX(0); transform: translateX(0); }
-    }
-    @keyframes slideFromRight {
-        from { opacity: 0; transform: translateX(12px); }
-        to   { opacity: 1; transform: translateX(0); }
-    }
-
-    .input-box {
-        display: -webkit-flex; display: flex;
-        background: rgba(255,255,255,0.10);
-        border: 1px solid rgba(212,175,55,0.2);
-        border-radius: 25px; padding: 4px; margin-top: 8px; -webkit-flex-shrink: 0; flex-shrink: 0;
-    }
-    input {
-        -webkit-flex: 1; flex: 1; background: transparent; border: none; color: white;
-        font-size: 16px; font-family: 'Vazirmatn', sans-serif;
-        padding: 10px 14px; outline: none;
-        -webkit-appearance: none; appearance: none;
-    }
-    input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
-
-    .send-btn {
-        width: 46px; height: 46px; background: transparent; border: none;
-        cursor: pointer; padding: 0;
-        display: -webkit-flex; display: flex;
-        -webkit-align-items: center; align-items: center;
-        -webkit-justify-content: center; justify-content: center;
-        -webkit-flex-shrink: 0; flex-shrink: 0;
-    }
-
-    /* ORB */
-    .orb {
-        width: 40px; height: 40px; border-radius: 50%;
-        background: rgba(255,255,255,0.08);
-        -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
-        border: 1.5px solid #d4af37; position: relative; overflow: hidden;
-        box-shadow: 0 0 15px rgba(212,175,55,0.5), inset 0 0 12px rgba(255,255,255,0.3);
-        -webkit-animation: orb-pulse 2.2s ease-in-out infinite;
-        animation: orb-pulse 2.2s ease-in-out infinite;
-    }
-    .core {
-        position: absolute; top: 50%; left: 50%;
-        -webkit-transform: translate(-50%,-50%); transform: translate(-50%,-50%);
-        width: 13px; height: 13px;
-        background: -webkit-radial-gradient(circle, #fff 20%, #d4af37 70%);
-        background: radial-gradient(circle, #fff 20%, #d4af37 70%);
-        border-radius: 50%; box-shadow: 0 0 18px #d4af37;
-        -webkit-animation: core-glow 1.6s ease-in-out infinite alternate;
-        animation: core-glow 1.6s ease-in-out infinite alternate;
-        z-index: 3;
-    }
-    .neural-lines { position: absolute; top:0;left:0;right:0;bottom:0; z-index: 2; }
-    .neural-lines .line {
-        position: absolute; top: 50%; left: 50%;
-        width: 120%; height: 1.2px;
-        background: -webkit-linear-gradient(90deg, transparent, #d4af37, transparent);
-        background: linear-gradient(90deg, transparent, #d4af37, transparent);
-        -webkit-transform-origin: center; transform-origin: center;
-        -webkit-animation: neural-rotate 3.5s linear infinite;
-        animation: neural-rotate 3.5s linear infinite;
-    }
-    .neural-lines .line:nth-child(1) { -webkit-transform: rotate(0deg); transform: rotate(0deg); -webkit-animation-duration: 3.2s; animation-duration: 3.2s; }
-    .neural-lines .line:nth-child(2) { -webkit-transform: rotate(36deg); transform: rotate(36deg); -webkit-animation-duration: 4.1s; animation-duration: 4.1s; }
-    .neural-lines .line:nth-child(3) { -webkit-transform: rotate(72deg); transform: rotate(72deg); -webkit-animation-duration: 2.8s; animation-duration: 2.8s; }
-    .neural-lines .line:nth-child(4) { -webkit-transform: rotate(108deg); transform: rotate(108deg); -webkit-animation-duration: 3.8s; animation-duration: 3.8s; }
-    .neural-lines .line:nth-child(5) { -webkit-transform: rotate(144deg); transform: rotate(144deg); -webkit-animation-duration: 4.5s; animation-duration: 4.5s; }
-
-    @-webkit-keyframes orb-pulse {
-        0%,100% { -webkit-transform: scale(1); transform: scale(1); }
-        50% { -webkit-transform: scale(1.08); transform: scale(1.08); }
-    }
-    @keyframes orb-pulse {
-        0%,100% { transform: scale(1); }
-        50% { transform: scale(1.08); }
-    }
-    @-webkit-keyframes core-glow {
-        from { box-shadow: 0 0 12px #d4af37; }
-        to { box-shadow: 0 0 26px #fff, 0 0 38px #d4af37; }
-    }
-    @keyframes core-glow {
-        from { box-shadow: 0 0 12px #d4af37; }
-        to { box-shadow: 0 0 26px #fff, 0 0 38px #d4af37; }
-    }
-    @-webkit-keyframes neural-rotate {
-        from { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
-        to { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
-    }
-    @keyframes neural-rotate {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-
-    /* thinking */
-    .brain-thinking {
-        display: -webkit-flex; display: flex;
-        -webkit-align-items: center; align-items: center;
-        gap: 10px; padding: 4px 2px;
-    }
-    .thinking-dots {
-        font-size: 13px; color: rgba(212,175,55,0.9); font-weight: 600;
-        display: -webkit-flex; display: flex;
-        -webkit-align-items: center; align-items: center;
-        gap: 3px;
-    }
-    .thinking-dots span {
-        -webkit-animation: dot-bounce 1.2s ease-in-out infinite;
-        animation: dot-bounce 1.2s ease-in-out infinite;
-        display: inline-block; font-size: 18px; line-height: 1; color: #d4af37;
-    }
-    .thinking-dots span:nth-child(2) { -webkit-animation-delay: 0.2s; animation-delay: 0.2s; }
-    .thinking-dots span:nth-child(3) { -webkit-animation-delay: 0.4s; animation-delay: 0.4s; }
-    @-webkit-keyframes dot-bounce {
-        0%,80%,100% { -webkit-transform: translateY(0); transform: translateY(0); opacity: 0.4; }
-        40% { -webkit-transform: translateY(-5px); transform: translateY(-5px); opacity: 1; }
-    }
-    @keyframes dot-bounce {
-        0%,80%,100% { transform: translateY(0); opacity: 0.4; }
-        40% { transform: translateY(-5px); opacity: 1; }
-    }
-    .cursor-blink {
-        display: inline-block; width: 2px; height: 1em;
-        background: rgba(255,255,255,0.75); margin-right: 1px;
-        vertical-align: text-bottom;
-        -webkit-animation: cursor-flash 0.55s step-end infinite;
-        animation: cursor-flash 0.55s step-end infinite;
-    }
-    @-webkit-keyframes cursor-flash { 0%,100%{opacity:1;} 50%{opacity:0;} }
-    @keyframes cursor-flash { 0%,100%{opacity:1;} 50%{opacity:0;} }
-
-    /* سرویس‌ها */
-    .services-grid {
-        display: -webkit-flex; display: flex;
-        -webkit-flex-wrap: wrap; flex-wrap: wrap;
-        gap: 16px; width: 100%; max-width: 360px;
-    }
-    .services-grid a {
-        text-decoration: none; color: white;
-        width: calc(50% - 8px);
-        display: block;
-    }
-    .service-box {
-        background: rgba(255,255,255,0.11);
-        -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-        border-radius: 24px; padding: 15px 10px 12px; text-align: center;
-        cursor: pointer; height: 230px;
-        display: -webkit-flex; display: flex;
-        -webkit-flex-direction: column; flex-direction: column;
-        -webkit-align-items: center; align-items: center;
-        -webkit-justify-content: center; justify-content: center;
-        gap: 10px;
-        -webkit-transition: -webkit-transform 0.3s ease; transition: transform 0.3s ease;
-        border: 1px solid rgba(212,175,55,0.55);
-        box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 25px rgba(212,175,55,0.25);
-        width: 100%;
-    }
-    .service-box:active { -webkit-transform: scale(0.97); transform: scale(0.97); }
-    .service-box img {
-        width: 145px; height: 145px; object-fit: cover;
-        border-radius: 18px; border: 2px solid rgba(255,255,255,0.3);
-    }
-    .service-box span {
-        font-size: 17.5px; font-weight: 800; color: white;
-        text-shadow: 0 0 10px rgba(212,175,55,0.35);
-    }
-    
-    /* باکس کد نویسی ذهنی */
-    .mindcode-box {
-        background: #000 !important;
-        border: 1px solid rgba(0,255,65,0.45) !important;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 20px rgba(0,255,65,0.15) !important;
-        position: relative;
-        overflow: hidden;
-    }
-    .mindcode-box::before {
-        content: '';
-        position: absolute; top:0;left:0;right:0;bottom:0;
-        background-image: repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 3px,
-            rgba(0,255,65,0.02) 3px,
-            rgba(0,255,65,0.02) 4px
-        );
-        pointer-events: none;
-        border-radius: 24px;
-        z-index: 0;
-    }
-    .mc-terminal {
-        width: 115px;
-        height: 92px;
-        background: #000;
-        border: 1px solid rgba(0,255,65,0.5);
-        border-radius: 8px;
-        padding: 7px 9px;
-        font-family: 'Share Tech Mono', 'Courier New', monospace;
-        font-size: 9.5px;
-        color: #00ff41;
-        overflow: hidden;
-        line-height: 1.6;
-        text-align: left;
-        direction: ltr;
-        box-shadow: 0 0 15px rgba(0,255,65,0.2);
-        position: relative;
-        z-index: 1;
-    }
-    .mc-prompt {
-        color: rgba(0,255,65,0.45);
-        margin-bottom: 3px;
-        font-size: 8.5px;
-    }
-    .mc-code {
-        -webkit-animation: matrix-scroll 3s linear infinite;
-        animation: matrix-scroll 3s linear infinite;
-    }
-    @-webkit-keyframes matrix-scroll {
-        0%   { -webkit-transform: translateY(0); transform: translateY(0); }
-        100% { -webkit-transform: translateY(-58px); transform: translateY(-58px); }
-    }
-    @keyframes matrix-scroll {
-        0%   { transform: translateY(0); }
-        100% { transform: translateY(-58px); }
-    }
-    .mc-title {
-        font-family: 'Vazirmatn', sans-serif;
-        font-size: 16px;
-        font-weight: 900;
-        color: #00ff41;
-        text-shadow: 0 0 10px #00ff41, 0 0 22px rgba(0,255,65,0.4);
-        position: relative; z-index: 1;
-    }
-    .mc-sub {
-        font-family: 'Share Tech Mono', 'Courier New', monospace;
-        font-size: 8.5px;
-        color: rgba(0,255,65,0.4);
-        letter-spacing: 2px;
-        position: relative; z-index: 1;
-    }
-
-    /* منو */
-    #menu-overlay {
-        position: fixed; top:0;left:0;right:0;bottom:0;
-        background: rgba(0,0,0,0.55);
-        z-index: 150; opacity: 0; pointer-events: none;
-        -webkit-transition: opacity 0.5s ease; transition: opacity 0.5s ease;
-    }
-    #menu-overlay.active { opacity: 1; pointer-events: auto; }
-    .side-menu {
-        position: fixed; top: 0; right: 0; width: 255px; height: 100vh;
-        background: rgba(255,255,255,0.085);
-        -webkit-backdrop-filter: blur(26px); backdrop-filter: blur(26px);
-        border-left: 1px solid rgba(212,175,55,0.3);
-        box-shadow: -12px 0 40px rgba(0,0,0,0.7);
-        z-index: 200;
-        -webkit-transform: translateX(100%); transform: translateX(100%);
-        -webkit-transition: -webkit-transform 0.55s ease; transition: transform 0.55s ease;
-        padding: 22px 16px 28px;
-        display: -webkit-flex; display: flex;
-        -webkit-flex-direction: column; flex-direction: column;
+    .now-playing {
+        position: fixed;
+        top: 10px; left: 10px; right: 10px;
+        height: calc(100% - 10px); height: calc(100dvh - 10px);
+        background: rgba(10, 10, 25, 0.98);
+        z-index: 300;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 20px 40px;
         overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        transform: translateY(110%);
+        border-radius: 22px 22px 0 0;
+        will-change: transform, border-radius;
+        touch-action: pan-y;
     }
-    .side-menu.open { -webkit-transform: translateX(0); transform: translateX(0); }
-    .menu-header {
-        display: -webkit-flex; display: flex;
-        -webkit-align-items: center; align-items: center;
-        -webkit-justify-content: space-between; justify-content: space-between;
-        margin-bottom: 24px; padding-bottom: 15px;
-        border-bottom: 1px solid rgba(212,175,55,0.22);
+    .now-playing.active {
+        display: flex;
+        transform: translateY(0%);
+        border-radius: 22px 22px 0 0;
+        transition: transform 0.52s cubic-bezier(0.32, 0.72, 0, 1),
+                    border-radius 0.52s cubic-bezier(0.32, 0.72, 0, 1);
     }
-    .menu-header h2 {
-        font-size: 22px; font-weight: 900; color: #d4af37;
-        font-family: 'Cinzel', serif;
-        text-shadow: 0 0 12px rgba(212,175,55,0.5);
+    .drag-handle-wrap { width: 100%; display: flex; justify-content: center; padding: 6px 0 2px; flex-shrink: 0; cursor: grab; }
+    .drag-handle { width: 44px; height: 5px; background: rgba(255,255,255,0.65); border-radius: 999px; box-shadow: 0 0 8px rgba(255,255,255,0.2); }
+
+    .mini-player {
+        position: fixed; bottom: 15px; left: 15px; right: 15px; height: 72px;
+        background: rgba(18, 18, 40, 0.72);
+        backdrop-filter: blur(28px) saturate(180%); -webkit-backdrop-filter: blur(28px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 22px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+        z-index: 290; display: none; align-items: center; padding: 0 16px; gap: 12px; cursor: pointer; overflow: hidden;
     }
-    .close-btn {
-        width: 38px; height: 38px;
-        display: -webkit-flex; display: flex;
-        -webkit-align-items: center; align-items: center;
-        -webkit-justify-content: center; justify-content: center;
-        font-size: 24px; color: #d4af37; cursor: pointer;
+    .mini-player.active { display: flex; }
+    .mini-cover { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
+    .mini-info { flex: 1; overflow: hidden; }
+    .mini-title { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mini-ep { font-size: 12px; opacity: 0.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mini-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.10); border-radius: 0 0 22px 22px; overflow: hidden; }
+    .mini-progress-bar { height: 100%; background: linear-gradient(to right, #ff9500, #ff6b00); border-radius: 999px; transition: width 0.5s linear; }
+    .mini-play-btn { width: 42px; height: 42px; background: #ff9500; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 14px rgba(255,149,0,0.5); }
+    .mini-play-btn svg { width: 22px; height: 22px; fill: #1a0033; }
+    .mini-close { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; opacity: 0.5; flex-shrink: 0; font-size: 20px; }
+
+    .player-topbar { width: 100%; max-width: 380px; display: flex; justify-content: space-between; align-items: center; padding: 8px 0 16px; flex-shrink: 0; }
+    .player-status { font-size: 15px; font-weight: 600; opacity: 0.85; }
+    
+    /* ✅ جایگزینی کاور با Text Box */
+    .question-box {
+        width: 100%;
+        max-width: 320px;
+        margin: 6px 0 10px;
+        padding: 24px 20px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(20px) saturate(150%);
+        -webkit-backdrop-filter: blur(20px) saturate(150%);
+        border: 1.5px solid rgba(255, 255, 255, 0.18);
+        border-radius: 20px;
+        box-shadow: 
+            0 0 30px rgba(255, 149, 0, 0.25),
+            0 15px 45px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.12),
+            0 0 20px rgba(212, 175, 55, 0.15);
+        position: relative;
+        flex-shrink: 0;
+        min-height: 160px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+    .question-box::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        background: linear-gradient(135deg, rgba(255,149,0,0.4), rgba(212,175,55,0.2), transparent);
+        border-radius: 20px;
+        z-index: -1;
+        filter: blur(12px);
+    }
+    .question-text {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.7;
+        color: #f0f0f0;
+        word-break: break-word;
+    }
+
+    .cover-comment-badge {
+        position: absolute; bottom: -13px; left: 50%; transform: translateX(-50%);
+        background: rgba(20,20,40,0.92); border: 1px solid rgba(255,255,255,0.18);
+        backdrop-filter: blur(10px); border-radius: 999px; padding: 5px 14px;
+        display: flex; align-items: center; gap: 6px;
+        font-size: 13px; font-weight: 700; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    }
+    .cover-comment-badge svg { width: 15px; height: 15px; fill: #ff9500; flex-shrink: 0; }
+    .track-info { text-align: center; width: 100%; max-width: 360px; margin: 20px 0 10px; flex-shrink: 0; }
+    .np-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .np-subtitle { font-size: 14.5px; opacity: 0.7; }
+    .progress-section { width: 100%; max-width: 360px; margin-bottom: 28px; flex-shrink: 0; display: none; }
+    .progress-container { width: 100%; height: 5px; background: rgba(255,255,255,0.18); border-radius: 999px; cursor: pointer; margin-bottom: 8px; }
+    .progress-bar { height: 100%; background: linear-gradient(to right, #ff9500, #ff6b00); border-radius: 999px; box-shadow: 0 0 12px #ff9500; }
+    .time-display { display: flex; justify-content: space-between; font-size: 13.5px; opacity: 0.75; }
+    .main-controls { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 360px; padding: 0 10px; margin-bottom: 30px; flex-shrink: 0; }
+    .control-btn { width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .control-btn svg { width: 30px; height: 30px; fill: #ddd; transition: all 0.2s; }
+    .control-btn:active svg { fill: #ff9500; transform: scale(0.9); }
+    .play-main { width: 82px; height: 82px; background: #ff9500; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(255,149,0,0.65); cursor: pointer; }
+    .play-main svg { width: 36px; height: 36px; fill: #1a0033; }
+    .comments-section { width: 100%; max-width: 360px; margin-top: 10px; padding-bottom: 30px; }
+    .comments-list { max-height: 240px; overflow-y: auto; padding-right: 4px; margin-bottom: 14px; }
+    .comments-list::-webkit-scrollbar { width: 5px; }
+    .comments-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 10px; }
+    .login-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(12px); z-index: 999; display: none; align-items: center; justify-content: center; }
+    .login-overlay.active { display: flex; }
+    .login-box { background: rgba(255,255,255,0.1); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.2); border-radius: 28px; padding: 36px 30px; width: 90%; max-width: 340px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); position: relative; }
+    .login-box h3 { font-size: 22px; font-weight: 800; text-align: center; margin-bottom: 6px; }
+    .login-box p { font-size: 13px; opacity: 0.6; text-align: center; margin-bottom: 24px; }
+    .login-field { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 13px 16px; color: white; font-size: 15px; outline: none; font-family: inherit; margin-bottom: 12px; transition: border 0.2s; }
+    .login-field:focus { border-color: #ff9500; }
+    .login-btn { width: 100%; background: #ff9500; color: #1a0033; border: none; border-radius: 999px; padding: 14px 0; font-weight: 800; font-size: 16px; cursor: pointer; margin-top: 4px; font-family: inherit; transition: opacity 0.2s; }
+    .login-btn:active { opacity: 0.8; }
+    .login-error { color: #ff4444; font-size: 13px; text-align: center; margin-top: 10px; display: none; }
+    .login-close { position: absolute; top: 14px; left: 16px; font-size: 22px; cursor: pointer; opacity: 0.6; background: none; border: none; color: white; }
+    .admin-badge { display: flex; align-items: center; gap: 6px; background: rgba(255,149,0,0.2); border: 1px solid rgba(255,149,0,0.5); border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 700; color: #ff9500; cursor: pointer; }
+    .delete-btn { background: rgba(255,50,50,0.2); border: 1px solid rgba(255,50,50,0.4); color: #ff6464; border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .delete-btn:hover { background: rgba(255,50,50,0.4); }
+    .loading-comments { text-align: center; padding: 20px; opacity: 0.6; font-size: 14px; }
+
+    .new-badge {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background: #ff9500;
+        color: #1a0033;
+        font-size: 11px;
+        font-weight: 900;
+        padding: 3px 9px;
+        border-radius: 999px;
+        letter-spacing: 0.3px;
+        box-shadow: 0 2px 8px rgba(255,149,0,0.55);
+        white-space: nowrap;
+        font-family: 'Vazirmatn', sans-serif;
+        pointer-events: none;
+    }
+
+    /* Card Icon */
+    .card-qa-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #ff9500, #ff6b00);
         border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        color: #1a0033;
+        font-size: 24px;
+        font-weight: 700;
     }
-    .menu-items { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; gap: 9px; }
-    .menu-item {
-        background: rgba(255,255,255,0.06); border: 1px solid rgba(212,175,55,0.18);
-        border-radius: 15px; padding: 14px 18px;
-        display: -webkit-flex; display: flex;
-        -webkit-align-items: center; align-items: center;
-        text-decoration: none; color: white;
-        font-size: 15.8px; font-weight: 700;
-    }
-    .menu-item .text { -webkit-flex: 1; flex: 1; line-height: 1.35; }
 </style>
 </head>
 <body>
 
-<div class="stars"></div>
-
-<header>
-    <div class="hamburger" onclick="toggleMenu()">☰</div>
+<header style="position:fixed;top:0;left:0;right:0;height:65px;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:100;">
+    <div onclick="goToHome()" style="font-size:28px;cursor:pointer;">←</div>
+    <div id="headerAuthArea">
+        <button onclick="openLogin()" class="admin-badge">🔐 ورود</button>
+    </div>
 </header>
 
-<div class="main-center">
-    <div class="title">PlanLife</div>
+<div id="loginOverlay" class="login-overlay">
+    <div class="login-box">
+        <button class="login-close" onclick="closeLogin()">✕</button>
+        <h3>🔐 ورود ادمین</h3>
+        <p>برای پاسخ دادن به سوالات وارد شوید</p>
+        <input id="loginUsername" class="login-field" type="text" placeholder="user name" autocomplete="off">
+        <input id="loginPassword" class="login-field" type="password" placeholder="password">
+        <button class="login-btn" onclick="doLogin()">login</button>
+        <div id="loginError" class="login-error">نام کاربری یا رمز عبور اشتباه است</div>
+    </div>
+</div>
 
-    <div class="chat-container">
-        <div id="chat-output"></div>
-        <div class="input-box">
-            <input id="user-input" placeholder="پیام بده..." onkeydown="if(event.key==='Enter') sendMessage()">
-            <button class="send-btn" onclick="sendMessage()">
-                <div class="orb">
-                    <div class="neural-lines">
-                        <div class="line"></div><div class="line"></div>
-                        <div class="line"></div><div class="line"></div>
-                        <div class="line"></div>
-                    </div>
-                    <div class="core"></div>
-                </div>
-            </button>
+<div style="margin-top:80px;text-align:center;">
+    <h2 style="font-size:32px;font-weight:900;">پاسخ سوالات ذهنی شما</h2>
+</div>
+<div style="padding:0 20px;">
+    <div style="font-size:22px;margin:25px 0 12px;font-weight:700;">دسته‌بندی‌ها</div>
+    <div style="display:flex;gap:15px;overflow-x:auto;padding-bottom:25px;" id="categorySlides"></div>
+    <div id="currentCategoryTitle" style="font-size:22px;margin:25px 0 12px;font-weight:700;">همه سوالات</div>
+    <div id="qaGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:18px;padding-bottom:120px;"></div>
+</div>
+
+<div id="miniPlayer" class="mini-player" onclick="expandPlayer()">
+    <div class="card-qa-icon">؟</div>
+    <div class="mini-info">
+        <div id="miniTitle" class="mini-title">سوال</div>
+        <div id="miniEp" class="mini-ep">PlanLife</div>
+    </div>
+    <div class="mini-play-btn" id="miniPlayBtn" onclick="event.stopPropagation(); miniToggleAnswer()">
+        <svg id="miniPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </div>
+    <div class="mini-close" onclick="event.stopPropagation(); killPlayer()">✕</div>
+    <div class="mini-progress">
+        <div class="mini-progress-bar" id="miniProgressBar" style="width:0%"></div>
+    </div>
+</div>
+
+<div id="nowPlayingScreen" class="now-playing">
+    <div class="drag-handle-wrap" id="dragHandleWrap">
+        <div class="drag-handle"></div>
+    </div>
+    <div class="player-topbar">
+        <button onclick="closeNowPlaying()" style="font-size:26px;background:none;border:none;color:white;">←</button>
+        <span id="playerStatus" class="player-status">درحال نمایش</span>
+        <button onclick="showMenu()" style="font-size:26px;background:none;border:none;color:white;">⋯</button>
+    </div>
+
+    <!-- ✅ Question Box (Glassmorphism) -->
+    <div class="question-box">
+        <div class="question-text" id="questionText">سوالی در اینجا نمایش داده خواهد شد</div>
+    </div>
+    <div class="cover-comment-badge" id="coverCommentBadge">
+        <svg viewBox="0 0 24 24"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
+        <span id="coverCommentCount">۰</span>
+        <span style="opacity:0.7; font-weight:500;">نظر</span>
+    </div>
+
+    <div class="track-info">
+        <h2 id="npTitle" class="np-title" style="display:none;">عنوان</h2>
+        <p id="npSubtitle" class="np-subtitle" style="display:none;">دسته‌بندی</p>
+    </div>
+
+    <div class="progress-section">
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="time-display">
+            <span id="currentTime">0:00</span>
+            <span id="totalTime">0:00</span>
         </div>
     </div>
 
-    <div class="services-grid">
+    <!-- ✅ جایگزین کردن: -10s و +10s را جابجا کردیم -->
+    <div class="main-controls">
+        <div class="control-btn" onclick="prevQA()"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z"/></svg></div>
+        <div class="control-btn" onclick="seek(10)"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg></div>
+        <div onclick="toggleAnswer()" class="play-main" id="playBtn"><svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="control-btn" onclick="seek(-10)"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></div>
+        <div class="control-btn" onclick="nextQA()"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></div>
+    </div>
 
-        <a href="https://planlife.ir/Pages/podcasts_free/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="">
-                <span>پادکست رایگان</span>
-            </div>
-        </a>
-
-        <a href="https://planlife.ir/Pages/Doreha/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="">
-                <span>دوره ها</span>
-            </div>
-        </a>
-
-        <a href="https://planlife.ir/Pages/Magazine/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="">
-                <span>مجله ماورایی 📰</span>
-            </div>
-        </a>
-
-        <a href="https://planlife.ir/Pages/Mindcoding/index.html">
-            <div class="service-box mindcode-box">
-                <div class="mc-terminal">
-                    <div class="mc-prompt">root@mind:~$</div>
-                    <div class="mc-code">
-                        if(belief){<br>
-                        &nbsp;rewrite();<br>
-                        }<br>
-                        RAS.update();<br>
-                        grow(life);<br>
-                        mind++;<br>
-                        if(belief){<br>
-                        &nbsp;rewrite();<br>
-                    </div>
-                </div>
-                <span class="mc-title">کد نویسی ذهنی</span>
-                <span class="mc-sub"></span>
-            </div>
-        </a>
-
-        <a href="https://planlife.ir/Pages/Tamrin/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="">
-                <span>تمرینات مجازی</span>
-            </div>
-        </a>
-
-        <a href="https://planlife.ir/Pages/visionboard/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg" alt="تابلو آرزوها">
-                <span>تابلو آرزوها 🔖</span>
-            </div>
-        </a>
-
-        <a href="https://planlife.ir/Pages/Book/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه">
-                <span>کتابخانه 📚</span>
-            </div>
-        </a>
-
-        <a href="https://planlife.ir/Pages/komakavaliye/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg" alt="">
-                <span>جعبه کمک های اولیه</span>
-            </div>
-        </a>
-
-        <a href="https://planlife.ir/Pages/ranj-lezat/index.html">
-            <div class="service-box">
-                <img src="http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2276.jpeg" alt="ترک عادت">
-                <span>ترک عادت</span>
-            </div>
-        </a>
-
-        <a href="https://planlife.ir/Pages/naghsherah/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781599306/IMG_1979_xcccao.jpg" alt="">
-                <span>نقشه راه</span>
-            </div>
-        </a>
-
-        <a href="https://planlife.ir/Pages/Music/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="">
-                <span>موزیک ها</span>
-            </div>
-        </a>
-
-        <a href="https://planlife.ir/Pages/Videos/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779985702/IMG_1211_snjqjm.jpg" alt="">
-                <span>ویدیوها 🎥</span>
-            </div>
-        </a>
-
-        <a href="https://planlife.ir/Pages/tamrintakhasosi/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780955091/IMG_1737_ei1f5w.png" alt="">
-                <span>تمرینات تخصصی</span>
-            </div>
-        </a>
-
-        <a href="https://planlife.ir/Pages/cheklist/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg" alt="">
-                <span>چک لیست روزانه📜</span>
-            </div>
-        </a>
-
+    <div class="comments-section">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; padding:0 4px;">
+            <span style="font-size:19px; font-weight:700;">💬 نظرات</span>
+            <span id="commentCount" style="background:#ff9500; color:#1a0033; font-size:12.5px; font-weight:800; padding:3px 11px; border-radius:999px; min-width:22px; text-align:center;">0</span>
+        </div>
+        <div id="commentsList" class="comments-list"></div>
+        <div id="commentForm" style="background:rgba(255,255,255,0.09); border-radius:18px; padding:16px 16px 18px;">
+            <input id="commentName" type="text" placeholder="نام شما (اختیاری)" onfocus="scrollToForm()"
+                   style="width:100%; background:rgba(0,0,0,0.4); border:1.5px solid rgba(255,255,255,0.1); border-radius:14px; padding:13px 16px; color:white; font-size:16px; margin-bottom:10px; outline:none; font-family:inherit; -webkit-appearance:none; appearance:none;">
+            <textarea id="commentText" placeholder="نظر خود را اینجا بنویسید..." rows="3" onfocus="scrollToForm()"
+                      style="width:100%; background:rgba(0,0,0,0.4); border:1.5px solid rgba(255,255,255,0.1); border-radius:14px; padding:13px 16px; color:white; font-size:16px; resize:none; height:80px; outline:none; font-family:inherit; line-height:1.5; display:block; -webkit-appearance:none; appearance:none;"></textarea>
+            <button id="submitCommentBtn" onclick="addComment()"
+                    style="margin-top:12px; width:100%; background:#ff9500; color:#1a0033; border:none; border-radius:999px; padding:15px 0; font-weight:800; font-size:16px; cursor:pointer; font-family:inherit; box-shadow:0 4px 18px rgba(255,149,0,0.35); -webkit-tap-highlight-color:transparent;">
+                ارسال نظر
+            </button>
+        </div>
     </div>
 </div>
 
-<div id="menu-overlay" onclick="closeMenu()"></div>
-<div id="side-menu" class="side-menu">
-    <div class="menu-header">
-        <h2>PlanLife</h2>
-        <div class="close-btn" onclick="closeMenu()">✕</div>
-    </div>
-    <div class="menu-items">
-        <a href="https://planlife.ir" class="menu-item" onclick="closeMenu()">
-            <span class="text">خانه</span>
-        </a>
-        <a href="https://planlife.ir/Pages/podcasts_free/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">پادکست‌های رایگان</span>
-        </a>
-        <a href="https://planlife.ir/Pages/Doreha/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">دوره‌ها</span>
-        </a>
-        <a href="https://planlife.ir/Pages/Magazine/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">مجله ماورایی 📰</span>
-        </a>
-        <a href="https://planlife.ir/Pages/Mindcoding/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">کد نویسی ذهنی</span>
-        </a>
-        <a href="https://planlife.ir/Pages/Tamrin/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">تمرینات مجازی</span>
-        </a>
-        <a href="https://planlife.ir/Pages/visionboard/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">تابلو آرزوها 🔖</span>
-        </a>
-        <a href="https://planlife.ir/Pages/Book/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">کتابخانه 📚</span>
-        </a>
-        <a href="https://planlife.ir/Pages/komakavaliye/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">جعبه کمک های اولیه</span>
-        </a>
-        <a href="https://planlife.ir/Pages/ranj-lezat/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">ترک عادت</span>
-        </a>
-        <a href="https://planlife.ir/Pages/naghsherah/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">نقشه راه</span>
-        </a>
-        <a href="https://planlife.ir/Pages/Music/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">موزیک‌ها</span>
-        </a>
-        <a href="https://planlife.ir/Pages/Videos/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">ویدیوها 🎥</span>
-        </a>
-        <a href="https://planlife.ir/Pages/tamrintakhasosi/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">تمرینات تخصصی</span>
-        </a>
-        <a href="https://planlife.ir/Pages/cheklist/index.html" class="menu-item" onclick="closeMenu()">
-            <span class="text">چک لیست روزانه 📜</span>
-        </a>
-    </div>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-var QA_URL = "https://raw.githubusercontent.com/soheil001/planlife1/main/qa.json";
-var qaData = null;
+const SUPABASE_URL      = 'https://hjzzvzxhrqovvducnxha.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
+const DELETE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/delete-comment-qa`;
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let allComments = {};
 
-function loadQA() {
-    return fetch(QA_URL + "?t=" + Date.now())
-        .then(function(res){ return res.json(); })
-        .then(function(data){ qaData = data; })
-        .catch(function(e){ console.log("خطا:", e); });
+async function fetchCommentsForQA(qaId) {
+    try {
+        const { data, error } = await supabaseClient.from('qa_comments').select('*').eq('qa_id', qaId).order('created_at', { ascending: false });
+        if (error) throw error;
+        allComments[qaId] = data || [];
+        return true;
+    } catch(e) { console.warn('Supabase fetch:', e); return false; }
 }
-
-function normalize(text) {
-    return text.toLowerCase()
-        .replace(/ي/g,'ی').replace(/ك/g,'ک')
-        .replace(/‌/g,' ').replace(/[،؟!٪]/g,' ').trim();
+async function fetchAllCommentCounts() {
+    try {
+        const { data, error } = await supabaseClient.from('qa_comments').select('qa_id');
+        if (error) throw error;
+        const counts = {};
+        (data || []).forEach(row => { counts[row.qa_id] = (counts[row.qa_id] || 0) + 1; });
+        return counts;
+    } catch(e) { console.warn('Supabase counts fetch:', e); return {}; }
 }
-function scoreEntry(entry, userWords, userText) {
-    var score = 0;
-    var expandedWords = userWords.slice();
-    if (qaData && qaData.synonyms) {
-        var keys = Object.keys(qaData.synonyms);
-        for (var i = 0; i < keys.length; i++) {
-            var key = keys[i];
-            var synonyms = qaData.synonyms[key];
-            var allForms = [key].concat(synonyms).map(normalize);
-            if (userWords.some(function(w){ return allForms.indexOf(w) >= 0; })) {
-                expandedWords = expandedWords.concat(allForms);
-            }
-        }
-    }
-    for (var j = 0; j < entry.questions.length; j++) {
-        var normQ = normalize(entry.questions[j]);
-        if (normQ === normalize(userText)) return 1000;
-        if (normalize(userText).indexOf(normQ) >= 0 || normQ.indexOf(normalize(userText)) >= 0) score += 80;
-    }
-    var allQWords = entry.questions.map(function(q){ return normalize(q); }).join(' ').split(/\s+/);
-    var tagWords = entry.tags ? entry.tags.map(function(t){ return normalize(t); }) : [];
-    for (var k = 0; k < expandedWords.length; k++) {
-        var word = expandedWords[k];
-        if (word.length < 2) continue;
-        if (allQWords.some(function(w){ return w.indexOf(word) >= 0 || word.indexOf(w) >= 0; })) score += 15;
-        if (tagWords.some(function(t){ return t.indexOf(word) >= 0 || word.indexOf(t) >= 0; })) score += 20;
-    }
-    return score;
+async function insertComment(qaId, name, text) {
+    try {
+        const { data, error } = await supabaseClient.from('qa_comments').insert([{ qa_id: qaId, name, text }]).select();
+        if (error) throw error;
+        return data && data[0];
+    } catch(e) { console.warn('Supabase insert:', e); return null; }
 }
-
-function findAnswer(userText) {
-    if (!qaData || !qaData.qa) return null;
-    var norm = normalize(userText);
-    var words = norm.split(/\s+/).filter(function(w){ return w.length > 1; });
-    var bestScore = 0, bestAnswer = null;
-    for (var i = 0; i < qaData.qa.length; i++) {
-        var score = scoreEntry(qaData.qa[i], words, userText);
-        if (score > bestScore) { bestScore = score; bestAnswer = qaData.qa[i].answer; }
-    }
-    if (bestScore >= 15) return bestAnswer;
-    return qaData.default_response || null;
-}
-
-function addMessage(text, type) {
-    var output = document.getElementById("chat-output");
-    var div = document.createElement("div");
-    div.className = type === 'user' ? 'msg-user' : 'msg-bot';
-    div.innerHTML = text.replace(/\n/g,'<br>');
-    output.appendChild(div);
-    output.scrollTop = output.scrollHeight;
-}
-
-function showThinking() {
-    var output = document.getElementById("chat-output");
-    var div = document.createElement("div");
-    div.className = 'msg-bot';
-    div.id = 'thinking-indicator';
-    div.innerHTML = '<div class="brain-thinking"><div class="thinking-dots">در حال فکر کردن <span>.</span><span>.</span><span>.</span></div></div>';
-    output.appendChild(div);
-    output.scrollTop = output.scrollHeight;
-}
-
-function removeThinking() {
-    var el = document.getElementById('thinking-indicator');
-    if (el) el.remove();
-}
-
-function typewriterMessage(text, onDone) {
-    var output = document.getElementById("chat-output");
-    var div = document.createElement("div");
-    div.className = 'msg-bot';
-    var span = document.createElement("span");
-    var cursor = document.createElement("span");
-    cursor.className = "cursor-blink";
-    div.appendChild(span);
-    div.appendChild(cursor);
-    output.appendChild(div);
-    var chars = Array.from(text.replace(/<br>/g, '\n'));
-    var i = 0, rawText = '';
-    function typeNext() {
-        if (i >= chars.length) {
-            cursor.remove();
-            span.innerHTML = text;
-            if (onDone) onDone();
-            return;
-        }
-        var ch = chars[i];
-        rawText += ch === '\n' ? '<br>' : ch;
-        span.innerHTML = rawText;
-        i++;
-        output.scrollTop = output.scrollHeight;
-        var delay = /[.!?،؟\n]/.test(ch) ? 180 : 45;
-        setTimeout(typeNext, delay);
-    }
-    typeNext();
-}
-
-var isSending = false;
-function sendMessage() {
-    if (isSending) return;
-    var input = document.getElementById("user-input");
-    var text = input.value.trim();
-    if (!text) return;
-    isSending = true;
-    input.disabled = true;
-    addMessage(text, 'user');
-    input.value = "";
-    showThinking();
-    setTimeout(function() {
-        removeThinking();
-        var answer = findAnswer(text);
-        var reply = answer || "سوال جالبیه! برای پاسخ دقیق‌تر می‌تونی از پادکست‌ها و دوره‌های پایین استفاده کنی یا سوالت رو با کلمات دیگه بپرسی 😊";
-        typewriterMessage(reply, function() {
-            input.disabled = false;
-            input.focus();
-            isSending = false;
+async function deleteCommentRemote(commentId, adminPassword) {
+    try {
+        const res = await fetch(DELETE_FUNCTION_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'apikey': SUPABASE_ANON_KEY },
+            body: JSON.stringify({ commentId, adminPassword })
         });
-    }, 2200);
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || ('HTTP ' + res.status));
+        return true;
+    } catch(e) { console.warn('Edge function delete:', e); alert('خطا در حذف نظر: ' + e.message); return false; }
 }
 
-function toggleMenu() {
-    var menu = document.getElementById('side-menu');
-    var overlay = document.getElementById('menu-overlay');
-    var main = document.querySelector('.main-center');
-    if (menu.classList.contains('open')) {
-        closeMenu();
-    } else {
-        menu.classList.add('open');
-        overlay.classList.add('active');
-        main.classList.add('blurred');
+// ✅ داده سوالات
+const qaData = [
+   {id:0,  isNew:true,  category:"سوالات در حوزه مالی",            question:"چطور می‌تونم ثروتمند بشم؟",                     answer:"", icon:"💰"},
+   {id:1,  isNew:true,  category:"سوالات در حوزه مالی",            question:"چرا پول از من فرار می‌کنه؟",                   answer:"", icon:"💰"},
+   {id:2,  isNew:false, category:"سوالات در حوزه مالی",            question:"آیا پول شر است؟",                              answer:"", icon:"💰"},
+   {id:3,  isNew:false, category:"سوالات در حوزه روابط",           question:"چطور رابطه‌ی خوبی برقرار کنم؟",                answer:"", icon:"💑"},
+   {id:4,  isNew:true,  category:"سوالات در حوزه روابط",           question:"آیا تنها هستم؟",                               answer:"", icon:"💑"},
+   {id:5,  isNew:false, category:"سوالات در حوزه روابط",           question:"چگونه اعتماد بسازم؟",                          answer:"", icon:"💑"},
+   {id:6,  isNew:false, category:"سوالات در حوزه اعتماد به نفس",   question:"چطور اعتماد به نفسم رو بالا ببرم؟",             answer:"", icon:"💪"},
+   {id:7,  isNew:true,  category:"سوالات در حوزه اعتماد به نفس",   question:"چرا خودم رو کم ارزش می‌دونم؟",                 answer:"", icon:"💪"},
+   {id:8,  isNew:false, category:"سوالات در حوزه اعتماد به نفس",   question:"بیرونی ها چه فکری دارند؟",                     answer:"", icon:"💪"},
+   {id:9,  isNew:false, category:"سوالات در حوزه احساس لیاقت",     question:"آیا من شایسته‌ی بهترین هستم؟",                 answer:"", icon:"👑"},
+   {id:10, isNew:false, category:"سوالات در حوزه احساس لیاقت",     question:"چطور احساس لیاقت رو قبول کنم؟",               answer:"", icon:"👑"},
+   {id:11, isNew:true,  category:"سوالات در حوزه احساس لیاقت",     question:"من شایسته‌ی چیها هستم؟",                      answer:"", icon:"👑"},
+   {id:12, isNew:false, category:"سوالات در حوزه‌ی کد های ذهنی",   question:"کد های ذهنی چیا هستن؟",                       answer:"", icon:"🧠"},
+   {id:13, isNew:true,  category:"سوالات در حوزه‌ی کد های ذهنی",   question:"چطور کد های منفی رو تغییر بدم؟",                answer:"", icon:"🧠"},
+   {id:14, isNew:false, category:"سوالات در حوزه‌ی کد های ذهنی",   question:"باورم رو چطور ریست کنم؟",                      answer:"", icon:"🧠"},
+];
+
+let currentQAIndex = 0, currentQAId = null, isAdmin = false;
+const ADMIN_USER = 'Admin', ADMIN_PASS = '12345';
+const ADMIN_API_PASSWORD = 'So@21072933@';
+const statusEl = document.getElementById('playerStatus');
+const playIcon = document.getElementById('playIcon');
+
+function openLogin() {
+    document.getElementById('loginOverlay').classList.add('active');
+    document.getElementById('loginError').style.display = 'none';
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginPassword').value = '';
+    setTimeout(() => document.getElementById('loginUsername').focus(), 100);
+}
+function closeLogin() { document.getElementById('loginOverlay').classList.remove('active'); }
+function doLogin() {
+    const u = document.getElementById('loginUsername').value.trim();
+    const p = document.getElementById('loginPassword').value;
+    if (u === ADMIN_USER && p === ADMIN_PASS) {
+        isAdmin = true; closeLogin(); updateAdminHeader();
+        if (currentQAId !== null) renderComments(currentQAId);
+    } else { document.getElementById('loginError').style.display = 'block'; }
+}
+function doLogout() { isAdmin = false; updateAdminHeader(); if (currentQAId !== null) renderComments(currentQAId); }
+function updateAdminHeader() {
+    const area = document.getElementById('headerAuthArea');
+    if (isAdmin) {
+        area.innerHTML = `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:13px;opacity:0.7;">👑 Admin</span><button onclick="doLogout()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:999px;color:white;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">خروج</button></div>`;
+    } else { area.innerHTML = `<button onclick="openLogin()" class="admin-badge">🔐 ورود</button>`; }
+}
+
+function toPersianNum(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
+function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function formatCommentTime(iso) {
+    const d = new Date(iso);
+    return `${d.toLocaleDateString('fa-IR',{year:'numeric',month:'short',day:'numeric'})} • ${d.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`;
+}
+
+async function loadComments(id) {
+    document.getElementById('commentsList').innerHTML = '<div class="loading-comments">⏳ در حال بارگذاری نظرات...</div>';
+    document.getElementById('commentCount').textContent = '...';
+    await fetchCommentsForQA(id);
+    renderComments(id);
+    refreshAllCardBadges();
+}
+
+function renderComments(id) {
+    const comments = allComments[id] || [];
+    const list     = document.getElementById('commentsList');
+    const countEl  = document.getElementById('commentCount');
+    const coverCnt = document.getElementById('coverCommentCount');
+    if (!list || !countEl) return;
+    countEl.textContent = comments.length;
+    if (coverCnt) coverCnt.textContent = toPersianNum(comments.length);
+    list.innerHTML = '';
+    if (comments.length === 0) {
+        list.innerHTML = '<p style="opacity:0.6;text-align:center;padding:22px 10px;font-size:14px;line-height:1.6;">هنوز نظری ثبت نشده.<br>اولین نفر باشید!</p>';
+        return;
+    }
+    comments.forEach(c => {
+        const div = document.createElement('div');
+        div.style.cssText = 'background:rgba(255,255,255,0.085);border-radius:14px;padding:13px 15px;margin-bottom:9px;border:1px solid rgba(255,255,255,0.06);';
+        div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+            <strong style="color:#ffd700;font-size:14.5px;">${escapeHtml(c.name)}</strong>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:11.5px;opacity:0.55;white-space:nowrap;">${formatCommentTime(c.created_at)}</span>
+                ${isAdmin ? `<button class="delete-btn" onclick="deleteComment(${id},${c.id})">🗑 حذف</button>` : ''}
+            </div>
+        </div>
+        <p style="font-size:14.8px;line-height:1.55;margin:0;color:#f0f0f0;">${escapeHtml(c.text)}</p>`;
+        list.appendChild(div);
+    });
+}
+
+async function addComment() {
+    if (currentQAId === null) return;
+    const name = document.getElementById('commentName').value.trim() || 'ناشناس';
+    const text = document.getElementById('commentText').value.trim();
+    if (!text) { alert('لطفاً متن نظر را وارد کنید.'); return; }
+    const btn = document.getElementById('submitCommentBtn');
+    btn.textContent = '⏳ در حال ارسال...'; btn.disabled = true;
+    const inserted = await insertComment(currentQAId, name, text);
+    if (inserted) {
+        if (!allComments[currentQAId]) allComments[currentQAId] = [];
+        allComments[currentQAId].unshift(inserted);
+        renderComments(currentQAId); refreshAllCardBadges();
+        document.getElementById('commentText').value = '';
+        document.getElementById('commentName').value = '';
+    } else { alert('ارسال نظر با خطا مواجه شد. لطفاً دوباره تلاش کنید.'); }
+    btn.textContent = 'ارسال نظر'; btn.disabled = false;
+}
+
+async function deleteComment(qaId, commentId) {
+    if (!isAdmin || !confirm('این نظر حذف شود؟')) return;
+    const ok = await deleteCommentRemote(commentId, ADMIN_API_PASSWORD);
+    if (!ok) return;
+    allComments[qaId] = (allComments[qaId] || []).filter(c => c.id !== commentId);
+    renderComments(qaId); refreshAllCardBadges();
+}
+
+function updateCardBadge(id, count) {
+    const badge = document.getElementById(`card-badge-${id}`);
+    if (badge) badge.textContent = toPersianNum(count);
+    if (currentQAId === id) {
+        const cc = document.getElementById('coverCommentCount'); if (cc) cc.textContent = toPersianNum(count);
+        const mc = document.getElementById('commentCount');      if (mc) mc.textContent = count;
     }
 }
-function closeMenu() {
-    document.getElementById('side-menu').classList.remove('open');
-    document.getElementById('menu-overlay').classList.remove('active');
-    document.querySelector('.main-center').classList.remove('blurred');
+async function refreshAllCardBadges() {
+    const counts = await fetchAllCommentCounts();
+    qaData.forEach(item => updateCardBadge(item.id, counts[item.id] || 0));
 }
-document.addEventListener('keydown', function(e) { if (e.key === "Escape") closeMenu(); });
 
-window.onload = function() {
-    var input = document.getElementById('user-input');
-    input.addEventListener('focus', function() {
-        document.body.style.position = 'fixed';
-        document.body.style.width = '100%';
-    });
-    input.addEventListener('blur', function() {
-        document.body.style.position = '';
-        document.body.style.width = '';
-        window.scrollTo(0, 0);
-    });
-    loadQA().then(function() {
-        addMessage("به PlanLife خوش اومدی 🌟\nهر سوالی درباره باور، ثروت، روابط یا اعتماد به نفس داری بپرس!", 'bot');
-    });
-};
+function setPlayIcons(answering) {
+    const icon = answering ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
+    playIcon.innerHTML = icon;
+    document.getElementById('miniPlayIcon').innerHTML = icon;
+    statusEl.textContent = answering ? 'درحال نمایش' : 'متوقف شده';
+}
+
+function openQA(question, category, id) {
+    document.getElementById('questionText').textContent = question;
+    document.getElementById('miniTitle').textContent  = question;
+    document.getElementById('miniEp').textContent     = category;
+    currentQAId  = id;
+    currentQAIndex = qaData.findIndex(item => item.id === id);
+    loadComments(id);
+    expandPlayer();
+    setPlayIcons(true);
+}
+
+function expandPlayer() {
+    const screen = document.getElementById('nowPlayingScreen');
+    document.getElementById('miniPlayer').classList.remove('active');
+    screen.style.transition = 'none';
+    screen.style.transform  = 'translateY(110%)';
+    screen.style.borderRadius = '22px 22px 0 0';
+    screen.scrollTop = 0;
+    screen.classList.add('active');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        screen.style.transition   = 'transform 0.52s cubic-bezier(0.32,0.72,0,1), border-radius 0.52s cubic-bezier(0.32,0.72,0,1)';
+        screen.style.transform    = 'translateY(0%)';
+        screen.style.borderRadius = '22px 22px 0 0';
+    }));
+}
+function minimizePlayer() {
+    const screen = document.getElementById('nowPlayingScreen');
+    screen.style.transition   = 'transform 0.48s cubic-bezier(0.32,0.72,0,1), border-radius 0.48s cubic-bezier(0.32,0.72,0,1)';
+    screen.style.transform    = 'translateY(110%)';
+    screen.style.borderRadius = '22px 22px 0 0';
+    setTimeout(() => {
+        screen.classList.remove('active');
+        screen.style.transform = screen.style.borderRadius = screen.style.transition = '';
+        if (currentQAId !== null) document.getElementById('miniPlayer').classList.add('active');
+    }, 480);
+}
+function killPlayer() {
+    const screen = document.getElementById('nowPlayingScreen');
+    screen.style.transition   = 'transform 0.38s cubic-bezier(0.32,0.72,0,1), border-radius 0.38s ease';
+    screen.style.transform    = 'translateY(100%)';
+    screen.style.borderRadius = '28px 28px 0 0';
+    setTimeout(() => {
+        screen.classList.remove('active');
+        screen.style.cssText = '';
+        document.getElementById('miniPlayer').classList.remove('active');
+    }, 380);
+    setPlayIcons(false);
+}
+function miniToggleAnswer() { setPlayIcons(!setPlayIcons.answering); }
+function toggleAnswer() { miniToggleAnswer(); }
+function seek(sec) { /* Placeholder for future functionality */ }
+function prevQA() { if (currentQAIndex > 0) { const p = qaData[currentQAIndex-1]; openQA(p.question, p.category, p.id); } }
+function nextQA() { if (currentQAIndex < qaData.length-1) { const n = qaData[currentQAIndex+1]; openQA(n.question, n.category, n.id); } }
+function closeNowPlaying() { minimizePlayer(); }
+function showMenu() { alert("منو (به زودی)"); }
+function goToHome() { window.location.href = "https://planlife.ir"; }
+
+async function loadQAPage() {
+    const cats = ["سوالات در حوزه مالی","سوالات در حوزه روابط","سوالات در حوزه اعتماد به نفس","سوالات در حوزه احساس لیاقت","سوالات در حوزه‌ی کد های ذهنی"];
+    document.getElementById('categorySlides').innerHTML = cats.map(c =>
+        `<div onclick="selectQACat('${c}')" style="min-width:140px;text-align:center;background:rgba(255,255,255,0.11);border-radius:18px;padding:10px;cursor:pointer;flex-shrink:0;">
+            <div style="width:130px;height:130px;border-radius:18px;background:linear-gradient(135deg,rgba(255,149,0,0.3),rgba(212,175,55,0.2));display:flex;align-items:center;justify-content:center;font-size:48px;">
+                ${qaData.find(q => q.category === c)?.icon || '❓'}
+            </div>
+            <p style="margin-top:10px;font-size:14.5px;font-weight:600;">${c}</p>
+        </div>`
+    ).join('');
+    renderGrid(qaData);
+    await refreshAllCardBadges();
+}
+
+function renderGrid(items) {
+    document.getElementById('qaGrid').innerHTML = items.map(item => {
+        const cnt = toPersianNum((allComments[item.id]||[]).length);
+        const st  = item.question.replace(/'/g,"\\'"), sc = item.category.replace(/'/g,"\\'");
+        const newBadge = item.isNew ? `<div class="new-badge">جدید</div>` : '';
+        return `<div onclick="openQA('${st}','${sc}',${item.id})"
+                     style="background:rgba(255,255,255,0.11);border-radius:22px;padding:12px;text-align:center;cursor:pointer;">
+            <div style="position:relative;">
+                <div style="width:100%;aspect-ratio:1/1;border-radius:18px;background:linear-gradient(135deg,rgba(255,149,0,0.2),rgba(212,175,55,0.1));display:flex;align-items:center;justify-content:center;font-size:56px;">
+                    ${item.icon}
+                </div>
+                <div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.62);backdrop-filter:blur(6px);border-radius:999px;padding:4px 9px;display:flex;align-items:center;gap:5px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#ff9500"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
+                    <span id="card-badge-${item.id}" style="font-size:12px;font-weight:700;color:white;">${cnt}</span>
+                </div>
+                ${newBadge}
+            </div>
+            <div style="font-size:15px;font-weight:600;margin:10px 0 6px;line-height:1.5;">${item.question}<br><small style="opacity:0.75;font-weight:400;font-size:13px;">${item.category}</small></div>
+            <div class="card-qa-icon">؟</div>
+        </div>`;
+    }).join('');
+}
+
+function selectQACat(cat) {
+    document.getElementById('currentCategoryTitle').textContent = cat;
+    renderGrid(qaData.filter(item => item.category === cat));
+}
+function scrollToForm() { setTimeout(() => { const f = document.getElementById('commentForm'); if (f) f.scrollIntoView({behavior:'smooth',block:'center'}); }, 320); }
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.getElementById('loginOverlay').classList.contains('active')) doLogin();
+});
+
+(function() {
+    const screen = document.getElementById('nowPlayingScreen');
+    let startY = 0, startX = 0, lastY = 0, velocity = 0, lastTime = 0;
+    let intentDecided = false, isMinimizing = false;
+    function onStart(e) {
+        const t = e.touches[0];
+        startY = t.clientY; startX = t.clientX;
+        lastY = startY; lastTime = Date.now();
+        velocity = 0; intentDecided = false; isMinimizing = false;
+        screen.style.transition = 'none';
+    }
+    function onMove(e) {
+        const t   = e.touches[0];
+        const dy  = t.clientY - startY;
+        const adx = Math.abs(t.clientX - startX);
+        const now = Date.now(), dt = now - lastTime;
+        if (dt > 0) velocity = (t.clientY - lastY) / dt;
+        lastY = t.clientY; lastTime = now;
+        if (!intentDecided && (Math.abs(dy) > 8 || adx > 8)) {
+            intentDecided = true;
+            if (adx > Math.abs(dy) * 1.2) return;
+            if (dy < 0) return;
+            if (dy > 0 && screen.scrollTop <= 1) { isMinimizing = true; screen.style.willChange = 'transform, border-radius'; }
+        }
+        if (!isMinimizing || dy <= 0) return;
+        e.preventDefault();
+        const progress   = Math.min(dy / 380, 1);
+        const resistance = dy * (1 - progress * 0.3);
+        screen.style.transform    = `translateY(${resistance}px) scale(${1 - progress * 0.08})`;
+        screen.style.borderRadius = `${progress * 28}px ${progress * 28}px 0 0`;
+        screen.style.opacity      = 1 - progress * 0.15;
+    }
+    function onEnd() {
+        if (!isMinimizing) return;
+        isMinimizing = false; screen.style.willChange = '';
+        const dy = lastY - startY;
+        const shouldMin = velocity > 0.4 || dy > 130;
+        screen.style.transition = 'transform 0.46s cubic-bezier(0.32,0.72,0,1), border-radius 0.46s cubic-bezier(0.32,0.72,0,1), opacity 0.46s ease';
+        if (shouldMin) {
+            screen.style.transform = 'translateY(100%) scale(0.92)';
+            screen.style.borderRadius = '28px 28px 0 0';
+            screen.style.opacity = '0.6';
+            setTimeout(() => {
+                screen.classList.remove('active'); screen.style.cssText = '';
+                if (currentQAId !== null) document.getElementById('miniPlayer').classList.add('active');
+            }, 460);
+        } else {
+            screen.style.transform = 'translateY(0) scale(1)';
+            screen.style.borderRadius = '0px'; screen.style.opacity = '1';
+            setTimeout(() => { screen.style.transition = screen.style.transform = screen.style.borderRadius = screen.style.opacity = ''; }, 460);
+        }
+    }
+    screen.addEventListener('touchstart', onStart, { passive: true });
+    screen.addEventListener('touchmove',  onMove,  { passive: false });
+    document.addEventListener('touchend',    onEnd);
+    document.addEventListener('touchcancel', onEnd);
+})();
+
+window.onload = loadQAPage;
 </script>
 </body>
 </html>
