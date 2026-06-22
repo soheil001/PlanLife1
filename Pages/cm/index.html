@@ -59,15 +59,12 @@
     .player-topbar { width: 100%; max-width: 380px; display: flex; justify-content: space-between; align-items: center; padding: 8px 0 16px; flex-shrink: 0; }
     .player-status { font-size: 15px; font-weight: 600; opacity: 0.85; }
     
-    /* Question Box در صفحه پلی - با اسکرول عمودی */
+    /* Question Box صفحه پلی - فقط تکست اسکرول میشه */
     .question-box {
         width: 100%;
         max-width: 320px;
         margin: 6px 0 10px;
-        padding: 24px 20px;
         background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(20px) saturate(150%);
-        -webkit-backdrop-filter: blur(20px) saturate(150%);
         border: 1.5px solid rgba(255, 255, 255, 0.18);
         border-radius: 20px;
         box-shadow: 
@@ -77,17 +74,10 @@
             0 0 20px rgba(212, 175, 55, 0.15);
         position: relative;
         flex-shrink: 0;
-        min-height: 120px;
-        max-height: 200px;
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        text-align: center;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
+        min-height: 160px;
+        max-height: 260px;
+        overflow: hidden;
     }
-    .question-box::-webkit-scrollbar { width: 4px; }
-    .question-box::-webkit-scrollbar-thumb { background: rgba(255,149,0,0.4); border-radius: 10px; }
     .question-box::before {
         content: '';
         position: absolute;
@@ -96,23 +86,43 @@
         border-radius: 20px;
         z-index: -1;
         filter: blur(12px);
+        pointer-events: none;
     }
+    /* پس‌زمینه ثابت داخل باکس */
+    .question-box-bg {
+        position: absolute;
+        inset: 0;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(20px) saturate(150%);
+        -webkit-backdrop-filter: blur(20px) saturate(150%);
+        pointer-events: none;
+        z-index: 0;
+    }
+    /* فقط تکست اسکرول میشه */
+    .question-text-scroll {
+        position: relative;
+        z-index: 1;
+        max-height: 260px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 22px 20px;
+        text-align: center;
+    }
+    .question-text-scroll::-webkit-scrollbar { width: 4px; }
+    .question-text-scroll::-webkit-scrollbar-thumb { background: rgba(255,149,0,0.4); border-radius: 10px; }
     .question-text {
         font-size: 16px;
         font-weight: 600;
         line-height: 1.7;
         color: #f0f0f0;
         word-break: break-word;
-        padding: 4px 0;
     }
 
-    /* Card Question Box - نسخه کوچک‌تر برای کارت */
+    /* Card Question Box - فقط تکست اسکرول میشه */
     .card-question-box {
         width: 100%;
-        padding: 12px 10px;
         background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(16px) saturate(140%);
-        -webkit-backdrop-filter: blur(16px) saturate(140%);
         border: 1px solid rgba(255, 255, 255, 0.16);
         border-radius: 14px;
         box-shadow: 
@@ -121,17 +131,10 @@
             inset 0 1px 0 rgba(255, 255, 255, 0.1);
         position: relative;
         min-height: 80px;
-        max-height: 120px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
+        max-height: 110px;
+        overflow: hidden;
         margin-bottom: 10px;
     }
-    .card-question-box::-webkit-scrollbar { width: 3px; }
-    .card-question-box::-webkit-scrollbar-thumb { background: rgba(255,149,0,0.35); border-radius: 10px; }
     .card-question-box::before {
         content: '';
         position: absolute;
@@ -140,14 +143,39 @@
         border-radius: 14px;
         z-index: -1;
         filter: blur(8px);
+        pointer-events: none;
     }
+    .card-question-box-bg {
+        position: absolute;
+        inset: 0;
+        border-radius: 14px;
+        background: rgba(255,255,255,0.03);
+        backdrop-filter: blur(16px) saturate(140%);
+        -webkit-backdrop-filter: blur(16px) saturate(140%);
+        pointer-events: none;
+        z-index: 0;
+    }
+    .card-question-text-scroll {
+        position: relative;
+        z-index: 1;
+        max-height: 110px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 10px 10px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 80px;
+    }
+    .card-question-text-scroll::-webkit-scrollbar { width: 3px; }
+    .card-question-text-scroll::-webkit-scrollbar-thumb { background: rgba(255,149,0,0.35); border-radius: 10px; }
     .card-question-text {
         font-size: 13px;
         font-weight: 600;
         line-height: 1.6;
         color: #f0f0f0;
         word-break: break-word;
-        padding: 2px 0;
     }
 
     .cover-comment-badge {
@@ -193,19 +221,20 @@
 
     .new-badge {
         position: absolute;
-        top: 8px;
-        left: 8px;
+        top: 6px;
+        left: 6px;
         background: #ff9500;
         color: #1a0033;
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 900;
-        padding: 3px 9px;
+        padding: 3px 8px;
         border-radius: 999px;
         letter-spacing: 0.3px;
         box-shadow: 0 2px 8px rgba(255,149,0,0.55);
         white-space: nowrap;
         font-family: 'Vazirmatn', sans-serif;
         pointer-events: none;
+        z-index: 3;
     }
 
     /* دکمه پلی روی کارت */
@@ -217,16 +246,47 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto;
         box-shadow: 0 4px 16px rgba(255,149,0,0.5);
         flex-shrink: 0;
     }
     .card-play-btn svg {
-        width: 22px;
-        height: 22px;
+        width: 20px;
+        height: 20px;
         fill: #1a0033;
         margin-right: -2px;
     }
+
+    /* ردیف پایین کارت: کامنت + پلی + جدید */
+    .card-bottom-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 2px;
+        margin-top: 6px;
+    }
+    .card-comment-chip {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(6px);
+        border-radius: 999px;
+        padding: 5px 10px;
+        font-size: 12px;
+        font-weight: 700;
+        color: white;
+    }
+    .card-comment-chip svg { width: 13px; height: 13px; fill: #ff9500; flex-shrink: 0; }
+    .card-new-chip {
+        background: #ff9500;
+        color: #1a0033;
+        font-size: 10px;
+        font-weight: 900;
+        padding: 4px 9px;
+        border-radius: 999px;
+        white-space: nowrap;
+    }
+    .card-empty-chip { width: 40px; }
 </style>
 </head>
 <body>
@@ -287,9 +347,12 @@
         <button onclick="showMenu()" style="font-size:26px;background:none;border:none;color:white;">⋯</button>
     </div>
 
-    <!-- Question Box با اسکرول عمودی -->
+    <!-- Question Box: بک‌گراند ثابت، فقط تکست اسکرول -->
     <div class="question-box">
-        <div class="question-text" id="questionText">سوالی در اینجا نمایش داده خواهد شد</div>
+        <div class="question-box-bg"></div>
+        <div class="question-text-scroll">
+            <div class="question-text" id="questionText">سوالی در اینجا نمایش داده خواهد شد</div>
+        </div>
     </div>
     <div class="cover-comment-badge" id="coverCommentBadge">
         <svg viewBox="0 0 24 24"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
@@ -346,6 +409,16 @@ const SUPABASE_ANON_KEY = 'sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
 const DELETE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/delete-comment-qa`;
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let allComments = {};
+
+// آرایه تصاویر رندوم برای کاور دسته‌بندی‌ها
+const COVER_IMAGES = [
+    'http://fs3.centraldnserver.com/~planlife/pics/IMG_2296.jpeg',
+    'http://fs3.centraldnserver.com/~planlife/pics/IMG_2298.jpeg',
+    'http://fs3.centraldnserver.com/~planlife/pics/IMG_2294.jpeg'
+];
+function getRandomCover(seed) {
+    return COVER_IMAGES[seed % COVER_IMAGES.length];
+}
 
 async function fetchCommentsForQA(qaId) {
     try {
@@ -571,7 +644,7 @@ function killPlayer() {
 }
 function miniToggleAnswer() { setPlayIcons(!setPlayIcons.answering); }
 function toggleAnswer() { miniToggleAnswer(); }
-function seek(sec) { /* Placeholder */ }
+function seek(sec) { }
 function prevQA() { if (currentQAIndex > 0) { const p = qaData[currentQAIndex-1]; openQA(p.question, p.category, p.id); } }
 function nextQA() { if (currentQAIndex < qaData.length-1) { const n = qaData[currentQAIndex+1]; openQA(n.question, n.category, n.id); } }
 function closeNowPlaying() { minimizePlayer(); }
@@ -580,14 +653,18 @@ function goToHome() { window.location.href = "https://planlife.ir"; }
 
 async function loadQAPage() {
     const cats = ["سوالات در حوزه مالی","سوالات در حوزه روابط","سوالات در حوزه اعتماد به نفس","سوالات در حوزه احساس لیاقت","سوالات در حوزه‌ی کد های ذهنی"];
-    document.getElementById('categorySlides').innerHTML = cats.map(c =>
-        `<div onclick="selectQACat('${c}')" style="min-width:140px;text-align:center;background:rgba(255,255,255,0.11);border-radius:18px;padding:10px;cursor:pointer;flex-shrink:0;">
-            <div style="width:130px;height:130px;border-radius:18px;background:linear-gradient(135deg,rgba(255,149,0,0.3),rgba(212,175,55,0.2));display:flex;align-items:center;justify-content:center;font-size:48px;">
-                ${qaData.find(q => q.category === c)?.icon || '❓'}
+    document.getElementById('categorySlides').innerHTML = cats.map((c, i) => {
+        const img = getRandomCover(i);
+        return `<div onclick="selectQACat('${c}')" style="min-width:140px;text-align:center;background:rgba(255,255,255,0.11);border-radius:18px;padding:10px;cursor:pointer;flex-shrink:0;">
+            <div style="width:130px;height:130px;border-radius:18px;overflow:hidden;position:relative;">
+                <img src="${img}" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                <div style="display:none;width:100%;height:100%;background:linear-gradient(135deg,rgba(255,149,0,0.3),rgba(212,175,55,0.2));align-items:center;justify-content:center;font-size:48px;position:absolute;inset:0;">
+                    ${qaData.find(q => q.category === c)?.icon || '❓'}
+                </div>
             </div>
             <p style="margin-top:10px;font-size:14.5px;font-weight:600;">${c}</p>
-        </div>`
-    ).join('');
+        </div>`;
+    }).join('');
     renderGrid(qaData);
     await refreshAllCardBadges();
 }
@@ -596,26 +673,30 @@ function renderGrid(items) {
     document.getElementById('qaGrid').innerHTML = items.map(item => {
         const cnt = toPersianNum((allComments[item.id]||[]).length);
         const st  = item.question.replace(/'/g,"\\'"), sc = item.category.replace(/'/g,"\\'");
-        const newBadge = item.isNew ? `<div class="new-badge">جدید</div>` : '';
+        const newChip = item.isNew
+            ? `<span class="card-new-chip">جدید</span>`
+            : `<span class="card-empty-chip"></span>`;
         return `<div onclick="openQA('${st}','${sc}',${item.id})"
-                     style="background:rgba(255,255,255,0.11);border-radius:22px;padding:12px;text-align:center;cursor:pointer;display:flex;flex-direction:column;gap:0;">
-            <div style="position:relative;">
-                <!-- Question Box روی کارت -->
-                <div class="card-question-box">
-                    <div class="card-question-text">${item.question}</div>
+                     style="background:rgba(255,255,255,0.11);border-radius:22px;padding:12px;text-align:center;cursor:pointer;display:flex;flex-direction:column;">
+            <!-- تکست باکس سوال -->
+            <div class="card-question-box">
+                <div class="card-question-box-bg"></div>
+                <div class="card-question-text-scroll">
+                    <span class="card-question-text">${item.question}</span>
                 </div>
-                <!-- badge نظرات -->
-                <div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.62);backdrop-filter:blur(6px);border-radius:999px;padding:4px 9px;display:flex;align-items:center;gap:5px;z-index:2;">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#ff9500"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
-                    <span id="card-badge-${item.id}" style="font-size:12px;font-weight:700;color:white;">${cnt}</span>
-                </div>
-                ${newBadge}
             </div>
             <!-- دسته‌بندی -->
-            <div style="font-size:12px;opacity:0.65;font-weight:400;margin:8px 0 6px;line-height:1.4;">${item.category}</div>
-            <!-- دکمه پلی -->
-            <div class="card-play-btn" style="margin-top:2px;">
-                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <div style="font-size:11.5px;opacity:0.6;font-weight:400;margin:6px 0 8px;line-height:1.4;text-align:center;">${item.category}</div>
+            <!-- ردیف پایین: کامنت + پلی + جدید -->
+            <div class="card-bottom-row">
+                <div class="card-comment-chip">
+                    <svg viewBox="0 0 24 24"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
+                    <span id="card-badge-${item.id}">${cnt}</span>
+                </div>
+                <div class="card-play-btn">
+                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                ${newChip}
             </div>
         </div>`;
     }).join('');
