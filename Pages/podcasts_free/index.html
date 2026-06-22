@@ -102,16 +102,11 @@
     .delete-btn:hover { background: rgba(255,50,50,0.4); }
     .loading-comments { text-align: center; padding: 20px; opacity: 0.6; font-size: 14px; }
 
-    /* ══════════════════════════════════
-       بج "جدید"
-       سمت چپ کاور، دقیقاً روبروی بج کامنت
-       همرنگ آیکون کامنت (#ff9500)
-    ══════════════════════════════════ */
     .new-badge {
         position: absolute;
         top: 8px;
-        left: 8px;                               /* سمت چپ کاور */
-        background: #ff9500;                     /* همرنگ آیکون کامنت */
+        left: 8px;
+        background: #ff9500;
         color: #1a0033;
         font-size: 11px;
         font-weight: 900;
@@ -189,6 +184,7 @@
         </div>
     </div>
     <div class="track-info">
+        <!-- ✅ تغییر: اسم اپیزود بالا (بزرگ) — دسته‌بندی پایین (کوچک) -->
         <h2 id="npTitle" class="np-title">عنوان پادکست</h2>
         <p id="npSubtitle" class="np-subtitle">PlanLife</p>
     </div>
@@ -273,12 +269,6 @@ async function deleteCommentRemote(commentId, adminPassword) {
     } catch(e) { console.warn('Edge function delete:', e); alert('خطا در حذف نظر: ' + e.message); return false; }
 }
 
-// ══════════════════════════════════════════════════════════════
-//  podcastData
-//  ─────────────────────────────────────────────────────────────
-//  isNew: true   →  لیبل نارنجی "جدید" سمت چپ کاور نمایش داده میشه
-//  isNew: false  →  بدون لیبل
-// ══════════════════════════════════════════════════════════════
 const podcastData = [
    {id:0,  isNew:true,  title:"موضوعات متفاوت", episode:"کد نویسی ذهن",                               src:"http://fs3.centraldnserver.com/~planlife/podcast_free/codenevisi/Codenevisizehn_free.m4a",                                                          cover:"http://fs3.centraldnserver.com/~planlife/pics/Podcastfree/IMG_2187.jpeg"},
    {id:24, isNew:true, title:"موضوعات متفاوت", episode:"به خودت حق بده",                              src:"http://fs3.centraldnserver.com/~planlife/podcast_free/Mozoatdigar/PlanLife.ir-Hagh nadadan be khod.m4a",                                           cover:"http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2254.jpeg"},
@@ -447,11 +437,12 @@ function setPlayIcons(playing) {
 }
 
 function playAudio(title, episode, src, cover, id) {
-    document.getElementById('npTitle').textContent    = title;
-    document.getElementById('npSubtitle').textContent = episode;
+    // ✅ تغییر: episode (اسم فایل) بالا — title (دسته‌بندی) پایین
+    document.getElementById('npTitle').textContent    = episode;
+    document.getElementById('npSubtitle').textContent = title;
+    document.getElementById('miniTitle').textContent  = episode;
+    document.getElementById('miniEp').textContent     = title;
     document.getElementById('npCover').src            = cover;
-    document.getElementById('miniTitle').textContent  = title;
-    document.getElementById('miniEp').textContent     = episode;
     document.getElementById('miniCover').src          = cover;
     currentPodcastId  = id;
     currentTrackIndex = podcastData.findIndex(item => item.id === id);
@@ -527,22 +518,15 @@ function renderGrid(items) {
     document.getElementById('podcastGrid').innerHTML = items.map(item => {
         const cnt = toPersianNum((allComments[item.id]||[]).length);
         const st  = item.title.replace(/'/g,"\\'"), se = item.episode.replace(/'/g,"\\'");
-
-        // لیبل "جدید" — فقط وقتی isNew: true باشه
-        const newBadge = item.isNew
-            ? `<div class="new-badge">جدید</div>`
-            : '';
-
+        const newBadge = item.isNew ? `<div class="new-badge">جدید</div>` : '';
         return `<div onclick="playAudio('${st}','${se}','${item.src}','${item.cover}',${item.id})"
                      style="background:rgba(255,255,255,0.11);border-radius:22px;padding:12px;text-align:center;cursor:pointer;">
             <div style="position:relative;">
                 <img src="${item.cover}" style="width:100%;aspect-ratio:1/1;border-radius:18px;object-fit:cover;">
-                <!-- بج کامنت — سمت راست -->
                 <div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.62);backdrop-filter:blur(6px);border-radius:999px;padding:4px 9px;display:flex;align-items:center;gap:5px;">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="#ff9500"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
                     <span id="card-badge-${item.id}" style="font-size:12px;font-weight:700;color:white;">${cnt}</span>
                 </div>
-                <!-- لیبل "جدید" — سمت چپ، روبروی بج کامنت -->
                 ${newBadge}
             </div>
             <div style="font-size:15.5px;font-weight:600;margin:10px 0 6px;">${item.episode}<br><small style="opacity:0.75;font-weight:400;">${item.title}</small></div>
