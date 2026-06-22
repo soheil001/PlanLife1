@@ -197,9 +197,36 @@
     .track-info { text-align: center; width: 100%; max-width: 360px; margin: 20px 0 10px; flex-shrink: 0; }
     .np-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
     .np-subtitle { font-size: 14.5px; opacity: 0.7; }
-    .progress-section { width: 100%; max-width: 360px; margin-bottom: 28px; flex-shrink: 0; display: none; }
-    .progress-container { width: 100%; height: 5px; background: rgba(255,255,255,0.18); border-radius: 999px; cursor: pointer; margin-bottom: 8px; }
-    .progress-bar { height: 100%; background: linear-gradient(to right, #ff9500, #ff6b00); border-radius: 999px; box-shadow: 0 0 12px #ff9500; }
+    .progress-section { width: 100%; max-width: 360px; margin-bottom: 28px; flex-shrink: 0; display: block; }
+    .progress-container {
+        width: 100%; height: 8px;
+        background: rgba(255,255,255,0.10);
+        border: 1px solid rgba(255,255,255,0.16);
+        backdrop-filter: blur(10px) saturate(150%);
+        -webkit-backdrop-filter: blur(10px) saturate(150%);
+        border-radius: 999px; cursor: pointer; margin-bottom: 8px;
+        position: relative;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+    }
+    .progress-bar {
+        height: 100%;
+        background: linear-gradient(to right, #ff9500, #ff6b00);
+        border-radius: 999px;
+        box-shadow: 0 0 12px #ff9500;
+        position: relative;
+        width: 0%;
+        transition: width 0.1s linear;
+    }
+    .progress-bar::after {
+        content: '';
+        position: absolute;
+        top: 50%; right: -6px;
+        width: 13px; height: 13px;
+        background: #fff;
+        border-radius: 50%;
+        transform: translateY(-50%);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
     .time-display { display: flex; justify-content: space-between; font-size: 13.5px; opacity: 0.75; }
     .main-controls { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 360px; padding: 0 10px; margin-bottom: 30px; flex-shrink: 0; }
     .control-btn { width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
@@ -226,24 +253,6 @@
     .delete-btn { background: rgba(255,50,50,0.2); border: 1px solid rgba(255,50,50,0.4); color: #ff6464; border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
     .delete-btn:hover { background: rgba(255,50,50,0.4); }
     .loading-comments { text-align: center; padding: 20px; opacity: 0.6; font-size: 14px; }
-
-    .new-badge {
-        position: absolute;
-        top: 6px;
-        left: 6px;
-        background: #ff9500;
-        color: #1a0033;
-        font-size: 10px;
-        font-weight: 900;
-        padding: 3px 8px;
-        border-radius: 999px;
-        letter-spacing: 0.3px;
-        box-shadow: 0 2px 8px rgba(255,149,0,0.55);
-        white-space: nowrap;
-        font-family: 'Vazirmatn', sans-serif;
-        pointer-events: none;
-        z-index: 3;
-    }
 
     /* دکمه پلی روی کارت */
     .card-play-btn {
@@ -383,6 +392,8 @@
         </div>
     </div>
 
+    <audio id="audioPlayer" preload="metadata"></audio>
+
     <div class="main-controls">
         <div class="control-btn" onclick="prevQA()"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z"/></svg></div>
         <div class="control-btn" onclick="seek(10)"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg></div>
@@ -465,22 +476,52 @@ async function deleteCommentRemote(commentId, adminPassword) {
     } catch(e) { console.warn('Edge function delete:', e); alert('خطا در حذف نظر: ' + e.message); return false; }
 }
 
+// ============================================================
+// ۵ آیتم سوال/جواب — هرکدوم: id، متن سوال، لینک فایل صوتی، مدت‌زمان
+// audio: لینک فایل صوتی رو همینجا بین کوتیشن‌ها بچسبون
+// duration: مدت زمان فایل صوتی به ثانیه (اختیاری — اگه صفر بگذاری از خود فایل صوتی خونده میشه)
+// ============================================================
 const qaData = [
-   {id:0,  isNew:true,  category:"سوالات در حوزه مالی",            question:"چطور می‌تونم ثروتمند بشم؟ من میخوام از نظر مالی رشد کنم اما نمیدونم چطور ؟ میتونید راهنمایی کنید ؟ ممنون",                     answer:"", icon:"💰"},
-   {id:1,  isNew:true,  category:"سوالات در حوزه مالی",            question:"چرا پول از من فرار می‌کنه؟",                   answer:"", icon:"💰"},
-   {id:2,  isNew:false, category:"سوالات در حوزه مالی",            question:"آیا پول شر است؟",                              answer:"", icon:"💰"},
-   {id:3,  isNew:false, category:"سوالات در حوزه روابط",           question:"چرا دختر جذب پسرای بد میشن؟ پسرهای بد چه جذابیتی دارند ؟ که پسر های خوب ندارند ؟ ",                answer:"http://fs3.centraldnserver.com/~planlife/soaljavab/Planlife.ir-che-psarayebad-jazaban.m4a", icon:"💑"},
-   {id:4,  isNew:true,  category:"سوالات در حوزه روابط",           question:"آیا تنها هستم؟",                               answer:"", icon:"💑"},
-   {id:5,  isNew:false, category:"سوالات در حوزه روابط",           question:"چگونه اعتماد بسازم؟",                          answer:"", icon:"💑"},
-   {id:6,  isNew:false, category:"سوالات در حوزه اعتماد به نفس",   question:"چطور اعتماد به نفسم رو بالا ببرم؟",             answer:"", icon:"💪"},
-   {id:7,  isNew:true,  category:"سوالات در حوزه اعتماد به نفس",   question:"چرا خودم رو کم ارزش می‌دونم؟",                 answer:"", icon:"💪"},
-   {id:8,  isNew:false, category:"سوالات در حوزه اعتماد به نفس",   question:"بیرونی ها چه فکری دارند؟",                     answer:"", icon:"💪"},
-   {id:9,  isNew:false, category:"سوالات در حوزه احساس لیاقت",     question:"آیا من شایسته‌ی بهترین هستم؟",                 answer:"", icon:"👑"},
-   {id:10, isNew:false, category:"سوالات در حوزه احساس لیاقت",     question:"چطور احساس لیاقت رو قبول کنم؟",               answer:"", icon:"👑"},
-   {id:11, isNew:true,  category:"سوالات در حوزه احساس لیاقت",     question:"من شایسته‌ی چیها هستم؟",                      answer:"", icon:"👑"},
-   {id:12, isNew:false, category:"سوالات در حوزه‌ی کد های ذهنی",   question:"کد های ذهنی چیا هستن؟",                       answer:"", icon:"🧠"},
-   {id:13, isNew:true,  category:"سوالات در حوزه‌ی کد های ذهنی",   question:"چطور کد های منفی رو تغییر بدم؟",                answer:"", icon:"🧠"},
-   {id:14, isNew:false, category:"سوالات در حوزه‌ی کد های ذهنی",   question:"باورم رو چطور ریست کنم؟",                      answer:"", icon:"🧠"},
+   {
+        id: 0,
+        category: "سوالات در حوزه مالی",
+        icon: "💰",
+        question: "چطور می‌تونم ثروتمند بشم؟ من میخوام از نظر مالی رشد کنم اما نمیدونم چطور ؟ میتونید راهنمایی کنید ؟ ممنون",
+        audio: "",
+        duration: 0
+   },
+   {
+        id: 1,
+        category: "سوالات در حوزه مالی",
+        icon: "💰",
+        question: "چرا پول از من فرار می‌کنه؟",
+        audio: "",
+        duration: 0
+   },
+   {
+        id: 2,
+        category: "سوالات در حوزه روابط",
+        icon: "💑",
+        question: "چرا دختر جذب پسرای بد میشن؟ پسرهای بد چه جذابیتی دارند ؟ که پسر های خوب ندارند ؟ ",
+        audio: "http://fs3.centraldnserver.com/~planlife/soaljavab/Planlife.ir-che-psarayebad-jazaban.m4a",
+        duration: 0
+   },
+   {
+        id: 3,
+        category: "سوالات در حوزه روابط",
+        icon: "💑",
+        question: "آیا تنها هستم؟",
+        audio: "",
+        duration: 0
+   },
+   {
+        id: 4,
+        category: "سوالات در حوزه اعتماد به نفس",
+        icon: "💪",
+        question: "چطور اعتماد به نفسم رو بالا ببرم؟",
+        audio: "",
+        duration: 0
+   }
 ];
 
 let currentQAIndex = 0, currentQAId = null, isAdmin = false;
@@ -488,6 +529,42 @@ const ADMIN_USER = 'Admin', ADMIN_PASS = '12345';
 const ADMIN_API_PASSWORD = 'So@21072933@';
 const statusEl = document.getElementById('playerStatus');
 const playIcon = document.getElementById('playIcon');
+const audioPlayer = document.getElementById('audioPlayer');
+
+function formatTime(sec) {
+    if (!isFinite(sec) || sec < 0) sec = 0;
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+}
+
+// --- sync تایم‌لاین صفحه‌ی پلی و مینی‌پلیر با خود فایل صوتی ---
+audioPlayer.addEventListener('timeupdate', () => {
+    if (!audioPlayer.duration) return;
+    const pct = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('miniProgressBar').style.width = pct + '%';
+    document.getElementById('currentTime').textContent = formatTime(audioPlayer.currentTime);
+});
+audioPlayer.addEventListener('loadedmetadata', () => {
+    document.getElementById('totalTime').textContent = formatTime(audioPlayer.duration);
+});
+audioPlayer.addEventListener('play',  () => setPlayIcons(true));
+audioPlayer.addEventListener('pause', () => setPlayIcons(false));
+audioPlayer.addEventListener('ended', () => {
+    setPlayIcons(false);
+    document.getElementById('progressBar').style.width = '0%';
+    document.getElementById('miniProgressBar').style.width = '0%';
+});
+
+// کلیک/درگ روی تایم‌لاین برای پرش
+document.getElementById('progressContainer').addEventListener('click', (e) => {
+    if (!audioPlayer.duration) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    // چون صفحه RTL هست، سمت راست = شروع
+    const ratio = 1 - ((e.clientX - rect.left) / rect.width);
+    audioPlayer.currentTime = Math.max(0, Math.min(1, ratio)) * audioPlayer.duration;
+});
 
 function openLogin() {
     document.getElementById('loginOverlay').classList.add('active');
@@ -595,23 +672,52 @@ async function refreshAllCardBadges() {
     qaData.forEach(item => updateCardBadge(item.id, counts[item.id] || 0));
 }
 
-function setPlayIcons(answering) {
-    const icon = answering ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
+function setPlayIcons(playing) {
+    const icon = playing ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
     playIcon.innerHTML = icon;
     document.getElementById('miniPlayIcon').innerHTML = icon;
-    statusEl.textContent = answering ? 'درحال نمایش' : 'متوقف شده';
+    statusEl.textContent = playing ? 'درحال پخش' : 'متوقف شده';
 }
 
 function openQA(question, category, id) {
+    const item = qaData.find(q => q.id === id);
     document.getElementById('questionText').textContent = question;
     document.getElementById('miniTitle').textContent  = question;
     document.getElementById('miniEp').textContent     = category;
     currentQAId  = id;
-    currentQAIndex = qaData.findIndex(item => item.id === id);
+    currentQAIndex = qaData.findIndex(q => q.id === id);
+
+    // ریست تایم‌لاین
+    document.getElementById('progressBar').style.width = '0%';
+    document.getElementById('miniProgressBar').style.width = '0%';
+    document.getElementById('currentTime').textContent = '0:00';
+    document.getElementById('totalTime').textContent = item && item.duration ? formatTime(item.duration) : '0:00';
+
+    if (item && item.audio) {
+        audioPlayer.src = item.audio;
+        audioPlayer.currentTime = 0;
+        audioPlayer.play().catch(() => setPlayIcons(false));
+    } else {
+        audioPlayer.removeAttribute('src');
+        audioPlayer.load();
+        setPlayIcons(false);
+    }
+
     loadComments(id);
     expandPlayer();
-    setPlayIcons(true);
 }
+
+function miniToggleAnswer() {
+    if (!audioPlayer.src) return;
+    if (audioPlayer.paused) { audioPlayer.play().catch(()=>{}); } else { audioPlayer.pause(); }
+}
+function toggleAnswer() { miniToggleAnswer(); }
+function seek(sec) {
+    if (!audioPlayer.duration) return;
+    audioPlayer.currentTime = Math.max(0, Math.min(audioPlayer.duration, audioPlayer.currentTime + sec));
+}
+function prevQA() { if (currentQAIndex > 0) { const p = qaData[currentQAIndex-1]; openQA(p.question, p.category, p.id); } }
+function nextQA() { if (currentQAIndex < qaData.length-1) { const n = qaData[currentQAIndex+1]; openQA(n.question, n.category, n.id); } }
 
 function expandPlayer() {
     const screen = document.getElementById('nowPlayingScreen');
@@ -648,27 +754,24 @@ function killPlayer() {
         screen.style.cssText = '';
         document.getElementById('miniPlayer').classList.remove('active');
     }, 380);
+    audioPlayer.pause();
+    audioPlayer.removeAttribute('src');
+    audioPlayer.load();
+    currentQAId = null;
     setPlayIcons(false);
 }
-function miniToggleAnswer() { setPlayIcons(!setPlayIcons.answering); }
-function toggleAnswer() { miniToggleAnswer(); }
-function seek(sec) { }
-function prevQA() { if (currentQAIndex > 0) { const p = qaData[currentQAIndex-1]; openQA(p.question, p.category, p.id); } }
-function nextQA() { if (currentQAIndex < qaData.length-1) { const n = qaData[currentQAIndex+1]; openQA(n.question, n.category, n.id); } }
 function closeNowPlaying() { minimizePlayer(); }
 function showMenu() { alert("منو (به زودی)"); }
 function goToHome() { window.location.href = "https://planlife.ir"; }
 
 async function loadQAPage() {
-    const cats = ["سوالات در حوزه مالی","سوالات در حوزه روابط","سوالات در حوزه اعتماد به نفس","سوالات در حوزه احساس لیاقت","سوالات در حوزه‌ی کد های ذهنی"];
+    // فقط دسته‌بندی‌هایی که الان سوال دارن نشون داده میشن
+    const cats = [...new Set(qaData.map(q => q.category))];
     document.getElementById('categorySlides').innerHTML = cats.map((c, i) => {
         const img = getRandomCover(i);
         return `<div onclick="selectQACat('${c}')" style="min-width:140px;text-align:center;background:rgba(255,255,255,0.11);border-radius:18px;padding:10px;cursor:pointer;flex-shrink:0;">
             <div style="width:130px;height:130px;border-radius:18px;overflow:hidden;position:relative;">
-                <img src="${img}" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                <div style="display:none;width:100%;height:100%;background:linear-gradient(135deg,rgba(255,149,0,0.3),rgba(212,175,55,0.2));align-items:center;justify-content:center;font-size:48px;position:absolute;inset:0;">
-                    ${qaData.find(q => q.category === c)?.icon || '❓'}
-                </div>
+                <img src="${img}" style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
             <p style="margin-top:10px;font-size:14.5px;font-weight:600;">${c}</p>
         </div>`;
@@ -681,11 +784,10 @@ function renderGrid(items) {
     document.getElementById('qaGrid').innerHTML = items.map(item => {
         const cnt = toPersianNum((allComments[item.id]||[]).length);
         const st  = item.question.replace(/'/g,"\\'"), sc = item.category.replace(/'/g,"\\'");
-        const newChip = item.isNew
-            ? `<span class="card-new-chip">جدید</span>`
-            : `<span class="card-empty-chip"></span>`;
         return `<div onclick="openQA('${st}','${sc}',${item.id})"
-                     style="background:rgba(255,255,255,0.11);border-radius:22px;padding:12px;text-align:center;cursor:pointer;display:flex;flex-direction:column;">
+                     style="background:rgba(255,255,255,0.11);border-radius:22px;padding:12px;text-align:center;cursor:pointer;display:flex;flex-direction:column;position:relative;">
+            <!-- آیکن دسته (مالی/روابط/اعتماد به نفس) -->
+            <div style="position:absolute;top:10px;right:10px;font-size:20px;z-index:2;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.4));">${item.icon}</div>
             <!-- تکست باکس سوال -->
             <div class="card-question-box">
                 <div class="card-question-box-bg"></div>
@@ -695,7 +797,7 @@ function renderGrid(items) {
             </div>
             <!-- دسته‌بندی -->
             <div style="font-size:11.5px;opacity:0.6;font-weight:400;margin:6px 0 8px;line-height:1.4;text-align:center;">${item.category}</div>
-            <!-- ردیف پایین: کامنت + پلی + جدید -->
+            <!-- ردیف پایین: کامنت + پلی -->
             <div class="card-bottom-row">
                 <div class="card-comment-chip">
                     <svg viewBox="0 0 24 24"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
@@ -704,7 +806,7 @@ function renderGrid(items) {
                 <div class="card-play-btn">
                     <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                 </div>
-                ${newChip}
+                <span class="card-empty-chip"></span>
             </div>
         </div>`;
     }).join('');
