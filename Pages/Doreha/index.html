@@ -69,6 +69,28 @@
         box-shadow: 0 8px 32px rgba(255,149,0,0.22), 0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.18);
     }
 
+    .cat-card.cat-soon {
+        opacity: 0.62;
+    }
+    .cat-card.cat-soon .cat-cover-wrap img {
+        filter: grayscale(45%);
+    }
+    .soon-ribbon {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(20,10,40,0.78);
+        border: 1px solid rgba(255,215,0,0.4);
+        backdrop-filter: blur(8px);
+        color: #ffd700;
+        font-size: 10.5px;
+        font-weight: 800;
+        padding: 4px 10px;
+        border-radius: 999px;
+        z-index: 2;
+        white-space: nowrap;
+    }
+
     .cat-cover-wrap {
         position: relative;
         width: 100%;
@@ -309,6 +331,7 @@
     .pay-btn-gold:active { transform: scale(0.97); }
     .buy-btn-individual { width: 100%; padding: 13px 10px; border: 1px solid rgba(255,200,0,0.45); border-radius: 14px; background: rgba(255,193,7,0.16); backdrop-filter: blur(14px); color: #ffd700; font-size: 14.5px; font-weight: 800; cursor: pointer; font-family: inherit; margin: -2px 0 16px; transition: transform 0.15s, background 0.2s; }
     .buy-btn-individual:active { transform: scale(0.97); background: rgba(255,193,7,0.32); }
+    .buy-btn-individual.soon-btn { opacity: 0.55; cursor: pointer; }
 
     .card-modal-inner { background: linear-gradient(145deg, rgba(20,10,50,0.92), rgba(10,20,60,0.88)); backdrop-filter: blur(28px) saturate(180%); border: 1px solid rgba(120,100,255,0.28); border-radius: 24px; padding: 24px 20px; box-shadow: 0 8px 40px rgba(80,40,200,0.25), inset 0 1px 0 rgba(255,255,255,0.1); position: relative; overflow: hidden; }
     .card-modal-inner::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(160,120,255,0.6), rgba(255,149,0,0.4), transparent); }
@@ -322,6 +345,31 @@
     .btn-telegram { background: linear-gradient(135deg, rgba(33,150,243,0.22), rgba(0,136,204,0.18)); border: 1px solid rgba(33,150,243,0.45); color: #82cbff; }
     .btn-whatsapp { background: linear-gradient(135deg, rgba(37,211,102,0.18), rgba(18,183,84,0.14)); border: 1px solid rgba(37,211,102,0.4); color: #7fffc4; }
     .btn-bale     { background: linear-gradient(135deg, rgba(130,80,255,0.22), rgba(100,60,200,0.18)); border: 1px solid rgba(130,80,255,0.45); color: #d4b3ff; }
+
+    .toast {
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background: rgba(25,15,50,0.96);
+        border: 1px solid rgba(255,215,0,0.4);
+        backdrop-filter: blur(16px);
+        color: #ffd700;
+        font-size: 14px;
+        font-weight: 700;
+        padding: 13px 22px;
+        border-radius: 999px;
+        z-index: 500;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease, transform 0.25s ease;
+        white-space: nowrap;
+    }
+    .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
 </style>
 </head>
 <body>
@@ -361,6 +409,9 @@
 <div id="cardModal" class="modal-overlay">
     <div class="modal-box" id="cardContent" style="max-width:400px;"></div>
 </div>
+
+<!-- toast -->
+<div id="toast" class="toast"></div>
 
 <!-- mini player -->
 <div id="miniPlayer" class="mini-player" onclick="expandPlayer()">
@@ -450,6 +501,8 @@
 
 // =====================================================
 // ✅ تنظیمات دسته‌بندی‌ها — فقط اینجا تغییر بده
+// برای هر دوره: comingSoon: true یعنی هنوز فعال نیست
+// و با کلیک فقط پیام "به‌زودی اضافه می‌شود" نشان می‌دهد
 // =====================================================
 const categoryConfig = {
     "دوره کدهای پشت‌ پرده پول": {
@@ -475,6 +528,7 @@ const categoryConfig = {
         cover: "http://fs3.centraldnserver.com/~planlife/pics/ravabet/IMG_2286.png",
         codes: ["88888", "ESH88", "Love"],
         pricing: { old: "۷،۳۵۰،۰۰۰", new: "۳،۹۶۰،۰۰۰", hasDiscount: true },
+        comingSoon: true,
         episodes: [
             { episode: 0, duration: "06:15", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg", isIntro: true },
             { episode: 1,  duration: "32:45", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
@@ -505,6 +559,7 @@ const categoryConfig = {
         cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
         codes: ["11111", "ET111", "Etemad"],
         pricing: { old: "۶،۵۸۰،۰۰۰", new: "۲،۹۶۰،۰۰۰", hasDiscount: true },
+        comingSoon: true,
         episodes: [
             { episode: 0, duration: "07:20", src: "https://res.cloudinary.com/dzgyndusa/video/upload/v1781607528/Etemad_be_nafs-ghesmate_1_neaq3v.m4a", isIntro: true },
             { episode: 1, duration: "32:45", src: "https://res.cloudinary.com/dzgyndusa/video/upload/v1781607528/Etemad_be_nafs-ghesmate_1_neaq3v.m4a" },
@@ -518,6 +573,7 @@ const categoryConfig = {
         cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
         codes: ["22222", "EL222", "Liyaghat"],
         pricing: { old: "۵،۶۸۰،۰۰۰", new: "۳،۳۵۰،۰۰۰", hasDiscount: true },
+        comingSoon: true,
         episodes: [
             { episode: 0,  duration: "05:50", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", isIntro: true },
             { episode: 1,  duration: "32:45", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg" },
@@ -538,6 +594,7 @@ const categoryConfig = {
         cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
         codes: ["33333", "ZE333", "Zehn"],
         pricing: { price: "۲،۹۵۰،۰۰۰", hasDiscount: false },
+        comingSoon: true,
         episodes: [
             { episode: 0, duration: "06:10", src: "https://tools.irbots.com/uploads/1779408150file_17519.mpeg", isIntro: true },
             { episode: 1, duration: "00:00", src: "" },
@@ -549,6 +606,8 @@ const categoryConfig = {
     },
 };
 // =====================================================
+
+const SOON_MESSAGE = "🔜 این دوره به‌زودی اضافه می‌شود";
 
 // ساختن courseData و بقیه‌ی آبجکت‌ها از categoryConfig
 const courseData = [];
@@ -562,6 +621,7 @@ Object.entries(categoryConfig).forEach(([catName, cfg]) => {
             src: ep.src,
             isIntro: !!ep.isIntro,
             category: catName,
+            comingSoon: !!cfg.comingSoon,
         });
     });
 });
@@ -647,6 +707,15 @@ function formatCommentTime(iso) {
     return `${d.toLocaleDateString('fa-IR',{year:'numeric',month:'short',day:'numeric'})} • ${d.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`;
 }
 
+let toastTimer = null;
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
 function loadPage() {
     const categories = Object.keys(categoryConfig);
     const wrapper = document.getElementById('categoriesWrapper');
@@ -665,12 +734,14 @@ function loadPage() {
             const cfg = categoryConfig[cat];
             const epCount = cfg.episodes.filter(e => !e.isIntro).length;
             const coverSrc = cfg.cover;
+            const soon = !!cfg.comingSoon;
 
             const card = document.createElement('div');
-            card.className = 'cat-card';
+            card.className = 'cat-card' + (soon ? ' cat-soon' : '');
             card.id = `cat-card-${catIdx}`;
             card.innerHTML = `
                 <div class="cat-cover-wrap">
+                    ${soon ? '<div class="soon-ribbon">به‌زودی</div>' : ''}
                     <img src="${coverSrc}" alt="${cat}" loading="lazy">
                 </div>
                 <div class="cat-info">
@@ -680,7 +751,9 @@ function loadPage() {
                         <span class="cat-arrow">›</span>
                     </div>
                 </div>`;
-            card.onclick = () => toggleAccordion(cat, catIdx, i);
+            card.onclick = soon
+                ? () => showToast(SOON_MESSAGE)
+                : () => toggleAccordion(cat, catIdx, i);
             cardsRow.appendChild(card);
         });
 
@@ -928,6 +1001,7 @@ function doLogout() {
 
 function playCourse(index) {
     const item = courseData[index];
+    if (item.comingSoon) { showToast(SOON_MESSAGE); return; }
     if (item.isIntro) { playAudio(item); }
     else if (isAdmin || unlockedCategories[item.category]) { playAudio(item); }
     else { showSubscriptionModal(item.category); }
@@ -985,7 +1059,7 @@ function closeModal() { document.getElementById('subscriptionModal').classList.r
 
 function showPricingModal(category) {
     closeModal();
-    const allPricing = Object.keys(coursePricing).map(name => ({ name, ...coursePricing[name] }));
+    const allPricing = Object.keys(coursePricing).map(name => ({ name, comingSoon: !!categoryConfig[name].comingSoon, ...coursePricing[name] }));
     let pricingHTML = allPricing.map(p => {
         let box;
         if (p.hasDiscount) {
@@ -1003,7 +1077,10 @@ function showPricingModal(category) {
                 <div style="font-size:18px;font-weight:900;color:#ffd700;margin-top:4px;">${p.price} تومان</div>
             </div>`;
         }
-        return box + `<button class="buy-btn-individual" onclick="showCardModal('${p.name}')"> خرید ${p.name}</button>`;
+        const buyBtn = p.comingSoon
+            ? `<button class="buy-btn-individual soon-btn" onclick="showToast(SOON_MESSAGE)">🔜 به‌زودی اضافه می‌شود</button>`
+            : `<button class="buy-btn-individual" onclick="showCardModal('${p.name}')"> خرید ${p.name}</button>`;
+        return box + buyBtn;
     }).join('');
 
     document.getElementById('pricingContent').innerHTML = `
@@ -1036,6 +1113,10 @@ function buildPriceBoxHTML(category) {
 }
 
 function showCardModal(category) {
+    if (categoryConfig[category] && categoryConfig[category].comingSoon) {
+        showToast(SOON_MESSAGE);
+        return;
+    }
     closePricingModal();
     window.currentPaymentCategory = category;
     document.getElementById('cardContent').innerHTML = `
