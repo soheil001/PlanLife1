@@ -524,6 +524,19 @@ const categoryConfig = {
             { episode: 11, duration: "38:17", src: "" },
         ]
     },
+    "دوره چطور حالم خوب باشه ؟": {
+        cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
+        codes: ["99999", "TA999", "Ehsas"],
+        pricing: { price: "۲،۹۵۰،۰۰۰", hasDiscount: false },
+        episodes: [
+            { episode: 0, duration: "04:45", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a", isIntro: true },
+            { episode: 1, duration: "32:10", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a" },
+            { episode: 2, duration: "36:56", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 2.m4a" },
+            { episode: 3, duration: "27:20", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 3.m4a" },
+            { episode: 4, duration: "24:35", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-tahavol halo ehsas 4.m4a" },
+            { episode: 5, duration: "21:28", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Project-Dore-tahavol halo ehsas 5.m4a" },
+        ]
+    },
     "دوره کلیدِ پنهانِ ارتباطات": {
         cover: "http://fs3.centraldnserver.com/~planlife/pics/ravabet/IMG_2286.png",
         codes: ["88888", "ESH88", "Love"],
@@ -540,19 +553,6 @@ const categoryConfig = {
             { episode: 7,  duration: "37:21", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
             { episode: 8,  duration: "41:10", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
             { episode: 9,  duration: "29:55", src: "https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
-        ]
-    },
-    "دوره چطور حالم خوب باشه ؟": {
-        cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
-        codes: ["99999", "TA999", "Ehsas"],
-        pricing: { price: "۲،۹۵۰،۰۰۰", hasDiscount: false },
-        episodes: [
-            { episode: 0, duration: "04:45", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a", isIntro: true },
-            { episode: 1, duration: "32:10", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a" },
-            { episode: 2, duration: "36:56", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 2.m4a" },
-            { episode: 3, duration: "27:20", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 3.m4a" },
-            { episode: 4, duration: "24:35", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-tahavol halo ehsas 4.m4a" },
-            { episode: 5, duration: "21:28", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Project-Dore-tahavol halo ehsas 5.m4a" },
         ]
     },
     "دوره خود باوری (اعتماد به نفس)": {
@@ -1062,7 +1062,12 @@ function showPricingModal(category) {
     const allPricing = Object.keys(coursePricing).map(name => ({ name, comingSoon: !!categoryConfig[name].comingSoon, ...coursePricing[name] }));
     let pricingHTML = allPricing.map(p => {
         let box;
-        if (p.hasDiscount) {
+        if (p.comingSoon) {
+            box = `<div class="pricing-box">
+                <div class="course-name">📚 ${p.name}</div>
+                <div style="font-size:14.5px;font-weight:800;color:#ffb347;margin-top:4px;line-height:1.6;">⏳ دوره در حال آماده شدن است، به‌زودی دوره اضافه می‌شود</div>
+            </div>`;
+        } else if (p.hasDiscount) {
             box = `<div class="pricing-box">
                 <div class="course-name">📚 ${p.name}</div>
                 <div class="old-price">قیمت قبلی: ${p.old} تومان</div>
