@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>پادکست‌های PlanLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Vazirmatn', sans-serif; background: #030303; color: white; }
+
+/* ═══════════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════════ */
+.site-header {
+    position: fixed; top: 0; left: 0; right: 0; height: 65px;
+    background: rgba(0,0,0,0.3); backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px; z-index: 100;
+}
+.back-btn { font-size: 28px; cursor: pointer; }
+.admin-badge {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,149,0,0.2); border: 1px solid rgba(255,149,0,0.5);
+    border-radius: 999px; padding: 6px 14px;
+    font-size: 13px; font-weight: 700; color: #ff9500; cursor: pointer;
+    font-family: inherit;
+}
+.admin-logout-btn {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 999px; color: white; padding: 6px 14px;
+    font-size: 13px; cursor: pointer; font-family: inherit;
+}
+
+/* ═══════════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════════ */
+.tabs-wrap {
+    margin-top: 80px;
+    text-align: center;
+    padding: 0 20px;
+}
+.page-title { font-size: 32px; font-weight: 900; margin-bottom: 20px; }
+.tabs {
+    display: flex; gap: 10px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 999px; padding: 5px;
+    margin-bottom: 24px;
+}
+.tab-btn {
+    flex: 1; padding: 11px 0;
+    font-size: 15px; font-weight: 700;
+    border-radius: 999px; border: none; cursor: pointer;
+    font-family: inherit; transition: all 0.25s;
+    color: rgba(255,255,255,0.55); background: transparent;
+}
+.tab-btn.active {
+    background: #ff9500; color: #1a0033;
+    box-shadow: 0 4px 14px rgba(255,149,0,0.45);
+}
+
+/* ═══════════════════════════════════════════════
+   SECTIONS
+═══════════════════════════════════════════════ */
+.section { display: none; padding: 0 0 120px; }
+.section.active { display: block; }
+
+/* SECTION: همه */
+.all-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    padding: 0 20px;
+}
+
+/* ═══════════════════════════════════════════════
+   CARD — PODCAST (shared base for both sections)
+═══════════════════════════════════════════════ */
+.card {
+    background: rgba(255,255,255,0.11);
+    border-radius: 22px; padding: 12px;
+    text-align: center; cursor: pointer;
+    display: flex; flex-direction: column;
+}
+
+/* Podcast card cover */
+.card-cover-wrap { position: relative; }
+.card-cover-img {
+    width: 100%; aspect-ratio: 1/1;
+    border-radius: 18px; object-fit: cover; display: block;
+}
+.card-comment-chip {
+    position: absolute; top: 8px; right: 8px;
+    background: rgba(0,0,0,0.62); backdrop-filter: blur(6px);
+    border-radius: 999px; padding: 4px 9px;
+    display: flex; align-items: center; gap: 5px;
+}
+.card-comment-chip svg { width: 13px; height: 13px; fill: #ff9500; }
+.card-comment-chip span { font-size: 12px; font-weight: 700; color: white; }
+.new-badge {
+    position: absolute; top: 8px; left: 8px;
+    background: #ff9500; color: #1a0033;
+    font-size: 11px; font-weight: 900;
+    padding: 3px 9px; border-radius: 999px;
+    pointer-events: none;
+}
+
+/* Podcast card bottom */
+.card-podcast-label {
+    font-size: 14px; font-weight: 600;
+    margin: 10px 0 10px; line-height: 1.4;
+}
+.card-play-circle {
+    width: 48px; height: 48px;
+    background: #ffd700; border-radius: 50%;
+    margin: 0 auto;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.card-play-circle .play-arrow {
+    width: 0; height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 16px solid #1a0033;
+    margin-left: 3px;
+}
+
+/* ═══════════════════════════════════════════════
+   CARD — QA
+═══════════════════════════════════════════════ */
+.card-qa-question-box {
+    width: 100%;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 14px;
+    position: relative;
+    height: 110px; overflow: hidden;
+    box-shadow: 0 0 18px rgba(255,149,0,0.2), 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+    margin-bottom: 8px;
+}
+.card-qa-question-box::before {
+    content: '';
+    position: absolute; inset: -1px;
+    background: linear-gradient(135deg, rgba(255,149,0,0.3), rgba(212,175,55,0.15), transparent);
+    border-radius: 14px; z-index: -1;
+    filter: blur(8px); pointer-events: none;
+}
+.card-qa-question-bg {
+    position: absolute; inset: 0; border-radius: 14px;
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    pointer-events: none; z-index: 0;
+}
+.card-qa-question-scroll {
+    position: absolute; inset: 0; z-index: 1;
+    overflow-y: scroll; -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain; touch-action: pan-y;
+    padding: 10px; text-align: center;
+    display: flex; align-items: center; justify-content: center;
+}
+.card-qa-question-scroll::-webkit-scrollbar { width: 3px; }
+.card-qa-question-scroll::-webkit-scrollbar-thumb { background: rgba(255,149,0,0.35); border-radius: 10px; }
+.card-qa-question-text {
+    font-size: 12.5px; font-weight: 600; line-height: 1.6;
+    color: #f0f0f0; word-break: break-word; width: 100%;
+}
+.card-qa-category {
+    font-size: 11px; opacity: 0.6; font-weight: 400;
+    margin-bottom: 8px; text-align: center;
+}
+.card-bottom-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2px;
+}
+.card-bottom-comment {
+    display: flex; align-items: center; gap: 4px;
+    background: rgba(0,0,0,0.45); backdrop-filter: blur(6px);
+    border-radius: 999px; padding: 5px 10px;
+    font-size: 12px; font-weight: 700; color: white;
+}
+.card-bottom-comment svg { width: 13px; height: 13px; fill: #ff9500; flex-shrink: 0; }
+.card-qa-play-btn {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, #ff9500, #ff6b00);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(255,149,0,0.5);
+    flex-shrink: 0;
+}
+.card-qa-play-btn svg { width: 20px; height: 20px; fill: #1a0033; margin-right: -2px; }
+
+/* ═══════════════════════════════════════════════
+   PODCAST SECTION — list only, no categories
+═══════════════════════════════════════════════ */
+#section-podcasts .section-label {
+    font-size: 22px; font-weight: 700;
+    padding: 0 20px; margin-bottom: 14px;
+}
+#section-podcasts .podcast-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 18px; padding: 0 20px;
+}
+
+/* ═══════════════════════════════════════════════
+   QA SECTION — categories + grid
+═══════════════════════════════════════════════ */
+#section-qa .section-label {
+    font-size: 22px; font-weight: 700;
+    padding: 0 20px; margin-bottom: 14px;
+}
+#section-qa .qa-categories-scroll {
+    display: flex; gap: 15px;
+    overflow-x: auto; padding: 0 20px 20px;
+    scrollbar-width: none;
+}
+#section-qa .qa-categories-scroll::-webkit-scrollbar { display: none; }
+.qa-cat-card {
+    min-width: 140px; text-align: center;
+    background: rgba(255,255,255,0.11);
+    border-radius: 18px; padding: 10px;
+    cursor: pointer; flex-shrink: 0;
+}
+.qa-cat-card img {
+    width: 130px; height: 130px;
+    border-radius: 18px; object-fit: cover; display: block;
+}
+.qa-cat-card p {
+    margin-top: 10px; font-size: 14.5px; font-weight: 600;
+}
+#section-qa .qa-current-cat {
+    font-size: 22px; font-weight: 700;
+    padding: 0 20px; margin-bottom: 14px;
+}
+#section-qa .qa-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 18px; padding: 0 20px;
+}
+
+/* ═══════════════════════════════════════════════
+   MINI PLAYER
+═══════════════════════════════════════════════ */
+.mini-player {
+    position: fixed; bottom: 15px; left: 15px; right: 15px; height: 72px;
+    background: rgba(18,18,40,0.72);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.14); border-radius: 22px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+    z-index: 290; display: none; align-items: center;
+    padding: 0 16px; gap: 12px; cursor: pointer; overflow: hidden;
+}
+.mini-player.active { display: flex; }
+.mini-cover-img { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
+.mini-info { flex: 1; overflow: hidden; }
+.mini-title { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mini-sub   { font-size: 12px; opacity: 0.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mini-play-btn {
+    width: 42px; height: 42px; background: #ff9500; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; box-shadow: 0 4px 14px rgba(255,149,0,0.5);
+}
+.mini-play-btn svg { width: 22px; height: 22px; fill: #1a0033; }
+.mini-close-btn {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0.5; flex-shrink: 0; font-size: 20px;
+}
+.mini-progress-wrap {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px; background: rgba(255,255,255,0.10);
+    border-radius: 0 0 22px 22px; overflow: hidden;
+}
+.mini-progress-bar {
+    height: 100%;
+    background: linear-gradient(to right, #ff9500, #ff6b00);
+    border-radius: 999px; transition: width 0.5s linear;
+    width: 0%;
+}
+
+/* ═══════════════════════════════════════════════
+   NOW PLAYING SCREEN (shared)
+═══════════════════════════════════════════════ */
+.now-playing {
+    position: fixed; top: 10px; left: 10px; right: 10px;
+    height: calc(100% - 10px); height: calc(100dvh - 10px);
+    background: rgba(10,10,25,0.98);
+    z-index: 300; display: none; flex-direction: column;
+    align-items: center; padding: 20px 20px 40px;
+    overflow-y: auto; overflow-x: hidden;
+    -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+    transform: translateY(110%);
+    border-radius: 22px 22px 0 0;
+    will-change: transform, border-radius;
+    touch-action: pan-y;
+}
+.now-playing.active {
+    display: flex; transform: translateY(0%);
+    border-radius: 22px 22px 0 0;
+    transition: transform 0.52s cubic-bezier(0.32,0.72,0,1),
+                border-radius 0.52s cubic-bezier(0.32,0.72,0,1);
+}
+.drag-handle-wrap {
+    width: 100%; display: flex; justify-content: center;
+    padding: 6px 0 2px; flex-shrink: 0; cursor: grab;
+}
+.drag-handle {
+    width: 44px; height: 5px;
+    background: rgba(255,255,255,0.65); border-radius: 999px;
+    box-shadow: 0 0 8px rgba(255,255,255,0.2);
+}
+.player-topbar {
+    width: 100%; max-width: 380px;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0 16px; flex-shrink: 0;
+}
+.player-topbar button {
+    font-size: 26px; background: none; border: none; color: white; cursor: pointer;
+}
+.player-status { font-size: 15px; font-weight: 600; opacity: 0.85; }
+
+/* Progress bar */
+.progress-section { width: 100%; max-width: 360px; margin-bottom: 28px; flex-shrink: 0; }
+.progress-container {
+    width: 100%; height: 8px;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.16);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-radius: 999px; cursor: pointer; margin-bottom: 8px;
+    position: relative; box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+}
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(to right, #ff9500, #ff6b00);
+    border-radius: 999px; box-shadow: 0 0 12px #ff9500;
+    width: 0%; transition: width 0.1s linear; position: relative;
+}
+.progress-bar::after {
+    content: ''; position: absolute; top: 50%; right: -6px;
+    width: 13px; height: 13px; background: #fff;
+    border-radius: 50%; transform: translateY(-50%);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+.time-display { display: flex; justify-content: space-between; font-size: 13.5px; opacity: 0.75; }
+
+/* Controls */
+.main-controls {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; max-width: 360px; padding: 0 10px; margin-bottom: 30px; flex-shrink: 0;
+}
+.control-btn {
+    width: 46px; height: 46px;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.control-btn svg { width: 30px; height: 30px; fill: #ddd; transition: all 0.2s; }
+.control-btn:active svg { fill: #ff9500; transform: scale(0.9); }
+.play-main {
+    width: 82px; height: 82px; background: #ff9500; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 30px rgba(255,149,0,0.65); cursor: pointer;
+}
+.play-main svg { width: 36px; height: 36px; fill: #1a0033; }
+
+/* ═══════════════════════════════════════════════
+   NOW PLAYING — PODCAST specific
+═══════════════════════════════════════════════ */
+.np-podcast-cover { width: 100%; max-width: 200px; margin: 6px 0 26px; flex-shrink: 0; position: relative; }
+.np-podcast-cover img {
+    width: 100%; aspect-ratio: 1/1; object-fit: cover;
+    border-radius: 20px; box-shadow: 0 15px 45px rgba(192,38,211,0.5);
+}
+.np-cover-badge {
+    position: absolute; bottom: -13px; left: 50%; transform: translateX(-50%);
+    background: rgba(20,20,40,0.92); border: 1px solid rgba(255,255,255,0.18);
+    backdrop-filter: blur(10px); border-radius: 999px; padding: 5px 14px;
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 700; white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+}
+.np-cover-badge svg { width: 15px; height: 15px; fill: #ff9500; flex-shrink: 0; }
+.np-track-info { text-align: center; width: 100%; max-width: 360px; margin: 20px 0 10px; flex-shrink: 0; }
+.np-title   { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+
+/* ═══════════════════════════════════════════════
+   NOW PLAYING — QA specific
+═══════════════════════════════════════════════ */
+.np-qa-question-box {
+    width: 100%; max-width: 320px; margin: 6px 0 10px;
+    background: rgba(255,255,255,0.08);
+    border: 1.5px solid rgba(255,255,255,0.18);
+    border-radius: 20px; position: relative; flex-shrink: 0;
+    height: 260px; overflow: hidden;
+    box-shadow: 0 0 30px rgba(255,149,0,0.25), 0 15px 45px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.12), 0 0 20px rgba(212,175,55,0.15);
+}
+.np-qa-question-box::before {
+    content: ''; position: absolute; inset: -2px;
+    background: linear-gradient(135deg, rgba(255,149,0,0.4), rgba(212,175,55,0.2), transparent);
+    border-radius: 20px; z-index: -1; filter: blur(12px); pointer-events: none;
+}
+.np-qa-question-bg {
+    position: absolute; inset: 0; border-radius: 20px;
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    pointer-events: none; z-index: 0;
+}
+.np-qa-question-scroll {
+    position: absolute; inset: 0; z-index: 1;
+    overflow-y: scroll; -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain; touch-action: pan-y;
+    padding: 22px 20px; text-align: center;
+    display: flex; align-items: center; justify-content: center;
+}
+.np-qa-question-scroll::-webkit-scrollbar { width: 4px; }
+.np-qa-question-scroll::-webkit-scrollbar-thumb { background: rgba(255,149,0,0.4); border-radius: 10px; }
+.np-qa-question-text {
+    font-size: 16px; font-weight: 600; line-height: 1.7;
+    color: #f0f0f0; word-break: break-word; width: 100%;
+}
+.np-qa-comment-badge {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(20,20,40,0.92); border: 1px solid rgba(255,255,255,0.18);
+    backdrop-filter: blur(10px); border-radius: 999px; padding: 5px 14px;
+    font-size: 13px; font-weight: 700; white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4); margin-bottom: 20px; flex-shrink: 0;
+}
+.np-qa-comment-badge svg { width: 15px; height: 15px; fill: #ff9500; flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════════
+   COMMENTS SECTION (shared)
+═══════════════════════════════════════════════ */
+.comments-section { width: 100%; max-width: 360px; margin-top: 10px; padding-bottom: 30px; }
+.comments-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 12px; padding: 0 4px;
+}
+.comments-header span:first-child { font-size: 19px; font-weight: 700; }
+.comments-count {
+    background: #ff9500; color: #1a0033;
+    font-size: 12.5px; font-weight: 800;
+    padding: 3px 11px; border-radius: 999px; min-width: 22px; text-align: center;
+}
+.comments-list { max-height: 240px; overflow-y: auto; padding-right: 4px; margin-bottom: 14px; }
+.comments-list::-webkit-scrollbar { width: 5px; }
+.comments-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 10px; }
+.comment-item {
+    background: rgba(255,255,255,0.085); border-radius: 14px;
+    padding: 13px 15px; margin-bottom: 9px;
+    border: 1px solid rgba(255,255,255,0.06);
+}
+.comment-item-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px;
+}
+.comment-name  { color: #ffd700; font-size: 14.5px; font-weight: 700; }
+.comment-time  { font-size: 11.5px; opacity: 0.55; white-space: nowrap; }
+.comment-text  { font-size: 14.8px; line-height: 1.55; color: #f0f0f0; }
+.delete-btn {
+    background: rgba(255,50,50,0.2); border: 1px solid rgba(255,50,50,0.4);
+    color: #ff6464; border-radius: 8px; padding: 4px 10px;
+    font-size: 12px; cursor: pointer; font-family: inherit;
+}
+.comment-form {
+    background: rgba(255,255,255,0.09); border-radius: 18px; padding: 16px 16px 18px;
+}
+.comment-input {
+    width: 100%; background: rgba(0,0,0,0.4);
+    border: 1.5px solid rgba(255,255,255,0.1); border-radius: 14px;
+    padding: 13px 16px; color: white; font-size: 16px;
+    outline: none; font-family: inherit;
+    -webkit-appearance: none; appearance: none;
+}
+.comment-input:focus { border-color: #ff9500; }
+.comment-name-input { margin-bottom: 10px; }
+.comment-textarea { resize: none; height: 80px; line-height: 1.5; display: block; }
+.comment-submit-btn {
+    margin-top: 12px; width: 100%; background: #ff9500; color: #1a0033;
+    border: none; border-radius: 999px; padding: 15px 0;
+    font-weight: 800; font-size: 16px; cursor: pointer; font-family: inherit;
+    box-shadow: 0 4px 18px rgba(255,149,0,0.35);
+    -webkit-tap-highlight-color: transparent;
+}
+.loading-comments { text-align: center; padding: 20px; opacity: 0.6; font-size: 14px; }
+
+/* ═══════════════════════════════════════════════
+   LOGIN OVERLAY
+═══════════════════════════════════════════════ */
+.login-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(12px); z-index: 999;
+    display: none; align-items: center; justify-content: center;
+}
+.login-overlay.active { display: flex; }
+.login-box {
+    background: rgba(255,255,255,0.1); backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 28px; padding: 36px 30px;
+    width: 90%; max-width: 340px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5); position: relative;
+}
+.login-box h3 { font-size: 22px; font-weight: 800; text-align: center; margin-bottom: 6px; }
+.login-box p  { font-size: 13px; opacity: 0.6; text-align: center; margin-bottom: 24px; }
+.login-field {
+    width: 100%; background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.15); border-radius: 14px;
+    padding: 13px 16px; color: white; font-size: 15px;
+    outline: none; font-family: inherit; margin-bottom: 12px; transition: border 0.2s;
+}
+.login-field:focus { border-color: #ff9500; }
+.login-btn {
+    width: 100%; background: #ff9500; color: #1a0033; border: none;
+    border-radius: 999px; padding: 14px 0;
+    font-weight: 800; font-size: 16px; cursor: pointer;
+    margin-top: 4px; font-family: inherit; transition: opacity 0.2s;
+}
+.login-close {
+    position: absolute; top: 14px; left: 16px; font-size: 22px;
+    cursor: pointer; opacity: 0.6; background: none; border: none; color: white;
+}
+.login-error { color: #ff4444; font-size: 13px; text-align: center; margin-top: 10px; display: none; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════ -->
+<header class="site-header">
+    <div class="back-btn" onclick="goToHome()">←</div>
+    <div id="headerAuthArea">
+        <button onclick="openLogin()" class="admin-badge">🔐 ورود</button>
+    </div>
+</header>
+
+<!-- ════════════════════════════════════════════
+     LOGIN OVERLAY
+════════════════════════════════════════════ -->
+<div id="loginOverlay" class="login-overlay">
+    <div class="login-box">
+        <button class="login-close" onclick="closeLogin()">✕</button>
+        <h3>🔐 ورود ادمین</h3>
+        <p>اطلاعات مدیریت را وارد کنید</p>
+        <input id="loginUsername" class="login-field" type="text" placeholder="user name" autocomplete="off">
+        <input id="loginPassword" class="login-field" type="password" placeholder="password">
+        <button class="login-btn" onclick="doLogin()">login</button>
+        <div id="loginError" class="login-error">نام کاربری یا رمز عبور اشتباه است</div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     TABS & PAGE TITLE
+════════════════════════════════════════════ -->
+<div class="tabs-wrap">
+    <h2 class="page-title">پادکست‌های PlanLife</h2>
+    <div class="tabs">
+        <button id="tab-all"       class="tab-btn active"  onclick="switchTab('all')">همه</button>
+        <button id="tab-podcasts"  class="tab-btn"         onclick="switchTab('podcasts')">پادکست‌ها</button>
+        <button id="tab-qa"        class="tab-btn"         onclick="switchTab('qa')">پاسخ به سوالات</button>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SECTION: همه (رندوم از هر دو)
+════════════════════════════════════════════ -->
+<div id="section-all" class="section active" style="padding: 0 20px 120px;">
+    <div id="allGrid" class="all-grid"></div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SECTION: پادکست‌ها
+════════════════════════════════════════════ -->
+<div id="section-podcasts" class="section">
+    <div class="section-label">پادکست‌ها</div>
+    <div id="podcastGrid" class="podcast-grid"></div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SECTION: پاسخ به سوالات
+════════════════════════════════════════════ -->
+<div id="section-qa" class="section">
+    <div class="section-label">دسته‌بندی‌ها</div>
+    <div id="qaCategorySlides" class="qa-categories-scroll"></div>
+    <div id="qaCurrentCat" class="qa-current-cat">همه سوالات</div>
+    <div id="qaGrid" class="qa-grid"></div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     MINI PLAYER
+════════════════════════════════════════════ -->
+<div id="miniPlayer" class="mini-player" onclick="expandCurrentPlayer()">
+    <!-- cover يا آيكن QA -->
+    <img id="miniCoverImg" class="mini-cover-img" src="" alt="" style="display:none;">
+    <div id="miniQaIcon" style="display:none; width:48px; height:48px; background:linear-gradient(135deg,#ff9500,#ff6b00); border-radius:12px; flex-shrink:0; align-items:center; justify-content:center;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+    </div>
+    <div class="mini-info">
+        <div id="miniTitle" class="mini-title">در حال پخش</div>
+        <div id="miniSub"   class="mini-sub">PlanLife</div>
+    </div>
+    <div class="mini-play-btn" id="miniPlayBtn" onclick="event.stopPropagation(); miniTogglePlay()">
+        <svg id="miniPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </div>
+    <div class="mini-close-btn" onclick="event.stopPropagation(); killPlayer()">✕</div>
+    <div class="mini-progress-wrap">
+        <div class="mini-progress-bar" id="miniProgressBar"></div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     NOW PLAYING — PODCAST
+════════════════════════════════════════════ -->
+<div id="npPodcast" class="now-playing">
+    <div class="drag-handle-wrap"><div class="drag-handle"></div></div>
+    <div class="player-topbar">
+        <button onclick="closeNowPlaying()">←</button>
+        <span id="npPodcastStatus" class="player-status">در حال پخش</span>
+        <button onclick="showMenu()">⋯</button>
+    </div>
+    <div class="np-podcast-cover">
+        <img id="npPodcastCover" src="" alt="">
+        <div class="np-cover-badge">
+            <svg viewBox="0 0 24 24"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
+            <span id="npPodcastCommentCount">۰</span>
+            <span style="opacity:0.7; font-weight:500;">نظر</span>
+        </div>
+    </div>
+    <div class="np-track-info">
+        <h2 id="npPodcastTitle" class="np-title">عنوان</h2>
+    </div>
+    <div class="progress-section">
+        <div class="progress-container" id="podcastProgressContainer">
+            <div class="progress-bar" id="podcastProgressBar"></div>
+        </div>
+        <div class="time-display">
+            <span id="podcastCurrentTime">0:00</span>
+            <span id="podcastTotalTime">0:00</span>
+        </div>
+    </div>
+    <div class="main-controls">
+        <div class="control-btn" onclick="prevPodcast()"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z"/></svg></div>
+        <div class="control-btn" onclick="podcastSeek(-10)"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg></div>
+        <div onclick="togglePodcastPlay()" class="play-main"><svg id="podcastPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="control-btn" onclick="podcastSeek(10)"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></div>
+        <div class="control-btn" onclick="nextPodcast()"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></div>
+    </div>
+    <div class="comments-section">
+        <div class="comments-header">
+            <span>💬 نظرات</span>
+            <span id="podcastCommentCount" class="comments-count">0</span>
+        </div>
+        <div id="podcastCommentsList" class="comments-list"></div>
+        <div class="comment-form">
+            <input id="podcastCommentName" type="text" placeholder="نام شما (اختیاری)"
+                   class="comment-input comment-name-input" onfocus="scrollToForm('podcastCommentForm')">
+            <textarea id="podcastCommentText" placeholder="نظر خود را اینجا بنویسید..." rows="3"
+                      class="comment-input comment-textarea" onfocus="scrollToForm('podcastCommentForm')"></textarea>
+            <button id="podcastSubmitBtn" class="comment-submit-btn" onclick="addPodcastComment()">ارسال نظر</button>
+        </div>
+    </div>
+    <audio id="podcastAudio"></audio>
+</div>
+
+<!-- ════════════════════════════════════════════
+     NOW PLAYING — QA
+════════════════════════════════════════════ -->
+<div id="npQa" class="now-playing">
+    <div class="drag-handle-wrap"><div class="drag-handle"></div></div>
+    <div class="player-topbar">
+        <button onclick="closeNowPlaying()">←</button>
+        <span id="npQaStatus" class="player-status">درحال نمایش</span>
+        <button onclick="showMenu()">⋯</button>
+    </div>
+    <div class="np-qa-question-box">
+        <div class="np-qa-question-bg"></div>
+        <div class="np-qa-question-scroll">
+            <div class="np-qa-question-text" id="npQaText">سوال</div>
+        </div>
+    </div>
+    <div class="np-qa-comment-badge" id="npQaCommentBadge">
+        <svg viewBox="0 0 24 24"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
+        <span id="npQaCommentCount">۰</span>
+        <span style="opacity:0.7; font-weight:500;">نظر</span>
+    </div>
+    <div class="progress-section">
+        <div class="progress-container" id="qaProgressContainer">
+            <div class="progress-bar" id="qaProgressBar"></div>
+        </div>
+        <div class="time-display">
+            <span id="qaCurrentTime">0:00</span>
+            <span id="qaTotalTime">0:00</span>
+        </div>
+    </div>
+    <div class="main-controls">
+        <div class="control-btn" onclick="prevQA()"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z"/></svg></div>
+        <div class="control-btn" onclick="qaSeek(10)"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg></div>
+        <div onclick="toggleQAPlay()" class="play-main"><svg id="qaPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="control-btn" onclick="qaSeek(-10)"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></div>
+        <div class="control-btn" onclick="nextQA()"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></div>
+    </div>
+    <div class="comments-section">
+        <div class="comments-header">
+            <span>💬 نظرات</span>
+            <span id="qaCommentCount" class="comments-count">0</span>
+        </div>
+        <div id="qaCommentsList" class="comments-list"></div>
+        <div class="comment-form" id="qaCommentForm">
+            <input id="qaCommentName" type="text" placeholder="نام شما (اختیاری)"
+                   class="comment-input comment-name-input" onfocus="scrollToForm('qaCommentForm')">
+            <textarea id="qaCommentText" placeholder="نظر خود را اینجا بنویسید..." rows="3"
+                      class="comment-input comment-textarea" onfocus="scrollToForm('qaCommentForm')"></textarea>
+            <button id="qaSubmitBtn" class="comment-submit-btn" onclick="addQAComment()">ارسال نظر</button>
+        </div>
+    </div>
+    <audio id="qaAudio"></audio>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+'use strict';
+
+/* ────────────────────────────────────────────
+   SUPABASE
+──────────────────────────────────────────── */
+const SUPABASE_URL          = 'https://hjzzvzxhrqovvducnxha.supabase.co';
+const SUPABASE_ANON_KEY     = 'sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
+const DELETE_PODCAST_URL    = `${SUPABASE_URL}/functions/v1/delete-comment`;
+const DELETE_QA_URL         = `${SUPABASE_URL}/functions/v1/delete-comment-qa`;
+const ADMIN_API_PASSWORD    = 'So@21072933@';
+
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ────────────────────────────────────────────
+   ADMIN
+──────────────────────────────────────────── */
+const ADMIN_USER = 'Admin';
+const ADMIN_PASS = '12345';
+let isAdmin = false;
+
+function openLogin() {
+    document.getElementById('loginOverlay').classList.add('active');
+    document.getElementById('loginError').style.display = 'none';
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginPassword').value = '';
+    setTimeout(() => document.getElementById('loginUsername').focus(), 100);
+}
+function closeLogin() { document.getElementById('loginOverlay').classList.remove('active'); }
+function doLogin() {
+    const u = document.getElementById('loginUsername').value.trim();
+    const p = document.getElementById('loginPassword').value;
+    if (u === ADMIN_USER && p === ADMIN_PASS) {
+        isAdmin = true; closeLogin(); updateAdminHeader();
+        if (activePodcastId !== null) renderPodcastComments(activePodcastId);
+        if (activeQAId      !== null) renderQAComments(activeQAId);
+    } else {
+        document.getElementById('loginError').style.display = 'block';
+    }
+}
+function doLogout() {
+    isAdmin = false; updateAdminHeader();
+    if (activePodcastId !== null) renderPodcastComments(activePodcastId);
+    if (activeQAId      !== null) renderQAComments(activeQAId);
+}
+function updateAdminHeader() {
+    const area = document.getElementById('headerAuthArea');
+    if (isAdmin) {
+        area.innerHTML = `
+            <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-size:13px;opacity:0.7;">👑 Admin</span>
+                <button onclick="doLogout()" class="admin-logout-btn">خروج</button>
+            </div>`;
+    } else {
+        area.innerHTML = `<button onclick="openLogin()" class="admin-badge">🔐 ورود</button>`;
+    }
+}
+
+/* ────────────────────────────────────────────
+   DATA — PODCASTS
+   برای اضافه کردن: يك آبجكت با همين ساختار add کن
+──────────────────────────────────────────── */
+const PODCASTS = [
+    {
+        id: 0, isNew: true,
+        episode: "کد نویسی ذهن",
+        cover:   "http://fs3.centraldnserver.com/~planlife/pics/Podcastfree/IMG_2409.jpeg",
+        src:     "http://fs3.centraldnserver.com/~planlife/podcast_free/codenevisi/Codenevisizehn_free.m4a"
+    },
+    {
+        id: 24, isNew: true,
+        episode: "به خودت حق بده",
+        cover:   "http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2254.jpeg",
+        src:     "http://fs3.centraldnserver.com/~planlife/podcast_free/Mozoatdigar/PlanLife.ir-Hagh nadadan be khod.m4a"
+    },
+    {
+        id: 1, isNew: false,
+        episode: "کار کردن روی باورها",
+        cover:   "http://fs3.centraldnserver.com/~planlife/pics/Servat/IMG_1053.JPG",
+        src:     "https://res.cloudinary.com/dfthbclzi/video/upload/v1780854988/Bavar_free_w9yucc.m4a"
+    },
+    {
+        id: 25, isNew: true,
+        episode: "از نظر همه باید جذاب باشم",
+        cover:   "http://fs3.centraldnserver.com/~planlife/pics/ravabet/IMG_2269.jpeg",
+        src:     "http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/PlanLife.ir-jazab bodan az nazare hame.m4a"
+    },
+    {
+        id: 4, isNew: false,
+        episode: "فقط با سختی کشیدن میشود؟",
+        cover:   "http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2318.JPG",
+        src:     "http://fs3.centraldnserver.com/~planlife/podcast_free/servat/SakhTi keshidan - planlife Free.m4a"
+    },
+    {
+        id: 5, isNew: false,
+        episode: "خسیس بودن در زندگی",
+        cover:   "http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2223.jpeg",
+        src:     "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779530272/Khasis_bodan_-_planLife.ir_Free_sv3vbr.m4a"
+    }
+];
+
+/* ────────────────────────────────────────────
+   DATA — QA
+   برای اضافه کردن: يك آبجكت با همين ساختار add کن
+──────────────────────────────────────────── */
+const QA_ITEMS = [
+    {
+        id: 0,
+        category: "سوالات در حوزه مالی",
+        question: "چطور می‌تونم معنا و رسالت واقعی زندگی خودم رو پیدا کنم؟ از کجا بفهمم که رسالت من چی هست و به سمتی باید برم ؟",
+        audio:    "http://fs3.centraldnserver.com/~planlife/soaljavab/planlife.ir-resalate-vagheiy-man.m4a"
+    },
+    {
+        id: 1,
+        category: "سوالات در حوزه مالی",
+        question: "چرا پول از من فرار می‌کنه؟",
+        audio:    ""
+    },
+    {
+        id: 2,
+        category: "سوالات در حوزه روابط",
+        question: "چرا دختر جذب پسرای بد میشن؟ پسرهای بد چه جذابیتی دارند که پسرهای خوب ندارند؟",
+        audio:    "http://fs3.centraldnserver.com/~planlife/soaljavab/Planlife.ir-che-psarayebad-jazaban.m4a"
+    },
+    {
+        id: 3,
+        category: "سوالات در حوزه روابط",
+        question: "چطور با ترس از تنهایی یا طرد شدن کنار بیام و کیفیت روابطم رو فدای این ترس‌ها نکنم؟",
+        audio:    "http://fs3.centraldnserver.com/~planlife/soaljavab/Project-chtor-kenarbiyam-ba-tanhaei.m4a"
+    },
+    {
+        id: 4,
+        category: "سوالات در حوزه اعتماد به نفس",
+        question: "چطور اعتماد به نفسم رو بالا ببرم؟",
+        audio:    ""
+    }
+];
+
+const QA_COVER_IMAGES = [
+    'http://fs3.centraldnserver.com/~planlife/pics/IMG_2296.jpeg',
+    'http://fs3.centraldnserver.com/~planlife/pics/IMG_2298.jpeg',
+    'http://fs3.centraldnserver.com/~planlife/pics/IMG_2294.jpeg'
+];
+
+/* ────────────────────────────────────────────
+   COMMENTS STORAGE
+──────────────────────────────────────────── */
+const podcastComments = {};
+const qaComments      = {};
+
+/* ── Podcast comments ── */
+async function fetchPodcastComments(id) {
+    try {
+        const { data, error } = await db.from('comments')
+            .select('*').eq('podcast_id', id).order('created_at', { ascending: false });
+        if (error) throw error;
+        podcastComments[id] = data || [];
+    } catch(e) { console.warn('podcast comments fetch:', e); podcastComments[id] = []; }
+}
+async function fetchAllPodcastCounts() {
+    try {
+        const { data, error } = await db.from('comments').select('podcast_id');
+        if (error) throw error;
+        const counts = {};
+        (data || []).forEach(r => { counts[r.podcast_id] = (counts[r.podcast_id] || 0) + 1; });
+        return counts;
+    } catch(e) { return {}; }
+}
+async function insertPodcastComment(id, name, text) {
+    try {
+        const { data, error } = await db.from('comments').insert([{ podcast_id: id, name, text }]).select();
+        if (error) throw error;
+        return data && data[0];
+    } catch(e) { return null; }
+}
+async function deletePodcastCommentRemote(commentId) {
+    try {
+        const res = await fetch(DELETE_PODCAST_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'apikey': SUPABASE_ANON_KEY },
+            body: JSON.stringify({ commentId, adminPassword: ADMIN_API_PASSWORD })
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || 'HTTP ' + res.status);
+        return true;
+    } catch(e) { alert('خطا در حذف: ' + e.message); return false; }
+}
+
+/* ── QA comments ── */
+async function fetchQAComments(id) {
+    try {
+        const { data, error } = await db.from('qa_comments')
+            .select('*').eq('qa_id', id).order('created_at', { ascending: false });
+        if (error) throw error;
+        qaComments[id] = data || [];
+    } catch(e) { console.warn('qa comments fetch:', e); qaComments[id] = []; }
+}
+async function fetchAllQACounts() {
+    try {
+        const { data, error } = await db.from('qa_comments').select('qa_id');
+        if (error) throw error;
+        const counts = {};
+        (data || []).forEach(r => { counts[r.qa_id] = (counts[r.qa_id] || 0) + 1; });
+        return counts;
+    } catch(e) { return {}; }
+}
+async function insertQAComment(id, name, text) {
+    try {
+        const { data, error } = await db.from('qa_comments').insert([{ qa_id: id, name, text }]).select();
+        if (error) throw error;
+        return data && data[0];
+    } catch(e) { return null; }
+}
+async function deleteQACommentRemote(commentId) {
+    try {
+        const res = await fetch(DELETE_QA_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'apikey': SUPABASE_ANON_KEY },
+            body: JSON.stringify({ commentId, adminPassword: ADMIN_API_PASSWORD })
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || 'HTTP ' + res.status);
+        return true;
+    } catch(e) { alert('خطا در حذف: ' + e.message); return false; }
+}
+
+/* ────────────────────────────────────────────
+   HELPERS
+──────────────────────────────────────────── */
+function toPersian(n)    { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
+function escapeHtml(s)   { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function formatTime(sec) {
+    if (!isFinite(sec) || sec < 0) sec = 0;
+    return `${Math.floor(sec/60)}:${Math.floor(sec%60).toString().padStart(2,'0')}`;
+}
+function formatCommentDate(iso) {
+    const d = new Date(iso);
+    return `${d.toLocaleDateString('fa-IR',{year:'numeric',month:'short',day:'numeric'})} • ${d.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`;
+}
+function scrollToForm(formId) {
+    setTimeout(() => {
+        const f = document.getElementById(formId);
+        if (f) f.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 320);
+}
+function goToHome() { window.location.href = 'https://planlife.ir'; }
+function showMenu() { alert('منو (به زودی)'); }
+
+/* ────────────────────────────────────────────
+   RENDER COMMENTS (shared template)
+──────────────────────────────────────────── */
+function renderCommentList(listEl, countEl, badgeEl, comments, deleteCallback) {
+    countEl.textContent = comments.length;
+    if (badgeEl) badgeEl.textContent = toPersian(comments.length);
+    listEl.innerHTML = '';
+    if (comments.length === 0) {
+        listEl.innerHTML = '<p style="opacity:0.6;text-align:center;padding:22px 10px;font-size:14px;line-height:1.6;">هنوز نظری ثبت نشده.<br>اولین نفر باشید!</p>';
+        return;
+    }
+    comments.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'comment-item';
+        div.innerHTML = `
+            <div class="comment-item-header">
+                <strong class="comment-name">${escapeHtml(c.name)}</strong>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span class="comment-time">${formatCommentDate(c.created_at)}</span>
+                    ${isAdmin ? `<button class="delete-btn" onclick="${deleteCallback}(${c.id})">🗑 حذف</button>` : ''}
+                </div>
+            </div>
+            <p class="comment-text">${escapeHtml(c.text)}</p>`;
+        listEl.appendChild(div);
+    });
+}
+
+/* ────────────────────────────────────────────
+   PODCAST COMMENTS
+──────────────────────────────────────────── */
+let activePodcastId = null;
+
+async function loadPodcastComments(id) {
+    const listEl = document.getElementById('podcastCommentsList');
+    listEl.innerHTML = '<div class="loading-comments">⏳ در حال بارگذاری...</div>';
+    document.getElementById('podcastCommentCount').textContent = '...';
+    await fetchPodcastComments(id);
+    renderPodcastComments(id);
+    refreshAllPodcastBadges();
+}
+function renderPodcastComments(id) {
+    const comments = podcastComments[id] || [];
+    renderCommentList(
+        document.getElementById('podcastCommentsList'),
+        document.getElementById('podcastCommentCount'),
+        document.getElementById('npPodcastCommentCount'),
+        comments,
+        'deletePodcastComment'
+    );
+}
+async function addPodcastComment() {
+    if (activePodcastId === null) return;
+    const name = document.getElementById('podcastCommentName').value.trim() || 'ناشناس';
+    const text = document.getElementById('podcastCommentText').value.trim();
+    if (!text) { alert('لطفاً متن نظر را وارد کنید.'); return; }
+    const btn = document.getElementById('podcastSubmitBtn');
+    btn.textContent = '⏳ در حال ارسال...'; btn.disabled = true;
+    const inserted = await insertPodcastComment(activePodcastId, name, text);
+    if (inserted) {
+        if (!podcastComments[activePodcastId]) podcastComments[activePodcastId] = [];
+        podcastComments[activePodcastId].unshift(inserted);
+        renderPodcastComments(activePodcastId);
+        refreshAllPodcastBadges();
+        document.getElementById('podcastCommentName').value = '';
+        document.getElementById('podcastCommentText').value = '';
+    } else { alert('ارسال نظر با خطا مواجه شد.'); }
+    btn.textContent = 'ارسال نظر'; btn.disabled = false;
+}
+async function deletePodcastComment(commentId) {
+    if (!isAdmin || !confirm('این نظر حذف شود؟')) return;
+    const ok = await deletePodcastCommentRemote(commentId);
+    if (!ok) return;
+    podcastComments[activePodcastId] = podcastComments[activePodcastId].filter(c => c.id !== commentId);
+    renderPodcastComments(activePodcastId);
+    refreshAllPodcastBadges();
+}
+async function refreshAllPodcastBadges() {
+    const counts = await fetchAllPodcastCounts();
+    PODCASTS.forEach(p => {
+        const el = document.getElementById(`pc-badge-${p.id}`);
+        if (el) el.textContent = toPersian(counts[p.id] || 0);
+    });
+    if (activePodcastId !== null) {
+        const cc = document.getElementById('npPodcastCommentCount');
+        if (cc) cc.textContent = toPersian(counts[activePodcastId] || 0);
+    }
+}
+
+/* ────────────────────────────────────────────
+   QA COMMENTS
+──────────────────────────────────────────── */
+let activeQAId = null;
+
+async function loadQAComments(id) {
+    const listEl = document.getElementById('qaCommentsList');
+    listEl.innerHTML = '<div class="loading-comments">⏳ در حال بارگذاری...</div>';
+    document.getElementById('qaCommentCount').textContent = '...';
+    await fetchQAComments(id);
+    renderQAComments(id);
+    refreshAllQABadges();
+}
+function renderQAComments(id) {
+    const comments = qaComments[id] || [];
+    renderCommentList(
+        document.getElementById('qaCommentsList'),
+        document.getElementById('qaCommentCount'),
+        document.getElementById('npQaCommentCount'),
+        comments,
+        'deleteQAComment'
+    );
+}
+async function addQAComment() {
+    if (activeQAId === null) return;
+    const name = document.getElementById('qaCommentName').value.trim() || 'ناشناس';
+    const text = document.getElementById('qaCommentText').value.trim();
+    if (!text) { alert('لطفاً متن نظر را وارد کنید.'); return; }
+    const btn = document.getElementById('qaSubmitBtn');
+    btn.textContent = '⏳ در حال ارسال...'; btn.disabled = true;
+    const inserted = await insertQAComment(activeQAId, name, text);
+    if (inserted) {
+        if (!qaComments[activeQAId]) qaComments[activeQAId] = [];
+        qaComments[activeQAId].unshift(inserted);
+        renderQAComments(activeQAId);
+        refreshAllQABadges();
+        document.getElementById('qaCommentName').value = '';
+        document.getElementById('qaCommentText').value = '';
+    } else { alert('ارسال نظر با خطا مواجه شد.'); }
+    btn.textContent = 'ارسال نظر'; btn.disabled = false;
+}
+async function deleteQAComment(commentId) {
+    if (!isAdmin || !confirm('این نظر حذف شود؟')) return;
+    const ok = await deleteQACommentRemote(commentId);
+    if (!ok) return;
+    qaComments[activeQAId] = qaComments[activeQAId].filter(c => c.id !== commentId);
+    renderQAComments(activeQAId);
+    refreshAllQABadges();
+}
+async function refreshAllQABadges() {
+    const counts = await fetchAllQACounts();
+    QA_ITEMS.forEach(q => {
+        const el = document.getElementById(`qa-badge-${q.id}`);
+        if (el) el.textContent = toPersian(counts[q.id] || 0);
+    });
+    if (activeQAId !== null) {
+        const cc = document.getElementById('npQaCommentCount');
+        if (cc) cc.textContent = toPersian(counts[activeQAId] || 0);
+    }
+}
+
+/* ────────────────────────────────────────────
+   AUDIO — PODCAST
+──────────────────────────────────────────── */
+const podcastAudio = document.getElementById('podcastAudio');
+let currentPodcastIndex = 0;
+
+podcastAudio.addEventListener('timeupdate', () => {
+    if (!podcastAudio.duration) return;
+    const pct = (podcastAudio.currentTime / podcastAudio.duration) * 100;
+    document.getElementById('podcastProgressBar').style.width = pct + '%';
+    document.getElementById('podcastCurrentTime').textContent = formatTime(podcastAudio.currentTime);
+    // mini only if podcast is active
+    if (activePodcastId !== null && activeQAId === null) {
+        document.getElementById('miniProgressBar').style.width = pct + '%';
+    }
+});
+podcastAudio.addEventListener('loadedmetadata', () => {
+    document.getElementById('podcastTotalTime').textContent = formatTime(podcastAudio.duration);
+});
+podcastAudio.addEventListener('play',  () => {
+    setPodcastPlayIcons(true);
+    if (activePodcastId !== null) setMiniPlayIcon(true);
+});
+podcastAudio.addEventListener('pause', () => {
+    setPodcastPlayIcons(false);
+    if (activePodcastId !== null) setMiniPlayIcon(false);
+});
+
+document.getElementById('podcastProgressContainer').addEventListener('click', e => {
+    if (!podcastAudio.duration) return;
+    const rect  = e.currentTarget.getBoundingClientRect();
+    const ratio = (e.clientX - rect.left) / rect.width;
+    podcastAudio.currentTime = ratio * podcastAudio.duration;
+});
+
+function setPodcastPlayIcons(playing) {
+    const icon = playing
+        ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'
+        : '<path d="M8 5v14l11-7z"/>';
+    document.getElementById('podcastPlayIcon').innerHTML = icon;
+    document.getElementById('npPodcastStatus').textContent = playing ? 'در حال پخش' : 'متوقف شده';
+}
+function togglePodcastPlay() {
+    if (podcastAudio.paused) podcastAudio.play().catch(()=>{});
+    else                     podcastAudio.pause();
+}
+function podcastSeek(sec) {
+    if (!podcastAudio.duration) return;
+    podcastAudio.currentTime = Math.max(0, Math.min(podcastAudio.duration, podcastAudio.currentTime + sec));
+}
+function prevPodcast() {
+    if (currentPodcastIndex > 0) {
+        currentPodcastIndex--;
+        playPodcast(PODCASTS[currentPodcastIndex]);
+    }
+}
+function nextPodcast() {
+    if (currentPodcastIndex < PODCASTS.length - 1) {
+        currentPodcastIndex++;
+        playPodcast(PODCASTS[currentPodcastIndex]);
+    }
+}
+
+function playPodcast(item) {
+    // pause QA if running
+    if (!qaAudio.paused) { qaAudio.pause(); activeQAId = null; }
+
+    activePodcastId     = item.id;
+    currentPodcastIndex = PODCASTS.findIndex(p => p.id === item.id);
+
+    document.getElementById('npPodcastCover').src = item.cover;
+    document.getElementById('npPodcastTitle').textContent = item.episode;
+
+    // mini player
+    showMiniPodcast(item);
+
+    podcastAudio.src = item.src;
+    podcastAudio.currentTime = 0;
+    document.getElementById('podcastProgressBar').style.width = '0%';
+    document.getElementById('podcastCurrentTime').textContent = '0:00';
+    document.getElementById('podcastTotalTime').textContent   = '0:00';
+    podcastAudio.play().catch(() => setPodcastPlayIcons(false));
+
+    loadPodcastComments(item.id);
+    openScreen('npPodcast');
+}
+
+/* ────────────────────────────────────────────
+   AUDIO — QA
+──────────────────────────────────────────── */
+const qaAudio = document.getElementById('qaAudio');
+let currentQAIndex = 0;
+
+qaAudio.addEventListener('timeupdate', () => {
+    if (!qaAudio.duration) return;
+    const pct = (qaAudio.currentTime / qaAudio.duration) * 100;
+    document.getElementById('qaProgressBar').style.width = pct + '%';
+    document.getElementById('qaCurrentTime').textContent = formatTime(qaAudio.currentTime);
+    if (activeQAId !== null) {
+        document.getElementById('miniProgressBar').style.width = pct + '%';
+    }
+});
+qaAudio.addEventListener('loadedmetadata', () => {
+    document.getElementById('qaTotalTime').textContent = formatTime(qaAudio.duration);
+});
+qaAudio.addEventListener('play',  () => {
+    setQAPlayIcons(true);
+    if (activeQAId !== null) setMiniPlayIcon(true);
+});
+qaAudio.addEventListener('pause', () => {
+    setQAPlayIcons(false);
+    if (activeQAId !== null) setMiniPlayIcon(false);
+});
+
+document.getElementById('qaProgressContainer').addEventListener('click', e => {
+    if (!qaAudio.duration) return;
+    const rect  = e.currentTarget.getBoundingClientRect();
+    const ratio = 1 - ((e.clientX - rect.left) / rect.width);
+    qaAudio.currentTime = Math.max(0, Math.min(1, ratio)) * qaAudio.duration;
+});
+
+function setQAPlayIcons(playing) {
+    const icon = playing
+        ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'
+        : '<path d="M8 5v14l11-7z"/>';
+    document.getElementById('qaPlayIcon').innerHTML = icon;
+    document.getElementById('npQaStatus').textContent = playing ? 'درحال پخش' : 'متوقف شده';
+}
+function toggleQAPlay() {
+    if (qaAudio.paused) qaAudio.play().catch(()=>{});
+    else                qaAudio.pause();
+}
+function qaSeek(sec) {
+    if (!qaAudio.duration) return;
+    qaAudio.currentTime = Math.max(0, Math.min(qaAudio.duration, qaAudio.currentTime + sec));
+}
+function prevQA() {
+    if (currentQAIndex > 0) {
+        currentQAIndex--;
+        openQA(QA_ITEMS[currentQAIndex]);
+    }
+}
+function nextQA() {
+    if (currentQAIndex < QA_ITEMS.length - 1) {
+        currentQAIndex++;
+        openQA(QA_ITEMS[currentQAIndex]);
+    }
+}
+
+function openQA(item) {
+    // pause podcast if running
+    if (!podcastAudio.paused) { podcastAudio.pause(); activePodcastId = null; }
+
+    activeQAId     = item.id;
+    currentQAIndex = QA_ITEMS.findIndex(q => q.id === item.id);
+
+    document.getElementById('npQaText').textContent = item.question;
+    document.getElementById('qaProgressBar').style.width = '0%';
+    document.getElementById('qaCurrentTime').textContent = '0:00';
+    document.getElementById('qaTotalTime').textContent   = '0:00';
+
+    // mini player
+    showMiniQA(item);
+
+    if (item.audio) {
+        qaAudio.src = item.audio;
+        qaAudio.currentTime = 0;
+        qaAudio.play().catch(() => setQAPlayIcons(false));
+    } else {
+        qaAudio.removeAttribute('src'); qaAudio.load();
+        setQAPlayIcons(false);
+    }
+
+    loadQAComments(item.id);
+    openScreen('npQa');
+}
+
+/* ────────────────────────────────────────────
+   MINI PLAYER
+──────────────────────────────────────────── */
+function showMiniPodcast(item) {
+    document.getElementById('miniCoverImg').src     = item.cover;
+    document.getElementById('miniCoverImg').style.display = 'block';
+    document.getElementById('miniQaIcon').style.display  = 'none';
+    document.getElementById('miniTitle').textContent = item.episode;
+    document.getElementById('miniSub').textContent   = 'PlanLife';
+    document.getElementById('miniProgressBar').style.width = '0%';
+}
+function showMiniQA(item) {
+    document.getElementById('miniCoverImg').style.display = 'none';
+    document.getElementById('miniQaIcon').style.display   = 'flex';
+    document.getElementById('miniTitle').textContent = item.question.slice(0, 40) + '…';
+    document.getElementById('miniSub').textContent   = item.category;
+    document.getElementById('miniProgressBar').style.width = '0%';
+}
+function setMiniPlayIcon(playing) {
+    const icon = playing
+        ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'
+        : '<path d="M8 5v14l11-7z"/>';
+    document.getElementById('miniPlayIcon').innerHTML = icon;
+}
+function miniTogglePlay() {
+    if (activeQAId !== null) toggleQAPlay();
+    else                     togglePodcastPlay();
+}
+function expandCurrentPlayer() {
+    if (activeQAId !== null) openScreen('npQa');
+    else                     openScreen('npPodcast');
+}
+function killPlayer() {
+    closeAllScreens();
+    document.getElementById('miniPlayer').classList.remove('active');
+    podcastAudio.pause();
+    qaAudio.pause(); qaAudio.removeAttribute('src'); qaAudio.load();
+    activePodcastId = null; activeQAId = null;
+    setMiniPlayIcon(false);
+}
+
+/* ────────────────────────────────────────────
+   SCREEN TRANSITIONS
+──────────────────────────────────────────── */
+function openScreen(id) {
+    const screen = document.getElementById(id);
+    document.getElementById('miniPlayer').classList.remove('active');
+    // hide other screen instantly
+    ['npPodcast','npQa'].forEach(s => {
+        if (s !== id) {
+            const el = document.getElementById(s);
+            el.classList.remove('active');
+            el.style.cssText = '';
+        }
+    });
+    screen.style.transition  = 'none';
+    screen.style.transform   = 'translateY(110%)';
+    screen.style.borderRadius = '22px 22px 0 0';
+    screen.scrollTop = 0;
+    screen.classList.add('active');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        screen.style.transition   = 'transform 0.52s cubic-bezier(0.32,0.72,0,1), border-radius 0.52s cubic-bezier(0.32,0.72,0,1)';
+        screen.style.transform    = 'translateY(0%)';
+        screen.style.borderRadius = '22px 22px 0 0';
+    }));
+}
+function minimizeScreen(id) {
+    const screen = document.getElementById(id);
+    screen.style.transition   = 'transform 0.48s cubic-bezier(0.32,0.72,0,1), border-radius 0.48s cubic-bezier(0.32,0.72,0,1)';
+    screen.style.transform    = 'translateY(110%)';
+    screen.style.borderRadius = '22px 22px 0 0';
+    setTimeout(() => {
+        screen.classList.remove('active');
+        screen.style.cssText = '';
+        if (activePodcastId !== null || activeQAId !== null) {
+            document.getElementById('miniPlayer').classList.add('active');
+        }
+    }, 480);
+}
+function closeAllScreens() {
+    ['npPodcast','npQa'].forEach(id => {
+        const screen = document.getElementById(id);
+        screen.style.transition   = 'transform 0.38s cubic-bezier(0.32,0.72,0,1)';
+        screen.style.transform    = 'translateY(100%)';
+        setTimeout(() => { screen.classList.remove('active'); screen.style.cssText = ''; }, 380);
+    });
+}
+function closeNowPlaying() {
+    if (document.getElementById('npPodcast').classList.contains('active')) minimizeScreen('npPodcast');
+    if (document.getElementById('npQa').classList.contains('active'))      minimizeScreen('npQa');
+}
+
+/* ── Swipe to close (attach to both screens) ── */
+function attachSwipeToClose(screenId) {
+    const screen = document.getElementById(screenId);
+    let startY = 0, startX = 0, lastY = 0, velocity = 0, lastTime = 0;
+    let intentDecided = false, isMinimizing = false;
+
+    screen.addEventListener('touchstart', e => {
+        const t = e.touches[0];
+        startY = lastY = t.clientY; startX = t.clientX;
+        lastTime = Date.now(); velocity = 0;
+        intentDecided = false; isMinimizing = false;
+        screen.style.transition = 'none';
+    }, { passive: true });
+
+    screen.addEventListener('touchmove', e => {
+        const t   = e.touches[0];
+        const dy  = t.clientY - startY;
+        const adx = Math.abs(t.clientX - startX);
+        const now = Date.now(), dt = now - lastTime;
+        if (dt > 0) velocity = (t.clientY - lastY) / dt;
+        lastY = t.clientY; lastTime = now;
+
+        if (!intentDecided && (Math.abs(dy) > 8 || adx > 8)) {
+            intentDecided = true;
+            if (adx > Math.abs(dy) * 1.2) return;
+            if (dy < 0) return;
+            if (dy > 0 && screen.scrollTop <= 1) { isMinimizing = true; screen.style.willChange = 'transform, border-radius'; }
+        }
+        if (!isMinimizing || dy <= 0) return;
+        e.preventDefault();
+        const progress   = Math.min(dy / 380, 1);
+        const resistance = dy * (1 - progress * 0.3);
+        screen.style.transform    = `translateY(${resistance}px) scale(${1 - progress * 0.08})`;
+        screen.style.borderRadius = `${progress * 28}px ${progress * 28}px 0 0`;
+        screen.style.opacity      = 1 - progress * 0.15;
+    }, { passive: false });
+
+    const onEnd = () => {
+        if (!isMinimizing) return;
+        isMinimizing = false; screen.style.willChange = '';
+        const dy = lastY - startY;
+        const shouldMin = velocity > 0.4 || dy > 130;
+        screen.style.transition = 'transform 0.46s cubic-bezier(0.32,0.72,0,1), border-radius 0.46s cubic-bezier(0.32,0.72,0,1), opacity 0.46s ease';
+        if (shouldMin) {
+            screen.style.transform    = 'translateY(100%) scale(0.92)';
+            screen.style.borderRadius = '28px 28px 0 0';
+            screen.style.opacity      = '0.6';
+            setTimeout(() => {
+                screen.classList.remove('active'); screen.style.cssText = '';
+                if (activePodcastId !== null || activeQAId !== null) {
+                    document.getElementById('miniPlayer').classList.add('active');
+                }
+            }, 460);
+        } else {
+            screen.style.transform    = 'translateY(0) scale(1)';
+            screen.style.borderRadius = '0px'; screen.style.opacity = '1';
+            setTimeout(() => {
+                screen.style.transition = screen.style.transform = screen.style.borderRadius = screen.style.opacity = '';
+            }, 460);
+        }
+    };
+    document.addEventListener('touchend',    onEnd);
+    document.addEventListener('touchcancel', onEnd);
+}
+
+/* ────────────────────────────────────────────
+   TABS
+──────────────────────────────────────────── */
+let activeTab = 'all';
+function switchTab(tab) {
+    activeTab = tab;
+    ['all','podcasts','qa'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.toggle('active', t === tab);
+        document.getElementById(`section-${t}`).classList.toggle('active', t === tab);
+    });
+}
+
+/* ────────────────────────────────────────────
+   RENDER — PODCAST CARD
+──────────────────────────────────────────── */
+function podcastCardHTML(item) {
+    const cnt = toPersian((podcastComments[item.id] || []).length);
+    return `
+        <div class="card" onclick="playPodcast(PODCASTS.find(p=>p.id===${item.id}))">
+            <div class="card-cover-wrap">
+                <img class="card-cover-img" src="${item.cover}" alt="${item.episode}" loading="lazy">
+                <div class="card-comment-chip">
+                    <svg viewBox="0 0 24 24"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
+                    <span id="pc-badge-${item.id}">${cnt}</span>
+                </div>
+                ${item.isNew ? '<div class="new-badge">جدید</div>' : ''}
+            </div>
+            <div class="card-podcast-label">${item.episode}</div>
+            <div class="card-play-circle"><div class="play-arrow"></div></div>
+        </div>`;
+}
+
+/* ────────────────────────────────────────────
+   RENDER — QA CARD
+──────────────────────────────────────────── */
+function qaCardHTML(item) {
+    const cnt = toPersian((qaComments[item.id] || []).length);
+    return `
+        <div class="card" onclick="openQA(QA_ITEMS.find(q=>q.id===${item.id}))">
+            <div class="card-qa-question-box">
+                <div class="card-qa-question-bg"></div>
+                <div class="card-qa-question-scroll">
+                    <span class="card-qa-question-text">${item.question}</span>
+                </div>
+            </div>
+            <div class="card-qa-category">${item.category}</div>
+            <div class="card-bottom-row">
+                <div class="card-bottom-comment">
+                    <svg viewBox="0 0 24 24"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
+                    <span id="qa-badge-${item.id}">${cnt}</span>
+                </div>
+                <div class="card-qa-play-btn">
+                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <div style="width:44px;"></div>
+            </div>
+        </div>`;
+}
+
+/* ────────────────────────────────────────────
+   RENDER GRIDS
+──────────────────────────────────────────── */
+function renderAllGrid() {
+    // ترکیب رندوم از هر دو
+    const podcasts = PODCASTS.map(p => ({ type: 'podcast', data: p }));
+    const qas      = QA_ITEMS.map(q => ({ type: 'qa', data: q }));
+    const merged   = [...podcasts, ...qas].sort(() => Math.random() - 0.5);
+    document.getElementById('allGrid').innerHTML = merged.map(item =>
+        item.type === 'podcast' ? podcastCardHTML(item.data) : qaCardHTML(item.data)
+    ).join('');
+}
+
+function renderPodcastGrid() {
+    document.getElementById('podcastGrid').innerHTML = PODCASTS.map(podcastCardHTML).join('');
+}
+
+function renderQAGrid(items) {
+    document.getElementById('qaGrid').innerHTML = items.map(qaCardHTML).join('');
+}
+
+function renderQACategories() {
+    const cats = [...new Set(QA_ITEMS.map(q => q.category))];
+    document.getElementById('qaCategorySlides').innerHTML = cats.map((cat, i) => {
+        const img = QA_COVER_IMAGES[i % QA_COVER_IMAGES.length];
+        return `
+            <div class="qa-cat-card" onclick="filterQAByCat('${cat.replace(/'/g,"\\'")}')">
+                <img src="${img}" alt="${cat}" loading="lazy">
+                <p>${cat}</p>
+            </div>`;
+    }).join('');
+    // دکمه «همه»
+    document.getElementById('qaCategorySlides').insertAdjacentHTML('afterbegin', `
+        <div class="qa-cat-card" onclick="filterQAByCat(null)" style="min-width:100px;">
+            <div style="width:100%;height:130px;background:rgba(255,149,0,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:32px;">🎧</div>
+            <p>همه</p>
+        </div>`);
+}
+
+function filterQAByCat(cat) {
+    const label = cat || 'همه سوالات';
+    document.getElementById('qaCurrentCat').textContent = label;
+    const items = cat ? QA_ITEMS.filter(q => q.category === cat) : QA_ITEMS;
+    renderQAGrid(items);
+}
+
+/* ────────────────────────────────────────────
+   INIT
+──────────────────────────────────────────── */
+async function init() {
+    // Swipe to close on both screens
+    attachSwipeToClose('npPodcast');
+    attachSwipeToClose('npQa');
+
+    // keyboard shortcut for login
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && document.getElementById('loginOverlay').classList.contains('active')) doLogin();
+    });
+
+    // Render static grids first (badges = 0)
+    renderAllGrid();
+    renderPodcastGrid();
+    renderQAGrid(QA_ITEMS);
+    renderQACategories();
+
+    // Then fetch real comment counts and update badges
+    const [pcCounts, qaCounts] = await Promise.all([
+        fetchAllPodcastCounts(),
+        fetchAllQACounts()
+    ]);
+    PODCASTS.forEach(p => {
+        const el = document.getElementById(`pc-badge-${p.id}`);
+        if (el) el.textContent = toPersian(pcCounts[p.id] || 0);
+    });
+    QA_ITEMS.forEach(q => {
+        const el = document.getElementById(`qa-badge-${q.id}`);
+        if (el) el.textContent = toPersian(qaCounts[q.id] || 0);
+    });
+}
+
+window.onload = init;
+</script>
+</body>
+</html>
