@@ -3,697 +3,1080 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>ویدیوهای ماورایی • PlanLife</title>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#1a0033">
+<title>PlanLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-    :root {
-        --gold: #d4af37;
-        --gold-light: #f0d060;
-        --gold-glow: rgba(212,175,55,0.35);
-        --glass-bg: rgba(255,255,255,0.07);
-        --glass-border: rgba(255,255,255,0.15);
-        --reel-w: 148px;
-        --reel-h: 263px;
-    }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     html, body {
-        min-height: 100%;
+        height: 100%;
         font-family: 'Vazirmatn', sans-serif;
-        color: white;
-        background: #02000d;
         overflow-x: hidden;
+        color: white;
+        background: #030303;
     }
 
-    /* ===== GALAXY BACKGROUND ===== */
-    .galaxy { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-    .galaxy::before {
-        content: '';
-        position: absolute; inset: 0;
-        background:
-            radial-gradient(ellipse 120% 80% at 60% -10%, rgba(80,20,180,0.6) 0%, transparent 55%),
-            radial-gradient(ellipse 80% 60% at -10% 40%, rgba(140,40,220,0.4) 0%, transparent 50%),
-            radial-gradient(ellipse 60% 50% at 100% 70%, rgba(180,50,120,0.35) 0%, transparent 50%),
-            radial-gradient(ellipse 40% 40% at 50% 100%, rgba(60,10,140,0.5) 0%, transparent 60%),
-            radial-gradient(ellipse 100% 100% at 50% 50%, rgba(5,0,25,0.95) 0%, transparent 100%);
+    .stars { position: fixed; top:0;left:0;right:0;bottom:0; background: transparent; z-index: 1; pointer-events: none; }
+    .stars::before, .stars::after {
+        content: ''; position: absolute; top:0;left:0;right:0;bottom:0;
+        background-image: radial-gradient(white 1px, transparent 1px);
+        background-size: 80px 80px; opacity: 0.45;
+        -webkit-animation: twinkle 10s infinite alternate, stars-move 20s linear infinite;
+        animation: twinkle 10s infinite alternate, stars-move 20s linear infinite;
     }
-    .galaxy-arm {
-        position: absolute; width: 200%; height: 300px; top: 20%; left: -50%;
-        background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(180,140,255,0.12) 0%, rgba(120,80,220,0.06) 40%, transparent 70%);
-        transform: rotate(-20deg); filter: blur(30px);
-        animation: armPulse 12s ease-in-out infinite alternate;
+    .stars::after {
+        background-size: 140px 140px; opacity: 0.3;
+        -webkit-animation: twinkle 16s infinite alternate, stars-move-diagonal 32s linear infinite;
+        animation: twinkle 16s infinite alternate, stars-move-diagonal 32s linear infinite;
     }
-    @keyframes armPulse {
-        0% { opacity: 0.6; transform: rotate(-20deg) scaleY(1); }
-        100% { opacity: 1; transform: rotate(-18deg) scaleY(1.1); }
-    }
-    .nebula { position: absolute; border-radius: 50%; filter: blur(60px); animation: nebulaDrift 18s ease-in-out infinite alternate; }
-    .nebula-1 { width: 500px; height: 300px; background: rgba(120,40,200,0.28); top: -80px; left: -100px; animation-delay: 0s; }
-    .nebula-2 { width: 400px; height: 400px; background: rgba(200,60,140,0.2); top: 30%; right: -100px; animation-delay: -6s; }
-    .nebula-3 { width: 350px; height: 250px; background: rgba(40,80,200,0.22); bottom: 10%; left: 10%; animation-delay: -12s; }
-    .nebula-4 { width: 250px; height: 250px; background: rgba(212,175,55,0.12); top: 55%; left: 40%; animation-delay: -4s; }
-    @keyframes nebulaDrift {
-        0% { transform: translate(0,0) scale(1); opacity: 0.7; }
-        100% { transform: translate(15px,-25px) scale(1.06); opacity: 1; }
-    }
-    #stars { position: absolute; inset: 0; }
+    @-webkit-keyframes twinkle { 0% { opacity: 0.35; } 100% { opacity: 0.65; } }
+    @keyframes twinkle { 0% { opacity: 0.35; } 100% { opacity: 0.65; } }
+    @-webkit-keyframes stars-move { from { background-position: 0 0; } to { background-position: 22px -480px; } }
+    @keyframes stars-move { from { background-position: 0 0; } to { background-position: 22px -480px; } }
+    @-webkit-keyframes stars-move-diagonal { from { background-position: 0 0; } to { background-position: -35px -550px; } }
+    @keyframes stars-move-diagonal { from { background-position: 0 0; } to { background-position: -35px -550px; } }
 
-    /* ===== HEADER ===== */
-    .header {
-        position: relative; z-index: 2;
-        padding: 52px 24px 20px;
-        display: flex; align-items: center; justify-content: center;
+    header {
+        position: fixed; top: 0; left: 0; right: 0; height: 65px;
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        padding: 0 20px; z-index: 100;
+        background: rgba(0,0,0,0.25);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
     }
-    .logo { display: flex; align-items: center; gap: 10px; }
-    .logo-icon {
-        width: 42px; height: 42px; border-radius: 12px;
-        background: linear-gradient(135deg, rgba(212,175,55,0.5), rgba(212,175,55,0.15));
-        border: 1px solid rgba(212,175,55,0.5);
-        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        display: flex; align-items: center; justify-content: center;
-        box-shadow: 0 0 20px rgba(212,175,55,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
-        font-size: 20px;
-    }
-    .logo-text {
-        font-size: 26px; font-weight: 900; letter-spacing: 2px;
-        background: linear-gradient(135deg, #ffffff 0%, var(--gold-light) 45%, var(--gold) 100%);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        filter: drop-shadow(0 0 16px rgba(212,175,55,0.5)); text-transform: uppercase;
-    }
-    .back-btn {
-        position: absolute; left: 24px; top: 50%; transform: translateY(-50%);
-        display: flex; align-items: center; gap: 7px;
-        background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
-        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        padding: 9px 16px 9px 12px; border-radius: 50px;
-        cursor: pointer; text-decoration: none; color: rgba(255,255,255,0.8);
-        font-size: 13px; font-weight: 600; font-family: 'Vazirmatn', sans-serif;
-        transition: all 0.3s ease; box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
-    }
-    .back-btn:hover {
-        background: rgba(255,255,255,0.14); border-color: rgba(212,175,55,0.5); color: var(--gold-light);
-        box-shadow: 0 0 18px rgba(212,175,55,0.2), inset 0 1px 0 rgba(255,255,255,0.2);
-        transform: translateY(-50%) scale(1.04);
-    }
-    .back-arrow { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .back-arrow svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-
-    /* ===== LAYOUT ===== */
-    .main { position: relative; z-index: 1; padding: 0 0 80px; }
-
-    /* ===== PAGE TITLE ===== */
-    .page-title {
-        font-size: 22px; font-weight: 800; text-align: center;
-        margin-bottom: 28px; padding: 0 20px;
-        color: rgba(255,255,255,0.75); letter-spacing: -0.3px;
+    .hamburger {
+        font-size: 28px; cursor: pointer; width: 50px; height: 50px;
+        border-radius: 50%; background: rgba(255,255,255,0.1);
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        -webkit-justify-content: center; justify-content: center;
+        -webkit-transition: all 0.2s ease; transition: all 0.2s ease;
     }
 
-    /* ===== SECTION LABEL ===== */
-    .section-label {
-        font-size: 19px; font-weight: 900;
-        color: rgba(255,255,255,0.55); letter-spacing: 0.5px;
-        margin-bottom: 16px;
-        padding: 0 20px;
-        font-family: 'Vazirmatn', sans-serif;
+    .main-center {
+        position: relative; z-index: 5; min-height: 100vh;
+        padding: 75px 20px 120px;
+        display: -webkit-flex; display: flex;
+        -webkit-flex-direction: column; flex-direction: column;
+        -webkit-align-items: center; align-items: center;
+        -webkit-transition: filter 0.5s ease; transition: filter 0.5s ease;
     }
-    .section-label span { color: var(--gold); }
-    .section-label em { color: rgba(255,255,255,0.3); font-style: normal; font-size: 14px; font-weight: 500; }
+    .main-center.blurred { -webkit-filter: blur(7px); filter: blur(7px); pointer-events: none; }
 
-    /* ===== DOCS SECTION ===== */
-    .docs-scroll {
-        display: grid;
-        grid-template-rows: repeat(2, auto);
-        grid-auto-flow: column;
-        grid-auto-columns: 195px;
-        gap: 14px 16px;
-        overflow-x: auto;
-        padding: 6px 20px 20px;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
+    .title {
+        font-size: 42px; font-weight: 900;
+        font-family: 'Cinzel', 'Vazirmatn', serif;
+        text-shadow: 0 0 30px rgba(212,175,55,0.9), 0 0 60px rgba(160,240,255,0.4);
+        margin-bottom: 25px; color: white; letter-spacing: 3px;
     }
-    .docs-scroll::-webkit-scrollbar { display: none; }
 
-    .dcard {
-        flex-shrink: 0;
-        width: 195px;
-        background: rgba(255,255,255,0.07);
-        border: 1px solid rgba(255,255,255,0.15);
-        backdrop-filter: blur(28px);
-        -webkit-backdrop-filter: blur(28px);
-        border-radius: 22px;
-        padding: 12px;
-        cursor: pointer;
-        transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.14);
+    /* چت باکس */
+    .chat-container {
+        width: 100%; max-width: 360px; height: 390px;
+        background: rgba(255,255,255,0.11);
+        -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+        border-radius: 28px;
+        border: 1px solid rgba(212,175,55,0.55);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 25px rgba(212,175,55,0.25);
+        display: -webkit-flex; display: flex;
+        -webkit-flex-direction: column; flex-direction: column;
+        padding: 12px; margin-bottom: 35px;
+    }
+    #chat-output {
+        -webkit-flex: 1; flex: 1; overflow-y: auto;
+        padding: 8px 6px;
+        display: -webkit-flex; display: flex;
+        -webkit-flex-direction: column; flex-direction: column;
+        gap: 10px; scroll-behavior: smooth;
+    }
+    #chat-output::-webkit-scrollbar { width: 3px; }
+    #chat-output::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 10px; }
+
+    .msg-bot {
+        -webkit-align-self: flex-start; align-self: flex-start;
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(212,175,55,0.2);
+        padding: 10px 14px;
+        border-radius: 4px 18px 18px 18px;
+        max-width: 84%; line-height: 1.8; font-size: 13.5px;
+        font-weight: 500; color: rgba(255,255,255,0.95);
+        -webkit-animation: slideFromLeft 0.38s ease both;
+        animation: slideFromLeft 0.38s ease both;
+    }
+    .msg-user {
+        -webkit-align-self: flex-end; align-self: flex-end;
+        background: -webkit-linear-gradient(135deg, rgba(110,70,240,0.88), rgba(75,35,190,0.92));
+        background: linear-gradient(135deg, rgba(110,70,240,0.88), rgba(75,35,190,0.92));
+        border: 1px solid rgba(150,110,255,0.35);
+        padding: 10px 14px;
+        border-radius: 18px 4px 18px 18px;
+        max-width: 84%; line-height: 1.8; font-size: 13.5px;
+        font-weight: 600; color: white;
+        -webkit-animation: slideFromRight 0.32s ease both;
+        animation: slideFromRight 0.32s ease both;
+    }
+    @-webkit-keyframes slideFromLeft {
+        from { opacity: 0; -webkit-transform: translateX(-12px); transform: translateX(-12px); }
+        to   { opacity: 1; -webkit-transform: translateX(0); transform: translateX(0); }
+    }
+    @keyframes slideFromLeft {
+        from { opacity: 0; transform: translateX(-12px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+    @-webkit-keyframes slideFromRight {
+        from { opacity: 0; -webkit-transform: translateX(12px); transform: translateX(12px); }
+        to   { opacity: 1; -webkit-transform: translateX(0); transform: translateX(0); }
+    }
+    @keyframes slideFromRight {
+        from { opacity: 0; transform: translateX(12px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .input-box {
+        display: -webkit-flex; display: flex;
+        background: rgba(255,255,255,0.10);
+        border: 1px solid rgba(212,175,55,0.2);
+        border-radius: 25px; padding: 4px; margin-top: 8px; -webkit-flex-shrink: 0; flex-shrink: 0;
+    }
+    input {
+        -webkit-flex: 1; flex: 1; background: transparent; border: none; color: white;
+        font-size: 16px; font-family: 'Vazirmatn', sans-serif;
+        padding: 10px 14px; outline: none;
+        -webkit-appearance: none; appearance: none;
+    }
+    input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
+
+    .send-btn {
+        width: 46px; height: 46px; background: transparent; border: none;
+        cursor: pointer; padding: 0;
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        -webkit-justify-content: center; justify-content: center;
+        -webkit-flex-shrink: 0; flex-shrink: 0;
+    }
+
+    /* ORB */
+    .orb {
+        width: 40px; height: 40px; border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+        -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+        border: 1.5px solid #d4af37; position: relative; overflow: hidden;
+        box-shadow: 0 0 15px rgba(212,175,55,0.5), inset 0 0 12px rgba(255,255,255,0.3);
+        -webkit-animation: orb-pulse 2.2s ease-in-out infinite;
+        animation: orb-pulse 2.2s ease-in-out infinite;
+    }
+    .core {
+        position: absolute; top: 50%; left: 50%;
+        -webkit-transform: translate(-50%,-50%); transform: translate(-50%,-50%);
+        width: 13px; height: 13px;
+        background: -webkit-radial-gradient(circle, #fff 20%, #d4af37 70%);
+        background: radial-gradient(circle, #fff 20%, #d4af37 70%);
+        border-radius: 50%; box-shadow: 0 0 18px #d4af37;
+        -webkit-animation: core-glow 1.6s ease-in-out infinite alternate;
+        animation: core-glow 1.6s ease-in-out infinite alternate;
+        z-index: 3;
+    }
+    .neural-lines { position: absolute; top:0;left:0;right:0;bottom:0; z-index: 2; }
+    .neural-lines .line {
+        position: absolute; top: 50%; left: 50%;
+        width: 120%; height: 1.2px;
+        background: -webkit-linear-gradient(90deg, transparent, #d4af37, transparent);
+        background: linear-gradient(90deg, transparent, #d4af37, transparent);
+        -webkit-transform-origin: center; transform-origin: center;
+        -webkit-animation: neural-rotate 3.5s linear infinite;
+        animation: neural-rotate 3.5s linear infinite;
+    }
+    .neural-lines .line:nth-child(1) { -webkit-transform: rotate(0deg); transform: rotate(0deg); -webkit-animation-duration: 3.2s; animation-duration: 3.2s; }
+    .neural-lines .line:nth-child(2) { -webkit-transform: rotate(36deg); transform: rotate(36deg); -webkit-animation-duration: 4.1s; animation-duration: 4.1s; }
+    .neural-lines .line:nth-child(3) { -webkit-transform: rotate(72deg); transform: rotate(72deg); -webkit-animation-duration: 2.8s; animation-duration: 2.8s; }
+    .neural-lines .line:nth-child(4) { -webkit-transform: rotate(108deg); transform: rotate(108deg); -webkit-animation-duration: 3.8s; animation-duration: 3.8s; }
+    .neural-lines .line:nth-child(5) { -webkit-transform: rotate(144deg); transform: rotate(144deg); -webkit-animation-duration: 4.5s; animation-duration: 4.5s; }
+
+    @-webkit-keyframes orb-pulse {
+        0%,100% { -webkit-transform: scale(1); transform: scale(1); }
+        50% { -webkit-transform: scale(1.08); transform: scale(1.08); }
+    }
+    @keyframes orb-pulse {
+        0%,100% { transform: scale(1); }
+        50% { transform: scale(1.08); }
+    }
+    @-webkit-keyframes core-glow {
+        from { box-shadow: 0 0 12px #d4af37; }
+        to { box-shadow: 0 0 26px #fff, 0 0 38px #d4af37; }
+    }
+    @keyframes core-glow {
+        from { box-shadow: 0 0 12px #d4af37; }
+        to { box-shadow: 0 0 26px #fff, 0 0 38px #d4af37; }
+    }
+    @-webkit-keyframes neural-rotate {
+        from { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+        to { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+    }
+    @keyframes neural-rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    /* thinking */
+    .brain-thinking {
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        gap: 10px; padding: 4px 2px;
+    }
+    .thinking-dots {
+        font-size: 13px; color: rgba(212,175,55,0.9); font-weight: 600;
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        gap: 3px;
+    }
+    .thinking-dots span {
+        -webkit-animation: dot-bounce 1.2s ease-in-out infinite;
+        animation: dot-bounce 1.2s ease-in-out infinite;
+        display: inline-block; font-size: 18px; line-height: 1; color: #d4af37;
+    }
+    .thinking-dots span:nth-child(2) { -webkit-animation-delay: 0.2s; animation-delay: 0.2s; }
+    .thinking-dots span:nth-child(3) { -webkit-animation-delay: 0.4s; animation-delay: 0.4s; }
+    @-webkit-keyframes dot-bounce {
+        0%,80%,100% { -webkit-transform: translateY(0); transform: translateY(0); opacity: 0.4; }
+        40% { -webkit-transform: translateY(-5px); transform: translateY(-5px); opacity: 1; }
+    }
+    @keyframes dot-bounce {
+        0%,80%,100% { transform: translateY(0); opacity: 0.4; }
+        40% { transform: translateY(-5px); opacity: 1; }
+    }
+    .cursor-blink {
+        display: inline-block; width: 2px; height: 1em;
+        background: rgba(255,255,255,0.75); margin-right: 1px;
+        vertical-align: text-bottom;
+        -webkit-animation: cursor-flash 0.55s step-end infinite;
+        animation: cursor-flash 0.55s step-end infinite;
+    }
+    @-webkit-keyframes cursor-flash { 0%,100%{opacity:1;} 50%{opacity:0;} }
+    @keyframes cursor-flash { 0%,100%{opacity:1;} 50%{opacity:0;} }
+
+    /* سرویس‌ها */
+    .services-grid {
+        display: -webkit-flex; display: flex;
+        -webkit-flex-wrap: wrap; flex-wrap: wrap;
+        gap: 16px; width: 100%; max-width: 360px;
+    }
+    .services-grid a {
+        text-decoration: none; color: white;
+        width: calc(50% - 8px);
+        display: block;
+    }
+    .service-box {
+        background: rgba(255,255,255,0.11);
+        -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+        border-radius: 24px; padding: 15px 10px 12px; text-align: center;
+        cursor: pointer; height: 230px;
+        display: -webkit-flex; display: flex;
+        -webkit-flex-direction: column; flex-direction: column;
+        -webkit-align-items: center; align-items: center;
+        -webkit-justify-content: center; justify-content: center;
+        gap: 10px;
+        -webkit-transition: -webkit-transform 0.3s ease; transition: transform 0.3s ease;
+        border: 1px solid rgba(212,175,55,0.55);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 25px rgba(212,175,55,0.25);
+        width: 100%;
+    }
+    .service-box:active { -webkit-transform: scale(0.97); transform: scale(0.97); }
+    .service-box img {
+        width: 145px; height: 145px; object-fit: cover;
+        border-radius: 18px; border: 2px solid rgba(255,255,255,0.3);
+    }
+    .service-box span {
+        font-size: 17.5px; font-weight: 800; color: white;
+        text-shadow: 0 0 10px rgba(212,175,55,0.35);
+    }
+    
+    /* باکس کد نویسی ذهنی */
+    .mindcode-box {
+        background: #000 !important;
+        border: 1px solid rgba(0,255,65,0.45) !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 20px rgba(0,255,65,0.15) !important;
         position: relative;
         overflow: hidden;
     }
-    .dcard::before {
+    .mindcode-box::before {
         content: '';
-        position: absolute; top: 0; left: 0; right: 0; height: 1px;
+        position: absolute; top:0;left:0;right:0;bottom:0;
+        background-image: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 3px,
+            rgba(0,255,65,0.02) 3px,
+            rgba(0,255,65,0.02) 4px
+        );
+        pointer-events: none;
+        border-radius: 24px;
+        z-index: 0;
+    }
+    .mc-terminal {
+        width: 115px;
+        height: 92px;
+        background: #000;
+        border: 1px solid rgba(0,255,65,0.5);
+        border-radius: 8px;
+        padding: 7px 9px;
+        font-family: 'Share Tech Mono', 'Courier New', monospace;
+        font-size: 9.5px;
+        color: #00ff41;
+        overflow: hidden;
+        line-height: 1.6;
+        text-align: left;
+        direction: ltr;
+        box-shadow: 0 0 15px rgba(0,255,65,0.2);
+        position: relative;
+        z-index: 1;
+    }
+    .mc-prompt {
+        color: rgba(0,255,65,0.45);
+        margin-bottom: 3px;
+        font-size: 8.5px;
+    }
+    .mc-code {
+        -webkit-animation: matrix-scroll 3s linear infinite;
+        animation: matrix-scroll 3s linear infinite;
+    }
+    @-webkit-keyframes matrix-scroll {
+        0%   { -webkit-transform: translateY(0); transform: translateY(0); }
+        100% { -webkit-transform: translateY(-58px); transform: translateY(-58px); }
+    }
+    @keyframes matrix-scroll {
+        0%   { transform: translateY(0); }
+        100% { transform: translateY(-58px); }
+    }
+    .mc-title {
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 16px;
+        font-weight: 900;
+        color: #00ff41;
+        text-shadow: 0 0 10px #00ff41, 0 0 22px rgba(0,255,65,0.4);
+        position: relative; z-index: 1;
+    }
+    .mc-sub {
+        font-family: 'Share Tech Mono', 'Courier New', monospace;
+        font-size: 8.5px;
+        color: rgba(0,255,65,0.4);
+        letter-spacing: 2px;
+        position: relative; z-index: 1;
+    }
+
+    /* منو */
+    #menu-overlay {
+        position: fixed; top:0;left:0;right:0;bottom:0;
+        background: rgba(0,0,0,0.55);
+        z-index: 150; opacity: 0; pointer-events: none;
+        -webkit-transition: opacity 0.5s ease; transition: opacity 0.5s ease;
+    }
+    #menu-overlay.active { opacity: 1; pointer-events: auto; }
+    .side-menu {
+        position: fixed; top: 0; right: 0; width: 255px; height: 100vh;
+        background: rgba(255,255,255,0.085);
+        -webkit-backdrop-filter: blur(26px); backdrop-filter: blur(26px);
+        border-left: 1px solid rgba(212,175,55,0.3);
+        box-shadow: -12px 0 40px rgba(0,0,0,0.7);
+        z-index: 200;
+        -webkit-transform: translateX(100%); transform: translateX(100%);
+        -webkit-transition: -webkit-transform 0.55s ease; transition: transform 0.55s ease;
+        padding: 22px 16px 28px;
+        display: -webkit-flex; display: flex;
+        -webkit-flex-direction: column; flex-direction: column;
+        overflow-y: auto;
+    }
+    .side-menu.open { -webkit-transform: translateX(0); transform: translateX(0); }
+    .menu-header {
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        -webkit-justify-content: space-between; justify-content: space-between;
+        margin-bottom: 24px; padding-bottom: 15px;
+        border-bottom: 1px solid rgba(212,175,55,0.22);
+    }
+    .menu-header h2 {
+        font-size: 22px; font-weight: 900; color: #d4af37;
+        font-family: 'Cinzel', serif;
+        text-shadow: 0 0 12px rgba(212,175,55,0.5);
+    }
+    .close-btn {
+        width: 38px; height: 38px;
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        -webkit-justify-content: center; justify-content: center;
+        font-size: 24px; color: #d4af37; cursor: pointer;
+        border-radius: 50%;
+    }
+    .menu-items { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; gap: 9px; }
+    .menu-item {
+        background: rgba(255,255,255,0.06); border: 1px solid rgba(212,175,55,0.18);
+        border-radius: 15px; padding: 14px 18px;
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        text-decoration: none; color: white;
+        font-size: 15.8px; font-weight: 700;
+    }
+    .menu-item .text { -webkit-flex: 1; flex: 1; line-height: 1.35; }
+
+    /* ===== VPN WARNING MODAL ===== */
+    #vpn-overlay {
+        position: fixed; top:0;left:0;right:0;bottom:0;
+        background: rgba(0,0,0,0.65);
+        -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+        z-index: 9999;
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        -webkit-justify-content: center; justify-content: center;
+        opacity: 0; pointer-events: none;
+        -webkit-transition: opacity 0.4s ease; transition: opacity 0.4s ease;
+    }
+    #vpn-overlay.visible {
+        opacity: 1; pointer-events: auto;
+    }
+    .vpn-modal {
+        position: relative;
+        width: calc(100% - 48px);
+        max-width: 340px;
+        background: rgba(255,255,255,0.10);
+        -webkit-backdrop-filter: blur(28px); backdrop-filter: blur(28px);
+        border-radius: 28px;
+        border: 1px solid rgba(255,180,0,0.45);
+        box-shadow:
+            0 0 0 1px rgba(255,255,255,0.06),
+            0 20px 60px rgba(0,0,0,0.7),
+            0 0 40px rgba(255,160,0,0.18),
+            inset 0 1px 0 rgba(255,255,255,0.12);
+        padding: 32px 24px 24px;
+        text-align: center;
+        -webkit-transform: scale(0.88) translateY(16px);
+        transform: scale(0.88) translateY(16px);
+        -webkit-transition: -webkit-transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease;
+        transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease;
+        opacity: 0;
+    }
+    #vpn-overlay.visible .vpn-modal {
+        -webkit-transform: scale(1) translateY(0);
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+    /* glow ring decoration */
+    .vpn-modal::before {
+        content: '';
+        position: absolute; top: -1px; left: -1px; right: -1px; bottom: -1px;
+        border-radius: 29px;
+        background: linear-gradient(135deg, rgba(255,200,50,0.22), transparent 60%, rgba(255,120,0,0.12));
+        pointer-events: none;
+        z-index: 0;
+    }
+    .vpn-icon {
+        font-size: 46px; margin-bottom: 14px;
+        display: block;
+        -webkit-animation: vpn-icon-pulse 2.4s ease-in-out infinite;
+        animation: vpn-icon-pulse 2.4s ease-in-out infinite;
+        position: relative; z-index: 1;
+        filter: drop-shadow(0 0 12px rgba(255,180,0,0.6));
+    }
+    @-webkit-keyframes vpn-icon-pulse {
+        0%,100% { -webkit-transform: scale(1); transform: scale(1); }
+        50% { -webkit-transform: scale(1.12); transform: scale(1.12); }
+    }
+    @keyframes vpn-icon-pulse {
+        0%,100% { transform: scale(1); }
+        50% { transform: scale(1.12); }
+    }
+    .vpn-title {
+        font-size: 19px; font-weight: 900;
+        color: #ffd060;
+        text-shadow: 0 0 18px rgba(255,200,50,0.55);
+        margin-bottom: 12px;
+        position: relative; z-index: 1;
+        line-height: 1.45;
+    }
+    .vpn-body {
+        font-size: 14px; font-weight: 500;
+        color: rgba(255,255,255,0.85);
+        line-height: 1.85;
+        margin-bottom: 24px;
+        position: relative; z-index: 1;
+    }
+    .vpn-body strong {
+        color: #ffd060;
+        font-weight: 800;
+    }
+    .vpn-confirm-btn {
+        position: relative; z-index: 1;
+        display: inline-block;
+        width: 100%;
+        padding: 14px 20px;
+        background: linear-gradient(135deg, #d4af37, #f5c842, #b8860b);
+        border: none; border-radius: 18px;
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 16px; font-weight: 800;
+        color: #1a0033;
+        cursor: pointer;
+        box-shadow: 0 6px 24px rgba(212,175,55,0.45), 0 2px 8px rgba(0,0,0,0.4);
+        -webkit-transition: -webkit-transform 0.18s ease, box-shadow 0.18s ease;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+        letter-spacing: 0.3px;
+    }
+    .vpn-confirm-btn:active {
+        -webkit-transform: scale(0.96);
+        transform: scale(0.96);
+        box-shadow: 0 3px 12px rgba(212,175,55,0.3);
+    }
+    /* shimmer on button */
+    .vpn-confirm-btn::after {
+        content: '';
+        position: absolute; top:0;left:-60%;
+        width: 50%; height: 100%;
         background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        border-radius: 18px;
+        -webkit-animation: btn-shimmer 2.8s ease-in-out infinite;
+        animation: btn-shimmer 2.8s ease-in-out infinite;
         pointer-events: none;
     }
-    .dcard:hover {
-        transform: translateY(-10px) scale(1.02);
-        box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 40px var(--gold-glow), inset 0 1px 0 rgba(255,255,255,0.18);
+    @-webkit-keyframes btn-shimmer {
+        0% { left: -60%; }
+        60%,100% { left: 110%; }
     }
-    .dcard:hover .play-overlay { opacity: 1; }
-    .dcard:hover .play-btn-lg { transform: translate(-50%,-50%) scale(1); opacity: 1; }
-
-    .dcard-thumb-wrap {
-        position: relative;
-        border-radius: 14px;
-        overflow: hidden;
+    @keyframes btn-shimmer {
+        0% { left: -60%; }
+        60%,100% { left: 110%; }
     }
-    .dcard-thumb {
-        width: 100%;
-        aspect-ratio: 16/9;
-        object-fit: cover;
-        display: block;
-        border-radius: 14px;
-    }
-    .play-overlay {
-        position: absolute; inset: 0; border-radius: 14px;
-        background: rgba(0,0,0,0.3);
-        opacity: 0; transition: opacity 0.25s;
-    }
-    .play-btn-lg {
-        position: absolute; top: 50%; left: 50%;
-        transform: translate(-50%,-50%) scale(0.75);
-        opacity: 0;
-        width: 52px; height: 52px; border-radius: 50%;
-        background: rgba(255,255,255,0.16);
-        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        border: 1.5px solid rgba(255,255,255,0.4);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.35), 0 0 0 8px rgba(255,255,255,0.05);
-        display: flex; align-items: center; justify-content: center;
-        transition: transform 0.32s cubic-bezier(0.34,1.56,0.64,1), opacity 0.28s ease;
-        z-index: 5;
-    }
-    .play-btn-lg::before {
-        content: '';
-        position: absolute; inset: 0; border-radius: 50%;
-        background: radial-gradient(circle at 35% 28%, rgba(255,255,255,0.3) 0%, transparent 65%);
-    }
-    .play-tri-lg {
-        width: 0; height: 0;
-        border-top: 10px solid transparent;
-        border-bottom: 10px solid transparent;
-        border-left: 18px solid rgba(255,255,255,0.95);
-        margin-left: 4px; position: relative; z-index: 1;
-        filter: drop-shadow(0 0 6px rgba(255,255,255,0.5));
-    }
-
-    .dcard-info { padding: 10px 4px 2px; }
-    .dcard-title { font-size: 13.5px; font-weight: 700; margin-bottom: 3px; line-height: 1.3; }
-    .dcard-sub font-size: 11px; color: rgba(255,255,255,0.5); }
-
-    /* ===== SECTION DIVIDER ===== */
-    .section-gap { height: 36px; }
-
-    /* ===== PLANLIFE REELS SECTION ===== */
-    .reel-row-wrap {
-        margin-bottom: 14px;
-        overflow: hidden;
-    }
-    .reel-row {
-        display: flex;
-        gap: 10px;
-        overflow-x: auto;
-        padding: 4px 20px 12px;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
-    }
-    .reel-row::-webkit-scrollbar { display: none; }
-
-    .rcard {
-        flex-shrink: 0;
-        width: var(--reel-w);
-        height: var(--reel-h);
-        border-radius: 16px;
-        overflow: hidden;
-        position: relative;
-        cursor: pointer;
-        border: 1px solid rgba(255,255,255,0.13);
-        box-shadow: 0 6px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12);
-        transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
-        background: #0a0618;
-    }
-    .rcard::before {
-        content: '';
-        position: absolute; top: 0; left: 0; right: 0; height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
-        z-index: 10; pointer-events: none;
-    }
-    .rcard:hover {
-        transform: translateY(-8px) scale(1.03);
-        box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px var(--gold-glow);
-    }
-    .rcard:hover .rplay { opacity: 1; transform: translate(-50%,-50%) scale(1); }
-    .rcard:hover .roverlay { opacity: 1; }
-
-    .rcard-img {
-        width: 100%; height: 100%;
-        object-fit: cover; display: block;
-    }
-    .roverlay {
-        position: absolute; inset: 0;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, transparent 35%, rgba(3,0,18,0.85) 80%);
-        opacity: 0.7;
-        transition: opacity 0.25s;
-    }
-    .rplay {
-        position: absolute; top: 50%; left: 50%;
-        transform: translate(-50%,-50%) scale(0.78);
-        opacity: 0;
-        width: 52px; height: 52px; border-radius: 50%;
-        background: rgba(255,255,255,0.15);
-        backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-        border: 1.5px solid rgba(255,255,255,0.42);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.4), 0 0 0 10px rgba(255,255,255,0.04);
-        display: flex; align-items: center; justify-content: center;
-        transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s;
-        z-index: 10;
-    }
-    .rplay::before {
-        content: '';
-        position: absolute; inset: 0; border-radius: 50%;
-        background: radial-gradient(circle at 35% 28%, rgba(255,255,255,0.3) 0%, transparent 65%);
-    }
-    .rplay-tri {
-        width: 0; height: 0;
-        border-top: 9px solid transparent;
-        border-bottom: 9px solid transparent;
-        border-left: 16px solid rgba(255,255,255,0.95);
-        margin-left: 3px; position: relative; z-index: 1;
-        filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
-    }
-    .rcard-num {
-        position: absolute; top: 9px; right: 9px;
-        background: rgba(0,0,0,0.4);
-        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.18);
-        border-radius: 20px;
-        font-size: 10px; font-weight: 700;
-        color: rgba(255,255,255,0.8);
-        padding: 3px 8px;
-        z-index: 11;
-        letter-spacing: 0.5px;
-    }
-    .rcard-bottom {
-        position: absolute; bottom: 0; left: 0; right: 0;
-        padding: 10px 10px;
-        z-index: 10;
-    }
-    .rcard-title { font-size: 12px; font-weight: 700; line-height: 1.3; margin-bottom: 1px; }
-    .rcard-sub { font-size: 10px; color: rgba(255,255,255,0.5); }
-
-    /* ===== BELIEF / TAQVIYAT SECTION ===== */
-    .belief-row-wrap { margin-bottom: 14px; }
-    .belief-row {
-        display: flex; gap: 10px;
-        overflow-x: auto;
-        padding: 4px 20px 12px;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
-    }
-    .belief-row::-webkit-scrollbar { display: none; }
-
-    .bcard {
-        flex-shrink: 0;
-        width: var(--reel-w);
-        height: var(--reel-h);
-        border-radius: 16px;
-        overflow: hidden;
-        position: relative;
-        cursor: pointer;
-        border: 1px solid rgba(255,255,255,0.13);
-        box-shadow: 0 6px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12);
-        transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
-        background: #06030f;
-    }
-    .bcard::before {
-        content: '';
-        position: absolute; top: 0; left: 0; right: 0; height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(212,175,55,0.35), transparent);
-        z-index: 10; pointer-events: none;
-    }
-    .bcard:hover {
-        transform: translateY(-8px) scale(1.03);
-        box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(212,175,55,0.25);
-    }
-    .bcard:hover .bplay { opacity: 1; transform: translate(-50%,-50%) scale(1); }
-
-    .bcard-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .boverlay {
-        position: absolute; inset: 0;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, transparent 35%, rgba(3,0,18,0.88) 80%);
-    }
-    .bplay {
-        position: absolute; top: 50%; left: 50%;
-        transform: translate(-50%,-50%) scale(0.78);
-        opacity: 0;
-        width: 52px; height: 52px; border-radius: 50%;
-        background: rgba(212,175,55,0.18);
-        backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-        border: 1.5px solid rgba(212,175,55,0.55);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3), 0 0 0 10px rgba(212,175,55,0.06);
-        display: flex; align-items: center; justify-content: center;
-        transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s;
-        z-index: 10;
-    }
-    .bplay::before {
-        content: '';
-        position: absolute; inset: 0; border-radius: 50%;
-        background: radial-gradient(circle at 35% 28%, rgba(255,220,100,0.3) 0%, transparent 65%);
-    }
-    .bplay-tri {
-        width: 0; height: 0;
-        border-top: 9px solid transparent;
-        border-bottom: 9px solid transparent;
-        border-left: 16px solid rgba(255,230,120,0.95);
-        margin-left: 3px; position: relative; z-index: 1;
-        filter: drop-shadow(0 0 5px rgba(212,175,55,0.6));
-    }
-    .bcard-num {
-        position: absolute; top: 9px; right: 9px;
-        background: rgba(212,175,55,0.18);
-        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(212,175,55,0.35);
-        border-radius: 20px;
-        font-size: 10px; font-weight: 700;
-        color: var(--gold-light);
-        padding: 3px 8px;
-        z-index: 11;
-        letter-spacing: 0.5px;
-    }
-    .bcard-bottom {
-        position: absolute; bottom: 0; left: 0; right: 0;
-        padding: 10px 10px; z-index: 10;
-    }
-    .bcard-title { font-size: 12px; font-weight: 700; line-height: 1.3; margin-bottom: 1px; }
-    .bcard-sub { font-size: 10px; color: rgba(255,255,255,0.5); }
-
-    /* ===== MODAL ===== */
-    #modal {
-        position: fixed; inset: 0;
-        background: rgba(0,0,8,0.92);
-        backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-        z-index: 999; display: none; align-items: center; justify-content: center; padding: 20px;
-    }
-    .modal-box {
-        width: 100%; max-width: 780px;
-        background: rgba(15,8,40,0.88);
-        border: 1px solid rgba(255,255,255,0.13); border-radius: 24px;
-        overflow: hidden;
-        box-shadow: 0 40px 100px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.13);
-        backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-    }
-    .modal-top {
-        padding: 15px 18px; display: flex; justify-content: space-between; align-items: center;
-        border-bottom: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.03);
-    }
-    .modal-title-text { font-size: 16px; font-weight: 700; }
-    .modal-close {
-        width: 30px; height: 30px; border-radius: 50%;
-        background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18);
-        display: flex; align-items: center; justify-content: center;
-        cursor: pointer; font-size: 15px; color: rgba(255,255,255,0.8); transition: background 0.2s;
-    }
-    .modal-close:hover { background: rgba(255,255,255,0.18); }
-    video { width: 100%; display: block; }
 </style>
 </head>
 <body>
 
-<div class="galaxy">
-    <canvas id="stars"></canvas>
-    <div class="galaxy-arm"></div>
-    <div class="nebula nebula-1"></div>
-    <div class="nebula nebula-2"></div>
-    <div class="nebula nebula-3"></div>
-    <div class="nebula nebula-4"></div>
-</div>
+<div class="stars"></div>
 
-<div class="header">
-    <a class="back-btn" href="https://planlife.ir">
-        <div class="back-arrow">
-            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+<!-- VPN Warning Modal -->
+<div id="vpn-overlay" onclick="handleVpnOverlayClick(event)">
+    <div class="vpn-modal">
+        <span class="vpn-icon">🛡️</span>
+        <div class="vpn-title">فیلترشکن شما فعال است</div>
+        <div class="vpn-body">
+            برای <strong>تجربه بهتر</strong>، سرعت بالاتر پخش و انجام روان‌تر تمرینات،<br>
+            لطفاً <strong>VPN (فیلترشکن)</strong> خود را خاموش کنید و سپس صفحه را رفرش نمایید.
         </div>
-        بازگشت
-    </a>
-    <div class="logo">
-        <div class="logo-icon">✦</div>
-        <div class="logo-text">PlanLife</div>
+        <button class="vpn-confirm-btn" onclick="closeVpnModal()">
+            ✅ &nbsp; بله، متوجه شدم
+        </button>
     </div>
 </div>
 
-<div class="main">
-    <h1 class="page-title">ویدیوهای ماورایی 🎥</h1>
+<header>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+</header>
 
-    <div class="section-label"><span>مستندها</span></div>
-    <div class="docs-scroll" id="docsRow"></div>
+<div class="main-center">
+    <div class="title">PlanLife</div>
 
-    <div class="section-gap"></div>
-
-    <div class="section-label"><span>PlanLife</span> <em>· ۲ ردیف</em></div>
-    <div class="reel-row-wrap">
-        <div class="reel-row" id="reelRow1"></div>
-    </div>
-    <div class="reel-row-wrap">
-        <div class="reel-row" id="reelRow2"></div>
-    </div>
-
-    <div class="section-gap"></div>
-
-    <div class="section-label"><span>باورسازی و تقویت</span> <em>· ۴ ردیف</em></div>
-    <div class="belief-row-wrap"><div class="belief-row" id="beliefRow1"></div></div>
-    <div class="belief-row-wrap"><div class="belief-row" id="beliefRow2"></div></div>
-    <div class="belief-row-wrap"><div class="belief-row" id="beliefRow3"></div></div>
-    <div class="belief-row-wrap"><div class="belief-row" id="beliefRow4"></div></div>
-</div>
-
-<div id="modal">
-    <div class="modal-box">
-        <div class="modal-top">
-            <div class="modal-title-text" id="mTitle"></div>
-            <div class="modal-close" onclick="closeModal()">✕</div>
+    <div class="chat-container">
+        <div id="chat-output"></div>
+        <div class="input-box">
+            <input id="user-input" placeholder="پیام بده..." onkeydown="if(event.key==='Enter') sendMessage()">
+            <button class="send-btn" onclick="sendMessage()">
+                <div class="orb">
+                    <div class="neural-lines">
+                        <div class="line"></div><div class="line"></div>
+                        <div class="line"></div><div class="line"></div>
+                        <div class="line"></div>
+                    </div>
+                    <div class="core"></div>
+                </div>
+            </button>
         </div>
-        <video id="vPlayer" controls autoplay></video>
+    </div>
+
+    <div class="services-grid">
+
+        <a href="https://planlife.ir/Pages/podcasts_free/index.html">
+            <div class="service-box">
+                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="">
+                <span>پادکست رایگان</span>
+            </div>
+        </a>
+
+        <a href="https://planlife.ir/Pages/Doreha/index.html">
+            <div class="service-box">
+                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="">
+                <span>دوره ها</span>
+            </div>
+        </a>
+
+        <a href="https://planlife.ir/Pages/Magazine/index.html">
+            <div class="service-box">
+                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="">
+                <span>مجله ماورایی 📰</span>
+            </div>
+        </a>
+
+        <a href="https://planlife.ir/Pages/Mindcoding/index.html">
+            <div class="service-box mindcode-box">
+                <div class="mc-terminal">
+                    <div class="mc-prompt">root@mind:~$</div>
+                    <div class="mc-code">
+                        if(belief){<br>
+                        &nbsp;rewrite();<br>
+                        }<br>
+                        RAS.update();<br>
+                        grow(life);<br>
+                        mind++;<br>
+                        if(belief){<br>
+                        &nbsp;rewrite();<br>
+                    </div>
+                </div>
+                <span class="mc-title">کد نویسی ذهنی</span>
+                <span class="mc-sub"></span>
+            </div>
+        </a>
+
+        <a href="https://planlife.ir/Pages/Tamrin/index.html">
+            <div class="service-box">
+                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="">
+                <span>تمرینات مجازی</span>
+            </div>
+        </a>
+
+        <a href="https://planlife.ir/Pages/visionboard/index.html">
+            <div class="service-box">
+                <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg" alt="تابلو آرزوها">
+                <span>تابلو آرزوها 🔖</span>
+            </div>
+        </a>
+
+        <a href="https://planlife.ir/Pages/Book/index.html">
+            <div class="service-box">
+                <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه">
+                <span>کتابخانه 📚</span>
+            </div>
+        </a>
+
+        <a href="https://planlife.ir/Pages/komakavaliye/index.html">
+            <div class="service-box">
+                <img src="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg" alt="">
+                <span>جعبه کمک های اولیه</span>
+            </div>
+        </a>
+
+        <a href="https://planlife.ir/Pages/ranj-lezat/index.html">
+            <div class="service-box">
+                <img src="http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2276.jpeg" alt="ترک عادت">
+                <span>ترک عادت</span>
+            </div>
+        </a>
+
+        <a href="https://planlife.ir/Pages/naghsherah/index.html">
+            <div class="service-box">
+                <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781599306/IMG_1979_xcccao.jpg" alt="">
+                <span>نقشه راه</span>
+            </div>
+        </a>
+
+        <a href="https://planlife.ir/Pages/Music/index.html">
+            <div class="service-box">
+                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="">
+                <span>موزیک ها</span>
+            </div>
+        </a>
+
+        <a href="https://planlife.ir/Pages/Videos/index.html">
+            <div class="service-box">
+                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779985702/IMG_1211_snjqjm.jpg" alt="">
+                <span>ویدیوها 🎥</span>
+            </div>
+        </a>
+
+        <a href="https://planlife.ir/Pages/tamrintakhasosi/index.html">
+            <div class="service-box">
+                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780955091/IMG_1737_ei1f5w.png" alt="">
+                <span>تمرینات تخصصی</span>
+            </div>
+        </a>
+
+        <a href="https://planlife.ir/Pages/cheklist/index.html">
+            <div class="service-box">
+                <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg" alt="">
+                <span>چک لیست روزانه📜</span>
+            </div>
+        </a>
+
+    </div>
+</div>
+
+<div id="menu-overlay" onclick="closeMenu()"></div>
+<div id="side-menu" class="side-menu">
+    <div class="menu-header">
+        <h2>PlanLife</h2>
+        <div class="close-btn" onclick="closeMenu()">✕</div>
+    </div>
+    <div class="menu-items">
+        <a href="https://planlife.ir" class="menu-item" onclick="closeMenu()">
+            <span class="text">خانه</span>
+        </a>
+        <a href="https://planlife.ir/Pages/podcasts_free/index.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">پادکست‌های رایگان</span>
+        </a>
+        <a href="https://planlife.ir/Pages/Doreha/index.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">دوره‌ها</span>
+        </a>
+        <a href="https://planlife.ir/Pages/Magazine/index.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">مجله ماورایی 📰</span>
+        </a>
+        <a href="https://planlife.ir/Pages/Mindcoding/index.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">کد نویسی ذهنی</span>
+        </a>
+        <a href="https://planlife.ir/Pages/Tamrin/index.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">تمرینات مجازی</span>
+        </a>
+        <a href="https://planlife.ir/Pages/visionboard/index.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">تابلو آرزوها 🔖</span>
+        </a>
+        <a href="https://planlife.ir/Pages/Book/index.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">کتابخانه 📚</span>
+        </a>
+        <a href="https://planlife.ir/Pages/komakavaliye/index.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">جعبه کمک های اولیه</span>
+        </a>
+        <a href="https://planlife.ir/Pages/ranj-lezat/index.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">ترک عادت</span>
+        </a>
+        <a href="https://planlife.ir/Pages/naghsherah/index.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">نقشه راه</span>
+        </a>
+        <a href="https://planlife.ir/Pages/Music/index.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">موزیک‌ها</span>
+        </a>
+        <a href="https://planlife.ir/Pages/Videos/index.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">ویدیوها 🎥</span>
+        </a>
+        <a href="https://planlife.ir/Pages/tamrintakhasosi/index.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">تمرینات تخصصی</span>
+        </a>
+        <a href="https://planlife.ir/Pages/cheklist/index.html" class="menu-item" onclick="closeMenu()">
+            <span class="text">چک لیست روزانه 📜</span>
+        </a>
     </div>
 </div>
 
 <script>
-/* ===== STARS ===== */
-(function() {
-    const canvas = document.getElementById('stars');
-    const ctx = canvas.getContext('2d');
-    let stars = [];
-    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    function createStars() {
-        stars = [];
-        const count = Math.floor((canvas.width * canvas.height) / 3000);
-        for (let i = 0; i < count; i++) {
-            stars.push({
-                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-                r: Math.random() * 1.4 + 0.2, alpha: Math.random() * 0.7 + 0.2,
-                speed: Math.random() * 0.008 + 0.002, offset: Math.random() * Math.PI * 2,
-                color: Math.random() > 0.85 ? 'gold' : (Math.random() > 0.7 ? 'purple' : 'white')
-            });
+/* ===== VPN DETECTION ===== */
+var VPN_STORAGE_KEY = 'planlife_vpn_warned';
+
+function getTodayDateStr() {
+    var d = new Date();
+    return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+}
+
+function alreadyWarnedToday() {
+    try {
+        var stored = localStorage.getItem(VPN_STORAGE_KEY);
+        if (!stored) return false;
+        return stored === getTodayDateStr();
+    } catch(e) { return false; }
+}
+
+function markWarnedToday() {
+    try { localStorage.setItem(VPN_STORAGE_KEY, getTodayDateStr()); } catch(e) {}
+}
+
+function showVpnModal() {
+    var overlay = document.getElementById('vpn-overlay');
+    overlay.classList.add('visible');
+}
+
+function closeVpnModal() {
+    var overlay = document.getElementById('vpn-overlay');
+    overlay.classList.remove('visible');
+    markWarnedToday();
+}
+
+function handleVpnOverlayClick(e) {
+    // فقط کلیک روی خود overlay (نه modal) باکس رو ببنده
+    if (e.target === document.getElementById('vpn-overlay')) {
+        closeVpnModal();
+    }
+}
+
+/**
+ * تشخیص VPN:
+ * روش ترکیبی — اگر هر کدام از موارد زیر true بود، احتمال VPN وجود دارد:
+ * 1. زمان‌بندی WebRTC — کندی در دریافت candidate نشانه tunnel است
+ * 2. timezone mismatch — اگر timezone مرورگر با IP جور نیست
+ * 3. تعداد RTCIceCandidateها — VPN معمولاً candidateهای کمتری دارد
+ */
+function detectVpn(callback) {
+    var suspicionScore = 0;
+    var checks = 0;
+    var totalChecks = 2;
+
+    function maybeFinish() {
+        checks++;
+        if (checks >= totalChecks) {
+            // اگر امتیاز ۱ یا بیشتر بود → نشان بده
+            callback(suspicionScore >= 1);
         }
     }
-    let t = 0;
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        t += 0.012;
-        stars.forEach(s => {
-            const a = s.alpha * (0.6 + 0.4 * Math.sin(t * s.speed * 60 + s.offset));
-            const colors = { gold: `rgba(255,208,128,${a})`, purple: `rgba(192,176,255,${a})`, white: `rgba(255,255,255,${a})` };
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-            ctx.fillStyle = colors[s.color];
-            ctx.fill();
-        });
-        requestAnimationFrame(draw);
-    }
-    resize(); createStars(); draw();
-    window.addEventListener('resize', () => { resize(); createStars(); });
-})();
 
-/* ===== DATA ===== */
+    // --- CHECK 1: WebRTC Ice Candidate timing ---
+    try {
+        var RTCPeerConnection = window.RTCPeerConnection ||
+                                window.webkitRTCPeerConnection ||
+                                window.mozRTCPeerConnection;
+        if (RTCPeerConnection) {
+            var pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+            var candidateCount = 0;
+            var startTime = Date.now();
+            var timeout = setTimeout(function() {
+                // اگر بعد از ۳ ثانیه هیچ candidate نیامد یا خیلی کم بود
+                if (candidateCount === 0) {
+                    suspicionScore += 2; // خیلی مشکوک
+                } else if (candidateCount < 2) {
+                    suspicionScore += 1;
+                }
+                try { pc.close(); } catch(e) {}
+                maybeFinish();
+            }, 3000);
 
-// ---- DOCS ----
-const docsData = [
-    { id:1, title:"نیکولا تسلا", sub:"ماورایی", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779986672/IMG_1221_jqjhpq.jpg", src:"https://persian1.cdn.asset.aparat.com/aparat-video/c68fc7d5a81c80e58251480982b2093347709199-720p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjA2NzhiYmExNjY4MTk2YjU0MDNkNzA1ODc5NjhjMDA2IiwiZXhwIjoxNzgwMDUyNjI1LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.WEP2EFns_jZ9RHgR-aO_PuBVStaNA7CUFosfGhvOmRs" },
-    { id:2, title:"استرهیکس سمینار", sub:"ماورایی", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779987179/IMG_1222_adwrqu.jpg", src:"https://hw17.cdn.asset.aparat.com/aparat-video/47af1a7ef3892943248663f1a334dd9c21946381-360p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImEzN2FhNTA2NjAzZDlmMjg5MWI4NWY3MTQwYzRjZDFmIiwiZXhwIjoxNzgwMDA0OTQ4LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.ZJyGHnfwoZoOPPkGN8zFHlnXZrdR5GqcysPVfzfChog" },
-    { id:3, title:"از غم به شادی", sub:"استرهیکس", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779987770/IMG_1223_rbor7c.jpg", src:"https://aspb26.cdn.asset.aparat.com/aparat-video/130cd5a8ef41176dbea488e96984ef1e16918897-360p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6Ijg3MTNlMTJmNjJkNzdmODZhMzI1MzE1YmE2NzEyOWQ5IiwiZXhwIjoxNzgwMDUyMzIyLCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.I9TnnkqfV-uYaQBtCUpqlupqyERm-LAmT5Ing5b7V5Q" },
-    { id:4, title:"فیلم زندگی وارن بافت", sub:"سرگذشت", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779994484/IMG_1228_altecx.jpg", src:"https://dl.farachart.com/mostanad/Warren_Buffett.mp4" },
-    { id:5, title:"راز ابر موفق‌ها", sub:"دارن هاردی", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779995682/IMG_1229_d6nbjf.jpg", src:"https://persian19.asset.aparat.com/aparat-video/aa41f62267d2d700395fdd0440f7799b62047924-360p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImRiZDNhYjhmNTM3ZTIwZDQ4MzZlZmM2NTNiZjRiOGZhIiwiZXhwIjoxNzgwMDEzNTU5LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.wL9WZKzilO8Oyv2L9i3QuZCuLcExqc4B6_Ey-SxkQpI" },
-    { id:6, title:"احساس لیاقت", sub:"شایسته بهترین‌ها", cover:"https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779657211/IMG_1151_zqcux9.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" }
-];
-
-// ---- PLANLIFE REELS ----
-const reelRow1Data = [
-    { id: 'r1-1', num: '۱', title: "پیدایش هوش", sub: "ماورایی", cover: "https://res.cloudinary.com/dfthbclzi/image/upload/v1780867337/IMG_1702_h6oq8f.jpg", src: "https://docs.google.com/uc?api=1&confirm=no_antivirus&id=1-jjlPSSXazr5owetkEjuu_gQO3zTKB8w" },
-    { id:'r1-2', num:'۲', title:"فیزیک کوانتوم", sub:"planlife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867335/IMG_1699_gxdcc4.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" },
-    { id:'r1-3', num:'۳', title:"ایلان ماسک", sub:"ماورایی", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867332/IMG_1692_yjy5qg.jpg", src:"https://t.tarahipro.ir/1405/02/22/Inside.the.Rage.Machine.2026.1080p.WEB-DL.SoftSub.mkv" },
-    { id:'r1-4', num:'۴', title:"قانون پنهان شده", sub:"ماورایی", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867331/IMG_1689_eqanx8.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Tears_of_Steel.mp4" },
-    { id:'r1-5', num:'۵', title:"قدرت انتخاب", sub:"تحول ذهن", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867330/IMG_1688_losrg8.jpg", src:"https://dl.farachart.com/mostanad/The_Wall_Street_Code.mp4" }
-];
-
-const reelRow2Data = [
-    { id:'r2-1', num:'۱', title:"ذهن انعطاف پذیر", sub:"planlife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867327/IMG_1682_rsyhm8.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4" },
-    { id:'r2-2', num:'۲', title:"باور شما = واقعیت شما", sub:"planlife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867329/IMG_1686_ppfmsu.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" },
-    { id:'r2-3', num:'۳', title:"باور", sub:"planlife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867330/IMG_1685_telr12.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4" },
-    { id:'r2-4', num:'۴', title:"فکر کنید و ثروتمند شوید", sub:"planlife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867330/IMG_1684_ikm6wu.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" },
-    { id:'r2-5', num:'۵', title:"فقط نتیجه", sub:"planlife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867326/IMG_1677_xjelbm.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4" }
-];
-
-// ---- BELIEF ROWS ----
-const beliefRowsData = [
-    [
-        { id:'b1-1', num:'۱', title:"nikola Tesla", sub:"planLife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867333/IMG_1691_fau3io.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" },
-        { id:'b1-2', num:'۲', title:"آلبرت انیشتین", sub:"planlife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867333/IMG_1693_xgwjoa.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" },
-        { id:'b1-3', num:'۳', title:"ادیسون", sub:"planlife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867332/IMG_1690_eqmtot.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" },
-        { id:'b1-4', num:'۴', title:"بروس لی", sub:"planLife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867334/IMG_1695_iblwht.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" },
-        { id:'b1-5', num:'۵', title:"نیوتون", sub:"planLife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867335/IMG_1697_qrdj4t.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" },
-        { id:'b1-6', num:'۶', title:"ننسون ماندلا", sub:"planLife", cover:"https://res.cloudinary.com/dfthbclzi/image/upload/v1780867335/IMG_1698_ajszr4.jpg", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample//BigBuckBunny.mp4" }
-    ],
-    [
-        { id:'b2-1', num:'۱', title:"قدرت کلمات", sub:"باورسازی", cover:"https://picsum.photos/seed/b21/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4" },
-        { id:'b2-2', num:'۲', title:"جذب عشق", sub:"تقویت", cover:"https://picsum.photos/seed/b22/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Tears_of_Steel.mp4" },
-        { id:'b2-3', num:'۳', title:"اعتماد عمیق", sub:"به خود باور داشته باش", cover:"https://picsum.photos/seed/b23/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" },
-        { id:'b2-4', num:'۴', title:"انرژی درمان", sub:"باورسازی", cover:"https://picsum.photos/seed/b24/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" }
-    ],
-    [
-        { id:'b3-1', num:'۱', title:"نیرو درون", sub:"کشف قدرت", cover:"https://picsum.photos/seed/b31/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4" },
-        { id:'b3-2', num:'۲', title:"تحول باور", sub:"تقویت ذهن", cover:"https://picsum.photos/seed/b32/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4" },
-        { id:'b3-3', num:'۳', title:"جادوی شادی", sub:"باورسازی", cover:"https://picsum.photos/seed/b33/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" },
-        { id:'b3-4', num:'۴', title:"ذهن موفق", sub:"برنامه ریزی", cover:"https://picsum.photos/seed/b34/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4" }
-    ],
-    [
-        { id:'b4-1', num:'۱', title:"باور بی‌نهایت", sub:"تقویت", cover:"https://picsum.photos/seed/b41/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" },
-        { id:'b4-2', num:'۲', title:"قانون جذب", sub:"باورسازی عمیق", cover:"https://picsum.photos/seed/b42/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" },
-        { id:'b4-3', num:'۳', title:"شفای درون", sub:"تقویت", cover:"https://picsum.photos/seed/b43/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" },
-        { id:'b4-4', num:'۴', title:"راه تحول", sub:"باورسازی", cover:"https://picsum.photos/seed/b44/300/533", src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" }
-    ]
-];
-
-/* ===== PLAY & DOWNLOAD MANAGER ===== */
-function play(src, title) {
-    // هوشمندسازی برای فرمت MKV و تداخل امنیتی مرورگر
-    if (src.toLowerCase().endsWith('.mkv')) {
-        const downloadLink = document.createElement('a');
-        downloadLink.href = src;
-        downloadLink.target = '_blank';
-        downloadLink.download = title || 'video';
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        return;
+            pc.onicecandidate = function(e) {
+                if (e.candidate) {
+                    candidateCount++;
+                    var elapsed = Date.now() - startTime;
+                    // VPN معمولاً candidateها را با تاخیر بالا برمی‌گرداند
+                    if (elapsed > 2000 && candidateCount < 2) {
+                        suspicionScore += 1;
+                    }
+                } else {
+                    // ICE gathering تموم شد
+                    clearTimeout(timeout);
+                    if (candidateCount === 0) suspicionScore += 2;
+                    else if (candidateCount < 2) suspicionScore += 1;
+                    try { pc.close(); } catch(e) {}
+                    maybeFinish();
+                }
+            };
+            pc.createDataChannel('');
+            pc.createOffer().then(function(offer) {
+                return pc.setLocalDescription(offer);
+            }).catch(function() {
+                clearTimeout(timeout);
+                suspicionScore += 1; // خطا در WebRTC هم مشکوکه
+                maybeFinish();
+            });
+        } else {
+            // WebRTC پشتیبانی نمیشه — احتمالاً مرورگر قدیمی یا VPN با disable WebRTC
+            suspicionScore += 1;
+            maybeFinish();
+        }
+    } catch(e) {
+        suspicionScore += 1;
+        maybeFinish();
     }
 
-    // باز کردن ویدیوهای استاندارد وب به صورت پخش آنلاین
-    document.getElementById('mTitle').textContent = title;
-    document.getElementById('vPlayer').src = src;
-    document.getElementById('modal').style.display = 'flex';
-    document.getElementById('vPlayer').play();
+    // --- CHECK 2: Connection type hint ---
+    try {
+        var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        if (conn) {
+            // اگر نوع اتصال VPN-like باشه (مثلاً other یا none)
+            var t = (conn.type || '').toLowerCase();
+            if (t === 'other' || t === 'none' || t === 'unknown') {
+                suspicionScore += 1;
+            }
+        }
+        // این check سریعه، فوری finish
+        maybeFinish();
+    } catch(e) {
+        maybeFinish();
+    }
 }
 
-function closeModal() {
-    const p = document.getElementById('vPlayer');
-    p.pause(); p.src = '';
-    document.getElementById('modal').style.display = 'none';
-}
-document.getElementById('modal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
-});
-
-/* ===== RENDER DOCS ===== */
-function renderDocs() {
-    const row = document.getElementById('docsRow');
-    docsData.forEach(v => {
-        const d = document.createElement('div');
-        d.className = 'dcard';
-        d.innerHTML = `
-            <div class="dcard-thumb-wrap">
-                <img src="${v.cover}" class="dcard-thumb" alt="${v.title}" loading="lazy">
-                <div class="play-overlay"></div>
-                <div class="play-btn-lg"><div class="play-tri-lg"></div></div>
-            </div>
-            <div class="dcard-info">
-                <div class="dcard-title">${v.title}</div>
-                <div class="dcard-sub">${v.sub}</div>
-            </div>`;
-        d.onclick = () => play(v.src, v.title);
-        row.appendChild(d);
-    });
-}
-
-/* ===== RENDER REELS ===== */
-function renderReels() {
-    const r1 = document.getElementById('reelRow1');
-    const r2 = document.getElementById('reelRow2');
-    reelRow1Data.forEach(v => {
-        const d = document.createElement('div');
-        d.className = 'rcard';
-        d.innerHTML = `
-            <img src="${v.cover}" class="rcard-img" alt="${v.title}" loading="lazy">
-            <div class="roverlay"></div>
-            <div class="rplay"><div class="rplay-tri"></div></div>
-            <div class="rcard-num">#${v.num}</div>
-            <div class="rcard-bottom">
-                <div class="rcard-title">${v.title}</div>
-                <div class="rcard-sub">${v.sub}</div>
-            </div>`;
-        d.onclick = () => play(v.src, v.title);
-        r1.appendChild(d);
-    });
-    reelRow2Data.forEach(v => {
-        const d = document.createElement('div');
-        d.className = 'rcard';
-        d.innerHTML = `
-            <img src="${v.cover}" class="rcard-img" alt="${v.title}" loading="lazy">
-            <div class="roverlay"></div>
-            <div class="rplay"><div class="rplay-tri"></div></div>
-            <div class="rcard-num">#${v.num}</div>
-            <div class="rcard-bottom">
-                <div class="rcard-title">${v.title}</div>
-                <div class="rcard-sub">${v.sub}</div>
-            </div>`;
-        d.onclick = () => play(v.src, v.title);
-        r2.appendChild(d);
-    });
-}
-
-/* ===== RENDER BELIEF ROWS ===== */
-function renderBelief() {
-    beliefRowsData.forEach((rowData, ri) => {
-        const row = document.getElementById(`beliefRow${ri+1}`);
-        rowData.forEach(v => {
-            const d = document.createElement('div');
-            d.className = 'bcard';
-            d.innerHTML = `
-                <img src="${v.cover}" class="bcard-img" alt="${v.title}" loading="lazy">
-                <div class="boverlay"></div>
-                <div class="bplay"><div class="bplay-tri"></div></div>
-                <div class="bcard-num">#${v.num}</div>
-                <div class="bcard-bottom">
-                    <div class="bcard-title">${v.title}</div>
-                    <div class="bcard-sub">${v.sub}</div>
-                </div>`;
-            d.onclick = () => play(v.src, v.title);
-            row.appendChild(d);
+function initVpnCheck() {
+    if (alreadyWarnedToday()) return; // امروز قبلاً نشون داده شده
+    // کمی صبر کن تا صفحه لود بشه
+    setTimeout(function() {
+        detectVpn(function(isVpn) {
+            if (isVpn) {
+                showVpnModal();
+            }
         });
-    });
+    }, 1800);
 }
 
-/* ===== INIT ===== */
-renderDocs();
-renderReels();
-renderBelief();
+/* ===== QA CHATBOT ===== */
+var QA_URL = "https://raw.githubusercontent.com/soheil001/planlife1/main/qa.json";
+var qaData = null;
+
+function loadQA() {
+    return fetch(QA_URL + "?t=" + Date.now())
+        .then(function(res){ return res.json(); })
+        .then(function(data){ qaData = data; })
+        .catch(function(e){ console.log("خطا:", e); });
+}
+
+function normalize(text) {
+    return text.toLowerCase()
+        .replace(/ي/g,'ی').replace(/ك/g,'ک')
+        .replace(/‌/g,' ').replace(/[،؟!٪]/g,' ').trim();
+}
+function scoreEntry(entry, userWords, userText) {
+    var score = 0;
+    var expandedWords = userWords.slice();
+    if (qaData && qaData.synonyms) {
+        var keys = Object.keys(qaData.synonyms);
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            var synonyms = qaData.synonyms[key];
+            var allForms = [key].concat(synonyms).map(normalize);
+            if (userWords.some(function(w){ return allForms.indexOf(w) >= 0; })) {
+                expandedWords = expandedWords.concat(allForms);
+            }
+        }
+    }
+    for (var j = 0; j < entry.questions.length; j++) {
+        var normQ = normalize(entry.questions[j]);
+        if (normQ === normalize(userText)) return 1000;
+        if (normalize(userText).indexOf(normQ) >= 0 || normQ.indexOf(normalize(userText)) >= 0) score += 80;
+    }
+    var allQWords = entry.questions.map(function(q){ return normalize(q); }).join(' ').split(/\s+/);
+    var tagWords = entry.tags ? entry.tags.map(function(t){ return normalize(t); }) : [];
+    for (var k = 0; k < expandedWords.length; k++) {
+        var word = expandedWords[k];
+        if (word.length < 2) continue;
+        if (allQWords.some(function(w){ return w.indexOf(word) >= 0 || word.indexOf(w) >= 0; })) score += 15;
+        if (tagWords.some(function(t){ return t.indexOf(word) >= 0 || word.indexOf(t) >= 0; })) score += 20;
+    }
+    return score;
+}
+
+function findAnswer(userText) {
+    if (!qaData || !qaData.qa) return null;
+    var norm = normalize(userText);
+    var words = norm.split(/\s+/).filter(function(w){ return w.length > 1; });
+    var bestScore = 0, bestAnswer = null;
+    for (var i = 0; i < qaData.qa.length; i++) {
+        var score = scoreEntry(qaData.qa[i], words, userText);
+        if (score > bestScore) { bestScore = score; bestAnswer = qaData.qa[i].answer; }
+    }
+    if (bestScore >= 15) return bestAnswer;
+    return qaData.default_response || null;
+}
+
+function addMessage(text, type) {
+    var output = document.getElementById("chat-output");
+    var div = document.createElement("div");
+    div.className = type === 'user' ? 'msg-user' : 'msg-bot';
+    div.innerHTML = text.replace(/\n/g,'<br>');
+    output.appendChild(div);
+    output.scrollTop = output.scrollHeight;
+}
+
+function showThinking() {
+    var output = document.getElementById("chat-output");
+    var div = document.createElement("div");
+    div.className = 'msg-bot';
+    div.id = 'thinking-indicator';
+    div.innerHTML = '<div class="brain-thinking"><div class="thinking-dots">در حال فکر کردن <span>.</span><span>.</span><span>.</span></div></div>';
+    output.appendChild(div);
+    output.scrollTop = output.scrollHeight;
+}
+
+function removeThinking() {
+    var el = document.getElementById('thinking-indicator');
+    if (el) el.remove();
+}
+
+function typewriterMessage(text, onDone) {
+    var output = document.getElementById("chat-output");
+    var div = document.createElement("div");
+    div.className = 'msg-bot';
+    var span = document.createElement("span");
+    var cursor = document.createElement("span");
+    cursor.className = "cursor-blink";
+    div.appendChild(span);
+    div.appendChild(cursor);
+    output.appendChild(div);
+    var chars = Array.from(text.replace(/<br>/g, '\n'));
+    var i = 0, rawText = '';
+    function typeNext() {
+        if (i >= chars.length) {
+            cursor.remove();
+            span.innerHTML = text;
+            if (onDone) onDone();
+            return;
+        }
+        var ch = chars[i];
+        rawText += ch === '\n' ? '<br>' : ch;
+        span.innerHTML = rawText;
+        i++;
+        output.scrollTop = output.scrollHeight;
+        var delay = /[.!?،؟\n]/.test(ch) ? 180 : 45;
+        setTimeout(typeNext, delay);
+    }
+    typeNext();
+}
+
+var isSending = false;
+function sendMessage() {
+    if (isSending) return;
+    var input = document.getElementById("user-input");
+    var text = input.value.trim();
+    if (!text) return;
+    isSending = true;
+    input.disabled = true;
+    addMessage(text, 'user');
+    input.value = "";
+    showThinking();
+    setTimeout(function() {
+        removeThinking();
+        var answer = findAnswer(text);
+        var reply = answer || "سوال جالبیه! برای پاسخ دقیق‌تر می‌تونی از پادکست‌ها و دوره‌های پایین استفاده کنی یا سوالت رو با کلمات دیگه بپرسی 😊";
+        typewriterMessage(reply, function() {
+            input.disabled = false;
+            input.focus();
+            isSending = false;
+        });
+    }, 2200);
+}
+
+function toggleMenu() {
+    var menu = document.getElementById('side-menu');
+    var overlay = document.getElementById('menu-overlay');
+    var main = document.querySelector('.main-center');
+    if (menu.classList.contains('open')) {
+        closeMenu();
+    } else {
+        menu.classList.add('open');
+        overlay.classList.add('active');
+        main.classList.add('blurred');
+    }
+}
+function closeMenu() {
+    document.getElementById('side-menu').classList.remove('open');
+    document.getElementById('menu-overlay').classList.remove('active');
+    document.querySelector('.main-center').classList.remove('blurred');
+}
+document.addEventListener('keydown', function(e) { if (e.key === "Escape") closeMenu(); });
+
+window.onload = function() {
+    var input = document.getElementById('user-input');
+    input.addEventListener('focus', function() {
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+    });
+    input.addEventListener('blur', function() {
+        document.body.style.position = '';
+        document.body.style.width = '';
+        window.scrollTo(0, 0);
+    });
+    loadQA().then(function() {
+        addMessage("به PlanLife خوش اومدی 🌟\nهر سوالی درباره باور، ثروت، روابط یا اعتماد به نفس داری بپرس!", 'bot');
+    });
+
+    // شروع بررسی VPN
+    initVpnCheck();
+};
 </script>
 </body>
 </html>
