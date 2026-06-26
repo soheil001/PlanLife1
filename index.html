@@ -419,11 +419,152 @@
         font-size: 15.8px; font-weight: 700;
     }
     .menu-item .text { -webkit-flex: 1; flex: 1; line-height: 1.35; }
+
+    /* ===== VPN WARNING MODAL ===== */
+    #vpn-overlay {
+        position: fixed; top:0;left:0;right:0;bottom:0;
+        background: rgba(0,0,0,0.65);
+        -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+        z-index: 9999;
+        display: -webkit-flex; display: flex;
+        -webkit-align-items: center; align-items: center;
+        -webkit-justify-content: center; justify-content: center;
+        opacity: 0; pointer-events: none;
+        -webkit-transition: opacity 0.4s ease; transition: opacity 0.4s ease;
+    }
+    #vpn-overlay.visible {
+        opacity: 1; pointer-events: auto;
+    }
+    .vpn-modal {
+        position: relative;
+        width: calc(100% - 48px);
+        max-width: 340px;
+        background: rgba(255,255,255,0.10);
+        -webkit-backdrop-filter: blur(28px); backdrop-filter: blur(28px);
+        border-radius: 28px;
+        border: 1px solid rgba(255,180,0,0.45);
+        box-shadow:
+            0 0 0 1px rgba(255,255,255,0.06),
+            0 20px 60px rgba(0,0,0,0.7),
+            0 0 40px rgba(255,160,0,0.18),
+            inset 0 1px 0 rgba(255,255,255,0.12);
+        padding: 32px 24px 24px;
+        text-align: center;
+        -webkit-transform: scale(0.88) translateY(16px);
+        transform: scale(0.88) translateY(16px);
+        -webkit-transition: -webkit-transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease;
+        transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease;
+        opacity: 0;
+    }
+    #vpn-overlay.visible .vpn-modal {
+        -webkit-transform: scale(1) translateY(0);
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+    /* glow ring decoration */
+    .vpn-modal::before {
+        content: '';
+        position: absolute; top: -1px; left: -1px; right: -1px; bottom: -1px;
+        border-radius: 29px;
+        background: linear-gradient(135deg, rgba(255,200,50,0.22), transparent 60%, rgba(255,120,0,0.12));
+        pointer-events: none;
+        z-index: 0;
+    }
+    .vpn-icon {
+        font-size: 46px; margin-bottom: 14px;
+        display: block;
+        -webkit-animation: vpn-icon-pulse 2.4s ease-in-out infinite;
+        animation: vpn-icon-pulse 2.4s ease-in-out infinite;
+        position: relative; z-index: 1;
+        filter: drop-shadow(0 0 12px rgba(255,180,0,0.6));
+    }
+    @-webkit-keyframes vpn-icon-pulse {
+        0%,100% { -webkit-transform: scale(1); transform: scale(1); }
+        50% { -webkit-transform: scale(1.12); transform: scale(1.12); }
+    }
+    @keyframes vpn-icon-pulse {
+        0%,100% { transform: scale(1); }
+        50% { transform: scale(1.12); }
+    }
+    .vpn-title {
+        font-size: 19px; font-weight: 900;
+        color: #ffd060;
+        text-shadow: 0 0 18px rgba(255,200,50,0.55);
+        margin-bottom: 12px;
+        position: relative; z-index: 1;
+        line-height: 1.45;
+    }
+    .vpn-body {
+        font-size: 14px; font-weight: 500;
+        color: rgba(255,255,255,0.85);
+        line-height: 1.85;
+        margin-bottom: 24px;
+        position: relative; z-index: 1;
+    }
+    .vpn-body strong {
+        color: #ffd060;
+        font-weight: 800;
+    }
+    .vpn-confirm-btn {
+        position: relative; z-index: 1;
+        display: inline-block;
+        width: 100%;
+        padding: 14px 20px;
+        background: linear-gradient(135deg, #d4af37, #f5c842, #b8860b);
+        border: none; border-radius: 18px;
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 16px; font-weight: 800;
+        color: #1a0033;
+        cursor: pointer;
+        box-shadow: 0 6px 24px rgba(212,175,55,0.45), 0 2px 8px rgba(0,0,0,0.4);
+        -webkit-transition: -webkit-transform 0.18s ease, box-shadow 0.18s ease;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+        letter-spacing: 0.3px;
+    }
+    .vpn-confirm-btn:active {
+        -webkit-transform: scale(0.96);
+        transform: scale(0.96);
+        box-shadow: 0 3px 12px rgba(212,175,55,0.3);
+    }
+    /* shimmer on button */
+    .vpn-confirm-btn::after {
+        content: '';
+        position: absolute; top:0;left:-60%;
+        width: 50%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        border-radius: 18px;
+        -webkit-animation: btn-shimmer 2.8s ease-in-out infinite;
+        animation: btn-shimmer 2.8s ease-in-out infinite;
+        pointer-events: none;
+    }
+    @-webkit-keyframes btn-shimmer {
+        0% { left: -60%; }
+        60%,100% { left: 110%; }
+    }
+    @keyframes btn-shimmer {
+        0% { left: -60%; }
+        60%,100% { left: 110%; }
+    }
 </style>
 </head>
 <body>
 
 <div class="stars"></div>
+
+<!-- VPN Warning Modal -->
+<div id="vpn-overlay" onclick="handleVpnOverlayClick(event)">
+    <div class="vpn-modal">
+        <span class="vpn-icon">🛡️</span>
+        <div class="vpn-title">فیلترشکن شما فعال است</div>
+        <div class="vpn-body">
+            برای <strong>تجربه بهتر</strong>، سرعت بالاتر پخش و انجام روان‌تر تمرینات،<br>
+            لطفاً <strong>VPN (فیلترشکن)</strong> خود را خاموش کنید و سپس صفحه را رفرش نمایید.
+        </div>
+        <button class="vpn-confirm-btn" onclick="closeVpnModal()">
+            ✅ &nbsp; بله، متوجه شدم
+        </button>
+    </div>
+</div>
 
 <header>
     <div class="hamburger" onclick="toggleMenu()">☰</div>
@@ -621,6 +762,149 @@
 </div>
 
 <script>
+/* ===== VPN DETECTION ===== */
+var VPN_STORAGE_KEY = 'planlife_vpn_warned';
+
+function getTodayDateStr() {
+    var d = new Date();
+    return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+}
+
+function alreadyWarnedToday() {
+    try {
+        var stored = localStorage.getItem(VPN_STORAGE_KEY);
+        if (!stored) return false;
+        return stored === getTodayDateStr();
+    } catch(e) { return false; }
+}
+
+function markWarnedToday() {
+    try { localStorage.setItem(VPN_STORAGE_KEY, getTodayDateStr()); } catch(e) {}
+}
+
+function showVpnModal() {
+    var overlay = document.getElementById('vpn-overlay');
+    overlay.classList.add('visible');
+}
+
+function closeVpnModal() {
+    var overlay = document.getElementById('vpn-overlay');
+    overlay.classList.remove('visible');
+    markWarnedToday();
+}
+
+function handleVpnOverlayClick(e) {
+    // فقط کلیک روی خود overlay (نه modal) باکس رو ببنده
+    if (e.target === document.getElementById('vpn-overlay')) {
+        closeVpnModal();
+    }
+}
+
+/**
+ * تشخیص VPN:
+ * روش ترکیبی — اگر هر کدام از موارد زیر true بود، احتمال VPN وجود دارد:
+ * 1. زمان‌بندی WebRTC — کندی در دریافت candidate نشانه tunnel است
+ * 2. timezone mismatch — اگر timezone مرورگر با IP جور نیست
+ * 3. تعداد RTCIceCandidateها — VPN معمولاً candidateهای کمتری دارد
+ */
+function detectVpn(callback) {
+    var suspicionScore = 0;
+    var checks = 0;
+    var totalChecks = 2;
+
+    function maybeFinish() {
+        checks++;
+        if (checks >= totalChecks) {
+            // اگر امتیاز ۱ یا بیشتر بود → نشان بده
+            callback(suspicionScore >= 1);
+        }
+    }
+
+    // --- CHECK 1: WebRTC Ice Candidate timing ---
+    try {
+        var RTCPeerConnection = window.RTCPeerConnection ||
+                                window.webkitRTCPeerConnection ||
+                                window.mozRTCPeerConnection;
+        if (RTCPeerConnection) {
+            var pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+            var candidateCount = 0;
+            var startTime = Date.now();
+            var timeout = setTimeout(function() {
+                // اگر بعد از ۳ ثانیه هیچ candidate نیامد یا خیلی کم بود
+                if (candidateCount === 0) {
+                    suspicionScore += 2; // خیلی مشکوک
+                } else if (candidateCount < 2) {
+                    suspicionScore += 1;
+                }
+                try { pc.close(); } catch(e) {}
+                maybeFinish();
+            }, 3000);
+
+            pc.onicecandidate = function(e) {
+                if (e.candidate) {
+                    candidateCount++;
+                    var elapsed = Date.now() - startTime;
+                    // VPN معمولاً candidateها را با تاخیر بالا برمی‌گرداند
+                    if (elapsed > 2000 && candidateCount < 2) {
+                        suspicionScore += 1;
+                    }
+                } else {
+                    // ICE gathering تموم شد
+                    clearTimeout(timeout);
+                    if (candidateCount === 0) suspicionScore += 2;
+                    else if (candidateCount < 2) suspicionScore += 1;
+                    try { pc.close(); } catch(e) {}
+                    maybeFinish();
+                }
+            };
+            pc.createDataChannel('');
+            pc.createOffer().then(function(offer) {
+                return pc.setLocalDescription(offer);
+            }).catch(function() {
+                clearTimeout(timeout);
+                suspicionScore += 1; // خطا در WebRTC هم مشکوکه
+                maybeFinish();
+            });
+        } else {
+            // WebRTC پشتیبانی نمیشه — احتمالاً مرورگر قدیمی یا VPN با disable WebRTC
+            suspicionScore += 1;
+            maybeFinish();
+        }
+    } catch(e) {
+        suspicionScore += 1;
+        maybeFinish();
+    }
+
+    // --- CHECK 2: Connection type hint ---
+    try {
+        var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        if (conn) {
+            // اگر نوع اتصال VPN-like باشه (مثلاً other یا none)
+            var t = (conn.type || '').toLowerCase();
+            if (t === 'other' || t === 'none' || t === 'unknown') {
+                suspicionScore += 1;
+            }
+        }
+        // این check سریعه، فوری finish
+        maybeFinish();
+    } catch(e) {
+        maybeFinish();
+    }
+}
+
+function initVpnCheck() {
+    if (alreadyWarnedToday()) return; // امروز قبلاً نشون داده شده
+    // کمی صبر کن تا صفحه لود بشه
+    setTimeout(function() {
+        detectVpn(function(isVpn) {
+            if (isVpn) {
+                showVpnModal();
+            }
+        });
+    }, 1800);
+}
+
+/* ===== QA CHATBOT ===== */
 var QA_URL = "https://raw.githubusercontent.com/soheil001/planlife1/main/qa.json";
 var qaData = null;
 
@@ -789,6 +1073,9 @@ window.onload = function() {
     loadQA().then(function() {
         addMessage("به PlanLife خوش اومدی 🌟\nهر سوالی درباره باور، ثروت، روابط یا اعتماد به نفس داری بپرس!", 'bot');
     });
+
+    // شروع بررسی VPN
+    initVpnCheck();
 };
 </script>
 </body>
