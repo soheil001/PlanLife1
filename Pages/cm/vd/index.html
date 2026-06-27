@@ -77,7 +77,8 @@ header {
 /* فید افقی اسکرول */
 .stories-scroll {
     display: flex;
-    flex-direction: row-reverse; /* راست به چپ برای RTL */
+    flex-direction: row; /* چپ به راست — استوری اول سمت چپ */
+    direction: ltr;
     gap: 14px;
     overflow-x: auto; overflow-y: hidden;
     padding: 6px 16px 10px;
@@ -114,7 +115,7 @@ header {
 
 /* حلقه رنگارنگ — دیده نشده */
 .story-ring {
-    width: 68px; height: 68px; border-radius: 50%;
+    width: 80px; height: 80px; border-radius: 50%;
     padding: 2.5px;
     background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888, #833ab4, #405de6, #5851db);
     transition: background 0.4s ease;
@@ -584,8 +585,8 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
     </div>
     <!-- محتوای اصلی -->
     <div class="story-modal-content" id="story-modal-content">
-        <div class="story-nav-left"  onclick="storyNavigate(-1)"></div>
-        <div class="story-nav-right" onclick="storyNavigate(1)"></div>
+        <div class="story-nav-left"  onclick="storyNavigate(1)"></div>
+        <div class="story-nav-right" onclick="storyNavigate(-1)"></div>
         <img id="story-modal-img" src="" alt="">
     </div>
     <!-- زیرنویس -->
@@ -987,19 +988,50 @@ function initVpnCheck() {
 var stories     = [];    /* آرایه اطلاعات استوری‌ها از DOM */
 var storyIndex  = 0;     /* استوری جاری در مودال */
 var storyTimer  = null;  /* تایمر auto-advance 5 ثانیه */
+var STORY_SEEN_KEY = 'planlife_stories_seen'; /* ذخیره وضعیت دیده‌شده با IP/دستگاه برای ۲۴ ساعت */
+var DAY_MS = 24 * 60 * 60 * 1000;
+
+/* خوندن لیست استوری‌های دیده‌شده (فقط اگر کمتر از ۲۴ ساعت از دیدنشون گذشته) */
+function getSeenMap() {
+    try {
+        var raw = localStorage.getItem(STORY_SEEN_KEY);
+        if (!raw) return {};
+        var map = JSON.parse(raw);
+        var now = Date.now();
+        var cleaned = {};
+        Object.keys(map).forEach(function(idx) {
+            if (now - map[idx] < DAY_MS) cleaned[idx] = map[idx];
+        });
+        return cleaned;
+    } catch(e) { return {}; }
+}
+function markSeenPersisted(idx) {
+    try {
+        var map = getSeenMap();
+        map[idx] = Date.now();
+        localStorage.setItem(STORY_SEEN_KEY, JSON.stringify(map));
+    } catch(e) {}
+}
+function isSeenPersisted(idx) {
+    var map = getSeenMap();
+    return Object.prototype.hasOwnProperty.call(map, idx);
+}
 
 /* جمع‌آوری اطلاعات از DOM */
 function initStories() {
     var items = document.querySelectorAll('.story-item');
     items.forEach(function(item) {
+        var idx = parseInt(item.dataset.index, 10);
+        var alreadySeen = isSeenPersisted(idx);
         stories.push({
             el:      item,
             img:     item.dataset.img     || '',
             cover:   item.dataset.cover   || '',
             name:    item.dataset.name    || '',
             caption: item.dataset.caption || '',
-            seen:    false
+            seen:    alreadySeen
         });
+        if (alreadySeen) item.classList.add('seen');
         item.addEventListener('click', function() {
             openStoryModal(parseInt(item.dataset.index, 10));
         });
@@ -1030,6 +1062,7 @@ function renderStoryModal() {
     if (!s) { closeStoryModal(); return; }
     s.seen = true;
     s.el.classList.add('seen');
+    markSeenPersisted(storyIndex);
     document.getElementById('story-modal-img').src         = s.img;
     document.getElementById('story-modal-avatar-img').src  = s.cover || s.img;
     document.getElementById('story-modal-name').textContent = s.name;
