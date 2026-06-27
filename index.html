@@ -229,12 +229,33 @@ header {
 
 /* زیرنویس استوری */
 .story-caption {
-    padding: 14px 16px 20px;
+    padding: 6px 16px 20px;
     width: 100%; max-width: 420px;
     font-size: 14px; font-weight: 500;
     color: rgba(255,255,255,0.9);
     text-align: center; line-height: 1.8; min-height: 54px;
 }
+
+/* دکمه شیشه‌ای زیر استوری */
+.story-action-btn {
+    display: none; /* پیش‌فرض مخفی، با JS فعال می‌شود */
+    align-items: center; justify-content: center;
+    width: calc(100% - 32px); max-width: 388px;
+    margin: 10px 16px 4px;
+    padding: 13px 20px;
+    background: rgba(255,255,255,0.14);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(212,175,55,0.55);
+    border-radius: 18px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.5), 0 0 18px rgba(212,175,55,0.2), inset 0 1px 0 rgba(255,255,255,0.18);
+    color: #ffd060; font-family: 'Vazirmatn', sans-serif;
+    font-size: 14.5px; font-weight: 800; text-decoration: none;
+    text-shadow: 0 0 10px rgba(212,175,55,0.35);
+    text-align: center;
+    transition: transform 0.15s ease, background 0.2s ease;
+}
+.story-action-btn:active { transform: scale(0.96); background: rgba(255,255,255,0.2); }
+.story-action-btn.show { display: flex; }
 
 /* ===== CHAT BOX ===== */
 .chat-container {
@@ -590,6 +611,8 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
         <div class="story-nav-right" onclick="storyNavigate(1)"></div>
         <img id="story-modal-img" src="" alt="">
     </div>
+    <!-- دکمه شیشه‌ای -->
+    <a class="story-action-btn" id="story-action-btn" href="#" target="_blank" rel="noopener"></a>
     <!-- زیرنویس -->
     <div class="story-caption" id="story-caption"></div>
 </div>
@@ -608,6 +631,9 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
            data-cover   = لینک عکس کاور دایره
            data-name    = نام زیر دایره
            data-caption = متن توضیح پایین مودال
+           data-btn-show = true یا false → دکمه شیشه‌ای نمایش داده شود یا نه
+           data-btn-text = متن داخل دکمه (وقتی show=true)
+           data-btn-link = لینکی که با زدن دکمه در تب جدید باز می‌شود
          عکس داخل <img src="..."> هم همان کاور است
          =================================================== -->
     <div class="stories-wrapper">
@@ -618,7 +644,10 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png"
                  data-cover="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png"
                  data-name="پادکست"
-                 data-caption="پادکست‌های رایگان PlanLife 🎙️">
+                 data-caption="پادکست‌های رایگان PlanLife 🎙️"
+                 data-btn-show="true"
+                 data-btn-text="شنیدن پادکست‌ها"
+                 data-btn-link="https://planlife.ir/Pages/podcasts_free/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
                         <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست">
@@ -632,7 +661,10 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"
                  data-cover="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"
                  data-name="دوره‌ها"
-                 data-caption="دوره‌های تخصصی رشد فردی 🚀">
+                 data-caption="دوره‌های تخصصی رشد فردی 🚀"
+                 data-btn-show="true"
+                 data-btn-text="مشاهده دوره‌ها"
+                 data-btn-link="https://planlife.ir/Pages/Doreha/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
                         <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌ها">
@@ -646,7 +678,10 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png"
                  data-cover="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png"
                  data-name="مجله"
-                 data-caption="مجله ماورایی — مقالات انگیزشی 📰">
+                 data-caption="مجله ماورایی — مقالات انگیزشی 📰"
+                 data-btn-show="true"
+                 data-btn-text="ورود به مجله"
+                 data-btn-link="https://planlife.ir/Pages/Magazine/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
                         <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="مجله">
@@ -660,7 +695,10 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg"
                  data-cover="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg"
                  data-name="تمرینات"
-                 data-caption="تمرینات مجازی روزانه 🧘">
+                 data-caption="تمرینات مجازی روزانه 🧘"
+                 data-btn-show="true"
+                 data-btn-text="شروع تمرین"
+                 data-btn-link="https://planlife.ir/Pages/Tamrin/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
                         <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرینات">
@@ -674,7 +712,10 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg"
                  data-cover="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg"
                  data-name="تابلو آرزو"
-                 data-caption="تابلو آرزوها — رویاهایت را ببین 🔖">
+                 data-caption="تابلو آرزوها — رویاهایت را ببین 🔖"
+                 data-btn-show="true"
+                 data-btn-text="ساخت تابلو آرزو"
+                 data-btn-link="https://planlife.ir/Pages/visionboard/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
                         <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg" alt="تابلو">
@@ -688,7 +729,10 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg"
                  data-cover="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg"
                  data-name="کتابخانه"
-                 data-caption="کتابخانه — بهترین کتاب‌های رشد فردی 📚">
+                 data-caption="کتابخانه — بهترین کتاب‌های رشد فردی 📚"
+                 data-btn-show="true"
+                 data-btn-text="ورود به کتابخانه"
+                 data-btn-link="https://planlife.ir/Pages/Book/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
                         <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه">
@@ -702,7 +746,10 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-img="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg"
                  data-cover="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg"
                  data-name="کمک اولیه"
-                 data-caption="جعبه کمک‌های اولیه روانی 🩺">
+                 data-caption="جعبه کمک‌های اولیه روانی 🩺"
+                 data-btn-show="true"
+                 data-btn-text="مشاهده جعبه کمک‌های اولیه"
+                 data-btn-link="https://planlife.ir/Pages/komakavaliye/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
                         <img src="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg" alt="کمک اولیه">
@@ -716,7 +763,10 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png"
                  data-cover="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png"
                  data-name="موزیک"
-                 data-caption="موزیک‌های انگیزشی و مدیتیشن 🎵">
+                 data-caption="موزیک‌های انگیزشی و مدیتیشن 🎵"
+                 data-btn-show="true"
+                 data-btn-text="گوش دادن به موزیک‌ها"
+                 data-btn-link="https://planlife.ir/Pages/Music/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
                         <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="موزیک">
@@ -730,7 +780,10 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779985702/IMG_1211_snjqjm.jpg"
                  data-cover="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779985702/IMG_1211_snjqjm.jpg"
                  data-name="ویدیوها"
-                 data-caption="ویدیوهای آموزشی و انگیزشی 🎥">
+                 data-caption="ویدیوهای آموزشی و انگیزشی 🎥"
+                 data-btn-show="true"
+                 data-btn-text="تماشای ویدیوها"
+                 data-btn-link="https://planlife.ir/Pages/Videos/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
                         <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779985702/IMG_1211_snjqjm.jpg" alt="ویدیوها">
@@ -744,7 +797,10 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg"
                  data-cover="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg"
                  data-name="چک لیست"
-                 data-caption="چک لیست روزانه — روز خود را مدیریت کن 📜">
+                 data-caption="چک لیست روزانه — روز خود را مدیریت کن 📜"
+                 data-btn-show="true"
+                 data-btn-text="مشاهده چک لیست"
+                 data-btn-link="https://planlife.ir/Pages/cheklist/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
                         <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg" alt="چک لیست">
@@ -1030,6 +1086,9 @@ function initStories() {
             cover:   item.dataset.cover   || '',
             name:    item.dataset.name    || '',
             caption: item.dataset.caption || '',
+            btnShow: (item.dataset.btnShow || '').toLowerCase() === 'true',
+            btnText: item.dataset.btnText || '',
+            btnLink: item.dataset.btnLink || '',
             seen:    alreadySeen
         });
         if (alreadySeen) item.classList.add('seen');
@@ -1068,6 +1127,16 @@ function renderStoryModal() {
     document.getElementById('story-modal-avatar-img').src  = s.cover || s.img;
     document.getElementById('story-modal-name').textContent = s.name;
     document.getElementById('story-caption').textContent    = s.caption;
+
+    var btn = document.getElementById('story-action-btn');
+    if (s.btnShow && s.btnLink) {
+        btn.textContent = s.btnText || 'مشاهده بیشتر';
+        btn.href = s.btnLink;
+        btn.classList.add('show');
+    } else {
+        btn.classList.remove('show');
+        btn.removeAttribute('href');
+    }
 }
 
 /* ساخت نوار پیشرفت */
