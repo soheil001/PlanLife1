@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a0033">
+    <title>اکسپلور - PlanLife</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            font-family: 'Vazirmatn', sans-serif;
+            background: #030303;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        /* ========== ستاره‌های پس‌زمینه ========== */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .stars::before, .stars::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(white 1px, transparent 1px);
+            background-size: 80px 80px;
+            opacity: 0.45;
+        }
+        .stars::after {
+            background-size: 140px 140px;
+            opacity: 0.3;
+        }
+        
+        /* ========== هدر ========== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-title {
+            font-size: 24px;
+            font-weight: 900;
+            color: #d4af37;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+        
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .header-icon:active {
+            transform: scale(0.95);
+        }
+        
+        /* ========== کانتینر گرید ========== */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 100%;
+            padding: 0;
+        }
+        
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0;
+        }
+        
+        /* ========== آیتم ویدیو ========== */
+        .video-item {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            background: #000;
+            cursor: pointer;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+        .video-item:active {
+            transform: scale(0.98);
+        }
+        
+        .video-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        /* شمارنده ویوز */
+        .video-stats {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            right: 8px;
+            z-index: 3;
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+        }
+        
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 4px 8px;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+        }
+        .stat svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+        
+        /* ========== مودال ویدیو (فید اسکرولی) ========== */
+        .video-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            z-index: 9000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .video-modal.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        /* کانتینر اسکرول عمودی - هر ویدیو یک صفحه کامل */
+        .feed-scroll {
+            position: absolute;
+            inset: 0;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+        }
+        .feed-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .feed-slide {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            background: #000;
+            overflow: hidden;
+        }
+        
+        .modal-video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+                
+        /* دکمه بستن */
+        .modal-close {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+        }
+        .modal-close:active {
+            transform: scale(0.9);
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        /* نوار اطلاعات پایین (پروفایل + توضیحات) ======== */
+        .modal-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+            padding: 60px 16px 28px;
+            z-index: 5;
+            direction: ltr;
+            text-align: left;
+        }
+        
+        /* ردیف پروفایل: لوگو + اسم + تیک — سمت چپ تصویر، چپ به راست */
+        .profile-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+            margin-bottom: 10px;
+            direction: ltr;
+            width: fit-content;
+        }
+        
+        .profile-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .profile-name {
+            font-size: 15px;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+            direction: ltr;
+            unicode-bidi: isolate;
+        }
+        
+        .profile-badge {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+        
+        .video-desc {
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.6;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+            direction: rtl;
+            text-align: right;
+            unicode-bidi: isolate;
+        }
+        
+        /* ========== ریسپانسیو ========== */
+        @media (max-width: 1024px) {
+            .videos-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .videos-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .header-title {
+                font-size: 20px;
+            }
+            
+            .modal-info {
+                padding: 50px 20px 24px;
+            }
+            
+            .video-desc {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<div class="header">
+    <div class="header-title">اکسپلور</div>
+    <div class="header-icon" title="تنظیمات">⚙️</div>
+</div>
+
+<div class="container">
+    <div class="videos-grid" id="videosGrid"></div>
+</div>
+
+<!-- مودال ویدیو (فید اسکرولی) ===== -->
+<div class="video-modal" id="videoModal">
+    <button class="modal-close" onclick="closeVideoModal()">✕</button>
+    
+    <div class="feed-scroll" id="feedScroll"></div>
+</div>
+
+<script>
+/* ========================================
+   داده‌های ویدیو — ویرایش اینجا
+   ======================================== */
+const videos = [
+    {
+        id: 1,
+        cover: 'http://fs3.centraldnserver.com/~planlife/explore/pic/1.jpeg',
+        src: 'http://fs3.centraldnserver.com/~planlife/explore/1.mp4',
+        title: 'اگه سردرگمی اینو ببین🎙️',
+        desc: 'حرف های خیلی مهمی زده میشه تا آخر ببینید حتما',
+        likes: 15200,
+        views: 569
+    },
+    {
+        id: 2,
+        cover: 'https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg',
+        src: 'http://fs3.centraldnserver.com/~planlife/explore/2.mp4',
+        title: 'دوره‌های تخصصی 🚀',
+        desc: 'دوره‌های جامع درباره ذهنیت موفقیت، مالیات و روابط',
+        likes: 9800,
+        views: 156000
+    },
+    {
+        id: 3,
+        cover: 'https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png',
+        src: 'http://fs3.centraldnserver.com/~planlife/explore/3.mp4',
+        title: 'مجله ماورایی 📰',
+        desc: 'مقالات انگیزشی و روانی برای بهبود کیفیت زندگی',
+        likes: 7650,
+        views: 245000
+    },
+    {
+        id: 4,
+        cover: 'https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg',
+        src: 'http://fs3.centraldnserver.com/~planlife/explore/4.mp4',
+        title: 'تمرینات مجازی 🧘',
+        desc: 'تمرینات روزانه مدیتیشن، یوگا و تمرکز ذهنی',
+        likes: 12400,
+        views: 398000
+    },
+    {
+        id: 5,
+        cover: 'http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png',
+        src: 'https://example.com/video5.mp4',
+        title: 'پاکسازی ذهنی 🔥',
+        desc: 'تکنیک‌های مؤثر برای رهایی از افکار منفی و غیرفعال',
+        likes: 8900,
+        views: 187000
+    },
+    {
+        id: 6,
+        cover: 'https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg',
+        src: 'https://example.com/video6.mp4',
+        title: 'تابلو آرزوها 🔖',
+        desc: 'ساخت تابلو بصری برای تحقق رویاها و اهداف',
+        likes: 11200,
+        views: 267000
+    },
+    {
+        id: 7,
+        cover: 'https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg',
+        src: 'https://example.com/video7.mp4',
+        title: 'کتابخانه دیجیتال 📚',
+        desc: 'بهترین کتاب‌های رشد فردی، خودشناسی و موفقیت',
+        likes: 9450,
+        views: 221000
+    },
+    {
+        id: 8,
+        cover: 'https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg',
+        src: 'https://example.com/video8.mp4',
+        title: 'جعبه کمک‌های اولیه 🩺',
+        desc: 'راهنمایی سریع برای بحران‌های روانی و احساسی',
+        likes: 6780,
+        views: 134000
+    },
+    {
+        id: 9,
+        cover: 'https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png',
+        src: 'http://fs3.centraldnserver.com/~planlife/pics/story/story1/Library-2.mp4',
+        title: 'موزیک مدیتیشن 🎵',
+        desc: 'موزیک‌های آرامش‌بخش و انگیزشی برای کار و تمرکز',
+        likes: 13500,
+        views: 445000
+    },
+    {
+        id: 10,
+        cover: 'https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779985702/IMG_1211_snjqjm.jpg',
+        src: 'https://example.com/video10.mp4',
+        title: 'ویدیوهای آموزشی 🎥',
+        desc: 'آموزش‌های کاربردی درباره مهارت‌های زندگی',
+        likes: 10200,
+        views: 312000
+    },
+    {
+        id: 11,
+        cover: 'https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg',
+        src: 'https://example.com/video11.mp4',
+        title: 'چک‌لیست روزانه 📜',
+        desc: 'برنامه روزانه برای بهره‌وری و خودشناسی',
+        likes: 7890,
+        views: 178000
+    },
+    {
+        id: 12,
+        cover: 'http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2276.jpeg',
+        src: 'https://example.com/video12.mp4',
+        title: 'ترک عادت‌های منفی 💪',
+        desc: 'رویکرد علمی و عملی برای ترک عادت‌های مضر',
+        likes: 8765,
+        views: 203000
+    }
+];
+
+/* ========================================
+   رسم گرید ویدیوها
+   ======================================== */
+function renderGrid() {
+    const grid = document.getElementById('videosGrid');
+    grid.innerHTML = '';
+    
+    videos.forEach((video, index) => {
+        const item = document.createElement('div');
+        item.className = 'video-item';
+        item.innerHTML = `
+            <img src="${video.cover}" alt="${video.title}">
+            <div class="video-stats">
+                <div class="stat">
+                    <svg viewBox="0 0 24 24" fill="white"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                    ${formatNumber(video.views)}
+                </div>
+            </div>
+        `;
+        
+        item.addEventListener('click', () => openVideoModal(index));
+        grid.appendChild(item);
+    });
+}
+
+function formatNumber(num) {
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+    return num;
+}
+
+/* ========================================
+   تنظیمات پروفایل (لوگو، اسم، تیک)
+   ======================================== */
+const PROFILE = {
+    avatar: 'http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg',
+    badge: 'http://fs3.centraldnserver.com/~planlife/pics/MagicEraser_260629_074549.png',
+    name: 'planlife.ir'
+};
+
+/* ========================================
+   مودال ویدیو — فید اسکرولی بی‌نهایت
+   ======================================== */
+const LOOP_COUNT = 6; // چند بار لیست ویدیوها تکرار شود تا اسکرول بی‌نهایت طبیعی به نظر برسد
+let feedItems = []; // هر آیتم: { video, slideEl, videoEl }
+let io; // IntersectionObserver برای پلی خودکار
+
+function buildFeedItem(video) {
+    const slide = document.createElement('div');
+    slide.className = 'feed-slide';
+    slide.innerHTML = `
+        <video class="modal-video" playsinline webkit-playsinline loop preload="none"></video>
+        <div class="modal-info">
+            <div class="profile-row">
+                <img class="profile-avatar" src="${PROFILE.avatar}" alt="${PROFILE.name}">
+                <span class="profile-name">${PROFILE.name}</span>
+                <img class="profile-badge" src="${PROFILE.badge}" alt="verified">
+            </div>
+            <div class="video-desc">${video.desc}</div>
+        </div>
+    `;
+    const videoEl = slide.querySelector('video');
+    return { video, slideEl: slide, videoEl };
+}
+
+function fillFeed() {
+    const scrollEl = document.getElementById('feedScroll');
+    scrollEl.innerHTML = '';
+    feedItems = [];
+    
+    for (let i = 0; i < LOOP_COUNT; i++) {
+        videos.forEach(video => {
+            const item = buildFeedItem(video);
+            feedItems.push(item);
+            scrollEl.appendChild(item.slideEl);
+        });
+    }
+}
+
+function setupInfiniteScroll() {
+    const scrollEl = document.getElementById('feedScroll');
+    
+    scrollEl.addEventListener('scroll', () => {
+        const scrollTop = scrollEl.scrollTop;
+        const scrollHeight = scrollEl.scrollHeight;
+        const clientHeight = scrollEl.clientHeight;
+        
+        // وقتی نزدیک انتهای فید رسیدیم، یک دور دیگه از ویدیوها رو اضافه کن
+        if (scrollHeight - (scrollTop + clientHeight) < clientHeight * 1.5) {
+            videos.forEach(video => {
+                const item = buildFeedItem(video);
+                feedItems.push(item);
+                scrollEl.appendChild(item.slideEl);
+                io.observe(item.slideEl);
+            });
+        }
+        
+        // وقتی نزدیک ابتدای فید رسیدیم (اسکرول به بالا)، یک دور قبل از ویدیوها رو هم اضافه کن
+        if (scrollTop < clientHeight * 0.5) {
+            const fragment = document.createDocumentFragment();
+            const newItems = [];
+            videos.forEach(video => {
+                const item = buildFeedItem(video);
+                newItems.push(item);
+                fragment.appendChild(item.slideEl);
+            });
+            const prevScrollHeight = scrollHeight;
+            scrollEl.insertBefore(fragment, scrollEl.firstChild);
+            feedItems = [...newItems, ...feedItems];
+            newItems.forEach(item => io.observe(item.slideEl));
+            // حفظ موقعیت اسکرول بعد از اضافه کردن آیتم‌های جدید به ابتدا
+            scrollEl.scrollTop = scrollTop + (scrollEl.scrollHeight - prevScrollHeight);
+        }
+    });
+}
+
+function setupAutoplayObserver() {
+    io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const slide = entry.target;
+            const videoEl = slide.querySelector('video');
+            const item = feedItems.find(it => it.slideEl === slide);
+            
+            if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
+                if (!videoEl.src) videoEl.src = item.video.src;
+                videoEl.play().catch(() => {});
+            } else {
+                videoEl.pause();
+            }
+        });
+    }, { threshold: [0, 0.6, 1] });
+    
+    feedItems.forEach(item => io.observe(item.slideEl));
+}
+
+function openVideoModal(index) {
+    const modal = document.getElementById('videoModal');
+    
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    
+    fillFeed();
+    setupAutoplayObserver();
+    setupInfiniteScroll();
+    
+    // اسکرول به ویدیویی که کاربر کلیک کرده (در اولین دور از LOOP_COUNT)
+    const scrollEl = document.getElementById('feedScroll');
+    const targetSlide = feedItems[index].slideEl;
+    scrollEl.scrollTop = targetSlide.offsetTop;
+    
+    // پلی فوری ویدیوی هدف بدون منتظر ماندن برای observer
+    const targetVideo = targetSlide.querySelector('video');
+    targetVideo.src = videos[index].src;
+    targetVideo.play().catch(() => {});
+}
+
+function closeVideoModal() {
+    const modal = document.getElementById('videoModal');
+    
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+    
+    // متوقف کردن همه ویدیوها و پاکسازی observer
+    feedItems.forEach(item => {
+        item.videoEl.pause();
+        item.videoEl.src = '';
+    });
+    if (io) io.disconnect();
+}
+
+/* ========================================
+   سوایپ عمودی به صورت طبیعی توسط اسکرول مرورگر
+   انجام می‌شود (scroll-snap) — نیازی به کد دستی نیست
+   ======================================== */
+
+/* ========================================
+   کلیدهای صفحه‌کلید
+   ======================================== */
+document.addEventListener('keydown', (e) => {
+    const modal = document.getElementById('videoModal');
+    
+    if (!modal.classList.contains('open')) return;
+    
+    const scrollEl = document.getElementById('feedScroll');
+    if (e.key === 'ArrowDown') scrollEl.scrollBy({ top: scrollEl.clientHeight, behavior: 'smooth' });
+    if (e.key === 'ArrowUp') scrollEl.scrollBy({ top: -scrollEl.clientHeight, behavior: 'smooth' });
+    if (e.key === 'Escape') closeVideoModal();
+});
+
+/* ========================================
+   شروع
+   ======================================== */
+window.addEventListener('load', () => {
+    renderGrid();
+});
+</script>
+
+</body>
+</html>
