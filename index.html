@@ -1,3 +1,4 @@
+cat > /home/claude/index.html << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -51,7 +52,7 @@ header {
 /* ===== MAIN ===== */
 .main-center {
     position: relative; z-index: 5; min-height: 100vh;
-    padding: 75px 20px 120px;
+    padding: 75px 20px 140px;
     display: flex; flex-direction: column; align-items: center;
     transition: filter 0.5s ease;
 }
@@ -140,7 +141,7 @@ header {
 }
 
 /* ===================================================
-   STORY MODAL — تمام صفحه ۹:۱۶
+   STORY MODAL
    =================================================== */
 #story-modal {
     position: fixed; top:0; left:0; right:0; bottom:0;
@@ -153,7 +154,6 @@ header {
 }
 #story-modal.open { opacity: 1; pointer-events: auto; }
 
-/* ── کادر اصلی استوری: نسبت ۹:۱۶، همه چیز relative ── */
 .story-container {
     width: 100%;
     max-width: 375px;
@@ -161,14 +161,13 @@ header {
     background: #000;
     border-radius: 12px;
     overflow: hidden;
-    position: relative;          /* ← پایه‌ی همه absolute ها */
+    position: relative;
     box-shadow: 0 20px 60px rgba(0,0,0,0.9);
 }
 
-/* ── تصویر/ویدیو: پر کردن کل کادر به عنوان بکگراند ── */
 .story-modal-content {
     position: absolute;
-    inset: 0;                    /* top:0 right:0 bottom:0 left:0 */
+    inset: 0;
     z-index: 1;
     background: #000;
     display: flex; align-items: center; justify-content: center;
@@ -181,7 +180,6 @@ header {
     display: block;
 }
 
-/* ── نوار پیشرفت: روی تصویر، بالا ── */
 .story-progress-bar {
     position: absolute;
     top: 0; left: 0; right: 0;
@@ -205,11 +203,9 @@ header {
     animation: progress-run 5s linear forwards;
 }
 @keyframes progress-run { from { width: 0%; } to { width: 100%; } }
-
-/* ── هدر: لوگو + planlife.ir + تیک + بستن — روی تصویر ── */
 .story-modal-header {
     position: absolute;
-    top: 26px; left: 0; right: 0;   /* زیر progress bar */
+    top: 26px; left: 0; right: 0;
     z-index: 10;
     display: flex; align-items: center; gap: 8px;
     padding: 8px 12px;
@@ -264,7 +260,6 @@ header {
     text-shadow: 0 1px 6px rgba(0,0,0,0.8);
 }
 
-/* ── ناوبری چپ/راست روی تصویر ── */
 .story-nav-left,
 .story-nav-right {
     position: absolute; top: 0; bottom: 0;
@@ -274,7 +269,6 @@ header {
 .story-nav-right { right: 0; }
 .story-nav-left  { left: 0; }
 
-/* ── فوتر: کپشن + دکمه — پایین تصویر ── */
 .story-footer {
     position: absolute;
     bottom: 0; left: 0; right: 0;
@@ -293,7 +287,6 @@ header {
     text-shadow: 0 1px 8px rgba(0,0,0,0.9);
 }
 
-/* دکمه شیشه‌ای */
 .story-action-btn {
     display: none;
     align-items: center; justify-content: center;
@@ -321,10 +314,7 @@ header {
     content: ''; position: absolute;
     top: 0; left: -100%;
     width: 100%; height: 100%;
-    background: linear-gradient(90deg, 
-        transparent, 
-        rgba(255,255,255,0.2), 
-        transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
     animation: glass-shine 2.5s ease-in-out infinite;
 }
 @keyframes glass-shine {
@@ -655,6 +645,226 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
     0%       { left: -60%; }
     60%,100% { left: 110%; }
 }
+
+/* ===================================================
+   BOTTOM NAVIGATION BAR
+   =================================================== */
+.bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 300;
+    padding: 0 16px 12px;
+    /* safe area for notch phones */
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+}
+
+/* نوار شیشه‌ای */
+.bottom-nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(32px) saturate(180%);
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.13);
+    border-radius: 28px;
+    padding: 8px 6px 10px;
+    box-shadow:
+        0 8px 32px rgba(0,0,0,0.55),
+        0 2px 8px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.18),
+        inset 0 -1px 0 rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* بازتاب نوری بالا */
+.bottom-nav-inner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+    border-radius: 50%;
+}
+
+/* آیتم‌های ناوبری */
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    padding: 4px 10px 2px;
+    border-radius: 18px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-decoration: none;
+    color: white;
+    position: relative;
+    min-width: 56px;
+}
+
+/* حالت غیرفعال */
+.nav-item .nav-icon-wrap {
+    width: 44px; height: 44px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* درخشش داخل ایکون */
+.nav-item .nav-icon-wrap::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -80%;
+    width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.5s ease;
+}
+.nav-item.active .nav-icon-wrap::before {
+    animation: nav-shimmer 2s ease-in-out infinite 0.3s;
+}
+@keyframes nav-shimmer {
+    0%       { left: -80%; }
+    50%,100% { left: 110%; }
+}
+
+.nav-item svg {
+    width: 24px; height: 24px;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 0 0px transparent);
+}
+
+.nav-label {
+    font-size: 10px; font-weight: 700;
+    color: rgba(255,255,255,0.45);
+    transition: all 0.3s ease;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    font-family: 'Vazirmatn', sans-serif;
+}
+
+/* ── حالت ACTIVE ── */
+.nav-item.active .nav-icon-wrap {
+    background: rgba(212,175,55,0.18);
+    border-color: rgba(212,175,55,0.55);
+    box-shadow:
+        0 0 18px rgba(212,175,55,0.3),
+        0 0 6px rgba(212,175,55,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+    transform: translateY(-2px) scale(1.05);
+}
+
+.nav-item.active svg {
+    filter: drop-shadow(0 0 8px rgba(212,175,55,0.8));
+}
+
+.nav-item.active .nav-label {
+    color: #ffd060;
+    text-shadow: 0 0 8px rgba(212,175,55,0.6);
+}
+
+/* ── آیتم وسط (Explore / کاوش) ── */
+.nav-item-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    text-decoration: none;
+    color: white;
+    padding: 0 6px 2px;
+    position: relative;
+    top: -8px;      /* بالاتر از بقیه */
+    min-width: 60px;
+}
+
+.nav-center-orb {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1.5px solid rgba(212,175,55,0.5);
+    box-shadow:
+        0 0 22px rgba(212,175,55,0.35),
+        0 6px 20px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.25),
+        inset 0 -1px 0 rgba(0,0,0,0.2);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: center-orb-pulse 3s ease-in-out infinite;
+}
+
+@keyframes center-orb-pulse {
+    0%,100% { box-shadow: 0 0 22px rgba(212,175,55,0.35), 0 6px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.25); }
+    50%      { box-shadow: 0 0 34px rgba(212,175,55,0.55), 0 8px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3); }
+}
+
+.nav-center-orb::before {
+    content: '';
+    position: absolute; top: 0; left: -80%; width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transform: skewX(-15deg);
+    animation: orb-shine 3s ease-in-out infinite;
+}
+@keyframes orb-shine {
+    0%       { left: -80%; }
+    50%,100% { left: 110%; }
+}
+
+.nav-center-orb svg {
+    width: 28px; height: 28px;
+    filter: drop-shadow(0 0 8px rgba(212,175,55,0.7));
+    position: relative; z-index: 1;
+}
+
+.nav-item-center.active .nav-center-orb {
+    background: rgba(212,175,55,0.22);
+    border-color: rgba(212,175,55,0.85);
+    box-shadow:
+        0 0 42px rgba(212,175,55,0.6),
+        0 6px 24px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.35);
+    transform: scale(1.1) translateY(-2px);
+}
+
+.nav-center-label {
+    font-size: 10px; font-weight: 700;
+    color: rgba(212,175,55,0.8);
+    text-shadow: 0 0 6px rgba(212,175,55,0.4);
+    font-family: 'Vazirmatn', sans-serif;
+    letter-spacing: 1px;
+}
+
+/* انیمیشن لمس */
+.nav-item:active .nav-icon-wrap,
+.nav-item-center:active .nav-center-orb {
+    transform: scale(0.92);
+}
+
+/* ریپل افکت روی آیتم */
+.nav-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(212,175,55,0.25);
+    transform: scale(0);
+    animation: nav-ripple-anim 0.5s ease-out forwards;
+    pointer-events: none;
+    width: 60px; height: 60px;
+    top: 50%; left: 50%;
+    margin-top: -30px; margin-left: -30px;
+}
+@keyframes nav-ripple-anim {
+    to { transform: scale(2.5); opacity: 0; }
+}
 </style>
 </head>
 <body>
@@ -677,11 +887,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
 <!-- Story Full-Screen Modal -->
 <div id="story-modal">
     <div class="story-container">
-
-        <!-- ١. نوار پیشرفت — absolute بالا -->
         <div class="story-progress-bar" id="story-progress-bar"></div>
-
-        <!-- ٢. هدر — absolute زیر progress bar -->
         <div class="story-modal-header">
             <div class="story-logo-section">
                 <div class="story-checkmark">
@@ -696,19 +902,14 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
             </div>
             <div class="story-modal-close" onclick="closeStoryModal()">✕</div>
         </div>
-
-        <!-- ٣. تصویر/ویدیو — absolute پشت همه چیز (z-index:1) -->
         <div class="story-modal-content" id="story-modal-content">
             <div class="story-nav-left"  onclick="storyNavigate(-1)"></div>
             <div class="story-nav-right" onclick="storyNavigate(1)"></div>
         </div>
-
-        <!-- ٤. فوتر — absolute پایین -->
         <div class="story-footer">
             <div class="story-caption" id="story-caption"></div>
             <a class="story-action-btn" id="story-action-btn" href="#" target="_blank" rel="noopener"></a>
         </div>
-
     </div>
 </div>
 
@@ -751,35 +952,37 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 </div>
                 <div class="story-label">دوره‌ها</div>
             </div>
-<div class="story-item" data-index="2"
-         data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/Library-1.mp4"
-         data-name="کتابخانه ۲"
-         data-caption="کتابخانه — بهترین کتاب‌های رشد فردی 📚"
-         data-btn-show="true"
-         data-btn-text="ورود به کتابخانه"
-         data-btn-link="https://planlife.ir/Pages/Book/index.html">
-        <div class="story-ring">
-            <div class="story-avatar">
-                <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه">
-            </div>
-        </div>
-        <div class="story-label">کتابخانه ۲</div>
-    </div>
- <div class="story-item" data-index="3"
-         data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/Library-2.mp4"
-         data-name="کتابخانه ۲"
-         data-caption="کتابخانه — بهترین کتاب‌های رشد فردی 📚"
-         data-btn-show="true"
-         data-btn-text="ورود به کتابخانه"
-         data-btn-link="https://planlife.ir/Pages/Book/index.html">
-        <div class="story-ring">
-            <div class="story-avatar">
-                <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه">
-            </div>
-        </div>
-        <div class="story-label">کتابخانه ۲</div>
-    </div>
+
             <div class="story-item" data-index="2"
+                 data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/Library-1.mp4"
+                 data-name="کتابخانه ۲"
+                 data-caption="کتابخانه — بهترین کتاب‌های رشد فردی 📚"
+                 data-btn-show="true"
+                 data-btn-text="ورود به کتابخانه"
+                 data-btn-link="https://planlife.ir/Pages/Book/index.html">
+                <div class="story-ring">
+                    <div class="story-avatar">
+                        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه">
+                    </div>
+                </div>
+                <div class="story-label">کتابخانه ۲</div>
+            </div>
+            <div class="story-item" data-index="3"
+                 data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/Library-2.mp4"
+                 data-name="کتابخانه ۲"
+                 data-caption="کتابخانه — بهترین کتاب‌های رشد فردی 📚"
+                 data-btn-show="true"
+                 data-btn-text="ورود به کتابخانه"
+                 data-btn-link="https://planlife.ir/Pages/Book/index.html">
+                <div class="story-ring">
+                    <div class="story-avatar">
+                        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه">
+                    </div>
+                </div>
+                <div class="story-label">کتابخانه ۲</div>
+            </div>
+
+            <div class="story-item" data-index="4"
                  data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/majale-story.mov"
                  data-name="مجله"
                  data-caption="مجله ماورایی — مقالات انگیزشی 📰"
@@ -794,7 +997,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 <div class="story-label">مجله</div>
             </div>
 
-            <div class="story-item" data-index="4"
+            <div class="story-item" data-index="5"
                  data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg"
                  data-name="تمرینات"
                  data-caption="تمرینات مجازی روزانه 🧘"
@@ -809,9 +1012,9 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 <div class="story-label">تمرینات</div>
             </div>
 
-            <div class="story-item" data-index="5"
+            <div class="story-item" data-index="6"
                  data-img="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png"
-                 data-name="تمرینات"
+                 data-name="پاکسازی ذهن"
                  data-caption="پاکسازی ذهن 🔥"
                  data-btn-show="true"
                  data-btn-text="شروع تمرین"
@@ -824,7 +1027,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 <div class="story-label">پاکسازی ذهن</div>
             </div>
 
-            <div class="story-item" data-index="5"
+            <div class="story-item" data-index="7"
                  data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg"
                  data-name="تابلو آرزو"
                  data-caption="تابلو آرزوها — رویاهایت را ببین 🔖"
@@ -839,7 +1042,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 <div class="story-label">تابلو آرزو</div>
             </div>
 
-            <div class="story-item" data-index="6"
+            <div class="story-item" data-index="8"
                  data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg"
                  data-name="کتابخانه"
                  data-caption="کتابخانه — بهترین کتاب‌های رشد فردی 📚"
@@ -854,7 +1057,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 <div class="story-label">کتابخانه</div>
             </div>
 
-            <div class="story-item" data-index="7"
+            <div class="story-item" data-index="9"
                  data-img="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg"
                  data-name="کمک اولیه"
                  data-caption="جعبه کمک‌های اولیه روانی 🩺"
@@ -869,7 +1072,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 <div class="story-label">کمک اولیه</div>
             </div>
 
-            <div class="story-item" data-index="8"
+            <div class="story-item" data-index="10"
                  data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png"
                  data-name="موزیک"
                  data-caption="موزیک‌های انگیزشی و مدیتیشن 🎵"
@@ -884,7 +1087,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 <div class="story-label">موزیک</div>
             </div>
 
-            <div class="story-item" data-index="9"
+            <div class="story-item" data-index="11"
                  data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/6452140137136714544.mp4"
                  data-name="ویدیوها"
                  data-caption="ویدیوهای آموزشی و انگیزشی 🎥"
@@ -899,7 +1102,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 <div class="story-label">ویدیوها</div>
             </div>
 
-            <div class="story-item" data-index="10"
+            <div class="story-item" data-index="12"
                  data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg"
                  data-name="چک لیست"
                  data-caption="چک لیست روزانه — روز خود را مدیریت کن 📜"
@@ -916,7 +1119,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
 
         </div>
     </div>
-
+    
     <!-- چت باکس -->
     <div class="chat-container">
         <div id="chat-output"></div>
@@ -1068,6 +1271,178 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
     </div>
 </div>
 
+<!-- ===================================================
+     BOTTOM NAVIGATION BAR
+     =================================================== -->
+<nav class="bottom-nav" id="bottom-nav">
+    <div class="bottom-nav-inner">
+
+        <!-- ۱. خانه (راست‌ترین) -->
+        <a class="nav-item active" id="nav-home" href="#" onclick="navClick(event,'nav-home')">
+            <div class="nav-icon-wrap">
+                <!-- ایکون خانه شیشه‌ای -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="home-grad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+                            <stop offset="100%" stop-color="#d4af37" stop-opacity="0.8"/>
+                        </linearGradient>
+                        <filter id="home-glow">
+                            <feGaussianBlur stdDeviation="0.5" result="blur"/>
+                            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                    </defs>
+                    <path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z"
+                          fill="url(#home-grad)" fill-opacity="0.2"
+                          stroke="url(#home-grad)" stroke-width="1.5"
+                          stroke-linejoin="round" filter="url(#home-glow)"/>
+                    <path d="M9 21V15H15V21" stroke="url(#home-grad)" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+                    <!-- شیشه روی در -->
+                    <rect x="10.5" y="15.5" width="3" height="5" rx="0.5"
+                          fill="white" fill-opacity="0.15" stroke="none"/>
+                    <!-- بازتاب -->
+                    <path d="M5 12L12 5.5L19 12" stroke="white" stroke-width="0.5" stroke-opacity="0.4" fill="none"/>
+                </svg>
+            </div>
+            <span class="nav-label">خانه</span>
+            <span>
+        </a>
+
+        <!-- ۲. پادکست‌ها -->
+        <a class="nav-item" id="nav-podcast" href="#" onclick="navClick(event,'nav-podcast')">
+            <div class="nav-icon-wrap">
+                <!-- ایکون میکروفون پادکست شیشه‌ای -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="mic-grad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+                            <stop offset="100%" stop-color="#a78bfa" stop-opacity="0.8"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- بدنه میکروفون -->
+                    <rect x="8.5" y="2" width="7" height="12" rx="3.5"
+                          fill="url(#mic-grad)" fill-opacity="0.18"
+                          stroke="url(#mic-grad)" stroke-width="1.5"/>
+                    <!-- بازتاب شیشه -->
+                    <path d="M10 4.5C10 3.7 10.5 3 11.2 3" stroke="white" stroke-width="1" stroke-opacity="0.5" stroke-linecap="round"/>
+                    <!-- پایه نگه‌دارنده -->
+                    <path d="M5 11C5 15.42 8.13 19 12 19C15.87 19 19 15.42 19 11"
+                          stroke="url(#mic-grad)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                    <!-- خط پایین -->
+                    <line x1="12" y1="19" x2="12" y2="22" stroke="url(#mic-grad)" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="9" y1="22" x2="15" y2="22" stroke="url(#mic-grad)" stroke-width="1.5" stroke-linecap="round"/>
+                    <!-- امواج صوتی -->
+                    <circle cx="12" cy="8" r="1.5" fill="url(#mic-grad)" fill-opacity="0.5"/>
+                </svg>
+            </div>
+            <span class="nav-label">پادکست‌ها</span>
+        </a>
+
+        <!-- ۳. Explore — وسط (کِرِستال/گوهر شیشه‌ای) -->
+        <a class="nav-item-center active" id="nav-explore" href="#" onclick="navCenterClick(event,'nav-explore')">
+            <div class="nav-center-orb">
+                <!-- ایکون کریستال/گوهر شیشه‌ای -->
+                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gem-top" x1="16" y1="2" x2="16" y2="16" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+                            <stop offset="100%" stop-color="#ffd060" stop-opacity="0.7"/>
+                        </linearGradient>
+                        <linearGradient id="gem-bot" x1="16" y1="16" x2="16" y2="30" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#ffd060" stop-opacity="0.8"/>
+                            <stop offset="100%" stop-color="#d4af37" stop-opacity="0.5"/>
+                        </linearGradient>
+                        <linearGradient id="gem-left" x1="2" y1="16" x2="16" y2="16" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.6"/>
+                            <stop offset="100%" stop-color="#ffd060" stop-opacity="0.3"/>
+                        </linearGradient>
+                        <linearGradient id="gem-right" x1="16" y1="16" x2="30" y2="16" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#ffd060" stop-opacity="0.3"/>
+                            <stop offset="100%" stop-color="#60d4fa" stop-opacity="0.6"/>
+                        </linearGradient>
+                        <filter id="gem-glow">
+                            <feGaussianBlur stdDeviation="1" result="blur"/>
+                            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                    </defs>
+                    <!-- فاست‌های الماس -->
+                    <!-- بالا -->
+                    <polygon points="16,2 8,12 16,16 24,12" fill="url(#gem-top)" fill-opacity="0.85" stroke="rgba(255,255,255,0.5)" stroke-width="0.5" filter="url(#gem-glow)"/>
+                    <!-- پایین -->
+                    <polygon points="8,12 16,30 24,12 16,16" fill="url(#gem-bot)" fill-opacity="0.7" stroke="rgba(212,175,55,0.4)" stroke-width="0.5"/>
+                    <!-- چپ -->
+                    <polygon points="2,8 8,12 16,16 16,2" fill="url(#gem-left)" fill-opacity="0.5" stroke="rgba(167,139,250,0.3)" stroke-width="0.4"/>
+                    <!-- راست -->
+                    <polygon points="30,8 24,12 16,16 16,2" fill="url(#gem-right)" fill-opacity="0.5" stroke="rgba(96,212,250,0.3)" stroke-width="0.4"/>
+                    <!-- بازتاب سفید درخشان -->
+                    <polygon points="16,2 19,8 16,10 13,8" fill="white" fill-opacity="0.55"/>
+                    <polygon points="16,2 13,8 16,10 16,2" fill="white" fill-opacity="0.3"/>
+                </svg>
+            </div>
+            <span class="nav-center-label">Explore</span>
+        </a>
+
+        <!-- ۴. دوره‌ها -->
+        <a class="nav-item" id="nav-courses" href="#" onclick="navClick(event,'nav-courses')">
+            <div class="nav-icon-wrap">
+                <!-- ایکون پوشه شیشه‌ای دوره‌ها -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="folder-grad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+                            <stop offset="100%" stop-color="#60d4fa" stop-opacity="0.8"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- پوشه اصلی -->
+                    <path d="M2 7C2 5.9 2.9 5 4 5H9.17C9.7 5 10.21 5.21 10.59 5.59L11.41 6.41C11.79 6.79 12.3 7 12.83 7H20C21.1 7 22 7.9 22 9V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V7Z"
+                          fill="url(#folder-grad)" fill-opacity="0.18"
+                          stroke="url(#folder-grad)" stroke-width="1.5" stroke-linejoin="round"/>
+                    <!-- خط بازتاب شیشه داخل -->
+                    <path d="M4 9H20" stroke="white" stroke-width="0.6" stroke-opacity="0.35" stroke-linecap="round"/>
+                    <!-- ستاره / نشانه دوره -->
+                    <path d="M12 12L13.12 14.27L15.62 14.62L13.81 16.38L14.24 18.88L12 17.7L9.76 18.88L10.19 16.38L8.38 14.62L10.88 14.27L12 12Z"
+                          fill="url(#folder-grad)" fill-opacity="0.7" stroke="url(#folder-grad)" stroke-width="0.8"/>
+                </svg>
+            </div>
+            <span class="nav-label">دوره‌ها</span>
+        </a>
+
+        <!-- ۵. تمرینات روزانه (چک‌لیست) -->
+        <a class="nav-item" id="nav-checklist" href="#" onclick="navClick(event,'nav-checklist')">
+            <div class="nav-icon-wrap">
+                <!-- ایکون برگه + قلم + چک‌لیست شیشه‌ای -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="check-grad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+                            <stop offset="100%" stop-color="#34d399" stop-opacity="0.8"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- برگه -->
+                    <path d="M6 2H15L20 7V21C20 21.55 19.55 22 19 22H6C5.45 22 5 21.55 5 21V3C5 2.45 5.45 2 6 2Z"
+                          fill="url(#check-grad)" fill-opacity="0.15"
+                          stroke="url(#check-grad)" stroke-width="1.5" stroke-linejoin="round"/>
+                    <!-- تا صفحه -->
+                    <path d="M15 2V7H20" stroke="url(#check-grad)" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+                    <!-- بازتاب شیشه -->
+                    <path d="M7 4H13" stroke="white" stroke-width="0.6" stroke-opacity="0.4" stroke-linecap="round"/>
+                    <!-- ردیف چک ۱ -->
+                    <path d="M8 11L9.5 12.5L12 10" stroke="url(#check-grad)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="13" y1="11.5" x2="17" y2="11.5" stroke="url(#check-grad)" stroke-width="1.2" stroke-linecap="round" stroke-opacity="0.6"/>
+                    <!-- ردیف چک ۲ -->
+                    <path d="M8 15L9.5 16.5L12 14" stroke="url(#check-grad)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="13" y1="15.5" x2="17" y2="15.5" stroke="url(#check-grad)" stroke-width="1.2" stroke-linecap="round" stroke-opacity="0.6"/>
+                    <!-- قلم کوچک روی گوشه -->
+                    <path d="M16.5 19L19 16.5L20.5 18L18 20.5L16.5 19Z" fill="url(#check-grad)" fill-opacity="0.8" stroke="url(#check-grad)" stroke-width="0.5"/>
+                    <path d="M19 16.5L20 15.5L21.5 17L20.5 18" stroke="url(#check-grad)" stroke-width="0.8" fill="none"/>
+                </svg>
+            </div>
+            <span class="nav-label">تمرینات</span>
+        </a>
+
+    </div>
+</nav>
+
 <script>
 /* ================================================
    VPN DETECTION
@@ -1161,7 +1536,7 @@ var DAY_MS = 24 * 60 * 60 * 1000;
 
 function getSeenMap() {
     try {
-        var raw = localStorage.getItem(STORY_SEEN_KEY);
+      var raw = localStorage.getItem(STORY_SEEN_KEY);
         if (!raw) return {};
         var map = JSON.parse(raw);
         var now = Date.now();
@@ -1222,15 +1597,12 @@ function closeStoryModal() {
     clearStoryTimer();
 }
 
-/* تشخیص ویدیو: پسوند URL یا data-type="video" روی story-item */
 function getMediaType(url, el) {
-    // اگر روی المان data-type="video" باشه
     if (el && el.dataset.type === 'video') return 'video';
     if (!url) return 'image';
     var clean = url.toLowerCase().split('?')[0].split('#')[0];
     var ext = clean.split('.').pop();
     if (['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv', 'm4v'].includes(ext)) return 'video';
-    // Cloudinary: اگر /video/upload/ در URL باشه
     if (clean.indexOf('/video/upload/') >= 0) return 'video';
     return 'image';
 }
@@ -1245,7 +1617,6 @@ function renderStoryModal() {
     var mediaType  = getMediaType(s.img, s.el);
     var contentDiv = document.getElementById('story-modal-content');
 
-    // توقف و حذف مدیا قبلی
     var oldVideo = contentDiv.querySelector('video');
     if (oldVideo) { oldVideo.pause(); oldVideo.src = ''; oldVideo.remove(); }
     var oldImg = contentDiv.querySelector('img');
@@ -1257,46 +1628,28 @@ function renderStoryModal() {
         video.setAttribute('webkit-playsinline', '');
         video.muted = false;
         video.autoplay = true;
-        video.controls = false;         // کنترل‌های سفارشی داریم
+        video.controls = false;
         video.preload = 'auto';
         video.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
 
-        // وقتی ویدیو تموم شد برو بعدی
-        video.addEventListener('ended', function() {
-            storyNavigate(1);
-        });
-
-        // اگر ویدیو لود نشد fallback به تایمر ۵ ثانیه
-        video.addEventListener('error', function() {
-            console.warn('Video load error, falling back to timer');
-            startStoryTimer();
-        });
-
-        // وقتی متادیتا لود شد تایمر رو بر اساس مدت ویدیو تنظیم کن
+        video.addEventListener('ended', function() { storyNavigate(1); });
+        video.addEventListener('error', function() { startStoryTimer(); });
         video.addEventListener('loadedmetadata', function() {
-            clearStoryTimer();  // تایمر پیشفرض رو حذف کن
+            clearStoryTimer();
             updateProgressForVideo(video);
         });
 
-        // source اضافه کن (برای Cloudinary و غیره)
         var source = document.createElement('source');
         source.src = s.img;
-        // اگر پسوند نداشت type رو mp4 فرض کن
         var ext = s.img.toLowerCase().split('?')[0].split('.').pop();
         source.type = ['webm','ogg'].includes(ext) ? 'video/' + ext : 'video/mp4';
         video.appendChild(source);
-
         contentDiv.appendChild(video);
 
-        // سعی کن autoplay
         var playPromise = video.play();
         if (playPromise !== undefined) {
-            playPromise.catch(function() {
-                // autoplay block شد، نمایش دکمه پلی
-                showPlayOverlay(video, contentDiv);
-            });
+            playPromise.catch(function() { showPlayOverlay(video, contentDiv); });
         }
-
     } else {
         var img = document.createElement('img');
         img.src = s.img;
@@ -1318,14 +1671,12 @@ function renderStoryModal() {
     }
 }
 
-/* نوار پیشرفت sync با ویدیو */
 function updateProgressForVideo(video) {
     var bar = document.getElementById('story-progress-bar');
     var segs = bar.querySelectorAll('.progress-seg');
     var activeSeg = segs[storyIndex];
     if (!activeSeg) return;
 
-    // انیمیشن CSS رو حذف کن، دستی آپدیت می‌کنیم
     var fill = activeSeg.querySelector('.progress-seg-fill');
     activeSeg.classList.remove('active');
     fill.style.transition = 'none';
@@ -1344,7 +1695,6 @@ function updateProgressForVideo(video) {
     });
 }
 
-/* دکمه پلی وقتی autoplay بلاک شد */
 function showPlayOverlay(video, container) {
     var overlay = document.createElement('div');
     overlay.style.cssText = 'position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);cursor:pointer;';
@@ -1352,10 +1702,7 @@ function showPlayOverlay(video, container) {
     btn.style.cssText = 'width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-size:32px;';
     btn.textContent = '▶';
     overlay.appendChild(btn);
-    overlay.addEventListener('click', function() {
-        video.play();
-        overlay.remove();
-    });
+    overlay.addEventListener('click', function() { video.play(); overlay.remove(); });
     container.appendChild(overlay);
 }
 
@@ -1547,6 +1894,69 @@ function closeMenu() {
 document.addEventListener('keydown', function(e) { if (e.key === "Escape") closeMenu(); });
 
 /* ================================================
+   BOTTOM NAVIGATION BAR
+   ================================================ */
+
+// لینک‌های هر آیتم — اینجا پر کن
+var NAV_LINKS = {
+    'nav-home':      'https://planlife.ir',   // ← لینک خانه
+    'nav-podcast':   'https://planlife.ir/Pages/podcastfree/index.html',   // ← لینک پادکست‌ها
+    'nav-explore':   'https://planlife.ir/Pages/Explore/index.html',   // ← لینک Explore
+    'nav-courses':   'https://planlife.ir/Pages/doreha/index.html',   // ← لینک دوره‌ها
+    'nav-checklist': 'https://planlife.ir/Pages/tamrin/index.html'    // ← لینک تمرینات
+};
+
+function navRipple(element) {
+    var ripple = document.createElement('span');
+    ripple.className = 'nav-ripple';
+    element.style.position = 'relative';
+    element.style.overflow = 'hidden';
+    element.appendChild(ripple);
+    setTimeout(function() { ripple.remove(); }, 500);
+}
+
+function navClick(e, id) {
+    e.preventDefault();
+
+    // ریپل
+    navRipple(document.getElementById(id));
+
+    // حذف active از همه آیتم‌های عادی
+    document.querySelectorAll('.nav-item').forEach(function(item) {
+        item.classList.remove('active');
+    });
+    // آیتم وسط هم active نگیرد اگر آیتم دیگه‌ای کلیک شد
+    var center = document.getElementById('nav-explore');
+    if (center) center.classList.remove('active');
+
+    // active کردن آیتم کلیک‌شده
+    document.getElementById(id).classList.add('active');
+
+    // رفتن به لینک با تأخیر کوتاه (برای نمایش انیمیشن)
+    var link = NAV_LINKS[id];
+    if (link && link !== '#') {
+        setTimeout(function() { window.location.href = link; }, 220);
+    }
+}
+
+function navCenterClick(e, id) {
+    e.preventDefault();
+
+    navRipple(document.getElementById(id));
+
+    // حذف active از همه
+    document.querySelectorAll('.nav-item').forEach(function(item) {
+        item.classList.remove('active');
+    });
+    document.getElementById(id).classList.add('active');
+
+    var link = NAV_LINKS[id];
+    if (link && link !== '#') {
+        setTimeout(function() { window.location.href = link; }, 220);
+    }
+}
+
+/* ================================================
    INIT
    ================================================ */
 window.onload = function() {
@@ -1571,3 +1981,5 @@ window.onload = function() {
 </script>
 </body>
 </html>
+HTMLEOF
+echo "done"
