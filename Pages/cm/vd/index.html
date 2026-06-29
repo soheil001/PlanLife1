@@ -723,7 +723,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
         <div class="stories-scroll" id="stories-scroll">
 
             <div class="story-item" data-index="0"
-                 data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/F0FC4F98-99EB-494A-A8FC-240266E37D8D.gif"
+                 data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png"
                  data-name="پادکست"
                  data-caption="پادکست‌های رایگان PlanLife 🎙️"
                  data-btn-show="true"
@@ -738,7 +738,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
             </div>
 
             <div class="story-item" data-index="1"
-                 data-img="6452140137136714544.mp4"
+                 data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"
                  data-name="دوره‌ها"
                  data-caption="دوره‌های تخصصی رشد فردی 🚀"
                  data-btn-show="true"
@@ -783,11 +783,11 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
             </div>
 
             <div class="story-item" data-index="4"
-                 data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/IMG_2487.jpeg"
-                 data-name="پاکسازی ذهن "
+                 data-img="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png"
+                 data-name="تمرینات"
                  data-caption="پاکسازی ذهن 🔥"
                  data-btn-show="true"
-                 data-btn-text="شروع پاکسازی"
+                 data-btn-text="شروع تمرین"
                  data-btn-link="https://planlife.ir/Pages/paksazi/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
@@ -798,7 +798,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
             </div>
 
             <div class="story-item" data-index="5"
-                 data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/6452140137136714544.mp4"
+                 data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg"
                  data-name="تابلو آرزو"
                  data-caption="تابلو آرزوها — رویاهایت را ببین 🔖"
                  data-btn-show="true"
@@ -858,7 +858,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
             </div>
 
             <div class="story-item" data-index="9"
-                 data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779985702/IMG_1211_snjqjm.jpg"
+                 data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/6452140137136714544.mp4"
                  data-name="ویدیوها"
                  data-caption="ویدیوهای آموزشی و انگیزشی 🎥"
                  data-btn-show="true"
@@ -1195,10 +1195,16 @@ function closeStoryModal() {
     clearStoryTimer();
 }
 
-function getMediaType(url) {
+/* تشخیص ویدیو: پسوند URL یا data-type="video" روی story-item */
+function getMediaType(url, el) {
+    // اگر روی المان data-type="video" باشه
+    if (el && el.dataset.type === 'video') return 'video';
     if (!url) return 'image';
-    var ext = url.toLowerCase().split('?')[0].split('.').pop();
+    var clean = url.toLowerCase().split('?')[0].split('#')[0];
+    var ext = clean.split('.').pop();
     if (['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv', 'm4v'].includes(ext)) return 'video';
+    // Cloudinary: اگر /video/upload/ در URL باشه
+    if (clean.indexOf('/video/upload/') >= 0) return 'video';
     return 'image';
 }
 
@@ -1209,20 +1215,61 @@ function renderStoryModal() {
     s.el.classList.add('seen');
     markSeenPersisted(storyIndex);
 
-    var mediaType  = getMediaType(s.img);
+    var mediaType  = getMediaType(s.img, s.el);
     var contentDiv = document.getElementById('story-modal-content');
 
-    // حذف مدیا قبلی (نه nav ها)
-    var oldMedia = contentDiv.querySelector('img, video');
-    if (oldMedia) oldMedia.remove();
+    // توقف و حذف مدیا قبلی
+    var oldVideo = contentDiv.querySelector('video');
+    if (oldVideo) { oldVideo.pause(); oldVideo.src = ''; oldVideo.remove(); }
+    var oldImg = contentDiv.querySelector('img');
+    if (oldImg) oldImg.remove();
 
     if (mediaType === 'video') {
         var video = document.createElement('video');
-        video.src = s.img;
-        video.controls = true;
+        video.setAttribute('playsinline', '');
+        video.setAttribute('webkit-playsinline', '');
+        video.muted = false;
         video.autoplay = true;
+        video.controls = false;         // کنترل‌های سفارشی داریم
+        video.preload = 'auto';
         video.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
+
+        // وقتی ویدیو تموم شد برو بعدی
+        video.addEventListener('ended', function() {
+            storyNavigate(1);
+        });
+
+        // اگر ویدیو لود نشد fallback به تایمر ۵ ثانیه
+        video.addEventListener('error', function() {
+            console.warn('Video load error, falling back to timer');
+            startStoryTimer();
+        });
+
+        // وقتی متادیتا لود شد تایمر رو بر اساس مدت ویدیو تنظیم کن
+        video.addEventListener('loadedmetadata', function() {
+            clearStoryTimer();  // تایمر پیشفرض رو حذف کن
+            updateProgressForVideo(video);
+        });
+
+        // source اضافه کن (برای Cloudinary و غیره)
+        var source = document.createElement('source');
+        source.src = s.img;
+        // اگر پسوند نداشت type رو mp4 فرض کن
+        var ext = s.img.toLowerCase().split('?')[0].split('.').pop();
+        source.type = ['webm','ogg'].includes(ext) ? 'video/' + ext : 'video/mp4';
+        video.appendChild(source);
+
         contentDiv.appendChild(video);
+
+        // سعی کن autoplay
+        var playPromise = video.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(function() {
+                // autoplay block شد، نمایش دکمه پلی
+                showPlayOverlay(video, contentDiv);
+            });
+        }
+
     } else {
         var img = document.createElement('img');
         img.src = s.img;
@@ -1242,6 +1289,47 @@ function renderStoryModal() {
         btn.classList.remove('show');
         btn.removeAttribute('href');
     }
+}
+
+/* نوار پیشرفت sync با ویدیو */
+function updateProgressForVideo(video) {
+    var bar = document.getElementById('story-progress-bar');
+    var segs = bar.querySelectorAll('.progress-seg');
+    var activeSeg = segs[storyIndex];
+    if (!activeSeg) return;
+
+    // انیمیشن CSS رو حذف کن، دستی آپدیت می‌کنیم
+    var fill = activeSeg.querySelector('.progress-seg-fill');
+    activeSeg.classList.remove('active');
+    fill.style.transition = 'none';
+    fill.style.width = '0%';
+
+    function updateFill() {
+        if (!video.duration || video.paused || video.ended) return;
+        var pct = (video.currentTime / video.duration) * 100;
+        fill.style.width = pct + '%';
+        requestAnimationFrame(updateFill);
+    }
+    video.addEventListener('play', function() { requestAnimationFrame(updateFill); });
+    video.addEventListener('timeupdate', function() {
+        if (!video.duration) return;
+        fill.style.width = ((video.currentTime / video.duration) * 100) + '%';
+    });
+}
+
+/* دکمه پلی وقتی autoplay بلاک شد */
+function showPlayOverlay(video, container) {
+    var overlay = document.createElement('div');
+    overlay.style.cssText = 'position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);cursor:pointer;';
+    var btn = document.createElement('div');
+    btn.style.cssText = 'width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-size:32px;';
+    btn.textContent = '▶';
+    overlay.appendChild(btn);
+    overlay.addEventListener('click', function() {
+        video.play();
+        overlay.remove();
+    });
+    container.appendChild(overlay);
 }
 
 function buildProgressBar() {
