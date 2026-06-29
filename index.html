@@ -28,7 +28,6 @@ html, body {
     position: absolute; top:0; left:0; right:0; bottom:0;
     background-image: radial-gradient(white 1px, transparent 1px);
     background-size: 80px 80px; opacity: 0.45;
-    /* بدون animation — کاملاً ثابت */
 }
 .stars::after {
     background-size: 140px 140px; opacity: 0.3;
@@ -74,10 +73,9 @@ header {
     margin-bottom: 22px; position: relative;
 }
 
-/* فید افقی اسکرول */
 .stories-scroll {
     display: flex;
-    flex-direction: row; /* چپ به راست — استوری اول سمت چپ */
+    flex-direction: row;
     direction: ltr;
     gap: 14px;
     overflow-x: auto; overflow-y: hidden;
@@ -90,7 +88,6 @@ header {
 .stories-scroll:active { cursor: grabbing; }
 .stories-scroll::-webkit-scrollbar { display: none; }
 
-/* محو شیشه‌ای چپ و راست */
 .stories-wrapper::before,
 .stories-wrapper::after {
     content: ''; position: absolute; top: 0; bottom: 0;
@@ -105,7 +102,6 @@ header {
     background: linear-gradient(to right, rgba(3,3,3,0.85), transparent);
 }
 
-/* ===== یک آیتم استوری ===== */
 .story-item {
     display: flex; flex-direction: column;
     align-items: center; gap: 6px;
@@ -113,7 +109,6 @@ header {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* حلقه رنگارنگ — دیده نشده */
 .story-ring {
     width: 80px; height: 80px; border-radius: 50%;
     padding: 2.5px;
@@ -121,17 +116,15 @@ header {
     transition: background 0.4s ease;
     flex-shrink: 0;
 }
-/* دیده شده → خاکستری */
 .story-item.seen .story-ring {
     background: rgba(255,255,255,0.18);
 }
 
-/* دایره شیشه‌ای داخل */
 .story-avatar {
     width: 100%; height: 100%; border-radius: 50%;
     background: rgba(255,255,255,0.10);
     backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border: 2.5px solid rgba(3,3,3,0.9); /* فاصله بین عکس و نوار */
+    border: 2.5px solid rgba(3,3,3,0.9);
     overflow: hidden;
     display: flex; align-items: center; justify-content: center;
 }
@@ -140,7 +133,6 @@ header {
     object-fit: cover; border-radius: 50%;
 }
 
-/* نام زیر استوری */
 .story-label {
     font-size: 10.5px; font-weight: 600;
     color: rgba(255,255,255,0.85); text-align: center;
@@ -149,34 +141,49 @@ header {
 }
 
 /* ===================================================
-   STORY MODAL — تمام صفحه
+   STORY MODAL — تمام صفحه ۹:۱۶
    =================================================== */
 #story-modal {
     position: fixed; top:0; left:0; right:0; bottom:0;
     z-index: 9000;
     background: rgba(0,0,0,0.92);
     backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-    display: flex; flex-direction: column; align-items: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
     opacity: 0; pointer-events: none;
     transition: opacity 0.3s ease;
 }
 #story-modal.open { opacity: 1; pointer-events: auto; }
 
+/* کادر استوری ۹:۱۶ */
+.story-container {
+    width: 100%; max-width: 375px;
+    aspect-ratio: 9 / 16;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+    position: relative;
+}
+
 /* نوار پیشرفت بالا */
 .story-progress-bar {
-    display: flex; gap: 4px;
+    display: flex; gap: 3px;
     direction: ltr;
-    padding: 14px 16px 8px;
-    width: 100%; max-width: 420px;
+    padding: 8px 12px;
+    width: 100%;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 .progress-seg {
-    flex: 1; height: 2.5px;
+    flex: 1; height: 2px;
     background: rgba(255,255,255,0.25);
-    border-radius: 4px; overflow: hidden;
+    border-radius: 3px; overflow: hidden;
 }
 .progress-seg-fill {
     height: 100%; background: white;
-    width: 0%; transition: none; border-radius: 4px;
+    width: 0%; transition: none; border-radius: 3px;
 }
 .progress-seg.done .progress-seg-fill { width: 100%; }
 .progress-seg.active .progress-seg-fill {
@@ -184,40 +191,76 @@ header {
 }
 @keyframes progress-run { from { width: 0%; } to { width: 100%; } }
 
-/* هدر مودال */
+/* هدر: لوگو + متن + چک */
 .story-modal-header {
-    display: flex; align-items: center; gap: 10px;
-    padding: 4px 16px 12px;
-    width: 100%; max-width: 420px; direction: rtl;
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 12px;
+    width: 100%;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    direction: rtl;
+    flex-shrink: 0;
+    justify-content: space-between;
+    flex-direction: row-reverse;
 }
-.story-modal-avatar {
-    width: 36px; height: 36px; border-radius: 50%;
-    border: 1.5px solid rgba(255,255,255,0.4);
-    overflow: hidden; background: rgba(255,255,255,0.1);
-    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+.story-logo-section {
+    display: flex; align-items: center; gap: 8px;
+    flex: 0 0 auto;
 }
-.story-modal-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.story-modal-name { font-size: 14px; font-weight: 700; color: white; }
+.story-logo-img {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 20px; font-weight: 900; color: white;
+    overflow: hidden;
+}
+.story-logo-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.story-branding {
+    display: flex; align-items: center; gap: 4px;
+}
+.story-branding-text {
+    font-size: 15px; font-weight: 700; color: white;
+    line-height: 1;
+}
+.story-checkmark {
+    width: 20px; height: 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    color: #0084ff;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+.story-checkmark img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+}
 .story-modal-close {
-    margin-right: auto; font-size: 22px;
-    color: white; cursor: pointer; padding: 4px; line-height: 1;
+    font-size: 22px;
+    color: white; cursor: pointer; padding: 4px 6px; line-height: 1;
 }
 
-/* محتوای اصلی استوری — شیشه‌ای */
+/* محتوای اصلی — عکس */
 .story-modal-content {
-    flex: 1; width: 100%; max-width: 420px;
-    position: relative; overflow: hidden;
-    background: rgba(255,255,255,0.07);
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border-radius: 12px; margin: 0 12px;
+    flex: 1;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
     display: flex; align-items: center; justify-content: center;
 }
 .story-modal-content img {
     width: 100%; height: 100%;
-    object-fit: cover; border-radius: 12px;
+    object-fit: cover;
 }
 
-/* دکمه ناوبری چپ/راست روی محتوا */
+/* ناوبری */
 .story-nav-left,
 .story-nav-right {
     position: absolute; top: 0; bottom: 0;
@@ -227,34 +270,68 @@ header {
 .story-nav-right { right: 0; }
 .story-nav-left  { left: 0; }
 
-/* زیرنویس استوری */
-.story-caption {
-    padding: 6px 16px 20px;
-    width: 100%; max-width: 420px;
-    font-size: 14px; font-weight: 500;
-    color: rgba(255,255,255,0.9);
-    text-align: center; line-height: 1.8; min-height: 54px;
+/* کپشن و دکمه پایین */
+.story-footer {
+    display: flex; flex-direction: column; gap: 10px;
+    padding: 14px 12px;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    flex-shrink: 0;
+    width: 100%;
 }
 
-/* دکمه شیشه‌ای زیر استوری */
-.story-action-btn {
-    display: none; /* پیش‌فرض مخفی، با JS فعال می‌شود */
-    align-items: center; justify-content: center;
-    width: calc(100% - 32px); max-width: 388px;
-    margin: 10px 16px 4px;
-    padding: 13px 20px;
-    background: rgba(255,255,255,0.14);
-    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(212,175,55,0.55);
-    border-radius: 18px;
-    box-shadow: 0 8px 28px rgba(0,0,0,0.5), 0 0 18px rgba(212,175,55,0.2), inset 0 1px 0 rgba(255,255,255,0.18);
-    color: #ffd060; font-family: 'Vazirmatn', sans-serif;
-    font-size: 14.5px; font-weight: 800; text-decoration: none;
-    text-shadow: 0 0 10px rgba(212,175,55,0.35);
-    text-align: center;
-    transition: transform 0.15s ease, background 0.2s ease;
+.story-caption {
+    font-size: 13px; font-weight: 500;
+    color: rgba(255,255,255,0.9);
+    text-align: center; line-height: 1.6;
+    min-height: 32px;
+    display: flex; align-items: center; justify-content: center;
 }
-.story-action-btn:active { transform: scale(0.96); background: rgba(255,255,255,0.2); }
+
+/* دکمه شیشه‌ای بسیار خوشگل */
+.story-action-btn {
+    display: none;
+    align-items: center; justify-content: center;
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.13);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1.2px solid rgba(212,175,55,0.6);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4), 
+                0 0 20px rgba(212,175,55,0.15),
+                inset 0 1px 0 rgba(255,255,255,0.25);
+    color: #ffd060;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 15px; font-weight: 800;
+    text-decoration: none;
+    text-shadow: 0 0 8px rgba(212,175,55,0.4);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+.story-action-btn::before {
+    content: ''; position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255,255,255,0.2), 
+        transparent);
+    animation: glass-shine 2.5s ease-in-out infinite;
+}
+@keyframes glass-shine {
+    0%      { left: -100%; }
+    50%     { left: 100%; }
+    100%    { left: 100%; }
+}
+.story-action-btn:active {
+    transform: scale(0.97);
+    background: rgba(255,255,255,0.18);
+}
 .story-action-btn.show { display: flex; }
 
 /* ===== CHAT BOX ===== */
@@ -595,26 +672,39 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
 
 <!-- Story Full-Screen Modal -->
 <div id="story-modal">
-    <!-- نوار پیشرفت -->
-    <div class="story-progress-bar" id="story-progress-bar"></div>
-    <!-- هدر: عکس + نام + بستن -->
-    <div class="story-modal-header">
-        <div class="story-modal-avatar">
-            <img id="story-modal-avatar-img" src="" alt="">
+    <div class="story-container">
+        <!-- نوار پیشرفت -->
+        <div class="story-progress-bar" id="story-progress-bar"></div>
+        
+        <!-- هدر: لوگو + متن + چک + بستن -->
+        <div class="story-modal-header">
+            <div class="story-logo-section">
+                <div class="story-checkmark">
+                    <img src="http://fs3.centraldnserver.com/~planlife/pics/MagicEraser_260629_074549.png" alt="✓">
+                </div>
+                <div class="story-branding">
+                    <div class="story-branding-text">planlife.ir</div>
+                </div>
+                <div class="story-logo-img">
+                    <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
+                </div>
+            </div>
+            <div class="story-modal-close" onclick="closeStoryModal()">✕</div>
         </div>
-        <div class="story-modal-name" id="story-modal-name"></div>
-        <div class="story-modal-close" onclick="closeStoryModal()">✕</div>
+        
+        <!-- محتوای اصلی — عکس -->
+        <div class="story-modal-content" id="story-modal-content">
+            <div class="story-nav-left"  onclick="storyNavigate(-1)"></div>
+            <div class="story-nav-right" onclick="storyNavigate(1)"></div>
+            <img id="story-modal-img" src="" alt="">
+        </div>
+        
+        <!-- کپشن و دکمه شیشه‌ای پایین -->
+        <div class="story-footer">
+            <div class="story-caption" id="story-caption"></div>
+            <a class="story-action-btn" id="story-action-btn" href="#" target="_blank" rel="noopener"></a>
+        </div>
     </div>
-    <!-- محتوای اصلی -->
-    <div class="story-modal-content" id="story-modal-content">
-        <div class="story-nav-left"  onclick="storyNavigate(-1)"></div>
-        <div class="story-nav-right" onclick="storyNavigate(1)"></div>
-        <img id="story-modal-img" src="" alt="">
-    </div>
-    <!-- دکمه شیشه‌ای -->
-    <a class="story-action-btn" id="story-action-btn" href="#" target="_blank" rel="noopener"></a>
-    <!-- زیرنویس -->
-    <div class="story-caption" id="story-caption"></div>
 </div>
 
 <header>
@@ -624,18 +714,6 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
 <div class="main-center">
     <div class="title">PlanLife</div>
 
-    <!-- ===================================================
-         استوری‌ها
-         برای تغییر هر استوری:
-           data-img     = لینک عکس تمام‌صفحه مودال
-           data-cover   = لینک عکس کاور دایره
-           data-name    = نام زیر دایره
-           data-caption = متن توضیح پایین مودال
-           data-btn-show = true یا false → دکمه شیشه‌ای نمایش داده شود یا نه
-           data-btn-text = متن داخل دکمه (وقتی show=true)
-           data-btn-link = لینکی که با زدن دکمه در تب جدید باز می‌شود
-         عکس داخل <img src="..."> هم همان کاور است
-         =================================================== -->
     <div class="stories-wrapper">
         <div class="stories-scroll" id="stories-scroll">
 
@@ -706,8 +784,9 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 </div>
                 <div class="story-label">تمرینات</div>
             </div>
-                        <!-- Story 4 — پاکسازی ذهن -->
-            <div class="story-item" data-index="3"
+
+            <!-- Story 5 — پاکسازی ذهن -->
+            <div class="story-item" data-index="4"
                  data-img="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png"
                  data-cover="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png"
                  data-name="تمرینات"
@@ -723,8 +802,8 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 <div class="story-label">پاکسازی ذهن</div>
             </div>
 
-            <!-- Story 5 — تابلو آرزو -->
-            <div class="story-item" data-index="4"
+            <!-- Story 6 — تابلو آرزو -->
+            <div class="story-item" data-index="5"
                  data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg"
                  data-cover="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg"
                  data-name="تابلو آرزو"
@@ -740,8 +819,8 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 <div class="story-label">تابلو آرزو</div>
             </div>
 
-            <!-- Story 6 — کتابخانه -->
-            <div class="story-item" data-index="5"
+            <!-- Story 7 — کتابخانه -->
+            <div class="story-item" data-index="6"
                  data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg"
                  data-cover="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg"
                  data-name="کتابخانه"
@@ -757,8 +836,8 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 <div class="story-label">کتابخانه</div>
             </div>
 
-            <!-- Story 7 — کمک اولیه -->
-            <div class="story-item" data-index="6"
+            <!-- Story 8 — کمک اولیه -->
+            <div class="story-item" data-index="7"
                  data-img="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg"
                  data-cover="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg"
                  data-name="کمک اولیه"
@@ -774,8 +853,8 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 <div class="story-label">کمک اولیه</div>
             </div>
 
-            <!-- Story 8 — موزیک -->
-            <div class="story-item" data-index="7"
+            <!-- Story 9 — موزیک -->
+            <div class="story-item" data-index="8"
                  data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png"
                  data-cover="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png"
                  data-name="موزیک"
@@ -791,8 +870,8 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 <div class="story-label">موزیک</div>
             </div>
 
-            <!-- Story 9 — ویدیوها -->
-            <div class="story-item" data-index="8"
+            <!-- Story 10 — ویدیوها -->
+            <div class="story-item" data-index="9"
                  data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779985702/IMG_1211_snjqjm.jpg"
                  data-cover="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779985702/IMG_1211_snjqjm.jpg"
                  data-name="ویدیوها"
@@ -808,8 +887,8 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 <div class="story-label">ویدیوها</div>
             </div>
 
-            <!-- Story 10 — چک لیست -->
-            <div class="story-item" data-index="9"
+            <!-- Story 11 — چک لیست -->
+            <div class="story-item" data-index="10"
                  data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg"
                  data-cover="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg"
                  data-name="چک لیست"
@@ -825,8 +904,8 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 <div class="story-label">چک لیست</div>
             </div>
 
-        </div><!-- /stories-scroll -->
-    </div><!-- /stories-wrapper -->
+        </div>
+    </div>
 
     <!-- چت باکس -->
     <div class="chat-container">
@@ -1064,13 +1143,12 @@ function initVpnCheck() {
 /* ================================================
    STORIES — منطق کامل
    ================================================ */
-var stories     = [];    /* آرایه اطلاعات استوری‌ها از DOM */
-var storyIndex  = 0;     /* استوری جاری در مودال */
-var storyTimer  = null;  /* تایمر auto-advance 5 ثانیه */
-var STORY_SEEN_KEY = 'planlife_stories_seen'; /* ذخیره وضعیت دیده‌شده با IP/دستگاه برای ۲۴ ساعت */
+var stories     = [];
+var storyIndex  = 0;
+var storyTimer  = null;
+var STORY_SEEN_KEY = 'planlife_stories_seen';
 var DAY_MS = 24 * 60 * 60 * 1000;
 
-/* خوندن لیست استوری‌های دیده‌شده (فقط اگر کمتر از ۲۴ ساعت از دیدنشون گذشته) */
 function getSeenMap() {
     try {
         var raw = localStorage.getItem(STORY_SEEN_KEY);
@@ -1096,7 +1174,6 @@ function isSeenPersisted(idx) {
     return Object.prototype.hasOwnProperty.call(map, idx);
 }
 
-/* جمع‌آوری اطلاعات از DOM */
 function initStories() {
     var items = document.querySelectorAll('.story-item');
     items.forEach(function(item) {
@@ -1121,7 +1198,6 @@ function initStories() {
     initDragScroll();
 }
 
-/* باز کردن مودال */
 function openStoryModal(idx) {
     storyIndex = idx;
     document.getElementById('story-modal').classList.add('open');
@@ -1131,24 +1207,20 @@ function openStoryModal(idx) {
     startStoryTimer();
 }
 
-/* بستن مودال */
 function closeStoryModal() {
     document.getElementById('story-modal').classList.remove('open');
     document.body.style.overflow = '';
     clearStoryTimer();
 }
 
-/* رندر محتوا */
 function renderStoryModal() {
     var s = stories[storyIndex];
     if (!s) { closeStoryModal(); return; }
     s.seen = true;
     s.el.classList.add('seen');
     markSeenPersisted(storyIndex);
-    document.getElementById('story-modal-img').src         = s.img;
-    document.getElementById('story-modal-avatar-img').src  = s.cover || s.img;
-    document.getElementById('story-modal-name').textContent = s.name;
-    document.getElementById('story-caption').textContent    = s.caption;
+    document.getElementById('story-modal-img').src = s.img;
+    document.getElementById('story-caption').textContent = s.caption;
 
     var btn = document.getElementById('story-action-btn');
     if (s.btnShow && s.btnLink) {
@@ -1161,7 +1233,6 @@ function renderStoryModal() {
     }
 }
 
-/* ساخت نوار پیشرفت */
 function buildProgressBar() {
     var bar = document.getElementById('story-progress-bar');
     bar.innerHTML = '';
@@ -1177,7 +1248,6 @@ function buildProgressBar() {
     });
 }
 
-/* تایمر ۵ ثانیه */
 function startStoryTimer() {
     clearStoryTimer();
     storyTimer = setTimeout(function() { storyNavigate(1); }, 5000);
@@ -1186,7 +1256,6 @@ function clearStoryTimer() {
     if (storyTimer) { clearTimeout(storyTimer); storyTimer = null; }
 }
 
-/* ناوبری بین استوری‌ها */
 function storyNavigate(dir) {
     clearStoryTimer();
     storyIndex += dir;
@@ -1197,13 +1266,12 @@ function storyNavigate(dir) {
     startStoryTimer();
 }
 
-/* کلیک خارج از مودال */
 document.getElementById('story-modal').addEventListener('click', function(e) {
     if (e.target === this) closeStoryModal();
 });
 
 /* ================================================
-   DRAG SCROLL — اسکرول افقی با موس/انگشت
+   DRAG SCROLL
    ================================================ */
 function initDragScroll() {
     var el = document.getElementById('stories-scroll');
@@ -1356,7 +1424,6 @@ document.addEventListener('keydown', function(e) { if (e.key === "Escape") close
    INIT
    ================================================ */
 window.onload = function() {
-    /* فیکس کیبورد موبایل */
     var input = document.getElementById('user-input');
     input.addEventListener('focus', function() {
         document.body.style.position = 'fixed';
@@ -1368,15 +1435,11 @@ window.onload = function() {
         window.scrollTo(0, 0);
     });
 
-    /* لود QA و پیام خوش‌آمد */
     loadQA().then(function() {
         addMessage("به PlanLife خوش اومدی 🌟\nهر سوالی درباره باور، ثروت، روابط یا اعتماد به نفس داری بپرس!", 'bot');
     });
 
-    /* استوری‌ها */
     initStories();
-
-    /* بررسی VPN */
     initVpnCheck();
 };
 </script>
