@@ -662,15 +662,18 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
 <div class="stars"></div>
 
 <!-- VPN Warning Modal -->
-<div id="vpn-overlay" onclick="handleVpnOverlayClick(event)">
+<div id="vpn-overlay">
     <div class="vpn-modal">
-        <span class="vpn-icon">🛡️</span>
-        <div class="vpn-title">فیلترشکن شما فعال است</div>
-        <div class="vpn-body">
+        <span class="vpn-icon" id="vpn-icon">🛡️</span>
+        <div class="vpn-title" id="vpn-title">فیلترشکن شما فعال است</div>
+        <div class="vpn-body" id="vpn-body">
             برای <strong>تجربه بهتر</strong>، سرعت بالاتر پخش و انجام روان‌تر تمرینات،<br>
             لطفاً <strong>VPN (فیلترشکن)</strong> خود را خاموش کنید و سپس صفحه را رفرش نمایید.
         </div>
-        <button class="vpn-confirm-btn" onclick="closeVpnModal()">✅ &nbsp; بله، متوجه شدم</button>
+        <button class="vpn-confirm-btn" id="vpn-confirm-btn" onclick="closeVpnModal()">✅ &nbsp; بله، متوجه شدم</button>
+        <button class="vpn-confirm-btn vpn-browser-btn" id="vpn-browser-btn" onclick="openInBrowser()" style="display:none;margin-top:10px;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);">
+            🌐 &nbsp; باز کردن در مرورگر
+        </button>
     </div>
 </div>
 
@@ -858,7 +861,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
             </div>
 
             <div class="story-item" data-index="9"
-                 data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/6452140137136714544.mp4"
+                 data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779985702/IMG_1211_snjqjm.jpg"
                  data-name="ویدیوها"
                  data-caption="ویدیوهای آموزشی و انگیزشی 🎥"
                  data-btn-show="true"
@@ -1043,57 +1046,123 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
 
 <script>
 /* ================================================
-   VPN DETECTION
+   VPN DETECTION — حساس + یک‌بار در کل + اینستاگرام
    ================================================ */
-var VPN_STORAGE_KEY = 'planlife_vpn_warned';
+var VPN_STORAGE_KEY = 'planlife_vpn_warned_v2';  // v2 = یک‌بار برای همیشه
 
-function getTodayDateStr() {
-    var d = new Date();
-    return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+/* تشخیص مرورگر اینستاگرام */
+function isInstagramBrowser() {
+    var ua = navigator.userAgent || '';
+    return /Instagram/i.test(ua);
 }
-function alreadyWarnedToday() {
-    try {
-        var stored = localStorage.getItem(VPN_STORAGE_KEY);
-        return stored ? stored === getTodayDateStr() : false;
-    } catch(e) { return false; }
+
+/* تشخیص مرورگر داخلی (اینستا، تلگرام، واتساپ، لاین) */
+function isInAppBrowser() {
+    var ua = navigator.userAgent || '';
+    return /Instagram|FBAN|FBAV|Twitter|Line\/|WhatsApp/i.test(ua);
 }
-function markWarnedToday() {
-    try { localStorage.setItem(VPN_STORAGE_KEY, getTodayDateStr()); } catch(e) {}
+
+function alreadyWarned() {
+    try { return !!localStorage.getItem(VPN_STORAGE_KEY); } catch(e) { return false; }
 }
+function markWarned() {
+    try { localStorage.setItem(VPN_STORAGE_KEY, '1'); } catch(e) {}
+}
+
 function showVpnModal() {
-    document.getElementById('vpn-overlay').classList.add('visible');
+    var overlay = document.getElementById('vpn-overlay');
+    overlay.classList.add('visible');
+
+    if (isInstagramBrowser()) {
+        // پیام خاص اینستاگرام
+        document.getElementById('vpn-icon').textContent = '📱';
+        document.getElementById('vpn-title').textContent = 'در مرورگر اینستاگرام هستید';
+        document.getElementById('vpn-body').innerHTML =
+            'برای <strong>پخش روان ویدیو</strong> و تجربه بهتر،<br>' +
+            'لطفاً سایت را در <strong>مرورگر گوشی</strong> خود باز کنید.<br>' +
+            '<small style="color:rgba(255,255,255,0.5);font-size:12px;">(کروم، سافاری یا فایرفاکس)</small>';
+        document.getElementById('vpn-confirm-btn').style.display = 'none';
+        document.getElementById('vpn-browser-btn').style.display = 'block';
+    }
 }
+
 function closeVpnModal() {
     document.getElementById('vpn-overlay').classList.remove('visible');
-    markWarnedToday();
+    markWarned();
 }
-function handleVpnOverlayClick(e) {
-    if (e.target === document.getElementById('vpn-overlay')) closeVpnModal();
+
+/* باز کردن در مرورگر خارجی از اینستاگرام */
+function openInBrowser() {
+    var url = window.location.href;
+    markWarned();
+
+    // روش ۱: intent برای اندروید (کروم)
+    var isAndroid = /Android/i.test(navigator.userAgent);
+    var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (isAndroid) {
+        // intent scheme — مستقیم کروم رو باز می‌کنه
+        var intentUrl = 'intent://' + url.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;end';
+        window.location.href = intentUrl;
+        // fallback بعد از ۱.۵ ثانیه
+        setTimeout(function() {
+            window.open(url, '_blank');
+        }, 1500);
+    } else if (isIOS) {
+        // iOS: فقط می‌شه clipboard + راهنما داد
+        // یا از x-safari-https scheme
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(function() {
+                    document.getElementById('vpn-body').innerHTML =
+                        '✅ لینک کپی شد!<br>' +
+                        'سافاری را باز کنید و در نوار آدرس Paste کنید.<br>' +
+                        '<strong style="color:#ffd060;font-size:13px;">' + url + '</strong>';
+                    document.getElementById('vpn-browser-btn').textContent = '✓ لینک کپی شد';
+                    document.getElementById('vpn-browser-btn').disabled = true;
+                });
+            } else {
+                throw new Error('no clipboard');
+            }
+        } catch(e) {
+            // fallback: نمایش URL
+            document.getElementById('vpn-body').innerHTML =
+                'آدرس زیر را در سافاری باز کنید:<br>' +
+                '<strong style="color:#ffd060;word-break:break-all;font-size:12px;">' + url + '</strong>';
+        }
+    } else {
+        window.open(url, '_blank');
+        closeVpnModal();
+    }
 }
+
 function detectVpn(callback) {
-    var suspicionScore = 0, checks = 0, totalChecks = 2;
+    var suspicionScore = 0, checks = 0, totalChecks = 3;
     function maybeFinish() {
         checks++;
         if (checks >= totalChecks) callback(suspicionScore >= 1);
     }
+
+    // چک ۱: WebRTC — کندی یا نبود candidate = VPN
     try {
         var RTC = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
         if (RTC) {
             var pc = new RTC({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
             var candidateCount = 0, startTime = Date.now();
             var timeout = setTimeout(function() {
-                if (candidateCount === 0) suspicionScore += 2;
+                if (candidateCount === 0) suspicionScore += 3;       // هیچ candidate‌ای نیومد = حتماً VPN
                 else if (candidateCount < 2) suspicionScore += 1;
                 try { pc.close(); } catch(e) {}
                 maybeFinish();
-            }, 3000);
+            }, 2500);                                                  // timeout کوتاه‌تر
             pc.onicecandidate = function(e) {
                 if (e.candidate) {
                     candidateCount++;
-                    if ((Date.now() - startTime) > 2000 && candidateCount < 2) suspicionScore += 1;
+                    var elapsed = Date.now() - startTime;
+                    if (elapsed > 1500 && candidateCount < 2) suspicionScore += 2;  // کند = VPN
                 } else {
                     clearTimeout(timeout);
-                    if (candidateCount === 0) suspicionScore += 2;
+                    if (candidateCount === 0) suspicionScore += 3;
                     else if (candidateCount < 2) suspicionScore += 1;
                     try { pc.close(); } catch(e) {}
                     maybeFinish();
@@ -1102,25 +1171,49 @@ function detectVpn(callback) {
             pc.createDataChannel('');
             pc.createOffer()
               .then(function(o){ return pc.setLocalDescription(o); })
-              .catch(function(){ clearTimeout(timeout); suspicionScore += 1; maybeFinish(); });
+              .catch(function(){ clearTimeout(timeout); suspicionScore += 2; maybeFinish(); });
         } else {
-            suspicionScore += 1; maybeFinish();
+            suspicionScore += 2; maybeFinish();  // RTC نداره = احتمالاً محدود شده
         }
-    } catch(e) { suspicionScore += 1; maybeFinish(); }
+    } catch(e) { suspicionScore += 2; maybeFinish(); }
+
+    // چک ۲: نوع اتصال
     try {
         var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
         if (conn) {
             var t = (conn.type || '').toLowerCase();
+            var eff = (conn.effectiveType || '').toLowerCase();
             if (t === 'other' || t === 'none' || t === 'unknown') suspicionScore += 1;
+            if (eff === '2g') suspicionScore += 1;  // اتصال خیلی کند = VPN احتمالی
+        }
+        maybeFinish();
+    } catch(e) { maybeFinish(); }
+
+    // چک ۳: timezone — ایران باشه ولی IP خارجی رفتار کنه
+    try {
+        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+        // اگر timezone ایران نبود ولی فارسی رو نشون می‌دن ← VPN
+        if (tz && tz.indexOf('Tehran') === -1 && tz.indexOf('Iran') === -1) {
+            suspicionScore += 1;
         }
         maybeFinish();
     } catch(e) { maybeFinish(); }
 }
+
 function initVpnCheck() {
-    if (alreadyWarnedToday()) return;
+    // اینستاگرام: همیشه نشون بده (بدون check)
+    if (isInstagramBrowser()) {
+        if (!alreadyWarned()) {
+            showVpnModal();
+        }
+        return;
+    }
+    // بقیه: اگر قبلاً دیدن، نشون نده
+    if (alreadyWarned()) return;
+    // detect کن
     setTimeout(function() {
         detectVpn(function(isVpn) { if (isVpn) showVpnModal(); });
-    }, 1800);
+    }, 800);   // سریع‌تر از قبل
 }
 
 /* ================================================
@@ -1349,6 +1442,11 @@ function buildProgressBar() {
 
 function startStoryTimer() {
     clearStoryTimer();
+    var s = stories[storyIndex];
+    if (!s) return;
+    // اگر ویدیو باشه تایمر نمی‌زنیم — ویدیو خودش 'ended' رو trigger می‌کنه
+    var mediaType = getMediaType(s.img, s.el);
+    if (mediaType === 'video') return;
     storyTimer = setTimeout(function() { storyNavigate(1); }, 5000);
 }
 function clearStoryTimer() {
@@ -1357,6 +1455,10 @@ function clearStoryTimer() {
 
 function storyNavigate(dir) {
     clearStoryTimer();
+    // توقف ویدیو در حال پخش
+    var contentDiv = document.getElementById('story-modal-content');
+    var vid = contentDiv.querySelector('video');
+    if (vid) { vid.pause(); vid.src = ''; }
     storyIndex += dir;
     if (storyIndex < 0) storyIndex = 0;
     if (storyIndex >= stories.length) { closeStoryModal(); return; }
