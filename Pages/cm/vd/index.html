@@ -122,47 +122,7 @@
             display: block;
         }
         
-        /* overlay شفاف برای hoverاثر */
-        .video-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-            transition: all 0.3s ease;
-        }
-        .video-item:hover .video-overlay {
-            background: rgba(0, 0, 0, 0.3);
-        }
-        
-        /* آیکن پلی */
-        .play-icon {
-            width: 56px;
-            height: 56px;
-            background: rgba(212, 175, 55, 0.85);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: #1a0033;
-            font-weight: bold;
-            opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.3s ease;
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
-        }
-        .video-item:hover .play-icon {
-            opacity: 1;
-            transform: scale(1);
-        }
-        
-        /* شمارنده لایک و ویوز */
+        /* شمارنده ویوز */
         .video-stats {
             position: absolute;
             bottom: 8px;
@@ -185,8 +145,13 @@
             border-radius: 12px;
             backdrop-filter: blur(8px);
         }
+        .stat svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
         
-        /* ========== مودال ویدیو ========== */
+        /* ========== مودال ویدیو (فید اسکرولی) ========== */
         .video-modal {
             position: fixed;
             top: 0;
@@ -204,13 +169,26 @@
             pointer-events: auto;
         }
         
-        .modal-content {
+        /* کانتینر اسکرول عمودی - هر ویدیو یک صفحه کامل */
+        .feed-scroll {
             position: absolute;
             inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+        }
+        .feed-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .feed-slide {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            background: #000;
+            overflow: hidden;
         }
         
         .modal-video {
@@ -222,7 +200,7 @@
                 
         /* دکمه بستن */
         .modal-close {
-            position: absolute;
+            position: fixed;
             top: 20px;
             right: 20px;
             width: 44px;
@@ -233,7 +211,7 @@
             color: white;
             font-size: 28px;
             cursor: pointer;
-            z-index: 10;
+            z-index: 50;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -245,23 +223,47 @@
             background: rgba(255, 255, 255, 0.25);
         }
         
-        /* نوار اطلاعات پایین ======== */
+        /* نوار اطلاعات پایین (پروفایل + توضیحات) ======== */
         .modal-info {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
-            padding: 60px 24px 32px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+            padding: 60px 16px 28px;
             z-index: 5;
         }
         
-        .video-title {
-            font-size: 18px;
+        /* ردیف پروفایل: لوگو + اسم + تیک */
+        .profile-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .profile-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .profile-name {
+            font-size: 15px;
             font-weight: 800;
-            margin-bottom: 12px;
             color: white;
-            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+            direction: ltr;
+            unicode-bidi: isolate;
+        }
+        
+        .profile-badge {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
         }
         
         .video-desc {
@@ -270,45 +272,6 @@
             color: rgba(255, 255, 255, 0.85);
             line-height: 1.6;
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-        }
-        
-        /* کنترل‌های سایپ ========== */
-        .modal-nav {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            z-index: 4;
-        }
-        
-        .nav-zone {
-            flex: 1;
-            cursor: pointer;
-        }
-        .nav-left {
-            cursor: w-resize;
-        }
-        .nav-right {
-            cursor: e-resize;
-        }
-        
-        /* اندیکاتور فعلی ========== */
-        .modal-indicator {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.15);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 700;
-            color: #d4af37;
-            z-index: 10;
-            backdrop-filter: blur(10px);
-            text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
         }
         
         /* ========== ریسپانسیو ========== */
@@ -331,10 +294,6 @@
                 padding: 50px 20px 24px;
             }
             
-            .video-title {
-                font-size: 16px;
-            }
-            
             .video-desc {
                 font-size: 13px;
             }
@@ -354,25 +313,11 @@
     <div class="videos-grid" id="videosGrid"></div>
 </div>
 
-<!-- مودال ویدیو ===== -->
+<!-- مودال ویدیو (فید اسکرولی) ===== -->
 <div class="video-modal" id="videoModal">
-    <div class="modal-nav">
-        <div class="nav-zone nav-left" onclick="navigateVideo(-1)"></div>
-        <div class="nav-zone nav-right" onclick="navigateVideo(1)"></div>
-    </div>
-    
-    <div class="modal-content">
-        <video class="modal-video" id="modalVideo" playsinline webkit-playsinline></video>
-    </div>
-    
     <button class="modal-close" onclick="closeVideoModal()">✕</button>
     
-    <div class="modal-indicator" id="modalIndicator">1 / 12</div>
-    
-    <div class="modal-info">
-        <div class="video-title" id="modalTitle">عنوان ویدیو</div>
-        <div class="video-desc" id="modalDesc">توضیحات ویدیو</div>
-    </div>
+    <div class="feed-scroll" id="feedScroll"></div>
 </div>
 
 <script>
@@ -490,8 +435,6 @@ const videos = [
     }
 ];
 
-let currentVideoIndex = 0;
-
 /* ========================================
    رسم گرید ویدیوها
    ======================================== */
@@ -504,12 +447,11 @@ function renderGrid() {
         item.className = 'video-item';
         item.innerHTML = `
             <img src="${video.cover}" alt="${video.title}">
-            <div class="video-overlay">
-                <div class="play-icon">▶</div>
-            </div>
             <div class="video-stats">
-                <div class="stat">❤️ ${formatNumber(video.likes)}</div>
-                <div class="stat">👁 ${formatNumber(video.views)}</div>
+                <div class="stat">
+                    <svg viewBox="0 0 24 24" fill="white"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                    ${formatNumber(video.views)}
+                </div>
             </div>
         `;
         
@@ -525,86 +467,148 @@ function formatNumber(num) {
 }
 
 /* ========================================
-   مودال ویدیو
+   تنظیمات پروفایل (لوگو، اسم، تیک)
    ======================================== */
+const PROFILE = {
+    avatar: 'http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg',
+    badge: 'http://fs3.centraldnserver.com/~planlife/pics/MagicEraser_260629_074549.png',
+    name: 'planlife.ir'
+};
+
+/* ========================================
+   مودال ویدیو — فید اسکرولی بی‌نهایت
+   ======================================== */
+const LOOP_COUNT = 6; // چند بار لیست ویدیوها تکرار شود تا اسکرول بی‌نهایت طبیعی به نظر برسد
+let feedItems = []; // هر آیتم: { video, slideEl, videoEl }
+let io; // IntersectionObserver برای پلی خودکار
+
+function buildFeedItem(video) {
+    const slide = document.createElement('div');
+    slide.className = 'feed-slide';
+    slide.innerHTML = `
+        <video class="modal-video" playsinline webkit-playsinline loop preload="none"></video>
+        <div class="modal-info">
+            <div class="profile-row">
+                <img class="profile-avatar" src="${PROFILE.avatar}" alt="${PROFILE.name}">
+                <span class="profile-name">${PROFILE.name}</span>
+                <img class="profile-badge" src="${PROFILE.badge}" alt="verified">
+            </div>
+            <div class="video-desc">${video.desc}</div>
+        </div>
+    `;
+    const videoEl = slide.querySelector('video');
+    return { video, slideEl: slide, videoEl };
+}
+
+function fillFeed() {
+    const scrollEl = document.getElementById('feedScroll');
+    scrollEl.innerHTML = '';
+    feedItems = [];
+    
+    for (let i = 0; i < LOOP_COUNT; i++) {
+        videos.forEach(video => {
+            const item = buildFeedItem(video);
+            feedItems.push(item);
+            scrollEl.appendChild(item.slideEl);
+        });
+    }
+}
+
+function setupInfiniteScroll() {
+    const scrollEl = document.getElementById('feedScroll');
+    
+    scrollEl.addEventListener('scroll', () => {
+        const scrollTop = scrollEl.scrollTop;
+        const scrollHeight = scrollEl.scrollHeight;
+        const clientHeight = scrollEl.clientHeight;
+        
+        // وقتی نزدیک انتهای فید رسیدیم، یک دور دیگه از ویدیوها رو اضافه کن
+        if (scrollHeight - (scrollTop + clientHeight) < clientHeight * 1.5) {
+            videos.forEach(video => {
+                const item = buildFeedItem(video);
+                feedItems.push(item);
+                scrollEl.appendChild(item.slideEl);
+                io.observe(item.slideEl);
+            });
+        }
+        
+        // وقتی نزدیک ابتدای فید رسیدیم (اسکرول به بالا)، یک دور قبل از ویدیوها رو هم اضافه کن
+        if (scrollTop < clientHeight * 0.5) {
+            const fragment = document.createDocumentFragment();
+            const newItems = [];
+            videos.forEach(video => {
+                const item = buildFeedItem(video);
+                newItems.push(item);
+                fragment.appendChild(item.slideEl);
+            });
+            const prevScrollHeight = scrollHeight;
+            scrollEl.insertBefore(fragment, scrollEl.firstChild);
+            feedItems = [...newItems, ...feedItems];
+            newItems.forEach(item => io.observe(item.slideEl));
+            // حفظ موقعیت اسکرول بعد از اضافه کردن آیتم‌های جدید به ابتدا
+            scrollEl.scrollTop = scrollTop + (scrollEl.scrollHeight - prevScrollHeight);
+        }
+    });
+}
+
+function setupAutoplayObserver() {
+    io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const slide = entry.target;
+            const videoEl = slide.querySelector('video');
+            const item = feedItems.find(it => it.slideEl === slide);
+            
+            if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
+                if (!videoEl.src) videoEl.src = item.video.src;
+                videoEl.play().catch(() => {});
+            } else {
+                videoEl.pause();
+            }
+        });
+    }, { threshold: [0, 0.6, 1] });
+    
+    feedItems.forEach(item => io.observe(item.slideEl));
+}
+
 function openVideoModal(index) {
-    currentVideoIndex = index;
     const modal = document.getElementById('videoModal');
-    const video = document.getElementById('modalVideo');
-    const data = videos[index];
     
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
     
-    video.src = data.src;
-    video.play();
+    fillFeed();
+    setupAutoplayObserver();
+    setupInfiniteScroll();
     
-    updateModalContent();
+    // اسکرول به ویدیویی که کاربر کلیک کرده (در اولین دور از LOOP_COUNT)
+    const scrollEl = document.getElementById('feedScroll');
+    const targetSlide = feedItems[index].slideEl;
+    scrollEl.scrollTop = targetSlide.offsetTop;
+    
+    // پلی فوری ویدیوی هدف بدون منتظر ماندن برای observer
+    const targetVideo = targetSlide.querySelector('video');
+    targetVideo.src = videos[index].src;
+    targetVideo.play().catch(() => {});
 }
 
 function closeVideoModal() {
     const modal = document.getElementById('videoModal');
-    const video = document.getElementById('modalVideo');
     
     modal.classList.remove('open');
     document.body.style.overflow = '';
     
-    video.pause();
-    video.src = '';
-}
-
-function navigateVideo(direction) {
-    const newIndex = currentVideoIndex + direction;
-    
-    if (newIndex < 0 || newIndex >= videos.length) return;
-    
-    const video = document.getElementById('modalVideo');
-    video.pause();
-    
-    currentVideoIndex = newIndex;
-    
-    const data = videos[currentVideoIndex];
-    video.src = data.src;
-    video.play();
-    
-    updateModalContent();
-}
-
-function updateModalContent() {
-    const data = videos[currentVideoIndex];
-    
-    document.getElementById('modalTitle').textContent = data.title;
-    document.getElementById('modalDesc').textContent = data.desc;
-    document.getElementById('modalIndicator').textContent = 
-        `${currentVideoIndex + 1} / ${videos.length}`;
+    // متوقف کردن همه ویدیوها و پاکسازی observer
+    feedItems.forEach(item => {
+        item.videoEl.pause();
+        item.videoEl.src = '';
+    });
+    if (io) io.disconnect();
 }
 
 /* ========================================
-   تاچ/سوایپ برای موبایل
+   سوایپ عمودی به صورت طبیعی توسط اسکرول مرورگر
+   انجام می‌شود (scroll-snap) — نیازی به کد دستی نیست
    ======================================== */
-let touchStartX = 0;
-let touchEndX = 0;
-
-document.getElementById('videoModal').addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-}, false);
-
-document.getElementById('videoModal').addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-}, false);
-
-function handleSwipe() {
-    const diff = touchStartX - touchEndX;
-    
-    if (Math.abs(diff) > 50) {
-        if (diff > 0) {
-            navigateVideo(1); // سوایپ چپ = بعدی
-        } else {
-            navigateVideo(-1); // سوایپ راست = قبلی
-        }
-    }
-}
 
 /* ========================================
    کلیدهای صفحه‌کلید
@@ -614,18 +618,10 @@ document.addEventListener('keydown', (e) => {
     
     if (!modal.classList.contains('open')) return;
     
-    if (e.key === 'ArrowLeft') navigateVideo(1);
-    if (e.key === 'ArrowRight') navigateVideo(-1);
+    const scrollEl = document.getElementById('feedScroll');
+    if (e.key === 'ArrowDown') scrollEl.scrollBy({ top: scrollEl.clientHeight, behavior: 'smooth' });
+    if (e.key === 'ArrowUp') scrollEl.scrollBy({ top: -scrollEl.clientHeight, behavior: 'smooth' });
     if (e.key === 'Escape') closeVideoModal();
-});
-
-/* ========================================
-   بستن با کلیک روی modal
-   ======================================== */
-document.getElementById('videoModal').addEventListener('click', (e) => {
-    if (e.target === document.getElementById('videoModal')) {
-        closeVideoModal();
-    }
 });
 
 /* ========================================
