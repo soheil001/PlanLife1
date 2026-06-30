@@ -106,6 +106,7 @@
             position: relative;
             width: 100%;
             aspect-ratio: 9 / 16;
+            height: var(--item-h, auto);
             background: #000;
             cursor: pointer;
             overflow: hidden;
@@ -475,6 +476,29 @@ function formatNumber(num) {
 }
 
 /* ========================================
+   تنظیم ارتفاع ردیف‌ها برای صفحه اول
+   هدف: ۳ ردیف کامل + حدود ۳ سانتیمتر از ردیف چهارم دیده بشه
+   تا کاربر متوجه بشه باید اسکرول کنه پایین
+   ======================================== */
+function adjustGridRowHeight() {
+    const grid = document.getElementById('videosGrid');
+    const header = document.querySelector('.header');
+    if (!grid || !header) return;
+
+    const headerHeight = header.offsetHeight;
+    const peekPx = 3 * 37.7952755906; // تبدیل ۳ سانتیمتر به پیکسل (96dpi)
+    const availableHeight = window.innerHeight - headerHeight - peekPx;
+
+    // فضای باقی‌مونده رو بین ۳ ردیف کامل تقسیم می‌کنیم
+    const itemHeight = availableHeight / 3;
+
+    // یه حداقل منطقی می‌ذاریم تا تو صفحه‌های خیلی کوتاه بیش از حد فشرده نشه
+    const finalHeight = Math.max(itemHeight, 140);
+
+    grid.style.setProperty('--item-h', finalHeight + 'px');
+}
+
+/* ========================================
    تنظیمات پروفایل (لوگو، اسم، تیک)
    ======================================== */
 const PROFILE = {
@@ -637,7 +661,9 @@ document.addEventListener('keydown', (e) => {
    ======================================== */
 window.addEventListener('load', () => {
     renderGrid();
+    adjustGridRowHeight();
 });
+window.addEventListener('resize', adjustGridRowHeight);
 </script>
 
 </body>
