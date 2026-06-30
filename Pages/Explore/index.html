@@ -6,6 +6,9 @@
     <meta name="theme-color" content="#1a0033">
     <title>اکسپلور - PlanLife</title>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- پیش‌اتصال به سرور ویدیو تا زمان شروع پخش کمتر بشه -->
+    <link rel="preconnect" href="http://fs3.centraldnserver.com">
+    <link rel="dns-prefetch" href="http://fs3.centraldnserver.com">
     <style>
         * {
             margin: 0;
@@ -127,7 +130,6 @@
         .video-stats {
             position: absolute;
             bottom: 8px;
-            left: 8px;
             right: 8px;
             z-index: 3;
             display: flex;
@@ -518,7 +520,7 @@ function buildFeedItem(video) {
     const slide = document.createElement('div');
     slide.className = 'feed-slide';
     slide.innerHTML = `
-        <video class="modal-video" playsinline webkit-playsinline loop preload="none"></video>
+        <video class="modal-video" playsinline webkit-playsinline loop preload="metadata" poster="${video.cover}"></video>
         <div class="modal-info">
             <div class="profile-row">
                 <img class="profile-avatar" src="${PROFILE.avatar}" alt="${PROFILE.name}">
@@ -589,15 +591,34 @@ function setupAutoplayObserver() {
             const slide = entry.target;
             const videoEl = slide.querySelector('video');
             const item = feedItems.find(it => it.slideEl === slide);
-            
+            const idx = feedItems.indexOf(item);
+
+            // به محض اینکه اسلاید کمی وارد دیدرس بشه، فوراً سورس رو ست کن تا بافر شروع بشه
+            if (entry.isIntersecting) {
+                if (!videoEl.src) {
+                    videoEl.preload = 'auto';
+                    videoEl.src = item.video.src;
+                    videoEl.load();
+                }
+            }
+
             if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
-                if (!videoEl.src) videoEl.src = item.video.src;
                 videoEl.play().catch(() => {});
+
+                // پیش‌بارگذاری ویدیوی بعدی و قبلی تا سوایپ سریع‌تر و بدون تاخیر باشه
+                [idx - 1, idx + 1].forEach(neighborIdx => {
+                    const neighbor = feedItems[neighborIdx];
+                    if (neighbor && !neighbor.videoEl.src) {
+                        neighbor.videoEl.preload = 'auto';
+                        neighbor.videoEl.src = neighbor.video.src;
+                        neighbor.videoEl.load();
+                    }
+                });
             } else {
                 videoEl.pause();
             }
         });
-    }, { threshold: [0, 0.6, 1] });
+    }, { threshold: [0, 0.3, 0.6, 1] });
     
     feedItems.forEach(item => io.observe(item.slideEl));
 }
@@ -619,8 +640,18 @@ function openVideoModal(index) {
     
     // پلی فوری ویدیوی هدف بدون منتظر ماندن برای observer
     const targetVideo = targetSlide.querySelector('video');
+    targetVideo.preload = 'auto';
     targetVideo.src = videos[index].src;
+    targetVideo.load();
     targetVideo.play().catch(() => {});
+
+    // پیش‌بارگذاری ویدیوی بعدی برای سوایپ سریع‌تر
+    const nextItem = feedItems[index + 1];
+    if (nextItem && !nextItem.videoEl.src) {
+        nextItem.videoEl.preload = 'auto';
+        nextItem.videoEl.src = nextItem.video.src;
+        nextItem.videoEl.load();
+    }
 }
 
 function closeVideoModal() {
