@@ -126,16 +126,16 @@
             display: block;
         }
         
-        /* شمارنده ویوز */
+        /* شمارنده ویوز - سمت چپ کاور، بدون بک‌گراند، فقط عدد + آیکن چشم */
         .video-stats {
             position: absolute;
             bottom: 8px;
-            right: 8px;
+            left: 8px;
             z-index: 3;
             display: flex;
             gap: 12px;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
         }
         
@@ -143,10 +143,6 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 4px 8px;
-            border-radius: 12px;
-            backdrop-filter: blur(8px);
         }
         .stat svg {
             width: 14px;
@@ -237,6 +233,7 @@
             z-index: 5;
             direction: ltr;
             text-align: left;
+            transition: padding-bottom 0.25s ease;
         }
         
         /* ردیف پروفایل: لوگو + اسم + تیک — سمت چپ تصویر، چپ به راست */
@@ -274,6 +271,16 @@
             flex-shrink: 0;
         }
         
+        /* خط جداکننده کم‌رنگ بین پروفایل و توضیحات
+           از زیر آواتار/اسم شروع میشه و وسط تصویر قرار می‌گیره */
+        .modal-divider {
+            width: 92%;
+            max-width: 360px;
+            height: 1px;
+            margin: 0 0 12px 0;
+            background: rgba(255, 255, 255, 0.22);
+        }
+        
         .video-desc {
             font-size: 14px;
             font-weight: 500;
@@ -283,6 +290,15 @@
             direction: rtl;
             text-align: right;
             unicode-bidi: isolate;
+            cursor: pointer;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .video-desc.expanded {
+            -webkit-line-clamp: unset;
+            overflow: visible;
         }
         
         /* ========== ریسپانسیو ========== */
@@ -527,10 +543,23 @@ function buildFeedItem(video) {
                 <span class="profile-name">${PROFILE.name}</span>
                 <img class="profile-badge" src="${PROFILE.badge}" alt="verified">
             </div>
+            <div class="modal-divider"></div>
             <div class="video-desc">${video.desc}</div>
         </div>
     `;
     const videoEl = slide.querySelector('video');
+    const descEl = slide.querySelector('.video-desc');
+    const infoEl = slide.querySelector('.modal-info');
+
+    // وقتی روی توضیحات کلیک میشه، اگه متن بلندتر از ۲ خط بود
+    // کامل باز میشه و کل بلوک (پروفایل + خط + متن) روی تصویر بالاتر میاد
+    descEl.addEventListener('click', () => {
+        const isOverflowing = descEl.scrollHeight > descEl.clientHeight;
+        if (!descEl.classList.contains('expanded') && !isOverflowing) return;
+        descEl.classList.toggle('expanded');
+        infoEl.classList.toggle('expanded');
+    });
+
     return { video, slideEl: slide, videoEl };
 }
 
