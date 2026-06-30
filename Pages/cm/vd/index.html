@@ -1499,10 +1499,17 @@ function initStories() {
     initDragScroll();
 }
 
+var savedScrollY = 0;
+
 function openStoryModal(idx) {
     storyIndex = idx;
+    savedScrollY = window.scrollY || window.pageYOffset || 0;
+    document.body.style.position = 'fixed';
+    document.body.style.top = (-savedScrollY) + 'px';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
     document.getElementById('story-modal').classList.add('open');
-    document.body.style.overflow = 'hidden';
     renderStoryModal();
     buildProgressBar();
     startStoryTimer();
@@ -1510,17 +1517,22 @@ function openStoryModal(idx) {
 
 function closeStoryModal() {
     document.getElementById('story-modal').classList.remove('open');
-    document.body.style.overflow = '';
     clearStoryTimer();
     var contentDiv = document.getElementById('story-modal-content');
     var vid = contentDiv.querySelector('video');
     if (vid) {
         vid.pause();
         vid.muted = true;
-        vid.src = '';
+        vid.removeAttribute('src');
         vid.load();
         vid.remove();
     }
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    window.scrollTo(0, savedScrollY);
 }
 
 function getMediaType(url, el) {
