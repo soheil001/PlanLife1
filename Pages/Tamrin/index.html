@@ -389,6 +389,7 @@
         font-size: 15.8px; font-weight: 700;
         transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
         box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+        cursor: pointer;
     }
     .menu-item:hover { background: rgba(212,175,55,0.11); border-color: #d4af37; transform: translateX(-8px); box-shadow: 0 6px 20px rgba(212,175,55,0.22); }
     .menu-item .text { flex: 1; line-height: 1.35; }
@@ -513,6 +514,141 @@
     .modal-btn { background: linear-gradient(135deg, #d4af37, #f0c84a); color: #111; border: none; padding: 14px 36px; font-size: 16px; font-weight: 900; border-radius: 50px; cursor: pointer; transition: all 0.3s; font-family: inherit; box-shadow: 0 4px 20px rgba(212,175,55,0.4); }
     .modal-btn:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(212,175,55,0.6); }
 
+    /* ==========================================
+       Alarm Settings Styles
+       ========================================== */
+    #alarm-settings-panel {
+        display: none;
+        width: 100%;
+        max-width: 720px;
+        background: rgba(255,255,255,0.09);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(212, 175, 55, 0.5);
+        border-radius: 28px;
+        padding: 30px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .alarm-group {
+        margin-bottom: 28px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    }
+    .alarm-group:last-child { border-bottom: none; margin-bottom: 0; }
+
+    .alarm-title {
+        font-size: 18px;
+        font-weight: 900;
+        color: #d4af37;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .alarm-controls {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .alarm-time-input {
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        border-radius: 12px;
+        padding: 10px 12px;
+        color: white;
+        font-size: 16px;
+        font-family: inherit;
+        width: 70px;
+        text-align: center;
+    }
+
+    .alarm-time-input:focus {
+        outline: none;
+        border-color: #d4af37;
+    }
+
+    .time-separator {
+        color: #d4af37;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .alarm-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .toggle-switch {
+        position: relative;
+        width: 50px;
+        height: 28px;
+        background: rgba(255,255,255,0.15);
+        border-radius: 14px;
+        cursor: pointer;
+        transition: background 0.3s;
+        border: 1px solid rgba(212,175,55,0.3);
+    }
+
+    .toggle-switch.enabled {
+        background: rgba(74,222,128,0.3);
+        border-color: #4ade80;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 24px;
+        height: 24px;
+        background: rgba(255,255,255,0.7);
+        border-radius: 12px;
+        transition: left 0.3s;
+    }
+
+    .toggle-switch.enabled .toggle-slider {
+        left: 24px;
+        background: #4ade80;
+    }
+
+    .alarm-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 14px;
+        flex-wrap: wrap;
+    }
+
+    .alarm-test-btn {
+        background: rgba(100,150,255,0.3);
+        color: #88aaff;
+        border: 1px solid rgba(100,150,255,0.5);
+        padding: 8px 16px;
+        font-size: 14px;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 700;
+        font-family: inherit;
+    }
+
+    .alarm-test-btn:hover {
+        background: rgba(100,150,255,0.5);
+        border-color: #88aaff;
+    }
+
+    .alarm-settings-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
     .spinner { display: inline-block; width: 22px; height: 22px; border: 3px solid rgba(212,175,55,0.3); border-top-color: #d4af37; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-left: 8px; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -548,6 +684,7 @@
         .dual-grid,
         #events-form,
         #gratitude-form,
+        #alarm-settings-panel,
         #morning-form,
         #night-form,
         .add-gratitude-btn,
@@ -779,6 +916,59 @@
         </div>
     </div>
 
+    <!-- Panel تنظیمات Alarm -->
+    <div id="alarm-settings-panel" style="display:none;">
+        <h2 style="text-align:center; margin-bottom:30px; color:#d4af37; font-size:24px;">⏰ تنظیمات Alarm</h2>
+        
+        <!-- صبح -->
+        <div class="alarm-group">
+            <div class="alarm-title">🌅 تمرین صبح</div>
+            <div class="alarm-controls">
+                <input type="number" id="morning-alarm-hour" class="alarm-time-input" min="0" max="23" placeholder="ساعت">
+                <span class="time-separator">:</span>
+                <input type="number" id="morning-alarm-minute" class="alarm-time-input" min="0" max="59" placeholder="دقیقه">
+                <div class="alarm-toggle">
+                    <span style="color:#ccc; font-size:14px;">فعال:</span>
+                    <div class="toggle-switch" id="morning-toggle">
+                        <div class="toggle-slider"></div>
+                    </div>
+                    <input type="checkbox" id="morning-alarm-enabled" style="display:none;">
+                </div>
+            </div>
+            <div class="alarm-buttons">
+                <button class="alarm-test-btn" onclick="testAlarm('morning')">🔔 تست صدا</button>
+            </div>
+            <p style="font-size:13px; color:rgba(255,255,255,0.6); margin-top:10px;">ساعت و دقیقه تمرین صبح را مشخص کن</p>
+        </div>
+
+        <!-- شب -->
+        <div class="alarm-group">
+            <div class="alarm-title">🌙 تمرین شب</div>
+            <div class="alarm-controls">
+                <input type="number" id="night-alarm-hour" class="alarm-time-input" min="0" max="23" placeholder="ساعت">
+                <span class="time-separator">:</span>
+                <input type="number" id="night-alarm-minute" class="alarm-time-input" min="0" max="59" placeholder="دقیقه">
+                <div class="alarm-toggle">
+                    <span style="color:#ccc; font-size:14px;">فعال:</span>
+                    <div class="toggle-switch" id="night-toggle">
+                        <div class="toggle-slider"></div>
+                    </div>
+                    <input type="checkbox" id="night-alarm-enabled" style="display:none;">
+                </div>
+            </div>
+            <div class="alarm-buttons">
+                <button class="alarm-test-btn" onclick="testAlarm('night')">🔔 تست صدا</button>
+            </div>
+            <p style="font-size:13px; color:rgba(255,255,255,0.6); margin-top:10px;">ساعت و دقیقه تمرین شب را مشخص کن</p>
+        </div>
+
+        <div class="alarm-settings-buttons">
+            <button class="btn" onclick="saveAlarmSettingsFromUI()">💾 ذخیره تنظیمات</button>
+            <button class="btn" onclick="toggleAlarmSettings()" style="background:rgba(255,255,255,0.2);">بستن</button>
+        </div>
+        <p style="text-align:center; font-size:13px; color:rgba(255,255,255,0.6); margin-top:14px;">💡 توجه: برای دریافت اطلاع‌رسانی‌ها، نوتیفیکیشن‌ها را برای این سایت فعال کن</p>
+    </div>
+
     <!-- دوگانه: اتفاقات + شکرگذاری -->
     <div class="dual-grid" id="dual-grid">
         <div class="events-card" id="events-card" onclick="openEventsForm()">
@@ -854,10 +1044,14 @@
         <a href="https://planlife.ir/Pages/Magazine/index.html" class="menu-item" onclick="closeMenu()"><span class="text">مجله ماورایی</span></a>
         <a href="library.html" class="menu-item" onclick="closeMenu()"><span class="text">کتابخانه</span></a>
         <a href="https://planlife.ir/Pages/Video/index.html" class="menu-item" onclick="closeMenu()"><span class="text">ویدیوها</span></a>
+        <button class="menu-item" onclick="toggleAlarmSettings(); closeMenu();" style="width:100%;text-align:right;background:rgba(212,175,55,0.15);"><span class="text">⏰ تنظیمات alarm</span></button>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="exercise_alarm.js"></script>
+
+<!-- باقی Supabase و Exercise Scripts -->
 <script>
 // ============================================================
 // Supabase — persistent exercise storage (replaces JSONBin)
@@ -883,7 +1077,6 @@ function setSyncStatus(msg, loading, success, error) {
     el.innerHTML = icon + (msg ? '<span>' + msg + '</span>' : '') + (loading ? '<span class="spinner"></span>' : '');
 }
 
-// Map a Supabase row back into the flat shape the rest of the app expects
 function rowToEntry(row) {
     const entry = Object.assign({}, row.payload, {
         id: row.id,
@@ -922,7 +1115,7 @@ async function deleteEntryRemote(rowId) {
         .from('exercise_entries')
         .delete()
         .eq('id', rowId)
-        .eq('user_id', USER_ID); // extra safety: only ever delete our own rows
+        .eq('user_id', USER_ID);
     if (error) throw new Error(error.message);
     return true;
 }
@@ -1121,7 +1314,6 @@ async function loadHistory(filter) {
 
 function showHistory(filter) { loadHistory(filter); }
 
-/* پرینت صحیح - قبل از print منو رو می‌بندیم */
 function printHistory() {
     closeMenu();
     setTimeout(function() { window.print(); }, 300);
@@ -1208,7 +1400,40 @@ function toggleDescription() {
     else { panel.classList.add('open'); panel.style.maxHeight = panel.scrollHeight + 'px'; chevron.style.transform = 'rotate(180deg)'; }
 }
 
-window.onload = function() { loadHistory('all'); };
+// Setup toggle switches
+function setupToggleSwitches() {
+    const morningToggle = document.getElementById('morning-toggle');
+    const nightToggle = document.getElementById('night-toggle');
+    const morningCheckbox = document.getElementById('morning-alarm-enabled');
+    const nightCheckbox = document.getElementById('night-alarm-enabled');
+
+    morningToggle.addEventListener('click', function() {
+        morningCheckbox.checked = !morningCheckbox.checked;
+        morningToggle.classList.toggle('enabled');
+    });
+
+    nightToggle.addEventListener('click', function() {
+        nightCheckbox.checked = !nightCheckbox.checked;
+        nightToggle.classList.toggle('enabled');
+    });
+
+    // Initial state
+    loadAlarmSettingsUI();
+    // Set initial toggle state
+    setTimeout(function() {
+        if (document.getElementById('morning-alarm-enabled').checked) {
+            document.getElementById('morning-toggle').classList.add('enabled');
+        }
+        if (document.getElementById('night-alarm-enabled').checked) {
+            document.getElementById('night-toggle').classList.add('enabled');
+        }
+    }, 100);
+}
+
+window.addEventListener('load', function() { 
+    loadHistory('all');
+    setupToggleSwitches();
+});
 </script>
 </body>
 </html>
