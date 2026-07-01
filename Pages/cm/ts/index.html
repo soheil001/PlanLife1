@@ -3,1879 +3,752 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#1a0033">
-<title>PlanLife</title>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#15120F">
+<title>دوره‌های PlanLife — پیش‌نمایش طراحی جدید</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=Noto+Serif:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html, body {
-    height: 100%;
-    font-family: 'Vazirmatn', sans-serif;
-    overflow-x: hidden;
-    color: white;
-    background: #030303;
-}
+  /* ============ TOKENS ============
+     ink       #15120F   background, near-black warm brown
+     ink-2     #1C1712   raised surface
+     paper     #F4ECDD   text / light warmth
+     ember     #C9814D   primary accent — action, unlocked
+     ember-dim rgba ember 15%
+     moss      #8CA07C   secondary — free / open state
+     brass     #C6A16A   price / premium marker
+     line      rgba(paper,0.09) hairline
+  */
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ height:100%; }
+  body{
+    font-family:'Vazirmatn',sans-serif;
+    background:#15120F;
+    color:#F4ECDD;
+    overflow-x:hidden;
+    background-image:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(201,129,77,0.10), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 20%, rgba(140,160,124,0.06), transparent 55%);
+  }
+  ::selection{ background:#C9814D; color:#15120F; }
 
-.stars {
-    position: fixed; top:0; left:0; right:0; bottom:0;
-    background: transparent; z-index: 1; pointer-events: none;
-}
-.stars::before, .stars::after {
-    content: '';
-    position: absolute; top:0; left:0; right:0; bottom:0;
-    background-image: radial-gradient(white 1px, transparent 1px);
-    background-size: 80px 80px; opacity: 0.45;
-}
-.stars::after {
-    background-size: 140px 140px; opacity: 0.3;
-}
+  .serif{ font-family:'Noto Serif','Vazirmatn',serif; }
 
-/* ===== HEADER ===== */
-header {
-    position: fixed; top: 0; left: 0; right: 0; height: 65px;
-    display: flex; align-items: center;
-    padding: 0 20px; z-index: 100;
-    background: rgba(0,0,0,0.25);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-}
-.hamburger {
-    font-size: 28px; cursor: pointer;
-    width: 50px; height: 50px; border-radius: 50%;
-    background: rgba(255,255,255,0.1);
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s ease;
-}
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 20px; background:rgba(21,18,15,0.86); backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(244,236,221,0.07);
+  }
+  .back-link{ display:flex; align-items:center; gap:6px; font-size:13.5px; color:rgba(244,236,221,0.65); cursor:pointer; }
+  .back-link:active{ opacity:0.6; }
+  .admin-link{ background:none; border:none; font-family:inherit; font-size:12.5px; color:rgba(244,236,221,0.45); cursor:pointer; letter-spacing:0.2px; }
+  .admin-pill{ display:flex; align-items:center; gap:8px; }
+  .admin-tag{ font-size:11.5px; color:#C9814D; border:1px solid rgba(201,129,77,0.4); background:rgba(201,129,77,0.1); padding:4px 11px; border-radius:99px; }
+  .logout-link{ background:none; border:none; font-family:inherit; font-size:12px; color:rgba(244,236,221,0.4); cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
 
-/* ===== MAIN ===== */
-.main-center {
-    position: relative; z-index: 5; min-height: 100vh;
-    padding: 75px 20px 140px;
-    display: flex; flex-direction: column; align-items: center;
-    transition: filter 0.5s ease;
-}
-.main-center.blurred { filter: blur(7px); pointer-events: none; }
+  /* ---------- hero ---------- */
+  .hero{ padding:34px 22px 22px; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12px; letter-spacing:0.3px; color:#C6A16A;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{ content:''; width:16px; height:1px; background:#C6A16A; }
+  h1.headline{ font-size:26px; line-height:1.5; font-weight:700; color:#F4ECDD; margin-bottom:10px; }
+  h1.headline em{ font-style:normal; color:#C9814D; }
+  .hero-sub{ font-size:14px; line-height:1.85; color:rgba(244,236,221,0.55); max-width:34ch; }
 
-.title {
-    font-size: 42px; font-weight: 900;
-    font-family: 'Cinzel', 'Vazirmatn', serif;
-    text-shadow: 0 0 30px rgba(212,175,55,0.9), 0 0 60px rgba(160,240,255,0.4);
-    margin-bottom: 20px; color: white; letter-spacing: 3px;
-}
+  /* ---------- section label ---------- */
+  .section-label{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:26px 22px 14px; font-size:13px; color:rgba(244,236,221,0.4);
+  }
+  .section-label b{ color:rgba(244,236,221,0.75); font-weight:600; font-size:13.5px; }
 
-/* ===================================================
-   STORIES
-   =================================================== */
-.stories-wrapper {
-    width: 100%; max-width: 400px;
-    margin-bottom: 22px; position: relative;
-}
+  /* ---------- chapter list w/ rail ---------- */
+  .chapters{ position:relative; padding:0 22px 30px; }
+  .chapters::before{
+    content:''; position:absolute; top:6px; bottom:26px; right:44px;
+    width:1px; background:linear-gradient(to bottom, rgba(244,236,221,0.14), rgba(244,236,221,0.03));
+  }
+  .chapter{ position:relative; }
+  .chapter-row{
+    position:relative; display:flex; align-items:flex-start; gap:14px;
+    padding:16px 0; cursor:pointer;
+  }
+  .rail-dot{
+    position:relative; z-index:2; flex-shrink:0; width:9px; height:9px; border-radius:50%;
+    margin-top:9px; margin-right:0;
+    background:#15120F; border:1.6px solid rgba(244,236,221,0.28);
+  }
+  .rail-dot.unlocked{ background:#C9814D; border-color:#C9814D; box-shadow:0 0 0 4px rgba(201,129,77,0.16); }
+  .rail-dot.free{ background:#8CA07C; border-color:#8CA07C; box-shadow:0 0 0 4px rgba(140,160,124,0.16); }
+  .rail-dot.soon{ border-style:dashed; border-color:rgba(244,236,221,0.22); }
 
-.stories-scroll {
-    display: flex;
-    flex-direction: row;
-    direction: ltr;
-    gap: 14px;
-    overflow-x: auto; overflow-y: hidden;
-    padding: 6px 16px 10px;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    cursor: grab;
-}
-.stories-scroll:active { cursor: grabbing; }
-.stories-scroll::-webkit-scrollbar { display: none; }
+  .chap-cover{ width:54px; height:54px; border-radius:14px; object-fit:cover; flex-shrink:0; filter:saturate(0.92); }
+  .chapter.is-soon .chap-cover{ filter:grayscale(55%) brightness(0.75); }
+  .chap-body{ flex:1; min-width:0; padding-top:1px; }
+  .chap-title{ font-size:15.5px; font-weight:600; color:#F4ECDD; margin-bottom:5px; line-height:1.4; }
+  .chap-meta{ display:flex; align-items:center; gap:8px; font-size:12px; color:rgba(244,236,221,0.42); flex-wrap:wrap; }
+  .chap-meta .dot-sep{ width:3px; height:3px; border-radius:50%; background:rgba(244,236,221,0.3); }
+  .status-open{ color:#8CA07C; }
+  .status-locked{ color:rgba(244,236,221,0.42); }
+  .status-soon{ color:#C6A16A; }
+  .chap-price{ font-size:12px; color:#C6A16A; margin-top:5px; }
+  .chap-price s{ color:rgba(244,236,221,0.3); margin-left:6px; font-size:11px; }
+  .chevron{ flex-shrink:0; margin-top:14px; font-size:15px; color:rgba(244,236,221,0.3); transition:transform 0.28s ease; }
+  .chapter.open .chevron{ transform:rotate(-90deg); color:#C9814D; }
+  .chapter-row:active .chap-title{ color:#C9814D; }
 
-.stories-wrapper::before,
-.stories-wrapper::after {
-    content: ''; position: absolute; top: 0; bottom: 0;
-    width: 28px; z-index: 10; pointer-events: none;
-}
-.stories-wrapper::before {
-    right: 0;
-    background: linear-gradient(to left, rgba(3,3,3,0.85), transparent);
-}
-.stories-wrapper::after {
-    left: 0;
-    background: linear-gradient(to right, rgba(3,3,3,0.85), transparent);
-}
+  .episodes{ overflow:hidden; max-height:0; transition:max-height 0.4s cubic-bezier(.4,0,.2,1); }
+  .episodes.open{ max-height:2000px; }
+  .episodes-inner{ padding:2px 0 18px 23px; }
+  .ep-row{
+    display:flex; align-items:center; gap:12px; padding:11px 0;
+    border-top:1px solid rgba(244,236,221,0.06);
+  }
+  .ep-row:first-child{ border-top:none; }
+  .ep-num{ font-size:11.5px; color:rgba(244,236,221,0.32); width:20px; flex-shrink:0; }
+  .ep-play{
+    width:30px; height:30px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(244,236,221,0.06); border:1px solid rgba(244,236,221,0.12);
+  }
+  .ep-row.intro .ep-play{ background:rgba(140,160,124,0.14); border-color:rgba(140,160,124,0.4); }
+  .ep-play svg{ width:11px; height:11px; fill:#F4ECDD; margin-right:-1px; }
+  .ep-info{ flex:1; min-width:0; }
+  .ep-title{ font-size:13.8px; color:#F4ECDD; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ep-tag{ font-size:11px; color:#8CA07C; margin-top:2px; }
+  .ep-dur{ font-size:12px; color:rgba(244,236,221,0.35); flex-shrink:0; }
+  .ep-comments{ display:flex; align-items:center; gap:3px; font-size:11px; color:rgba(244,236,221,0.32); flex-shrink:0; }
+  .ep-comments svg{ width:10px; height:10px; fill:rgba(244,236,221,0.32); }
 
-.story-item {
-    display: flex; flex-direction: column;
-    align-items: center; gap: 6px;
-    flex-shrink: 0; cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-}
+  /* ---------- toast ---------- */
+  .toast{
+    position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(14px);
+    background:#1C1712; border:1px solid rgba(201,129,77,0.4); color:#C9814D;
+    font-size:13.5px; font-weight:600; padding:12px 20px; border-radius:99px; z-index:500;
+    opacity:0; pointer-events:none; transition:opacity 0.25s, transform 0.25s; white-space:nowrap;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 
-.story-ring {
-    width: 80px; height: 80px; border-radius: 50%;
-    padding: 2.5px;
-    background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888, #833ab4, #405de6, #5851db);
-    transition: background 0.4s ease;
-    flex-shrink: 0;
-}
-.story-item.seen .story-ring {
-    background: rgba(255,255,255,0.18);
-}
+  /* ---------- mini player ---------- */
+  .mini-player{
+    position:fixed; bottom:14px; left:14px; right:14px; height:64px;
+    background:rgba(28,23,18,0.92); backdrop-filter:blur(20px);
+    border:1px solid rgba(244,236,221,0.1); border-radius:18px;
+    z-index:290; display:none; align-items:center; padding:0 14px; gap:12px; cursor:pointer;
+    box-shadow:0 12px 32px rgba(0,0,0,0.5);
+  }
+  .mini-player.active{ display:flex; }
+  .mini-cover{ width:42px; height:42px; border-radius:10px; object-fit:cover; }
+  .mini-info{ flex:1; overflow:hidden; }
+  .mini-title{ font-size:13.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .mini-ep{ font-size:11.5px; color:rgba(244,236,221,0.45); }
+  .mini-play-btn{ width:36px; height:36px; background:#C9814D; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .mini-play-btn svg{ width:16px; height:16px; fill:#15120F; }
+  .mini-close{ font-size:16px; opacity:0.4; padding:4px; }
+  .mini-progress{ position:absolute; bottom:0; left:0; right:0; height:2px; background:rgba(244,236,221,0.08); border-radius:0 0 18px 18px; overflow:hidden; }
+  .mini-progress-bar{ height:100%; background:#C9814D; }
 
-.story-avatar {
-    width: 100%; height: 100%; border-radius: 50%;
-    background: rgba(255,255,255,0.10);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border: 2.5px solid rgba(3,3,3,0.9);
-    overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
-}
-.story-avatar img {
-    width: 100%; height: 100%;
-    object-fit: cover; border-radius: 50%;
-}
+  /* ---------- now playing ---------- */
+  .now-playing{
+    position:fixed; top:0; left:0; right:0; height:100dvh; background:#15120F;
+    z-index:300; display:none; flex-direction:column; align-items:center;
+    padding:16px 22px 30px; overflow-y:auto; transform:translateY(110%);
+  }
+  .now-playing.active{ display:flex; transform:translateY(0); transition:transform 0.5s cubic-bezier(.32,.72,0,1); }
+  .drag-handle-wrap{ width:100%; display:flex; justify-content:center; padding:6px 0 14px; }
+  .drag-handle{ width:36px; height:4px; background:rgba(244,236,221,0.25); border-radius:99px; }
+  .np-top{ width:100%; max-width:380px; display:flex; justify-content:space-between; align-items:center; margin-bottom:26px; }
+  .np-top button{ background:none; border:none; color:#F4ECDD; font-size:22px; cursor:pointer; }
+  .np-status{ font-size:12.5px; color:rgba(244,236,221,0.4); }
 
-.story-label {
-    font-size: 10.5px; font-weight: 600;
-    color: rgba(255,255,255,0.85); text-align: center;
-    max-width: 72px; overflow: hidden;
-    text-overflow: ellipsis; white-space: nowrap; line-height: 1.3;
-}
+  .np-cover-wrap{ width:100%; max-width:220px; margin-bottom:22px; position:relative; }
+  .np-cover-wrap img{ width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:18px; box-shadow:0 25px 60px rgba(201,129,77,0.22); }
 
-/* ===================================================
-   STORY MODAL
-   =================================================== */
-#story-modal {
-    position: fixed; top:0; left:0; right:0; bottom:0;
-    z-index: 9000;
-    background: rgba(0,0,0,0.92);
-    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-#story-modal.open { opacity: 1; pointer-events: auto; }
+  .np-track{ text-align:center; margin-bottom:22px; }
+  .np-title{ font-size:19px; font-weight:700; margin-bottom:6px; }
+  .np-sub{ font-size:13.5px; color:rgba(244,236,221,0.45); }
 
-.story-container {
-    width: 100%;
-    max-width: 375px;
-    aspect-ratio: 9 / 16;
-    background: #000;
-    border-radius: 12px;
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.9);
-}
+  .np-progress{ width:100%; max-width:340px; margin-bottom:24px; }
+  .np-bar-track{ width:100%; height:3px; background:rgba(244,236,221,0.14); border-radius:99px; cursor:pointer; margin-bottom:8px; }
+  .np-bar-fill{ height:100%; background:#C9814D; border-radius:99px; }
+  .np-time{ display:flex; justify-content:space-between; font-size:12px; color:rgba(244,236,221,0.4); }
 
-.story-modal-content {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: #000;
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-}
-.story-modal-content img,
-.story-modal-content video {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-}
+  .np-controls{ display:flex; align-items:center; justify-content:center; gap:26px; margin-bottom:26px; }
+  .np-ctrl{ background:none; border:none; cursor:pointer; display:flex; }
+  .np-ctrl svg{ width:24px; height:24px; fill:rgba(244,236,221,0.7); }
+  .np-play-main{ width:64px; height:64px; background:#C9814D; border-radius:50%; display:flex; align-items:center; justify-content:center; border:none; cursor:pointer; box-shadow:0 10px 28px rgba(201,129,77,0.4); }
+  .np-play-main svg{ width:26px; height:26px; fill:#15120F; }
 
-.story-progress-bar {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    z-index: 10;
-    display: flex; gap: 3px;
-    direction: ltr;
-    padding: 10px 12px 6px;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent);
-}
-.progress-seg {
-    flex: 1; height: 2.5px;
-    background: rgba(255,255,255,0.28);
-    border-radius: 3px; overflow: hidden;
-}
-.progress-seg-fill {
-    height: 100%; background: white;
-    width: 0%; transition: none; border-radius: 3px;
-}
-.progress-seg.done .progress-seg-fill { width: 100%; }
-.progress-seg.active .progress-seg-fill {
-    animation: progress-run 5s linear forwards;
-}
-@keyframes progress-run { from { width: 0%; } to { width: 100%; } }
-.story-modal-header {
-    position: absolute;
-    top: 26px; left: 0; right: 0;
-    z-index: 10;
-    display: flex; align-items: center; gap: 8px;
-    padding: 8px 12px;
-    direction: rtl;
-    justify-content: space-between;
-    flex-direction: row-reverse;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.35), transparent);
-}
-.story-logo-section {
-    display: flex; align-items: center; gap: 4px;
-    flex: 0 0 auto;
-}
-.story-logo-img {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: transparent;
-    border: 1.5px solid rgba(255,255,255,0.2);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    font-size: 20px; font-weight: 900; color: white;
-    overflow: hidden;
-}
-.story-logo-img img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-}
-.story-branding {
-    display: flex; align-items: center; gap: 4px;
-}
-.story-branding-text {
-    font-size: 15px; font-weight: 700; color: white;
-    line-height: 1;
-    text-shadow: 0 1px 6px rgba(0,0,0,0.7);
-}
-.story-checkmark {
-    width: 16px; height: 16px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-    color: #0084ff;
-    flex-shrink: 0;
-    overflow: hidden;
-    margin-right: 2px;
-}
-.story-checkmark img {
-    width: 100%; height: 100%;
-    object-fit: contain;
-}
-.story-modal-close {
-    font-size: 22px;
-    color: white; cursor: pointer; padding: 4px 6px; line-height: 1;
-    text-shadow: 0 1px 6px rgba(0,0,0,0.8);
-}
+  .np-rate{ width:100%; max-width:340px; padding:14px 0; border-top:1px solid rgba(244,236,221,0.08); border-bottom:1px solid rgba(244,236,221,0.08); margin-bottom:22px; display:none; }
+  .np-rate.active{ display:block; }
+  .np-rate-label{ font-size:12.5px; color:rgba(244,236,221,0.5); text-align:center; margin-bottom:10px; display:block; }
+  .stars-row{ display:flex; gap:8px; justify-content:center; direction:ltr; }
+  .star-btn{ width:30px; background:none; border:none; font-size:22px; color:rgba(244,236,221,0.2); cursor:pointer; padding:0; }
+  .star-btn.filled{ color:#C6A16A; }
 
-.story-nav-left,
-.story-nav-right {
-    position: absolute; top: 0; bottom: 0;
-    width: 40%; cursor: pointer; z-index: 9;
-    -webkit-tap-highlight-color: transparent;
-}
-.story-nav-right { right: 0; }
-.story-nav-left  { left: 0; }
+  .np-comments{ width:100%; max-width:340px; }
+  .np-comments-head{ display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .np-comments-head span.count{ font-size:12px; color:#15120F; background:#C9814D; padding:2px 9px; border-radius:99px; font-weight:700; }
+  .comment-row{ padding:12px 0; border-top:1px solid rgba(244,236,221,0.07); }
+  .comment-row:first-child{ border-top:none; }
+  .comment-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
+  .comment-name{ font-size:13.5px; font-weight:600; color:#C6A16A; }
+  .comment-time{ font-size:11px; color:rgba(244,236,221,0.32); }
+  .comment-text{ font-size:13.5px; line-height:1.6; color:rgba(244,236,221,0.8); }
+  .del-btn{ background:none; border:1px solid rgba(255,90,90,0.35); color:#ff8a8a; font-size:11px; padding:3px 9px; border-radius:7px; font-family:inherit; }
 
-.story-footer {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    z-index: 10;
-    display: flex; flex-direction: column; gap: 10px;
-    padding: 40px 14px 18px;
-    background: linear-gradient(to top, rgba(0,0,0,0.72) 60%, transparent);
-}
+  .comment-form{ margin-top:8px; }
+  .comment-form input, .comment-form textarea{
+    width:100%; background:rgba(244,236,221,0.05); border:1px solid rgba(244,236,221,0.12);
+    border-radius:12px; padding:12px 14px; color:#F4ECDD; font-size:14.5px; font-family:inherit;
+    outline:none; margin-bottom:9px;
+  }
+  .comment-form textarea{ resize:none; height:74px; line-height:1.5; }
+  .comment-submit{
+    width:100%; background:#C9814D; color:#15120F; border:none; border-radius:12px;
+    padding:13px 0; font-weight:700; font-size:14.5px; font-family:inherit; cursor:pointer; margin-top:2px;
+  }
 
-.story-caption {
-    font-size: 13px; font-weight: 500;
-    color: rgba(255,255,255,0.95);
-    text-align: center; line-height: 1.6;
-    min-height: 20px;
-    display: flex; align-items: center; justify-content: center;
-    text-shadow: 0 1px 8px rgba(0,0,0,0.9);
-}
+  /* ---------- modals ---------- */
+  .modal-overlay{ position:fixed; inset:0; background:rgba(10,8,6,0.88); z-index:400; display:none; align-items:flex-end; justify-content:center; }
+  .modal-overlay.active{ display:flex; }
+  .modal-box{
+    background:#1C1712; border:1px solid rgba(244,236,221,0.1); border-radius:22px 22px 0 0;
+    padding:26px 22px 34px; width:100%; max-width:460px; text-align:center; max-height:88vh; overflow-y:auto;
+  }
+  .modal-title{ font-size:18px; font-weight:700; margin-bottom:6px; }
+  .modal-sub{ font-size:13.5px; color:rgba(244,236,221,0.5); margin-bottom:20px; line-height:1.7; }
+  .modal-input{
+    width:100%; padding:14px; border-radius:12px; border:1px solid rgba(244,236,221,0.14);
+    text-align:center; font-size:20px; margin-bottom:12px; background:rgba(244,236,221,0.05);
+    color:#F4ECDD; font-family:inherit; outline:none; letter-spacing:2px;
+  }
+  .modal-btn{ width:100%; padding:14px; border:none; border-radius:12px; font-size:14.5px; font-weight:700; cursor:pointer; margin-top:9px; font-family:inherit; }
+  .btn-primary{ background:#C9814D; color:#15120F; }
+  .btn-secondary{ background:rgba(244,236,221,0.08); color:#F4ECDD; }
+  .btn-ghost{ background:none; color:rgba(244,236,221,0.5); border:1px solid rgba(244,236,221,0.14); }
 
-.story-action-btn {
-    display: none;
-    align-items: center; justify-content: center;
-    width: 100%;
-    padding: 12px 16px;
-    background: rgba(255,255,255,0.13);
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border: 1.2px solid rgba(212,175,55,0.6);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4), 
-                0 0 20px rgba(212,175,55,0.15),
-                inset 0 1px 0 rgba(255,255,255,0.25);
-    color: #ffd060;
-    font-family: 'Vazirmatn', sans-serif;
-    font-size: 15px; font-weight: 800;
-    text-decoration: none;
-    text-shadow: 0 0 8px rgba(212,175,55,0.4);
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
-}
-.story-action-btn::before {
-    content: ''; position: absolute;
-    top: 0; left: -100%;
-    width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    animation: glass-shine 2.5s ease-in-out infinite;
-}
-@keyframes glass-shine {
-    0%      { left: -100%; }
-    50%     { left: 100%; }
-    100%    { left: 100%; }
-}
-.story-action-btn:active {
-    transform: scale(0.97);
-    background: rgba(255,255,255,0.18);
-}
-.story-action-btn.show { display: flex; }
+  .price-row{ display:flex; justify-content:space-between; align-items:center; padding:16px 4px; border-top:1px solid rgba(244,236,221,0.07); text-align:right; }
+  .price-row:first-of-type{ border-top:none; }
+  .price-row .pname{ font-size:14px; font-weight:600; }
+  .price-row .pval{ font-size:14px; font-weight:800; color:#C6A16A; }
+  .price-row .pold{ font-size:11.5px; color:rgba(244,236,221,0.3); text-decoration:line-through; display:block; }
+  .buy-mini{ background:rgba(201,129,77,0.14); border:1px solid rgba(201,129,77,0.4); color:#C9814D; font-size:12.5px; font-weight:700; padding:8px 14px; border-radius:9px; font-family:inherit; }
 
-/* ===== CHAT BOX ===== */
-.chat-container {
-    width: 100%; max-width: 320px; height: 340px;
-    background: rgba(255,255,255,0.11);
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    border-radius: 28px; border: 1px solid rgba(212,175,55,0.55);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 25px rgba(212,175,55,0.25);
-    display: flex; flex-direction: column;
-    padding: 12px; margin-top: 20px; margin-bottom: 35px;
-}
-#chat-output {
-    flex: 1; overflow-y: auto; padding: 8px 6px;
-    display: flex; flex-direction: column;
-    gap: 10px; scroll-behavior: smooth;
-}
-#chat-output::-webkit-scrollbar { width: 3px; }
-#chat-output::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 10px; }
-
-.msg-bot {
-    align-self: flex-start;
-    background: rgba(255,255,255,0.12); border: 1px solid rgba(212,175,55,0.2);
-    padding: 10px 14px; border-radius: 4px 18px 18px 18px;
-    max-width: 84%; line-height: 1.8; font-size: 13.5px;
-    font-weight: 500; color: rgba(255,255,255,0.95);
-    animation: slideFromLeft 0.38s ease both;
-}
-.msg-user {
-    align-self: flex-end;
-    background: linear-gradient(135deg, rgba(110,70,240,0.88), rgba(75,35,190,0.92));
-    border: 1px solid rgba(150,110,255,0.35);
-    padding: 10px 14px; border-radius: 18px 4px 18px 18px;
-    max-width: 84%; line-height: 1.8; font-size: 13.5px;
-    font-weight: 600; color: white;
-    animation: slideFromRight 0.32s ease both;
-}
-@keyframes slideFromLeft {
-    from { opacity: 0; transform: translateX(-12px); }
-    to   { opacity: 1; transform: translateX(0); }
-}
-@keyframes slideFromRight {
-    from { opacity: 0; transform: translateX(12px); }
-    to   { opacity: 1; transform: translateX(0); }
-}
-
-.input-box {
-    display: flex; background: rgba(255,255,255,0.10);
-    border: 1px solid rgba(212,175,55,0.2);
-    border-radius: 25px; padding: 4px; margin-top: 8px; flex-shrink: 0;
-}
-input {
-    flex: 1; background: transparent; border: none; color: white;
-    font-size: 16px; font-family: 'Vazirmatn', sans-serif;
-    padding: 10px 14px; outline: none;
-    -webkit-appearance: none; appearance: none;
-}
-input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
-.send-btn {
-    width: 46px; height: 46px; background: transparent; border: none;
-    cursor: pointer; padding: 0;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-
-/* ===== ORB ===== */
-.orb {
-    width: 40px; height: 40px; border-radius: 50%;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border: 1.5px solid #d4af37; position: relative; overflow: hidden;
-    box-shadow: 0 0 15px rgba(212,175,55,0.5), inset 0 0 12px rgba(255,255,255,0.3);
-    animation: orb-pulse 2.2s ease-in-out infinite;
-}
-.core {
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%,-50%);
-    width: 13px; height: 13px;
-    background: radial-gradient(circle, #fff 20%, #d4af37 70%);
-    border-radius: 50%; box-shadow: 0 0 18px #d4af37;
-    animation: core-glow 1.6s ease-in-out infinite alternate; z-index: 3;
-}
-.neural-lines { position: absolute; top:0;left:0;right:0;bottom:0; z-index: 2; }
-.neural-lines .line {
-    position: absolute; top: 50%; left: 50%;
-    width: 120%; height: 1.2px;
-    background: linear-gradient(90deg, transparent, #d4af37, transparent);
-    transform-origin: center;
-    animation: neural-rotate 3.5s linear infinite;
-}
-.neural-lines .line:nth-child(1) { transform: rotate(0deg);   animation-duration: 3.2s; }
-.neural-lines .line:nth-child(2) { transform: rotate(36deg);  animation-duration: 4.1s; }
-.neural-lines .line:nth-child(3) { transform: rotate(72deg);  animation-duration: 2.8s; }
-.neural-lines .line:nth-child(4) { transform: rotate(108deg); animation-duration: 3.8s; }
-.neural-lines .line:nth-child(5) { transform: rotate(144deg); animation-duration: 4.5s; }
-@keyframes orb-pulse {
-    0%,100% { transform: scale(1); }
-    50%      { transform: scale(1.08); }
-}
-@keyframes core-glow {
-    from { box-shadow: 0 0 12px #d4af37; }
-    to   { box-shadow: 0 0 26px #fff, 0 0 38px #d4af37; }
-}
-@keyframes neural-rotate {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-}
-
-/* ===== Thinking ===== */
-.brain-thinking { display: flex; align-items: center; gap: 10px; padding: 4px 2px; }
-.thinking-dots {
-    font-size: 13px; color: rgba(212,175,55,0.9); font-weight: 600;
-    display: flex; align-items: center; gap: 3px;
-}
-.thinking-dots span {
-    animation: dot-bounce 1.2s ease-in-out infinite;
-    display: inline-block; font-size: 18px; line-height: 1; color: #d4af37;
-}
-.thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
-.thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes dot-bounce {
-    0%,80%,100% { transform: translateY(0); opacity: 0.4; }
-    40%          { transform: translateY(-5px); opacity: 1; }
-}
-.cursor-blink {
-    display: inline-block; width: 2px; height: 1em;
-    background: rgba(255,255,255,0.75); margin-right: 1px;
-    vertical-align: text-bottom;
-    animation: cursor-flash 0.55s step-end infinite;
-}
-@keyframes cursor-flash { 0%,100%{opacity:1;} 50%{opacity:0;} }
-
-/* ===== SERVICES GRID ===== */
-.services-grid {
-    display: flex; flex-wrap: wrap;
-    gap: 16px; width: 100%; max-width: 360px;
-}
-.services-grid a {
-    text-decoration: none; color: white;
-    width: calc(50% - 8px); display: block;
-}
-.service-box {
-    background: rgba(255,255,255,0.11);
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    border-radius: 24px; padding: 15px 10px 12px; text-align: center;
-    cursor: pointer; height: 230px;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 10px;
-    transition: transform 0.3s ease;
-    border: 1px solid rgba(212,175,55,0.55);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 25px rgba(212,175,55,0.25);
-    width: 100%;
-}
-.service-box:active { transform: scale(0.97); }
-.service-box img {
-    width: 145px; height: 145px; object-fit: cover;
-    border-radius: 18px; border: 2px solid rgba(255,255,255,0.3);
-}
-.service-box span {
-    font-size: 17.5px; font-weight: 800; color: white;
-    text-shadow: 0 0 10px rgba(212,175,55,0.35);
-}
-
-/* ===== کد نویسی ذهنی ===== */
-.mindcode-box {
-    background: #000 !important;
-    border: 1px solid rgba(0,255,65,0.45) !important;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 20px rgba(0,255,65,0.15) !important;
-    position: relative; overflow: hidden;
-}
-.mindcode-box::before {
-    content: ''; position: absolute; top:0;left:0;right:0;bottom:0;
-    background-image: repeating-linear-gradient(
-        0deg, transparent, transparent 3px,
-        rgba(0,255,65,0.02) 3px, rgba(0,255,65,0.02) 4px
-    );
-    pointer-events: none; border-radius: 24px; z-index: 0;
-}
-.mc-terminal {
-    width: 115px; height: 92px; background: #000;
-    border: 1px solid rgba(0,255,65,0.5); border-radius: 8px;
-    padding: 7px 9px;
-    font-family: 'Share Tech Mono', 'Courier New', monospace;
-    font-size: 9.5px; color: #00ff41; overflow: hidden;
-    line-height: 1.6; text-align: left; direction: ltr;
-    box-shadow: 0 0 15px rgba(0,255,65,0.2); position: relative; z-index: 1;
-}
-.mc-prompt { color: rgba(0,255,65,0.45); margin-bottom: 3px; font-size: 8.5px; }
-.mc-code { animation: matrix-scroll 3s linear infinite; }
-@keyframes matrix-scroll {
-    0%   { transform: translateY(0); }
-    100% { transform: translateY(-58px); }
-}
-.mc-title {
-    font-family: 'Vazirmatn', sans-serif; font-size: 16px; font-weight: 900;
-    color: #00ff41; text-shadow: 0 0 10px #00ff41, 0 0 22px rgba(0,255,65,0.4);
-    position: relative; z-index: 1;
-}
-.mc-sub {
-    font-family: 'Share Tech Mono', 'Courier New', monospace;
-    font-size: 8.5px; color: rgba(0,255,65,0.4);
-    letter-spacing: 2px; position: relative; z-index: 1;
-}
-
-/* ===== MENU ===== */
-#menu-overlay {
-    position: fixed; top:0;left:0;right:0;bottom:0;
-    background: rgba(0,0,0,0.55);
-    z-index: 150; opacity: 0; pointer-events: none;
-    transition: opacity 0.5s ease;
-}
-#menu-overlay.active { opacity: 1; pointer-events: auto; }
-.side-menu {
-    position: fixed; top: 0; right: 0; width: 255px; height: 100vh;
-    background: rgba(255,255,255,0.085);
-    backdrop-filter: blur(26px); -webkit-backdrop-filter: blur(26px);
-    border-left: 1px solid rgba(212,175,55,0.3);
-    box-shadow: -12px 0 40px rgba(0,0,0,0.7);
-    z-index: 200; transform: translateX(100%);
-    transition: transform 0.55s ease;
-    padding: 22px 16px 28px;
-    display: flex; flex-direction: column; overflow-y: auto;
-}
-.side-menu.open { transform: translateX(0); }
-.menu-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 24px; padding-bottom: 15px;
-    border-bottom: 1px solid rgba(212,175,55,0.22);
-}
-.menu-header h2 {
-    font-size: 22px; font-weight: 900; color: #d4af37;
-    font-family: 'Cinzel', serif; text-shadow: 0 0 12px rgba(212,175,55,0.5);
-}
-.close-btn {
-    width: 38px; height: 38px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px; color: #d4af37; cursor: pointer; border-radius: 50%;
-}
-.menu-items { display: flex; flex-direction: column; gap: 9px; }
-.menu-item {
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(212,175,55,0.18);
-    border-radius: 15px; padding: 14px 18px;
-    display: flex; align-items: center;
-    text-decoration: none; color: white;
-    font-size: 15.8px; font-weight: 700;
-}
-.menu-item .text { flex: 1; line-height: 1.35; }
-
-/* ===== VPN MODAL ===== */
-#vpn-overlay {
-    position: fixed; top:0;left:0;right:0;bottom:0;
-    background: rgba(0,0,0,0.65);
-    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-    z-index: 9999;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
-}
-#vpn-overlay.visible { opacity: 1; pointer-events: auto; }
-.vpn-modal {
-    position: relative; width: calc(100% - 48px); max-width: 340px;
-    background: rgba(255,255,255,0.10);
-    backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
-    border-radius: 28px; border: 1px solid rgba(255,180,0,0.45);
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.7),
-                0 0 40px rgba(255,160,0,0.18), inset 0 1px 0 rgba(255,255,255,0.12);
-    padding: 32px 24px 24px; text-align: center;
-    transform: scale(0.88) translateY(16px);
-    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease;
-    opacity: 0;
-}
-#vpn-overlay.visible .vpn-modal { transform: scale(1) translateY(0); opacity: 1; }
-.vpn-modal::before {
-    content: ''; position: absolute; top:-1px; left:-1px; right:-1px; bottom:-1px;
-    border-radius: 29px;
-    background: linear-gradient(135deg, rgba(255,200,50,0.22), transparent 60%, rgba(255,120,0,0.12));
-    pointer-events: none; z-index: 0;
-}
-.vpn-icon {
-    font-size: 46px; margin-bottom: 14px; display: block;
-    animation: vpn-icon-pulse 2.4s ease-in-out infinite;
-    position: relative; z-index: 1;
-    filter: drop-shadow(0 0 12px rgba(255,180,0,0.6));
-}
-@keyframes vpn-icon-pulse {
-    0%,100% { transform: scale(1); }
-    50%      { transform: scale(1.12); }
-}
-.vpn-title {
-    font-size: 19px; font-weight: 900; color: #ffd060;
-    text-shadow: 0 0 18px rgba(255,200,50,0.55);
-    margin-bottom: 12px; position: relative; z-index: 1; line-height: 1.45;
-}
-.vpn-body {
-    font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.85);
-    line-height: 1.85; margin-bottom: 24px; position: relative; z-index: 1;
-}
-.vpn-body strong { color: #ffd060; font-weight: 800; }
-.vpn-confirm-btn {
-    position: relative; z-index: 1; display: inline-block; width: 100%;
-    padding: 14px 20px;
-    background: linear-gradient(135deg, #d4af37, #f5c842, #b8860b);
-    border: none; border-radius: 18px;
-    font-family: 'Vazirmatn', sans-serif;
-    font-size: 16px; font-weight: 800; color: #1a0033;
-    cursor: pointer; overflow: hidden;
-    box-shadow: 0 6px 24px rgba(212,175,55,0.45), 0 2px 8px rgba(0,0,0,0.4);
-    transition: transform 0.18s ease, box-shadow 0.18s ease; letter-spacing: 0.3px;
-}
-.vpn-confirm-btn:active { transform: scale(0.96); box-shadow: 0 3px 12px rgba(212,175,55,0.3); }
-.vpn-confirm-btn::after {
-    content: ''; position: absolute; top:0; left:-60%;
-    width: 50%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    border-radius: 18px;
-    animation: btn-shimmer 2.8s ease-in-out infinite; pointer-events: none;
-}
-@keyframes btn-shimmer {
-    0%       { left: -60%; }
-    60%,100% { left: 110%; }
-}
-
-/* ===================================================
-   BOTTOM NAVIGATION BAR
-   =================================================== */
-.bottom-nav {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    z-index: 300;
-    padding: 0 16px 12px;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom));
-}
-
-.bottom-nav-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    background: rgba(255,255,255,0.07);
-    backdrop-filter: blur(32px) saturate(180%);
-    -webkit-backdrop-filter: blur(32px) saturate(180%);
-    border: 1px solid rgba(255,255,255,0.13);
-    border-radius: 28px;
-    padding: 8px 6px 10px;
-    box-shadow:
-        0 8px 32px rgba(0,0,0,0.55),
-        0 2px 8px rgba(0,0,0,0.35),
-        inset 0 1px 0 rgba(255,255,255,0.18),
-        inset 0 -1px 0 rgba(0,0,0,0.2);
-    position: relative;
-}
-
-.bottom-nav-inner::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 10%; right: 10%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
-    border-radius: 50%;
-}
-
-.nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    padding: 4px 10px 2px;
-    border-radius: 18px;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    text-decoration: none;
-    color: white;
-    position: relative;
-    min-width: 56px;
-    overflow: visible;
-}
-
-.nav-item .nav-icon-wrap {
-    width: 44px; height: 44px;
-    border-radius: 14px;
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.10);
-    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-    position: relative;
-    overflow: hidden;
-}
-
-.nav-item .nav-icon-wrap::before {
-    content: '';
-    position: absolute;
-    top: 0; left: -80%;
-    width: 60%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-    transform: skewX(-20deg);
-    transition: left 0.5s ease;
-}
-.nav-item.active .nav-icon-wrap::before {
-    animation: nav-shimmer 2s ease-in-out infinite 0.3s;
-}
-@keyframes nav-shimmer {
-    0%       { left: -80%; }
-    50%,100% { left: 110%; }
-}
-
-.nav-item svg {
-    width: 24px; height: 24px;
-    transition: all 0.3s ease;
-    filter: drop-shadow(0 0 0px transparent);
-}
-
-.nav-label {
-    font-size: 10px; font-weight: 700;
-    color: rgba(255,255,255,0.45);
-    transition: all 0.3s ease;
-    letter-spacing: 0.3px;
-    white-space: nowrap;
-    font-family: 'Vazirmatn', sans-serif;
-}
-
-.nav-item.active .nav-icon-wrap {
-    background: rgba(212,175,55,0.18);
-    border-color: rgba(212,175,55,0.55);
-    box-shadow:
-        0 0 18px rgba(212,175,55,0.3),
-        0 0 6px rgba(212,175,55,0.2),
-        inset 0 1px 0 rgba(255,255,255,0.2);
-    transform: translateY(-2px) scale(1.05);
-}
-
-.nav-item.active svg {
-    filter: drop-shadow(0 0 8px rgba(212,175,55,0.8));
-}
-
-.nav-item.active .nav-label {
-    color: #ffd060;
-    text-shadow: 0 0 8px rgba(212,175,55,0.6);
-}
-
-/* ── آیتم وسط (Explore / کاوش) — دایره نیمه بیرون‌زده ── */
-.nav-item-center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    text-decoration: none;
-    color: white;
-    padding: 0 6px 2px;
-    position: relative;
-    top: -8px;
-    min-width: 60px;
-    overflow: visible;
-}
-
-.nav-center-orb {
-    width: 64px; height: 64px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.10);
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border: 1.5px solid rgba(212,175,55,0.55);
-    box-shadow:
-        0 0 24px rgba(212,175,55,0.4),
-        0 8px 22px rgba(0,0,0,0.55),
-        inset 0 1px 0 rgba(255,255,255,0.28),
-        inset 0 -1px 0 rgba(0,0,0,0.2);
-    display: flex; align-items: center; justify-content: center;
-    position: relative; overflow: visible;
-    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-    animation: center-orb-pulse 3s ease-in-out infinite;
-    /* نیمی از دایره بیرون از باکس نوار */
-    transform: translateY(-26px);
-    margin-bottom: -26px;
-}
-
-@keyframes center-orb-pulse {
-    0%,100% { box-shadow: 0 0 24px rgba(212,175,55,0.4), 0 8px 22px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.28); }
-    50%      { box-shadow: 0 0 38px rgba(212,175,55,0.6), 0 10px 26px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.32); }
-}
-
-.nav-center-orb svg {
-    width: 30px; height: 30px;
-    filter: drop-shadow(0 0 8px rgba(212,175,55,0.7));
-    position: relative; z-index: 1;
-}
-
-.nav-item-center.active .nav-center-orb {
-    background: rgba(212,175,55,0.24);
-    border-color: rgba(212,175,55,0.9);
-    box-shadow:
-        0 0 46px rgba(212,175,55,0.65),
-        0 8px 24px rgba(0,0,0,0.5),
-        inset 0 1px 0 rgba(255,255,255,0.4);
-    transform: translateY(-26px) scale(1.08);
-}
-
-.nav-center-label {
-    font-size: 10px; font-weight: 700;
-    color: rgba(212,175,55,0.8);
-    text-shadow: 0 0 6px rgba(212,175,55,0.4);
-    font-family: 'Vazirmatn', sans-serif;
-    letter-spacing: 1px;
-    margin-top: -22px;
-}
-
-.nav-item:active .nav-icon-wrap,
-.nav-item-center:active .nav-center-orb {
-    transform: translateY(-26px) scale(0.95);
-}
-
-.nav-ripple {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(212,175,55,0.25);
-    transform: scale(0);
-    animation: nav-ripple-anim 0.5s ease-out forwards;
-    pointer-events: none;
-    width: 60px; height: 60px;
-    top: 50%; left: 50%;
-    margin-top: -30px; margin-left: -30px;
-}
-@keyframes nav-ripple-anim {
-    to { transform: scale(2.5); opacity: 0; }
-}
+  @media (min-width:480px){ .chapters::before{ right:44px; } }
 </style>
 </head>
 <body>
 
-<div class="stars"></div>
-
-<!-- VPN Warning Modal -->
-<div id="vpn-overlay" onclick="handleVpnOverlayClick(event)">
-    <div class="vpn-modal">
-        <span class="vpn-icon">🛡️</span>
-        <div class="vpn-title">فیلترشکن شما فعال است</div>
-        <div class="vpn-body">
-            برای <strong>تجربه بهتر</strong>، سرعت بالاتر پخش و انجام روان‌تر تمرینات،<br>
-            لطفاً <strong>VPN (فیلترشکن)</strong> خود را خاموش کنید و سپس صفحه را رفرش نمایید.
-        </div>
-        <button class="vpn-confirm-btn" onclick="closeVpnModal()">✅ &nbsp; بله، متوجه شدم</button>
-    </div>
-</div>
-
-<!-- Story Full-Screen Modal -->
-<div id="story-modal">
-    <div class="story-container">
-        <div class="story-progress-bar" id="story-progress-bar"></div>
-        <div class="story-modal-header">
-            <div class="story-logo-section">
-                <div class="story-checkmark">
-                    <img src="http://fs3.centraldnserver.com/~planlife/pics/MagicEraser_260629_074549.png" alt="✓">
-                </div>
-                <div class="story-branding">
-                    <div class="story-branding-text">planlife.ir</div>
-                </div>
-                <div class="story-logo-img">
-                    <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
-                </div>
-            </div>
-            <div class="story-modal-close" onclick="closeStoryModal()">✕</div>
-        </div>
-        <div class="story-modal-content" id="story-modal-content">
-            <div class="story-nav-left"  onclick="storyNavigate(-1)"></div>
-            <div class="story-nav-right" onclick="storyNavigate(1)"></div>
-        </div>
-        <div class="story-footer">
-            <div class="story-caption" id="story-caption"></div>
-            <a class="story-action-btn" id="story-action-btn" href="#" target="_blank" rel="noopener"></a>
-        </div>
-    </div>
-</div>
-
 <header>
-    <div class="hamburger" onclick="toggleMenu()">☰</div>
+  <div class="back-link">← بازگشت</div>
+  <div id="headerAuthArea"><button class="admin-link" onclick="openAdminModal()">ورود ادمین</button></div>
 </header>
 
-<div class="main-center">
-    <div class="title">PlanLife</div>
+<section class="hero">
+  <div class="eyebrow">آکادمی PlanLife</div>
+  <h1 class="headline">مسیر رشد شخصی‌ات را <em>ورق بزن</em></h1>
+  <p class="hero-sub">هر دوره یک قدم مشخص از تحول‌ست. نقطه‌ی روی مسیر نشون می‌ده کجا باز و کجا هنوز قفله.</p>
+</section>
 
-    <div class="stories-wrapper">
-        <div class="stories-scroll" id="stories-scroll">
+<div class="section-label"><b>دوره‌های صوتی</b><span id="progressCount"></span></div>
 
-            <div class="story-item" data-index="0"
-                 data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png"
-                 data-name="پادکست"
-                 data-caption="پادکست‌های رایگان PlanLife 🎙️"
-                 data-btn-show="true"
-                 data-btn-text="شنیدن پادکست‌ها"
-                 data-btn-link="https://planlife.ir/Pages/podcasts_free/index.html">
-                <div class="story-ring">
-                    <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست">
-                    </div>
-                </div>
-                <div class="story-label">پادکست</div>
-            </div>
+<div class="chapters" id="chaptersWrap"></div>
 
-            <div class="story-item" data-index="1"
-                 data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/dore-jadid-jaryan.mov"
-                 data-name="دوره ی جدید🎙️"
-                 data-caption="دوره‌های تخصصی رشد فردی 🚀"
-                 data-btn-show="true"
-                 data-btn-text="مشاهده دوره‌ها"
-                 data-btn-link="https://planlife.ir/Pages/Doreha/index.html">
-                <div class="story-ring">
-                    <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌ها">
-                    </div>
-                </div>
-                <div class="story-label">دوره‌ها</div>
-            </div>
+<div class="modal-overlay" id="subscriptionModal"><div class="modal-box" id="modalContent"></div></div>
+<div class="modal-overlay" id="pricingModal"><div class="modal-box" id="pricingContent"></div></div>
 
-            <div class="story-item" data-index="2"
-                 data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/Library-1.mp4"
-                 data-name="کتابخانه ۲"
-                 data-caption="کتابخانه — بهترین کتاب‌های رشد فردی 📚"
-                 data-btn-show="true"
-                 data-btn-text="ورود به کتابخانه"
-                 data-btn-link="https://planlife.ir/Pages/Book/index.html">
-                <div class="story-ring">
-                    <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه">
-                    </div>
-                </div>
-                <div class="story-label">کتابخانه ۲</div>
-            </div>
-            <div class="story-item" data-index="3"
-                 data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/Library-2.mp4"
-                 data-name="کتابخانه ۲"
-                 data-caption="کتابخانه — بهترین کتاب‌های رشد فردی 📚"
-                 data-btn-show="true"
-                 data-btn-text="ورود به کتابخانه"
-                 data-btn-link="https://planlife.ir/Pages/Book/index.html">
-                <div class="story-ring">
-                    <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه">
-                    </div>
-                </div>
-                <div class="story-label">کتابخانه ۲</div>
-            </div>
+<div class="toast" id="toast"></div>
 
-            <div class="story-item" data-index="4"
-                 data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/majale-story.mov"
-                 data-name="مجله"
-                 data-caption="مجله ماورایی — مقالات انگیزشی 📰"
-                 data-btn-show="true"
-                 data-btn-text="ورود به مجله"
-                 data-btn-link="https://planlife.ir/Pages/Magazine/index.html">
-                <div class="story-ring">
-                    <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="مجله">
-                    </div>
-                </div>
-                <div class="story-label">مجله</div>
-            </div>
-
-            <div class="story-item" data-index="5"
-                 data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg"
-                 data-name="تمرینات"
-                 data-caption="تمرینات مجازی روزانه 🧘"
-                 data-btn-show="true"
-                 data-btn-text="شروع تمرین"
-                 data-btn-link="https://planlife.ir/Pages/Tamrin/index.html">
-                <div class="story-ring">
-                    <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرینات">
-                    </div>
-                </div>
-                <div class="story-label">تمرینات</div>
-            </div>
-
-            <div class="story-item" data-index="6"
-                 data-img="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png"
-                 data-name="پاکسازی ذهن"
-                 data-caption="پاکسازی ذهن 🔥"
-                 data-btn-show="true"
-                 data-btn-text="شروع تمرین"
-                 data-btn-link="https://planlife.ir/Pages/paksazi/index.html">
-                <div class="story-ring">
-                    <div class="story-avatar">
-                        <img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" alt="پاکسازی ذهن">
-                    </div>
-                </div>
-                <div class="story-label">پاکسازی ذهن</div>
-            </div>
-
-            <div class="story-item" data-index="7"
-                 data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg"
-                 data-name="تابلو آرزو"
-                 data-caption="تابلو آرزوها — رویاهایت را ببین 🔖"
-                 data-btn-show="true"
-                 data-btn-text="ساخت تابلو آرزو"
-                 data-btn-link="https://planlife.ir/Pages/visionboard/index.html">
-                <div class="story-ring">
-                    <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg" alt="تابلو">
-                    </div>
-                </div>
-                <div class="story-label">تابلو آرزو</div>
-            </div>
-
-            <div class="story-item" data-index="8"
-                 data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg"
-                 data-name="کتابخانه"
-                 data-caption="کتابخانه — بهترین کتاب‌های رشد فردی 📚"
-                 data-btn-show="true"
-                 data-btn-text="ورود به کتابخانه"
-                 data-btn-link="https://planlife.ir/Pages/Book/index.html">
-                <div class="story-ring">
-                    <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه">
-                    </div>
-                </div>
-                <div class="story-label">کتابخانه</div>
-            </div>
-
-            <div class="story-item" data-index="9"
-                 data-img="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg"
-                 data-name="کمک اولیه"
-                 data-caption="جعبه کمک‌های اولیه روانی 🩺"
-                 data-btn-show="true"
-                 data-btn-text="مشاهده جعبه کمک‌های اولیه"
-                 data-btn-link="https://planlife.ir/Pages/komakavaliye/index.html">
-                <div class="story-ring">
-                    <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg" alt="کمک اولیه">
-                    </div>
-                </div>
-                <div class="story-label">کمک اولیه</div>
-            </div>
-
-            <div class="story-item" data-index="10"
-                 data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png"
-                 data-name="موزیک"
-                 data-caption="موزیک‌های انگیزشی و مدیتیشن 🎵"
-                 data-btn-show="true"
-                 data-btn-text="گوش دادن به موزیک‌ها"
-                 data-btn-link="https://planlife.ir/Pages/Music/index.html">
-                <div class="story-ring">
-                    <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="موزیک">
-                    </div>
-                </div>
-                <div class="story-label">موزیک</div>
-            </div>
-
-            <div class="story-item" data-index="11"
-                 data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/6452140137136714544.mp4"
-                 data-name="ویدیوها"
-                 data-caption="ویدیوهای آموزشی و انگیزشی 🎥"
-                 data-btn-show="true"
-                 data-btn-text="تماشای ویدیوها"
-                 data-btn-link="https://planlife.ir/Pages/Videos/index.html">
-                <div class="story-ring">
-                    <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779985702/IMG_1211_snjqjm.jpg" alt="ویدیوها">
-                    </div>
-                </div>
-                <div class="story-label">ویدیوها</div>
-            </div>
-
-            <div class="story-item" data-index="12"
-                 data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg"
-                 data-name="چک لیست"
-                 data-caption="چک لیست روزانه — روز خود را مدیریت کن 📜"
-                 data-btn-show="true"
-                 data-btn-text="مشاهده چک لیست"
-                 data-btn-link="https://planlife.ir/Pages/cheklist/index.html">
-                <div class="story-ring">
-                    <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg" alt="چک لیست">
-                    </div>
-                </div>
-                <div class="story-label">چک لیست</div>
-            </div>
-
-        </div>
-    </div>
-    
-    <!-- چت باکس -->
-    <div class="chat-container">
-        <div id="chat-output"></div>
-        <div class="input-box">
-            <input id="user-input" placeholder="پیام بده..." onkeydown="if(event.key==='Enter') sendMessage()">
-            <button class="send-btn" onclick="sendMessage()">
-                <div class="orb">
-                    <div class="neural-lines">
-                        <div class="line"></div><div class="line"></div>
-                        <div class="line"></div><div class="line"></div>
-                        <div class="line"></div>
-                    </div>
-                    <div class="core"></div>
-                </div>
-            </button>
-        </div>
-    </div>
-
-    <!-- سرویس‌ها -->
-    <div class="services-grid">
-        <a href="https://planlife.ir/Pages/podcasts_free/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="">
-                <span>پادکست رایگان</span>
-            </div>
-        </a>
-        <a href="https://planlife.ir/Pages/Doreha/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="">
-                <span>دوره ها</span>
-            </div>
-        </a>
-        <a href="https://planlife.ir/Pages/Magazine/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="">
-                <span>مجله ماورایی 📰</span>
-            </div>
-        </a>
-        <a href="https://planlife.ir/Pages/Mindcoding/index.html">
-            <div class="service-box mindcode-box">
-                <div class="mc-terminal">
-                    <div class="mc-prompt">root@mind:~$</div>
-                    <div class="mc-code">
-                        if(belief){<br>
-                        &nbsp;rewrite();<br>
-                        }<br>
-                        RAS.update();<br>
-                        grow(life);<br>
-                        mind++;<br>
-                        if(belief){<br>
-                        &nbsp;rewrite();<br>
-                    </div>
-                </div>
-                <span class="mc-title">کد نویسی ذهنی</span>
-                <span class="mc-sub"></span>
-            </div>
-        </a>
-        <a href="https://planlife.ir/Pages/Tamrin/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="">
-                <span>تمرینات مجازی</span>
-            </div>
-        </a>
-        <a href="https://planlife.ir/Pages/paksazi/index.html">
-            <div class="service-box">
-                <img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" alt="پاکسازی ذهن">
-                <span>پاکسازی ذهنی 💭</span>
-            </div>
-        </a>
-        <a href="https://planlife.ir/Pages/visionboard/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg" alt="تابلو آرزوها">
-                <span>تابلو آرزوها 🔖</span>
-            </div>
-        </a>
-        <a href="https://planlife.ir/Pages/Book/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه">
-                <span>کتابخانه 📚</span>
-            </div>
-        </a>
-        <a href="https://planlife.ir/Pages/komakavaliye/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg" alt="">
-                <span>جعبه کمک های اولیه</span>
-            </div>
-        </a>
-        <a href="https://planlife.ir/Pages/ranj-lezat/index.html">
-            <div class="service-box">
-                <img src="http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2276.jpeg" alt="ترک عادت">
-                <span>ترک عادت</span>
-            </div>
-        </a>
-        <a href="https://planlife.ir/Pages/naghsherah/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781599306/IMG_1979_xcccao.jpg" alt="">
-                <span>نقشه راه</span>
-            </div>
-        </a>
-        <a href="https://planlife.ir/Pages/Music/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="">
-                <span>موزیک ها</span>
-            </div>
-        </a>
-        <a href="https://planlife.ir/Pages/Videos/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779985702/IMG_1211_snjqjm.jpg" alt="">
-                <span>ویدیوها 🎥</span>
-            </div>
-        </a>
-        <a href="https://planlife.ir/Pages/tamrintakhasosi/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780955091/IMG_1737_ei1f5w.png" alt="">
-                <span>تمرینات تخصصی</span>
-            </div>
-        </a>
-        <a href="https://planlife.ir/Pages/cheklist/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg" alt="">
-                <span>چک لیست روزانه📜</span>
-            </div>
-        </a>
-    </div>
+<div class="mini-player" id="miniPlayer" onclick="expandPlayer()">
+  <img id="miniCover" class="mini-cover" src="" alt="">
+  <div class="mini-info">
+    <div id="miniTitle" class="mini-title">در حال پخش</div>
+    <div id="miniEp" class="mini-ep">PlanLife</div>
+  </div>
+  <div class="mini-play-btn" onclick="event.stopPropagation(); miniTogglePlay()">
+    <svg id="miniPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+  </div>
+  <div class="mini-close" onclick="event.stopPropagation(); killPlayer()">✕</div>
+  <div class="mini-progress"><div class="mini-progress-bar" id="miniProgressBar" style="width:0%"></div></div>
 </div>
 
-<div id="menu-overlay" onclick="closeMenu()"></div>
-<div id="side-menu" class="side-menu">
-    <div class="menu-header">
-        <h2>PlanLife</h2>
-        <div class="close-btn" onclick="closeMenu()">✕</div>
+<div class="now-playing" id="nowPlayingScreen">
+  <div class="drag-handle-wrap"><div class="drag-handle"></div></div>
+  <div class="np-top">
+    <button onclick="closeNowPlaying()">←</button>
+    <span class="np-status" id="playerStatus">در حال پخش</span>
+    <button onclick="alert('منو (به‌زودی)')">⋯</button>
+  </div>
+
+  <div class="np-cover-wrap"><img id="npCover" src="" alt=""></div>
+
+  <div class="np-track">
+    <div class="np-title serif" id="npTitle">عنوان دوره</div>
+    <div class="np-sub" id="npSubtitle">PlanLife</div>
+  </div>
+
+  <div class="np-progress">
+    <div class="np-bar-track" id="progressContainer"><div class="np-bar-fill" id="progressBar" style="width:0%"></div></div>
+    <div class="np-time"><span id="currentTime">0:00</span><span id="totalTime">0:00</span></div>
+  </div>
+
+  <div class="np-controls">
+    <button class="np-ctrl" onclick="prevTrack()"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z"/></svg></button>
+    <button class="np-ctrl" onclick="seek(-10)"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg></button>
+    <button class="np-play-main" onclick="togglePlay()"><svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+    <button class="np-ctrl" onclick="seek(10)"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></button>
+    <button class="np-ctrl" onclick="nextTrack()"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+  </div>
+
+  <div class="np-rate" id="starsSection">
+    <span class="np-rate-label">امتیازت به این قسمت؟</span>
+    <div class="stars-row" id="starsContainer"></div>
+  </div>
+
+  <div class="np-comments">
+    <div class="np-comments-head"><span class="serif" style="font-size:16px;font-weight:700;">نظرها</span><span class="count" id="commentCount">0</span></div>
+    <div id="commentsList"></div>
+    <div class="comment-form" id="commentForm">
+      <input id="commentName" type="text" placeholder="نام (اختیاری)">
+      <textarea id="commentText" placeholder="نظرت رو بنویس..."></textarea>
+      <button class="comment-submit" id="submitCommentBtn" onclick="addComment()">ارسال نظر</button>
     </div>
-    <div class="menu-items">
-        <a href="https://planlife.ir" class="menu-item" onclick="closeMenu()"><span class="text">خانه</span></a>
-        <a href="https://planlife.ir/Pages/podcasts_free/index.html" class="menu-item" onclick="closeMenu()"><span class="text">پادکست‌های رایگان</span></a>
-        <a href="https://planlife.ir/Pages/Doreha/index.html" class="menu-item" onclick="closeMenu()"><span class="text">دوره‌ها</span></a>
-        <a href="https://planlife.ir/Pages/Magazine/index.html" class="menu-item" onclick="closeMenu()"><span class="text">مجله ماورایی 📰</span></a>
-        <a href="https://planlife.ir/Pages/Mindcoding/index.html" class="menu-item" onclick="closeMenu()"><span class="text">کد نویسی ذهنی</span></a>
-        <a href="https://planlife.ir/Pages/Tamrin/index.html" class="menu-item" onclick="closeMenu()"><span class="text">تمرینات مجازی</span></a>
-        <a href="https://planlife.ir/Pages/visionboard/index.html" class="menu-item" onclick="closeMenu()"><span class="text">تابلو آرزوها 🔖</span></a>
-        <a href="https://planlife.ir/Pages/Book/index.html" class="menu-item" onclick="closeMenu()"><span class="text">کتابخانه 📚</span></a>
-        <a href="https://planlife.ir/Pages/komakavaliye/index.html" class="menu-item" onclick="closeMenu()"><span class="text">جعبه کمک های اولیه</span></a>
-        <a href="https://planlife.ir/Pages/ranj-lezat/index.html" class="menu-item" onclick="closeMenu()"><span class="text">ترک عادت</span></a>
-        <a href="https://planlife.ir/Pages/naghsherah/index.html" class="menu-item" onclick="closeMenu()"><span class="text">نقشه راه</span></a>
-        <a href="https://planlife.ir/Pages/Music/index.html" class="menu-item" onclick="closeMenu()"><span class="text">موزیک‌ها</span></a>
-        <a href="https://planlife.ir/Pages/Videos/index.html" class="menu-item" onclick="closeMenu()"><span class="text">ویدیوها 🎥</span></a>
-        <a href="https://planlife.ir/Pages/tamrintakhasosi/index.html" class="menu-item" onclick="closeMenu()"><span class="text">تمرینات تخصصی</span></a>
-        <a href="https://planlife.ir/Pages/cheklist/index.html" class="menu-item" onclick="closeMenu()"><span class="text">چک لیست روزانه 📜</span></a>
-    </div>
+  </div>
+
+  <audio id="mainAudio" style="display:none;"></audio>
 </div>
-
-<!-- ===================================================
-     BOTTOM NAVIGATION BAR
-     =================================================== -->
-<nav class="bottom-nav" id="bottom-nav">
-    <div class="bottom-nav-inner">
-
-        <!-- ۱. خانه -->
-        <a class="nav-item active" id="nav-home" href="#" onclick="navClick(event,'nav-home')">
-            <div class="nav-icon-wrap">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="home-grad" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
-                            <stop offset="100%" stop-color="#d4af37" stop-opacity="0.85"/>
-                        </linearGradient>
-                    </defs>
-                    <path d="M3.5 11L12 4L20.5 11V19.5C20.5 20.05 20.05 20.5 19.5 20.5H14.5V14H9.5V20.5H4.5C3.95 20.5 3.5 20.05 3.5 19.5V11Z"
-                          fill="url(#home-grad)" fill-opacity="0.9"
-                          stroke="white" stroke-width="0.6" stroke-linejoin="round"/>
-                    <circle cx="12" cy="16.6" r="0.9" fill="white" fill-opacity="0.7"/>
-                </svg>
-            </div>
-            <span class="nav-label">خانه</span>
-        </a>
-
-        <!-- ۲. پادکست‌ها -->
-        <a class="nav-item" id="nav-podcast" href="#" onclick="navClick(event,'nav-podcast')">
-            <div class="nav-icon-wrap">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="head-grad" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
-                            <stop offset="100%" stop-color="#a78bfa" stop-opacity="0.85"/>
-                        </linearGradient>
-                    </defs>
-                    <!-- هدفون پادکست -->
-                    <path d="M4 13.5C4 8.25 7.58 4 12 4C16.42 4 20 8.25 20 13.5"
-                          stroke="url(#head-grad)" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-                    <rect x="3" y="13" width="3.4" height="6" rx="1.6" fill="url(#head-grad)" fill-opacity="0.9" stroke="white" stroke-width="0.4"/>
-                    <rect x="17.6" y="13" width="3.4" height="6" rx="1.6" fill="url(#head-grad)" fill-opacity="0.9" stroke="white" stroke-width="0.4"/>
-                </svg>
-            </div>
-            <span class="nav-label">پادکست‌ها</span>
-        </a>
-
-        <!-- ۳. Explore — وسط (دایره‌ای که نیمی بیرون از باکس می‌زند) -->
-        <a class="nav-item-center active" id="nav-explore" href="#" onclick="navCenterClick(event,'nav-explore')">
-            <div class="nav-center-orb">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="compass-grad" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.98"/>
-                            <stop offset="100%" stop-color="#ffd060" stop-opacity="0.9"/>
-                        </linearGradient>
-                    </defs>
-                    <circle cx="12" cy="12" r="9.2" stroke="url(#compass-grad)" stroke-width="1.6" fill="rgba(255,255,255,0.06)"/>
-                    <path d="M15.5 8.5L13 13L8.5 15.5L11 11L15.5 8.5Z" fill="url(#compass-grad)" stroke="white" stroke-width="0.4" stroke-linejoin="round"/>
-                    <circle cx="12" cy="12" r="1.1" fill="white"/>
-                </svg>
-            </div>
-            <span class="nav-center-label">Explore</span>
-        </a>
-
-        <!-- ۴. دوره‌ها -->
-        <a class="nav-item" id="nav-courses" href="#" onclick="navClick(event,'nav-courses')">
-            <div class="nav-icon-wrap">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="grad-grad" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
-                            <stop offset="100%" stop-color="#60d4fa" stop-opacity="0.85"/>
-                        </linearGradient>
-                    </defs>
-                    <!-- کلاه فارغ‌التحصیلی -->
-                    <path d="M12 3L22 8L12 13L2 8L12 3Z" fill="url(#grad-grad)" fill-opacity="0.9" stroke="white" stroke-width="0.4" stroke-linejoin="round"/>
-                    <path d="M6 10.2V15C6 16.5 8.7 18 12 18C15.3 18 18 16.5 18 15V10.2"
-                          stroke="url(#grad-grad)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-                    <path d="M22 8V14" stroke="url(#grad-grad)" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-            </div>
-            <span class="nav-label">دوره‌ها</span>
-        </a>
-
-        <!-- ۵. تمرینات روزانه (چک‌لیست) -->
-        <a class="nav-item" id="nav-checklist" href="#" onclick="navClick(event,'nav-checklist')">
-            <div class="nav-icon-wrap">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="check2-grad" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
-                            <stop offset="100%" stop-color="#34d399" stop-opacity="0.85"/>
-                        </linearGradient>
-                    </defs>
-                    <rect x="4.5" y="3.5" width="15" height="17" rx="2.5" fill="url(#check2-grad)" fill-opacity="0.16" stroke="url(#check2-grad)" stroke-width="1.6"/>
-                    <path d="M8 11.3L10 13.3L14.5 8.8" stroke="url(#check2-grad)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-                    <line x1="8" y1="16" x2="16" y2="16" stroke="url(#check2-grad)" stroke-width="1.4" stroke-linecap="round" stroke-opacity="0.65"/>
-                </svg>
-            </div>
-            <span class="nav-label">تمرینات</span>
-        </a>
-
-    </div>
-</nav>
 
 <script>
-/* ================================================
-   VPN DETECTION
-   ================================================ */
-var VPN_STORAGE_KEY = 'planlife_vpn_warned';
+/* ================= PREVIEW NOTE =================
+   این یه پیش‌نمایش طراحیه. برای اینکه هنگام تست، کامنت‌های واقعی توی
+   دیتابیس شما ثبت نشه، بخش نظرات موقتاً از دیتای نمونه‌ی محلی استفاده می‌کنه
+   (نه Supabase واقعی). بقیه‌ی منطق (قفل/باز بودن، پخش صدا، پرداخت) دقیقاً
+   مثل نسخه‌ی اصلیه. اگه طراحی رو پسندیدی، همینو رو دیتابیس واقعی وصل می‌کنم.
+=================================================== */
 
-function getTodayDateStr() {
-    var d = new Date();
-    return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
-}
-function alreadyWarnedToday() {
-    try {
-        var stored = localStorage.getItem(VPN_STORAGE_KEY);
-        return stored ? stored === getTodayDateStr() : false;
-    } catch(e) { return false; }
-}
-function markWarnedToday() {
-    try { localStorage.setItem(VPN_STORAGE_KEY, getTodayDateStr()); } catch(e) {}
-}
-function showVpnModal() {
-    document.getElementById('vpn-overlay').classList.add('visible');
-}
-function closeVpnModal() {
-    document.getElementById('vpn-overlay').classList.remove('visible');
-    markWarnedToday();
-}
-function handleVpnOverlayClick(e) {
-    if (e.target === document.getElementById('vpn-overlay')) closeVpnModal();
-}
-function detectVpn(callback) {
-    var suspicionScore = 0, checks = 0, totalChecks = 2;
-    function maybeFinish() {
-        checks++;
-        if (checks >= totalChecks) callback(suspicionScore >= 1);
-    }
-    try {
-        var RTC = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
-        if (RTC) {
-            var pc = new RTC({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
-            var candidateCount = 0, startTime = Date.now();
-            var timeout = setTimeout(function() {
-                if (candidateCount === 0) suspicionScore += 2;
-                else if (candidateCount < 2) suspicionScore += 1;
-                try { pc.close(); } catch(e) {}
-                maybeFinish();
-            }, 3000);
-            pc.onicecandidate = function(e) {
-                if (e.candidate) {
-                    candidateCount++;
-                    if ((Date.now() - startTime) > 2000 && candidateCount < 2) suspicionScore += 1;
-                } else {
-                    clearTimeout(timeout);
-                    if (candidateCount === 0) suspicionScore += 2;
-                    else if (candidateCount < 2) suspicionScore += 1;
-                    try { pc.close(); } catch(e) {}
-                    maybeFinish();
-                }
-            };
-            pc.createDataChannel('');
-            pc.createOffer()
-              .then(function(o){ return pc.setLocalDescription(o); })
-              .catch(function(){ clearTimeout(timeout); suspicionScore += 1; maybeFinish(); });
-        } else {
-            suspicionScore += 1; maybeFinish();
-        }
-    } catch(e) { suspicionScore += 1; maybeFinish(); }
-    try {
-        var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        if (conn) {
-            var t = (conn.type || '').toLowerCase();
-            if (t === 'other' || t === 'none' || t === 'unknown') suspicionScore += 1;
-        }
-        maybeFinish();
-    } catch(e) { maybeFinish(); }
-}
-function initVpnCheck() {
-    if (alreadyWarnedToday()) return;
-    setTimeout(function() {
-        detectVpn(function(isVpn) { if (isVpn) showVpnModal(); });
-    }, 1800);
-}
+const categoryConfig = {
+  "دوره کدهای پشت‌ پرده پول": {
+    cover: "http://fs3.centraldnserver.com/~planlife/pics/Servat/moneyplanlife.JPG",
+    codes: ["77777","BA777","TH777","Servat","2933"],
+    pricing: { old:"۸،۶۵۰،۰۰۰", new:"۳،۹۶۰،۰۰۰", hasDiscount:true },
+    episodes: [
+      { episode:0, duration:"12:05", isIntro:true, src:"http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/Moarefi_ dore_servat.m4a" },
+      { episode:1, duration:"32:45", src:"http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/dore-code-servat-1.m4a" },
+      { episode:2, duration:"43:12", src:"http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/dore-code-servat-2.m4a" },
+      { episode:3, duration:"43:06", src:"http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/dore-code-servat-3.m4a" },
+      { episode:4, duration:"31:50", src:"http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/Dore-code-servat-4.m4a" },
+    ]
+  },
+  "دوره چطور حالم خوب باشه ؟": {
+    cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
+    codes: ["99999","TA999","Ehsas"],
+    pricing: { price:"۲،۹۵۰،۰۰۰", hasDiscount:false },
+    episodes: [
+      { episode:0, duration:"04:45", isIntro:true, src:"http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a" },
+      { episode:1, duration:"32:10", src:"http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a" },
+      { episode:2, duration:"36:56", src:"http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 2.m4a" },
+      { episode:3, duration:"27:20", src:"http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 3.m4a" },
+      { episode:4, duration:"24:35", src:"http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-tahavol halo ehsas 4.m4a" },
+    ]
+  },
+  "دوره هماهنگی با جریان خلقت": {
+    cover: "http://fs3.centraldnserver.com/~planlife/pics/IMG_2461.jpeg",
+    codes: ["88888","ESH88","Love"],
+    pricing: { old:"۷،۳۵۰،۰۰۰", new:"۳،۹۶۰،۰۰۰", hasDiscount:true },
+    episodes: [
+      { episode:0, duration:"06:15", isIntro:true, src:"https://tools.irbots.com/uploads/1779408560file_17523.mpeg" },
+      { episode:1, duration:"29:16", src:"http://fs3.centraldnserver.com/~planlife/doreha/jaryane-khelqat/dore-jaryan-1.m4a" },
+      { episode:2, duration:"22:37", src:"http://fs3.centraldnserver.com/~planlife/doreha/jaryane-khelqat/dore-jaryan-2.m4a" },
+      { episode:3, duration:"24:58", src:"http://fs3.centraldnserver.com/~planlife/doreha/jaryane-khelqat/dore-jaryan-3.m4a" },
+    ]
+  },
+  "دوره خود باوری (اعتماد به نفس)": {
+    cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
+    codes: ["11111","ET111","Etemad"],
+    pricing: { old:"۶،۵۸۰،۰۰۰", new:"۲،۹۶۰،۰۰۰", hasDiscount:true },
+    comingSoon: true,
+    episodes: [
+      { episode:0, duration:"07:20", isIntro:true, src:"" },
+      { episode:1, duration:"32:45", src:"" },
+      { episode:2, duration:"43:12", src:"" },
+    ]
+  },
+};
+const SOON_MESSAGE = "🔜 این دوره به‌زودی اضافه می‌شود";
+const ADMIN_CODE = "admin2933";
 
-/* ================================================
-   STORIES
-   ================================================ */
-var stories     = [];
-var storyIndex  = 0;
-var storyTimer  = null;
-var STORY_SEEN_KEY = 'planlife_stories_seen';
-var DAY_MS = 24 * 60 * 60 * 1000;
-
-function getSeenMap() {
-    try {
-      var raw = localStorage.getItem(STORY_SEEN_KEY);
-        if (!raw) return {};
-        var map = JSON.parse(raw);
-        var now = Date.now();
-        var cleaned = {};
-        Object.keys(map).forEach(function(idx) {
-            if (now - map[idx] < DAY_MS) cleaned[idx] = map[idx];
-        });
-        return cleaned;
-    } catch(e) { return {}; }
-}
-function markSeenPersisted(idx) {
-    try {
-        var map = getSeenMap();
-        map[idx] = Date.now();
-        localStorage.setItem(STORY_SEEN_KEY, JSON.stringify(map));
-    } catch(e) {}
-}
-function isSeenPersisted(idx) {
-    var map = getSeenMap();
-    return Object.prototype.hasOwnProperty.call(map, idx);
-}
-
-function initStories() {
-    var items = document.querySelectorAll('.story-item');
-    items.forEach(function(item) {
-        var idx = parseInt(item.dataset.index, 10);
-        var alreadySeen = isSeenPersisted(idx);
-        stories.push({
-            el:      item,
-            img:     item.dataset.img     || '',
-            name:    item.dataset.name    || '',
-            caption: item.dataset.caption || '',
-            btnShow: (item.dataset.btnShow || '').toLowerCase() === 'true',
-            btnText: item.dataset.btnText || '',
-            btnLink: item.dataset.btnLink || '',
-            seen:    alreadySeen
-        });
-        if (alreadySeen) item.classList.add('seen');
-        item.addEventListener('click', function() {
-            openStoryModal(parseInt(item.dataset.index, 10));
-        });
+const courseData = [];
+Object.entries(categoryConfig).forEach(([catName,cfg])=>{
+  cfg.episodes.forEach(ep=>{
+    courseData.push({
+      title: ep.isIntro ? `معرفی: ${catName.replace('دوره ','')}` : catName,
+      episode: ep.episode, duration: ep.duration, cover: cfg.cover, src: ep.src,
+      isIntro: !!ep.isIntro, category: catName, comingSoon: !!cfg.comingSoon,
     });
-    initDragScroll();
+  });
+});
+const subscriptionCodes = {}; const coursePricing = {};
+Object.entries(categoryConfig).forEach(([n,c])=>{ subscriptionCodes[n]=c.codes; coursePricing[n]=c.pricing; });
+
+// local mock comment store (preview only)
+let mockComments = {};
+let seedId = 1;
+function seedComment(key,name,text,daysAgo){
+  if(!mockComments[key]) mockComments[key]=[];
+  const d = new Date(Date.now()-daysAgo*86400000);
+  mockComments[key].push({id:seedId++, name, text, created_at:d.toISOString()});
+}
+seedComment(commentKeySafe('دوره کدهای پشت‌ پرده پول',1),'نگین','قسمت اول خیلی روشنگر بود، منتظر بقیه‌شم 🙏',2);
+seedComment(commentKeySafe('دوره کدهای پشت‌ پرده پول',1),'آرمان','صدا و کیفیت فوق‌العادست.',5);
+function commentKeySafe(t,e){ return `course_${t}_ep${e}`; }
+
+let unlockedCategories = {};
+let isAdmin = false;
+let currentTrackIndex = 0;
+let currentTrackKey = null;
+let userRatings = {};
+
+const audio = document.getElementById('mainAudio');
+const progressBar = document.getElementById('progressBar');
+const currentTimeEl = document.getElementById('currentTime');
+const totalTimeEl = document.getElementById('totalTime');
+const progressContainer = document.getElementById('progressContainer');
+const statusEl = document.getElementById('playerStatus');
+const playIcon = document.getElementById('playIcon');
+
+function commentKey(title,episode){ return `course_${title}_ep${episode}`; }
+function toPersianNum(n){ return String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]); }
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function formatCommentTime(iso){ const d=new Date(iso); return `${d.toLocaleDateString('fa-IR',{month:'short',day:'numeric'})} • ${d.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`; }
+
+let toastTimer=null;
+function showToast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
 }
 
-function openStoryModal(idx) {
-    storyIndex = idx;
-    document.getElementById('story-modal').classList.add('open');
-    document.body.style.overflow = 'hidden';
-    renderStoryModal();
-    buildProgressBar();
-    startStoryTimer();
+function statusFor(cat,cfg){
+  if(cfg.comingSoon) return {cls:'soon', text:'به‌زودی', dot:'soon'};
+  if(isAdmin || unlockedCategories[cat]) return {cls:'open', text:'باز — گوش بده', dot:'unlocked'};
+  return {cls:'locked', text:'نیازمند اشتراک', dot:'locked'};
 }
 
-function closeStoryModal() {
-    document.getElementById('story-modal').classList.remove('open');
-    document.body.style.overflow = '';
-    clearStoryTimer();
+function loadPage(){
+  const wrap = document.getElementById('chaptersWrap');
+  wrap.innerHTML='';
+  const cats = Object.keys(categoryConfig);
+  let openCount=0;
+  cats.forEach((cat,idx)=>{
+    const cfg = categoryConfig[cat];
+    const st = statusFor(cat,cfg);
+    if(st.cls==='open') openCount++;
+    const epCount = cfg.episodes.filter(e=>!e.isIntro).length;
+
+    const chapter = document.createElement('div');
+    chapter.className = 'chapter' + (cfg.comingSoon?' is-soon':'');
+    chapter.id = `chapter-${idx}`;
+
+    const priceHtml = cfg.pricing.hasDiscount
+      ? `<div class="chap-price"><s>${cfg.pricing.old}</s>${cfg.pricing.new} تومان</div>`
+      : (cfg.pricing.price ? `<div class="chap-price">${cfg.pricing.price} تومان</div>` : '');
+
+    chapter.innerHTML = `
+      <div class="chapter-row" onclick="${cfg.comingSoon ? `showToast(SOON_MESSAGE)` : `toggleChapter(${idx})`}">
+        <div class="rail-dot ${st.dot==='unlocked'?'unlocked':st.dot==='soon'?'soon':''}"></div>
+        <img class="chap-cover" src="${cfg.cover}" alt="">
+        <div class="chap-body">
+          <div class="chap-title">${cat}</div>
+          <div class="chap-meta">
+            <span>${toPersianNum(epCount)} قسمت</span>
+            <span class="dot-sep"></span>
+            <span class="status-${st.cls}">${st.text}</span>
+          </div>
+          ${cfg.comingSoon ? '' : priceHtml}
+        </div>
+        <div class="chevron">›</div>
+      </div>
+      <div class="episodes" id="episodes-${idx}"></div>
+    `;
+    wrap.appendChild(chapter);
+  });
+  document.getElementById('progressCount').textContent = `${toPersianNum(openCount)} از ${toPersianNum(cats.length)} باز`;
 }
 
-function getMediaType(url, el) {
-    if (el && el.dataset.type === 'video') return 'video';
-    if (!url) return 'image';
-    var clean = url.toLowerCase().split('?')[0].split('#')[0];
-    var ext = clean.split('.').pop();
-    if (['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv', 'm4v'].includes(ext)) return 'video';
-    if (clean.indexOf('/video/upload/') >= 0) return 'video';
-    return 'image';
+let openChapterIdx = null;
+function toggleChapter(idx){
+  const cat = Object.keys(categoryConfig)[idx];
+  const epWrap = document.getElementById(`episodes-${idx}`);
+  const chapterEl = document.getElementById(`chapter-${idx}`);
+  const wasOpen = openChapterIdx===idx;
+
+  document.querySelectorAll('.episodes').forEach(e=>{ e.classList.remove('open'); e.innerHTML=''; });
+  document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('open'));
+
+  if(!wasOpen){
+    epWrap.innerHTML = buildEpisodesHTML(cat);
+    epWrap.classList.add('open');
+    chapterEl.classList.add('open');
+    openChapterIdx = idx;
+    setTimeout(()=>chapterEl.scrollIntoView({behavior:'smooth',block:'start'}),60);
+  } else {
+    openChapterIdx = null;
+  }
 }
 
-function renderStoryModal() {
-    var s = stories[storyIndex];
-    if (!s) { closeStoryModal(); return; }
-    s.seen = true;
-    s.el.classList.add('seen');
-    markSeenPersisted(storyIndex);
+function buildEpisodesHTML(cat){
+  const items = courseData.filter(x=>x.category===cat);
+  let html = '<div class="episodes-inner">';
+  const intro = items.find(x=>x.isIntro);
+  if(intro){
+    const idx = courseData.indexOf(intro);
+    html += `
+      <div class="ep-row intro" onclick="playCourse(${idx})">
+        <div class="ep-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="ep-info"><div class="ep-title">${intro.title}</div><div class="ep-tag">معرفی رایگان</div></div>
+        <div class="ep-dur">${intro.duration}</div>
+      </div>`;
+  }
+  items.filter(x=>!x.isIntro).forEach(item=>{
+    const idx = courseData.indexOf(item);
+    const key = commentKey(item.title,item.episode);
+    const cnt = toPersianNum((mockComments[key]||[]).length);
+    html += `
+      <div class="ep-row" onclick="playCourse(${idx})">
+        <div class="ep-num">${toPersianNum(item.episode)}</div>
+        <div class="ep-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="ep-info"><div class="ep-title">قسمت ${toPersianNum(item.episode)}</div></div>
+        <div class="ep-comments"><svg viewBox="0 0 24 24"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>${cnt}</div>
+        <div class="ep-dur">${item.duration}</div>
+      </div>`;
+  });
+  html += '</div>';
+  return html;
+}
 
-    var mediaType  = getMediaType(s.img, s.el);
-    var contentDiv = document.getElementById('story-modal-content');
+function renderStars(){
+  const c = document.getElementById('starsContainer'); c.innerHTML='';
+  const rating = userRatings[currentTrackKey]||0;
+  for(let i=1;i<=5;i++){
+    const b = document.createElement('button');
+    b.className = `star-btn ${rating>=i?'filled':''}`; b.textContent='★';
+    b.onclick = (e)=>{ e.preventDefault(); userRatings[currentTrackKey]=i; renderStars(); };
+    c.appendChild(b);
+  }
+}
 
-    var oldVideo = contentDiv.querySelector('video');
-    if (oldVideo) { oldVideo.pause(); oldVideo.src = ''; oldVideo.remove(); }
-    var oldImg = contentDiv.querySelector('img');
-    if (oldImg) oldImg.remove();
+function loadComments(title,episode){
+  const key = commentKey(title,episode);
+  currentTrackKey = key;
+  const starsSection = document.getElementById('starsSection');
+  const cat = courseData[currentTrackIndex].category;
+  if(isAdmin || unlockedCategories[cat] || courseData[currentTrackIndex].isIntro){ starsSection.classList.add('active'); renderStars(); }
+  else { starsSection.classList.remove('active'); }
+  renderComments(key);
+}
 
-    if (mediaType === 'video') {
-        var video = document.createElement('video');
-        video.setAttribute('playsinline', '');
-        video.setAttribute('webkit-playsinline', '');
-        video.muted = false;
-        video.autoplay = true;
-        video.controls = false;
-        video.preload = 'auto';
-        video.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
+function renderComments(key){
+  const comments = mockComments[key] || [];
+  const list = document.getElementById('commentsList');
+  document.getElementById('commentCount').textContent = comments.length;
+  list.innerHTML = '';
+  if(comments.length===0){
+    list.innerHTML = '<p style="opacity:0.4;text-align:center;padding:18px 10px;font-size:13.5px;">هنوز نظری ثبت نشده. اولین نفر باش!</p>';
+    return;
+  }
+  comments.slice().reverse().forEach(c=>{
+    const div = document.createElement('div'); div.className='comment-row';
+    div.innerHTML = `
+      <div class="comment-head">
+        <span class="comment-name">${escapeHtml(c.name)}</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="comment-time">${formatCommentTime(c.created_at)}</span>
+          ${isAdmin ? `<button class="del-btn" onclick="deleteComment('${key}',${c.id})">حذف</button>` : ''}
+        </div>
+      </div>
+      <p class="comment-text">${escapeHtml(c.text)}</p>`;
+    list.appendChild(div);
+  });
+}
 
-        video.addEventListener('ended', function() { storyNavigate(1); });
-        video.addEventListener('error', function() { startStoryTimer(); });
-        video.addEventListener('loadedmetadata', function() {
-            clearStoryTimer();
-            updateProgressForVideo(video);
-        });
+function addComment(){
+  if(!currentTrackKey) return;
+  const name = document.getElementById('commentName').value.trim() || 'ناشناس';
+  const text = document.getElementById('commentText').value.trim();
+  if(!text){ showToast('لطفاً متن نظر رو بنویس'); return; }
+  if(!mockComments[currentTrackKey]) mockComments[currentTrackKey]=[];
+  mockComments[currentTrackKey].push({id:seedId++, name, text, created_at:new Date().toISOString()});
+  renderComments(currentTrackKey);
+  document.getElementById('commentText').value='';
+  document.getElementById('commentName').value='';
+  showToast('نظرت ثبت شد ✓');
+}
 
-        var source = document.createElement('source');
-        source.src = s.img;
-        var ext = s.img.toLowerCase().split('?')[0].split('.').pop();
-        source.type = ['webm','ogg'].includes(ext) ? 'video/' + ext : 'video/mp4';
-        video.appendChild(source);
-        contentDiv.appendChild(video);
+function deleteComment(key,id){
+  if(!isAdmin) return;
+  mockComments[key] = (mockComments[key]||[]).filter(c=>c.id!==id);
+  renderComments(key);
+}
 
-        var playPromise = video.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(function() { showPlayOverlay(video, contentDiv); });
-        }
-    } else {
-        var img = document.createElement('img');
-        img.src = s.img;
-        img.alt = '';
-        img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
-        contentDiv.appendChild(img);
+function openAdminModal(){
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-title">ورود ادمین</div>
+    <div class="modal-sub">کد ادمین رو وارد کن تا دسترسی کامل داشته باشی</div>
+    <input id="adminCodeInput" type="password" maxlength="15" placeholder="کد ادمین" class="modal-input">
+    <button onclick="checkAdminCode()" class="modal-btn btn-primary">تأیید</button>
+    <button onclick="closeModal()" class="modal-btn btn-secondary">بستن</button>`;
+  document.getElementById('subscriptionModal').classList.add('active');
+}
+function checkAdminCode(){
+  const code = document.getElementById('adminCodeInput').value.trim();
+  if(code===ADMIN_CODE){
+    isAdmin = true;
+    Object.keys(subscriptionCodes).forEach(c=>unlockedCategories[c]=true);
+    updateAdminHeader(); loadPage(); closeModal();
+    if(currentTrackKey) loadComments(courseData[currentTrackIndex].title, courseData[currentTrackIndex].episode);
+    showToast('دسترسی ادمین فعال شد 👑');
+  } else {
+    const inp = document.getElementById('adminCodeInput');
+    inp.style.borderColor='#ff5a5a'; inp.value=''; inp.placeholder='کد اشتباهه';
+    setTimeout(()=>{ if(document.getElementById('adminCodeInput')){ inp.style.borderColor=''; inp.placeholder='کد ادمین'; } },1600);
+  }
+}
+function updateAdminHeader(){
+  const area = document.getElementById('headerAuthArea');
+  if(isAdmin){
+    area.innerHTML = `<div class="admin-pill"><span class="admin-tag">ادمین</span><button class="logout-link" onclick="doLogout()">خروج</button></div>`;
+  } else {
+    area.innerHTML = `<button class="admin-link" onclick="openAdminModal()">ورود ادمین</button>`;
+  }
+}
+function doLogout(){
+  isAdmin=false; unlockedCategories={}; updateAdminHeader(); loadPage();
+  if(currentTrackKey) loadComments(courseData[currentTrackIndex].title, courseData[currentTrackIndex].episode);
+}
+
+function playCourse(index){
+  const item = courseData[index];
+  if(item.comingSoon){ showToast(SOON_MESSAGE); return; }
+  if(item.isIntro || isAdmin || unlockedCategories[item.category]) playAudio(item);
+  else showSubscriptionModal(item.category);
+}
+
+function showSubscriptionModal(category){
+  window.currentUnlockCategory = category;
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-title">نیاز به اشتراک داری</div>
+    <div class="modal-sub">دسته‌بندی: <b style="color:#F4ECDD;">${category}</b><br>کد اشتراکت رو وارد کن یا تهیه‌ش کن</div>
+    <input id="unlockCode" type="text" maxlength="10" placeholder="*****" class="modal-input">
+    <button onclick="checkUnlockCode()" class="modal-btn btn-primary">فعال‌سازی</button>
+    <button onclick="showPricingModal('${category}')" class="modal-btn btn-secondary">💳 تهیه اشتراک</button>
+    <button onclick="closeModal()" class="modal-btn btn-ghost">بستن</button>`;
+  document.getElementById('subscriptionModal').classList.add('active');
+}
+function checkUnlockCode(){
+  const code = document.getElementById('unlockCode').value.trim();
+  const category = window.currentUnlockCategory;
+  if(code===ADMIN_CODE){ checkAdminCode2remap(); return; }
+  if(subscriptionCodes[category] && subscriptionCodes[category].includes(code)){
+    unlockedCategories[category]=true; loadPage(); closeModal();
+    showToast('اشتراک فعال شد ✓');
+  } else {
+    document.getElementById('modalContent').innerHTML = `
+      <div class="modal-title" style="color:#ff8a8a;">کد اشتباهه</div>
+      <div class="modal-sub">لطفاً کد صحیح رو وارد کن یا با پشتیبانی تماس بگیر</div>
+      <button onclick="showSubscriptionModal('${category}')" class="modal-btn btn-secondary">تلاش دوباره</button>
+      <button onclick="closeModal()" class="modal-btn btn-ghost">بستن</button>`;
+  }
+}
+function checkAdminCode2remap(){
+  isAdmin=true; Object.keys(subscriptionCodes).forEach(c=>unlockedCategories[c]=true);
+  updateAdminHeader(); loadPage(); closeModal(); showToast('دسترسی ادمین فعال شد 👑');
+}
+function closeModal(){ document.getElementById('subscriptionModal').classList.remove('active'); }
+
+function showPricingModal(category){
+  closeModal();
+  const rows = Object.keys(coursePricing).map(name=>{
+    const cfg = categoryConfig[name]; const p = coursePricing[name];
+    if(cfg.comingSoon){
+      return `<div class="price-row"><div><div class="pname">${name}</div><div style="font-size:11.5px;color:#C6A16A;margin-top:3px;">به‌زودی اضافه می‌شه</div></div><button class="buy-mini" style="opacity:0.5;" onclick="showToast(SOON_MESSAGE)">⏳</button></div>`;
     }
-
-    document.getElementById('story-caption').textContent = s.caption;
-
-    var btn = document.getElementById('story-action-btn');
-    if (s.btnShow && s.btnLink) {
-        btn.textContent = s.btnText || 'مشاهده بیشتر';
-        btn.href = s.btnLink;
-        btn.classList.add('show');
-    } else {
-        btn.classList.remove('show');
-        btn.removeAttribute('href');
-    }
+    const priceHtml = p.hasDiscount ? `<span class="pold">${p.old} ت</span><span class="pval">${p.new} تومان</span>` : `<span class="pval">${p.price} تومان</span>`;
+    return `<div class="price-row"><div><div class="pname">${name}</div>${priceHtml}</div><button class="buy-mini" onclick="showCardModal('${name}')">خرید</button></div>`;
+  }).join('');
+  document.getElementById('pricingContent').innerHTML = `
+    <div class="modal-title" style="margin-bottom:16px;">تهیه اشتراک</div>
+    ${rows}
+    <button onclick="closePricingModal()" class="modal-btn btn-secondary" style="margin-top:18px;">بستن</button>`;
+  document.getElementById('pricingModal').classList.add('active');
+}
+function closePricingModal(){ document.getElementById('pricingModal').classList.remove('active'); }
+function showCardModal(category){
+  closePricingModal();
+  showToast('برای اتصال درگاه پرداخت واقعی آماده‌ست ✓');
 }
 
-function updateProgressForVideo(video) {
-    var bar = document.getElementById('story-progress-bar');
-    var segs = bar.querySelectorAll('.progress-seg');
-    var activeSeg = segs[storyIndex];
-    if (!activeSeg) return;
-
-    var fill = activeSeg.querySelector('.progress-seg-fill');
-    activeSeg.classList.remove('active');
-    fill.style.transition = 'none';
-    fill.style.width = '0%';
-
-    function updateFill() {
-        if (!video.duration || video.paused || video.ended) return;
-        var pct = (video.currentTime / video.duration) * 100;
-        fill.style.width = pct + '%';
-        requestAnimationFrame(updateFill);
-    }
-    video.addEventListener('play', function() { requestAnimationFrame(updateFill); });
-    video.addEventListener('timeupdate', function() {
-        if (!video.duration) return;
-        fill.style.width = ((video.currentTime / video.duration) * 100) + '%';
-    });
-}
-
-function showPlayOverlay(video, container) {
-    var overlay = document.createElement('div');
-    overlay.style.cssText = 'position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);cursor:pointer;';
-    var btn = document.createElement('div');
-    btn.style.cssText = 'width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-size:32px;';
-    btn.textContent = '▶';
-    overlay.appendChild(btn);
-    overlay.addEventListener('click', function() { video.play(); overlay.remove(); });
-    container.appendChild(overlay);
-}
-
-function buildProgressBar() {
-    var bar = document.getElementById('story-progress-bar');
-    bar.innerHTML = '';
-    stories.forEach(function(s, i) {
-        var seg  = document.createElement('div');
-        seg.className = 'progress-seg';
-        if (i < storyIndex) seg.classList.add('done');
-        if (i === storyIndex) seg.classList.add('active');
-        var fill = document.createElement('div');
-        fill.className = 'progress-seg-fill';
-        seg.appendChild(fill);
-        bar.appendChild(seg);
-    });
-}
-
-function startStoryTimer() {
-    clearStoryTimer();
-    storyTimer = setTimeout(function() { storyNavigate(1); }, 5000);
-}
-function clearStoryTimer() {
-    if (storyTimer) { clearTimeout(storyTimer); storyTimer = null; }
-}
-
-function storyNavigate(dir) {
-    clearStoryTimer();
-    storyIndex += dir;
-    if (storyIndex < 0) storyIndex = 0;
-    if (storyIndex >= stories.length) { closeStoryModal(); return; }
-    renderStoryModal();
-    buildProgressBar();
-    startStoryTimer();
-}
-
-document.getElementById('story-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeStoryModal();
+function formatTime(s){ if(!s||isNaN(s)) return "0:00"; return `${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,'0')}`; }
+audio.addEventListener('timeupdate', ()=>{
+  if(!audio.duration) return;
+  const pct = (audio.currentTime/audio.duration)*100;
+  progressBar.style.width = `${pct}%`;
+  currentTimeEl.textContent = formatTime(audio.currentTime);
+  const mpb = document.getElementById('miniProgressBar'); if(mpb) mpb.style.width = `${pct}%`;
+});
+audio.addEventListener('loadedmetadata', ()=> totalTimeEl.textContent = formatTime(audio.duration));
+progressContainer.addEventListener('click', e=>{
+  const r = progressContainer.getBoundingClientRect();
+  audio.currentTime = ((e.clientX-r.left)/r.width) * audio.duration;
 });
 
-/* ================================================
-   DRAG SCROLL
-   ================================================ */
-function initDragScroll() {
-    var el = document.getElementById('stories-scroll');
-    var isDown = false, startX, scrollLeft;
-    el.addEventListener('mousedown', function(e) {
-        isDown = true; startX = e.pageX - el.offsetLeft; scrollLeft = el.scrollLeft;
-        el.style.cursor = 'grabbing';
-    });
-    el.addEventListener('mouseleave', function() { isDown = false; el.style.cursor = 'grab'; });
-    el.addEventListener('mouseup',    function() { isDown = false; el.style.cursor = 'grab'; });
-    el.addEventListener('mousemove',  function(e) {
-        if (!isDown) return;
-        e.preventDefault();
-        el.scrollLeft = scrollLeft - (e.pageX - el.offsetLeft - startX) * 1.4;
-    });
+function setPlayIcons(playing){
+  const icon = playing ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
+  playIcon.innerHTML = icon;
+  document.getElementById('miniPlayIcon').innerHTML = icon;
+  statusEl.textContent = playing ? 'در حال پخش' : 'متوقف شده';
 }
 
-/* ================================================
-   QA CHATBOT
-   ================================================ */
-var QA_URL = "https://raw.githubusercontent.com/soheil001/planlife1/main/qa.json";
-var qaData = null;
-
-function loadQA() {
-    return fetch(QA_URL + "?t=" + Date.now())
-        .then(function(res){ return res.json(); })
-        .then(function(data){ qaData = data; })
-        .catch(function(e){ console.log("خطا:", e); });
-}
-function normalize(text) {
-    return text.toLowerCase()
-        .replace(/ي/g,'ی').replace(/ك/g,'ک')
-        .replace(/‌/g,' ').replace(/[،؟!٪]/g,' ').trim();
-}
-function scoreEntry(entry, userWords, userText) {
-    var score = 0, expandedWords = userWords.slice();
-    if (qaData && qaData.synonyms) {
-        Object.keys(qaData.synonyms).forEach(function(key) {
-            var allForms = [key].concat(qaData.synonyms[key]).map(normalize);
-            if (userWords.some(function(w){ return allForms.indexOf(w) >= 0; }))
-                expandedWords = expandedWords.concat(allForms);
-        });
-    }
-    entry.questions.forEach(function(q) {
-        var normQ = normalize(q);
-        if (normQ === normalize(userText)) { score += 1000; return; }
-        if (normalize(userText).indexOf(normQ) >= 0 || normQ.indexOf(normalize(userText)) >= 0) score += 80;
-    });
-    var allQWords = entry.questions.map(function(q){ return normalize(q); }).join(' ').split(/\s+/);
-    var tagWords  = (entry.tags || []).map(function(t){ return normalize(t); });
-    expandedWords.forEach(function(word) {
-        if (word.length < 2) return;
-        if (allQWords.some(function(w){ return w.indexOf(word) >= 0 || word.indexOf(w) >= 0; })) score += 15;
-        if (tagWords.some(function(t) { return t.indexOf(word) >= 0 || word.indexOf(t) >= 0; })) score += 20;
-    });
-    return score;
-}
-function findAnswer(userText) {
-    if (!qaData || !qaData.qa) return null;
-    var words = normalize(userText).split(/\s+/).filter(function(w){ return w.length > 1; });
-    var bestScore = 0, bestAnswer = null;
-    qaData.qa.forEach(function(entry) {
-        var score = scoreEntry(entry, words, userText);
-        if (score > bestScore) { bestScore = score; bestAnswer = entry.answer; }
-    });
-    return bestScore >= 15 ? bestAnswer : (qaData.default_response || null);
-}
-function addMessage(text, type) {
-    var output = document.getElementById("chat-output");
-    var div = document.createElement("div");
-    div.className = type === 'user' ? 'msg-user' : 'msg-bot';
-    div.innerHTML = text.replace(/\n/g,'<br>');
-    output.appendChild(div);
-    output.scrollTop = output.scrollHeight;
-}
-function showThinking() {
-    var output = document.getElementById("chat-output");
-    var div = document.createElement("div");
-    div.className = 'msg-bot'; div.id = 'thinking-indicator';
-    div.innerHTML = '<div class="brain-thinking"><div class="thinking-dots">در حال فکر کردن <span>.</span><span>.</span><span>.</span></div></div>';
-    output.appendChild(div);
-    output.scrollTop = output.scrollHeight;
-}
-function removeThinking() {
-    var el = document.getElementById('thinking-indicator');
-    if (el) el.remove();
-}
-function typewriterMessage(text, onDone) {
-    var output = document.getElementById("chat-output");
-    var div    = document.createElement("div");
-    div.className = 'msg-bot';
-    var span   = document.createElement("span");
-    var cursor = document.createElement("span");
-    cursor.className = "cursor-blink";
-    div.appendChild(span); div.appendChild(cursor);
-    output.appendChild(div);
-    var chars = Array.from(text.replace(/<br>/g, '\n'));
-    var i = 0, rawText = '';
-    function typeNext() {
-        if (i >= chars.length) {
-            cursor.remove(); span.innerHTML = text;
-            if (onDone) onDone(); return;
-        }
-        var ch = chars[i];
-        rawText += ch === '\n' ? '<br>' : ch;
-        span.innerHTML = rawText; i++;
-        output.scrollTop = output.scrollHeight;
-        setTimeout(typeNext, /[.!?،؟\n]/.test(ch) ? 180 : 45);
-    }
-    typeNext();
-}
-var isSending = false;
-function sendMessage() {
-    if (isSending) return;
-    var input = document.getElementById("user-input");
-    var text  = input.value.trim();
-    if (!text) return;
-    isSending = true; input.disabled = true;
-    addMessage(text, 'user'); input.value = "";
-    showThinking();
-    setTimeout(function() {
-        removeThinking();
-        var answer = findAnswer(text);
-        var reply  = answer || "سوال جالبیه! برای پاسخ دقیق‌تر می‌تونی از پادکست‌ها و دوره‌های پایین استفاده کنی یا سوالت رو با کلمات دیگه بپرسی 😊";
-        typewriterMessage(reply, function() {
-            input.disabled = false; input.focus(); isSending = false;
-        });
-    }, 2200);
+function playAudio(item){
+  currentTrackIndex = courseData.indexOf(item);
+  document.getElementById('npTitle').textContent = item.title;
+  document.getElementById('npSubtitle').textContent = item.isIntro ? 'معرفی رایگان' : `قسمت ${toPersianNum(item.episode)}`;
+  document.getElementById('npCover').src = item.cover;
+  document.getElementById('miniTitle').textContent = item.title;
+  document.getElementById('miniEp').textContent = item.isIntro ? 'معرفی' : `قسمت ${toPersianNum(item.episode)}`;
+  document.getElementById('miniCover').src = item.cover;
+  if(item.src){ audio.src = item.src; audio.play().then(()=>setPlayIcons(true)).catch(()=>setPlayIcons(false)); }
+  else { setPlayIcons(false); showToast('فایل نمونه در این پیش‌نمایش موجود نیست'); }
+  loadComments(item.title, item.episode);
+  expandPlayer();
 }
 
-/* ================================================
-   MENU
-   ================================================ */
-function toggleMenu() {
-    document.getElementById('side-menu').classList.contains('open') ? closeMenu() : openMenu();
+function expandPlayer(){
+  const screen = document.getElementById('nowPlayingScreen');
+  document.getElementById('miniPlayer').classList.remove('active');
+  screen.classList.add('active');
 }
-function openMenu() {
-    document.getElementById('side-menu').classList.add('open');
-    document.getElementById('menu-overlay').classList.add('active');
-    document.querySelector('.main-center').classList.add('blurred');
+function minimizePlayer(){
+  document.getElementById('nowPlayingScreen').classList.remove('active');
+  if(audio.src) document.getElementById('miniPlayer').classList.add('active');
 }
-function closeMenu() {
-    document.getElementById('side-menu').classList.remove('open');
-    document.getElementById('menu-overlay').classList.remove('active');
-    document.querySelector('.main-center').classList.remove('blurred');
+function killPlayer(){
+  document.getElementById('nowPlayingScreen').classList.remove('active');
+  document.getElementById('miniPlayer').classList.remove('active');
+  audio.pause(); setPlayIcons(false);
 }
-document.addEventListener('keydown', function(e) { if (e.key === "Escape") closeMenu(); });
+function miniTogglePlay(){ if(audio.paused){ audio.play(); setPlayIcons(true);} else { audio.pause(); setPlayIcons(false);} }
+function togglePlay(){ miniTogglePlay(); }
+function seek(s){ if(audio.src) audio.currentTime += s; }
+function prevTrack(){ if(currentTrackIndex>0) playAudio(courseData[currentTrackIndex-1]); }
+function nextTrack(){ if(currentTrackIndex<courseData.length-1) playAudio(courseData[currentTrackIndex+1]); }
+function closeNowPlaying(){ minimizePlayer(); }
 
-/* ================================================
-   BOTTOM NAVIGATION BAR
-   ================================================ */
-var NAV_LINKS = {
-    'nav-home':      'https://planlife.ir',
-    'nav-podcast':   'https://planlife.ir/Pages/podcasts_free/index.html',
-    'nav-explore':   'https://planlife.ir/Pages/Explore/index.html',
-    'nav-courses':   'https://planlife.ir/Pages/Doreha/index.html',
-    'nav-checklist': 'https://planlife.ir/Pages/Tamrin/index.html'
-};
-
-function navRipple(element) {
-    var ripple = document.createElement('span');
-    ripple.className = 'nav-ripple';
-    element.appendChild(ripple);
-    setTimeout(function() { ripple.remove(); }, 500);
-}
-
-function navClick(e, id) {
-    e.preventDefault();
-    navRipple(document.getElementById(id));
-    document.querySelectorAll('.nav-item').forEach(function(item) {
-        item.classList.remove('active');
-    });
-    var center = document.getElementById('nav-explore');
-    if (center) center.classList.remove('active');
-    document.getElementById(id).classList.add('active');
-    var link = NAV_LINKS[id];
-    if (link && link !== '#') {
-        setTimeout(function() { window.location.href = link; }, 220);
-    }
-}
-
-function navCenterClick(e, id) {
-    e.preventDefault();
-    navRipple(document.getElementById(id));
-    document.querySelectorAll('.nav-item').forEach(function(item) {
-        item.classList.remove('active');
-    });
-    document.getElementById(id).classList.add('active');
-    var link = NAV_LINKS[id];
-    if (link && link !== '#') {
-        setTimeout(function() { window.location.href = link; }, 220);
-    }
-}
-
-/* ================================================
-   INIT
-   ================================================ */
-window.onload = function() {
-    var input = document.getElementById('user-input');
-    input.addEventListener('focus', function() {
-        document.body.style.position = 'fixed';
-        document.body.style.width = '100%';
-    });
-    input.addEventListener('blur', function() {
-        document.body.style.position = '';
-        document.body.style.width = '';
-        window.scrollTo(0, 0);
-    });
-
-    loadQA().then(function() {
-        addMessage("به PlanLife خوش اومدی 🌟\nهر سوالی درباره باور، ثروت، روابط یا اعتماد به نفس داری بپرس!", 'bot');
-    });
-
-    initStories();
-    initVpnCheck();
-};
+window.onload = loadPage;
 </script>
 </body>
 </html>
