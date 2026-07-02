@@ -6,7 +6,19 @@
 <meta name="theme-color" content="#1a0033">
 <link rel="preconnect" href="http://fs3.centraldnserver.com">
 <link rel="dns-prefetch" href="http://fs3.centraldnserver.com">
+<link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+<link rel="dns-prefetch" href="https://res.cloudinary.com">
 <title>PlanLife</title>
+
+<!-- ===== PWA META & MANIFEST ===== -->
+<link rel="manifest" href="/manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PlanLife">
+<link rel="apple-touch-icon" href="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg">
+<link rel="icon" href="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg">
+
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -648,6 +660,201 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
 }
 
 /* ===================================================
+   IOS INSTALL BANNER
+   =================================================== */
+#ios-install-overlay {
+    position: fixed; top:0;left:0;right:0;bottom:0;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    z-index: 9998;
+    display: flex; align-items: flex-end; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+}
+#ios-install-overlay.visible { opacity: 1; pointer-events: auto; }
+.ios-install-sheet {
+    position: relative; width: 100%; max-width: 420px;
+    background: rgba(20,15,35,0.92);
+    backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
+    border-radius: 26px 26px 0 0;
+    border: 1px solid rgba(212,175,55,0.4);
+    border-bottom: none;
+    box-shadow: 0 -10px 50px rgba(0,0,0,0.7), 0 0 40px rgba(212,175,55,0.15);
+    padding: 22px 20px calc(22px + env(safe-area-inset-bottom));
+    transform: translateY(100%);
+    transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1);
+}
+#ios-install-overlay.visible .ios-install-sheet { transform: translateY(0); }
+.ios-install-handle {
+    width: 40px; height: 4px; border-radius: 4px;
+    background: rgba(255,255,255,0.25);
+    margin: 0 auto 16px;
+}
+.ios-install-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+}
+.ios-install-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    overflow: hidden; flex-shrink: 0;
+    border: 1.5px solid rgba(212,175,55,0.5);
+    box-shadow: 0 0 16px rgba(212,175,55,0.3);
+}
+.ios-install-icon img { width: 100%; height: 100%; object-fit: cover; }
+.ios-install-titlewrap { flex: 1; }
+.ios-install-title {
+    font-size: 17px; font-weight: 900; color: #ffd060;
+    text-shadow: 0 0 12px rgba(212,175,55,0.4);
+}
+.ios-install-sub {
+    font-size: 12.5px; color: rgba(255,255,255,0.6); margin-top: 2px;
+}
+.ios-install-close {
+    font-size: 20px; color: rgba(255,255,255,0.6); cursor: pointer;
+    padding: 4px 8px;
+}
+.ios-install-steps {
+    display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px;
+}
+.ios-install-step {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(212,175,55,0.15);
+    border-radius: 16px; padding: 12px 14px;
+}
+.ios-install-step-num {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(212,175,55,0.2);
+    border: 1px solid rgba(212,175,55,0.5);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: #ffd060;
+    flex-shrink: 0;
+}
+.ios-install-step-text {
+    font-size: 13.5px; font-weight: 500; color: rgba(255,255,255,0.92);
+    line-height: 1.6; flex: 1;
+}
+.ios-install-step-text b { color: #ffd060; font-weight: 800; }
+.ios-share-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; vertical-align: middle;
+}
+.ios-install-gotit {
+    width: 100%; padding: 13px 18px;
+    background: linear-gradient(135deg, #d4af37, #f5c842, #b8860b);
+    border: none; border-radius: 16px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 15px; font-weight: 800; color: #1a0033;
+    cursor: pointer;
+}
+
+/* ===================================================
+   SUBSCRIPTION GATE MODAL
+   =================================================== */
+#subscribe-overlay {
+    position: fixed; top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.68);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    z-index: 9997;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+}
+#subscribe-overlay.visible { opacity: 1; pointer-events: auto; }
+.subscribe-modal {
+    position: relative; width: 100%; max-width: 350px;
+    background: rgba(255,255,255,0.10);
+    backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+    border-radius: 28px; border: 1px solid rgba(212,175,55,0.5);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.75),
+                0 0 40px rgba(212,175,55,0.18), inset 0 1px 0 rgba(255,255,255,0.14);
+    padding: 30px 22px 22px; text-align: center;
+    transform: scale(0.88) translateY(16px);
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease;
+    opacity: 0;
+}
+#subscribe-overlay.visible .subscribe-modal { transform: scale(1) translateY(0); opacity: 1; }
+.subscribe-modal::before {
+    content: ''; position: absolute; top:-1px; left:-1px; right:-1px; bottom:-1px;
+    border-radius: 29px;
+    background: linear-gradient(135deg, rgba(212,175,55,0.2), transparent 60%, rgba(160,110,255,0.1));
+    pointer-events: none; z-index: 0;
+}
+.subscribe-icon {
+    font-size: 40px; margin-bottom: 10px; display: block;
+    position: relative; z-index: 1;
+    filter: drop-shadow(0 0 12px rgba(212,175,55,0.6));
+}
+.subscribe-title {
+    font-size: 18px; font-weight: 900; color: #ffd060;
+    text-shadow: 0 0 16px rgba(212,175,55,0.5);
+    margin-bottom: 14px; position: relative; z-index: 1; line-height: 1.5;
+    font-family: 'Vazirmatn', sans-serif;
+}
+.subscribe-body {
+    font-size: 13.5px; font-weight: 500; color: rgba(255,255,255,0.88);
+    line-height: 2; margin-bottom: 20px; position: relative; z-index: 1;
+    text-align: right;
+}
+.subscribe-input-wrap {
+    position: relative; z-index: 1;
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(212,175,55,0.35);
+    border-radius: 18px; padding: 5px 6px 5px 5px;
+    margin-bottom: 8px;
+}
+.subscribe-input {
+    flex: 1; background: transparent; border: none; color: white;
+    font-size: 14.5px; font-family: 'Vazirmatn', sans-serif;
+    padding: 11px 12px; outline: none; text-align: center;
+    -webkit-appearance: none; appearance: none;
+}
+.subscribe-input::placeholder { color: rgba(255,255,255,0.45); font-size: 13px; }
+.subscribe-check-btn {
+    width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+    background: rgba(212,175,55,0.18);
+    border: 1.5px solid rgba(212,175,55,0.7);
+    color: #ffd060; font-size: 16px; font-weight: 900;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 12px rgba(212,175,55,0.3);
+    transition: transform 0.18s ease;
+}
+.subscribe-check-btn:active { transform: scale(0.9); }
+.subscribe-error {
+    display: none;
+    color: #ff8080; font-size: 12px; font-weight: 600;
+    margin-bottom: 14px; position: relative; z-index: 1;
+    text-shadow: 0 0 8px rgba(255,80,80,0.3);
+}
+.subscribe-buy-btn {
+    position: relative; z-index: 1; display: block; width: 100%;
+    padding: 13px 18px; margin-bottom: 10px;
+    background: rgba(255,255,255,0.13);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border: 1.2px solid rgba(212,175,55,0.65);
+    border-radius: 18px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 15px; font-weight: 800; color: #ffd060;
+    cursor: pointer; overflow: hidden;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.4), 0 0 18px rgba(212,175,55,0.18),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: transform 0.18s ease;
+}
+.subscribe-buy-btn:active { transform: scale(0.97); }
+.subscribe-close-btn {
+    position: relative; z-index: 1; display: block; width: 100%;
+    padding: 11px 18px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 16px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 13.5px; font-weight: 700; color: rgba(255,255,255,0.75);
+    cursor: pointer; transition: transform 0.18s ease;
+}
+.subscribe-close-btn:active { transform: scale(0.97); }
+
+/* ===================================================
    BOTTOM NAVIGATION BAR
    =================================================== */
 .bottom-nav {
@@ -856,6 +1063,52 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
 
 <div class="stars"></div>
 
+<!-- iOS Add to Home Screen Sheet -->
+<div id="ios-install-overlay" onclick="handleIosOverlayClick(event)">
+    <div class="ios-install-sheet">
+        <div class="ios-install-handle"></div>
+        <div class="ios-install-header">
+            <div class="ios-install-icon">
+                <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
+            </div>
+            <div class="ios-install-titlewrap">
+                <div class="ios-install-title">نصب PlanLife روی آیفون</div>
+                <div class="ios-install-sub">با چند لمس ساده، اپلیکیشن بشه روی صفحه اصلی 🚀</div>
+            </div>
+            <div class="ios-install-close" onclick="closeIosInstall()">✕</div>
+        </div>
+        <div class="ios-install-steps">
+            <div class="ios-install-step">
+                <div class="ios-install-step-num">۱</div>
+                <div class="ios-install-step-text">
+                    از نوار پایین مرورگر Safari روی آیکون
+                    <span class="ios-share-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 3V15" stroke="#ffd060" stroke-width="1.8" stroke-linecap="round"/>
+                            <path d="M8 7L12 3L16 7" stroke="#ffd060" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5 12V18.5C5 19.88 6.12 21 7.5 21H16.5C17.88 21 19 19.88 19 18.5V12" stroke="#ffd060" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                    <b>اشتراک‌گذاری (Share)</b> بزن
+                </div>
+            </div>
+            <div class="ios-install-step">
+                <div class="ios-install-step-num">۲</div>
+                <div class="ios-install-step-text">
+                    از لیست باز شده، گزینه <b>«Add to Home Screen»</b> (افزودن به صفحه اصلی) رو انتخاب کن
+                </div>
+            </div>
+            <div class="ios-install-step">
+                <div class="ios-install-step-num">۳</div>
+                <div class="ios-install-step-text">
+                    روی <b>«Add»</b> (افزودن) بزن — تمام! حالا PlanLife مثل یک اپلیکیشن روی گوشیت نصب شده ✅
+                </div>
+            </div>
+        </div>
+        <button class="ios-install-gotit" onclick="closeIosInstall()">متوجه شدم</button>
+    </div>
+</div>
+
 <!-- VPN Warning Modal -->
 <div id="vpn-overlay" onclick="handleVpnOverlayClick(event)">
     <div class="vpn-modal">
@@ -866,6 +1119,25 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
             لطفاً <strong>VPN (فیلترشکن)</strong> خود را خاموش کنید و سپس صفحه را رفرش نمایید.
         </div>
         <button class="vpn-confirm-btn" onclick="closeVpnModal()">✅ &nbsp; بله، متوجه شدم</button>
+    </div>
+</div>
+
+<!-- Subscription Gate Modal -->
+<div id="subscribe-overlay" onclick="handleSubscribeOverlayClick(event)">
+    <div class="subscribe-modal">
+        <span class="subscribe-icon">✨</span>
+        <div class="subscribe-title">دسترسی ویژه اعضای دوره</div>
+        <div class="subscribe-body">
+            سلام؛ این بخش شامل تمرینات تخصصی حرفه‌ای می‌باشد که برای افرادی که در دوره‌ها هستند تنظیم شده است و نحوه‌ی تمرین توضیح داده شده تا هم‌زمان با پیش بردن دوره، این تمرینات را انجام دهند.<br><br>
+            اگر داخل دوره ثبت‌نام کرده‌اید، کد اشتراک را وارد کنید.
+        </div>
+        <div class="subscribe-input-wrap">
+            <input id="subscribe-code-input" class="subscribe-input" type="text" placeholder="کد اشتراک خود را وارد کنید" onkeydown="if(event.key==='Enter') checkSubscribeCode()">
+            <button class="subscribe-check-btn" onclick="checkSubscribeCode()" aria-label="تایید">✓</button>
+        </div>
+        <div class="subscribe-error" id="subscribe-error">کد اشتراک نامعتبر است، لطفاً دوباره تلاش کنید.</div>
+        <button class="subscribe-buy-btn" onclick="goToBuyCourse()">🛒 &nbsp; خرید دوره</button>
+        <button class="subscribe-close-btn" onclick="closeSubscribeModal()">بستن</button>
     </div>
 </div>
 
@@ -917,7 +1189,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-btn-link="https://planlife.ir/Pages/podcasts_free/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست">
+                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست" loading="eager">
                     </div>
                 </div>
                 <div class="story-label">پادکست</div>
@@ -932,7 +1204,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-btn-link="https://planlife.ir/Pages/Doreha/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌ها">
+                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌ها" loading="eager">
                     </div>
                 </div>
                 <div class="story-label">دوره‌ها</div>
@@ -947,7 +1219,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-btn-link="https://planlife.ir/Pages/Book/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه">
+                        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه" loading="eager">
                     </div>
                 </div>
                 <div class="story-label">کتابخانه ۲</div>
@@ -961,7 +1233,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-btn-link="https://planlife.ir/Pages/Book/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه">
+                        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه" loading="eager">
                     </div>
                 </div>
                 <div class="story-label">کتابخانه ۲</div>
@@ -976,14 +1248,14 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-btn-link="https://planlife.ir/Pages/Magazine/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="مجله">
+                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="مجله" loading="eager">
                     </div>
                 </div>
                 <div class="story-label">مجله</div>
             </div>
 
             <div class="story-item" data-index="5"
-                 data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg"
+                 data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/tabliq-tamrinat.mp4"
                  data-name="تمرینات"
                  data-caption="تمرینات مجازی روزانه 🧘"
                  data-btn-show="true"
@@ -991,7 +1263,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-btn-link="https://planlife.ir/Pages/Tamrin/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرینات">
+                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرینات" loading="eager">
                     </div>
                 </div>
                 <div class="story-label">تمرینات</div>
@@ -1006,7 +1278,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-btn-link="https://planlife.ir/Pages/paksazi/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
-                        <img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" alt="پاکسازی ذهن">
+                        <img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" alt="پاکسازی ذهن" loading="eager">
                     </div>
                 </div>
                 <div class="story-label">پاکسازی ذهن</div>
@@ -1021,7 +1293,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-btn-link="https://planlife.ir/Pages/visionboard/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg" alt="تابلو">
+                        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg" alt="تابلو" loading="eager">
                     </div>
                 </div>
                 <div class="story-label">تابلو آرزو</div>
@@ -1036,7 +1308,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-btn-link="https://planlife.ir/Pages/Book/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه">
+                        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه" loading="eager">
                     </div>
                 </div>
                 <div class="story-label">کتابخانه</div>
@@ -1051,7 +1323,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-btn-link="https://planlife.ir/Pages/komakavaliye/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg" alt="کمک اولیه">
+                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg" alt="کمک اولیه" loading="eager">
                     </div>
                 </div>
                 <div class="story-label">کمک اولیه</div>
@@ -1066,28 +1338,13 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-btn-link="https://planlife.ir/Pages/Music/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="موزیک">
+                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="موزیک" loading="eager">
                     </div>
                 </div>
                 <div class="story-label">موزیک</div>
             </div>
 
             <div class="story-item" data-index="11"
-                 data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/6452140137136714544.mp4"
-                 data-name="ویدیوها"
-                 data-caption="ویدیوهای آموزشی و انگیزشی 🎥"
-                 data-btn-show="true"
-                 data-btn-text="تماشای ویدیوها"
-                 data-btn-link="https://planlife.ir/Pages/Videos/index.html">
-                <div class="story-ring">
-                    <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779985702/IMG_1211_snjqjm.jpg" alt="ویدیوها">
-                    </div>
-                </div>
-                <div class="story-label">ویدیوها</div>
-            </div>
-
-            <div class="story-item" data-index="12"
                  data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg"
                  data-name="چک لیست"
                  data-caption="چک لیست روزانه — روز خود را مدیریت کن 📜"
@@ -1096,7 +1353,7 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                  data-btn-link="https://planlife.ir/Pages/cheklist/index.html">
                 <div class="story-ring">
                     <div class="story-avatar">
-                        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg" alt="چک لیست">
+                        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg" alt="چک لیست" loading="eager">
                     </div>
                 </div>
                 <div class="story-label">چک لیست</div>
@@ -1192,13 +1449,13 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 <span>جعبه کمک های اولیه</span>
             </div>
         </a>
-        <a href="https://planlife.ir/Pages/ranj-lezat/index.html">
+        <a href="javascript:void(0)" onclick="openSubscribeModal('ranj-lezat', event)">
             <div class="service-box">
                 <img src="http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2276.jpeg" alt="ترک عادت">
                 <span>ترک عادت</span>
             </div>
         </a>
-        <a href="https://planlife.ir/Pages/naghsherah/index.html">
+        <a href="javascript:void(0)" onclick="openSubscribeModal('naghsherah', event)">
             <div class="service-box">
                 <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781599306/IMG_1979_xcccao.jpg" alt="">
                 <span>نقشه راه</span>
@@ -1210,19 +1467,13 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
                 <span>موزیک ها</span>
             </div>
         </a>
-        <a href="https://planlife.ir/Pages/Videos/index.html">
-            <div class="service-box">
-                <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779985702/IMG_1211_snjqjm.jpg" alt="">
-                <span>ویدیوها 🎥</span>
-            </div>
-        </a>
-        <a href="https://planlife.ir/Pages/tamrintakhasosi/index.html">
+        <a href="javascript:void(0)" onclick="openSubscribeModal('tamrintakhasosi', event)">
             <div class="service-box">
                 <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780955091/IMG_1737_ei1f5w.png" alt="">
                 <span>تمرینات تخصصی</span>
             </div>
         </a>
-        <a href="https://planlife.ir/Pages/cheklist/index.html">
+        <a href="javascript:void(0)" onclick="openSubscribeModal('cheklist', event)">
             <div class="service-box">
                 <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg" alt="">
                 <span>چک لیست روزانه📜</span>
@@ -1247,12 +1498,11 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
         <a href="https://planlife.ir/Pages/visionboard/index.html" class="menu-item" onclick="closeMenu()"><span class="text">تابلو آرزوها 🔖</span></a>
         <a href="https://planlife.ir/Pages/Book/index.html" class="menu-item" onclick="closeMenu()"><span class="text">کتابخانه 📚</span></a>
         <a href="https://planlife.ir/Pages/komakavaliye/index.html" class="menu-item" onclick="closeMenu()"><span class="text">جعبه کمک های اولیه</span></a>
-        <a href="https://planlife.ir/Pages/ranj-lezat/index.html" class="menu-item" onclick="closeMenu()"><span class="text">ترک عادت</span></a>
-        <a href="https://planlife.ir/Pages/naghsherah/index.html" class="menu-item" onclick="closeMenu()"><span class="text">نقشه راه</span></a>
+        <a href="javascript:void(0)" class="menu-item" onclick="closeMenu(); openSubscribeModal('ranj-lezat', event)"><span class="text">ترک عادت</span></a>
+        <a href="javascript:void(0)" class="menu-item" onclick="closeMenu(); openSubscribeModal('naghsherah', event)"><span class="text">نقشه راه</span></a>
         <a href="https://planlife.ir/Pages/Music/index.html" class="menu-item" onclick="closeMenu()"><span class="text">موزیک‌ها</span></a>
-        <a href="https://planlife.ir/Pages/Videos/index.html" class="menu-item" onclick="closeMenu()"><span class="text">ویدیوها 🎥</span></a>
-        <a href="https://planlife.ir/Pages/tamrintakhasosi/index.html" class="menu-item" onclick="closeMenu()"><span class="text">تمرینات تخصصی</span></a>
-        <a href="https://planlife.ir/Pages/cheklist/index.html" class="menu-item" onclick="closeMenu()"><span class="text">چک لیست روزانه 📜</span></a>
+        <a href="javascript:void(0)" class="menu-item" onclick="closeMenu(); openSubscribeModal('tamrintakhasosi', event)"><span class="text">تمرینات تخصصی</span></a>
+        <a href="javascript:void(0)" class="menu-item" onclick="closeMenu(); openSubscribeModal('cheklist', event)"><span class="text">چک لیست روزانه 📜</span></a>
     </div>
 </div>
 
@@ -1362,6 +1612,55 @@ input::placeholder { color: rgba(255,255,255,0.4); font-size: 14px; }
 
 <script>
 /* ================================================
+   PWA: SERVICE WORKER REGISTRATION
+   ================================================ */
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').then(function (reg) {
+            console.log('PlanLife SW registered:', reg.scope);
+        }).catch(function (err) {
+            console.log('PlanLife SW registration failed:', err);
+        });
+    });
+}
+
+/* ================================================
+   PWA: iOS ADD TO HOME SCREEN PROMPT
+   ================================================ */
+var IOS_INSTALL_KEY = 'planlife_ios_install_shown';
+
+function isIos() {
+    return /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+           (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+function isInStandaloneMode() {
+    return ('standalone' in window.navigator && window.navigator.standalone) ||
+           (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+}
+function alreadyShownIosInstall() {
+    try { return localStorage.getItem(IOS_INSTALL_KEY) === '1'; } catch (e) { return false; }
+}
+function markIosInstallShown() {
+    try { localStorage.setItem(IOS_INSTALL_KEY, '1'); } catch (e) {}
+}
+function showIosInstall() {
+    document.getElementById('ios-install-overlay').classList.add('visible');
+}
+function closeIosInstall() {
+    document.getElementById('ios-install-overlay').classList.remove('visible');
+    markIosInstallShown();
+}
+function handleIosOverlayClick(e) {
+    if (e.target === document.getElementById('ios-install-overlay')) closeIosInstall();
+}
+function initIosInstallPrompt() {
+    if (!isIos()) return;
+    if (isInStandaloneMode()) return; // قبلاً به‌صورت اپ نصب شده
+    if (alreadyShownIosInstall()) return;
+    setTimeout(function () { showIosInstall(); }, 1500);
+}
+
+/* ================================================
    VPN DETECTION
    ================================================ */
 var VPN_STORAGE_KEY = 'planlife_vpn_warned';
@@ -1443,6 +1742,49 @@ function initVpnCheck() {
 }
 
 /* ================================================
+   SUBSCRIPTION GATE MODAL
+   ================================================ */
+var SUBSCRIBE_CODE = "admin2933";
+var subscribeTargetLink = "";
+var SUBSCRIBE_LINKS = {
+    "ranj-lezat":       "https://planlife.ir/Pages/ranj-lezat/index.html",
+    "naghsherah":       "https://planlife.ir/Pages/naghsherah/index.html",
+    "tamrintakhasosi":  "https://planlife.ir/Pages/tamrintakhasosi/index.html",
+    "cheklist":         "https://planlife.ir/Pages/cheklist/index.html"
+};
+
+function openSubscribeModal(key, e) {
+    if (e && e.preventDefault) e.preventDefault();
+    subscribeTargetLink = SUBSCRIBE_LINKS[key] || "https://planlife.ir/Pages/Doreha/index.html";
+    var input = document.getElementById('subscribe-code-input');
+    input.value = "";
+    document.getElementById('subscribe-error').style.display = "none";
+    document.getElementById('subscribe-overlay').classList.add('visible');
+    setTimeout(function(){ input.focus(); }, 350);
+}
+function closeSubscribeModal() {
+    document.getElementById('subscribe-overlay').classList.remove('visible');
+}
+function handleSubscribeOverlayClick(e) {
+    if (e.target === document.getElementById('subscribe-overlay')) closeSubscribeModal();
+}
+function checkSubscribeCode() {
+    var input = document.getElementById('subscribe-code-input');
+    var code = (input.value || "").trim();
+    var errorEl = document.getElementById('subscribe-error');
+    if (code && code === SUBSCRIBE_CODE) {
+        errorEl.style.display = "none";
+        window.location.href = subscribeTargetLink;
+    } else {
+        errorEl.style.display = "block";
+        input.focus();
+    }
+}
+function goToBuyCourse() {
+    window.location.href = "https://planlife.ir/Pages/Doreha/index.html";
+}
+
+/* ================================================
    STORIES
    ================================================ */
 var stories     = [];
@@ -1450,6 +1792,7 @@ var storyIndex  = 0;
 var storyTimer  = null;
 var STORY_SEEN_KEY = 'planlife_stories_seen';
 var DAY_MS = 24 * 60 * 60 * 1000;
+var storyMediaCache = {}; // idx -> preloaded <img> or <video> element
 
 function getSeenMap() {
     try {
@@ -1497,6 +1840,36 @@ function initStories() {
         });
     });
     initDragScroll();
+    preloadStoryMedia();
+}
+
+/* ---- Warm up every story's media in the background so it plays
+        instantly the moment the person taps it ---- */
+function preloadStoryMedia() {
+    stories.forEach(function(s, idx) {
+        var type = getMediaType(s.img, s.el);
+        if (storyMediaCache[idx]) return;
+        if (type === 'video') {
+            var v = document.createElement('video');
+            v.muted = true;
+            v.preload = 'auto';
+            v.playsInline = true;
+            v.setAttribute('playsinline', '');
+            v.style.cssText = 'position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;left:-9999px;';
+            var src = document.createElement('source');
+            src.src = s.img;
+            var ext = s.img.toLowerCase().split('?')[0].split('.').pop();
+            src.type = ['webm','ogg'].includes(ext) ? 'video/' + ext : 'video/mp4';
+            v.appendChild(src);
+            document.body.appendChild(v);
+            try { v.load(); } catch(e) {}
+            storyMediaCache[idx] = v;
+        } else {
+            var img = new Image();
+            img.src = s.img;
+            storyMediaCache[idx] = img;
+        }
+    });
 }
 
 var savedScrollY = 0;
@@ -1522,7 +1895,6 @@ function closeStoryModal() {
     var vid = contentDiv.querySelector('video');
     if (vid) {
         vid.pause();
-        vid.muted = true;
         vid.removeAttribute('src');
         vid.load();
         vid.remove();
@@ -1564,7 +1936,9 @@ function renderStoryModal() {
         var video = document.createElement('video');
         video.setAttribute('playsinline', '');
         video.setAttribute('webkit-playsinline', '');
-        video.muted = false;
+        /* شروع به‌صورت بی‌صدا تا پخش خودکار همیشه بدون نمایش آیکن پلی انجام شود،
+           سپس بلافاصله صدا فعال می‌شود */
+        video.muted = true;
         video.autoplay = true;
         video.controls = false;
         video.preload = 'auto';
@@ -1578,6 +1952,10 @@ function renderStoryModal() {
             clearStoryTimer();
             updateProgressForVideo(video);
         });
+        video.addEventListener('playing', function() {
+            /* بعد از شروع پخش موفق، صدا را فعال کن (بدون نمایش هیچ آیکنی) */
+            video.muted = false;
+        }, { once: true });
 
         var source = document.createElement('source');
         source.src = s.img;
@@ -1588,12 +1966,17 @@ function renderStoryModal() {
 
         var playPromise = video.play();
         if (playPromise !== undefined) {
-            playPromise.catch(function() { showPlayOverlay(video, contentDiv); });
+            playPromise.catch(function() {
+                /* حتی اگر پخش بی‌صدا هم رد شد، دوباره تلاش کن بدون نمایش آیکن پلی */
+                setTimeout(function(){ video.play().catch(function(){}); }, 200);
+            });
         }
     } else {
         var img = document.createElement('img');
         img.src = s.img;
         img.alt = '';
+        img.loading = 'eager';
+        try { img.fetchPriority = 'high'; } catch(e) {}
         img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
         contentDiv.appendChild(img);
     }
@@ -1633,17 +2016,6 @@ function updateProgressForVideo(video) {
         if (!video.duration) return;
         fill.style.width = ((video.currentTime / video.duration) * 100) + '%';
     });
-}
-
-function showPlayOverlay(video, container) {
-    var overlay = document.createElement('div');
-    overlay.style.cssText = 'position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);cursor:pointer;';
-    var btn = document.createElement('div');
-    btn.style.cssText = 'width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-size:32px;';
-    btn.textContent = '▶';
-    overlay.appendChild(btn);
-    overlay.addEventListener('click', function() { video.play(); overlay.remove(); });
-    container.appendChild(overlay);
 }
 
 function buildProgressBar() {
@@ -1882,6 +2254,11 @@ function navCenterClick(e, id) {
 /* ================================================
    INIT
    ================================================ */
+/* شروع پیش‌بارگذاری استوری‌ها هرچه زودتر، بدون منتظر ماندن برای بقیه اسکریپت‌ها */
+document.addEventListener('DOMContentLoaded', function() {
+    initStories();
+});
+
 window.onload = function() {
     var input = document.getElementById('user-input');
     input.addEventListener('focus', function() {
@@ -1898,8 +2275,8 @@ window.onload = function() {
         addMessage("به PlanLife خوش اومدی 🌟\nهر سوالی درباره باور، ثروت، روابط یا اعتماد به نفس داری بپرس!", 'bot');
     });
 
-    initStories();
     initVpnCheck();
+    initIosInstallPrompt();
 };
 </script>
 </body>
