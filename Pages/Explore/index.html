@@ -6,9 +6,11 @@
     <meta name="theme-color" content="#1a0033">
     <title>اکسپلور - PlanLife</title>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <!-- پیش‌اتصال به سرور ویدیو تا زمان شروع پخش کمتر بشه -->
+    <!-- پیش‌اتصال به سرورهای رسانه تا زمان شروع لود کمتر بشه -->
     <link rel="preconnect" href="http://fs3.centraldnserver.com">
     <link rel="dns-prefetch" href="http://fs3.centraldnserver.com">
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+    <link rel="dns-prefetch" href="https://res.cloudinary.com">
     <style>
         * {
             margin: 0;
@@ -76,6 +78,34 @@
             -webkit-text-fill-color: transparent;
             text-shadow: 0 0 20px rgba(212, 175, 55, 0.35);
             direction: ltr;
+        }
+        
+        /* دکمه بازگشت به صفحه اصلی */
+        .back-btn {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f5d77a;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .back-btn:active {
+            transform: translateY(-50%) scale(0.9);
+            background: rgba(255, 255, 255, 0.16);
+        }
+        .back-btn svg {
+            width: 20px;
+            height: 20px;
         }
         
         /* ========== کانتینر گرید ========== */
@@ -200,7 +230,7 @@
             color: white;
             font-size: 28px;
             cursor: pointer;
-            z-index: 50;
+            z-index: 9600;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -291,6 +321,58 @@
             overflow: visible;
         }
         
+        /* ========== باکس آموزشی سوایپ (فقط بار اول) ========== */
+        .swipe-tutorial {
+            position: fixed;
+            inset: 0;
+            z-index: 9500;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 24%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.45s ease;
+        }
+        .swipe-tutorial.show {
+            opacity: 1;
+        }
+        
+        .tutorial-glass {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-radius: 20px;
+            padding: 16px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+        }
+        
+        .tutorial-arrow {
+            color: #f5d77a;
+            animation: tutorialBounce 1.3s ease-in-out infinite;
+        }
+        .tutorial-arrow svg {
+            width: 24px;
+            height: 24px;
+        }
+        @keyframes tutorialBounce {
+            0%, 100% { transform: translateY(0); opacity: 0.55; }
+            50% { transform: translateY(-9px); opacity: 1; }
+        }
+        
+        .tutorial-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.92);
+            text-align: center;
+            white-space: nowrap;
+        }
+        
         /* ========== ریسپانسیو ========== */
         @media (max-width: 1024px) {
             .videos-grid {
@@ -314,6 +396,12 @@
             .video-desc {
                 font-size: 13px;
             }
+            
+            .tutorial-text {
+                font-size: 12px;
+                white-space: normal;
+                max-width: 220px;
+            }
         }
     </style>
 </head>
@@ -322,6 +410,9 @@
 <div class="stars"></div>
 
 <div class="header">
+    <a href="index.html" class="back-btn" aria-label="بازگشت به PlanLife">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+    </a>
     <div class="header-title">Explore PlanLife</div>
 </div>
 
@@ -334,6 +425,16 @@
     <button class="modal-close" onclick="closeVideoModal()">✕</button>
     
     <div class="feed-scroll" id="feedScroll"></div>
+    
+    <!-- باکس آموزشی که فقط بار اول نمایش داده میشه -->
+    <div class="swipe-tutorial" id="swipeTutorial">
+        <div class="tutorial-glass">
+            <div class="tutorial-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+            </div>
+            <div class="tutorial-text">پایین تصویر رو بکش بالا تا ویدیوی بعدی رو ببینی</div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -462,7 +563,7 @@ function renderGrid() {
         const item = document.createElement('div');
         item.className = 'video-item';
         item.innerHTML = `
-            <img src="${video.cover}" alt="${video.title}">
+            <img src="${video.cover}" alt="${video.title}" loading="${index < 6 ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${index < 3 ? 'high' : 'auto'}">
             <div class="video-stats">
                 <div class="stat">
                     <svg viewBox="0 0 24 24" fill="white"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
@@ -517,15 +618,15 @@ const PROFILE = {
 /* ========================================
    مودال ویدیو — فید اسکرولی بی‌نهایت
    ======================================== */
-const LOOP_COUNT = 6; // چند بار لیست ویدیوها تکرار شود تا اسکرول بی‌نهایت طبیعی به نظر برسد
+const LOOP_COUNT = 3; // چند بار لیست ویدیوها تکرار شود (کمتر = بازشدن سریع‌تر مودال)
 let feedItems = []; // هر آیتم: { video, slideEl, videoEl }
-let io; // IntersectionObserver برای پلی خودکار
+let io; // IntersectionObserver برای پلی خودکار + پیش‌بارگذاری زودهنگام
 
 function buildFeedItem(video) {
     const slide = document.createElement('div');
     slide.className = 'feed-slide';
     slide.innerHTML = `
-        <video class="modal-video" playsinline webkit-playsinline loop preload="metadata" poster="${video.cover}"></video>
+        <video class="modal-video" playsinline webkit-playsinline loop preload="none" poster="${video.cover}"></video>
         <div class="modal-info">
             <div class="profile-row">
                 <img class="profile-avatar" src="${PROFILE.avatar}" alt="${PROFILE.name}">
@@ -603,7 +704,17 @@ function setupInfiniteScroll() {
     });
 }
 
+function loadVideoSrc(item, priority) {
+    if (item.videoEl.src) return;
+    item.videoEl.preload = 'auto';
+    if (priority) item.videoEl.setAttribute('fetchpriority', 'high');
+    item.videoEl.src = item.video.src;
+    item.videoEl.load();
+}
+
 function setupAutoplayObserver() {
+    // rootMargin بزرگ باعث میشه لود ویدیوی بعدی/قبلی قبل از رسیدن کاربر بهش شروع بشه
+    // و وقتی کاربر بالا میکشه دیگه منتظر بافر نمونه
     io = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             const slide = entry.target;
@@ -611,34 +722,50 @@ function setupAutoplayObserver() {
             const item = feedItems.find(it => it.slideEl === slide);
             const idx = feedItems.indexOf(item);
 
-            // به محض اینکه اسلاید کمی وارد دیدرس بشه، فوراً سورس رو ست کن تا بافر شروع بشه
+            // به محض اینکه اسلاید وارد محدوده پیش‌بارگذاری بشه، سورس رو ست کن
             if (entry.isIntersecting) {
-                if (!videoEl.src) {
-                    videoEl.preload = 'auto';
-                    videoEl.src = item.video.src;
-                    videoEl.load();
-                }
+                loadVideoSrc(item, false);
             }
 
             if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
+                videoEl.setAttribute('fetchpriority', 'high');
                 videoEl.play().catch(() => {});
 
                 // پیش‌بارگذاری ویدیوی بعدی و قبلی تا سوایپ سریع‌تر و بدون تاخیر باشه
                 [idx - 1, idx + 1].forEach(neighborIdx => {
                     const neighbor = feedItems[neighborIdx];
-                    if (neighbor && !neighbor.videoEl.src) {
-                        neighbor.videoEl.preload = 'auto';
-                        neighbor.videoEl.src = neighbor.video.src;
-                        neighbor.videoEl.load();
-                    }
+                    if (neighbor) loadVideoSrc(neighbor, false);
                 });
             } else {
                 videoEl.pause();
             }
         });
-    }, { threshold: [0, 0.3, 0.6, 1] });
+    }, { threshold: [0, 0.3, 0.6, 1], rootMargin: '150% 0px' });
     
     feedItems.forEach(item => io.observe(item.slideEl));
+}
+
+/* ========================================
+   باکس آموزشی سوایپ — فقط یک بار در کل عمر کاربر نمایش داده میشه
+   ======================================== */
+const TUTORIAL_KEY = 'plExploreSwipeTutorialSeen';
+
+function maybeShowSwipeTutorial() {
+    const tutorial = document.getElementById('swipeTutorial');
+    tutorial.classList.remove('show');
+
+    if (localStorage.getItem(TUTORIAL_KEY)) return;
+
+    // یه لحظه صبر می‌کنیم تا ویدیو باز بشه، بعد باکس رو نشون میدیم
+    setTimeout(() => tutorial.classList.add('show'), 400);
+
+    const scrollEl = document.getElementById('feedScroll');
+    const dismiss = () => {
+        tutorial.classList.remove('show');
+        localStorage.setItem(TUTORIAL_KEY, '1');
+        scrollEl.removeEventListener('scroll', dismiss);
+    };
+    scrollEl.addEventListener('scroll', dismiss, { once: true, passive: true });
 }
 
 function openVideoModal(index) {
@@ -656,20 +783,20 @@ function openVideoModal(index) {
     const targetSlide = feedItems[index].slideEl;
     scrollEl.scrollTop = targetSlide.offsetTop;
     
-    // پلی فوری ویدیوی هدف بدون منتظر ماندن برای observer
+    // پلی فوری ویدیوی هدف با بالاترین اولویت، بدون منتظر ماندن برای observer
     const targetVideo = targetSlide.querySelector('video');
     targetVideo.preload = 'auto';
+    targetVideo.setAttribute('fetchpriority', 'high');
     targetVideo.src = videos[index].src;
     targetVideo.load();
     targetVideo.play().catch(() => {});
 
-    // پیش‌بارگذاری ویدیوی بعدی برای سوایپ سریع‌تر
-    const nextItem = feedItems[index + 1];
-    if (nextItem && !nextItem.videoEl.src) {
-        nextItem.videoEl.preload = 'auto';
-        nextItem.videoEl.src = nextItem.video.src;
-        nextItem.videoEl.load();
-    }
+    // پیش‌بارگذاری ویدیوی بعدی و قبلی برای سوایپ سریع‌تر
+    [feedItems[index - 1], feedItems[index + 1]].forEach(neighbor => {
+        if (neighbor) loadVideoSrc(neighbor, false);
+    });
+
+    maybeShowSwipeTutorial();
 }
 
 function closeVideoModal() {
@@ -677,6 +804,7 @@ function closeVideoModal() {
     
     modal.classList.remove('open');
     document.body.style.overflow = '';
+    document.getElementById('swipeTutorial').classList.remove('show');
     
     // متوقف کردن همه ویدیوها و پاکسازی observer
     feedItems.forEach(item => {
