@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a0033">
+<title>PlanLife | پرداخت دوره کدهای پشت‌ پرده پول</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Vazirmatn', Tahoma, sans-serif; }
+    html, body { height: 100%; color: white; background: #030303; }
+    body {
+        min-height: 100vh;
+        padding-bottom: 60px;
+        background-image:
+            radial-gradient(circle at 10% 5%, rgba(255,215,0,0.10) 0%, transparent 45%),
+            radial-gradient(circle at 90% 15%, rgba(160,90,255,0.10) 0%, transparent 50%);
+    }
+
+    header {
+        position: sticky; top: 0; z-index: 100;
+        height: 65px;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 20px;
+        background: rgba(3,3,3,0.65);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .btn-back {
+        font-size: 13px; font-weight: 700; color: white; text-decoration: none;
+        background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14);
+        padding: 9px 16px; border-radius: 30px; cursor: pointer;
+    }
+    .btn-home {
+        font-size: 13px; font-weight: 700; color: #ffd700; text-decoration: none;
+        background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.3);
+        padding: 9px 16px; border-radius: 30px;
+    }
+
+    .pay-container { max-width: 480px; margin: 26px auto 0; padding: 0 5%; }
+    .page-title { font-size: 18px; font-weight: 900; margin-bottom: 4px; }
+    .page-subtitle { font-size: 13px; color: #9aa3b5; margin-bottom: 22px; line-height: 1.7; }
+
+    .amount-hero {
+        background: linear-gradient(135deg, rgba(255,215,0,0.14), rgba(160,90,255,0.08));
+        border: 1px solid rgba(255,215,0,0.28);
+        border-radius: 24px;
+        padding: 26px 20px;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+        margin-bottom: 20px;
+    }
+    .amount-hero .icon { font-size: 28px; margin-bottom: 6px; }
+    .amount-hero .course-name { font-size: 14px; font-weight: 800; margin-bottom: 12px; color: #fff; }
+    .amount-hero .old-price { font-size: 13px; color: rgba(255,255,255,0.4); text-decoration: line-through; margin-bottom: 4px; }
+    .amount-hero .amount { font-size: 30px; font-weight: 900; background: linear-gradient(135deg,#ffd700,#ff9500); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .amount-hero .amount span { font-size: 14px; font-weight: 700; -webkit-text-fill-color: #9aa3b5; margin-right: 6px; }
+    .amount-hero .discount-tag { display:inline-block; margin-top:8px; background: rgba(255,149,0,0.16); border:1px solid rgba(255,149,0,0.4); color:#ffb347; border-radius:999px; padding:3px 12px; font-size:11px; font-weight:800; }
+
+    .card-info-box {
+        background: rgba(255,255,255,0.045);
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255,255,255,0.09);
+        border-radius: 22px; padding: 20px; margin-bottom: 20px;
+    }
+    .card-info-box h3 { font-size: 14px; color: #ffd700; margin-bottom: 14px; display:flex; align-items:center; gap:6px; }
+    .info-row {
+        display:flex; align-items:center; justify-content:space-between; gap:10px;
+        background: rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.05);
+        border-radius:14px; padding:12px 14px; margin-bottom:10px;
+    }
+    .info-row:last-child { margin-bottom:0; }
+    .info-row .info-text { display:flex; flex-direction:column; gap:3px; min-width:0; }
+    .info-row .info-text .lbl { font-size: 11px; color:#9aa3b5; }
+    .info-row .info-text .val { font-size:15px; font-weight:800; direction:ltr; text-align:right; letter-spacing:0.5px; overflow-wrap:anywhere; }
+    .copy-btn {
+        flex-shrink:0; background: rgba(255,215,0,0.12); border:1px solid rgba(255,215,0,0.32);
+        color:#ffd700; padding:8px 14px; border-radius:10px; font-size:12.5px; font-weight:800;
+        cursor:pointer; white-space:nowrap; transition:0.2s;
+    }
+    .copy-btn.copied { background: rgba(0,255,136,0.16); border-color: rgba(0,255,136,0.4); color:#00ff88; }
+    .copy-btn:active { transform: scale(0.94); }
+
+    .steps-box {
+        background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+        border-radius:22px; padding:20px; margin-bottom:20px;
+    }
+    .steps-box h3 { font-size:14px; color:#ffd700; margin-bottom:14px; }
+    .step-item { display:flex; gap:10px; align-items:flex-start; margin-bottom:12px; }
+    .step-item:last-child { margin-bottom:0; }
+    .step-num {
+        flex-shrink:0; width:24px; height:24px; border-radius:50%;
+        background: rgba(255,215,0,0.15); color:#ffd700; font-size:12px; font-weight:900;
+        display:flex; align-items:center; justify-content:center;
+    }
+    .step-text { font-size:13px; color:#cbd5e1; line-height:1.75; padding-top:2px; }
+
+    .send-box {
+        background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+        border-radius:22px; padding:20px;
+    }
+    .send-box h3 { font-size:14px; color:#ffd700; margin-bottom:6px; }
+    .send-box p { font-size:12.5px; color:#9aa3b5; margin-bottom:16px; line-height:1.7; }
+    .platform-btn {
+        width:100%; padding:13px 16px; border:none; border-radius:14px; font-size:14px;
+        font-weight:700; cursor:pointer; font-family:inherit; display:flex; align-items:center;
+        gap:12px; margin-bottom:10px; backdrop-filter: blur(14px); text-decoration:none;
+        transition: opacity 0.2s, transform 0.15s;
+    }
+    .platform-btn:last-child { margin-bottom:0; }
+    .platform-btn:active { opacity:0.75; transform: scale(0.98); }
+    .platform-btn img { width:26px; height:26px; border-radius:7px; object-fit:cover; flex-shrink:0; }
+    .btn-telegram { background: linear-gradient(135deg, rgba(33,150,243,0.2), rgba(0,136,204,0.14)); border:1px solid rgba(33,150,243,0.4); color:#82cbff; }
+    .btn-whatsapp { background: linear-gradient(135deg, rgba(37,211,102,0.16), rgba(18,183,84,0.12)); border:1px solid rgba(37,211,102,0.36); color:#7fffc4; }
+    .btn-bale { background: linear-gradient(135deg, rgba(130,80,255,0.2), rgba(100,60,200,0.14)); border:1px solid rgba(130,80,255,0.4); color:#d4b3ff; }
+
+    .note-box {
+        margin-top: 18px; font-size:12px; color:#9aa3b5; line-height:1.8;
+        background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06);
+        border-radius:16px; padding:14px 16px;
+    }
+    .note-box b { color:#ffd700; }
+
+    .toast {
+        position: fixed; bottom: 24px; left:50%; transform: translateX(-50%) translateY(20px);
+        background: rgba(20,10,35,0.95); backdrop-filter: blur(16px);
+        border:1px solid rgba(255,215,0,0.35); color:#ffd700; padding:11px 22px;
+        border-radius:30px; font-size:13px; font-weight:700; opacity:0; transition:0.3s;
+        pointer-events:none; z-index:3000; white-space:nowrap;
+    }
+    .toast.show { opacity:1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+    <a href="javascript:history.back()" class="btn-back">بازگشت ←</a>
+    <a href="https://planlife.ir" class="btn-home">🏠 PlanLife</a>
+</header>
+
+<div class="pay-container">
+    <div class="page-title">پرداخت هزینه دوره</div>
+    <div class="page-subtitle">برای دریافت کد فعال‌سازی «دوره کدهای پشت‌ پرده پول»، مبلغ زیر رو واریز کن و رسیدش رو برای پشتیبانی بفرست.</div>
+
+    <div class="amount-hero">
+        <div class="icon">💳</div>
+        <div class="course-name">📚 دوره کدهای پشت‌ پرده پول</div>
+        <div class="old-price">قیمت قبلی: ۸،۶۵۰،۰۰۰ تومان</div><div class="amount">۳،۹۶۰،۰۰۰<span>تومان</span></div><div class="discount-tag">با تخفیف</div>
+    </div>
+
+    <div class="card-info-box">
+        <h3>📇 اطلاعات کارت مقصد</h3>
+        <div class="info-row">
+            <div class="info-text">
+                <span class="lbl">شماره کارت</span>
+                <span class="val" id="card-number">6219-8618-8152-9910</span>
+            </div>
+            <button class="copy-btn" data-copy-target="card-number" data-copy-raw="6219861881529910">کپی</button>
+        </div>
+        <div class="info-row">
+            <div class="info-text">
+                <span class="lbl">به نام</span>
+                <span class="val" id="card-holder">سهیل باغبانی</span>
+            </div>
+            <button class="copy-btn" data-copy-target="card-holder">کپی</button>
+        </div>
+        <div class="info-row">
+            <div class="info-text">
+                <span class="lbl">بانک</span>
+                <span class="val" id="card-bank">بانک سامان</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="steps-box">
+        <h3>راهنمای پرداخت</h3>
+        <div class="step-item">
+            <div class="step-num">۱</div>
+            <div class="step-text">مبلغ بالا رو دقیقاً به شماره کارت مقصد واریز کن.</div>
+        </div>
+        <div class="step-item">
+            <div class="step-num">۲</div>
+            <div class="step-text">از رسید تراکنش عکس بگیر یا اسکرین‌شات بگیر.</div>
+        </div>
+        <div class="step-item">
+            <div class="step-num">۳</div>
+            <div class="step-text">عکس رسید رو از یکی از راه‌های زیر برای پشتیبانی PlanLife بفرست.</div>
+        </div>
+        <div class="step-item">
+            <div class="step-num">۴</div>
+            <div class="step-text">پس از تایید پشتیبانی، کد فعال‌سازی این دوره برات ارسال می‌شه.</div>
+        </div>
+    </div>
+
+    <div class="send-box">
+        <h3>✅ ارسال رسید پرداخت</h3>
+        <p>روی یکی از پلتفرم‌های زیر بزن و عکس رسید رو همراه نام دوره برای پشتیبانی ارسال کن:</p>
+        <a class="platform-btn btn-telegram" href="https://t.me/Planlifeir" target="_blank" rel="noopener">
+            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="">تلگرام
+        </a>
+        <a class="platform-btn btn-whatsapp" href="https://wa.me/905437333582" target="_blank" rel="noopener">
+            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111705.png" alt="">واتس‌اپ
+        </a>
+        <a class="platform-btn btn-bale" href="https://ble.ir/planlifeir" target="_blank" rel="noopener">
+            <img src="https://cdn-icons-png.flaticon.com/512/5968/5968898.png" alt="">بله
+        </a>
+    </div>
+
+    <div class="note-box">
+        لطفاً هنگام ارسال رسید، حتماً نام دوره «<b>دوره کدهای پشت‌ پرده پول</b>» رو هم بنویس تا پشتیبانی سریع‌تر بررسی کنه.
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 1800);
+    }
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const raw = btn.dataset.copyRaw;
+            const targetId = btn.dataset.copyTarget;
+            const text = raw || document.getElementById(targetId).innerText;
+            try {
+                await navigator.clipboard.writeText(text);
+            } catch (e) {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            }
+            const orig = btn.textContent;
+            btn.textContent = 'کپی شد ✅';
+            btn.classList.add('copied');
+            showToast('کپی شد');
+            setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+        });
+    });
+</script>
+</body>
+</html>
