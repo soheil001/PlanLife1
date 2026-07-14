@@ -66,11 +66,13 @@
         padding: 10px 14px 60px;
         max-width: 480px;
         margin: 0 auto;
+        direction: ltr; /* اولین استوری از سمت چپ، ستون ۱ شروع بشه */
     }
     .result-item {
         display: flex; flex-direction: column; align-items: center; gap: 6px;
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
+        direction: rtl; /* متن فارسی زیر آیکن درست نمایش داده بشه */
     }
     .result-ring {
         width: 100%; max-width: 76px; aspect-ratio: 1/1;
@@ -91,7 +93,7 @@
         overflow: hidden;
         display: flex; align-items: center; justify-content: center;
     }
-    .result-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .result-avatar img, .result-avatar video { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
     .result-label {
         font-size: 10.5px; font-weight: 600;
         color: rgba(255,255,255,0.85);
@@ -279,8 +281,10 @@
 const RESULTS_PAGE_ID = "template"; // برای هر دوره عوضش کن، مثلا "servat"
 const ENTRY_LINK = "https://planlife.ir/Pages/Doreha/index.html"; // لینک دکمه‌ی وارد دوره شوید
 
-// نام‌های نمونه — می‌تونی اسم، عکس و فیلم هرکدوم رو با نتیجه‌ی واقعی عوض کنی.
-// ترتیب همینه که خواستی: اولین استوری «آقای احمدی»
+// نام‌های نمونه — می‌تونی اسم و لینک media رو با نتیجه‌ی واقعی عوض کنی.
+// هر استوری فقط یک عکس/فیلم داره (media) که هم کاور آیکنه، هم خودِ استوری.
+// کپشن زیر استوری هم خودکار همون اسم می‌شه، نیازی به فیلد جدا نیست.
+// ترتیب همینه که خواستی: اولین استوری (ستون ۱، سمت چپ) «آقای احمدی»
 const SAMPLE_SURNAMES = [
     "احمدی","محمدی","رضایی","رحیمی","کریمی","حسینی","صادقی","طاهری",
     "نوری","یوسفی","قاسمی","رستمی","شریفی","عزیزی","فرهادی","جعفری",
@@ -291,19 +295,15 @@ const resultsData = [];
 SAMPLE_SURNAMES.forEach(surname => {
     resultsData.push({
         name: `نتیجه‌ی آقای ${surname}`,
-        avatar: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
-        media: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
-        caption: "متن کپشن نتیجه اینجا قرار می‌گیرد"
+        media: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg"
     });
     resultsData.push({
         name: `نتیجه‌ی خانم ${surname}`,
-        avatar: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
-        media: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
-        caption: "متن کپشن نتیجه اینجا قرار می‌گیرد"
+        media: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg"
     });
 });
 // 👆 الان ۴۰ استوری داریم (۴ ستون × ۱۰ ردیف).
-// برای اضافه کردن نتیجه‌ی جدید فقط یک آبجکت مثل بالا به resultsData.push کن یا مستقیم به آرایه اضافه کن.
+// برای اضافه کردن نتیجه‌ی جدید فقط یک آبجکت مثل { name: "...", media: "لینک عکس یا فیلم" } اضافه کن.
 // هر چقدر بیشتر اضافه کنی، فقط ردیف‌های بیشتری پایین‌تر اضافه می‌شه و صفحه به همون اندازه اسکرول می‌خوره.
 
 /* =====================================================================
@@ -344,6 +344,15 @@ let savedScrollY = 0;
 // تعداد استوری‌های ردیف اول که باید بلافاصله و با اولویت بالا لود بشن
 const EAGER_ROWS_COUNT = 8; // ۲ ردیف اول (۴ ستونه) = ۸ آیتم
 
+// کاور آیکن رو از روی همون فایل استوری می‌سازه (چه عکس چه فیلم)، نیازی به کاور جدا نیست
+function buildCoverMarkup(url, alt, isEager) {
+    const type = getMediaType(url);
+    if (type === 'video') {
+        return `<video src="${url}" muted playsinline preload="${isEager ? 'auto' : 'metadata'}"${isEager ? ' fetchpriority="high"' : ''}></video>`;
+    }
+    return `<img src="${url}" alt="${alt}" loading="${isEager ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${isEager ? 'high' : 'auto'}">`;
+}
+
 function renderGrid() {
     const grid = document.getElementById('resultsGrid');
     grid.innerHTML = '';
@@ -365,12 +374,7 @@ function renderGrid() {
         item.dataset.idx = idx;
         item.innerHTML = `
             <div class="result-ring">
-                <div class="result-avatar">
-                    <img src="${r.avatar}" alt="${r.name}"
-                         loading="${isEager ? 'eager' : 'lazy'}"
-                         decoding="async"
-                         fetchpriority="${isEager ? 'high' : 'auto'}">
-                </div>
+                <div class="result-avatar">${buildCoverMarkup(r.media, r.name, isEager)}</div>
             </div>
             <div class="result-label">${r.name}</div>`;
         item.addEventListener('click', () => openStoryModal(idx));
@@ -511,7 +515,7 @@ function renderStoryModal() {
         contentDiv.appendChild(img);
     }
 
-    document.getElementById('story-caption').textContent = s.caption || '';
+    document.getElementById('story-caption').textContent = s.name || '';
 
     // استوری بعدی و قبلی رو هم از الان پیش‌بارگذاری کن تا سوایپ بین استوری‌ها درجا باشه
     [stories[storyIndex - 1], stories[storyIndex + 1]].forEach(neighbor => {
