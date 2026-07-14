@@ -326,7 +326,8 @@
         margin-top: 10px;
     }
     .buy-course-btn,
-    .play-course-btn {
+    .play-course-btn,
+    .results-course-btn {
         width: 100%;
         border-radius: 12px;
         padding: 10px 8px;
@@ -345,6 +346,13 @@
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
     }
+    .results-course-btn {
+        background: linear-gradient(135deg, rgba(0,229,160,0.22), rgba(0,180,255,0.12));
+        border: 1px solid rgba(0,229,160,0.45);
+        color: #4dffc4;
+        box-shadow: 0 4px 14px rgba(0,229,160,0.10);
+    }
+    .results-course-btn:active { transform: scale(0.96); background: rgba(0,229,160,0.32); }
     .buy-course-btn {
         background: linear-gradient(135deg, rgba(255,215,0,0.24), rgba(255,170,0,0.14));
         border: 1px solid rgba(255,215,0,0.5);
@@ -621,6 +629,21 @@ const PAYMENT_LINKS = {
 };
 // =====================================================
 
+// =====================================================
+// 🏆 لینک صفحه‌ی «نتایج بچه‌های دوره» (استوری‌های نتایج)
+// برای هر دوره یک صفحه‌ی استوری جدا بساز (از روی فایل
+// results-template.html) و لینکش رو اینجا جلوی همون دوره بذار
+// =====================================================
+const RESULTS_LINKS = {
+    "دوره کدهای پشت‌ پرده پول": "https://planlife.ir/Pages/Doreha/results-servat.html",
+    "دوره چطور حالم خوب باشه ؟": "https://planlife.ir/Pages/Doreha/results-ehsas.html",
+    "دوره هماهنگی با جریان خلقت": "https://planlife.ir/Pages/Doreha/results-jaryan.html",
+    "دوره خود باوری (اعتماد به نفس)": "https://planlife.ir/Pages/Doreha/results-etemad.html",
+    "دوره پذیرش احساس لیاقت": "https://planlife.ir/Pages/Doreha/results-liyaghat.html",
+    "دوره نفوذ به لایه‌های پنهانِ ذهن": "https://planlife.ir/Pages/Doreha/results-nofoz.html",
+};
+// =====================================================
+
 // ساختن courseData و بقیه‌ی آبجکت‌ها از categoryConfig
 const courseData = [];
 Object.entries(categoryConfig).forEach(([catName, cfg]) => {
@@ -736,6 +759,16 @@ function goToPayment(category) {
     window.location.href = link;
 }
 
+// می‌ره به صفحه‌ی «نتایج بچه‌های دوره» (استوری) اختصاصی همون دوره
+function goToResults(category) {
+    const link = RESULTS_LINKS[category];
+    if (!link) {
+        showToast('⚠️ لینک نتایج این دوره هنوز تنظیم نشده');
+        return;
+    }
+    window.location.href = link;
+}
+
 function loadPage() {
     const categories = Object.keys(categoryConfig);
     const wrapper = document.getElementById('categoriesWrapper');
@@ -772,14 +805,21 @@ function loadPage() {
                     </div>
                 </div>`;
 
-            // دکمه‌های خرید / پخش زیر هر کارت
+            // دکمه‌های نتایج / خرید / پخش زیر هر کارت
             const actions = document.createElement('div');
             actions.className = 'card-actions';
             actions.innerHTML = `
+                <button type="button" class="results-course-btn">🏆 نتایج بچه‌های دوره</button>
                 <button type="button" class="buy-course-btn">💳 خرید دوره</button>
                 <button type="button" class="play-course-btn">▶ پخش دوره</button>`;
+            const resultsBtn = actions.querySelector('.results-course-btn');
             const buyBtn = actions.querySelector('.buy-course-btn');
             const playBtn = actions.querySelector('.play-course-btn');
+            resultsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (soon) { showToast(SOON_MESSAGE); return; }
+                goToResults(cat);
+            });
             buyBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 if (soon) { showToast(SOON_MESSAGE); return; }
