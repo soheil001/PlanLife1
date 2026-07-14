@@ -116,6 +116,7 @@
 
     .story-container {
         width: 100%; max-width: 375px; aspect-ratio: 9/16;
+        margin-top: -1cm; /* استوری از ۱ سانت بالاتر از حالت قبلی (وسط‌چین) شروع می‌شه */
         background: #000; border-radius: 12px; overflow: hidden; position: relative;
         box-shadow: 0 20px 60px rgba(0,0,0,0.9);
     }
@@ -124,8 +125,11 @@
         position: absolute; inset: 0; z-index: 1; background: #000;
         display: flex; align-items: center; justify-content: center; overflow: hidden;
     }
+    /* پس‌زمینه‌ی استوری همون قاب ۹:۱۶ می‌مونه، ولی خود عکس/ویدیو داخل یک
+       قاب ۹:۱۵ (کمی کوتاه‌تر از قاب اصلی) وسط‌چین می‌شه؛ همین فاصله‌ی کوچیک
+       بالا/پایین باعث می‌شه هیچ‌وقت لبه‌ی عکس به لبه‌ی قاب نچسبه. */
     .story-modal-content img, .story-modal-content video {
-        width: 100%; height: 100%; object-fit: cover; display: block;
+        width: 100%; aspect-ratio: 9/15; object-fit: cover; display: block;
     }
 
     .story-progress-bar {
@@ -243,9 +247,29 @@
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         text-align: center;
     }
-    .tutorial-box.tutorial-pos-bottom { bottom: 118px; left: 50%; transform: translateX(-50%); }
-    .tutorial-box.tutorial-pos-right { top: 50%; right: 16px; transform: translateY(-50%); }
-    .tutorial-box.tutorial-pos-left { top: 50%; left: 16px; transform: translateY(-50%); }
+    .tutorial-box.tutorial-pos-bottom { bottom: 150px; left: 50%; transform: translateX(-50%); }
+    .tutorial-box.tutorial-pos-right { top: 46%; right: 34px; transform: translateY(-50%); }
+    .tutorial-box.tutorial-pos-left { top: 46%; left: 34px; transform: translateY(-50%); }
+
+    /* فلش‌ها: به‌جای این که باکس روی دکمه/ناحیه بشینه، به سمتش اشاره می‌کنه */
+    .tutorial-box.tutorial-pos-bottom::after {
+        content: ''; position: absolute; bottom: -9px; left: 50%; transform: translateX(-50%);
+        width: 0; height: 0;
+        border-left: 9px solid transparent; border-right: 9px solid transparent;
+        border-top: 9px solid rgba(20,18,28,0.94);
+    }
+    .tutorial-box.tutorial-pos-right::after {
+        content: ''; position: absolute; top: 50%; right: -9px; transform: translateY(-50%);
+        width: 0; height: 0;
+        border-top: 9px solid transparent; border-bottom: 9px solid transparent;
+        border-left: 9px solid rgba(20,18,28,0.94);
+    }
+    .tutorial-box.tutorial-pos-left::after {
+        content: ''; position: absolute; top: 50%; left: -9px; transform: translateY(-50%);
+        width: 0; height: 0;
+        border-top: 9px solid transparent; border-bottom: 9px solid transparent;
+        border-right: 9px solid rgba(20,18,28,0.94);
+    }
 
     .tutorial-close {
         position: absolute; top: 6px; right: 10px;
@@ -734,7 +758,7 @@ function renderStoryModal() {
         video.muted = false;
         video.controls = false;
         video.preload = 'auto';
-        video.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
+        video.style.cssText = 'position:relative;z-index:0;';
         video.addEventListener('ended', () => storyNavigate(1));
         video.addEventListener('error', () => storyNavigate(1));
         video.addEventListener('loadedmetadata', () => { updateProgressForVideo(video); });
@@ -752,7 +776,7 @@ function renderStoryModal() {
         const img = document.createElement('img');
         img.src = s.media;
         img.alt = '';
-        img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
+        img.style.cssText = 'position:relative;z-index:0;';
         contentDiv.appendChild(img);
     }
 
