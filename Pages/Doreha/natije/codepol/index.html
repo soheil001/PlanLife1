@@ -135,13 +135,13 @@
         background: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent);
     }
     .progress-seg { flex: 1; height: 2.5px; background: rgba(255,255,255,0.28); border-radius: 3px; overflow: hidden; }
-    .progress-seg-fill { height: 100%; background: white; width: 0%; transition: none; border-radius: 3px; }
+    .progress-seg-fill { height: 100%; background: white; width: 0%; border-radius: 3px; }
     .progress-seg.done .progress-seg-fill { width: 100%; }
-    .progress-seg.active .progress-seg-fill { animation: progress-run 5s linear forwards; }
-    @keyframes progress-run { from { width: 0%; } to { width: 100%; } }
 
     .story-modal-header {
-        position: absolute; top: 26px; left: 0; right: 0; z-index: 10;
+        /* z-index بالاتر از تمام لایه‌ها (حتی پاپ‌آپ آموزشی) گذاشته شده
+           تا کاربر همیشه بتونه با ضربدر، کل استوری رو ببنده */
+        position: absolute; top: 26px; left: 0; right: 0; z-index: 20;
         display: flex; align-items: center; gap: 8px; padding: 8px 12px;
         direction: rtl; justify-content: space-between; flex-direction: row-reverse;
         background: linear-gradient(to bottom, rgba(0,0,0,0.35), transparent);
@@ -171,15 +171,32 @@
 
     .story-footer {
         position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
-        display: flex; flex-direction: column; gap: 10px;
+        display: flex; flex-direction: column; align-items: center; gap: 10px;
         padding: 40px 14px 18px;
         background: linear-gradient(to top, rgba(0,0,0,0.72) 60%, transparent);
     }
+
+    /* ===== دکمه‌ی متوقف کردن استوری ===== */
+    .story-pause-btn {
+        width: 30px; height: 30px; border-radius: 50%;
+        background: rgba(255,255,255,0.10);
+        border: 1px solid rgba(255,255,255,0.18);
+        display: flex; align-items: center; justify-content: center;
+        color: rgba(255,255,255,0.85);
+        opacity: 0.55;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+    .story-pause-btn:active { opacity: 0.9; transform: scale(0.9); }
+    .story-pause-btn svg { display: block; }
+
     .story-caption {
         font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.95);
         text-align: center; line-height: 1.6; min-height: 20px;
         display: flex; align-items: center; justify-content: center;
         text-shadow: 0 1px 8px rgba(0,0,0,0.9);
+        width: 100%;
     }
 
     .story-action-btn {
@@ -205,6 +222,48 @@
     }
     @keyframes glass-shine { 0% { left: -100%; } 50% { left: 100%; } 100% { left: 100%; } }
     .story-action-btn:active { transform: scale(0.97); background: rgba(255,255,255,0.18); }
+
+    /* ===== پاپ‌آپ آموزشی (فقط بار اول) ===== */
+    #tutorial-overlay {
+        position: absolute; inset: 0; z-index: 15;
+        background: rgba(0,0,0,0.45);
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.25s ease;
+    }
+    #tutorial-overlay.open { opacity: 1; pointer-events: auto; }
+
+    .tutorial-box {
+        position: absolute;
+        width: 76%; max-width: 240px;
+        background: rgba(20,18,28,0.94);
+        border: 1px solid rgba(212,175,55,0.45);
+        border-radius: 14px;
+        padding: 16px 16px 14px;
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        text-align: center;
+    }
+    .tutorial-box.tutorial-pos-bottom { bottom: 118px; left: 50%; transform: translateX(-50%); }
+    .tutorial-box.tutorial-pos-right { top: 50%; right: 16px; transform: translateY(-50%); }
+    .tutorial-box.tutorial-pos-left { top: 50%; left: 16px; transform: translateY(-50%); }
+
+    .tutorial-close {
+        position: absolute; top: 6px; right: 10px;
+        font-size: 15px; color: rgba(255,255,255,0.55); cursor: pointer; line-height: 1;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .tutorial-text {
+        font-size: 13px; line-height: 1.85; color: #fff;
+        margin: 8px 0 12px; padding-top: 6px;
+    }
+    .tutorial-btn {
+        background: linear-gradient(135deg,#f5d77a,#d4af37);
+        color: #1a0033; border: none; border-radius: 20px;
+        font-family: 'Vazirmatn', sans-serif; font-weight: 800; font-size: 13px;
+        padding: 8px 22px; cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .tutorial-btn:active { transform: scale(0.96); }
 
     @media (max-width: 380px) {
         .results-grid { gap: 16px 4px; }
@@ -244,7 +303,21 @@
             <div class="story-nav-left" onclick="storyNavigate(-1)"></div>
             <div class="story-nav-right" onclick="storyNavigate(1)"></div>
         </div>
+
+        <!-- پاپ‌آپ آموزشی: فقط بار اولی که کاربر وارد استوری میشه نمایش داده میشه -->
+        <div id="tutorial-overlay">
+            <div class="tutorial-box" id="tutorial-box">
+                <div class="tutorial-close" onclick="closeTutorial()">✕</div>
+                <div class="tutorial-text" id="tutorial-text"></div>
+                <button class="tutorial-btn" onclick="nextTutorialStep()">متوجه شدم</button>
+            </div>
+        </div>
+
         <div class="story-footer">
+            <div class="story-pause-btn" id="story-pause-btn" onclick="toggleStoryPause(event)" aria-label="توقف / ادامه">
+                <svg id="pause-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg>
+                <svg id="play-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="display:none;"><path d="M7 5l12 7-12 7V5z"></path></svg>
+            </div>
             <div class="story-caption" id="story-caption"></div>
             <a class="story-action-btn" id="story-action-btn" href="#" target="_blank" rel="noopener">وارد دوره شوید</a>
         </div>
@@ -261,7 +334,9 @@
    2) ENTRY_LINK : لینک دکمه‌ی «وارد دوره شوید».
 
    3) resultsData : الان خودکار از روی لینک‌های
-      codepol/1.jpeg تا codepol/40.jpeg ساخته می‌شه.
+      codepol/1.jpeg تا codepol/40.jpeg ساخته می‌شه؛
+      اسم هر نتیجه هم به‌صورت رندوم و طبیعی از لیست اسم/فامیل‌های
+      پایین ساخته می‌شه (مثلاً «مریم موسوی»، «علیرضا محمدی»).
       اگر خواستی تعداد یا مسیر رو عوض کنی، همین چند خط زیر رو ویرایش کن.
    ===================================================================== */
 
@@ -271,10 +346,25 @@ const ENTRY_LINK = "https://planlife.ir/Pages/Doreha/index.html"; // لینک د
 const STORY_BASE_URL = "http://fs3.centraldnserver.com/~planlife/doreha/natije/codepol/";
 const STORY_COUNT = 40; // تعداد کل استوری‌ها (1.jpeg تا 40.jpeg)
 
+// لیست اسم و فامیلی برای ساخت نام رندوم و طبیعی — هر وقت خواستی می‌تونی
+// اسم/فامیل بیشتری به این دو آرایه اضافه کنی تا تنوع بیشتر بشه.
+const FIRST_NAMES = ["مریم","زهرا","فاطمه","نگار","سارا","الهام","نیلوفر","پریسا","مینا","آیدا",
+                      "رویا","شیوا","مهسا","یاسمن","ترانه","سمیرا","نازنین","هستی","آناهیتا","بهاره",
+                      "علی","محمد","حسین","رضا","علیرضا","امیر","سعید","بهنام","آرش","کیان",
+                      "نیما","سینا","پویا","مهدی","دانیال","امیرحسین","حامد","بابک","فرهاد","شاهین"];
+const LAST_NAMES  = ["موسوی","محمدی","حسینی","رضایی","کریمی","صادقی","نجفی","احمدی","جعفری","قاسمی",
+                      "صالحی","رحیمی","کاظمی","اسدی","نوری","یوسفی","شریفی","عباسی","طاهری","بهرامی"];
+
+function randomFullName() {
+    const f = FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)];
+    const l = LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)];
+    return f + " " + l;
+}
+
 const resultsData = [];
 for (let i = 1; i <= STORY_COUNT; i++) {
     resultsData.push({
-        name: `نتیجه شماره ${i}`,
+        name: randomFullName(),
         media: `${STORY_BASE_URL}${i}.jpeg`
     });
 }
@@ -311,9 +401,64 @@ function isSeenPersisted(idx) {
     return Object.prototype.hasOwnProperty.call(getSeenMap(), idx);
 }
 
+/* =====================================================================
+   پاپ‌آپ آموزشی — فقط یک‌ بار به هر مرورگر/دستگاه نمایش داده می‌شود
+   (چون این صفحه استاتیک روی گیت‌هاب هاست شده و بک‌اند ندارد، ردیابی
+   واقعی بر اساس IP نیاز به سرور دارد؛ همین localStorage معادل عملی
+   و قابل‌اعتمادِ «یک‌بار به هر کاربر نشون بده» است — دقیقاً مثل باقی
+   قابلیت‌های «دیده‌شده» همین سایت).
+   ===================================================================== */
+const TUTORIAL_KEY = 'planlife_results_tutorial_seen_v1';
+let tutorialActive = false;
+let tutorialStep = 0;
+
+const tutorialSteps = [
+    { pos: 'bottom', text: 'با این دکمه می‌تونید استوری رو متوقف کنید و با خیال راحت نتیجه رو بخونید.' },
+    { pos: 'right',  text: 'برای رفتن به نتیجه‌ی بعدی، روی این قسمت از تصویر بزنید.' },
+    { pos: 'left',   text: 'برای برگشتن به نتیجه‌ی قبلی، روی این قسمت از تصویر بزنید.' }
+];
+
+function shouldShowTutorial() {
+    try { return !localStorage.getItem(TUTORIAL_KEY); } catch(e) { return false; }
+}
+
+function startTutorial() {
+    tutorialActive = true;
+    showTutorialStep(0);
+}
+
+function showTutorialStep(i) {
+    tutorialStep = i;
+    const overlay = document.getElementById('tutorial-overlay');
+    const box = document.getElementById('tutorial-box');
+    const textEl = document.getElementById('tutorial-text');
+    box.classList.remove('tutorial-pos-bottom', 'tutorial-pos-right', 'tutorial-pos-left');
+    box.classList.add('tutorial-pos-' + tutorialSteps[i].pos);
+    textEl.textContent = tutorialSteps[i].text;
+    overlay.classList.add('open');
+}
+
+function nextTutorialStep() {
+    if (tutorialStep < tutorialSteps.length - 1) {
+        showTutorialStep(tutorialStep + 1);
+    } else {
+        finishTutorial();
+    }
+}
+
+function closeTutorial() {
+    finishTutorial();
+}
+
+function finishTutorial() {
+    tutorialActive = false;
+    document.getElementById('tutorial-overlay').classList.remove('open');
+    try { localStorage.setItem(TUTORIAL_KEY, '1'); } catch(e) {}
+    if (!isStoryPaused) resumeAutoAdvance();
+}
+
 let stories = [];
 let storyIndex = 0;
-let storyTimer = null;
 let savedScrollY = 0;
 
 const EAGER_ROWS_COUNT = 8;
@@ -397,8 +542,126 @@ function setupMediaPrefetchObserver() {
     document.querySelectorAll('.result-item').forEach(el => mediaIO.observe(el));
 }
 
+/* =====================================================================
+   موتور «پخش خودکار / توقف» — یک منطق واحد برای عکس و ویدیو
+   که هم با دکمه‌ی توقف کاربر و هم با پاپ‌آپ آموزشی هماهنگ است.
+   ===================================================================== */
+let isStoryPaused = false;
+let autoTimerId = null;      // setTimeout برای عکس‌ها
+let autoRemainingMs = 5000;  // زمان باقی‌مانده تا رفتن به نتیجه‌ی بعدی
+let autoStartedAt = null;
+let currentVideoElement = null;
+const IMAGE_DURATION_MS = 5000;
+
+function resetPauseIcon() {
+    document.getElementById('pause-icon').style.display = 'block';
+    document.getElementById('play-icon').style.display = 'none';
+}
+
+function clearAutoTimer() {
+    if (autoTimerId) { clearTimeout(autoTimerId); autoTimerId = null; }
+}
+
+function startAutoAdvance() {
+    clearAutoTimer();
+    const s = stories[storyIndex];
+    if (!s) return;
+    if (getMediaType(s.media) === 'video') {
+        if (currentVideoElement) {
+            const p = currentVideoElement.play();
+            if (p !== undefined) p.catch(() => showPlayOverlay(currentVideoElement, document.getElementById('story-modal-content')));
+        }
+        return; // ویدیو با رویداد 'ended' خودش جلو می‌ره
+    }
+    autoRemainingMs = IMAGE_DURATION_MS;
+    runImageTimer();
+}
+
+function runImageTimer() {
+    autoStartedAt = Date.now();
+    autoTimerId = setTimeout(() => storyNavigate(1), autoRemainingMs);
+    animateImageFill(autoRemainingMs);
+}
+
+function animateImageFill(durationMs) {
+    const bar = document.getElementById('story-progress-bar');
+    const seg = bar.querySelectorAll('.progress-seg')[storyIndex];
+    if (!seg) return;
+    const fill = seg.querySelector('.progress-seg-fill');
+    const startPercent = parseFloat(fill.style.width) || 0;
+    fill.style.transition = 'none';
+    fill.style.width = startPercent + '%';
+    void fill.offsetWidth; // reflow برای اعمال شدن مقدار قبل از شروع ترنزیشن جدید
+    fill.style.transition = `width ${durationMs}ms linear`;
+    requestAnimationFrame(() => { fill.style.width = '100%'; });
+}
+
+function getComputedFillPercent(fill) {
+    const parentWidth = fill.parentElement.offsetWidth;
+    if (!parentWidth) return 0;
+    const currentWidth = fill.getBoundingClientRect().width;
+    return Math.min(100, (currentWidth / parentWidth) * 100);
+}
+
+function pauseAutoAdvance() {
+    const s = stories[storyIndex];
+    if (!s) return;
+    if (getMediaType(s.media) === 'video') {
+        if (currentVideoElement) currentVideoElement.pause();
+        return;
+    }
+    if (autoTimerId) {
+        clearTimeout(autoTimerId);
+        autoTimerId = null;
+        const elapsed = Date.now() - autoStartedAt;
+        autoRemainingMs = Math.max(0, autoRemainingMs - elapsed);
+    }
+    const bar = document.getElementById('story-progress-bar');
+    const seg = bar.querySelectorAll('.progress-seg')[storyIndex];
+    if (seg) {
+        const fill = seg.querySelector('.progress-seg-fill');
+        const computedPercent = getComputedFillPercent(fill);
+        fill.style.transition = 'none';
+        fill.style.width = computedPercent + '%';
+    }
+}
+
+function resumeAutoAdvance() {
+    if (tutorialActive || isStoryPaused) return;
+    const s = stories[storyIndex];
+    if (!s) return;
+    if (getMediaType(s.media) === 'video') {
+        if (currentVideoElement) {
+            const p = currentVideoElement.play();
+            if (p !== undefined) p.catch(() => showPlayOverlay(currentVideoElement, document.getElementById('story-modal-content')));
+        }
+        return;
+    }
+    runImageTimer(); // با همون autoRemainingMs باقی‌مونده ادامه می‌ده
+}
+
+// دکمه‌ی توقف/ادامه‌ی کاربر
+function toggleStoryPause(e) {
+    if (e) e.stopPropagation();
+    if (tutorialActive) return; // در حین آموزش، کنترل با پاپ‌آپه
+    isStoryPaused = !isStoryPaused;
+    const pauseIcon = document.getElementById('pause-icon');
+    const playIcon = document.getElementById('play-icon');
+    if (isStoryPaused) {
+        pauseAutoAdvance();
+        pauseIcon.style.display = 'none';
+        playIcon.style.display = 'block';
+    } else {
+        pauseIcon.style.display = 'block';
+        playIcon.style.display = 'none';
+        resumeAutoAdvance();
+    }
+}
+
 function openStoryModal(idx) {
     storyIndex = idx;
+    isStoryPaused = false;
+    resetPauseIcon();
     savedScrollY = window.scrollY || window.pageYOffset || 0;
     document.body.style.position = 'fixed';
     document.body.style.top = (-savedScrollY) + 'px';
@@ -409,15 +672,25 @@ function openStoryModal(idx) {
     document.getElementById('story-action-btn').href = ENTRY_LINK;
     renderStoryModal();
     buildProgressBar();
-    startStoryTimer();
+    if (shouldShowTutorial()) {
+        startTutorial();
+    } else {
+        startAutoAdvance();
+    }
 }
 
 function closeStoryModal() {
     document.getElementById('story-modal').classList.remove('open');
-    clearStoryTimer();
+    clearAutoTimer();
+    if (tutorialActive) {
+        tutorialActive = false;
+        document.getElementById('tutorial-overlay').classList.remove('open');
+    }
     const contentDiv = document.getElementById('story-modal-content');
     const vid = contentDiv.querySelector('video');
     if (vid) { vid.pause(); vid.muted = true; vid.removeAttribute('src'); vid.load(); vid.remove(); }
+    currentVideoElement = null;
+    isStoryPaused = false;
     document.body.style.position = '';
     document.body.style.top = '';
     document.body.style.left = '';
@@ -452,18 +725,19 @@ function renderStoryModal() {
     const oldImg = contentDiv.querySelector('img');
     if (oldImg) oldImg.remove();
 
+    currentVideoElement = null;
+
     if (mediaType === 'video') {
         const video = document.createElement('video');
         video.setAttribute('playsinline', '');
         video.setAttribute('webkit-playsinline', '');
         video.muted = false;
-        video.autoplay = true;
         video.controls = false;
         video.preload = 'auto';
         video.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
         video.addEventListener('ended', () => storyNavigate(1));
-        video.addEventListener('error', () => startStoryTimer());
-        video.addEventListener('loadedmetadata', () => { clearStoryTimer(); updateProgressForVideo(video); });
+        video.addEventListener('error', () => storyNavigate(1));
+        video.addEventListener('loadedmetadata', () => { updateProgressForVideo(video); });
 
         const source = document.createElement('source');
         source.src = s.media;
@@ -471,9 +745,9 @@ function renderStoryModal() {
         source.type = ['webm','ogg'].includes(ext) ? 'video/' + ext : 'video/mp4';
         video.appendChild(source);
         contentDiv.appendChild(video);
-
-        const playPromise = video.play();
-        if (playPromise !== undefined) playPromise.catch(() => showPlayOverlay(video, contentDiv));
+        currentVideoElement = video;
+        // پخش واقعی توسط startAutoAdvance / resumeAutoAdvance کنترل می‌شود
+        // (نه اینجا) تا با دکمه‌ی توقف و پاپ‌آپ آموزشی هماهنگ بمونه.
     } else {
         const img = document.createElement('img');
         img.src = s.media;
@@ -495,16 +769,9 @@ function updateProgressForVideo(video) {
     const activeSeg = segs[storyIndex];
     if (!activeSeg) return;
     const fill = activeSeg.querySelector('.progress-seg-fill');
-    activeSeg.classList.remove('active');
     fill.style.transition = 'none';
     fill.style.width = '0%';
 
-    function updateFill() {
-        if (!video.duration || video.paused || video.ended) return;
-        fill.style.width = ((video.currentTime / video.duration) * 100) + '%';
-        requestAnimationFrame(updateFill);
-    }
-    video.addEventListener('play', () => requestAnimationFrame(updateFill));
     video.addEventListener('timeupdate', () => {
         if (!video.duration) return;
         fill.style.width = ((video.currentTime / video.duration) * 100) + '%';
@@ -537,22 +804,19 @@ function buildProgressBar() {
     });
 }
 
-function startStoryTimer() {
-    clearStoryTimer();
-    storyTimer = setTimeout(() => storyNavigate(1), 5000);
-}
-function clearStoryTimer() {
-    if (storyTimer) { clearTimeout(storyTimer); storyTimer = null; }
-}
-
 function storyNavigate(dir) {
-    clearStoryTimer();
+    clearAutoTimer();
+    if (currentVideoElement) { try { currentVideoElement.pause(); } catch(e) {} }
     storyIndex += dir;
     if (storyIndex < 0) storyIndex = 0;
     if (storyIndex >= stories.length) { closeStoryModal(); return; }
+    isStoryPaused = false;
+    resetPauseIcon();
     renderStoryModal();
     buildProgressBar();
-    startStoryTimer();
+    if (!tutorialActive) {
+        startAutoAdvance();
+    }
 }
 
 document.getElementById('story-modal').addEventListener('click', function(e) {
