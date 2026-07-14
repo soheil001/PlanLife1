@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a0033">
+<title>نتایج بچه‌های دوره - PlanLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+<!-- پیش‌اتصال به سرورهای رسانه تا دانلود عکس/فیلم زودتر شروع بشه (چه با VPN چه بدون VPN) -->
+<link rel="preconnect" href="http://fs3.centraldnserver.com">
+<link rel="dns-prefetch" href="http://fs3.centraldnserver.com">
+<link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+<link rel="dns-prefetch" href="https://res.cloudinary.com">
+<link rel="preconnect" href="https://tools.irbots.com" crossorigin>
+<link rel="dns-prefetch" href="https://tools.irbots.com">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; font-family: 'Vazirmatn', sans-serif; overflow-x: hidden; color: white; background: #030303; }
+    .stars { position: fixed; inset: 0; background: transparent; z-index: 0; pointer-events: none; }
+    .stars::before, .stars::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(white 1px, transparent 1px); background-size: 80px 80px; opacity: 0.45; }
+    .stars::after { background-size: 140px 140px; opacity: 0.3; }
+
+    header {
+        position: sticky; top: 0; z-index: 50;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(15px);
+        border-bottom: 1px solid rgba(212,175,55,0.2);
+        padding: 18px 20px;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .header-title {
+        font-family: 'Georgia','Times New Roman',serif;
+        font-size: 20px; font-weight: 700; letter-spacing: 1px;
+        background: linear-gradient(135deg, #f5d77a 0%, #d4af37 45%, #b8860b 70%, #f5d77a 100%);
+        -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 20px rgba(212,175,55,0.35);
+    }
+    .back-btn {
+        position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
+        width: 40px; height: 40px; border-radius: 50%;
+        background: rgba(255,255,255,0.08); border: 1px solid rgba(212,175,55,0.3);
+        backdrop-filter: blur(10px);
+        display: flex; align-items: center; justify-content: center;
+        color: #f5d77a; text-decoration: none;
+    }
+    .back-btn:active { transform: translateY(-50%) scale(0.9); background: rgba(255,255,255,0.16); }
+    .back-btn svg { width: 20px; height: 20px; }
+
+    .page-sub {
+        position: relative; z-index: 2;
+        text-align: center;
+        font-size: 12.5px; opacity: 0.6;
+        padding: 14px 20px 4px;
+    }
+
+    /* ===================================================
+       گرید نتایج — دقیقاً ۴ ستون، هر تعداد ردیف که لازم باشه
+       فقط کافیه به آرایه‌ی resultsData آبجکت جدید اضافه کنی
+       خودش می‌ره ردیف بعدی
+       =================================================== */
+    .results-grid {
+        position: relative; z-index: 2;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px 6px;
+        padding: 10px 14px 60px;
+        max-width: 480px;
+        margin: 0 auto;
+    }
+    .result-item {
+        display: flex; flex-direction: column; align-items: center; gap: 6px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .result-ring {
+        width: 100%; max-width: 76px; aspect-ratio: 1/1;
+        border-radius: 50%;
+        padding: 2.5px;
+        margin: 0 auto;
+        background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888, #833ab4, #405de6, #5851db);
+        transition: background 0.4s ease;
+    }
+    .result-item.seen .result-ring {
+        background: rgba(255,255,255,0.18);
+    }
+    .result-avatar {
+        width: 100%; height: 100%; border-radius: 50%;
+        background: rgba(255,255,255,0.10);
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        border: 2.5px solid rgba(3,3,3,0.9);
+        overflow: hidden;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .result-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .result-label {
+        font-size: 10.5px; font-weight: 600;
+        color: rgba(255,255,255,0.85);
+        text-align: center; line-height: 1.3;
+        max-width: 82px;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .empty-msg {
+        position: relative; z-index: 2;
+        text-align: center; opacity: 0.55; font-size: 13.5px;
+        padding: 60px 20px;
+    }
+
+    /* ===================================================
+       مودال استوری تمام‌صفحه
+       =================================================== */
+    #story-modal {
+        position: fixed; inset: 0; z-index: 9800;
+        background: rgba(0,0,0,0.92);
+        backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+    #story-modal.open { opacity: 1; pointer-events: auto; }
+
+    .story-container {
+        width: 100%; max-width: 375px; aspect-ratio: 9/16;
+        background: #000; border-radius: 12px; overflow: hidden; position: relative;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+    }
+
+    .story-modal-content {
+        position: absolute; inset: 0; z-index: 1; background: #000;
+        display: flex; align-items: center; justify-content: center; overflow: hidden;
+    }
+    .story-modal-content img, .story-modal-content video {
+        width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+
+    .story-progress-bar {
+        position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+        display: flex; gap: 3px; direction: ltr;
+        padding: 10px 12px 6px;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent);
+    }
+    .progress-seg { flex: 1; height: 2.5px; background: rgba(255,255,255,0.28); border-radius: 3px; overflow: hidden; }
+    .progress-seg-fill { height: 100%; background: white; width: 0%; transition: none; border-radius: 3px; }
+    .progress-seg.done .progress-seg-fill { width: 100%; }
+    .progress-seg.active .progress-seg-fill { animation: progress-run 5s linear forwards; }
+    @keyframes progress-run { from { width: 0%; } to { width: 100%; } }
+
+    .story-modal-header {
+        position: absolute; top: 26px; left: 0; right: 0; z-index: 10;
+        display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+        direction: rtl; justify-content: space-between; flex-direction: row-reverse;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.35), transparent);
+    }
+    .story-logo-section { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; }
+    .story-logo-img {
+        width: 32px; height: 32px; border-radius: 50%;
+        border: 1.5px solid rgba(255,255,255,0.2);
+        display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;
+    }
+    .story-logo-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .story-branding-text {
+        font-size: 14px; font-weight: 700; color: white; line-height: 1;
+        text-shadow: 0 1px 6px rgba(0,0,0,0.7);
+    }
+    .story-modal-close {
+        font-size: 22px; color: white; cursor: pointer; padding: 4px 6px; line-height: 1;
+        text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+    }
+
+    .story-nav-left, .story-nav-right {
+        position: absolute; top: 0; bottom: 0; width: 40%; cursor: pointer; z-index: 9;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .story-nav-right { right: 0; }
+    .story-nav-left { left: 0; }
+
+    .story-footer {
+        position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
+        display: flex; flex-direction: column; gap: 10px;
+        padding: 40px 14px 18px;
+        background: linear-gradient(to top, rgba(0,0,0,0.72) 60%, transparent);
+    }
+    .story-caption {
+        font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.95);
+        text-align: center; line-height: 1.6; min-height: 20px;
+        display: flex; align-items: center; justify-content: center;
+        text-shadow: 0 1px 8px rgba(0,0,0,0.9);
+    }
+
+    /* دکمه‌ی ثابت زیر همه‌ی استوری‌ها */
+    .story-action-btn {
+        display: flex; align-items: center; justify-content: center;
+        width: 100%; padding: 12px 16px;
+        background: rgba(255,255,255,0.13);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        border: 1.2px solid rgba(212,175,55,0.6);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(212,175,55,0.15), inset 0 1px 0 rgba(255,255,255,0.25);
+        color: #ffd060;
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 15px; font-weight: 800;
+        text-decoration: none; text-align: center;
+        cursor: pointer;
+        position: relative; overflow: hidden;
+    }
+    .story-action-btn::before {
+        content: ''; position: absolute; top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        animation: glass-shine 2.5s ease-in-out infinite;
+    }
+    @keyframes glass-shine { 0% { left: -100%; } 50% { left: 100%; } 100% { left: 100%; } }
+    .story-action-btn:active { transform: scale(0.97); background: rgba(255,255,255,0.18); }
+
+    @media (max-width: 380px) {
+        .results-grid { gap: 16px 4px; }
+        .result-ring { max-width: 68px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<header>
+    <a href="https://planlife.ir/Pages/Doreha/index.html" class="back-btn" aria-label="بازگشت به دوره‌ها">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+    </a>
+    <div class="header-title">نتایج بچه‌های دوره</div>
+</header>
+<div class="page-sub">روی هر استوری بزن و نتیجه‌ رو ببین</div>
+
+<div class="results-grid" id="resultsGrid"></div>
+
+<!-- پول مخفی برای پیش‌بارگذاری عکس/فیلم‌ها (کاربر نمی‌بینتش) -->
+<div id="prefetchPool" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;"></div>
+
+<!-- ===== مودال استوری تمام‌صفحه ===== -->
+<div id="story-modal">
+    <div class="story-container">
+        <div class="story-progress-bar" id="story-progress-bar"></div>
+        <div class="story-modal-header">
+            <div class="story-logo-section">
+                <div class="story-logo-img">
+                    <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
+                </div>
+                <div class="story-branding-text">planlife.ir</div>
+            </div>
+            <div class="story-modal-close" onclick="closeStoryModal()">✕</div>
+        </div>
+        <div class="story-modal-content" id="story-modal-content">
+            <div class="story-nav-left" onclick="storyNavigate(-1)"></div>
+            <div class="story-nav-right" onclick="storyNavigate(1)"></div>
+        </div>
+        <div class="story-footer">
+            <div class="story-caption" id="story-caption"></div>
+            <a class="story-action-btn" id="story-action-btn" href="#" target="_blank" rel="noopener">وارد دوره شوید</a>
+        </div>
+    </div>
+</div>
+
+<script>
+/* =====================================================================
+   ✅ فقط این بخش رو برای هر دوره تغییر بده:
+
+   1) RESULTS_PAGE_ID : یک شناسه‌ی یکتا برای همین صفحه بذار
+      (مثلاً "servat" یا "jaryan") تا وضعیت «دیده‌شده» استوری‌ها
+      قاطی صفحه‌های دیگه نشه.
+
+   2) ENTRY_LINK : لینک دکمه‌ی «وارد دوره شوید» — اینو با لینک
+      همون دوره عوض کن.
+
+   3) resultsData : برای هر نتیجه یک آبجکت اضافه کن. هر چقدر
+      آبجکت اضافه کنی خودش می‌ره ردیف بعدی (۴ ستون ثابت، ردیف
+      بی‌نهایت). نیازی به تغییر چیز دیگه‌ای نیست.
+   ===================================================================== */
+
+const RESULTS_PAGE_ID = "template"; // برای هر دوره عوضش کن، مثلا "servat"
+const ENTRY_LINK = "https://planlife.ir/Pages/Doreha/index.html"; // لینک دکمه‌ی وارد دوره شوید
+
+// نام‌های نمونه — می‌تونی اسم، عکس و فیلم هرکدوم رو با نتیجه‌ی واقعی عوض کنی.
+// ترتیب همینه که خواستی: اولین استوری «آقای احمدی»
+const SAMPLE_SURNAMES = [
+    "احمدی","محمدی","رضایی","رحیمی","کریمی","حسینی","صادقی","طاهری",
+    "نوری","یوسفی","قاسمی","رستمی","شریفی","عزیزی","فرهادی","جعفری",
+    "مرادی","صالحی","هاشمی","نجفی"
+];
+
+const resultsData = [];
+SAMPLE_SURNAMES.forEach(surname => {
+    resultsData.push({
+        name: `نتیجه‌ی آقای ${surname}`,
+        avatar: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
+        media: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
+        caption: "متن کپشن نتیجه اینجا قرار می‌گیرد"
+    });
+    resultsData.push({
+        name: `نتیجه‌ی خانم ${surname}`,
+        avatar: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
+        media: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
+        caption: "متن کپشن نتیجه اینجا قرار می‌گیرد"
+    });
+});
+// 👆 الان ۴۰ استوری داریم (۴ ستون × ۱۰ ردیف).
+// برای اضافه کردن نتیجه‌ی جدید فقط یک آبجکت مثل بالا به resultsData.push کن یا مستقیم به آرایه اضافه کن.
+// هر چقدر بیشتر اضافه کنی، فقط ردیف‌های بیشتری پایین‌تر اضافه می‌شه و صفحه به همون اندازه اسکرول می‌خوره.
+
+/* =====================================================================
+   منطق «دیده‌شده» — دقیقاً مثل استوری صفحه‌ی اکسپلور:
+   با کلیک روی استوری، لاین رنگی‌اش خاکستری می‌شود و بعد از
+   ۲۴ ساعت دوباره رنگی برمی‌گردد.
+   ===================================================================== */
+const SEEN_KEY = 'planlife_results_seen_' + RESULTS_PAGE_ID;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function getSeenMap() {
+    try {
+        const raw = localStorage.getItem(SEEN_KEY);
+        if (!raw) return {};
+        const map = JSON.parse(raw);
+        const now = Date.now();
+        const cleaned = {};
+        Object.keys(map).forEach(idx => { if (now - map[idx] < DAY_MS) cleaned[idx] = map[idx]; });
+        return cleaned;
+    } catch(e) { return {}; }
+}
+function markSeenPersisted(idx) {
+    try {
+        const map = getSeenMap();
+        map[idx] = Date.now();
+        localStorage.setItem(SEEN_KEY, JSON.stringify(map));
+    } catch(e) {}
+}
+function isSeenPersisted(idx) {
+    return Object.prototype.hasOwnProperty.call(getSeenMap(), idx);
+}
+
+let stories = [];
+let storyIndex = 0;
+let storyTimer = null;
+let savedScrollY = 0;
+
+// تعداد استوری‌های ردیف اول که باید بلافاصله و با اولویت بالا لود بشن
+const EAGER_ROWS_COUNT = 8; // ۲ ردیف اول (۴ ستونه) = ۸ آیتم
+
+function renderGrid() {
+    const grid = document.getElementById('resultsGrid');
+    grid.innerHTML = '';
+
+    if (!resultsData.length) {
+        grid.innerHTML = '';
+        document.body.insertAdjacentHTML('beforeend', '<div class="empty-msg">هنوز نتیجه‌ای اضافه نشده</div>');
+        return;
+    }
+
+    resultsData.forEach((r, idx) => {
+        const alreadySeen = isSeenPersisted(idx);
+        stories.push({ ...r, seen: alreadySeen, _preloaded: false });
+
+        const isEager = idx < EAGER_ROWS_COUNT;
+        const item = document.createElement('div');
+        item.className = 'result-item' + (alreadySeen ? ' seen' : '');
+        item.id = `result-item-${idx}`;
+        item.dataset.idx = idx;
+        item.innerHTML = `
+            <div class="result-ring">
+                <div class="result-avatar">
+                    <img src="${r.avatar}" alt="${r.name}"
+                         loading="${isEager ? 'eager' : 'lazy'}"
+                         decoding="async"
+                         fetchpriority="${isEager ? 'high' : 'auto'}">
+                </div>
+            </div>
+            <div class="result-label">${r.name}</div>`;
+        item.addEventListener('click', () => openStoryModal(idx));
+        grid.appendChild(item);
+    });
+
+    // اولین ۸ استوری رو همین الان و با اولویت بالا پیش‌بارگذاری کن
+    stories.slice(0, EAGER_ROWS_COUNT).forEach(s => preloadMedia(s, true));
+
+    // بقیه رو وقتی آیتمشون نزدیک دید کاربر شد (قبل از رسیدن بهش) پیش‌بارگذاری کن
+    setupMediaPrefetchObserver();
+}
+
+// این تابع عکس/فیلم استوری رو از قبل توی کش مرورگر «گرم» می‌کنه
+// تا وقتی کاربر روش می‌زنه، درجا و بدون تاخیر باز بشه (چه با VPN چه بدون VPN)
+function preloadMedia(storyObj, priority) {
+    if (!storyObj || storyObj._preloaded) return;
+    storyObj._preloaded = true;
+    const type = getMediaType(storyObj.media);
+    const pool = document.getElementById('prefetchPool');
+
+    if (type === 'video') {
+        const v = document.createElement('video');
+        v.muted = true;
+        v.setAttribute('playsinline', '');
+        v.setAttribute('webkit-playsinline', '');
+        v.preload = 'auto';
+        if (priority) { try { v.fetchPriority = 'high'; } catch(e) {} v.setAttribute('fetchpriority', 'high'); }
+        v.src = storyObj.media;
+        v.load();
+        pool.appendChild(v);
+    } else {
+        const img = new Image();
+        img.decoding = 'async';
+        if (priority) { try { img.fetchPriority = 'high'; } catch(e) {} }
+        img.src = storyObj.media;
+        pool.appendChild(img);
+    }
+}
+
+let mediaIO = null;
+function setupMediaPrefetchObserver() {
+    if (mediaIO) mediaIO.disconnect();
+    // rootMargin بزرگ باعث میشه پیش‌بارگذاری خیلی قبل از رسیدن اسکرول کاربر شروع بشه
+    mediaIO = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const idx = parseInt(entry.target.dataset.idx, 10);
+            preloadMedia(stories[idx], false);
+        });
+    }, { rootMargin: '1000% 0px', threshold: 0 });
+
+    document.querySelectorAll('.result-item').forEach(el => mediaIO.observe(el));
+}
+
+function openStoryModal(idx) {
+    storyIndex = idx;
+    savedScrollY = window.scrollY || window.pageYOffset || 0;
+    document.body.style.position = 'fixed';
+    document.body.style.top = (-savedScrollY) + 'px';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+    document.getElementById('story-modal').classList.add('open');
+    document.getElementById('story-action-btn').href = ENTRY_LINK;
+    renderStoryModal();
+    buildProgressBar();
+    startStoryTimer();
+}
+
+function closeStoryModal() {
+    document.getElementById('story-modal').classList.remove('open');
+    clearStoryTimer();
+    const contentDiv = document.getElementById('story-modal-content');
+    const vid = contentDiv.querySelector('video');
+    if (vid) { vid.pause(); vid.muted = true; vid.removeAttribute('src'); vid.load(); vid.remove(); }
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    window.scrollTo(0, savedScrollY);
+}
+
+function getMediaType(url) {
+    if (!url) return 'image';
+    const clean = url.toLowerCase().split('?')[0].split('#')[0];
+    const ext = clean.split('.').pop();
+    if (['mp4','webm','ogg','mov','avi','mkv','m4v'].includes(ext)) return 'video';
+    if (clean.indexOf('/video/upload/') >= 0) return 'video';
+    return 'image';
+}
+
+function renderStoryModal() {
+    const s = stories[storyIndex];
+    if (!s) { closeStoryModal(); return; }
+
+    s.seen = true;
+    const itemEl = document.getElementById(`result-item-${storyIndex}`);
+    if (itemEl) itemEl.classList.add('seen');
+    markSeenPersisted(storyIndex);
+
+    const mediaType = getMediaType(s.media);
+    const contentDiv = document.getElementById('story-modal-content');
+
+    const oldVideo = contentDiv.querySelector('video');
+    if (oldVideo) { oldVideo.pause(); oldVideo.src = ''; oldVideo.remove(); }
+    const oldImg = contentDiv.querySelector('img');
+    if (oldImg) oldImg.remove();
+
+    if (mediaType === 'video') {
+        const video = document.createElement('video');
+        video.setAttribute('playsinline', '');
+        video.setAttribute('webkit-playsinline', '');
+        video.muted = false;
+        video.autoplay = true;
+        video.controls = false;
+        video.preload = 'auto';
+        video.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
+        video.addEventListener('ended', () => storyNavigate(1));
+        video.addEventListener('error', () => startStoryTimer());
+        video.addEventListener('loadedmetadata', () => { clearStoryTimer(); updateProgressForVideo(video); });
+
+        const source = document.createElement('source');
+        source.src = s.media;
+        const ext = s.media.toLowerCase().split('?')[0].split('.').pop();
+        source.type = ['webm','ogg'].includes(ext) ? 'video/' + ext : 'video/mp4';
+        video.appendChild(source);
+        contentDiv.appendChild(video);
+
+        const playPromise = video.play();
+        if (playPromise !== undefined) playPromise.catch(() => showPlayOverlay(video, contentDiv));
+    } else {
+        const img = document.createElement('img');
+        img.src = s.media;
+        img.alt = '';
+        img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
+        contentDiv.appendChild(img);
+    }
+
+    document.getElementById('story-caption').textContent = s.caption || '';
+
+    // استوری بعدی و قبلی رو هم از الان پیش‌بارگذاری کن تا سوایپ بین استوری‌ها درجا باشه
+    [stories[storyIndex - 1], stories[storyIndex + 1]].forEach(neighbor => {
+        if (neighbor) preloadMedia(neighbor, true);
+    });
+}
+
+function updateProgressForVideo(video) {
+    const bar = document.getElementById('story-progress-bar');
+    const segs = bar.querySelectorAll('.progress-seg');
+    const activeSeg = segs[storyIndex];
+    if (!activeSeg) return;
+    const fill = activeSeg.querySelector('.progress-seg-fill');
+    activeSeg.classList.remove('active');
+    fill.style.transition = 'none';
+    fill.style.width = '0%';
+
+    function updateFill() {
+        if (!video.duration || video.paused || video.ended) return;
+        fill.style.width = ((video.currentTime / video.duration) * 100) + '%';
+        requestAnimationFrame(updateFill);
+    }
+    video.addEventListener('play', () => requestAnimationFrame(updateFill));
+    video.addEventListener('timeupdate', () => {
+        if (!video.duration) return;
+        fill.style.width = ((video.currentTime / video.duration) * 100) + '%';
+    });
+}
+
+function showPlayOverlay(video, container) {
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);cursor:pointer;';
+    const btn = document.createElement('div');
+    btn.style.cssText = 'width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-size:32px;';
+    btn.textContent = '▶';
+    overlay.appendChild(btn);
+    overlay.addEventListener('click', () => { video.play(); overlay.remove(); });
+    container.appendChild(overlay);
+}
+
+function buildProgressBar() {
+    const bar = document.getElementById('story-progress-bar');
+    bar.innerHTML = '';
+    stories.forEach((s, i) => {
+        const seg = document.createElement('div');
+        seg.className = 'progress-seg';
+        if (i < storyIndex) seg.classList.add('done');
+        if (i === storyIndex) seg.classList.add('active');
+        const fill = document.createElement('div');
+        fill.className = 'progress-seg-fill';
+        seg.appendChild(fill);
+        bar.appendChild(seg);
+    });
+}
+
+function startStoryTimer() {
+    clearStoryTimer();
+    storyTimer = setTimeout(() => storyNavigate(1), 5000);
+}
+function clearStoryTimer() {
+    if (storyTimer) { clearTimeout(storyTimer); storyTimer = null; }
+}
+
+function storyNavigate(dir) {
+    clearStoryTimer();
+    storyIndex += dir;
+    if (storyIndex < 0) storyIndex = 0;
+    if (storyIndex >= stories.length) { closeStoryModal(); return; }
+    renderStoryModal();
+    buildProgressBar();
+    startStoryTimer();
+}
+
+document.getElementById('story-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeStoryModal();
+});
+
+window.addEventListener('load', renderGrid);
+</script>
+</body>
+</html>
