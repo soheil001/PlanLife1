@@ -53,11 +53,6 @@
         padding: 14px 20px 4px;
     }
 
-    /* ===================================================
-       گرید نتایج — دقیقاً ۴ ستون، هر تعداد ردیف که لازم باشه
-       فقط کافیه به آرایه‌ی resultsData آبجکت جدید اضافه کنی
-       خودش می‌ره ردیف بعدی
-       =================================================== */
     .results-grid {
         position: relative; z-index: 2;
         display: grid;
@@ -66,13 +61,13 @@
         padding: 10px 14px 60px;
         max-width: 480px;
         margin: 0 auto;
-        direction: ltr; /* اولین استوری از سمت چپ، ستون ۱ شروع بشه */
+        direction: ltr;
     }
     .result-item {
         display: flex; flex-direction: column; align-items: center; gap: 6px;
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
-        direction: rtl; /* متن فارسی زیر آیکن درست نمایش داده بشه */
+        direction: rtl;
     }
     .result-ring {
         width: 100%; max-width: 76px; aspect-ratio: 1/1;
@@ -109,9 +104,6 @@
         padding: 60px 20px;
     }
 
-    /* ===================================================
-       مودال استوری تمام‌صفحه
-       =================================================== */
     #story-modal {
         position: fixed; inset: 0; z-index: 9800;
         background: rgba(0,0,0,0.92);
@@ -190,7 +182,6 @@
         text-shadow: 0 1px 8px rgba(0,0,0,0.9);
     }
 
-    /* دکمه‌ی ثابت زیر همه‌ی استوری‌ها */
     .story-action-btn {
         display: flex; align-items: center; justify-content: center;
         width: 100%; padding: 12px 16px;
@@ -235,10 +226,8 @@
 
 <div class="results-grid" id="resultsGrid"></div>
 
-<!-- پول مخفی برای پیش‌بارگذاری عکس/فیلم‌ها (کاربر نمی‌بینتش) -->
 <div id="prefetchPool" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;"></div>
 
-<!-- ===== مودال استوری تمام‌صفحه ===== -->
 <div id="story-modal">
     <div class="story-container">
         <div class="story-progress-bar" id="story-progress-bar"></div>
@@ -267,44 +256,30 @@
    ✅ فقط این بخش رو برای هر دوره تغییر بده:
 
    1) RESULTS_PAGE_ID : یک شناسه‌ی یکتا برای همین صفحه بذار
-      (مثلاً "servat" یا "jaryan") تا وضعیت «دیده‌شده» استوری‌ها
-      قاطی صفحه‌های دیگه نشه.
+      تا وضعیت «دیده‌شده» استوری‌ها قاطی صفحه‌های دیگه نشه.
 
-   2) ENTRY_LINK : لینک دکمه‌ی «وارد دوره شوید» — اینو با لینک
-      همون دوره عوض کن.
+   2) ENTRY_LINK : لینک دکمه‌ی «وارد دوره شوید».
 
-   3) resultsData : برای هر نتیجه یک آبجکت اضافه کن. هر چقدر
-      آبجکت اضافه کنی خودش می‌ره ردیف بعدی (۴ ستون ثابت، ردیف
-      بی‌نهایت). نیازی به تغییر چیز دیگه‌ای نیست.
+   3) resultsData : الان خودکار از روی لینک‌های
+      codepol/1.jpeg تا codepol/40.jpeg ساخته می‌شه.
+      اگر خواستی تعداد یا مسیر رو عوض کنی، همین چند خط زیر رو ویرایش کن.
    ===================================================================== */
 
-const RESULTS_PAGE_ID = "template"; // برای هر دوره عوضش کن، مثلا "servat"
+const RESULTS_PAGE_ID = "codepol"; // شناسه‌ی یکتای همین دوره
 const ENTRY_LINK = "https://planlife.ir/Pages/Doreha/index.html"; // لینک دکمه‌ی وارد دوره شوید
 
-// نام‌های نمونه — می‌تونی اسم و لینک media رو با نتیجه‌ی واقعی عوض کنی.
-// هر استوری فقط یک عکس/فیلم داره (media) که هم کاور آیکنه، هم خودِ استوری.
-// کپشن زیر استوری هم خودکار همون اسم می‌شه، نیازی به فیلد جدا نیست.
-// ترتیب همینه که خواستی: اولین استوری (ستون ۱، سمت چپ) «آقای احمدی»
-const SAMPLE_SURNAMES = [
-    "احمدی","محمدی","رضایی","رحیمی","کریمی","حسینی","صادقی","طاهری",
-    "نوری","یوسفی","قاسمی","رستمی","شریفی","عزیزی","فرهادی","جعفری",
-    "مرادی","صالحی","هاشمی","نجفی"
-];
+const STORY_BASE_URL = "http://fs3.centraldnserver.com/~planlife/doreha/natije/codepol/";
+const STORY_COUNT = 40; // تعداد کل استوری‌ها (1.jpeg تا 40.jpeg)
 
 const resultsData = [];
-SAMPLE_SURNAMES.forEach(surname => {
+for (let i = 1; i <= STORY_COUNT; i++) {
     resultsData.push({
-        name: `نتیجه‌ی آقای ${surname}`,
-        media: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg"
+        name: `نتیجه شماره ${i}`,
+        media: `${STORY_BASE_URL}${i}.jpeg`
     });
-    resultsData.push({
-        name: `نتیجه‌ی خانم ${surname}`,
-        media: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg"
-    });
-});
-// 👆 الان ۴۰ استوری داریم (۴ ستون × ۱۰ ردیف).
-// برای اضافه کردن نتیجه‌ی جدید فقط یک آبجکت مثل { name: "...", media: "لینک عکس یا فیلم" } اضافه کن.
-// هر چقدر بیشتر اضافه کنی، فقط ردیف‌های بیشتری پایین‌تر اضافه می‌شه و صفحه به همون اندازه اسکرول می‌خوره.
+}
+// برای اضافه کردن استوری جدید، فقط STORY_COUNT رو زیاد کن (به شرطی که فایل بعدی
+// با همون الگوی عددی، مثلاً 41.jpeg، روی سرور آپلود شده باشه).
 
 /* =====================================================================
    منطق «دیده‌شده» — دقیقاً مثل استوری صفحه‌ی اکسپلور:
@@ -341,10 +316,8 @@ let storyIndex = 0;
 let storyTimer = null;
 let savedScrollY = 0;
 
-// تعداد استوری‌های ردیف اول که باید بلافاصله و با اولویت بالا لود بشن
-const EAGER_ROWS_COUNT = 8; // ۲ ردیف اول (۴ ستونه) = ۸ آیتم
+const EAGER_ROWS_COUNT = 8;
 
-// کاور آیکن رو از روی همون فایل استوری می‌سازه (چه عکس چه فیلم)، نیازی به کاور جدا نیست
 function buildCoverMarkup(url, alt, isEager) {
     const type = getMediaType(url);
     if (type === 'video') {
@@ -381,15 +354,10 @@ function renderGrid() {
         grid.appendChild(item);
     });
 
-    // اولین ۸ استوری رو همین الان و با اولویت بالا پیش‌بارگذاری کن
     stories.slice(0, EAGER_ROWS_COUNT).forEach(s => preloadMedia(s, true));
-
-    // بقیه رو وقتی آیتمشون نزدیک دید کاربر شد (قبل از رسیدن بهش) پیش‌بارگذاری کن
     setupMediaPrefetchObserver();
 }
 
-// این تابع عکس/فیلم استوری رو از قبل توی کش مرورگر «گرم» می‌کنه
-// تا وقتی کاربر روش می‌زنه، درجا و بدون تاخیر باز بشه (چه با VPN چه بدون VPN)
 function preloadMedia(storyObj, priority) {
     if (!storyObj || storyObj._preloaded) return;
     storyObj._preloaded = true;
@@ -418,7 +386,6 @@ function preloadMedia(storyObj, priority) {
 let mediaIO = null;
 function setupMediaPrefetchObserver() {
     if (mediaIO) mediaIO.disconnect();
-    // rootMargin بزرگ باعث میشه پیش‌بارگذاری خیلی قبل از رسیدن اسکرول کاربر شروع بشه
     mediaIO = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (!entry.isIntersecting) return;
@@ -517,7 +484,6 @@ function renderStoryModal() {
 
     document.getElementById('story-caption').textContent = s.name || '';
 
-    // استوری بعدی و قبلی رو هم از الان پیش‌بارگذاری کن تا سوایپ بین استوری‌ها درجا باشه
     [stories[storyIndex - 1], stories[storyIndex + 1]].forEach(neighbor => {
         if (neighbor) preloadMedia(neighbor, true);
     });
