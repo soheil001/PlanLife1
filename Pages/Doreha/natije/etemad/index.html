@@ -115,44 +115,36 @@
     #story-modal.open { opacity: 1; pointer-events: auto; }
 
     .story-container {
-        width: 100%; max-width: 375px; 
-        max-height: 90vh; /* اگه ارتفاع تصویر خیلی زیاد بود، scroll بشه */
+        width: 100%; max-width: 375px; aspect-ratio: 9/16;
         background: #000; border-radius: 12px; overflow: hidden; position: relative;
         box-shadow: 0 20px 60px rgba(0,0,0,0.9);
-        display: flex; flex-direction: column;
-        margin-top: -1cm;
     }
 
     .story-modal-content {
-        position: relative; z-index: 1; background: #000;
-        display: flex; align-items: center; justify-content: center; 
-        overflow-y: auto; flex: 1;
-        padding-top: 0.5cm; /* نیم سانت پایین‌تر از planlife.ir شروع بشه تا متن تداخل نداشته باشه */
-        padding-bottom: 0;
+        position: absolute; inset: 0; z-index: 1; background: #000;
+        display: flex; align-items: center; justify-content: center; overflow: hidden;
     }
-    /* عکس/ویدیو اندازه‌ی خودش رو نگه می‌داره؛ اگه تصویر بزرگ‌تر بود،
-       overflow:auto کل modal-content درش اسکرول می‌کنه. */
     .story-modal-content img, .story-modal-content video {
-        width: 100%; height: auto; display: block;
+        width: 100%; height: 100%; object-fit: cover; display: block;
     }
 
     .story-progress-bar {
-        position: sticky; top: 0; left: 0; right: 0; z-index: 20;
+        position: absolute; top: 0; left: 0; right: 0; z-index: 10;
         display: flex; gap: 3px; direction: ltr;
-        padding: 12px 12px 8px;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.65), transparent);
+        padding: 10px 12px 6px;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent);
     }
     .progress-seg { flex: 1; height: 2.5px; background: rgba(255,255,255,0.28); border-radius: 3px; overflow: hidden; }
     .progress-seg-fill { height: 100%; background: white; width: 0%; border-radius: 3px; }
     .progress-seg.done .progress-seg-fill { width: 100%; }
 
     .story-modal-header {
-        /* sticky برای اینکه logo/close button همیشه روی صفحه دیده شه،
-           حتی اگه محتوای تصویر پایین‌تر بره */
-        position: sticky; top: 0; left: 0; right: 0; z-index: 30;
-        display: flex; align-items: center; gap: 8px; padding: 12px 12px 8px;
+        /* z-index بالاتر از تمام لایه‌ها (حتی پاپ‌آپ آموزشی) گذاشته شده
+           تا کاربر همیشه بتونه با ضربدر، کل استوری رو ببنده */
+        position: absolute; top: 26px; left: 0; right: 0; z-index: 20;
+        display: flex; align-items: center; gap: 8px; padding: 8px 12px;
         direction: rtl; justify-content: space-between; flex-direction: row-reverse;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent);
+        background: linear-gradient(to bottom, rgba(0,0,0,0.35), transparent);
     }
     .story-logo-section { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; direction: ltr; }
     .story-logo-img {
@@ -169,7 +161,8 @@
         font-size: 22px; color: white; cursor: pointer; padding: 4px 6px; line-height: 1;
         text-shadow: 0 1px 6px rgba(0,0,0,0.8);
     }
-        /* absolute نسبت به story-modal-content (parent) — تا روی تصویر کلیک کنیم */
+
+    .story-nav-left, .story-nav-right {
         position: absolute; top: 0; bottom: 0; width: 40%; cursor: pointer; z-index: 9;
         -webkit-tap-highlight-color: transparent;
     }
@@ -177,11 +170,10 @@
     .story-nav-left { left: 0; }
 
     .story-footer {
-        /* sticky-bottom تا همیشه دیده شود، حتی اگه محتوا اسکرول بشه */
-        position: sticky; bottom: 0; left: 0; right: 0; z-index: 10;
+        position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
         display: flex; flex-direction: column; align-items: center; gap: 10px;
-        padding: 30px 14px 18px;
-        background: linear-gradient(to top, rgba(0,0,0,0.88) 65%, transparent);
+        padding: 40px 14px 18px;
+        background: linear-gradient(to top, rgba(0,0,0,0.72) 60%, transparent);
     }
 
     /* ===== دکمه‌ی متوقف کردن استوری ===== */
@@ -251,29 +243,9 @@
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         text-align: center;
     }
-    .tutorial-box.tutorial-pos-bottom { bottom: 150px; left: 50%; transform: translateX(-50%); }
-    .tutorial-box.tutorial-pos-right { top: 46%; right: 34px; transform: translateY(-50%); }
-    .tutorial-box.tutorial-pos-left { top: 46%; left: 34px; transform: translateY(-50%); }
-
-    /* فلش‌ها: به‌جای این که باکس روی دکمه/ناحیه بشینه، به سمتش اشاره می‌کنه */
-    .tutorial-box.tutorial-pos-bottom::after {
-        content: ''; position: absolute; bottom: -9px; left: 50%; transform: translateX(-50%);
-        width: 0; height: 0;
-        border-left: 9px solid transparent; border-right: 9px solid transparent;
-        border-top: 9px solid rgba(20,18,28,0.94);
-    }
-    .tutorial-box.tutorial-pos-right::after {
-        content: ''; position: absolute; top: 50%; right: -9px; transform: translateY(-50%);
-        width: 0; height: 0;
-        border-top: 9px solid transparent; border-bottom: 9px solid transparent;
-        border-left: 9px solid rgba(20,18,28,0.94);
-    }
-    .tutorial-box.tutorial-pos-left::after {
-        content: ''; position: absolute; top: 50%; left: -9px; transform: translateY(-50%);
-        width: 0; height: 0;
-        border-top: 9px solid transparent; border-bottom: 9px solid transparent;
-        border-right: 9px solid rgba(20,18,28,0.94);
-    }
+    .tutorial-box.tutorial-pos-bottom { bottom: 118px; left: 50%; transform: translateX(-50%); }
+    .tutorial-box.tutorial-pos-right { top: 50%; right: 16px; transform: translateY(-50%); }
+    .tutorial-box.tutorial-pos-left { top: 50%; left: 16px; transform: translateY(-50%); }
 
     .tutorial-close {
         position: absolute; top: 6px; right: 10px;
@@ -762,7 +734,7 @@ function renderStoryModal() {
         video.muted = false;
         video.controls = false;
         video.preload = 'auto';
-        video.style.cssText = 'position:relative;z-index:0;';
+        video.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
         video.addEventListener('ended', () => storyNavigate(1));
         video.addEventListener('error', () => storyNavigate(1));
         video.addEventListener('loadedmetadata', () => { updateProgressForVideo(video); });
@@ -780,7 +752,7 @@ function renderStoryModal() {
         const img = document.createElement('img');
         img.src = s.media;
         img.alt = '';
-        img.style.cssText = 'position:relative;z-index:0;';
+        img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
         contentDiv.appendChild(img);
     }
 
