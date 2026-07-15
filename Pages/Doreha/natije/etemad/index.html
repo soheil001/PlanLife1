@@ -229,18 +229,30 @@
 
     /* ===== دکمه‌ی متوقف کردن استوری ===== */
     .story-pause-btn {
-        width: 30px; height: 30px; border-radius: 50%;
-        background: rgba(255,255,255,0.10);
-        border: 1px solid rgba(255,255,255,0.18);
+        width: 36px; height: 36px; border-radius: 50%;
+        background: rgba(255,255,255,0.09);
+        backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
+        border: 1px solid rgba(255,255,255,0.22);
         display: flex; align-items: center; justify-content: center;
-        color: rgba(255,255,255,0.85);
-        opacity: 0.55;
+        color: rgba(255,255,255,0.9);
+        opacity: 0.6;
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
         transition: opacity 0.15s ease, transform 0.15s ease;
     }
     .story-pause-btn:active { opacity: 0.9; transform: scale(0.9); }
-    .story-pause-btn svg { display: block; }
+    .story-pause-btn svg { display: block; width: 16px; height: 16px; }
+
+    /* هایلایت پالس‌دار دور دکمه‌ی توقف در حین نمایش آموزش */
+    .story-pause-btn.tutorial-highlight {
+        opacity: 1;
+        z-index: 25;
+        animation: pause-pulse 1.15s ease-in-out infinite;
+    }
+    @keyframes pause-pulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(245,215,122,0.55); }
+        50% { box-shadow: 0 0 0 9px rgba(245,215,122,0); }
+    }
 
     .story-caption {
         font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.95);
@@ -297,6 +309,59 @@
     .tutorial-box.tutorial-pos-bottom { bottom: 118px; left: 50%; transform: translateX(-50%); }
     .tutorial-box.tutorial-pos-right { top: 50%; right: 16px; transform: translateY(-50%); }
     .tutorial-box.tutorial-pos-left { top: 50%; left: 16px; transform: translateY(-50%); }
+
+    /* دم‌ اشاره‌گر روبه‌پایین، دقیقاً به سمت دکمه‌ی توقف */
+    .tutorial-box.tutorial-pos-bottom::after {
+        content: '';
+        position: absolute;
+        bottom: -9px; left: 50%;
+        transform: translateX(-50%) rotate(45deg);
+        width: 16px; height: 16px;
+        background: rgba(20,18,28,0.94);
+        border-right: 1px solid rgba(212,175,55,0.45);
+        border-bottom: 1px solid rgba(212,175,55,0.45);
+    }
+    .tutorial-down-arrow {
+        position: absolute;
+        left: 50%; bottom: 78px; transform: translateX(-50%);
+        font-size: 20px; color: #f5d77a;
+        text-shadow: 0 0 10px rgba(245,215,122,0.6);
+        opacity: 0; pointer-events: none;
+        animation: arrow-bounce 1.15s ease-in-out infinite;
+    }
+    .tutorial-down-arrow.show { opacity: 1; }
+    @keyframes arrow-bounce {
+        0%, 100% { transform: translateX(-50%) translateY(0); }
+        50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* فلش کوچیک‌تر برای قدم‌های «بعدی» و «قبلی» */
+    .tutorial-side-arrow {
+        position: absolute;
+        top: 50%;
+        font-size: 14px; color: #f5d77a;
+        text-shadow: 0 0 8px rgba(245,215,122,0.55);
+        opacity: 0; pointer-events: none;
+    }
+    .tutorial-side-arrow.show { opacity: 1; }
+    .tutorial-side-arrow.pos-right {
+        right: 34px;
+        transform: translateY(58px);
+        animation: side-arrow-bounce-right 1.15s ease-in-out infinite;
+    }
+    .tutorial-side-arrow.pos-left {
+        left: 34px;
+        transform: translateY(58px);
+        animation: side-arrow-bounce-left 1.15s ease-in-out infinite;
+    }
+    @keyframes side-arrow-bounce-right {
+        0%, 100% { transform: translateY(58px) translateX(0); }
+        50% { transform: translateY(58px) translateX(5px); }
+    }
+    @keyframes side-arrow-bounce-left {
+        0%, 100% { transform: translateY(58px) translateX(0); }
+        50% { transform: translateY(58px) translateX(-5px); }
+    }
 
     .tutorial-close {
         position: absolute; top: 6px; right: 10px;
@@ -392,12 +457,14 @@
                 <div class="tutorial-text" id="tutorial-text"></div>
                 <button class="tutorial-btn" onclick="nextTutorialStep()">متوجه شدم</button>
             </div>
+            <div class="tutorial-down-arrow" id="tutorial-down-arrow">↓</div>
+            <div class="tutorial-side-arrow" id="tutorial-side-arrow">›</div>
         </div>
 
         <div class="story-footer">
             <div class="story-pause-btn" id="story-pause-btn" onclick="toggleStoryPause(event)" aria-label="توقف / ادامه">
-                <svg id="pause-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg>
-                <svg id="play-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="display:none;"><path d="M7 5l12 7-12 7V5z"></path></svg>
+                <svg id="pause-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg>
+                <svg id="play-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="display:none;"><path d="M7 5l12 7-12 7V5z"></path></svg>
             </div>
             <div class="story-caption" id="story-caption"></div>
             <a class="story-action-btn" id="story-action-btn" href="#" target="_blank" rel="noopener">وارد دوره شوید</a>
@@ -475,7 +542,10 @@ function isSeenPersisted(idx) {
    و قابل‌اعتمادِ «یک‌بار به هر کاربر نشون بده» است — دقیقاً مثل باقی
    قابلیت‌های «دیده‌شده» همین سایت).
    ===================================================================== */
-const TUTORIAL_KEY = 'planlife_results_tutorial_seen_v1';
+/* نمایش آموزش: فقط ۳ بار و هر بار در یک روز متفاوت (مثلاً امروز، فردا، پس‌فردا)
+   و بعد از اون دیگه هرگز نمایش داده نمی‌شه. */
+const TUTORIAL_KEY = 'planlife_results_tutorial_progress_v2';
+const TUTORIAL_MAX_SHOWS = 3;
 let tutorialActive = false;
 let tutorialStep = 0;
 
@@ -485,8 +555,29 @@ const tutorialSteps = [
     { pos: 'left',   text: 'برای برگشتن به نتیجه‌ی قبلی، روی این قسمت از تصویر بزنید.' }
 ];
 
+function todayDateStr() {
+    const d = new Date();
+    return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+}
+
+function getTutorialProgress() {
+    try {
+        const raw = localStorage.getItem(TUTORIAL_KEY);
+        if (!raw) return { count: 0, lastShownDate: null };
+        const parsed = JSON.parse(raw);
+        return { count: parsed.count || 0, lastShownDate: parsed.lastShownDate || null };
+    } catch(e) { return { count: 0, lastShownDate: null }; }
+}
+
+function saveTutorialProgress(progress) {
+    try { localStorage.setItem(TUTORIAL_KEY, JSON.stringify(progress)); } catch(e) {}
+}
+
 function shouldShowTutorial() {
-    try { return !localStorage.getItem(TUTORIAL_KEY); } catch(e) { return false; }
+    const p = getTutorialProgress();
+    if (p.count >= TUTORIAL_MAX_SHOWS) return false;      // سقف ۳ بار پر شده
+    if (p.lastShownDate === todayDateStr()) return false; // امروز قبلاً دیده شده
+    return true;
 }
 
 function startTutorial() {
@@ -499,10 +590,58 @@ function showTutorialStep(i) {
     const overlay = document.getElementById('tutorial-overlay');
     const box = document.getElementById('tutorial-box');
     const textEl = document.getElementById('tutorial-text');
+    const downArrow = document.getElementById('tutorial-down-arrow');
+    const sideArrow = document.getElementById('tutorial-side-arrow');
+    const pauseBtn = document.getElementById('story-pause-btn');
+
     box.classList.remove('tutorial-pos-bottom', 'tutorial-pos-right', 'tutorial-pos-left');
     box.classList.add('tutorial-pos-' + tutorialSteps[i].pos);
     textEl.textContent = tutorialSteps[i].text;
     overlay.classList.add('open');
+
+    // ریست جایگاه‌های اختصاصی قبل از تنظیم دوباره
+    box.style.left = '';
+    box.style.right = '';
+    box.style.bottom = '';
+    box.style.transform = '';
+    downArrow.classList.remove('show');
+    sideArrow.classList.remove('show', 'pos-right', 'pos-left');
+    pauseBtn.classList.remove('tutorial-highlight');
+
+    if (i === 0) {
+        pauseBtn.classList.add('tutorial-highlight');
+        downArrow.classList.add('show');
+        // موقعیت دقیق باکس و فلش رو از روی مکان واقعیِ دکمه‌ی توقف محاسبه می‌کنیم
+        // تا مستقل از طول متن یا سایز صفحه، همیشه دقیقاً روی دکمه بیفته.
+        requestAnimationFrame(() => positionTutorialOverPauseButton(box, downArrow, pauseBtn));
+    } else if (i === 1) {
+        sideArrow.textContent = '›';
+        sideArrow.classList.add('pos-right', 'show');
+    } else if (i === 2) {
+        sideArrow.textContent = '‹';
+        sideArrow.classList.add('pos-left', 'show');
+    }
+}
+
+function positionTutorialOverPauseButton(box, downArrow, pauseBtn) {
+    const container = document.querySelector('.story-container');
+    if (!container || !pauseBtn) return;
+    const containerRect = container.getBoundingClientRect();
+    const btnRect = pauseBtn.getBoundingClientRect();
+
+    const centerX = (btnRect.left + btnRect.width / 2) - containerRect.left;
+    const distFromBottomToBtnTop = containerRect.bottom - btnRect.top;
+
+    const arrowBottom = distFromBottomToBtnTop + 6;   // نوک فلش، چسبیده به بالای دکمه
+    const boxBottom = arrowBottom + 34;               // فاصله‌ی باکس تا فلش
+
+    downArrow.style.left = centerX + 'px';
+    downArrow.style.transform = 'translateX(-50%)';
+    downArrow.style.bottom = arrowBottom + 'px';
+
+    box.style.left = centerX + 'px';
+    box.style.transform = 'translateX(-50%)';
+    box.style.bottom = boxBottom + 'px';
 }
 
 function nextTutorialStep() {
@@ -520,7 +659,10 @@ function closeTutorial() {
 function finishTutorial() {
     tutorialActive = false;
     document.getElementById('tutorial-overlay').classList.remove('open');
-    try { localStorage.setItem(TUTORIAL_KEY, '1'); } catch(e) {}
+    document.getElementById('story-pause-btn').classList.remove('tutorial-highlight');
+    document.getElementById('tutorial-down-arrow').classList.remove('show');
+    const p = getTutorialProgress();
+    saveTutorialProgress({ count: p.count + 1, lastShownDate: todayDateStr() });
     if (!isStoryPaused) resumeAutoAdvance();
 }
 
