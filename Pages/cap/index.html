@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تشخیص کپشن فارسی از ویدیو</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @font-face {
+            font-family: 'Vazir';
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font/Vazir.ttf') format('truetype');
+        }
+
+        body {
+            font-family: 'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #333;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upload-box {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-box:hover {
+            border-color: #764ba2;
+            background: #f8f9ff;
+        }
+
+        .upload-box input {
+            display: none;
+        }
+
+        .upload-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .upload-hint {
+            color: #999;
+            font-size: 13px;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            background: #000;
+            display: none;
+        }
+
+        video.show {
+            display: block;
+        }
+
+        .file-info {
+            background: #e3f2fd;
+            border-right: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #1976d2;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .btn-success:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #0b7dda;
+            transform: translateY(-2px);
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+            display: none;
+        }
+
+        .status.show {
+            display: block;
+        }
+
+        .status.loading {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffc107;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #28a745;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 150px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .preview-section {
+            display: none;
+        }
+
+        .preview-section.show {
+            display: block;
+        }
+
+        .caption-preview {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 16px;
+            line-height: 1.8;
+            text-align: center;
+            min-height: 100px;
+            border: 2px solid #e0e0e0;
+        }
+
+        canvas {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        canvas.show {
+            display: block;
+        }
+
+        .download-section {
+            display: none;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        .download-section.show {
+            display: block;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: currentColor;
+            border-radius: 100%;
+            animation: sk-bounce 1.4s infinite ease-in-out both;
+            margin-left: 5px;
+        }
+
+        @keyframes sk-bounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .note {
+            background: #e8f4f8;
+            border-right: 4px solid #00bcd4;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #00695c;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 تشخیص کپشن فارسی</h1>
+        <p class="subtitle">ویدیو رو آپلود کنید و کپشن فارسی دریافت کنید</p>
+
+        <!-- بخش آپلود ویدیو -->
+        <div class="section">
+            <div class="section-title">📹 مرحله 1: آپلود ویدیو</div>
+            <div class="upload-box" onclick="document.getElementById('videoInput').click()">
+                <div class="upload-icon">📹</div>
+                <div class="upload-text">ویدیو خود را اینجا قرار دهید</div>
+                <div class="upload-hint">یا روی جعبه کلیک کنید</div>
+                <input type="file" id="videoInput" accept="video/*">
+            </div>
+            <div class="file-info" id="fileInfo">
+                <strong>✓ فایل انتخاب شده:</strong>
+                <span id="fileName"></span>
+            </div>
+            <video id="videoPreview"></video>
+        </div>
+
+        <!-- بخش وضعیت -->
+        <div class="status" id="status"></div>
+
+        <!-- بخش متن کپشن -->
+        <div class="section">
+            <div class="section-title">📝 مرحله 2: متن کپشن</div>
+            <textarea id="captionText" placeholder="متن کپشن فارسی را اینجا وارد کنید یا دکمه تشخیص خودکار را کلیک کنید..."></textarea>
+            <div class="buttons">
+                <button class="btn-primary" id="autoBtn" onclick="autoDetectCaption()" disabled>
+                    🔍 تشخیص خودکار
+                </button>
+                <button class="btn-secondary" id="clearBtn" onclick="clearText()">
+                    🗑️ پاک کردن
+                </button>
+            </div>
+        </div>
+
+        <!-- بخش پیش‌نمایش -->
+        <div class="section preview-section" id="previewSection">
+            <div class="section-title">👁️ مرحله 3: پیش‌نمایش</div>
+            <div class="caption-preview" id="captionPreview"></div>
+            <canvas id="canvas" width="1000" height="600"></canvas>
+            <button class="btn-primary" onclick="drawCanvas()" style="width: 100%;">
+                🎨 رسم روی تصویر
+            </button>
+        </div>
+
+        <!-- بخش دانلود -->
+        <div class="section download-section" id="downloadSection">
+            <div class="section-title">💾 مرحله 4: دانلود</div>
+            <div class="buttons">
+                <button class="btn-success" onclick="downloadSRT()">
+                    📥 دانلود SRT
+                </button>
+                <button class="btn-success" onclick="downloadVTT()">
+                    📥 دانلود VTT
+                </button>
+                <button class="btn-success" onclick="downloadPNG()">
+                    🖼️ دانلود تصویر
+                </button>
+            </div>
+        </div>
+
+        <div class="note">
+            💡 <strong>نکات:</strong> متن کپشن را وارد کنید یا از دکمه تشخیص خودکار استفاده کنید. سپس روی دکمه "رسم روی تصویر" کلیک کنید و فایل‌های مختلف را دانلود کنید.
+        </div>
+    </div>
+
+    <script>
+        let videoFile = null;
+        let currentCaption = '';
+
+        // رویداد آپلود ویدیو
+        document.getElementById('videoInput').addEventListener('change', function(e) {
+            videoFile = e.target.files[0];
+            if (videoFile) {
+                document.getElementById('fileInfo').classList.add('show');
+                document.getElementById('fileName').textContent = videoFile.name;
+                document.getElementById('autoBtn').disabled = false;
+                
+                // نمایش ویدیو
+                const videoUrl = URL.createObjectURL(videoFile);
+                const video = document.getElementById('videoPreview');
+                video.src = videoUrl;
+                video.classList.add('show');
+            }
+        });
+
+        // تابع تشخیص خودکار
+        async function autoDetectCaption() {
+            if (!videoFile) {
+                showStatus('لطفا ابتدا ویدیو را آپلود کنید', 'error');
+                return;
+            }
+
+            showStatus('⏳ در حال استخراج صوت از ویدیو...', 'loading');
+            document.getElementById('autoBtn').disabled = true;
+
+            try {
+                // استخراج صوت
+                const audioBlob = await extractAudioFromVideo(videoFile);
+                showStatus('⏳ در حال تبدیل صوت به متن...', 'loading');
+
+                // تبدیل صوت به متن
+                const text = await transcribeAudio(audioBlob);
+                
+                document.getElementById('captionText').value = text;
+                currentCaption = text;
+                
+                showStatus('✅ تشخیص با موفقیت انجام شد!', 'success');
+                document.getElementById('previewSection').classList.add('show');
+                document.getElementById('downloadSection').classList.add('show');
+                updatePreview();
+                
+            } catch (error) {
+                showStatus('❌ خطا: ' + error.message, 'error');
+                console.error(error);
+            } finally {
+                document.getElementById('autoBtn').disabled = false;
+            }
+        }
+
+        // استخراج صوت از ویدیو
+        async function extractAudioFromVideo(file) {
+            return new Promise((resolve, reject) => {
+                const videoElement = document.createElement('video');
+                videoElement.crossOrigin = 'anonymous';
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    videoElement.src = e.target.result;
+                    videoElement.play();
+
+                    setTimeout(() => {
+                        try {
+                            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                            const mediaSource = audioContext.createMediaElementAudioNode(videoElement);
+                            const destination = audioContext.createMediaStreamDestination();
+                            
+                            mediaSource.connect(destination);
+
+                            const mediaRecorder = new MediaRecorder(destination.stream);
+                            const chunks = [];
+
+                            mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+                            mediaRecorder.onstop = () => {
+                                const blob = new Blob(chunks, { type: 'audio/wav' });
+                                resolve(blob);
+                            };
+
+                            mediaRecorder.start();
+                            
+                            // ضبط برای مدت معینی (حداکثر 60 ثانیه)
+                            const duration = Math.min(videoElement.duration || 10, 60) * 1000;
+                            setTimeout(() => mediaRecorder.stop(), duration);
+                        } catch (err) {
+                            reject(err);
+                        }
+                    }, 500);
+                };
+                
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // تبدیل صوت به متن
+        async function transcribeAudio(audioBlob) {
+            const base64Audio = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.readAsDataURL(audioBlob);
+            });
+
+            const response = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: 'claude-sonnet-4-6',
+                    max_tokens: 2048,
+                    messages: [
+                        {
+                            role: 'user',
+                            content: [
+                                {
+                                    type: 'text',
+                                    text: 'این یک فایل صوتی است. لطفا متن این صوت را به فارسی تبدیل و استخراج کنید. فقط متن فارسی را بنویسید، بدون توضیح یا کامنت اضافی.'
+                                },
+                                {
+                                    type: 'document',
+                                    source: {
+                                        type: 'base64',
+                                        media_type: 'audio/wav',
+                                        data: base64Audio.split(',')[1]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error?.message || 'خطا در تبدیل صوت');
+            }
+
+            const data = await response.json();
+            const text = data.content[0].text;
+            
+            if (!text) {
+                throw new Error('متن خالی برگردانده شد');
+            }
+            
+            return text;
+        }
+
+        // به‌روزرسانی پیش‌نمایش
+        function updatePreview() {
+            const text = document.getElementById('captionText').value;
+            currentCaption = text;
+            document.getElementById('captionPreview').textContent = text || 'متن شما اینجا نمایش داده خواهد شد...';
+            
+            if (text) {
+                document.getElementById('downloadSection').classList.add('show');
+            }
+        }
+
+        // رسم متن روی تصویر
+        function drawCanvas() {
+            const text = document.getElementById('captionText').value;
+            if (!text) {
+                showStatus('لطفا متن کپشن را وارد کنید', 'error');
+                return;
+            }
+
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+
+            // پس‌زمینه شیب‌دار
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // تنظیمات متن
+            ctx.font = 'bold 60px Vazir, Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // شکستن متن به خطوط
+            const words = text.split(' ');
+            const lines = [];
+            let currentLine = '';
+
+            for (let word of words) {
+                const testLine = currentLine + (currentLine ? ' ' : '') + word;
+                const metrics = ctx.measureText(testLine);
+                
+                if (metrics.width > 900) {
+                    if (currentLine) lines.push(currentLine);
+                    currentLine = word;
+                } else {
+                    currentLine = testLine;
+                }
+            }
+            if (currentLine) lines.push(currentLine);
+
+            // محاسبه موقعیت
+            const lineHeight = 90;
+            const totalHeight = lines.length * lineHeight;
+            const startY = (canvas.height - totalHeight) / 2;
+
+            // رسم خطوط
+            lines.forEach((line, index) => {
+                const y = startY + index * lineHeight;
+                
+                // سایه
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+                ctx.fillText(line, canvas.width / 2 + 3, y + 3);
+                
+                // متن سفید
+                ctx.fillStyle = 'white';
+                ctx.fillText(line, canvas.width / 2, y);
+            });
+
+            canvas.classList.add('show');
+            showStatus('✅ تصویر با موفقیت رسم شد!', 'success');
+        }
+
+        // دانلود SRT
+        function downloadSRT() {
+            const text = document.getElementById('captionText').value;
+            if (!text) return;
+
+            const lines = text.split('\n').filter(l => l.trim());
+            let srt = '';
+            const secondsPerLine = 5;
+
+            lines.forEach((line, index) => {
+                const startTime = index * secondsPerLine;
+                const endTime = (index + 1) * secondsPerLine;
+                
+                srt += `${index + 1}\n`;
+                srt += `${formatTime(startTime)} --> ${formatTime(endTime)}\n`;
+                srt += `${line.trim()}\n\n`;
+            });
+
+            downloadFile(srt, 'captions.srt', 'text/plain');
+        }
+
+        // دانلود VTT
+        function downloadVTT() {
+            const text = document.getElementById('captionText').value;
+            if (!text) return;
+
+            const lines = text.split('\n').filter(l => l.trim());
+            let vtt = 'WEBVTT\n\n';
+            const secondsPerLine = 5;
+
+            lines.forEach((line, index) => {
+                const startTime = index * secondsPerLine;
+                const endTime = (index + 1) * secondsPerLine;
+                
+                vtt += `${formatTime(startTime)} --> ${formatTime(endTime)}\n`;
+                vtt += `${line.trim()}\n\n`;
+            });
+
+            downloadFile(vtt, 'captions.vtt', 'text/vtt');
+        }
+
+        // دانلود تصویر
+        function downloadPNG() {
+            const canvas = document.getElementById('canvas');
+            if (!canvas.classList.contains('show')) {
+                showStatus('ابتدا دکمه "رسم روی تصویر" را کلیک کنید', 'error');
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = `caption_${new Date().getTime()}.png`;
+            link.click();
+            
+            showStatus('✅ تصویر دانلود شد!', 'success');
+        }
+
+        // تابع کمکی فرمت زمان
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = Math.floor(seconds % 60);
+            const ms = Math.floor((seconds % 1) * 1000);
+            
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')},${String(ms).padStart(3, '0')}`;
+        }
+
+        // دانلود فایل
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            showStatus(`✅ فایل ${filename} دانلود شد!`, 'success');
+        }
+
+        // پاک کردن متن
+        function clearText() {
+            document.getElementById('captionText').value = '';
+            document.getElementById('captionPreview').textContent = '';
+            currentCaption = '';
+        }
+
+        // نمایش پیام وضعیت
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = 'status show ' + type;
+            
+            setTimeout(() => {
+                if (type !== 'error') {
+                    status.classList.remove('show');
+                }
+            }, 5000);
+        }
+
+        // رویداد تغییر متن
+        document.getElementById('captionText').addEventListener('input', updatePreview);
+    </script>
+</body>
+</html>
