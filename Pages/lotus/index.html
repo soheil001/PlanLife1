@@ -706,39 +706,12 @@
 
 <script>
 (function(){
-  // Cache all category / product / promo images so repeat visitors
-  // never re-download them - instant load straight from the browser cache.
-  if (!('caches' in window)) return;
-  var CACHE_NAME = 'lotus-images-v1';
-
-  function urlFromBg(el){
-    var m = /url\((['"]?)(.*?)\1\)/.exec(el.style.backgroundImage || '');
-    return m ? m[2] : null;
+  // One-time cleanup: remove the old image cache so any visitor whose
+  // images got stuck from before is fixed automatically. Images are no
+  // longer cached - they load fresh every time, prioritized via <link rel="preload">.
+  if ('caches' in window) {
+    caches.delete('lotus-images-v1');
   }
-  function swapBg(el, blobUrl){ el.style.backgroundImage = "url('" + blobUrl + "')"; }
-  function swapImg(el, blobUrl){ el.src = blobUrl; }
-
-  function process(el, getUrl, apply){
-    var url = getUrl(el);
-    if (!url) return;
-    caches.open(CACHE_NAME).then(function(cache){
-      cache.match(url).then(function(res){
-        if (res) {
-          // Found in cache from a previous visit -> use it instantly, no network
-          res.blob().then(function(blob){ apply(el, URL.createObjectURL(blob)); });
-        } else {
-          // Not cached yet -> let it load normally, and store a copy for next time
-          fetch(url, { cache: 'force-cache' }).then(function(res){
-            if (res && res.ok) { cache.put(url, res.clone()); }
-          }).catch(function(){});
-        }
-      });
-    });
-  }
-
-  document.querySelectorAll('.cat-icon').forEach(function(el){ process(el, urlFromBg, swapBg); });
-  document.querySelectorAll('.product-thumb').forEach(function(el){ process(el, urlFromBg, swapBg); });
-  document.querySelectorAll('.promo img').forEach(function(el){ process(el, function(e){ return e.getAttribute('src'); }, swapImg); });
 })();
 </script>
 
@@ -762,7 +735,23 @@
   });
 
   if ('caches' in window) {
+    // Refresh the cached video every 3rd visit, so it stays up to date
+    // while still loading instantly the other two out of three times.
+    var VISIT_KEY = 'lotus_hero_video_visits';
+    var visits = parseInt(localStorage.getItem(VISIT_KEY) || '0', 10) + 1;
+    try { localStorage.setItem(VISIT_KEY, visits); } catch(e){}
+    var forceRefresh = (visits % 3 === 0);
+
     caches.open(CACHE_NAME).then(function(cache){
+      if (forceRefresh) {
+        cache.delete(VIDEO_URL).then(function(){
+          playFromSrc(VIDEO_URL);
+          fetch(VIDEO_URL).then(function(res){
+            if (res && res.ok) { cache.put(VIDEO_URL, res.clone()); }
+          }).catch(function(){});
+        });
+        return;
+      }
       cache.match(VIDEO_URL).then(function(cached){
         if (cached) {
           // Already downloaded on a previous visit -> instant playback, zero network use
@@ -770,7 +759,7 @@
             playFromSrc(URL.createObjectURL(blob));
           });
         } else {
-          // First visit -> stream immediately, and store a copy for next time
+          // Not cached yet -> stream immediately, and store a copy for next time
           playFromSrc(VIDEO_URL);
           fetch(VIDEO_URL).then(function(res){
             if (res && res.ok) { cache.put(VIDEO_URL, res.clone()); }
