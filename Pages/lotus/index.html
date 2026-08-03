@@ -6,6 +6,7 @@
 <title>لوتوس | فروشگاه پرمیوم دخانیات</title>
 <meta name="description" content="لوتوس، مرجع تخصصی فروش ویپ، جویس، قلیان و لوازم جانبی با ضمانت اصالت و بهترین قیمت در ایران.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preload" as="video" href="http://fs3.centraldnserver.com/~planlife/pics/lotus/slider.mov" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -149,10 +150,13 @@
     padding:0;
     margin:0;
   }
-  .hero-full img{
+  .hero-full img,
+  .hero-full video{
     width:100%;
     height:auto;
     display:block;
+    object-fit:cover;
+    background: var(--bg-soft);
   }
   .btn-gold{
     display:inline-flex; align-items:center; gap:10px;
@@ -441,7 +445,7 @@
 <main>
   <!-- HERO -->
   <section class="hero-full">
-    <img src="http://fs3.centraldnserver.com/~planlife/pics/lotus/slider.png" alt="تجربه‌ای لوکس برای لحظات خاص شما - لوتوس">
+    <video id="heroVideo" muted autoplay playsinline preload="none" poster="http://fs3.centraldnserver.com/~planlife/pics/lotus/slider.png" fetchpriority="high" aria-label="تجربه‌ای لوکس برای لحظات خاص شما - لوتوس"></video>
   </section>
 
   <!-- CATEGORIES -->
@@ -682,6 +686,49 @@
     </span>
   </div>
 </footer>
+
+<script>
+(function(){
+  var VIDEO_URL = 'http://fs3.centraldnserver.com/~planlife/pics/lotus/slider.mov';
+  var CACHE_NAME = 'lotus-hero-video-v1';
+  var video = document.getElementById('heroVideo');
+  if (!video) return;
+
+  function playFromSrc(src){
+    video.src = src;
+    video.load();
+    var p = video.play();
+    if (p && p.catch) { p.catch(function(){ /* autoplay blocked, poster stays visible */ }); }
+  }
+
+  // Freeze on the last frame instead of looping / going blank when finished
+  video.addEventListener('ended', function(){
+    video.pause();
+  });
+
+  if ('caches' in window) {
+    caches.open(CACHE_NAME).then(function(cache){
+      cache.match(VIDEO_URL).then(function(cached){
+        if (cached) {
+          // Already downloaded on a previous visit -> instant playback, zero network use
+          cached.blob().then(function(blob){
+            playFromSrc(URL.createObjectURL(blob));
+          });
+        } else {
+          // First visit -> stream immediately, and store a copy for next time
+          playFromSrc(VIDEO_URL);
+          fetch(VIDEO_URL).then(function(res){
+            if (res && res.ok) { cache.put(VIDEO_URL, res.clone()); }
+          }).catch(function(){});
+        }
+      });
+    });
+  } else {
+    // Cache Storage not supported -> fall back to normal streaming
+    playFromSrc(VIDEO_URL);
+  }
+})();
+</script>
 
 </body>
 </html>
