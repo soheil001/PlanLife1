@@ -7,6 +7,14 @@
 <meta name="description" content="لوتوس، مرجع تخصصی فروش ویپ، جویس، قلیان و لوازم جانبی با ضمانت اصالت و بهترین قیمت در ایران.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preload" as="video" href="http://fs3.centraldnserver.com/~planlife/pics/lotus/slider.mov" fetchpriority="high">
+<link rel="preload" as="image" href="http://fs3.centraldnserver.com/~planlife/pics/lotus/pod.png" fetchpriority="high">
+<link rel="preload" as="image" href="http://fs3.centraldnserver.com/~planlife/pics/lotus/Jois.png" fetchpriority="high">
+<link rel="preload" as="image" href="http://fs3.centraldnserver.com/~planlife/pics/lotus/elec.png" fetchpriority="high">
+<link rel="preload" as="image" href="http://fs3.centraldnserver.com/~planlife/pics/lotus/Ghel.png" fetchpriority="high">
+<link rel="preload" as="image" href="http://fs3.centraldnserver.com/~planlife/pics/lotus/tanbako.png" fetchpriority="high">
+<link rel="preload" as="image" href="http://fs3.centraldnserver.com/~planlife/pics/lotus/zoghal.png" fetchpriority="high">
+<link rel="preload" as="image" href="http://fs3.centraldnserver.com/~planlife/pics/lotus/jadid.png">
+<link rel="preload" as="image" href="http://fs3.centraldnserver.com/~planlife/pics/lotus/ersal.png">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -686,6 +694,44 @@
     </span>
   </div>
 </footer>
+
+<script>
+(function(){
+  // Cache all category / product / promo images so repeat visitors
+  // never re-download them - instant load straight from the browser cache.
+  if (!('caches' in window)) return;
+  var CACHE_NAME = 'lotus-images-v1';
+
+  function urlFromBg(el){
+    var m = /url\((['"]?)(.*?)\1\)/.exec(el.style.backgroundImage || '');
+    return m ? m[2] : null;
+  }
+  function swapBg(el, blobUrl){ el.style.backgroundImage = "url('" + blobUrl + "')"; }
+  function swapImg(el, blobUrl){ el.src = blobUrl; }
+
+  function process(el, getUrl, apply){
+    var url = getUrl(el);
+    if (!url) return;
+    caches.open(CACHE_NAME).then(function(cache){
+      cache.match(url).then(function(res){
+        if (res) {
+          // Found in cache from a previous visit -> use it instantly, no network
+          res.blob().then(function(blob){ apply(el, URL.createObjectURL(blob)); });
+        } else {
+          // Not cached yet -> let it load normally, and store a copy for next time
+          fetch(url, { cache: 'force-cache' }).then(function(res){
+            if (res && res.ok) { cache.put(url, res.clone()); }
+          }).catch(function(){});
+        }
+      });
+    });
+  }
+
+  document.querySelectorAll('.cat-icon').forEach(function(el){ process(el, urlFromBg, swapBg); });
+  document.querySelectorAll('.product-thumb').forEach(function(el){ process(el, urlFromBg, swapBg); });
+  document.querySelectorAll('.promo img').forEach(function(el){ process(el, function(e){ return e.getAttribute('src'); }, swapImg); });
+})();
+</script>
 
 <script>
 (function(){
