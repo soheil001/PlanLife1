@@ -450,34 +450,12 @@
 
 <script>
 (function(){
-  // Reuse the same image cache as the homepage so these product thumbnails
-  // load instantly (no re-download) if the visitor has been on the site before.
-  if (!('caches' in window)) return;
-  var CACHE_NAME = 'lotus-images-v1';
-
-  function urlFromBg(el){
-    var m = /url\((['"]?)(.*?)\1\)/.exec(el.style.backgroundImage || '');
-    return m ? m[2] : null;
+  // One-time cleanup: remove the old image cache so any visitor whose
+  // product images got stuck from before is fixed automatically.
+  // Images are no longer cached - they load fresh every time.
+  if ('caches' in window) {
+    caches.delete('lotus-images-v1');
   }
-  function swapBg(el, blobUrl){ el.style.backgroundImage = "url('" + blobUrl + "')"; }
-
-  function process(el){
-    var url = urlFromBg(el);
-    if (!url) return;
-    caches.open(CACHE_NAME).then(function(cache){
-      cache.match(url).then(function(res){
-        if (res) {
-          res.blob().then(function(blob){ swapBg(el, URL.createObjectURL(blob)); });
-        } else {
-          fetch(url, { cache: 'force-cache' }).then(function(res){
-            if (res && res.ok) { cache.put(url, res.clone()); }
-          }).catch(function(){});
-        }
-      });
-    });
-  }
-
-  document.querySelectorAll('.product-thumb').forEach(process);
 })();
 </script>
 
