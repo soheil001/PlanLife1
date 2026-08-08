@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>پیکربندی رنگ خودرو | نمایش زنده</title>
+<style>
+  :root{
+    --studio:#0a0a0b;
+    --studio-2:#050506;
+    --gold:#c9a04a;
+    --text:#eeece7;
+    --muted:#8b8d93;
+    --line:#1e1f22;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{
+    background:
+      radial-gradient(ellipse at 50% -10%, #17181b 0%, var(--studio-2) 65%);
+    color:var(--text);
+    font-family:"Vazirmatn","Segoe UI",Tahoma,sans-serif;
+    min-height:100%;
+  }
+  .wrap{
+    max-width:1100px;
+    margin:0 auto;
+    padding:28px 0 48px;
+  }
+  header{
+    text-align:center;
+    padding:0 16px 22px;
+  }
+  .eyebrow{
+    font-size:11px;
+    letter-spacing:.35em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:10px;
+  }
+  h1{
+    font-size:clamp(19px,3.4vw,27px);
+    font-weight:600;
+  }
+
+  .stage{
+    position:relative;
+    width:100%;
+    aspect-ratio: 16/9;
+    background:#000;
+    overflow:hidden;
+  }
+  @media (max-width:640px){
+    .stage{ aspect-ratio: 4/3; }
+  }
+
+  .stage video{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0;
+    transition:opacity .28s ease;
+    pointer-events:none;
+    background:#000;
+  }
+  .stage video.active{
+    opacity:1;
+    z-index:2;
+  }
+
+  .stage-loading{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    background:#0a0a0b;
+    z-index:5;
+    gap:10px;
+    font-size:12px;
+    letter-spacing:.15em;
+    color:var(--muted);
+    transition:opacity .35s ease;
+  }
+  .stage-loading::before{
+    content:"";
+    width:14px; height:14px;
+    border:2px solid rgba(201,160,74,.25);
+    border-top-color:var(--gold);
+    border-radius:50%;
+    animation:spin .75s linear infinite;
+  }
+  .stage-loading.hidden{ opacity:0; pointer-events:none; }
+  @keyframes spin{ to{ transform:rotate(360deg);} }
+
+  .badge{
+    position:absolute;
+    top:16px;
+    right:16px;
+    z-index:6;
+    background:rgba(10,10,11,.55);
+    backdrop-filter:blur(6px);
+    border:1px solid rgba(255,255,255,.08);
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:11px;
+    letter-spacing:.08em;
+    color:var(--text);
+  }
+
+  .panel{
+    padding:26px 16px 0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+  }
+  .swatches{
+    display:flex;
+    gap:22px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .swatch{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    background:none;
+    border:none;
+    cursor:pointer;
+    color:var(--muted);
+    font-family:inherit;
+    outline:none;
+  }
+  .dot{
+    width:38px; height:38px;
+    border-radius:10px;
+    border:2px solid rgba(255,255,255,.10);
+    transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    box-shadow: inset 0 0 12px rgba(0,0,0,.35);
+  }
+  .swatch:hover .dot{ transform:translateY(-2px); }
+  .swatch.active .dot{
+    border-color:var(--gold);
+    box-shadow: inset 0 0 12px rgba(0,0,0,.35), 0 0 0 3px rgba(201,160,74,.18);
+  }
+  .swatch-name{ font-size:12.5px; }
+  .swatch.active .swatch-name{ color:var(--text); font-weight:600; }
+  .swatch-finish{ font-size:10px; color:#63656b; letter-spacing:.05em; }
+
+  .current{
+    margin-top:2px;
+    font-size:13px;
+    color:var(--muted);
+  }
+  .current b{ color:var(--text); font-weight:600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">نمایش زنده خودرو</div>
+    <h1>رنگ بدنه رو انتخاب کن</h1>
+  </header>
+
+  <div class="stage" id="stage">
+    <div class="stage-loading" id="stageLoading">در حال بارگذاری</div>
+    <div class="badge" id="finishBadge">پوشش مات</div>
+    <video id="v-nardo" src="http://fs3.centraldnserver.com/~planlife/pics/lutos/Gclass-nardogray.mp4" muted loop playsinline preload="auto"></video>
+    <video id="v-black" src="http://fs3.centraldnserver.com/~planlife/pics/lutos/Gclass-meshki.mp4" muted loop playsinline preload="auto"></video>
+    <video id="v-red" src="http://fs3.centraldnserver.com/~planlife/pics/lutos/Gclass-Red.mp4" muted loop playsinline preload="auto"></video>
+  </div>
+
+  <div class="panel">
+    <div class="swatches" role="group" aria-label="انتخاب رنگ بدنه">
+      <button class="swatch active" data-target="v-nardo" data-name="نقره‌ای ناردو" data-finish="پوشش مات">
+        <span class="dot" style="background:#6d7175"></span>
+        <span class="swatch-name">نقره‌ای ناردو</span>
+        <span class="swatch-finish">مات</span>
+      </button>
+      <button class="swatch" data-target="v-black" data-name="مشکی" data-finish="پوشش مات">
+        <span class="dot" style="background:#1c1c1e"></span>
+        <span class="swatch-name">مشکی</span>
+        <span class="swatch-finish">مات</span>
+      </button>
+      <button class="swatch" data-target="v-red" data-name="قرمز" data-finish="پوشش مات">
+        <span class="dot" style="background:#7a2323"></span>
+        <span class="swatch-name">قرمز</span>
+        <span class="swatch-finish">مات</span>
+      </button>
+    </div>
+    <div class="current">رنگ فعلی: <b id="currentName">نقره‌ای ناردو</b> — <span id="currentFinish">پوشش مات</span></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const stage = document.getElementById('stage');
+  const stageLoading = document.getElementById('stageLoading');
+  const videos = {
+    'v-nardo': document.getElementById('v-nardo'),
+    'v-black': document.getElementById('v-black'),
+    'v-red':   document.getElementById('v-red')
+  };
+  const currentName = document.getElementById('currentName');
+  const currentFinish = document.getElementById('currentFinish');
+  const finishBadge = document.getElementById('finishBadge');
+
+  let activeId = 'v-nardo';
+  let readyCount = 0;
+  const total = Object.keys(videos).length;
+
+  function markReady(){
+    readyCount++;
+    if(readyCount >= 1){
+      // show as soon as the first (default) video can play, don't block on all three
+      stageLoading.classList.add('hidden');
+    }
+  }
+
+  Object.entries(videos).forEach(([id, el])=>{
+    el.addEventListener('canplaythrough', markReady, { once:true });
+    // fallback in case canplaythrough never fires (slow network, still start playing)
+    el.addEventListener('loadeddata', markReady, { once:true });
+    const p = el.play();
+    if(p && p.catch) p.catch(()=>{ /* autoplay might need a user gesture on some browsers */ });
+  });
+
+  videos[activeId].classList.add('active');
+
+  function setActive(id, name, finish){
+    if(id === activeId) return;
+    videos[activeId].classList.remove('active');
+    activeId = id;
+    videos[activeId].classList.add('active');
+    // resync playback so the switch feels instant and continuous
+    try{ videos[activeId].currentTime = videos[activeId].currentTime; }catch(e){}
+    currentName.textContent = name;
+    currentFinish.textContent = finish;
+    finishBadge.textContent = finish;
+  }
+
+  document.querySelectorAll('.swatch').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.swatch').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      setActive(btn.dataset.target, btn.dataset.name, btn.dataset.finish);
+    });
+  });
+
+  // safety timeout: hide loader even if events never fire
+  setTimeout(()=> stageLoading.classList.add('hidden'), 4000);
+})();
+</script>
+</body>
+</html>
