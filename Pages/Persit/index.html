@@ -1,0 +1,410 @@
+import React, { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, Heart, ShoppingBag, Menu, X, Search, User } from 'lucide-react';
+
+export default function DavodiWebsite() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [wishlist, setWishlist] = useState({});
+
+  const slides = [
+    {
+      id: 1,
+      title: 'Il Meglio della Natura, per Te.',
+      subtitle: 'Selezioniamo con cura i migliori prodotti alimentari per portare sulla tua tavola autenticità, gusto e benessere.',
+      image: 'linear-gradient(135deg, #2d1810 0%, #1a0f0a 100%)',
+      accent: '#D4AF37'
+    }
+  ];
+
+  const categories = [
+    { id: 1, name: 'Zafferano', image: '🧡', color: '#8B4513' },
+    { id: 2, name: 'Frutta Secca', image: '🥜', color: '#CD853F' },
+    { id: 3, name: 'Biscotti', image: '🍪', color: '#8B6F47' },
+    { id: 4, name: 'Dolci Tradizionali', image: '🍰', color: '#A0826D' },
+    { id: 5, name: 'Spezie e Erbe', image: '🌿', color: '#6B8E23' }
+  ];
+
+  const products = [
+    { id: 1, name: 'Zafferano Super Negin', price: '€12.90', rating: 5, reviews: 128 },
+    { id: 2, name: 'Pistacchi Sgusciati', price: '€8.90', rating: 5, reviews: 94 },
+    { id: 3, name: 'Biscotti al Burro', price: '€4.90', rating: 5, reviews: 267 },
+    { id: 4, name: 'Mix Frutta Secca', price: '€9.90', rating: 5, reviews: 156 },
+    { id: 5, name: 'Biscotti al Sesamo', price: '€4.50', rating: 5, reviews: 203 },
+    { id: 6, name: 'Tè allo Zafferano', price: '€7.90', rating: 5, reviews: 89 }
+  ];
+
+  const features = [
+    { icon: '✓', title: '100% Naturale', desc: 'Senza conservanti nè additivi' },
+    { icon: '📦', title: 'Imballaggio Sicuro', desc: 'Confezioni eleganti e resistenti' },
+    { icon: '🔍', title: 'Filiera Controllata', desc: 'Dalla selezione alla tua tavola' }
+  ];
+
+  const toggleWishlist = (productId) => {
+    setWishlist(prev => ({
+      ...prev,
+      [productId]: !prev[productId]
+    }));
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
+  return (
+    <div className="min-h-screen bg-black text-white font-sans">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-black border-b border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              <span className="text-2xl font-serif font-bold" style={{ color: '#D4AF37' }}>
+                DAVOODI
+              </span>
+              <div className="text-xs tracking-widest" style={{ color: '#D4AF37' }}>
+                ITALIA
+              </div>
+            </div>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex space-x-8">
+              {['Home', 'Negozio', 'Chi siamo', 'Blog', 'Contatti'].map((item) => (
+                <a
+                  key={item}
+                  href="#"
+                  className="text-sm transition-colors hover:text-yellow-600"
+                  style={{ color: '#D4AF37' }}
+                >
+                  {item}
+                </a>
+              ))}
+            </nav>
+
+            {/* Right Icons */}
+            <div className="flex items-center space-x-4">
+              <Search size={20} className="hidden md:block cursor-pointer hover:text-yellow-600" />
+              <User size={20} className="hidden md:block cursor-pointer hover:text-yellow-600" />
+              <div className="relative">
+                <ShoppingBag size={20} className="cursor-pointer hover:text-yellow-600" />
+                <span
+                  className="absolute -top-2 -right-2 w-5 h-5 rounded-full text-xs flex items-center justify-center font-bold"
+                  style={{ backgroundColor: '#D4AF37', color: '#000' }}
+                >
+                  0
+                </span>
+              </div>
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden"
+              >
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <nav className="md:hidden pb-4 space-y-2">
+              {['Home', 'Negozio', 'Chi siamo', 'Blog', 'Contatti'].map((item) => (
+                <a
+                  key={item}
+                  href="#"
+                  className="block py-2 text-sm"
+                  style={{ color: '#D4AF37' }}
+                >
+                  {item}
+                </a>
+              ))}
+            </nav>
+          )}
+        </div>
+      </header>
+
+      {/* Hero Slider */}
+      <section className="relative h-screen md:h-[600px] overflow-hidden">
+        {slides.map((slide, index) => (
+          <div
+            key={slide.id}
+            className={`absolute inset-0 transition-opacity duration-1000 ${
+              index === currentSlide ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{ background: slide.image }}
+          >
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                  <div className="text-center md:text-left">
+                    <div className="text-xs tracking-widest mb-4" style={{ color: '#D4AF37' }}>
+                      QUALITA PREMIUM
+                    </div>
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4 leading-tight">
+                      {slide.title}
+                    </h1>
+                    <p className="text-gray-300 text-lg mb-8 max-w-lg">
+                      {slide.subtitle}
+                    </p>
+                    <button
+                      className="px-8 py-3 rounded-sm text-black font-semibold text-sm tracking-widest transition-all hover:opacity-90"
+                      style={{ backgroundColor: '#D4AF37' }}
+                    >
+                      SCOPRI I PRODOTTI →
+                    </button>
+                  </div>
+                  <div className="hidden md:flex items-center justify-center relative h-[500px]">
+                    <div
+                      className="w-64 h-64 rounded-full opacity-20"
+                      style={{ backgroundColor: '#D4AF37' }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Slide Navigation */}
+            <button
+              onClick={prevSlide}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full border border-gray-600 hover:border-yellow-600 transition"
+            >
+              <ChevronLeft size={24} />
+            </button>
+            <button
+              onClick={nextSlide}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full border border-gray-600 hover:border-yellow-600 transition"
+            >
+              <ChevronRight size={24} />
+            </button>
+
+            {/* Dots */}
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
+              {slides.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentSlide(idx)}
+                  className={`w-3 h-3 rounded-full transition ${
+                    idx === currentSlide ? 'bg-yellow-600' : 'bg-gray-600'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
+
+      {/* Features */}
+      <section className="bg-gray-950 py-16 md:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="flex gap-4">
+              <div className="text-3xl" style={{ color: '#D4AF37' }}>★</div>
+              <div>
+                <h3 className="font-semibold mb-1">Qualità Garantita</h3>
+                <p className="text-sm text-gray-400">Prodotti selezionati con la massima cura</p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="text-3xl" style={{ color: '#D4AF37' }}>📦</div>
+              <div>
+                <h3 className="font-semibold mb-1">Spedizione Veloce</h3>
+                <p className="text-sm text-gray-400">Consegniamo in tutta Italia in 24/48h</p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="text-3xl" style={{ color: '#D4AF37' }}>✓</div>
+              <div>
+                <h3 className="font-semibold mb-1">Pagamenti Sicuri</h3>
+                <p className="text-sm text-gray-400">Transazioni protette e sicure al 100%</p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="text-3xl" style={{ color: '#D4AF37' }}>💬</div>
+              <div>
+                <h3 className="font-semibold mb-1">Assistenza Clienti</h3>
+                <p className="text-sm text-gray-400">Siamo sempre disponibili per te</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Categories */}
+      <section className="py-16 md:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-12">
+            <div>
+              <div className="text-xs tracking-widest mb-2" style={{ color: '#D4AF37' }}>
+                LE NOSTRE CATEGORIE
+              </div>
+              <h2 className="text-3xl md:text-4xl font-serif font-bold">
+                Scopri i nostri prodotti
+              </h2>
+            </div>
+            <a href="#" className="text-sm tracking-widest" style={{ color: '#D4AF37' }}>
+              VAI AL NEGOZIO →
+            </a>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            {categories.map((cat) => (
+              <div key={cat.id} className="group cursor-pointer">
+                <div
+                  className="aspect-square rounded-lg overflow-hidden mb-3 flex items-center justify-center text-6xl group-hover:opacity-80 transition"
+                  style={{ backgroundColor: cat.color + '20' }}
+                >
+                  {cat.image}
+                </div>
+                <h3 className="font-serif text-lg text-center group-hover:text-yellow-600 transition">
+                  {cat.name}
+                </h3>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Story Section */}
+      <section className="bg-gray-950 py-16 md:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="text-xs tracking-widest mb-2" style={{ color: '#D4AF37' }}>
+                LA NOSTRA PASSIONE
+              </div>
+              <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6">
+                Tradizione, Qualità <br />
+                <span style={{ color: '#D4AF37' }}>e Fiducia dal 1997</span>
+              </h2>
+              <p className="text-gray-400 mb-6 leading-relaxed">
+                Da oltre 25 anni, Davoodi porta l'eccellenza dei sapori autentici sulla tua tavola. Selezioniamo solo il meglio della natura per offrirti prodotti genuini e di qualità superiore.
+              </p>
+              <p className="text-gray-400 mb-8 leading-relaxed">
+                Ogni prodotto è scelto con cura, garantendo autenticità e benessere per la tua famiglia.
+              </p>
+              <button
+                className="px-8 py-3 rounded-sm font-semibold text-sm tracking-widest transition-all hover:opacity-90"
+                style={{ backgroundColor: '#D4AF37', color: '#000' }}
+              >
+                SCOPRI DI PIU →
+              </button>
+            </div>
+            <div
+              className="aspect-square rounded-lg flex items-center justify-center text-8xl"
+              style={{ backgroundColor: '#2d1810' }}
+            >
+              🌺
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Best Sellers */}
+      <section className="py-16 md:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-12">
+            <div>
+              <div className="text-xs tracking-widest mb-2" style={{ color: '#D4AF37' }}>
+                I PIU AMATI
+              </div>
+              <h2 className="text-3xl md:text-4xl font-serif font-bold">
+                Prodotti più venduti
+              </h2>
+            </div>
+            <a href="#" className="text-sm tracking-widest" style={{ color: '#D4AF37' }}>
+              VEDI TUTTI →
+            </a>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {products.map((product) => (
+              <div
+                key={product.id}
+                className="group bg-gray-950 rounded-lg overflow-hidden hover:bg-gray-900 transition"
+              >
+                <div className="aspect-square bg-gradient-to-br from-orange-900 to-yellow-900 flex items-center justify-center text-4xl relative overflow-hidden">
+                  🍯
+                  <button
+                    onClick={() => toggleWishlist(product.id)}
+                    className="absolute top-3 right-3 p-2 rounded-full bg-black/50 hover:bg-black/70 transition"
+                  >
+                    <Heart
+                      size={18}
+                      className={wishlist[product.id] ? 'fill-red-500 text-red-500' : 'text-gray-400'}
+                    />
+                  </button>
+                </div>
+                <div className="p-4">
+                  <h3 className="font-serif text-sm mb-2 group-hover:text-yellow-600 transition line-clamp-2">
+                    {product.name}
+                  </h3>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="font-bold" style={{ color: '#D4AF37' }}>
+                      {product.price}
+                    </span>
+                    <span className="text-xs text-gray-400">
+                      ★★★★★ ({product.reviews})
+                    </span>
+                  </div>
+                  <button
+                    className="w-full py-2 rounded text-black text-xs font-semibold transition hover:opacity-90"
+                    style={{ backgroundColor: '#D4AF37' }}
+                  >
+                    Aggiungi al Carrello
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-950 border-t border-gray-800 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <div className="text-xl font-serif font-bold mb-4" style={{ color: '#D4AF37' }}>
+                DAVOODI
+              </div>
+              <p className="text-sm text-gray-400">
+                Scopri il meglio della gastronomia italiana
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Navigazione</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><a href="#" className="hover:text-yellow-600">Home</a></li>
+                <li><a href="#" className="hover:text-yellow-600">Negozio</a></li>
+                <li><a href="#" className="hover:text-yellow-600">Chi siamo</a></li>
+                <li><a href="#" className="hover:text-yellow-600">Blog</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Customer Care</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><a href="#" className="hover:text-yellow-600">Contatti</a></li>
+                <li><a href="#" className="hover:text-yellow-600">Privacy</a></li>
+                <li><a href="#" className="hover:text-yellow-600">Termini</a></li>
+                <li><a href="#" className="hover:text-yellow-600">Resi</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Seguici</h4>
+              <div className="flex gap-4 text-sm">
+                <a href="#" className="text-gray-400 hover:text-yellow-600">Instagram</a>
+                <a href="#" className="text-gray-400 hover:text-yellow-600">Facebook</a>
+                <a href="#" className="text-gray-400 hover:text-yellow-600">Twitter</a>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
+            <p>&copy; 2024 Davoodi Italia. Tutti i diritti riservati.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
