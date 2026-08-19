@@ -421,8 +421,10 @@ section{padding:76px 0;}
 .toast.show{opacity:1; visibility:visible; transform:translateX(-50%) translateY(0);}
 .toast svg{width:16px;height:16px; color:var(--gold);}
 
-/* reveal on scroll */
-.reveal{opacity:0; transform:translateY(26px); transition:opacity .8s var(--ease), transform .8s var(--ease);}
+/* reveal on scroll — visible by default; JS opts elements into the hidden pre-reveal state
+   only if it can guarantee it will reveal them again, so content is never stuck invisible */
+.reveal{opacity:1; transform:none; transition:opacity .8s var(--ease), transform .8s var(--ease);}
+.reveal.pre-reveal{opacity:0; transform:translateY(26px);}
 .reveal.in-view{opacity:1; transform:translateY(0);}
 
 /* focus visibility */
@@ -541,7 +543,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
   <!-- ===================== HERO ===================== -->
   <section class="hero" id="home">
     <div class="hero-slides">
-      <div class="hero-slide active" style="background-image:url('IMG_HERO')">
+      <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1600607686527-6fb886090705?w=1600&q=80&auto=format&fit=crop')">
         <div class="hero-overlay"></div>
         <div class="hero-content container">
           <p class="eyebrow">Qualità Premium</p>
@@ -550,7 +552,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
           <a href="#negozio" class="btn btn-gold">Scopri i Prodotti <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></a>
         </div>
       </div>
-      <div class="hero-slide" style="background-image:url('IMG_SLIDE2')">
+      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1609501676725-7186f017a4b7?w=1600&q=80&auto=format&fit=crop')">
         <div class="hero-overlay"></div>
         <div class="hero-content container">
           <p class="eyebrow">Dal 1997</p>
@@ -559,7 +561,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
           <a href="#chisiamo" class="btn btn-gold">La Nostra Storia <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></a>
         </div>
       </div>
-      <div class="hero-slide" style="background-image:url('IMG_SLIDE3')">
+      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1573851552153-816785fecf4a?w=1600&q=80&auto=format&fit=crop')">
         <div class="hero-overlay"></div>
         <div class="hero-content container">
           <p class="eyebrow">Selezione Artigianale</p>
@@ -611,12 +613,12 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
         <a href="#negozio" class="btn btn-outline">Vai al Negozio <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></a>
       </div>
       <div class="cat-grid">
-        <a href="#negozio" class="cat-card reveal"><img src="IMG_CAT_ZAFFERANO" alt="Zafferano" loading="lazy"><div class="cat-overlay"></div><div class="cat-info"><h3>Zafferano</h3><span>Scopri di più <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></span></div></a>
-        <a href="#negozio" class="cat-card reveal"><img src="IMG_CAT_FRUTTASECCA" alt="Frutta Secca" loading="lazy"><div class="cat-overlay"></div><div class="cat-info"><h3>Frutta Secca</h3><span>Scopri di più <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></span></div></a>
-        <a href="#negozio" class="cat-card reveal"><img src="IMG_CAT_BISCOTTI" alt="Biscotti" loading="lazy"><div class="cat-overlay"></div><div class="cat-info"><h3>Biscotti</h3><span>Scopri di più <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></span></div></a>
-        <a href="#negozio" class="cat-card reveal"><img src="IMG_CAT_DOLCI" alt="Dolci Tradizionali" loading="lazy"><div class="cat-overlay"></div><div class="cat-info"><h3>Dolci Tradizionali</h3><span>Scopri di più <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></span></div></a>
-        <a href="#negozio" class="cat-card reveal"><img src="IMG_CAT_SPEZIE" alt="Spezie e Erbe" loading="lazy"><div class="cat-overlay"></div><div class="cat-info"><h3>Spezie e Erbe</h3><span>Scopri di più <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></span></div></a>
-        <a href="#negozio" class="cat-card reveal"><img src="IMG_CAT_FRUTTADISID" alt="Frutta Disidratata" loading="lazy"><div class="cat-overlay"></div><div class="cat-info"><h3>Frutta Disidratata</h3><span>Scopri di più <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></span></div></a>
+        <a href="#negozio" class="cat-card reveal"><img src="https://images.unsplash.com/photo-1600607686527-6fb886090705?w=600&q=80&auto=format&fit=crop" alt="Zafferano" loading="lazy"><div class="cat-overlay"></div><div class="cat-info"><h3>Zafferano</h3><span>Scopri di più <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></span></div></a>
+        <a href="#negozio" class="cat-card reveal"><img src="https://images.unsplash.com/photo-1573851552153-816785fecf4a?w=600&q=80&auto=format&fit=crop" alt="Frutta Secca" loading="lazy"><div class="cat-overlay"></div><div class="cat-info"><h3>Frutta Secca</h3><span>Scopri di più <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></span></div></a>
+        <a href="#negozio" class="cat-card reveal"><img src="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600&q=80&auto=format&fit=crop" alt="Biscotti" loading="lazy"><div class="cat-overlay"></div><div class="cat-info"><h3>Biscotti</h3><span>Scopri di più <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></span></div></a>
+        <a href="#negozio" class="cat-card reveal"><img src="https://images.unsplash.com/photo-1519676867240-f03562e64548?w=600&q=80&auto=format&fit=crop" alt="Dolci Tradizionali" loading="lazy"><div class="cat-overlay"></div><div class="cat-info"><h3>Dolci Tradizionali</h3><span>Scopri di più <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></span></div></a>
+        <a href="#negozio" class="cat-card reveal"><img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=600&q=80&auto=format&fit=crop" alt="Spezie e Erbe" loading="lazy"><div class="cat-overlay"></div><div class="cat-info"><h3>Spezie e Erbe</h3><span>Scopri di più <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></span></div></a>
+        <a href="#negozio" class="cat-card reveal"><img src="https://images.unsplash.com/photo-1615484477778-ca3b77940c25?w=600&q=80&auto=format&fit=crop" alt="Frutta Disidratata" loading="lazy"><div class="cat-overlay"></div><div class="cat-info"><h3>Frutta Disidratata</h3><span>Scopri di più <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></span></div></a>
       </div>
     </div>
   </section>
@@ -635,7 +637,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
         </div>
         <a href="#negozio" class="btn btn-gold">Scopri di Più <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></a>
       </div>
-      <div class="story-image reveal"><img src="IMG_GIFTBOX" alt="Confezione regalo Davoodi Italia" loading="lazy"></div>
+      <div class="story-image reveal"><img src="https://images.unsplash.com/photo-1607083206968-13611e3d76db?w=900&q=80&auto=format&fit=crop" alt="Confezione regalo Davoodi Italia" loading="lazy"></div>
     </div>
   </section>
 
@@ -679,10 +681,9 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
         <a href="#" class="btn btn-outline">Vedi Tutti <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></a>
       </div>
       <div class="product-grid" id="productGrid">
-        <!-- products injected by JS-friendly markup below (static for reliability) -->
         <div class="product-card reveal" data-name="Zafferano Super Negin">
           <div class="product-media">
-            <img src="IMG_P_ZAFFERANO" alt="Zafferano Super Negin" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=600&q=80&auto=format&fit=crop" alt="Zafferano Super Negin" loading="lazy">
             <button class="wishlist-btn" aria-label="Aggiungi ai preferiti"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20.5c-4-2.7-8.5-6.2-8.5-10.8 0-2.7 2.1-4.7 4.7-4.7 1.7 0 3 .8 3.8 2 .8-1.2 2.1-2 3.8-2 2.6 0 4.7 2 4.7 4.7 0 4.6-4.5 8.1-8.5 10.8Z" stroke="currentColor" stroke-width="1.5"/></svg></button>
             <button class="quick-add">Aggiungi al Carrello</button>
           </div>
@@ -694,7 +695,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
         </div>
         <div class="product-card reveal" data-name="Pistacchi Sgusciati">
           <div class="product-media">
-            <img src="IMG_P_PISTACCHI" alt="Pistacchi Sgusciati" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1508061253366-f7da158b6d46?w=600&q=80&auto=format&fit=crop" alt="Pistacchi Sgusciati" loading="lazy">
             <button class="wishlist-btn" aria-label="Aggiungi ai preferiti"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20.5c-4-2.7-8.5-6.2-8.5-10.8 0-2.7 2.1-4.7 4.7-4.7 1.7 0 3 .8 3.8 2 .8-1.2 2.1-2 3.8-2 2.6 0 4.7 2 4.7 4.7 0 4.6-4.5 8.1-8.5 10.8Z" stroke="currentColor" stroke-width="1.5"/></svg></button>
             <button class="quick-add">Aggiungi al Carrello</button>
           </div>
@@ -706,7 +707,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
         </div>
         <div class="product-card reveal" data-name="Biscotti al Burro">
           <div class="product-media">
-            <img src="IMG_P_BISCOTTIBURRO" alt="Biscotti al Burro" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600&q=80&auto=format&fit=crop" alt="Biscotti al Burro" loading="lazy">
             <button class="wishlist-btn" aria-label="Aggiungi ai preferiti"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20.5c-4-2.7-8.5-6.2-8.5-10.8 0-2.7 2.1-4.7 4.7-4.7 1.7 0 3 .8 3.8 2 .8-1.2 2.1-2 3.8-2 2.6 0 4.7 2 4.7 4.7 0 4.6-4.5 8.1-8.5 10.8Z" stroke="currentColor" stroke-width="1.5"/></svg></button>
             <button class="quick-add">Aggiungi al Carrello</button>
           </div>
@@ -718,7 +719,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
         </div>
         <div class="product-card reveal" data-name="Mix Frutta Secca">
           <div class="product-media">
-            <img src="IMG_P_MIXFRUTTA" alt="Mix Frutta Secca" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=600&q=80&auto=format&fit=crop" alt="Mix Frutta Secca" loading="lazy">
             <button class="wishlist-btn" aria-label="Aggiungi ai preferiti"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20.5c-4-2.7-8.5-6.2-8.5-10.8 0-2.7 2.1-4.7 4.7-4.7 1.7 0 3 .8 3.8 2 .8-1.2 2.1-2 3.8-2 2.6 0 4.7 2 4.7 4.7 0 4.6-4.5 8.1-8.5 10.8Z" stroke="currentColor" stroke-width="1.5"/></svg></button>
             <button class="quick-add">Aggiungi al Carrello</button>
           </div>
@@ -730,7 +731,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
         </div>
         <div class="product-card reveal" data-name="Biscotti al Sesamo">
           <div class="product-media">
-            <img src="IMG_P_BISCOTTISESAMO" alt="Biscotti al Sesamo" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1558326567-98ae2405596b?w=600&q=80&auto=format&fit=crop" alt="Biscotti al Sesamo" loading="lazy">
             <button class="wishlist-btn" aria-label="Aggiungi ai preferiti"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20.5c-4-2.7-8.5-6.2-8.5-10.8 0-2.7 2.1-4.7 4.7-4.7 1.7 0 3 .8 3.8 2 .8-1.2 2.1-2 3.8-2 2.6 0 4.7 2 4.7 4.7 0 4.6-4.5 8.1-8.5 10.8Z" stroke="currentColor" stroke-width="1.5"/></svg></button>
             <button class="quick-add">Aggiungi al Carrello</button>
           </div>
@@ -742,7 +743,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
         </div>
         <div class="product-card reveal" data-name="Tè allo Zafferano">
           <div class="product-media">
-            <img src="IMG_P_TEZAFFERANO" alt="Tè allo Zafferano" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=600&q=80&auto=format&fit=crop" alt="Tè allo Zafferano" loading="lazy">
             <button class="wishlist-btn" aria-label="Aggiungi ai preferiti"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20.5c-4-2.7-8.5-6.2-8.5-10.8 0-2.7 2.1-4.7 4.7-4.7 1.7 0 3 .8 3.8 2 .8-1.2 2.1-2 3.8-2 2.6 0 4.7 2 4.7 4.7 0 4.6-4.5 8.1-8.5 10.8Z" stroke="currentColor" stroke-width="1.5"/></svg></button>
             <button class="quick-add">Aggiungi al Carrello</button>
           </div>
@@ -975,14 +976,21 @@ window.addEventListener('scroll', ()=>{
 }, {passive:true});
 backToTop.addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
 
-/* Scroll reveal */
+/* Scroll reveal (progressive enhancement — content stays visible if this fails) */
 const revealEls = document.querySelectorAll('.reveal');
-const io = new IntersectionObserver((entries)=>{
-  entries.forEach(entry=>{
-    if(entry.isIntersecting){ entry.target.classList.add('in-view'); io.unobserve(entry.target); }
+if('IntersectionObserver' in window){
+  revealEls.forEach(el=>el.classList.add('pre-reveal'));
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){ entry.target.classList.add('in-view'); io.unobserve(entry.target); }
+    });
+  }, {threshold:.15, rootMargin:'0px 0px -10% 0px'});
+  revealEls.forEach(el=>io.observe(el));
+  // Safety net: reveal anything left un-triggered after load (e.g. short pages, fast scroll, odd viewports)
+  window.addEventListener('load', ()=>{
+    setTimeout(()=>{ revealEls.forEach(el=>el.classList.add('in-view')); }, 1500);
   });
-}, {threshold:.15});
-revealEls.forEach(el=>io.observe(el));
+}
 
 /* Active nav link on scroll */
 const navLinks = document.querySelectorAll('.main-nav a[href^="#"]');
