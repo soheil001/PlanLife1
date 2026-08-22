@@ -254,11 +254,11 @@ ul{margin:0; padding:0; list-style:none;}
   background:linear-gradient(90deg, rgba(8,7,5,.92) 8%, rgba(8,7,5,.55) 42%, rgba(8,7,5,.15) 68%),
              linear-gradient(0deg, rgba(8,7,5,.75), transparent 40%);
 }
-.hero-content{position:relative; z-index:2; height:100%; display:flex; flex-direction:column; justify-content:center; max-width:640px;}
-.hero-content .eyebrow{opacity:0; animation:fadeUp .8s .2s var(--ease) forwards;}
-.hero-content h1{font-size:clamp(34px,6vw,64px); line-height:1.08; opacity:0; animation:fadeUp .8s .35s var(--ease) forwards;}
-.hero-content .hero-text{margin:22px 0 32px; color:var(--muted); font-size:15.5px; line-height:1.75; max-width:460px; opacity:0; animation:fadeUp .8s .5s var(--ease) forwards;}
-.hero-content .btn{opacity:0; animation:fadeUp .8s .65s var(--ease) forwards;}
+.hero-content{position:relative; z-index:2; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; max-width:100%;}
+.hero-content .eyebrow{display:none;}
+.hero-content h1{display:none;}
+.hero-content .hero-text{display:none;}
+.hero-content .btn{opacity:0; animation:fadeUp .8s .2s var(--ease) forwards;}
 @keyframes fadeUp{from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);}}
 
 .hero-arrow{
@@ -338,6 +338,11 @@ section{padding:76px 0;}
 
 /* Process */
 .process-grid{display:grid; grid-template-columns:1fr; gap:30px;}
+@media(max-width:759px){
+  .process-grid{display:flex; gap:20px; overflow-x:auto; scroll-behavior:smooth; padding:0 24px; margin:0 calc(-24px); -webkit-overflow-scrolling:touch; scrollbar-width:none;}
+  .process-grid::-webkit-scrollbar{display:none;}
+  .process-card{flex-shrink:0; width:min(320px, 90vw);}
+}
 @media(min-width:760px){.process-grid{grid-template-columns:repeat(3,1fr); gap:40px;}}
 .process-card{position:relative; padding:34px 26px; border:1px solid var(--line-soft); border-radius:var(--radius-lg); background:var(--bg-soft);}
 .process-num{font-family:'Cormorant Garamond',serif; font-size:46px; color:transparent; -webkit-text-stroke:1px var(--gold); font-weight:600; line-height:1;}
@@ -386,6 +391,11 @@ section{padding:76px 0;}
 
 /* Testimonials */
 .testi-grid{display:grid; grid-template-columns:1fr; gap:26px;}
+@media(max-width:819px){
+  .testi-grid{display:flex; gap:18px; overflow-x:auto; scroll-behavior:smooth; padding:0 24px; margin:0 calc(-24px) 28px; -webkit-overflow-scrolling:touch; scrollbar-width:none;}
+  .testi-grid::-webkit-scrollbar{display:none;}
+  .testi-card{flex-shrink:0; width:min(300px, 85vw);}
+}
 @media(min-width:820px){.testi-grid{grid-template-columns:repeat(3,1fr);}}
 .testi-card{background:var(--bg-soft); border:1px solid var(--line-soft); border-radius:var(--radius-lg); padding:32px 28px;}
 .testi-card .stars{margin-bottom:16px;}
@@ -422,9 +432,7 @@ section{padding:76px 0;}
 }
 .carousel-slide{position:absolute; inset:0; width:100%; height:100%; background-size:cover; background-position:center; opacity:0; transition:opacity .8s var(--ease);}
 .carousel-slide.active{opacity:1; z-index:2;}
-.carousel-controls{position:absolute; bottom:20px; left:50%; transform:translateX(-50%); z-index:10; display:flex; gap:10px;}
-.carousel-controls button{width:8px; height:8px; border-radius:50%; border:1px solid var(--gold-light); background:transparent; padding:0; transition:all .3s; cursor:pointer;}
-.carousel-controls button.active{background:var(--gold-light); width:24px; border-radius:5px;}
+.carousel-controls{display:none;}
 
 /* Footer */
 .site-footer{background:#060504; border-top:1px solid var(--line-soft); padding-top:70px;}
@@ -644,34 +652,10 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
       <div class="hero-slide active" style="background-image:url('http://fs3.centraldnserver.com/~planlife/pics/Persit/1.png')">
         <div class="hero-overlay"></div>
         <div class="hero-content container">
-          <p class="eyebrow">Qualità Premium</p>
-          <h1>Il Meglio della <span>Natura</span>, per Te.</h1>
-          <p class="hero-text">Selezioniamo con cura i migliori prodotti alimentari per portare sulla tua tavola autenticità, gusto e benessere, dritti dalla tradizione italiana.</p>
           <a href="#negozio" class="btn btn-gold">Scopri i Prodotti <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></a>
         </div>
       </div>
-      <div class="hero-slide" style="background-image:url('http://fs3.centraldnserver.com/~planlife/pics/Persit/1.png')">
-        <div class="hero-overlay"></div>
-        <div class="hero-content container">
-          <p class="eyebrow">Dal 1997</p>
-          <h1>Tradizione <span>Italiana</span>, Cura Autentica.</h1>
-          <p class="hero-text">Da oltre 25 anni scegliamo solo il meglio della natura per offrirti prodotti genuini, confezionati con la stessa passione di sempre.</p>
-          <a href="#chisiamo" class="btn btn-gold">La Nostra Storia <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></a>
-        </div>
-      </div>
-      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1573851552153-816785fecf4a?w=1600&q=80&auto=format&fit=crop')">
-        <div class="hero-overlay"></div>
-        <div class="hero-content container">
-          <p class="eyebrow">Selezione Artigianale</p>
-          <h1>Frutta Secca, <span>Croccantezza</span> Autentica.</h1>
-          <p class="hero-text">Mandorle, pistacchi e nocciole selezionati uno a uno per portare in tavola un gusto ricco e naturale, senza compromessi.</p>
-          <a href="#negozio" class="btn btn-gold">Vedi la Selezione <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></a>
-        </div>
-      </div>
     </div>
-    <button class="hero-arrow prev" id="heroPrev" aria-label="Slide precedente"><svg viewBox="0 0 16 16" fill="none"><path d="M10 2 4 8l6 6" stroke="currentColor" stroke-width="1.6"/></svg></button>
-    <button class="hero-arrow next" id="heroNext" aria-label="Slide successiva"><svg viewBox="0 0 16 16" fill="none"><path d="M6 2l6 6-6 6" stroke="currentColor" stroke-width="1.6"/></svg></button>
-    <div class="hero-dots" id="heroDots"></div>
   </section>
 
   <!-- ===================== FEATURES ===================== -->
@@ -804,8 +788,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
   <!-- ===================== CAROUSEL SECTION (NEW) ===================== -->
   <section class="carousel-section">
     <div class="carousel-wrapper" id="carouselWrapper">
-      <div class="carousel-slide active" style="background-image:url('http://fs3.centraldnserver.com/~planlife/pics/Persit/12.jpg')"></div>
-      <div class="carousel-controls" id="carouselControls"></div>
+      <div class="carousel-slide active" style="background-image:url('http://fs3.centraldnserver.com/~planlife/pics/Persit/12.jpg');"></div>
     </div>
   </section>
 
@@ -816,7 +799,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
         <p class="eyebrow">Cosa Dicono di Noi</p>
         <h2>Recensioni dei Nostri Clienti</h2>
       </div>
-      <div class="testi-grid">
+      <div class="testi-grid" id="testiGrid">
         <div class="testi-card reveal">
           <div class="stars">★★★★★</div>
           <p class="quote">"Lo zafferano Super Negin ha un profumo incredibile, si sente davvero la differenza rispetto ad altre marche."</p>
@@ -832,6 +815,9 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
           <p class="quote">"Spedizione velocissima e frutta secca freschissima. Davoodi è ormai il mio negozio di fiducia."</p>
           <div class="testi-who"><div class="testi-avatar">E</div><div><b>Elena F.</b><span>Cliente verificata</span></div></div>
         </div>
+      </div>
+      <div style="text-align:center; margin-top:28px; display:none;" id="testiViewAllBtnWrapper" class="reveal">
+        <button type="button" class="btn btn-outline" id="testiViewAllBtn">Vedi Tutti i Pareri <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></button>
       </div>
     </div>
   </section>
@@ -962,40 +948,10 @@ searchClose.addEventListener('click', ()=> searchOverlay.classList.remove('open'
 searchOverlay.addEventListener('click', (e)=>{ if(e.target === searchOverlay) searchOverlay.classList.remove('open'); });
 document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape'){ searchOverlay.classList.remove('open'); closeDrawer(); closeProductModal(); } });
 
-/* Hero slider */
-const slides = document.querySelectorAll('.hero-slide');
-const dotsWrap = document.getElementById('heroDots');
-let current = 0, timer;
-slides.forEach((_, i)=>{
-  const dot = document.createElement('button');
-  if(i===0) dot.classList.add('active');
-  dot.setAttribute('aria-label', 'Vai alla slide ' + (i+1));
-  dot.addEventListener('click', ()=> goTo(i));
-  dotsWrap.appendChild(dot);
-});
-const dots = dotsWrap.querySelectorAll('button');
-function goTo(i){
-  slides[current].classList.remove('active');
-  dots[current].classList.remove('active');
-  current = (i + slides.length) % slides.length;
-  slides[current].classList.add('active');
-  dots[current].classList.add('active');
-  resetTimer();
-}
-function resetTimer(){ clearInterval(timer); timer = setInterval(()=>goTo(current+1), 6000); }
-document.getElementById('heroPrev').addEventListener('click', ()=>goTo(current-1));
-document.getElementById('heroNext').addEventListener('click', ()=>goTo(current+1));
-resetTimer();
-const heroEl = document.querySelector('.hero');
-heroEl.addEventListener('mouseenter', ()=>clearInterval(timer));
-heroEl.addEventListener('mouseleave', resetTimer);
+/* Hero slider - disabled since we only have one slide */
+// No slider needed for single slide
 
-/* Carousel section (single slide, static for now) */
-const carouselControls = document.getElementById('carouselControls');
-const carouselButton = document.createElement('button');
-carouselButton.classList.add('active');
-carouselButton.setAttribute('aria-label', 'Slide 1');
-carouselControls.appendChild(carouselButton);
+/* Carousel section (single slide, no controls needed) */
 
 /* Cart + wishlist + toast */
 const cartCount = document.getElementById('cartCount');
@@ -1091,7 +1047,20 @@ const UI = {
     addedToCart:(name)=> name + ' aggiunto al carrello',
     addedWishlist:'Aggiunto ai preferiti', removedWishlist:'Rimosso dai preferiti',
     addToWishlistLabel:'Aggiungi ai preferiti', regionLabel:'Italia (EUR €)',
-    newsletterThanks:"Grazie per l'iscrizione! Controlla la tua email.", from:'Da '
+    newsletterThanks:"Grazie per l'iscrizione! Controlla la tua email.", from:'Da ',
+    // Page sections
+    comeFunziona:'Come Funziona',
+    ordinareNonMai:'Ordinare Non È Mai Stato Così Semplice',
+    cosaDicono:'Cosa Dicono di Noi',
+    recensioni:'Recensioni dei Nostri Clienti',
+    viewAllTestimonials:'Vedi Tutti i Pareri',
+    // Process cards
+    processTitle1:'Scegli i Prodotti',
+    processDesc1:'Esplora il nostro catalogo e scegli i sapori autentici che preferisci, dallo zafferano ai dolci tradizionali.',
+    processTitle2:'Ordina in Sicurezza',
+    processDesc2:'Completa il tuo ordine con pochi click grazie a pagamenti protetti e sicuri al 100%.',
+    processTitle3:'Ricevi a Casa',
+    processDesc3:'Riceverai i tuoi prodotti in tutta Italia entro 24/48h, imballati con cura.',
   },
   en:{
     addToCart:'Add to Cart', viewAll:'View All Products', showLess:'Show Less',
@@ -1099,7 +1068,20 @@ const UI = {
     addedToCart:(name)=> name + ' added to cart',
     addedWishlist:'Added to wishlist', removedWishlist:'Removed from wishlist',
     addToWishlistLabel:'Add to wishlist', regionLabel:'English (USD $)',
-    newsletterThanks:'Thanks for subscribing! Check your email.', from:'From '
+    newsletterThanks:'Thanks for subscribing! Check your email.', from:'From ',
+    // Page sections
+    comeFunziona:'How It Works',
+    ordinareNonMai:'Ordering Has Never Been So Simple',
+    cosaDicono:'What They Say About Us',
+    recensioni:'Customer Reviews',
+    viewAllTestimonials:'View All Reviews',
+    // Process cards
+    processTitle1:'Choose Products',
+    processDesc1:'Explore our catalog and choose the authentic flavors you prefer, from saffron to traditional desserts.',
+    processTitle2:'Order Securely',
+    processDesc2:'Complete your order in a few clicks with fully protected and secure payments.',
+    processTitle3:'Receive at Home',
+    processDesc3:'Receive your products throughout Italy within 24/48 hours, carefully packaged.',
   }
 };
 
@@ -1216,6 +1198,25 @@ function setLang(newLang){
   document.getElementById('langToggleLabel').textContent = UI[lang].regionLabel;
   document.getElementById('langToggleMobileLabel').textContent = UI[lang].regionLabel;
   viewAllBtnLabel.textContent = showAllProducts ? UI[lang].showLess : UI[lang].viewAll;
+  
+  // Update process section
+  const processTitle = document.querySelector('.process .section-head h2');
+  if(processTitle) processTitle.textContent = UI[lang].ordinareNonMai;
+  const processCards = document.querySelectorAll('.process-card');
+  processCards.forEach((card, idx)=>{
+    const h3 = card.querySelector('h3');
+    const p = card.querySelector('p');
+    if(idx === 0){ if(h3) h3.textContent = UI[lang].processTitle1; if(p) p.textContent = UI[lang].processDesc1; }
+    if(idx === 1){ if(h3) h3.textContent = UI[lang].processTitle2; if(p) p.textContent = UI[lang].processDesc2; }
+    if(idx === 2){ if(h3) h3.textContent = UI[lang].processTitle3; if(p) p.textContent = UI[lang].processDesc3; }
+  });
+  
+  // Update testimonials section
+  const testiTitle = document.querySelector('.testimonials .section-head h2');
+  if(testiTitle) testiTitle.textContent = UI[lang].recensioni;
+  const testiViewAllBtn = document.getElementById('testiViewAllBtn');
+  if(testiViewAllBtn) testiViewAllBtn.innerHTML = UI[lang].viewAllTestimonials + ' <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg>';
+  
   renderProductGrid();
   if(productModal.classList.contains('open')) renderModalContent();
 }
@@ -1223,6 +1224,23 @@ document.getElementById('langToggle').addEventListener('click', ()=> setLang(lan
 document.getElementById('langToggleMobile').addEventListener('click', ()=> setLang(lang==='it' ? 'en' : 'it'));
 
 renderProductGrid();
+
+/* Show testimonials view all button on mobile */
+const testiViewAllBtnWrapper = document.getElementById('testiViewAllBtnWrapper');
+function checkTestiLayout(){
+  const isMobile = window.innerWidth < 820;
+  if(isMobile && testiViewAllBtnWrapper){
+    testiViewAllBtnWrapper.style.display = 'block';
+  } else if(testiViewAllBtnWrapper){
+    testiViewAllBtnWrapper.style.display = 'none';
+  }
+}
+window.addEventListener('resize', checkTestiLayout);
+checkTestiLayout();
+// Update button text on language change
+document.getElementById('testiViewAllBtn').addEventListener('click', ()=>{
+  alert(lang === 'it' ? 'Mostra tutti i pareri' : 'Show all reviews');
+});
 
 /* Newsletter */
 document.getElementById('newsletterForm').addEventListener('submit', (e)=>{
