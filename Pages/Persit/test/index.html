@@ -176,9 +176,28 @@ ul{margin:0; padding:0; list-style:none;}
 }
 .region-select{display:none;}
 @media(min-width:1080px){
-  .region-select{display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--muted); margin-right:6px;}
-  .region-select svg{width:8px;}
+  .region-select{position:relative; display:flex; align-items:center;}
+  .region-select>button{background:none; border:none; font-family:inherit; display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--muted); margin-right:6px; padding:6px 0;}
+  .region-select>button:hover{color:var(--cream);}
+  .region-select svg{width:8px; transition:transform .3s var(--ease);}
+  .region-select:hover svg{transform:rotate(180deg);}
+  .region-select .dropdown-panel{left:auto; right:-6px; transform:translateY(6px); min-width:170px;}
+  .region-select:hover .dropdown-panel{transform:translateY(0);}
+  .region-select .dropdown-panel button{
+    display:flex; width:100%; text-align:left; background:none; border:none; font-family:inherit;
+    padding:10px 14px; font-size:13px; color:var(--muted); border-radius:2px;
+  }
+  .region-select .dropdown-panel button:hover{background:rgba(201,162,77,.08); color:var(--gold-light);}
+  .region-select .dropdown-panel button.active{color:var(--gold-light);}
 }
+
+/* Mobile drawer language switch */
+.drawer-lang{display:flex; gap:10px; margin-top:22px;}
+.drawer-lang button{
+  flex:1; padding:11px 0; font-size:13px; letter-spacing:.04em; border:1px solid var(--line);
+  background:transparent; color:var(--muted); border-radius:var(--radius); font-family:inherit; transition:all .25s;
+}
+.drawer-lang button.active{background:var(--gold); border-color:var(--gold); color:#1a1509; font-weight:500;}
 
 /* Search overlay */
 .search-overlay{
@@ -282,6 +301,30 @@ section{padding:76px 0;}
 .cat-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:30px 22px;}
 @media(min-width:640px){.cat-grid{grid-template-columns:repeat(3,1fr);}}
 @media(min-width:1080px){.cat-grid{grid-template-columns:repeat(6,1fr);}}
+@media(max-width:639px){
+  .cat-grid{
+    display:flex;
+    grid-template-columns:none;
+    gap:20px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scroll-snap-type:x proximity;
+    scroll-behavior:smooth;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    -ms-overflow-style:none;
+    padding:4px 24px 14px;
+    margin:0 -24px;
+  }
+  .cat-grid::-webkit-scrollbar{display:none;}
+  .cat-grid .cat-card{
+    flex:0 0 auto;
+    width:96px;
+    scroll-snap-align:start;
+  }
+  .cat-grid .cat-info h3{font-size:14px;}
+  .cat-grid .cat-info span{font-size:10px;}
+}
 .cat-card{display:flex; flex-direction:column; align-items:center; text-align:center; gap:16px;}
 .cat-media{
   position:relative; width:100%; aspect-ratio:1/1; border-radius:50%; overflow:hidden;
@@ -526,8 +569,12 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
     </nav>
 
     <div class="header-icons">
-      <div class="region-select">
-        Italia (EUR €) <svg viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.4"/></svg>
+      <div class="region-select" id="regionSelect">
+        <button type="button" id="regionSelectBtn"><span id="regionSelectLabel">Italia (EUR €)</span> <svg viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.4"/></svg></button>
+        <div class="dropdown-panel">
+          <button type="button" class="lang-option active" data-lang="it">Italia (EUR €)</button>
+          <button type="button" class="lang-option" data-lang="en">English (USD $)</button>
+        </div>
       </div>
       <button class="icon-btn" id="searchToggle" aria-label="Cerca">
         <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -582,6 +629,10 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
     <a href="#blog">Blog</a>
     <a href="#contatti">Contatti</a>
   </nav>
+  <div class="drawer-lang">
+    <button type="button" class="lang-option active" data-lang="it">Italiano (EUR €)</button>
+    <button type="button" class="lang-option" data-lang="en">English (USD $)</button>
+  </div>
   <div class="drawer-contact">
     <p>Via dello Zafferano 12, Milano, Italia<br>+39 02 1234 5678<br>info@davoodi.it</p>
     <div class="drawer-social">
@@ -743,7 +794,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
         <a href="#" class="btn btn-outline">Vedi Tutti <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></a>
       </div>
       <div class="product-grid" id="productGrid">
-        <div class="product-card reveal" data-name="Zafferano Super Negin" data-price="€12,90" data-stars="5" data-img="https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=900&q=70&auto=format&fit=crop&fm=webp" data-desc="Testo descrittivo di esempio: zafferano Super Negin dai fili lunghi e dal profumo intenso, raccolto a mano e selezionato per aroma e colore. [Descrizione di prova, da sostituire con il testo definitivo.]">
+        <div class="product-card reveal" data-name="Zafferano Super Negin" data-name-en="Super Negin Saffron" data-price="€12,90" data-price-en="$14.00" data-stars="5" data-img="https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=900&q=70&auto=format&fit=crop&fm=webp" data-desc="Testo descrittivo di esempio: zafferano Super Negin dai fili lunghi e dal profumo intenso, raccolto a mano e selezionato per aroma e colore. [Descrizione di prova, da sostituire con il testo definitivo.]" data-desc-en="Sample description: Super Negin saffron with long threads and an intense aroma, hand-harvested and selected for scent and colour. [Draft description, to be replaced with final copy.]">
           <div class="product-media">
             <img src="https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=500&q=65&auto=format&fit=crop&fm=webp" alt="Zafferano Super Negin" width="500" height="525" loading="lazy" decoding="async">
             <button class="wishlist-btn" aria-label="Aggiungi ai preferiti"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20.5c-4-2.7-8.5-6.2-8.5-10.8 0-2.7 2.1-4.7 4.7-4.7 1.7 0 3 .8 3.8 2 .8-1.2 2.1-2 3.8-2 2.6 0 4.7 2 4.7 4.7 0 4.6-4.5 8.1-8.5 10.8Z" stroke="currentColor" stroke-width="1.5"/></svg></button>
@@ -755,7 +806,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
             <div class="stars">★★★★★</div>
           </div>
         </div>
-        <div class="product-card reveal" data-name="Pistacchi Sgusciati" data-price="€8,90" data-stars="5" data-img="https://images.unsplash.com/photo-1508061253366-f7da158b6d46?w=900&q=70&auto=format&fit=crop&fm=webp" data-desc="Testo descrittivo di esempio: pistacchi sgusciati croccanti e naturali, ideali da soli o come guarnizione per dolci e piatti salati. [Descrizione di prova, da sostituire con il testo definitivo.]">
+        <div class="product-card reveal" data-name="Pistacchi Sgusciati" data-name-en="Shelled Pistachios" data-price="€8,90" data-price-en="$9.70" data-stars="5" data-img="https://images.unsplash.com/photo-1508061253366-f7da158b6d46?w=900&q=70&auto=format&fit=crop&fm=webp" data-desc="Testo descrittivo di esempio: pistacchi sgusciati croccanti e naturali, ideali da soli o come guarnizione per dolci e piatti salati. [Descrizione di prova, da sostituire con il testo definitivo.]" data-desc-en="Sample description: crunchy, natural shelled pistachios, perfect on their own or as a topping for desserts and savoury dishes. [Draft description, to be replaced with final copy.]">
           <div class="product-media">
             <img src="https://images.unsplash.com/photo-1508061253366-f7da158b6d46?w=500&q=65&auto=format&fit=crop&fm=webp" alt="Pistacchi Sgusciati" width="500" height="525" loading="lazy" decoding="async">
             <button class="wishlist-btn" aria-label="Aggiungi ai preferiti"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20.5c-4-2.7-8.5-6.2-8.5-10.8 0-2.7 2.1-4.7 4.7-4.7 1.7 0 3 .8 3.8 2 .8-1.2 2.1-2 3.8-2 2.6 0 4.7 2 4.7 4.7 0 4.6-4.5 8.1-8.5 10.8Z" stroke="currentColor" stroke-width="1.5"/></svg></button>
@@ -767,7 +818,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
             <div class="stars">★★★★★</div>
           </div>
         </div>
-        <div class="product-card reveal" data-name="Biscotti al Burro" data-price="€4,90" data-stars="5" data-img="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=900&q=70&auto=format&fit=crop&fm=webp" data-desc="Testo descrittivo di esempio: biscotti al burro friabili, preparati con ricetta tradizionale e ingredienti selezionati. [Descrizione di prova, da sostituire con il testo definitivo.]">
+        <div class="product-card reveal" data-name="Biscotti al Burro" data-name-en="Butter Biscuits" data-price="€4,90" data-price-en="$5.40" data-stars="5" data-img="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=900&q=70&auto=format&fit=crop&fm=webp" data-desc="Testo descrittivo di esempio: biscotti al burro friabili, preparati con ricetta tradizionale e ingredienti selezionati. [Descrizione di prova, da sostituire con il testo definitivo.]" data-desc-en="Sample description: crumbly butter biscuits, made with a traditional recipe and selected ingredients. [Draft description, to be replaced with final copy.]">
           <div class="product-media">
             <img src="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=500&q=65&auto=format&fit=crop&fm=webp" alt="Biscotti al Burro" width="500" height="525" loading="lazy" decoding="async">
             <button class="wishlist-btn" aria-label="Aggiungi ai preferiti"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20.5c-4-2.7-8.5-6.2-8.5-10.8 0-2.7 2.1-4.7 4.7-4.7 1.7 0 3 .8 3.8 2 .8-1.2 2.1-2 3.8-2 2.6 0 4.7 2 4.7 4.7 0 4.6-4.5 8.1-8.5 10.8Z" stroke="currentColor" stroke-width="1.5"/></svg></button>
@@ -779,7 +830,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
             <div class="stars">★★★★★</div>
           </div>
         </div>
-        <div class="product-card reveal" data-name="Mix Frutta Secca" data-price="€9,90" data-stars="5" data-img="https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=900&q=70&auto=format&fit=crop&fm=webp" data-desc="Testo descrittivo di esempio: mix di frutta secca selezionata, fonte naturale di energia per ogni momento della giornata. [Descrizione di prova, da sostituire con il testo definitivo.]">
+        <div class="product-card reveal" data-name="Mix Frutta Secca" data-name-en="Mixed Dried Fruit &amp; Nuts" data-price="€9,90" data-price-en="$10.80" data-stars="5" data-img="https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=900&q=70&auto=format&fit=crop&fm=webp" data-desc="Testo descrittivo di esempio: mix di frutta secca selezionata, fonte naturale di energia per ogni momento della giornata. [Descrizione di prova, da sostituire con il testo definitivo.]" data-desc-en="Sample description: a selected mix of dried fruit and nuts, a natural source of energy for any time of day. [Draft description, to be replaced with final copy.]">
           <div class="product-media">
             <img src="https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=500&q=65&auto=format&fit=crop&fm=webp" alt="Mix Frutta Secca" width="500" height="525" loading="lazy" decoding="async">
             <button class="wishlist-btn" aria-label="Aggiungi ai preferiti"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20.5c-4-2.7-8.5-6.2-8.5-10.8 0-2.7 2.1-4.7 4.7-4.7 1.7 0 3 .8 3.8 2 .8-1.2 2.1-2 3.8-2 2.6 0 4.7 2 4.7 4.7 0 4.6-4.5 8.1-8.5 10.8Z" stroke="currentColor" stroke-width="1.5"/></svg></button>
@@ -791,7 +842,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
             <div class="stars">★★★★★</div>
           </div>
         </div>
-        <div class="product-card reveal" data-name="Biscotti al Sesamo" data-price="€4,50" data-stars="4" data-img="https://images.unsplash.com/photo-1558326567-98ae2405596b?w=900&q=70&auto=format&fit=crop&fm=webp" data-desc="Testo descrittivo di esempio: biscotti al sesamo dal gusto delicato e croccante, perfetti da accompagnare a tè e caffè. [Descrizione di prova, da sostituire con il testo definitivo.]">
+        <div class="product-card reveal" data-name="Biscotti al Sesamo" data-name-en="Sesame Biscuits" data-price="€4,50" data-price-en="$4.90" data-stars="4" data-img="https://images.unsplash.com/photo-1558326567-98ae2405596b?w=900&q=70&auto=format&fit=crop&fm=webp" data-desc="Testo descrittivo di esempio: biscotti al sesamo dal gusto delicato e croccante, perfetti da accompagnare a tè e caffè. [Descrizione di prova, da sostituire con il testo definitivo.]" data-desc-en="Sample description: sesame biscuits with a delicate, crunchy taste, perfect alongside tea and coffee. [Draft description, to be replaced with final copy.]">
           <div class="product-media">
             <img src="https://images.unsplash.com/photo-1558326567-98ae2405596b?w=500&q=65&auto=format&fit=crop&fm=webp" alt="Biscotti al Sesamo" width="500" height="525" loading="lazy" decoding="async">
             <button class="wishlist-btn" aria-label="Aggiungi ai preferiti"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20.5c-4-2.7-8.5-6.2-8.5-10.8 0-2.7 2.1-4.7 4.7-4.7 1.7 0 3 .8 3.8 2 .8-1.2 2.1-2 3.8-2 2.6 0 4.7 2 4.7 4.7 0 4.6-4.5 8.1-8.5 10.8Z" stroke="currentColor" stroke-width="1.5"/></svg></button>
@@ -803,7 +854,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
             <div class="stars">★★★★☆</div>
           </div>
         </div>
-        <div class="product-card reveal" data-name="Tè allo Zafferano" data-price="€7,90" data-stars="4" data-img="https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=900&q=70&auto=format&fit=crop&fm=webp" data-desc="Testo descrittivo di esempio: infuso allo zafferano dal profumo delicato, ideale per un momento di relax in ogni stagione. [Descrizione di prova, da sostituire con il testo definitivo.]">
+        <div class="product-card reveal" data-name="Tè allo Zafferano" data-name-en="Saffron Tea" data-price="€7,90" data-price-en="$8.60" data-stars="4" data-img="https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=900&q=70&auto=format&fit=crop&fm=webp" data-desc="Testo descrittivo di esempio: infuso allo zafferano dal profumo delicato, ideale per un momento di relax in ogni stagione. [Descrizione di prova, da sostituire con il testo definitivo.]" data-desc-en="Sample description: a saffron infusion with a delicate aroma, ideal for a relaxing moment in any season. [Draft description, to be replaced with final copy.]">
           <div class="product-media">
             <img src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=500&q=65&auto=format&fit=crop&fm=webp" alt="Tè allo Zafferano" width="500" height="525" loading="lazy" decoding="async">
             <button class="wishlist-btn" aria-label="Aggiungi ai preferiti"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20.5c-4-2.7-8.5-6.2-8.5-10.8 0-2.7 2.1-4.7 4.7-4.7 1.7 0 3 .8 3.8 2 .8-1.2 2.1-2 3.8-2 2.6 0 4.7 2 4.7 4.7 0 4.6-4.5 8.1-8.5 10.8Z" stroke="currentColor" stroke-width="1.5"/></svg></button>
@@ -1035,26 +1086,37 @@ function showToast(msg){
   clearTimeout(toast._t);
   toast._t = setTimeout(()=> toast.classList.remove('show'), 2800);
 }
+function productName(card){
+  const isEn = document.documentElement.dataset.lang === 'en';
+  return (isEn && card.dataset.nameEn) ? card.dataset.nameEn : card.dataset.name;
+}
 document.querySelectorAll('.quick-add').forEach(btn=>{
   btn.addEventListener('click', (e)=>{
     e.stopPropagation();
     cart++; cartCount.textContent = cart;
-    const name = btn.closest('.product-card').dataset.name;
-    showToast(name + ' aggiunto al carrello');
+    const isEn = document.documentElement.dataset.lang === 'en';
+    const name = productName(btn.closest('.product-card'));
+    showToast(isEn ? (name + ' added to cart') : (name + ' aggiunto al carrello'));
   });
 });
 document.querySelectorAll('.product-card .wishlist-btn').forEach(btn=>{
   btn.addEventListener('click', (e)=>{
     e.stopPropagation();
     btn.classList.toggle('active');
-    showToast(btn.classList.contains('active') ? 'Aggiunto ai preferiti' : 'Rimosso dai preferiti');
+    const isEn = document.documentElement.dataset.lang === 'en';
+    if(isEn){
+      showToast(btn.classList.contains('active') ? 'Added to wishlist' : 'Removed from wishlist');
+    }else{
+      showToast(btn.classList.contains('active') ? 'Aggiunto ai preferiti' : 'Rimosso dai preferiti');
+    }
   });
 });
 
 /* Newsletter */
 document.getElementById('newsletterForm').addEventListener('submit', (e)=>{
   e.preventDefault();
-  showToast('Grazie per l\\'iscrizione! Controlla la tua email.');
+  const isEn = document.documentElement.dataset.lang === 'en';
+  showToast(isEn ? 'Thanks for subscribing! Check your email.' : 'Grazie per l\'iscrizione! Controlla la tua email.');
   e.target.reset();
 });
 
@@ -1110,12 +1172,13 @@ let pmQtyVal = 1;
 let pmCurrentName = '';
 
 function openProductModal(card){
-  pmCurrentName = card.dataset.name;
+  const isEn = document.documentElement.dataset.lang === 'en';
+  pmCurrentName = isEn && card.dataset.nameEn ? card.dataset.nameEn : card.dataset.name;
   pmImg.src = card.dataset.img;
   pmImg.alt = pmCurrentName;
   pmTitle.textContent = pmCurrentName;
-  pmDesc.textContent = card.dataset.desc;
-  pmPrice.textContent = card.dataset.price;
+  pmDesc.textContent = isEn && card.dataset.descEn ? card.dataset.descEn : card.dataset.desc;
+  pmPrice.textContent = isEn && card.dataset.priceEn ? card.dataset.priceEn : card.dataset.price;
   const starCount = parseInt(card.dataset.stars || '5', 10);
   pmStars.textContent = '★★★★★☆☆☆☆☆'.slice(5 - starCount, 10 - starCount);
   pmQtyVal = 1; pmQty.textContent = pmQtyVal;
@@ -1140,8 +1203,182 @@ document.getElementById('pmPlus').addEventListener('click', ()=>{ pmQtyVal++; pm
 pmWishlist.addEventListener('click', ()=> pmWishlist.classList.toggle('active'));
 pmAddToCart.addEventListener('click', ()=>{
   cart += pmQtyVal; cartCount.textContent = cart;
-  showToast(pmCurrentName + ' (' + pmQtyVal + ') aggiunto al carrello');
+  const isEn = document.documentElement.dataset.lang === 'en';
+  showToast(isEn ? (pmCurrentName + ' (' + pmQtyVal + ') added to cart') : (pmCurrentName + ' (' + pmQtyVal + ') aggiunto al carrello'));
   closeProductModal();
+});
+
+/* ===================== IT ⇄ EN TRANSLATION ENGINE ===================== */
+const IT_EN_DICT = {
+  "Spedizione gratuita per ordini superiori a":"Free shipping on orders over",
+  "€79":"$85",
+  "in tutta Italia":"across Italy",
+  "Negozio":"Shop",
+  "Categorie":"Categories",
+  "Zafferano":"Saffron",
+  "Frutta Secca":"Dried Fruit & Nuts",
+  "Biscotti":"Biscuits",
+  "Dolci Tradizionali":"Traditional Sweets",
+  "Spezie e Erbe":"Spices & Herbs",
+  "Frutta Disidratata":"Dried Fruit",
+  "Chi Siamo":"About Us",
+  "Contatti":"Contact",
+  "Cerca nel Catalogo":"Search the Catalogue",
+  "Via dello Zafferano 12, Milano, Italia":"Via dello Zafferano 12, Milan, Italy",
+  "Selezione Artigianale":"Artisan Selection",
+  "Frutta Secca,":"Dried Fruit,",
+  "Autentica.":"Truly Authentic.",
+  "Croccantezza":"Crunchiness",
+  "Mandorle, pistacchi e nocciole selezionati uno a uno per portare in tavola un gusto ricco e naturale, senza compromessi.":"Almonds, pistachios and hazelnuts selected one by one, bringing a rich, natural taste to your table with no compromises.",
+  "Vedi la Selezione":"View the Selection",
+  "Qualità Garantita":"Guaranteed Quality",
+  "Prodotti selezionati con la massima cura":"Products selected with the utmost care",
+  "Spedizione Veloce":"Fast Shipping",
+  "Consegnamo in tutta Italia in 24/48h":"We deliver across Italy in 24/48h",
+  "Pagamenti Sicuri":"Secure Payments",
+  "Transazioni protette e sicure al 100%":"100% protected and secure transactions",
+  "Assistenza Clienti":"Customer Support",
+  "Siamo sempre disponibili per te":"We're always here for you",
+  "Le Nostre Categorie":"Our Categories",
+  "Scopri i Nostri Prodotti":"Discover Our Products",
+  "Vai al Negozio":"Go to Shop",
+  "Scopri di più":"Discover more",
+  "La Nostra Passione":"Our Passion",
+  "Tradizione,":"Tradition,",
+  "Qualità":"Quality",
+  "e Fiducia dal 1997":"and Trust since 1997",
+  "Da oltre 25 anni, Davoodi porta l'eccellenza dei sapori autentici sulla tua tavola. Selezioniamo solo il meglio della natura per offrirti prodotti genuini e di qualità superiore, dalla raccolta dello zafferano alla lavorazione artigianale dei nostri dolci.":"For over 25 years, Davoodi has brought the excellence of authentic flavours to your table. We select only the best that nature offers, from hand-harvested saffron to the artisan crafting of our sweets.",
+  "Anni di Esperienza":"Years of Experience",
+  "Prodotti Selezionati":"Selected Products",
+  "Clienti Soddisfatti":"Happy Customers",
+  "Scopri di Più":"Discover More",
+  "Come Funziona":"How It Works",
+  "Ordinare Non È Mai Stato Così Semplice":"Ordering Has Never Been Easier",
+  "Scegli i Prodotti":"Choose Your Products",
+  "Esplora il nostro catalogo e scegli i sapori autentici che preferisci, dallo zafferano ai dolci tradizionali.":"Browse our catalogue and choose the authentic flavours you love, from saffron to traditional sweets.",
+  "Ordina in Sicurezza":"Order Securely",
+  "Completa il tuo ordine con pochi click grazie a pagamenti protetti e sicuri al 100%.":"Complete your order in a few clicks with 100% protected, secure payments.",
+  "Ricevi a Casa":"Receive at Home",
+  "Riceverai i tuoi prodotti in tutta Italia entro 24/48h, imballati con cura.":"Your products will arrive anywhere in Italy within 24/48h, carefully packaged.",
+  "I Più Amati":"Best Loved",
+  "Prodotti Più Venduti":"Best-Selling Products",
+  "Vedi Tutti":"View All",
+  "Zafferano Super Negin":"Super Negin Saffron",
+  "Pistacchi Sgusciati":"Shelled Pistachios",
+  "Biscotti al Burro":"Butter Biscuits",
+  "Mix Frutta Secca":"Mixed Dried Fruit & Nuts",
+  "Biscotti al Sesamo":"Sesame Biscuits",
+  "Tè allo Zafferano":"Saffron Tea",
+  "€12,90":"$14.00",
+  "€8,90":"$9.70",
+  "€4,90":"$5.40",
+  "€9,90":"$10.80",
+  "€4,50":"$4.90",
+  "€7,90":"$8.60",
+  "Aggiungi al Carrello":"Add to Cart",
+  "100% Naturale":"100% Natural",
+  "Senza conservanti né additivi":"No preservatives or additives",
+  "Imballaggio Sicuro":"Secure Packaging",
+  "Confezioni eleganti e resistenti":"Elegant, sturdy packaging",
+  "Filiera Controllata":"Controlled Supply Chain",
+  "Dalla selezione alla tua tavola":"From selection to your table",
+  "Cosa Dicono di Noi":"What Our Customers Say",
+  "Recensioni dei Nostri Clienti":"Reviews From Our Customers",
+  "\u201CLo zafferano Super Negin ha un profumo incredibile, si sente davvero la differenza rispetto ad altre marche.\u201D":"\u201CThe Super Negin saffron has an incredible aroma, you can really feel the difference compared to other brands.\u201D",
+  "\"Lo zafferano Super Negin ha un profumo incredibile, si sente davvero la differenza rispetto ad altre marche.\"":"\"The Super Negin saffron has an incredible aroma, you can really feel the difference compared to other brands.\"",
+  "\"Confezione elegantissima, perfetta come regalo. I biscotti al burro sono spariti in due giorni in famiglia.\"":"\"Absolutely elegant packaging, perfect as a gift. The butter biscuits were gone within two days at home.\"",
+  "\"Spedizione velocissima e frutta secca freschissima. Davoodi è ormai il mio negozio di fiducia.\"":"\"Super-fast shipping and incredibly fresh dried fruit. Davoodi is now my go-to shop.\"",
+  "Cliente verificata":"Verified customer",
+  "Cliente verificato":"Verified customer",
+  "Resta Aggiornato":"Stay Updated",
+  "Entra nel Mondo Davoodi":"Enter the World of Davoodi",
+  "Iscriviti alla newsletter e ricevi subito il 10% di sconto sul tuo primo ordine, oltre ad anteprime e offerte esclusive.":"Subscribe to our newsletter and get 10% off your first order, plus early access and exclusive offers.",
+  "Iscriviti":"Subscribe",
+  "Niente spam. Puoi disiscriverti in qualsiasi momento.":"No spam. You can unsubscribe anytime.",
+  "Dal 1997 selezioniamo il meglio della natura: zafferano, frutta secca, biscotti e dolci tradizionali, per portare autenticità italiana sulla tua tavola.":"Since 1997 we've selected the best nature has to offer: saffron, dried fruit, biscuits and traditional sweets, bringing Italian authenticity to your table.",
+  "Azienda":"Company",
+  "Assistenza":"Support",
+  "Lavora con Noi":"Careers",
+  "Spedizioni":"Shipping",
+  "Resi e Rimborsi":"Returns & Refunds",
+  "Domande Frequenti":"FAQ",
+  "Termini e Condizioni":"Terms & Conditions",
+  "Via dello Zafferano 12,":"Via dello Zafferano 12,",
+  "20100 Milano, Italia":"20100 Milan, Italy",
+  "Davoodi Italia — P.IVA 00000000000. Tutti i diritti riservati.":"Davoodi Italia — VAT No. 00000000000. All rights reserved.",
+  "Pagamenti sicuri: Carta di Credito · PayPal · Bonifico Bancario":"Secure payments: Credit Card · PayPal · Bank Transfer",
+  "Quantità":"Quantity",
+  "Italia (EUR €)":"Italia (EUR €)"
+};
+
+const PLACEHOLDER_DICT = {
+  "Zafferano, biscotti, pistacchi…":"Saffron, biscuits, pistachios…",
+  "Il tuo indirizzo email":"Your email address"
+};
+
+const originalTextMap = new WeakMap();
+
+function collectTranslatableNodes(){
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode(node){
+      if(!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+      const p = node.parentElement;
+      if(!p) return NodeFilter.FILTER_REJECT;
+      if(p.closest('script, style')) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const nodes = [];
+  let n;
+  while((n = walker.nextNode())) nodes.push(n);
+  return nodes;
+}
+
+function applyLanguage(lang){
+  const nodes = collectTranslatableNodes();
+  nodes.forEach(node=>{
+    if(!originalTextMap.has(node)) originalTextMap.set(node, node.nodeValue);
+    const original = originalTextMap.get(node);
+    if(lang === 'it'){
+      node.nodeValue = original;
+      return;
+    }
+    const trimmed = original.trim();
+    const translation = IT_EN_DICT[trimmed];
+    if(translation){
+      const leading = original.match(/^\s*/)[0];
+      const trailing = original.match(/\s*$/)[0];
+      node.nodeValue = leading + translation + trailing;
+    }
+  });
+
+  const searchInput = document.querySelector('.search-box input');
+  const newsletterInput = document.querySelector('.newsletter-form input');
+  if(lang === 'en'){
+    if(searchInput) searchInput.placeholder = PLACEHOLDER_DICT["Zafferano, biscotti, pistacchi…"];
+    if(newsletterInput) newsletterInput.placeholder = PLACEHOLDER_DICT["Il tuo indirizzo email"];
+  }else{
+    if(searchInput) searchInput.placeholder = "Zafferano, biscotti, pistacchi…";
+    if(newsletterInput) newsletterInput.placeholder = "Il tuo indirizzo email";
+  }
+
+  document.documentElement.lang = lang;
+  document.documentElement.dataset.lang = lang;
+
+  const regionLabel = document.getElementById('regionSelectLabel');
+  if(regionLabel) regionLabel.textContent = lang === 'en' ? 'English (USD $)' : 'Italia (EUR €)';
+
+  document.querySelectorAll('.lang-option').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+}
+
+document.querySelectorAll('.lang-option').forEach(btn=>{
+  btn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    applyLanguage(btn.dataset.lang);
+    closeDrawer();
+  });
 });
 </script>
 </body>
