@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحلیل مسیر حرفه‌ای | آکادمی حسابداری جاویدان</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:    #0F1F3D;
+    --blue:    #1A4DB8;
+    --blue-mid:#2563EB;
+    --sky:     #3B82F6;
+    --ice:     #EFF6FF;
+    --white:   #FFFFFF;
+    --green:   #10B981;
+    --orange:  #F59E0B;
+    --red:     #EF4444;
+    --glass-bg: rgba(255,255,255,0.12);
+    --glass-border: rgba(255,255,255,0.22);
+    --glass-hover: rgba(255,255,255,0.22);
+    --text-dark: #0F1F3D;
+    --text-mid: #334155;
+    --text-soft: #64748B;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Vazirmatn', sans-serif;
+    background: linear-gradient(135deg, #0F1F3D 0%, #1A3A72 40%, #0D2E6B 70%, #0F1F3D 100%);
+    min-height: 100vh;
+    color: var(--white);
+    direction: rtl;
+    overflow-x: hidden;
+  }
+
+  /* ─── Background orbs ─── */
+  .bg-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb1 { width: 500px; height: 500px; background: #3B82F6; top: -150px; right: -100px; }
+  .orb2 { width: 400px; height: 400px; background: #1D4ED8; bottom: -100px; left: -100px; }
+  .orb3 { width: 300px; height: 300px; background: #06B6D4; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+
+  /* ─── Wrapper ─── */
+  #app {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+  }
+
+  /* ─── Card ─── */
+  .card {
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 28px;
+    width: 100%;
+    max-width: 620px;
+    padding: 40px 36px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+    animation: fadeUp .45s cubic-bezier(.22,.87,.33,1) both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── Logo / Header ─── */
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .brand-icon {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 4px 14px rgba(59,130,246,0.45);
+    flex-shrink: 0;
+  }
+  .brand-name { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75); line-height: 1.4; }
+  .brand-name span { display: block; color: #fff; font-size: 15px; font-weight: 700; }
+
+  /* ─── Progress ─── */
+  .progress-wrap { margin-bottom: 32px; }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 500;
+  }
+  .step-label { color: rgba(255,255,255,0.85); font-weight: 600; font-size: 13px; }
+  .progress-bar-bg {
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #60A5FA, #3B82F6);
+    border-radius: 99px;
+    transition: width .6s cubic-bezier(.22,.87,.33,1);
+    box-shadow: 0 0 10px rgba(96,165,250,0.6);
+  }
+
+  /* ─── Question ─── */
+  .q-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(59,130,246,0.18);
+    border: 1px solid rgba(59,130,246,0.3);
+    border-radius: 99px;
+    padding: 4px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #93C5FD;
+    margin-bottom: 16px;
+    letter-spacing: .02em;
+  }
+  .q-text {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.55;
+    margin-bottom: 28px;
+  }
+
+  /* ─── Options ─── */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .option {
+    background: rgba(255,255,255,0.07);
+    border: 1.5px solid rgba(255,255,255,0.13);
+    border-radius: 16px;
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: all .22s cubic-bezier(.22,.87,.33,1);
+    position: relative;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .option::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(59,130,246,0.18), rgba(29,78,216,0.1));
+    opacity: 0;
+    transition: opacity .22s;
+    border-radius: inherit;
+  }
+  .option:hover { border-color: rgba(96,165,250,0.5); transform: translateX(-3px); }
+  .option:hover::before { opacity: 1; }
+  .option:active { transform: scale(0.98); }
+
+  .option.selected {
+    border-color: #3B82F6;
+    background: rgba(59,130,246,0.18);
+    box-shadow: 0 0 0 1px rgba(59,130,246,0.4), 0 8px 24px rgba(59,130,246,0.2);
+  }
+  .option.selected::before { opacity: 1; }
+
+  .opt-radio {
+    width: 22px; height: 22px;
+    border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s;
+  }
+  .option.selected .opt-radio {
+    border-color: #3B82F6;
+    background: #3B82F6;
+  }
+  .opt-radio-dot {
+    width: 8px; height: 8px;
+    background: #fff;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform .2s cubic-bezier(.34,1.56,.64,1);
+  }
+  .option.selected .opt-radio-dot { transform: scale(1); }
+
+  .opt-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.88);
+    line-height: 1.5;
+    flex: 1;
+  }
+  .option.selected .opt-text { color: #fff; font-weight: 600; }
+
+  .opt-emoji { font-size: 20px; flex-shrink: 0; }
+
+  /* ─── Buttons ─── */
+  .btn-primary {
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 24px;
+    box-shadow: 0 8px 28px rgba(59,130,246,0.4);
+    transition: all .22s;
+    letter-spacing: .01em;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(59,130,246,0.5); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  .btn-ghost {
+    background: rgba(255,255,255,0.07);
+    border: 1.5px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.7);
+    border-radius: 12px;
+    padding: 12px 22px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+  /* ─── Start screen ─── */
+  .start-icon {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+    border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 34px;
+    margin-bottom: 24px;
+    box-shadow: 0 12px 40px rgba(59,130,246,0.45);
+  }
+  .start-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.45;
+    margin-bottom: 16px;
+  }
+  .start-desc {
+    font-size: 15px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.75;
+    margin-bottom: 28px;
+  }
+  .start-stats {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .stat-chip {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 99px;
+    padding: 7px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stat-chip span { color: #60A5FA; }
+
+  /* ─── Lead form ─── */
+  .lead-icon { font-size: 48px; margin-bottom: 16px; }
+  .lead-title { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 10px; }
+  .lead-desc { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.7; margin-bottom: 28px; }
+
+  .form-group { margin-bottom: 16px; }
+  .form-label { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75); margin-bottom: 8px; display: block; }
+  .form-input {
+    width: 100%;
+    background: rgba(255,255,255,0.08);
+    border: 1.5px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: #fff;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 15px;
+    outline: none;
+    direction: rtl;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .form-input::placeholder { color: rgba(255,255,255,0.3); }
+  .form-input:focus {
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+  }
+  .privacy-note { font-size: 12px; color: rgba(255,255,255,0.35); text-align: center; margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+
+  /* ─── Result ─── */
+  .result-header {
+    background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(29,78,216,0.15));
+    border: 1px solid rgba(59,130,246,0.3);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .result-emoji { font-size: 48px; margin-bottom: 10px; }
+  .result-level-label { font-size: 12px; color: #93C5FD; font-weight: 600; margin-bottom: 4px; letter-spacing: .05em; text-transform: uppercase; }
+  .result-level { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+  .result-desc { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.7; }
+
+  /* Score gauge */
+  .score-wrap {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .score-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 10px; font-weight: 600; }
+  .score-number { font-size: 48px; font-weight: 800; color: #60A5FA; line-height: 1; }
+  .score-max { font-size: 16px; color: rgba(255,255,255,0.3); }
+  .score-bar-bg { height: 8px; background: rgba(255,255,255,0.08); border-radius: 99px; margin-top: 14px; overflow: hidden; }
+  .score-bar-fill { height: 100%; border-radius: 99px; transition: width 1.2s cubic-bezier(.22,.87,.33,1); }
+
+  /* Insight cards */
+  .insights { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .insight-card {
+    flex: 1;
+    min-width: 130px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 14px;
+  }
+  .insight-label { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 600; margin-bottom: 6px; }
+  .insight-value { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.4; }
+  .insight-icon { font-size: 20px; margin-bottom: 6px; }
+
+  /* Lead badge */
+  .lead-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 99px;
+    padding: 6px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  .lead-hot { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #FCA5A5; }
+  .lead-warm { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); color: #FCD34D; }
+  .lead-cold { background: rgba(96,165,250,0.15); border: 1px solid rgba(96,165,250,0.3); color: #93C5FD; }
+
+  /* Course card */
+  .course-card {
+    background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(5,150,105,0.08));
+    border: 1.5px solid rgba(16,185,129,0.3);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .course-label { font-size: 11px; color: #6EE7B7; font-weight: 700; letter-spacing: .05em; margin-bottom: 8px; }
+  .course-name { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+  .course-desc { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6; }
+
+  .cta-buttons { display: flex; flex-direction: column; gap: 10px; }
+  .btn-cta-main {
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #10B981, #059669);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 28px rgba(16,185,129,0.35);
+    transition: all .22s;
+  }
+  .btn-cta-main:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(16,185,129,0.45); }
+
+  .btn-cta-sec {
+    width: 100%;
+    padding: 14px 24px;
+    background: rgba(255,255,255,0.07);
+    border: 1.5px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.8);
+    border-radius: 14px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .22s;
+  }
+  .btn-cta-sec:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+  /* Path chips */
+  .path-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .path-chip {
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: #93C5FD;
+    font-weight: 600;
+  }
+  .path-arrow { color: rgba(255,255,255,0.25); font-size: 13px; display: flex; align-items: center; }
+
+  /* Transition animation */
+  .slide-exit { animation: slideExit .25s ease forwards; }
+  .slide-enter { animation: slideEnter .35s cubic-bezier(.22,.87,.33,1) forwards; }
+  @keyframes slideExit {
+    to { opacity: 0; transform: translateX(30px); }
+  }
+  @keyframes slideEnter {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Mobile */
+  @media (max-width: 480px) {
+    .card { padding: 28px 20px; border-radius: 22px; }
+    .q-text { font-size: 17px; }
+    .opt-text { font-size: 14px; }
+    .start-title { font-size: 20px; }
+    .score-number { font-size: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-orb orb1"></div>
+<div class="bg-orb orb2"></div>
+<div class="bg-orb orb3"></div>
+
+<div id="app">
+  <div class="card" id="main-card">
+    <!-- Dynamic content here -->
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+const state = {
+  screen: 'start',       // start | quiz | lead | result
+  path: null,            // 'A' | 'B' | 'C'
+  currentQ: 0,
+  answers: {},
+  name: '',
+  phone: '',
+  score: 0,
+  leadScore: 0,
+  leadType: '',
+};
+
+// ═══════════════════════════════════════════════
+//  QUESTIONS
+// ═══════════════════════════════════════════════
+
+const Q_LEVEL = {
+  id: 'level',
+  badge: 'سطح‌سنجی',
+  text: 'الان وضعیتت در حسابداری چطوره؟',
+  options: [
+    { id:'a', text:'تقریباً هیچ چیزی از حسابداری نمی‌دانم', emoji:'🌱', score:5 },
+    { id:'b', text:'مفاهیم اولیه را بلدم ولی تجربه عملی ندارم', emoji:'📖', score:15 },
+    { id:'c', text:'حسابداری خوانده‌ام ولی در بازار کار ضعیفم', emoji:'📋', score:30 },
+    { id:'d', text:'در حال حاضر حسابدار هستم', emoji:'💼', score:60 },
+    { id:'e', text:'حسابدار حرفه‌ای هستم و دنبال پیشرفت بیشترم', emoji:'🏆', score:80 },
+  ]
+};
+
+const PATH_A = [
+  {
+    id:'a_why', badge:'هدف‌گذاری',
+    text:'چرا می‌خواهی حسابداری را یاد بگیری؟',
+    options:[
+      { id:'a', text:'پیدا کردن اولین شغل', emoji:'💼', score:20 },
+      { id:'b', text:'تغییر شغل', emoji:'🔄', score:18 },
+      { id:'c', text:'افزایش درآمد', emoji:'💰', score:22 },
+      { id:'d', text:'داشتن یک مهارت مطمئن', emoji:'🛡️', score:16 },
+      { id:'e', text:'راه‌اندازی کسب‌وکار', emoji:'🚀', score:24 },
+      { id:'f', text:'استفاده در کسب‌وکار شخصی', emoji:'🏪', score:20 },
+    ]
+  },
+  {
+    id:'a_income_now', badge:'وضعیت درآمد',
+    text:'در حال حاضر درآمد ماهانه‌ات تقریباً چقدر است؟',
+    options:[
+      { id:'a', text:'درآمد ندارم', emoji:'⚪', score:5 },
+      { id:'b', text:'کمتر از ۱۰ میلیون', emoji:'🔵', score:8 },
+      { id:'c', text:'۱۰ تا ۲۰ میلیون', emoji:'🟢', score:12 },
+      { id:'d', text:'۲۰ تا ۳۰ میلیون', emoji:'🟡', score:16 },
+      { id:'e', text:'۳۰ تا ۵۰ میلیون', emoji:'🟠', score:18 },
+      { id:'f', text:'بیشتر از ۵۰ میلیون', emoji:'🔴', score:20 },
+    ]
+  },
+  {
+    id:'a_income_goal', badge:'هدف درآمدی',
+    text:'دوست داری با یادگیری حسابداری به چه درآمدی برسی؟',
+    options:[
+      { id:'a', text:'۱۵ تا ۲۰ میلیون', emoji:'📈', score:10 },
+      { id:'b', text:'۲۰ تا ۳۰ میلیون', emoji:'📈', score:14 },
+      { id:'c', text:'۳۰ تا ۵۰ میلیون', emoji:'📈', score:18 },
+      { id:'d', text:'۵۰ تا ۸۰ میلیون', emoji:'🚀', score:22 },
+      { id:'e', text:'بیشتر از ۸۰ میلیون', emoji:'💎', score:25 },
+    ]
+  },
+  {
+    id:'a_worry', badge:'نگرانی اصلی',
+    text:'بزرگ‌ترین نگرانی تو برای ورود به حسابداری چیه؟',
+    options:[
+      { id:'a', text:'نمی‌دانم از کجا شروع کنم', emoji:'🗺️', score:15 },
+      { id:'b', text:'می‌ترسم نتوانم یاد بگیرم', emoji:'😰', score:10 },
+      { id:'c', text:'تجربه عملی ندارم', emoji:'🔧', score:18 },
+      { id:'d', text:'نمی‌دانم چطور شغل پیدا کنم', emoji:'🔍', score:16 },
+      { id:'e', text:'درآمد این کار برایم مشخص نیست', emoji:'❓', score:12 },
+      { id:'f', text:'از کار با نرم‌افزارها می‌ترسم', emoji:'💻', score:14 },
+    ]
+  },
+  {
+    id:'a_time', badge:'زمان یادگیری',
+    text:'هفته‌ای چقدر زمان می‌توانی برای یادگیری بگذاری؟',
+    options:[
+      { id:'a', text:'کمتر از ۳ ساعت', emoji:'⏱️', score:8 },
+      { id:'b', text:'۳ تا ۵ ساعت', emoji:'⏰', score:12 },
+      { id:'c', text:'۵ تا ۱۰ ساعت', emoji:'🕐', score:18 },
+      { id:'d', text:'بیشتر از ۱۰ ساعت', emoji:'🔥', score:24 },
+    ]
+  },
+];
+
+const PATH_B = [
+  {
+    id:'b_weak', badge:'نقاط ضعف',
+    text:'بیشتر در کدام بخش احساس ضعف می‌کنی؟',
+    options:[
+      { id:'a', text:'ثبت اسناد حسابداری', emoji:'📄', score:15 },
+      { id:'b', text:'نرم‌افزارهای حسابداری', emoji:'💻', score:15 },
+      { id:'c', text:'حقوق و دستمزد', emoji:'👥', score:15 },
+      { id:'d', text:'مالیات', emoji:'🏛️', score:18 },
+      { id:'e', text:'بیمه', emoji:'🛡️', score:13 },
+      { id:'f', text:'تهیه گزارش‌های مالی', emoji:'📊', score:18 },
+      { id:'g', text:'کار عملی و تجربه واقعی', emoji:'🔧', score:20 },
+    ]
+  },
+  {
+    id:'b_trust', badge:'اعتمادبه‌نفس',
+    text:'اگر همین امروز بخواهی وارد یک شرکت شوی، چقدر به مهارتت اعتماد داری؟',
+    options:[
+      { id:'a', text:'اصلاً اعتماد ندارم', emoji:'😟', score:5 },
+      { id:'b', text:'کم', emoji:'😐', score:10 },
+      { id:'c', text:'متوسط', emoji:'🙂', score:16 },
+      { id:'d', text:'خوب', emoji:'😊', score:22 },
+      { id:'e', text:'کاملاً آماده‌ام', emoji:'💪', score:28 },
+    ]
+  },
+  {
+    id:'b_income_now', badge:'درآمد فعلی',
+    text:'در حال حاضر درآمد ماهانه‌ات چقدر است؟',
+    options:[
+      { id:'a', text:'بدون درآمد', emoji:'⚪', score:5 },
+      { id:'b', text:'کمتر از ۱۵ میلیون', emoji:'🔵', score:8 },
+      { id:'c', text:'۱۵ تا ۲۵ میلیون', emoji:'🟢', score:14 },
+      { id:'d', text:'۲۵ تا ۴۰ میلیون', emoji:'🟡', score:18 },
+      { id:'e', text:'۴۰ تا ۶۰ میلیون', emoji:'🟠', score:22 },
+      { id:'f', text:'بیشتر از ۶۰ میلیون', emoji:'💎', score:25 },
+    ]
+  },
+  {
+    id:'b_goal_income', badge:'هدف درآمدی',
+    text:'هدف درآمدی تو در ۶ تا ۱۲ ماه آینده چیه؟',
+    options:[
+      { id:'a', text:'۲۰ تا ۳۰ میلیون', emoji:'📈', score:10 },
+      { id:'b', text:'۳۰ تا ۵۰ میلیون', emoji:'📈', score:15 },
+      { id:'c', text:'۵۰ تا ۸۰ میلیون', emoji:'🚀', score:20 },
+      { id:'d', text:'۸۰ تا ۱۰۰ میلیون', emoji:'💎', score:24 },
+      { id:'e', text:'بیشتر از ۱۰۰ میلیون', emoji:'🔥', score:28 },
+    ]
+  },
+  {
+    id:'b_goal', badge:'هدف آموزشی',
+    text:'مهم‌ترین چیزی که می‌خواهی از آموزش به دست بیاوری چیست؟',
+    options:[
+      { id:'a', text:'آمادگی برای استخدام', emoji:'💼', score:20 },
+      { id:'b', text:'افزایش حقوق', emoji:'💰', score:22 },
+      { id:'c', text:'گرفتن پروژه', emoji:'📁', score:24 },
+      { id:'d', text:'ارتقای شغلی', emoji:'⬆️', score:22 },
+      { id:'e', text:'تبدیل شدن به حسابدار حرفه‌ای', emoji:'🏆', score:25 },
+      { id:'f', text:'ورود به حوزه مالیات و مشاغل تخصصی', emoji:'🏛️', score:26 },
+    ]
+  },
+];
+
+const PATH_C = [
+  {
+    id:'c_exp', badge:'سابقه کاری',
+    text:'چند سال سابقه کار حسابداری داری؟',
+    options:[
+      { id:'a', text:'کمتر از ۱ سال', emoji:'🌱', score:10 },
+      { id:'b', text:'۱ تا ۳ سال', emoji:'📖', score:18 },
+      { id:'c', text:'۳ تا ۵ سال', emoji:'💼', score:24 },
+      { id:'d', text:'۵ تا ۱۰ سال', emoji:'⭐', score:28 },
+      { id:'e', text:'بیشتر از ۱۰ سال', emoji:'👑', score:32 },
+    ]
+  },
+  {
+    id:'c_position', badge:'سمت فعلی',
+    text:'در حال حاضر در چه سطحی فعالیت می‌کنی؟',
+    options:[
+      { id:'a', text:'کمک حسابدار', emoji:'🔵', score:10 },
+      { id:'b', text:'حسابدار', emoji:'💼', score:16 },
+      { id:'c', text:'حسابدار ارشد', emoji:'⭐', score:22 },
+      { id:'d', text:'سرپرست حسابداری', emoji:'🎯', score:26 },
+      { id:'e', text:'مدیر مالی', emoji:'👔', score:30 },
+      { id:'f', text:'مشاور مالی / مالیاتی', emoji:'🏛️', score:32 },
+      { id:'g', text:'صاحب کسب‌وکار', emoji:'🚀', score:30 },
+    ]
+  },
+  {
+    id:'c_career_goal', badge:'هدف حرفه‌ای',
+    text:'مهم‌ترین هدف حرفه‌ای تو چیست؟',
+    options:[
+      { id:'a', text:'افزایش درآمد', emoji:'💰', score:20 },
+      { id:'b', text:'ارتقای شغلی', emoji:'⬆️', score:20 },
+      { id:'c', text:'رسیدن به سمت مدیر مالی', emoji:'👔', score:24 },
+      { id:'d', text:'گرفتن پروژه‌های بیشتر', emoji:'📁', score:22 },
+      { id:'e', text:'تخصص در مالیات', emoji:'🏛️', score:22 },
+      { id:'f', text:'راه‌اندازی دفتر خدمات حسابداری', emoji:'🏢', score:26 },
+      { id:'g', text:'افزایش اعتبار حرفه‌ای', emoji:'🏆', score:24 },
+    ]
+  },
+  {
+    id:'c_income_now', badge:'درآمد فعلی',
+    text:'درآمد ماهانه فعلی‌ات تقریباً چقدر است؟',
+    options:[
+      { id:'a', text:'کمتر از ۲۰ میلیون', emoji:'🔵', score:8 },
+      { id:'b', text:'۲۰ تا ۳۰ میلیون', emoji:'🟢', score:14 },
+      { id:'c', text:'۳۰ تا ۵۰ میلیون', emoji:'🟡', score:18 },
+      { id:'d', text:'۵۰ تا ۸۰ میلیون', emoji:'🟠', score:22 },
+      { id:'e', text:'۸۰ تا ۱۲۰ میلیون', emoji:'💎', score:26 },
+      { id:'f', text:'بیشتر از ۱۲۰ میلیون', emoji:'👑', score:30 },
+    ]
+  },
+  {
+    id:'c_income_goal', badge:'هدف درآمدی',
+    text:'درآمد هدف تو چقدر است؟',
+    options:[
+      { id:'a', text:'۵۰ میلیون', emoji:'📈', score:14 },
+      { id:'b', text:'۸۰ میلیون', emoji:'🚀', score:18 },
+      { id:'c', text:'۱۰۰ میلیون', emoji:'💎', score:22 },
+      { id:'d', text:'۱۵۰ میلیون', emoji:'💎', score:26 },
+      { id:'e', text:'بیشتر از ۱۵۰ میلیون', emoji:'👑', score:30 },
+    ]
+  },
+  {
+    id:'c_specialty', badge:'حوزه تخصصی',
+    text:'در کدام حوزه می‌خواهی تخصص بیشتری پیدا کنی؟',
+    options:[
+      { id:'a', text:'مالیات', emoji:'🏛️', score:20 },
+      { id:'b', text:'حسابداری صنعتی', emoji:'🏭', score:18 },
+      { id:'c', text:'حسابداری شرکت‌ها', emoji:'🏢', score:18 },
+      { id:'d', text:'حقوق و دستمزد', emoji:'👥', score:16 },
+      { id:'e', text:'مدیریت مالی', emoji:'📊', score:22 },
+      { id:'f', text:'حسابرسی', emoji:'🔍', score:20 },
+      { id:'g', text:'مشاوره مالی', emoji:'💡', score:22 },
+      { id:'h', text:'راه‌اندازی کسب‌وکار خدمات حسابداری', emoji:'🚀', score:25 },
+    ]
+  },
+];
+
+const Q_READINESS = {
+  id:'readiness', badge:'آمادگی شروع',
+  text:'اگر یک مسیر مشخص و عملی برای رسیدن به هدف شغلی‌ات داشته باشی، چقدر برای شروع آماده‌ای؟',
+  options:[
+    { id:'a', text:'همین الان آماده‌ام', emoji:'🔥', score:30 },
+    { id:'b', text:'در همین ماه می‌خواهم شروع کنم', emoji:'🚀', score:25 },
+    { id:'c', text:'احتمالاً شروع می‌کنم', emoji:'👍', score:18 },
+    { id:'d', text:'هنوز در حال بررسی هستم', emoji:'🤔', score:10 },
+    { id:'e', text:'فعلاً فقط می‌خواهم اطلاعات بیشتری کسب کنم', emoji:'📚', score:5 },
+  ]
+};
+
+// ═══════════════════════════════════════════════
+//  QUIZ FLOW BUILDER
+// ═══════════════════════════════════════════════
+function buildQuestions() {
+  const path = state.path;
+  let qs = [Q_LEVEL];
+  if (path === 'A') qs = qs.concat(PATH_A);
+  else if (path === 'B') qs = qs.concat(PATH_B);
+  else if (path === 'C') qs = qs.concat(PATH_C);
+  qs.push(Q_READINESS);
+  return qs;
+}
+
+// Determine path from level answer
+function getPath(levelAns) {
+  if (levelAns === 'a' || levelAns === 'b') return 'A';
+  if (levelAns === 'c') return 'B';
+  return 'C';
+}
+
+// ═══════════════════════════════════════════════
+//  SCORING
+// ═══════════════════════════════════════════════
+function calcScores() {
+  const questions = buildQuestions();
+  let total = 0, maxTotal = 0;
+  let leadScore = 0;
+
+  questions.forEach(q => {
+    const ans = state.answers[q.id];
+    const maxOpt = Math.max(...q.options.map(o => o.score));
+    maxTotal += maxOpt;
+    if (ans) {
+      const opt = q.options.find(o => o.id === ans);
+      if (opt) {
+        total += opt.score;
+        // Lead scoring bonuses
+        if (q.id === 'readiness') {
+          if (ans === 'a') leadScore += 40;
+          else if (ans === 'b') leadScore += 30;
+          else if (ans === 'c') leadScore += 18;
+          else if (ans === 'd') leadScore += 8;
+          else leadScore += 2;
+        }
+        if (q.id.includes('income_goal') || q.id.includes('goal_income')) leadScore += 12;
+        if (q.id.includes('time') && (ans === 'c' || ans === 'd')) leadScore += 10;
+      }
+    }
+  });
+
+  const pct = Math.round((total / maxTotal) * 100);
+  leadScore = Math.min(100, leadScore);
+
+  state.score = pct;
+  state.leadScore = leadScore;
+
+  if (leadScore >= 60) state.leadType = 'HOT';
+  else if (leadScore >= 30) state.leadType = 'WARM';
+  else state.leadType = 'COLD';
+}
+
+function getReadinessGroup(score) {
+  if (score <= 39) return { label:'نیازمند شروع از پایه', color:'#F87171' };
+  if (score <= 59) return { label:'در مسیر یادگیری', color:'#FBBF24' };
+  if (score <= 79) return { label:'آماده ورود جدی به بازار کار', color:'#60A5FA' };
+  return { label:'آماده رشد حرفه‌ای', color:'#34D399' };
+}
+
+// ═══════════════════════════════════════════════
+//  RESULT CONTENT
+// ═══════════════════════════════════════════════
+function getResultData() {
+  const path = state.path;
+  const levelAns = state.answers['level'];
+  const readinessAns = state.answers['readiness'];
+
+  // Level label
+  let levelLabel, levelEmoji, levelDesc, strength, challenge, roadmap, course;
+
+  if (path === 'A') {
+    levelEmoji = '🌱'; levelLabel = 'مبتدی';
+    levelDesc = 'تو هنوز در ابتدای مسیر هستی، اما انگیزه‌ات برای ورود به دنیای حسابداری واقعی است.';
+    strength = 'انگیزه برای شروع و ذهن باز برای یادگیری';
+    challenge = 'نداشتن مسیر مشخص و تجربه عملی';
+    roadmap = ['مفاهیم پایه', 'نرم‌افزارهای حسابداری', 'تمرین عملی', 'ورود به بازار کار'];
+    course = { label:'دوره پیشنهادی برای تو', name:'دوره جامع حسابداری از صفر تا بازار کار', desc:'مناسب برای شروع کامل از پایه تا استخدام در بازار کار' };
+  } else if (path === 'B') {
+    levelEmoji = '📋'; levelLabel = 'نیمه‌حرفه‌ای';
+    levelDesc = 'دانش پایه را داری، اما فاصله‌ای بین تئوری و عمل وجود دارد که باید پر شود.';
+    strength = 'دانش تئوری و آشنایی با مفاهیم پایه';
+    challenge = 'ضعف در مهارت‌های عملی و اعتمادبه‌نفس حرفه‌ای';
+    roadmap = ['تقویت نقاط ضعف', 'مهارت‌های عملی', 'پروژه‌های واقعی', 'ورود حرفه‌ای'];
+    course = { label:'دوره پیشنهادی برای تو', name:'دوره حسابداری عملی و ورود به بازار کار', desc:'تمرکز روی مهارت‌های عملی، نرم‌افزار و اعتمادبه‌نفس حرفه‌ای' };
+  } else {
+    levelEmoji = '🏆'; levelLabel = 'حرفه‌ای';
+    levelDesc = 'با تجربه و مهارت خوب، چالش اصلی‌ات افزایش ارزش و جایگاه حرفه‌ای‌ات است.';
+    strength = 'تجربه عملی و دانش کاربردی';
+    challenge = 'رشد به سطح بالاتر و افزایش درآمد متناسب با توانایی';
+    roadmap = ['تخصص بیشتر', 'مهارت‌های تکمیلی', 'پروژه‌های تخصصی', 'جایگاه حرفه‌ای بالاتر'];
+    course = { label:'دوره پیشنهادی برای تو', name:'دوره تخصصی ارتقای مهارت حسابداران حرفه‌ای', desc:'طراحی شده برای حسابداران با تجربه که دنبال رشد بیشتر هستند' };
+  }
+
+  // Override course if specialty goal
+  const specialty = state.answers['c_specialty'];
+  if (specialty === 'a') course.name = 'دوره تخصصی مالیات و امور مالیاتی';
+  const careerGoal = state.answers['c_career_goal'];
+  if (careerGoal === 'e') course.name = 'دوره تخصصی مالیات پیشرفته';
+
+  return { levelEmoji, levelLabel, levelDesc, strength, challenge, roadmap, course };
+}
+
+// ═══════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════
+const card = document.getElementById('main-card');
+
+function transition(renderFn) {
+  card.classList.add('slide-exit');
+  setTimeout(() => {
+    card.classList.remove('slide-exit');
+    renderFn();
+    card.classList.add('slide-enter');
+    setTimeout(() => card.classList.remove('slide-enter'), 400);
+  }, 220);
+}
+
+// ─── START ───
+function renderStart() {
+  card.innerHTML = `
+    <div class="brand">
+      <div class="brand-icon">📊</div>
+      <div class="brand-name">
+        <span>آکادمی حسابداری جاویدان</span>
+        تحلیل مسیر حرفه‌ای
+      </div>
+    </div>
+    <div class="start-icon">🎯</div>
+    <div class="start-title">ببینیم مسیر حرفه‌ای شدن در حسابداری برای تو چیه</div>
+    <div class="start-desc">
+      با پاسخ دادن به چند سؤال کوتاه، سطح فعلی، هدف شغلی، میزان درآمد و مسیر مناسب یادگیری حسابداری برایت بررسی می‌شود.
+    </div>
+    <div class="start-stats">
+      <div class="stat-chip">⏱️ <span>کمتر از ۲ دقیقه</span></div>
+      <div class="stat-chip">📊 <span>تحلیل اختصاصی</span></div>
+      <div class="stat-chip">🔒 <span>کاملاً محرمانه</span></div>
+    </div>
+    <button class="btn-primary" onclick="startQuiz()">شروع تحلیل من ←</button>
+  `;
+}
+
+// ─── QUIZ ───
+let questions = [];
+
+function renderQuiz() {
+  const q = questions[state.currentQ];
+  const totalQ = questions.length;
+  const progress = Math.round(((state.currentQ) / totalQ) * 100);
+  const selectedAns = state.answers[q.id];
+
+  card.innerHTML = `
+    <div class="brand" style="margin-bottom:20px">
+      <div class="brand-icon" style="width:32px;height:32px;font-size:15px;border-radius:8px">📊</div>
+      <div class="brand-name" style="font-size:11px">
+        <span style="font-size:13px">آکادمی جاویدان</span>
+        تحلیل مسیر حرفه‌ای
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span class="step-label">سؤال ${toPersianNum(state.currentQ + 1)} از ${toPersianNum(totalQ)}</span>
+        <span>${toPersianNum(progress)}٪ تکمیل شده</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" style="width:${progress}%"></div>
+      </div>
+    </div>
+    <div class="q-badge">✦ ${q.badge}</div>
+    <div class="q-text">${q.text}</div>
+    <div class="options" id="options-list">
+      ${q.options.map(opt => `
+        <div class="option ${selectedAns === opt.id ? 'selected' : ''}"
+             onclick="selectOption('${q.id}','${opt.id}',this)"
+             data-id="${opt.id}">
+          <div class="opt-radio">
+            <div class="opt-radio-dot"></div>
+          </div>
+          <div class="opt-text">${opt.text}</div>
+          <div class="opt-emoji">${opt.emoji}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="display:flex;gap:10px;margin-top:24px;align-items:center">
+      ${state.currentQ > 0 ? `<button class="btn-ghost" onclick="prevQ()" style="white-space:nowrap">→ قبلی</button>` : ''}
+      <button class="btn-primary" id="next-btn"
+        style="margin-top:0;${!selectedAns ? 'opacity:.45;cursor:not-allowed' : ''}"
+        onclick="nextQ()" ${!selectedAns ? 'disabled' : ''}>
+        ${state.currentQ === totalQ - 1 ? 'دریافت نتیجه ✓' : 'سؤال بعدی ←'}
+      </button>
+    </div>
+  `;
+}
+
+function selectOption(qId, optId, el) {
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  state.answers[qId] = optId;
+
+  // Set path after level question
+  if (qId === 'level') {
+    state.path = getPath(optId);
+    questions = buildQuestions();
+  }
+
+  const btn = document.getElementById('next-btn');
+  if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer'; }
+
+  // Auto-advance on mobile after short delay
+  setTimeout(() => { if (state.screen === 'quiz') nextQ(); }, 500);
+}
+
+function nextQ() {
+  const q = questions[state.currentQ];
+  if (!state.answers[q.id]) return;
+  if (state.currentQ < questions.length - 1) {
+    state.currentQ++;
+    transition(renderQuiz);
+  } else {
+    // Go to lead form
+    state.screen = 'lead';
+    transition(renderLead);
+  }
+}
+
+function prevQ() {
+  if (state.currentQ > 0) {
+    state.currentQ--;
+    transition(renderQuiz);
+  }
+}
+
+// ─── LEAD ───
+function renderLead() {
+  card.innerHTML = `
+    <div class="lead-icon">🎯</div>
+    <div class="lead-title">تحلیل تو آماده است!</div>
+    <div class="lead-desc">
+      بر اساس پاسخ‌هایی که دادی، سطح حسابداری، وضعیت شغلی، هدف درآمدی و مسیر مناسب یادگیری تو بررسی شده است.
+      برای مشاهده نتیجه اختصاصی، اطلاعات زیر را وارد کن.
+    </div>
+    <div class="form-group">
+      <label class="form-label">نام و نام خانوادگی</label>
+      <input class="form-input" id="inp-name" type="text" placeholder="مثلاً: علی احمدی" value="${state.name}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">شماره موبایل</label>
+      <input class="form-input" id="inp-phone" type="tel" placeholder="۰۹۱۲۳۴۵۶۷۸۹" value="${state.phone}">
+    </div>
+    <button class="btn-primary" onclick="submitLead()" style="margin-top:8px">
+      مشاهده تحلیل اختصاصی من →
+    </button>
+    <div class="privacy-note">🔒 اطلاعات شما محرمانه باقی می‌ماند.</div>
+  `;
+}
+
+function submitLead() {
+  const name = document.getElementById('inp-name').value.trim();
+  const phone = document.getElementById('inp-phone').value.trim();
+  if (!name) { shake('inp-name'); return; }
+  if (!phone || phone.length < 10) { shake('inp-phone'); return; }
+  state.name = name;
+  state.phone = phone;
+  calcScores();
+  saveData();
+  state.screen = 'result';
+  transition(renderResult);
+}
+
+function shake(id) {
+  const el = document.getElementById(id);
+  el.style.borderColor = '#EF4444';
+  el.style.animation = 'shake .3s';
+  setTimeout(() => { el.style.animation = ''; el.style.borderColor = ''; }, 600);
+}
+
+// ─── RESULT ───
+function renderResult() {
+  const { levelEmoji, levelLabel, levelDesc, strength, challenge, roadmap, course } = getResultData();
+  const group = getReadinessGroup(state.score);
+  const scoreColor = state.score >= 80 ? '#34D399' : state.score >= 60 ? '#60A5FA' : state.score >= 40 ? '#FBBF24' : '#F87171';
+
+  let leadBadgeClass = state.leadType === 'HOT' ? 'lead-hot' : state.leadType === 'WARM' ? 'lead-warm' : 'lead-cold';
+  let leadEmoji = state.leadType === 'HOT' ? '🔥' : state.leadType === 'WARM' ? '🟡' : '🔵';
+
+  let ctaHtml = '';
+  if (state.leadType === 'HOT') {
+    ctaHtml = `
+      <div class="cta-buttons">
+        <button class="btn-cta-main">مشاهده دوره مناسب من ←</button>
+        <button class="btn-cta-sec">مشاوره رایگان با کارشناس 📞</button>
+      </div>
+    `;
+  } else if (state.leadType === 'WARM') {
+    ctaHtml = `
+      <div class="cta-buttons">
+        <button class="btn-cta-sec" style="border-color:rgba(245,158,11,0.3);color:#FCD34D">دریافت مشاوره رایگان 📞</button>
+      </div>
+    `;
+  } else {
+    ctaHtml = `
+      <div class="cta-buttons">
+        <button class="btn-cta-sec">دریافت راهنمای رایگان حسابداری 📚</button>
+      </div>
+    `;
+  }
+
+  card.innerHTML = `
+    <div class="brand" style="margin-bottom:20px">
+      <div class="brand-icon" style="width:32px;height:32px;font-size:15px;border-radius:8px">📊</div>
+      <div class="brand-name" style="font-size:11px">
+        <span style="font-size:13px">آکادمی جاویدان</span>
+        نتیجه تحلیل اختصاصی
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:4px">سلام ${state.name} عزیز 👋</div>
+      <div style="font-size:16px;font-weight:600;color:rgba(255,255,255,0.85)">نتیجه تحلیل مسیر حرفه‌ای تو</div>
+    </div>
+
+    <div class="result-header">
+      <div class="result-emoji">${levelEmoji}</div>
+      <div class="result-level-label">سطح فعلی</div>
+      <div class="result-level">${levelLabel}</div>
+      <div class="result-desc">${levelDesc}</div>
+    </div>
+
+    <div class="score-wrap">
+      <div class="score-label">شاخص آمادگی حرفه‌ای</div>
+      <div><span class="score-number" id="score-num">۰</span><span class="score-max"> از ۱۰۰</span></div>
+      <div class="score-bar-bg">
+        <div class="score-bar-fill" id="score-fill" style="width:0%;background:${scoreColor}"></div>
+      </div>
+      <div style="margin-top:10px;font-size:13px;font-weight:700;color:${group.color}">${group.label}</div>
+    </div>
+
+    <div class="insights">
+      <div class="insight-card">
+        <div class="insight-icon">💪</div>
+        <div class="insight-label">نقطه قوت</div>
+        <div class="insight-value">${strength}</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">⚡</div>
+        <div class="insight-label">چالش اصلی</div>
+        <div class="insight-value">${challenge}</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:16px">
+      <div style="font-size:12px;color:rgba(255,255,255,0.45);font-weight:600;margin-bottom:10px">مسیر پیشنهادی</div>
+      <div class="path-wrap">
+        ${roadmap.map((s, i) => `
+          <div class="path-chip">${s}</div>
+          ${i < roadmap.length - 1 ? '<div class="path-arrow">←</div>' : ''}
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-label">✦ ${course.label}</div>
+      <div class="course-name">${course.name}</div>
+      <div class="course-desc">${course.desc}</div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:16px">
+      <span class="lead-badge ${leadBadgeClass}">${leadEmoji} ${state.leadType} LEAD</span>
+    </div>
+
+    ${ctaHtml}
+
+    <div style="text-align:center;margin-top:20px">
+      <button class="btn-ghost" style="font-size:12px;padding:8px 16px" onclick="restartQuiz()">
+        شروع مجدد تحلیل
+      </button>
+    </div>
+  `;
+
+  // Animate score counter
+  setTimeout(() => {
+    const fill = document.getElementById('score-fill');
+    const num = document.getElementById('score-num');
+    if (fill) fill.style.width = state.score + '%';
+    if (num) animateCounter(num, 0, state.score, 1200);
+  }, 100);
+}
+
+function animateCounter(el, from, to, duration) {
+  const start = performance.now();
+  function frame(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const val = Math.round(from + (to - from) * eased);
+    el.textContent = toPersianNum(val);
+    if (progress < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+// ─── HELPERS ───
+function toPersianNum(n) {
+  return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+}
+
+function saveData() {
+  const data = {
+    name: state.name,
+    phone: state.phone,
+    path: state.path,
+    level: state.answers['level'],
+    score: state.score,
+    leadScore: state.leadScore,
+    leadType: state.leadType,
+    answers: state.answers,
+    timestamp: new Date().toISOString(),
+  };
+  console.log('Lead Data:', JSON.stringify(data, null, 2));
+  // In production: send to backend via fetch('/api/leads', { method:'POST', body: JSON.stringify(data) })
+}
+
+function startQuiz() {
+  state.screen = 'quiz';
+  state.currentQ = 0;
+  state.path = null;
+  questions = [Q_LEVEL, Q_READINESS]; // placeholder until path selected
+  transition(renderQuiz);
+}
+
+function restartQuiz() {
+  Object.assign(state, {
+    screen: 'start', path: null, currentQ: 0,
+    answers: {}, name: '', phone: '',
+    score: 0, leadScore: 0, leadType: '',
+  });
+  transition(renderStart);
+}
+
+// ─── INIT ───
+renderStart();
+
+// Shake keyframe (injected)
+const style = document.createElement('style');
+style.textContent = `@keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>
