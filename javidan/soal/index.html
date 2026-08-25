@@ -333,6 +333,88 @@
   }
   @keyframes spin { to { transform: translate(-50%,-50%) rotate(360deg); } }
 
+  /* OTP Screen */
+  .otp-icon { font-size: 48px; margin-bottom: 16px; }
+  .otp-title { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 10px; }
+  .otp-desc { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.7; margin-bottom: 28px; }
+  .otp-phone-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(59,130,246,0.15);
+    border: 1px solid rgba(59,130,246,0.3);
+    border-radius: 99px;
+    padding: 6px 18px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #93C5FD;
+    margin-bottom: 24px;
+    direction: ltr;
+    letter-spacing: 0.05em;
+  }
+  .otp-inputs {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 24px;
+    direction: ltr;
+  }
+  .otp-box {
+    width: 64px;
+    height: 72px;
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    text-align: center;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: #fff;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    caret-color: #3B82F6;
+  }
+    .otp-box:focus {
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
+  }
+  .otp-box.filled {
+    border-color: rgba(96,165,250,0.6);
+    background: rgba(59,130,246,0.12);
+  }
+  .otp-box.error {
+    border-color: #EF4444;
+    box-shadow: 0 0 0 3px rgba(239,68,68,0.2);
+    animation: shake .3s;
+  }
+  .otp-resend {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .otp-resend button {
+    background: none;
+    border: none;
+    color: #60A5FA;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  .otp-error-msg {
+    background: rgba(239,68,68,0.12);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: #FCA5A5;
+    text-align: center;
+    margin-bottom: 16px;
+    display: none;
+  }
+
   .result-header {
     background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(29,78,216,0.15));
     border: 1px solid rgba(59,130,246,0.3);
@@ -430,7 +512,32 @@
   }
   .btn-cta-sec:hover { background: rgba(255,255,255,0.12); color: #fff; }
 
-  .path-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  /* نتایج بچه‌های دوره - دکمه */
+  .btn-testimonials {
+    width: 100%;
+    padding: 15px 24px;
+    background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.15));
+    border: 1.5px solid rgba(245,158,11,0.4);
+    color: #FCD34D;
+    border-radius: 14px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .22s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .btn-testimonials:hover {
+    background: linear-gradient(135deg, rgba(245,158,11,0.3), rgba(217,119,6,0.22));
+    border-color: rgba(245,158,11,0.6);
+    transform: translateY(-2px);
+  }
+
+  .path-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
   .path-chip {
     background: rgba(59,130,246,0.1);
     border: 1px solid rgba(59,130,246,0.2);
@@ -452,12 +559,171 @@
     to { opacity: 1; transform: translateX(0); }
   }
 
+  /* ─── VIDEO MODAL ─── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 12, 30, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px 16px 32px;
+    overflow-y: auto;
+    animation: fadeIn .3s ease;
+  }
+    @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .modal-inner {
+    width: 100%;
+    max-width: 680px;
+    animation: slideUp .35s cubic-bezier(.22,.87,.33,1);
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(32px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .modal-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .modal-close {
+    width: 40px; height: 40px;
+    background: rgba(255,255,255,0.1);
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: rgba(255,255,255,0.8);
+    font-size: 18px;
+    font-weight: 700;
+    transition: all .2s;
+    flex-shrink: 0;
+  }
+  .modal-close:hover {
+    background: rgba(239,68,68,0.2);
+    border-color: rgba(239,68,68,0.4);
+    color: #FCA5A5;
+  }
+  .modal-subtitle {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 24px;
+  }
+
+  /* Current playing video */
+  .video-main-wrap {
+    background: #000;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .video-main-wrap video {
+    width: 100%;
+    display: block;
+    max-height: 380px;
+    object-fit: contain;
+    background: #000;
+  }
+  .video-info-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.04);
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .video-info-label { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 600; }
+  .video-nav-btns { display: flex; gap: 8px; }
+  .vid-nav-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .vid-nav-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+  .vid-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* Thumbnails grid */
+  .videos-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  .video-thumb {
+    background: rgba(0,0,0,0.4);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all .2s;
+    position: relative;
+  }
+  .video-thumb:hover { border-color: rgba(96,165,250,0.5); transform: scale(1.04); }
+  .video-thumb.active { border-color: #3B82F6; box-shadow: 0 0 0 1px rgba(59,130,246,0.4); }
+  .video-thumb-inner {
+    width: 100%;
+    padding-top: 140%;
+    position: relative;
+    background: linear-gradient(135deg, rgba(30,50,100,0.8), rgba(15,25,60,0.9));
+    display: flex; align-items: center; justify-content: center;
+  }
+  .video-thumb-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  .video-thumb-num {
+    font-size: 22px;
+    font-weight: 800;
+    color: rgba(255,255,255,0.8);
+  }
+  .video-thumb-play {
+    font-size: 16px;
+  }
+  .video-thumb-label {
+    font-size: 9px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 600;
+  }
+  .video-thumb.active .video-thumb-num { color: #60A5FA; }
+
   @media (max-width: 480px) {
     .card { padding: 28px 20px; border-radius: 22px; }
     .q-text { font-size: 17px; }
     .opt-text { font-size: 14px; }
     .start-title { font-size: 20px; }
     .score-number { font-size: 40px; }
+    .videos-grid { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .otp-box { width: 52px; height: 60px; font-size: 22px; border-radius: 12px; }
+    .otp-inputs { gap: 8px; }
   }
 </style>
 </head>
@@ -471,6 +737,31 @@
   <div class="card" id="main-card"></div>
 </div>
 
+<!-- VIDEO MODAL -->
+<div id="video-modal" class="modal-overlay" style="display:none">
+  <div class="modal-inner">
+    <div class="modal-header">
+      <div class="modal-title">🏆 نتایج بچه‌های دوره</div>
+      <button class="modal-close" onclick="closeVideoModal()">✕</button>
+    </div>
+    <div class="modal-subtitle">ببین بقیه بعد از دوره به کجا رسیدن 👇</div>
+
+    <div class="video-main-wrap">
+      <video id="main-video" controls playsinline>
+        <source id="main-video-src" src="" type="video/mp4">
+      </video>
+      <div class="video-info-bar">
+        <div class="video-info-label" id="video-label">ویدیو ۱ از ۱۰</div>
+        <div class="video-nav-btns">
+          <button class="vid-nav-btn" id="vid-prev" onclick="changeVideo(currentVideoIndex - 1)">→ قبلی</button>
+          <button class="vid-nav-btn" id="vid-next" onclick="changeVideo(currentVideoIndex + 1)">بعدی ←</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="videos-grid" id="videos-grid"></div>
+  </div>
+</div>
 <script>
 // ═══════════════════════════════════════════════
 //  STATE
@@ -485,6 +776,7 @@ const state = {
   score: 0,
   leadScore: 0,
   leadType: '',
+  otpSent: false,
 };
 
 // ═══════════════════════════════════════════════
@@ -623,7 +915,6 @@ const PATH_B = [
     ]
   },
 ];
-
 const PATH_C = [
   {
     id:'c_exp', badge:'سابقه کاری',
@@ -713,6 +1004,9 @@ const Q_READINESS = {
   ]
 };
 
+// ALL QUESTIONS reference (for label lookup)
+const ALL_QUESTIONS = [Q_LEVEL, ...PATH_A, ...PATH_B, ...PATH_C, Q_READINESS];
+
 // ═══════════════════════════════════════════════
 //  QUIZ FLOW
 // ═══════════════════════════════════════════════
@@ -764,12 +1058,27 @@ function calcScores() {
   state.leadScore = Math.min(100, leadScore);
   state.leadType  = state.leadScore >= 60 ? 'HOT' : state.leadScore >= 30 ? 'WARM' : 'COLD';
 }
-
 function getReadinessGroup(score) {
   if (score <= 39) return { label:'نیازمند شروع از پایه', color:'#F87171' };
   if (score <= 59) return { label:'در مسیر یادگیری', color:'#FBBF24' };
   if (score <= 79) return { label:'آماده ورود جدی به بازار کار', color:'#60A5FA' };
   return { label:'آماده رشد حرفه‌ای', color:'#34D399' };
+}
+
+// ═══════════════════════════════════════════════
+//  BUILD FULL QA TEXT for Email
+// ═══════════════════════════════════════════════
+function buildQAText() {
+  const questions = buildQuestions();
+  const lines = [];
+  questions.forEach(q => {
+    const ansId = state.answers[q.id];
+    if (!ansId) return;
+    const opt = q.options.find(o => o.id === ansId);
+    if (!opt) return;
+    lines.push({ question: q.text, answer: opt.text });
+  });
+  return lines;
 }
 
 // ═══════════════════════════════════════════════
@@ -814,6 +1123,8 @@ function getResultData() {
 //  EMAIL — ارسال به سرور
 // ═══════════════════════════════════════════════
 async function sendEmail() {
+  const qaList = buildQAText();
+
   const payload = {
     name:      state.name,
     phone:     state.phone,
@@ -822,6 +1133,7 @@ async function sendEmail() {
     leadScore: state.leadScore,
     leadType:  state.leadType,
     answers:   state.answers,
+    qa:        qaList,  // سوال و جواب کامل
   };
 
   try {
@@ -833,9 +1145,20 @@ async function sendEmail() {
     const data = await res.json();
     console.log('ایمیل:', data);
   } catch (err) {
-    // اگر خطا داشت فقط لاگ می‌کنیم — کاربر نتیجه رو می‌بینه
     console.error('خطا در ارسال ایمیل:', err);
   }
+}
+
+// ═══════════════════════════════════════════════
+//  SMS OTP (فعلاً هر کدی قبوله — اتصال واقعی بعداً)
+// ═══════════════════════════════════════════════
+async function sendSMS(phone) {
+  // TODO: اتصال به پنل SMS
+  // const res = await fetch('https://jaavidan.ir/send-sms.php', {
+  //   method: 'POST', headers: {'Content-Type':'application/json'},
+  //   body: JSON.stringify({ phone, code: generatedCode }),
+  // });
+  console.log('کد OTP ارسال شد به', phone);
 }
 
 // ═══════════════════════════════════════════════
@@ -876,7 +1199,6 @@ function renderStart() {
     <button class="btn-primary" onclick="startQuiz()">شروع تحلیل من ←</button>
   `;
 }
-
 // ─── QUIZ ───
 let questions = [];
 
@@ -964,7 +1286,7 @@ function prevQ() {
   }
 }
 
-// ─── LEAD ───
+// ─── LEAD (فرم اطلاعات) ───
 function renderLead() {
   card.innerHTML = `
     <div class="lead-icon">🎯</div>
@@ -979,10 +1301,10 @@ function renderLead() {
     </div>
     <div class="form-group">
       <label class="form-label">شماره موبایل</label>
-      <input class="form-input" id="inp-phone" type="tel" placeholder="۰۹۱۲۳۴۵۶۷۸۹" value="${state.phone}">
+      <input class="form-input" id="inp-phone" type="tel" placeholder="۰۹۱۲۳۴۵۶۷۸۹" value="${state.phone}" dir="ltr" style="text-align:right">
     </div>
     <button class="btn-primary" id="submit-btn" onclick="submitLead()" style="margin-top:8px">
-      مشاهده تحلیل اختصاصی من →
+      دریافت کد تأیید و مشاهده نتیجه →
     </button>
     <div class="privacy-note">🔒 اطلاعات شما محرمانه باقی می‌ماند.</div>
   `;
@@ -997,21 +1319,142 @@ async function submitLead() {
 
   state.name  = name;
   state.phone = phone;
-  calcScores();
 
-  // ─── نمایش loading روی دکمه ───
   const btn = document.getElementById('submit-btn');
   btn.classList.add('btn-loading');
   btn.disabled = true;
 
-  // ─── ارسال ایمیل (موازی با نمایش نتیجه) ───
-  sendEmail(); // بدون await — کاربر منتظر نمی‌ماند
+  // ارسال SMS OTP
+  await sendSMS(phone);
 
-  // ─── کمی تأخیر برای UX بهتر ───
+  await new Promise(r => setTimeout(r, 700));
+
+  state.screen = 'otp';
+  transition(renderOTP);
+}
+
+// ─── OTP SCREEN ───
+function renderOTP() {
+  card.innerHTML = `
+    <div class="otp-icon">📱</div>
+    <div class="otp-title">تأیید شماره موبایل</div>
+    <div class="otp-desc">
+      کد ۴ رقمی ارسال‌شده به شماره زیر را وارد کن:
+    </div>
+    <div style="text-align:center;margin-bottom:24px">
+      <span class="otp-phone-badge">📞 ${state.phone}</span>
+    </div>
+        <div class="otp-inputs" id="otp-inputs">
+      <input class="otp-box" id="otp-0" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code">
+      <input class="otp-box" id="otp-1" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="otp-box" id="otp-2" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="otp-box" id="otp-3" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]">
+    </div>
+
+    <div class="otp-error-msg" id="otp-error">❌ کد وارد شده صحیح نیست. دوباره امتحان کن.</div>
+
+    <button class="btn-primary" id="otp-btn" onclick="verifyOTP()" disabled style="opacity:.45;cursor:not-allowed;margin-top:0">
+      تأیید و مشاهده نتیجه →
+    </button>
+
+    <div class="otp-resend" style="margin-top:16px">
+      کد دریافت نکردی؟
+      <button onclick="resendOTP()">ارسال مجدد</button>
+    </div>
+
+    <div style="text-align:center;margin-top:12px">
+      <button class="btn-ghost" style="font-size:12px;padding:8px 16px" onclick="transition(renderLead)">
+        → ویرایش شماره
+      </button>
+    </div>
+  `;
+
+  setupOTPInputs();
+}
+
+function setupOTPInputs() {
+  const inputs = [0,1,2,3].map(i => document.getElementById('otp-' + i));
+
+  inputs.forEach((inp, idx) => {
+    inp.addEventListener('input', (e) => {
+      // accept only digits
+      inp.value = inp.value.replace(/\D/g, '').slice(0,1);
+      inp.classList.toggle('filled', inp.value !== '');
+
+      if (inp.value && idx < 3) inputs[idx + 1].focus();
+      checkAllFilled(inputs);
+    });
+
+    inp.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !inp.value && idx > 0) {
+        inputs[idx - 1].focus();
+        inputs[idx - 1].value = '';
+        inputs[idx - 1].classList.remove('filled');
+        checkAllFilled(inputs);
+      }
+    });
+
+    inp.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'').slice(0,4);
+      paste.split('').forEach((ch, i) => {
+        if (inputs[i]) { inputs[i].value = ch; inputs[i].classList.add('filled'); }
+      });
+      if (paste.length >= 4) inputs[3].focus();
+      checkAllFilled(inputs);
+    });
+  });
+
+  setTimeout(() => inputs[0].focus(), 100);
+}
+
+function checkAllFilled(inputs) {
+  const allFilled = inputs.every(i => i.value.length === 1);
+  const btn = document.getElementById('otp-btn');
+  if (btn) {
+    btn.disabled = !allFilled;
+    btn.style.opacity = allFilled ? '1' : '.45';
+    btn.style.cursor = allFilled ? 'pointer' : 'not-allowed';
+  }
+  if (allFilled) {
+    // auto-submit after short delay
+    setTimeout(() => { if (document.getElementById('otp-btn')) verifyOTP(); }, 300);
+  }
+}
+
+async function verifyOTP() {
+  const inputs = [0,1,2,3].map(i => document.getElementById('otp-' + i));
+  if (!inputs[0]) return;
+  const code = inputs.map(i => i.value).join('');
+  if (code.length < 4) return;
+
+  const btn = document.getElementById('otp-btn');
+  btn.classList.add('btn-loading');
+  btn.disabled = true;
+
   await new Promise(r => setTimeout(r, 600));
 
-  state.screen = 'result';
-  transition(renderResult);
+  // ─── فعلاً هر کدی قبوله ───
+  const isValid = true; // TODO: validate against sent code via server
+
+  if (isValid) {
+    calcScores();
+    sendEmail(); // ارسال ایمیل بعد از تأیید
+    state.screen = 'result';
+    transition(renderResult);
+  } else {
+    btn.classList.remove('btn-loading');
+    btn.disabled = false;
+    inputs.forEach(i => { i.classList.add('error'); setTimeout(()=> i.classList.remove('error'), 600); });
+    const errEl = document.getElementById('otp-error');
+    if (errEl) { errEl.style.display = 'block'; }
+  }
+}
+
+async function resendOTP() {
+  await sendSMS(state.phone);
+  const el = document.querySelector('.otp-resend');
+  if (el) { el.innerHTML = '✅ کد جدید ارسال شد'; setTimeout(()=>{ el.innerHTML = 'کد دریافت نکردی؟ <button onclick="resendOTP()">ارسال مجدد</button>'; }, 3000); }
 }
 
 function shake(id) {
@@ -1048,8 +1491,7 @@ function renderResult() {
         <button class="btn-cta-sec">دریافت راهنمای رایگان حسابداری 📚</button>
       </div>`;
   }
-
-  card.innerHTML = `
+card.innerHTML = `
     <div class="brand" style="margin-bottom:20px">
       <div class="brand-icon" style="width:32px;height:32px;font-size:15px;border-radius:8px">📊</div>
       <div class="brand-name" style="font-size:11px">
@@ -1102,6 +1544,11 @@ function renderResult() {
       </div>
     </div>
 
+    <!-- دکمه نتایج بچه‌های دوره -->
+    <button class="btn-testimonials" onclick="openVideoModal()">
+      🎬 میخوای نتایج بچه‌های دوره رو ببینی؟
+    </button>
+
     <div class="course-card">
       <div class="course-label">✦ ${course.label}</div>
       <div class="course-name">${course.name}</div>
@@ -1142,6 +1589,94 @@ function animateCounter(el, from, to, duration) {
 }
 
 // ═══════════════════════════════════════════════
+//  VIDEO MODAL
+// ═══════════════════════════════════════════════
+let currentVideoIndex = 0;
+const TOTAL_VIDEOS = 10;
+const VIDEO_BASE = 'https://jaavidan.ir/videos/natije/';
+
+function openVideoModal() {
+  const modal = document.getElementById('video-modal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  buildVideoGrid();
+  changeVideo(0);
+}
+
+function closeVideoModal() {
+  const modal = document.getElementById('video-modal');
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
+  const vid = document.getElementById('main-video');
+  if (vid) { vid.pause(); }
+}
+
+function buildVideoGrid() {
+  const grid = document.getElementById('videos-grid');
+  grid.innerHTML = '';
+  for (let i = 1; i <= TOTAL_VIDEOS; i++) {
+    const div = document.createElement('div');
+    div.className = 'video-thumb';
+    div.id = 'thumb-' + (i-1);
+    div.onclick = () => changeVideo(i-1);
+    div.innerHTML = `
+      <div class="video-thumb-inner">
+        <div class="video-thumb-content">
+          <div class="video-thumb-num">${toPersianNum(i)}</div>
+          <div class="video-thumb-play">▶️</div>
+          <div class="video-thumb-label">ویدیو</div>
+        </div>
+      </div>
+    `;
+    grid.appendChild(div);
+  }
+}
+
+function changeVideo(index) {
+  if (index < 0 || index >= TOTAL_VIDEOS) return;
+  currentVideoIndex = index;
+
+  // Update main video
+  const src = document.getElementById('main-video-src');
+  const vid  = document.getElementById('main-video');
+  if (src && vid) {
+    src.src = VIDEO_BASE + (index + 1) + '.mp4';
+    vid.load();
+    vid.play().catch(() => {});
+  }
+
+  // Update label
+  const label = document.getElementById('video-label');
+  if (label) label.textContent = 'ویدیو ' + toPersianNum(index + 1) + ' از ' + toPersianNum(TOTAL_VIDEOS);
+
+  // Update thumbnails
+  document.querySelectorAll('.video-thumb').forEach((el, i) => {
+    el.classList.toggle('active', i === index);
+  });
+
+  // Update nav buttons
+  const prev = document.getElementById('vid-prev');
+  const next = document.getElementById('vid-next');
+  if (prev) prev.disabled = index === 0;
+  if (next) next.disabled = index === TOTAL_VIDEOS - 1;
+
+  // Scroll thumb into view
+  const activeThumb = document.getElementById('thumb-' + index);
+  if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+}
+
+// Close modal on overlay click (but not inner click)
+document.getElementById('video-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeVideoModal();
+});
+
+// Close on ESC
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeVideoModal();
+});
+
+// ═══════════════════════════════════════════════
 //  HELPERS
 // ═══════════════════════════════════════════════
 function toPersianNum(n) {
@@ -1160,7 +1695,7 @@ function restartQuiz() {
   Object.assign(state, {
     screen:'start', path:null, currentQ:0,
     answers:{}, name:'', phone:'',
-    score:0, leadScore:0, leadType:'',
+    score:0, leadScore:0, leadType:'', otpSent:false,
   });
   transition(renderStart);
 }
