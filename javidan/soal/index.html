@@ -1140,10 +1140,16 @@ function saveData() {
     leadScore: state.leadScore,
     leadType: state.leadType,
     answers: state.answers,
-    timestamp: new Date().toISOString(),
   };
-  console.log('Lead Data:', JSON.stringify(data, null, 2));
-  // In production: send to backend via fetch('/api/leads', { method:'POST', body: JSON.stringify(data) })
+
+  fetch('https://jaavidan.ir/save-lead.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(r => r.json())
+  .then(res => console.log('ذخیره شد:', res))
+  .catch(err => console.error('خطا:', err));
 }
 
 function startQuiz() {
