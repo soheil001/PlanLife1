@@ -1,734 +1,784 @@
-import { useState, useEffect, useRef } from "react";
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ارزیابی حسابداری | آکادمی جاویدان</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#1A2332;min-height:100vh}
+  ::selection{background:#E8F5F3}
+  ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#ddd;border-radius:3px}
 
-// ─── Design tokens ───────────────────────────────────────────────
-// Palette: White base, Slate-900 text, Brand teal #0F7B6C, Accent gold #C9A94B
-// Type: Vazirmatn (Google Fonts) for Persian, Inter for numbers
-// Signature element: animated progress arc + dynamic gradient card on result
-
-const BRAND = "#0F7B6C";
-const BRAND_LIGHT = "#E8F5F3";
-const GOLD = "#C9A94B";
-const SLATE = "#1A2332";
-const MUTED = "#6B7A8D";
-const BG = "#F8FAFB";
-const WHITE = "#FFFFFF";
-
-// ─── Google Sheets API ────────────────────────────────────────────
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbwA96clj8vnRr2RU_HG8F54zm-Bv1cXPRU64cH7Z5CfQXG_1zxfzX_IWM9o79UAIhAq/exec";
-
-async function sendToSheet(data) {
-  try {
-    await fetch(SHEET_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-  } catch (err) {
-    console.error("Sheet error:", err);
+  /* tokens */
+  :root{
+    --brand:#0F7B6C;--brand-light:#E8F5F3;--gold:#C9A94B;
+    --slate:#1A2332;--muted:#6B7A8D;--bg:#F8FAFB;--white:#FFFFFF;
   }
+
+  /* animations */
+  @keyframes fadeSlide{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+
+  /* screens */
+  .screen{display:none}.screen.active{display:block}
+
+  /* hero */
+  #hero{min-height:100vh;background:linear-gradient(160deg,#fff 0%,#E8F5F3 100%);display:flex;flex-direction:column}
+  .hero-header{padding:20px 24px;display:flex;justify-content:space-between;align-items:center;max-width:1100px;margin:0 auto;width:100%}
+  .logo{display:flex;align-items:center;gap:10px}
+  .logo-icon{width:38px;height:38px;border-radius:10px;background:var(--brand);display:flex;align-items:center;justify-content:center}
+  .hero-body{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px}
+  .hero-inner{max-width:680px;width:100%;text-align:center}
+  .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:99px;background:rgba(15,123,108,.1);margin-bottom:28px;border:1px solid rgba(15,123,108,.3)}
+  .hero-title{font-size:clamp(28px,5vw,46px);font-weight:800;color:var(--slate);line-height:1.35;margin-bottom:20px}
+  .hero-sub{font-size:clamp(15px,2.5vw,18px);color:var(--muted);line-height:1.8;margin-bottom:40px;max-width:540px;margin-left:auto;margin-right:auto}
+  .btn-primary{padding:18px 48px;border-radius:14px;border:none;cursor:pointer;background:linear-gradient(135deg,#0F7B6C,#0A5E52);color:#fff;font-size:18px;font-weight:700;font-family:'Vazirmatn',sans-serif;box-shadow:0 8px 32px rgba(15,123,108,.5);transition:transform .2s,box-shadow .2s}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(15,123,108,.6)}
+  .stats{display:flex;gap:16px;margin-top:48px;justify-content:center;flex-wrap:wrap}
+  .stat-card{padding:14px 24px;background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.05);text-align:center;min-width:110px}
+  .stat-num{font-size:20px;font-weight:800;color:var(--brand)}
+  .stat-label{font-size:12px;color:var(--muted);margin-top:2px}
+
+  /* progress */
+  .sticky-header{background:#fff;border-bottom:1px solid #F1F5F9;position:sticky;top:0;z-index:50;padding-bottom:12px}
+  .sticky-inner{max-width:640px;margin:0 auto;padding:14px 24px 0;display:flex;justify-content:space-between;align-items:center}
+  .progress-wrap{padding:8px 24px 0;max-width:640px;margin:0 auto}
+  .progress-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .progress-track{height:6px;background:#E2E8F0;border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,#0F7B6C,#C9A94B);border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+  .progress-pct{text-align:left;margin-top:4px;font-size:12px;color:var(--muted)}
+
+  /* form */
+  #form-screen{min-height:100vh;background:var(--bg)}
+  .step-wrap{max-width:640px;margin:24px auto;padding:0 16px 80px;animation:fadeSlide .3s ease}
+  .step-card{background:#fff;border-radius:20px;padding:28px 24px;box-shadow:0 2px 16px rgba(15,123,108,.05),0 1px 4px rgba(0,0,0,.04)}
+  .step-title{font-size:20px;font-weight:700;color:var(--slate);margin-bottom:8px;line-height:1.5}
+  .step-sub{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.7}
+  .q-label{font-size:15px;font-weight:600;color:var(--slate);margin-bottom:12px;margin-top:0}
+  .q-label.mt{margin-top:20px}
+  .q-note{font-weight:400;color:var(--muted);font-size:13px}
+  .step-actions{display:flex;gap:10px;margin-top:14px;flex-direction:row-reverse}
+  .btn-next{flex:1;padding:14px 24px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#0F7B6C,#0A5E52);color:#fff;font-size:16px;font-weight:700;font-family:'Vazirmatn',sans-serif;transition:all .2s;box-shadow:0 4px 14px rgba(15,123,108,.4)}
+  .btn-next:disabled{background:#CBD5E1;box-shadow:none;cursor:not-allowed}
+  .btn-back{padding:14px 20px;border-radius:12px;border:2px solid #E2E8F0;cursor:pointer;background:#fff;color:var(--muted);font-size:15px;font-family:'Vazirmatn',sans-serif}
+  .divider{border-top:1px solid #F1F5F9;margin-top:20px;padding-top:20px}
+
+  /* options */
+  .opt{display:flex;align-items:center;gap:10px;width:100%;padding:13px 16px;border-radius:12px;border:2px solid #E2E8F0;background:#fff;cursor:pointer;text-align:right;transition:all .18s;margin-bottom:8px;font-size:15px;font-family:'Vazirmatn',sans-serif;color:var(--slate);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .opt.selected{border-color:var(--brand);background:var(--brand-light);box-shadow:0 0 0 3px rgba(15,123,108,.13)}
+  .opt-circle{width:20px;height:20px;border-radius:50%;flex-shrink:0;border:2px solid #CBD5E1;background:transparent;display:flex;align-items:center;justify-content:center;transition:all .15s}
+  .opt-square{width:20px;height:20px;border-radius:6px;flex-shrink:0;border:2px solid #CBD5E1;background:transparent;display:flex;align-items:center;justify-content:center;transition:all .15s}
+  .opt.selected .opt-circle,.opt.selected .opt-square{border-color:var(--brand);background:var(--brand)}
+  .opt-text{flex:1}
+  .check-svg{display:none}
+  .opt.selected .check-svg{display:block}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  .excel-levels{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+  .excel-btn{padding:16px 12px;border-radius:12px;border:2px solid #E2E8F0;background:#fff;cursor:pointer;font-size:15px;font-weight:600;color:var(--slate);font-family:'Vazirmatn',sans-serif;transition:all .15s}
+  .excel-btn.selected{border-color:var(--brand);background:var(--brand-light);color:var(--brand)}
+  .inline-box{margin-top:16px;padding:16px;background:var(--brand-light);border-radius:12px}
+  .inline-box-label{font-size:14px;color:var(--brand);font-weight:600;margin-bottom:8px}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .inp{width:100%;padding:13px 16px;border-radius:10px;border:2px solid #E2E8F0;font-size:15px;font-family:'Vazirmatn',sans-serif;outline:none;margin-bottom:10px;color:var(--slate);background:#fff;direction:rtl;transition:border-color .15s}
+  .inp:focus,.inp.filled{border-color:var(--brand)}
+  .info-box{padding:14px;background:var(--brand-light);border-radius:10px;border:1px solid rgba(15,123,108,.3)}
+  .info-box p{font-size:13px;color:var(--brand);line-height:1.7}
+
+  /* result */
+  #result-screen{min-height:100vh;background:var(--bg)}
+  .result-hero{background:linear-gradient(135deg,#0F7B6C 0%,#0A5E52 100%);padding:48px 24px 80px;position:relative;overflow:hidden}
+  .result-hero::before{content:'';position:absolute;top:-60px;left:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.05)}
+  .result-hero::after{content:'';position:absolute;bottom:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.07)}
+  .result-inner{max-width:640px;margin:0 auto;text-align:center;position:relative;z-index:1}
+  .result-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:99px;background:rgba(255,255,255,.15);margin-bottom:20px}
+  .result-name{font-size:28px;font-weight:800;color:#fff;margin-bottom:8px}
+  .result-sub{font-size:16px;color:rgba(255,255,255,.8);margin-bottom:32px}
+  .result-cards{display:flex;justify-content:center;gap:20px;flex-wrap:wrap}
+  .result-card{background:rgba(255,255,255,.12);border-radius:16px;padding:20px 32px;text-align:center;backdrop-filter:blur(10px)}
+  .result-score{font-size:40px;font-weight:800;color:#fff}
+  .result-score-label{font-size:13px;color:rgba(255,255,255,.7);margin-top:4px}
+  .result-level{font-size:24px;font-weight:800;color:var(--gold)}
+  .result-body{max-width:640px;margin:-32px auto 0;padding:0 16px 60px}
+  .r-card{background:#fff;border-radius:20px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,.04);margin-bottom:16px}
+  .r-card-brand{border:2px solid var(--brand-light)}
+  .r-card p{font-size:15px;color:var(--slate);line-height:1.8;font-weight:500}
+  .r-card-label{font-size:13px;color:var(--brand);font-weight:600;margin-bottom:8px}
+  .r-card-muted{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:12px}
+  .path-wrap{display:flex;gap:12px;align-items:flex-start}
+  .path-icon{font-size:32px}
+  .path-title{font-size:18px;font-weight:700;color:var(--slate);margin-bottom:6px}
+  .path-desc{font-size:14px;color:var(--muted);line-height:1.7}
+  .tags{display:flex;gap:8px;flex-wrap:wrap}
+  .tag{padding:6px 14px;border-radius:99px;background:rgba(201,169,75,.15);color:var(--gold);font-size:13px;font-weight:600}
+  .cta-card{background:linear-gradient(135deg,#1A2332 0%,#0D1829 100%);border-radius:20px;padding:28px;text-align:center;margin-bottom:12px}
+  .cta-title{font-size:16px;color:#fff;font-weight:700;margin-bottom:6px}
+  .cta-sub{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:20px}
+  .btn-cta{width:100%;padding:16px;border-radius:12px;border:none;background:linear-gradient(135deg,#0F7B6C,#0A5E52);color:#fff;font-size:16px;font-weight:700;cursor:pointer;font-family:'Vazirmatn',sans-serif;margin-bottom:10px;box-shadow:0 4px 20px rgba(15,123,108,.6)}
+  .btn-outline-white{width:100%;padding:14px;border-radius:12px;border:2px solid rgba(255,255,255,.2);background:transparent;color:#fff;font-size:15px;font-weight:600;cursor:pointer;font-family:'Vazirmatn',sans-serif}
+  .btn-restart{width:100%;padding:14px;border-radius:12px;border:2px solid #E2E8F0;background:#fff;color:var(--muted);font-size:14px;cursor:pointer;font-family:'Vazirmatn',sans-serif}
+
+  /* admin */
+  #admin-screen{min-height:100vh;background:#0F172A;color:#fff}
+  .admin-login{display:flex;align-items:center;justify-content:center;min-height:100vh}
+  .admin-login-card{background:#1E293B;border-radius:20px;padding:32px;width:90%;max-width:360px;text-align:center}
+  .admin-icon{width:48px;height:48px;border-radius:12px;background:var(--brand);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:20px}
+  .admin-title{color:#fff;font-size:18px;font-weight:700;margin-bottom:6px}
+  .admin-note{color:#64748B;font-size:13px;margin-bottom:24px}
+  .admin-inp{width:100%;padding:13px 16px;border-radius:10px;border:2px solid #334155;background:#0F172A;color:#fff;font-size:15px;font-family:'Vazirmatn',sans-serif;outline:none;margin-bottom:12px;direction:rtl}
+  .btn-admin-login{width:100%;padding:13px;border-radius:10px;border:none;background:var(--brand);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:'Vazirmatn',sans-serif;margin-bottom:12px}
+  .btn-admin-back{width:100%;padding:11px;border-radius:10px;border:2px solid #334155;background:transparent;color:#64748B;font-size:14px;cursor:pointer;font-family:'Vazirmatn',sans-serif}
+  .dashboard{padding:24px 16px 60px}
+  .dash-inner{max-width:900px;margin:0 auto}
+  .dash-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+  .dash-title{font-size:22px;font-weight:800;color:#fff}
+  .dash-sub{font-size:13px;color:#64748B;margin-top:2px}
+  .btn-exit{padding:10px 18px;border-radius:10px;border:2px solid #334155;background:transparent;color:#64748B;font-size:13px;cursor:pointer;font-family:'Vazirmatn',sans-serif}
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:24px}
+  .stat-dark{background:#1E293B;border-radius:14px;padding:18px 20px}
+  .stat-dark-num{font-size:26px;font-weight:800}
+  .stat-dark-label{font-size:12px;color:#64748B;margin-top:4px}
+  .table-wrap{background:#1E293B;border-radius:16px;overflow:hidden}
+  .table-head{padding:16px 20px;border-bottom:1px solid #334155;display:flex;justify-content:space-between}
+  .table-head span:first-child{font-weight:700;font-size:15px}
+  .table-head span:last-child{font-size:12px;color:#64748B}
+  .table-scroll{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  thead tr{background:#0F172A}
+  th{padding:12px 14px;text-align:right;color:#64748B;font-weight:600;white-space:nowrap}
+  td{padding:12px 14px}
+  tr.even{background:#1A2840}
+  .level-tag{padding:3px 10px;border-radius:99px;background:rgba(15,123,108,.3);color:var(--brand);font-weight:600;font-size:12px}
+  .empty-state{background:#1E293B;border-radius:16px;padding:40px;text-align:center}
+
+  /* dot */
+  .dot-green{width:8px;height:8px;border-radius:50%;background:#22C55E;display:inline-block}
+
+  @media(max-width:480px){
+    .grid2{grid-template-columns:1fr}
+    .excel-levels{grid-template-columns:1fr 1fr}
+    .contact-grid{grid-template-columns:1fr}
+    .result-cards{gap:12px}
+    .result-card{padding:16px 20px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div id="hero" class="screen active">
+  <div id="hero-screen">
+    <header class="hero-header">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 3h18v4H3V3zm0 6h12v4H3V9zm0 6h18v4H3v-4z" fill="white" opacity=".9"/></svg>
+        </div>
+        <span style="font-weight:700;font-size:16px;color:var(--slate)">آکادمی حسابداری جاویدان</span>
+      </div>
+      <span style="font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px">
+        <span class="dot-green"></span> ارزیابی رایگان
+      </span>
+    </header>
+    <div class="hero-body">
+      <div class="hero-inner">
+        <div class="badge">
+          <span style="font-size:12px;color:var(--brand);font-weight:600">ارزیابی تخصصی مسیر شغلی حسابداری</span>
+        </div>
+        <h1 class="hero-title">حسابداری را در چه سطحی بلدی؟</h1>
+        <p class="hero-sub">در کمتر از ۵ دقیقه سطح مهارت، تجربه و مسیر شغلی خودت را ارزیابی کن و ببین برای حرفهایتر شدن دقیقاً روی چه مهارتهایی باید کار کنی.</p>
+        <button class="btn-primary" onclick="startForm()">شروع ارزیابی ✦</button>
+        <p style="margin-top:14px;font-size:13px;color:var(--muted)">این ارزیابی حدود ۵ دقیقه زمان میبرد.</p>
+        <div class="stats">
+          <div class="stat-card"><div class="stat-num">۲۳۰۰+</div><div class="stat-label">نفر شرکت کرده</div></div>
+          <div class="stat-card"><div class="stat-num">۸ مرحله</div><div class="stat-label">ارزیابی تخصصی</div></div>
+          <div class="stat-card"><div class="stat-num">رایگان</div><div class="stat-label">بدون هزینه</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button onclick="goAdmin()" style="position:fixed;bottom:16px;left:16px;padding:8px 14px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;font-size:12px;color:var(--muted);cursor:pointer;font-family:'Vazirmatn',sans-serif">پنل مدیریت</button>
+</div>
+
+<!-- ═══ FORM ═══ -->
+<div id="form-screen" class="screen">
+  <div class="sticky-header">
+    <div class="sticky-inner">
+      <span style="font-weight:700;font-size:15px;color:var(--slate)">آکادمی حسابداری جاویدان</span>
+      <span style="font-size:13px;color:var(--brand);font-weight:600" id="time-left-top">⏱ ۵ دقیقه تا پایان</span>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span style="font-size:13px;color:var(--muted);font-weight:500" id="step-label">مرحله ۱ از ۸</span>
+        <span style="font-size:13px;color:var(--brand);font-weight:600" id="time-left-bar">⏱ ۵ دقیقه تا پایان</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:12.5%"></div></div>
+      <div class="progress-pct" id="progress-pct">۱۲٪</div>
+    </div>
+  </div>
+  <div id="step-container"></div>
+</div>
+
+<!-- ═══ RESULT ═══ -->
+<div id="result-screen" class="screen">
+  <div class="result-hero">
+    <div class="result-inner">
+      <div class="result-badge"><span style="font-size:13px;color:#fff;font-weight:600">ارزیابی تو کامل شد ✦</span></div>
+      <h1 class="result-name" id="res-name">نتیجه ارزیابی تو</h1>
+      <p class="result-sub">بر اساس پاسخهایت، نتیجه ارزیابی حسابداری جاویدان:</p>
+      <div class="result-cards">
+        <div class="result-card">
+          <div class="result-score" id="res-score">۰</div>
+          <div class="result-score-label">امتیاز از ۱۰۰</div>
+        </div>
+        <div class="result-card">
+          <div class="result-level" id="res-level">—</div>
+          <div class="result-score-label">سطح مهارتی</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="result-body">
+    <div class="r-card r-card-brand"><p id="res-positive"></p></div>
+    <div class="r-card">
+      <p class="r-card-label">مسیر پیشنهادی آکادمی برای تو</p>
+      <div class="path-wrap">
+        <span class="path-icon" id="res-path-icon"></span>
+        <div>
+          <div class="path-title" id="res-path-title"></div>
+          <div class="path-desc" id="res-path-desc"></div>
+        </div>
+      </div>
+    </div>
+    <div class="r-card" id="res-weak-card" style="display:none">
+      <p class="r-card-muted">مهارتهایی که تقویتشان میتواند به تو کمک کند:</p>
+      <div class="tags" id="res-tags"></div>
+    </div>
+    <div class="cta-card">
+      <p class="cta-title">مسیر پیشنهادی تو را با آموزش درست شروع کنیم.</p>
+      <p class="cta-sub">آکادمی حسابداری جاویدان آماده راهنمایی شماست.</p>
+      <button class="btn-cta">مشاهده مسیر آموزشی من ←</button>
+      <button class="btn-outline-white">📞 مشاوره رایگان با آکادمی</button>
+    </div>
+    <button class="btn-restart" onclick="restartForm()">شروع مجدد ارزیابی</button>
+  </div>
+</div>
+
+<!-- ═══ ADMIN ═══ -->
+<div id="admin-screen" class="screen">
+  <div id="admin-login-view" class="admin-login">
+    <div class="admin-login-card">
+      <div class="admin-icon">🔐</div>
+      <h2 class="admin-title">پنل مدیریت</h2>
+      <p class="admin-note">آکادمی حسابداری جاویدان</p>
+      <input type="password" id="admin-pass" class="admin-inp" placeholder="رمز عبور" onkeydown="if(event.key==='Enter')adminLogin()">
+      <button class="btn-admin-login" onclick="adminLogin()">ورود</button>
+      <button class="btn-admin-back" onclick="goHero()">بازگشت</button>
+    </div>
+  </div>
+  <div id="admin-dashboard-view" style="display:none">
+    <div class="dashboard">
+      <div class="dash-inner">
+        <div class="dash-header">
+          <div>
+            <div class="dash-title">داشبورد مدیریت</div>
+            <div class="dash-sub">آکادمی حسابداری جاویدان</div>
+          </div>
+          <button class="btn-exit" onclick="goHero()">← خروج</button>
+        </div>
+        <div class="stats-grid" id="admin-stats"></div>
+        <div id="admin-table"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+// ═══════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbwA96clj8vnRr2RU_HG8F54zm-Bv1cXPRU64cH7Z5CfQXG_1zxfzX_IWM9o79UAIhAq/exec";
+const ADMIN_PASS = "javidan1403";
+const TOTAL_STEPS = 8;
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let currentStep = 1;
+let answers = {};
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function toPersian(n) {
+  return String(n).replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
 }
 
-// ─── Storage helpers ──────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function getTimeLeft(step) {
+  const times = [5,4,3,3,2,2,1,1];
+  return toPersian(times[Math.min(step-1,7)] || 1);
+}
+
+// ═══════════════════════════════════════════════
+// STORAGE & SHEETS
+// ═══════════════════════════════════════════════
 function loadDB() {
-  try {
-    const raw = localStorage.getItem("javidan_db");
-    return raw ? JSON.parse(raw) : { submissions: [] };
-  } catch { return { submissions: [] }; }
+  try { const r = localStorage.getItem("javidan_db"); return r ? JSON.parse(r) : {submissions:[]}; }
+  catch { return {submissions:[]}; }
 }
-function saveDB(db) {
-  try { localStorage.setItem("javidan_db", JSON.stringify(db)); } catch {}
-}
+function saveDB(db) { try { localStorage.setItem("javidan_db", JSON.stringify(db)); } catch {} }
+
 function saveSubmission(data) {
   const db = loadDB();
   const entry = { ...data, id: Date.now(), date: new Date().toLocaleDateString("fa-IR") };
   db.submissions.push(entry);
   saveDB(db);
-  // ارسال به Google Sheets
   sendToSheet(entry);
 }
+
+async function sendToSheet(data) {
+  try {
+    await fetch(SHEET_URL, {
+      method: "POST", mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+  } catch(e) { console.error("Sheet error:", e); }
+}
+
 function getSubmissions() { return loadDB().submissions; }
 
-// ─── Scoring ──────────────────────────────────────────────────────
-function calcScore(answers) {
+// ═══════════════════════════════════════════════
+// SCORING
+// ═══════════════════════════════════════════════
+function calcScore(ans) {
   let score = 0;
-  // Employment status
-  if (answers.employment === "accounting") score += 20;
-  else if (answers.employment === "other_work" || answers.employment === "freelance") score += 10;
-  else if (answers.employment === "student") score += 5;
-  // Experience duration
-  const expMap = { "less6": 5, "6to12": 10, "1to2": 15, "2to5": 20, "5plus": 25 };
-  score += expMap[answers.expDuration] || 0;
-  // Accounting tasks done
-  const tasks = answers.accountingTasks || [];
+  if (ans.employment === "accounting") score += 20;
+  else if (ans.employment === "other_work" || ans.employment === "freelance") score += 10;
+  else if (ans.employment === "student") score += 5;
+  const expMap = { less6:5, "6to12":10, "1to2":15, "2to5":20, "5plus":25 };
+  score += expMap[ans.expDuration] || 0;
+  const tasks = ans.accountingTasks || [];
   score += Math.min(tasks.length * 2, 20);
-  // Software
-  const sw = answers.software || [];
+  const sw = ans.software || [];
   score += Math.min(sw.length * 3, 12);
-  // Excel
-  const xlMap = { "beginner": 2, "medium": 6, "good": 10, "pro": 14 };
-  score += xlMap[answers.excelLevel] || 0;
-  // Knowledge questions
-  const kq = answers.knowledgeAnswers || {};
-  const correct = { kq1: "b", kq2: "b", kq3: "b", kq4: "b" };
-  Object.entries(correct).forEach(([k, v]) => { if (kq[k] === v) score += 3; });
+  const xlMap = { beginner:2, medium:6, good:10, pro:14 };
+  score += xlMap[ans.excelLevel] || 0;
+  const kq = ans.knowledgeAnswers || {};
+  const correct = { kq1:"b", kq2:"b", kq3:"b", kq4:"b" };
+  Object.entries(correct).forEach(([k,v]) => { if(kq[k]===v) score += 3; });
   return Math.min(score, 100);
 }
 
 function getLevel(score) {
-  if (score < 30) return { label: "مبتدی", color: "#E8895A", path: 1 };
-  if (score < 60) return { label: "در حال یادگیری", color: GOLD, path: 2 };
-  if (score < 80) return { label: "نیمه‌حرفه‌ای", color: BRAND, path: 3 };
-  return { label: "حرفه‌ای", color: "#3B7DD8", path: 4 };
+  if (score < 30) return { label:"مبتدی", path:1 };
+  if (score < 60) return { label:"در حال یادگیری", path:2 };
+  if (score < 80) return { label:"نیمهحرفهای", path:3 };
+  return { label:"حرفهای", path:4 };
 }
 
 const PATHS = {
-  1: { title: "شروع از صفر تا ورود به بازار کار", desc: "پایه‌های حسابداری رو از صفر یاد می‌گیری و با مسیر عملی و ساختارمند، آماده اولین شغلت میشی.", icon: "🚀" },
-  2: { title: "تقویت مهارت‌های عملی حسابداری", desc: "دانش پایه داری؛ با تمرین عملی روی نرم‌افزار، اسناد و گزارش‌گیری، مهارتت رو به سطح بازار کار می‌رسونی.", icon: "⚡" },
-  3: { title: "حسابدار حرفه‌ای", desc: "از مرحله شروع عبور کردی؛ حالا نوبت تسلط کامل روی حقوق، مالیات، نرم‌افزارهای پیشرفته و گزارش‌های مالی‌ه.", icon: "💼" },
-  4: { title: "تخصص و ارتقای شغلی", desc: "پایه محکمی داری. مرحله بعدی: تخصص در مالیات، بیمه، Excel حرفه‌ای، صورت‌های مالی و مدیریت مالی.", icon: "🏆" },
+  1: { title:"شروع از صفر تا ورود به بازار کار", desc:"پایههای حسابداری رو از صفر یاد میگیری و با مسیر عملی و ساختارمند، آماده اولین شغلت میشی.", icon:"🚀" },
+  2: { title:"تقویت مهارتهای عملی حسابداری", desc:"دانش پایه داری؛ با تمرین عملی روی نرمافزار، اسناد و گزارشگیری، مهارتت رو به سطح بازار کار میرسونی.", icon:"⚡" },
+  3: { title:"حسابدار حرفهای", desc:"از مرحله شروع عبور کردی؛ حالا نوبت تسلط کامل روی حقوق، مالیات، نرمافزارهای پیشرفته و گزارشهای مالیه.", icon:"💼" },
+  4: { title:"تخصص و ارتقای شغلی", desc:"پایه محکمی داری. مرحله بعدی: تخصص در مالیات، بیمه، Excel حرفهای، صورتهای مالی و مدیریت مالی.", icon:"🏆" },
 };
 
-// ─── Components ───────────────────────────────────────────────────
-const fonts = `
-  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Vazirmatn', sans-serif; direction: rtl; background: ${BG}; color: ${SLATE}; }
-  ::selection { background: ${BRAND_LIGHT}; }
-  ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
-`;
-
-function OptionCard({ label, selected, onClick, multi }) {
-  return (
-    <button onClick={onClick} style={{
-      display: "flex", alignItems: "center", gap: 10, width: "100%",
-      padding: "13px 16px", borderRadius: 12, border: `2px solid ${selected ? BRAND : "#E2E8F0"}`,
-      background: selected ? BRAND_LIGHT : WHITE, cursor: "pointer", textAlign: "right",
-      transition: "all .18s ease", marginBottom: 8, fontSize: 15, fontFamily: "inherit", color: SLATE,
-      boxShadow: selected ? `0 0 0 3px ${BRAND}22` : "0 1px 3px #0001"
-    }}>
-      <span style={{
-        width: 20, height: 20, borderRadius: multi ? 6 : "50%", flexShrink: 0,
-        border: `2px solid ${selected ? BRAND : "#CBD5E1"}`,
-        background: selected ? BRAND : "transparent",
-        display: "flex", alignItems: "center", justifyContent: "center", transition: "all .15s"
-      }}>
-        {selected && <svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round"/></svg>}
-      </span>
-      <span style={{ flex: 1 }}>{label}</span>
-    </button>
-  );
+// ═══════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════
+function startForm() {
+  currentStep = 1; answers = {};
+  showScreen('form-screen');
+  renderStep();
 }
 
-function ProgressBar({ step, total, timeLeft }) {
-  const pct = Math.round((step / total) * 100);
-  return (
-    <div style={{ padding: "16px 24px 0", maxWidth: 640, margin: "0 auto" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-        <span style={{ fontSize: 13, color: MUTED, fontWeight: 500 }}>مرحله {toPersian(step)} از {toPersian(total)}</span>
-        <span style={{ fontSize: 13, color: BRAND, fontWeight: 600 }}>⏱ {timeLeft} دقیقه تا پایان</span>
-      </div>
-      <div style={{ height: 6, background: "#E2E8F0", borderRadius: 99, overflow: "hidden" }}>
-        <div style={{ height: "100%", width: `${pct}%`, background: `linear-gradient(90deg, ${BRAND}, ${GOLD})`, borderRadius: 99, transition: "width .5s cubic-bezier(.4,0,.2,1)" }} />
-      </div>
-      <div style={{ textAlign: "left", marginTop: 4, fontSize: 12, color: MUTED }}>{toPersian(pct)}٪</div>
-    </div>
-  );
+function restartForm() {
+  currentStep = 1; answers = {};
+  showScreen('hero');
 }
 
-function toPersian(n) {
-  return String(n).replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
+function goAdmin() { showScreen('admin-screen'); }
+function goHero() {
+  document.getElementById('admin-login-view').style.display = 'flex';
+  document.getElementById('admin-dashboard-view').style.display = 'none';
+  document.getElementById('admin-pass').value = '';
+  showScreen('hero');
 }
 
-function StepCard({ title, subtitle, children, onNext, onBack, nextLabel = "ادامه →", canNext = true, showBack = true }) {
-  return (
-    <div style={{ maxWidth: 640, margin: "24px auto", padding: "0 16px 80px", animation: "fadeSlide .3s ease" }}>
-      <style>{`@keyframes fadeSlide { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }`}</style>
-      <div style={{ background: WHITE, borderRadius: 20, padding: "28px 24px", boxShadow: "0 2px 16px #0F7B6C0D, 0 1px 4px #0001" }}>
-        {title && <h2 style={{ fontSize: 20, fontWeight: 700, color: SLATE, marginBottom: subtitle ? 8 : 20, lineHeight: 1.5 }}>{title}</h2>}
-        {subtitle && <p style={{ fontSize: 14, color: MUTED, marginBottom: 20, lineHeight: 1.7 }}>{subtitle}</p>}
-        {children}
-      </div>
-      <div style={{ display: "flex", gap: 10, marginTop: 14, flexDirection: "row-reverse" }}>
-        <button onClick={onNext} disabled={!canNext} style={{
-          flex: 1, padding: "14px 24px", borderRadius: 12, border: "none", cursor: canNext ? "pointer" : "not-allowed",
-          background: canNext ? `linear-gradient(135deg, ${BRAND}, #0A5E52)` : "#CBD5E1",
-          color: WHITE, fontSize: 16, fontWeight: 700, fontFamily: "inherit", transition: "all .2s",
-          boxShadow: canNext ? `0 4px 14px ${BRAND}40` : "none"
-        }}>{nextLabel}</button>
-        {showBack && <button onClick={onBack} style={{
-          padding: "14px 20px", borderRadius: 12, border: `2px solid #E2E8F0`, cursor: "pointer",
-          background: WHITE, color: MUTED, fontSize: 15, fontFamily: "inherit"
-        }}>← قبلی</button>}
-      </div>
-    </div>
-  );
+function nextStep() {
+  if (currentStep < TOTAL_STEPS) { currentStep++; renderStep(); }
+  else finish();
 }
 
-// ─── HERO ─────────────────────────────────────────────────────────
-function Hero({ onStart }) {
-  return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: `linear-gradient(160deg, ${WHITE} 0%, ${BRAND_LIGHT} 100%)` }}>
-      <header style={{ padding: "20px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", maxWidth: 1100, margin: "0 auto", width: "100%" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 38, height: 38, borderRadius: 10, background: BRAND, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 3h18v4H3V3zm0 6h12v4H3V9zm0 6h18v4H3v-4z" fill="white" opacity=".9"/></svg>
-          </div>
-          <span style={{ fontWeight: 700, fontSize: 16, color: SLATE }}>آکادمی حسابداری جاویدان</span>
-        </div>
-        <span style={{ fontSize: 13, color: MUTED, display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#22C55E", display: "inline-block" }}></span>
-          ارزیابی رایگان
-        </span>
-      </header>
-
-      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 24px" }}>
-        <div style={{ maxWidth: 680, width: "100%", textAlign: "center" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 18px", borderRadius: 99, background: `${BRAND}15`, marginBottom: 28, border: `1px solid ${BRAND}30` }}>
-            <span style={{ fontSize: 12, color: BRAND, fontWeight: 600 }}>ارزیابی تخصصی مسیر شغلی حسابداری</span>
-          </div>
-          <h1 style={{ fontSize: "clamp(28px, 5vw, 46px)", fontWeight: 800, color: SLATE, lineHeight: 1.35, marginBottom: 20 }}>
-            حسابداری را در چه سطحی بلدی؟
-          </h1>
-          <p style={{ fontSize: "clamp(15px, 2.5vw, 18px)", color: MUTED, lineHeight: 1.8, marginBottom: 40, maxWidth: 540, margin: "0 auto 40px" }}>
-            در کمتر از ۵ دقیقه سطح مهارت، تجربه و مسیر شغلی خودت را ارزیابی کن و ببین برای حرفه‌ای‌تر شدن دقیقاً روی چه مهارت‌هایی باید کار کنی.
-          </p>
-          <button onClick={onStart} style={{
-            padding: "18px 48px", borderRadius: 14, border: "none", cursor: "pointer",
-            background: `linear-gradient(135deg, ${BRAND}, #0A5E52)`, color: WHITE,
-            fontSize: 18, fontWeight: 700, fontFamily: "inherit",
-            boxShadow: `0 8px 32px ${BRAND}50`, transition: "transform .2s, box-shadow .2s"
-          }} onMouseEnter={e => { e.target.style.transform = "translateY(-2px)"; e.target.style.boxShadow = `0 12px 40px ${BRAND}60`; }}
-             onMouseLeave={e => { e.target.style.transform = ""; e.target.style.boxShadow = `0 8px 32px ${BRAND}50`; }}>
-            شروع ارزیابی ✦
-          </button>
-          <p style={{ marginTop: 14, fontSize: 13, color: MUTED }}>این ارزیابی حدود ۵ دقیقه زمان می‌برد.</p>
-
-          <div style={{ display: "flex", gap: 16, marginTop: 48, justifyContent: "center", flexWrap: "wrap" }}>
-            {[["۲۳۰۰+", "نفر شرکت کرده"], ["۸ مرحله", "ارزیابی تخصصی"], ["رایگان", "بدون هزینه"]].map(([n, l]) => (
-              <div key={l} style={{ padding: "14px 24px", background: WHITE, borderRadius: 14, boxShadow: "0 2px 8px #0001", textAlign: "center", minWidth: 110 }}>
-                <div style={{ fontSize: 20, fontWeight: 800, color: BRAND }}>{n}</div>
-                <div style={{ fontSize: 12, color: MUTED, marginTop: 2 }}>{l}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+function prevStep() {
+  if (currentStep > 1) { currentStep--; renderStep(); }
 }
 
-// ─── FORM STEPS ───────────────────────────────────────────────────
-const TOTAL_STEPS = 8;
-
-function getTimeLeft(step) {
-  const times = [5, 4, 3, 3, 2, 2, 1, 1];
-  return toPersian(times[Math.min(step - 1, 7)] || 1);
+function updateProgress() {
+  const pct = Math.round((currentStep / TOTAL_STEPS) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = toPersian(pct) + '٪';
+  document.getElementById('step-label').textContent = 'مرحله ' + toPersian(currentStep) + ' از ' + toPersian(TOTAL_STEPS);
+  const t = getTimeLeft(currentStep);
+  document.getElementById('time-left-top').textContent = '⏱ ' + t + ' دقیقه تا پایان';
+  document.getElementById('time-left-bar').textContent = '⏱ ' + t + ' دقیقه تا پایان';
 }
 
-export default function App() {
-  const [screen, setScreen] = useState("hero"); // hero | form | result | admin
-  const [step, setStep] = useState(1);
-  const [answers, setAnswers] = useState({});
-  const [score, setScore] = useState(0);
-  const [adminPass, setAdminPass] = useState("");
-  const [adminUnlocked, setAdminUnlocked] = useState(false);
+function renderStep() {
+  updateProgress();
+  const c = document.getElementById('step-container');
+  c.innerHTML = '';
+  switch(currentStep) {
+    case 1: c.innerHTML = buildStep1(); break;
+    case 2: c.innerHTML = buildStep2(); break;
+    case 3: c.innerHTML = buildStep3(); break;
+    case 4: c.innerHTML = buildStep4(); break;
+    case 5: c.innerHTML = buildStep5(); break;
+    case 6: c.innerHTML = buildStep6(); break;
+    case 7: c.innerHTML = buildStep7(); break;
+    case 8: c.innerHTML = buildStep8(); break;
+  }
+  attachListeners();
+  window.scrollTo(0,0);
+}
 
-  const set = (key, val) => setAnswers(p => ({ ...p, [key]: val }));
-  const toggle = (key, val) => {
+// ═══════════════════════════════════════════════
+// OPTION HELPERS
+// ═══════════════════════════════════════════════
+function optHTML(value, label, key, multi=false, selected=false) {
+  const sel = selected ? 'selected' : '';
+  const shape = multi ? 'opt-square' : 'opt-circle';
+  return `<button class="opt ${sel}" onclick="selectOpt('${key}','${escVal(value)}',${multi})" data-key="${key}" data-val="${escVal(value)}">
+    <span class="${shape}"><svg class="check-svg" width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg></span>
+    <span class="opt-text">${label}</span>
+  </button>`;
+}
+
+function escVal(v) { return v.replace(/'/g,"&#39;").replace(/"/g,'&quot;'); }
+
+function isSelected(key, val) {
+  if (Array.isArray(answers[key])) return answers[key].includes(val);
+  return answers[key] === val;
+}
+
+function selectOpt(key, val, multi) {
+  if (multi) {
     const prev = answers[key] || [];
-    set(key, prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val]);
-  };
-
-  function nextStep() {
-    if (step < TOTAL_STEPS) setStep(s => s + 1);
-    else finish();
+    if (prev.includes(val)) answers[key] = prev.filter(v => v !== val);
+    else answers[key] = [...prev, val];
+  } else {
+    answers[key] = val;
   }
-  function prevStep() { if (step > 1) setStep(s => s - 1); }
-
-  function finish() {
-    const s = calcScore(answers);
-    setScore(s);
-    setScreen("result");
-    if (answers.name || answers.phone) saveSubmission({ ...answers, score: s, level: getLevel(s).label, path: getLevel(s).path });
-  }
-
-  // Determine visible steps based on answers
-  function getVisibleStep(stepNum) {
-    const emp = answers.employment;
-    // Step 6 only for non-employed
-    if (stepNum === 6 && emp === "accounting") return false;
-    // Step 7 only for employed
-    if (stepNum === 7 && (emp !== "accounting" && emp !== "other_work" && emp !== "freelance")) return false;
-    return true;
-  }
-
-  // Map logical step to actual component
-  function renderStep() {
-    switch (step) {
-      case 1: return <Step1 answers={answers} set={set} onNext={nextStep} />;
-      case 2: return <Step2 answers={answers} set={set} toggle={toggle} onNext={nextStep} onBack={prevStep} />;
-      case 3: return <Step3 answers={answers} set={set} toggle={toggle} onNext={nextStep} onBack={prevStep} />;
-      case 4: return <Step4 answers={answers} set={set} toggle={toggle} onNext={nextStep} onBack={prevStep} />;
-      case 5: return <Step5 answers={answers} set={set} onNext={nextStep} onBack={prevStep} />;
-      case 6: return <Step6 answers={answers} set={set} toggle={toggle} onNext={nextStep} onBack={prevStep} />;
-      case 7: return <Step7 answers={answers} set={set} toggle={toggle} onNext={nextStep} onBack={prevStep} />;
-      case 8: return <Step8 answers={answers} set={set} onNext={finish} onBack={prevStep} />;
-      default: return null;
-    }
-  }
-
-  if (screen === "hero") return (
-    <div>
-      <style>{fonts}</style>
-      <Hero onStart={() => setScreen("form")} />
-      <button onClick={() => setScreen("admin")} style={{ position: "fixed", bottom: 16, left: 16, padding: "8px 14px", borderRadius: 8, border: "1px solid #E2E8F0", background: WHITE, fontSize: 12, color: MUTED, cursor: "pointer", fontFamily: "inherit" }}>پنل مدیریت</button>
-    </div>
-  );
-
-  if (screen === "form") return (
-    <div style={{ minHeight: "100vh", background: BG, fontFamily: "inherit" }}>
-      <style>{fonts}</style>
-      <div style={{ background: WHITE, borderBottom: "1px solid #F1F5F9", position: "sticky", top: 0, zIndex: 50, paddingBottom: 12 }}>
-        <div style={{ maxWidth: 640, margin: "0 auto", padding: "14px 24px 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span style={{ fontWeight: 700, fontSize: 15, color: SLATE }}>آکادمی حسابداری جاویدان</span>
-          <span style={{ fontSize: 13, color: BRAND, fontWeight: 600 }}>⏱ {getTimeLeft(step)} دقیقه تا پایان</span>
-        </div>
-        <ProgressBar step={step} total={TOTAL_STEPS} timeLeft={getTimeLeft(step)} />
-      </div>
-      {renderStep()}
-    </div>
-  );
-
-  if (screen === "result") return (
-    <div style={{ minHeight: "100vh", background: BG }}>
-      <style>{fonts}</style>
-      <Result answers={answers} score={score} onRestart={() => { setScreen("hero"); setStep(1); setAnswers({}); }} />
-    </div>
-  );
-
-  if (screen === "admin") return (
-    <div style={{ minHeight: "100vh", background: "#0F172A" }}>
-      <style>{fonts}</style>
-      <AdminPanel onBack={() => setScreen("hero")} />
-    </div>
-  );
+  renderStep();
 }
 
-// ─── STEP 1: Employment ───────────────────────────────────────────
-function Step1({ answers, set, onNext }) {
+// ═══════════════════════════════════════════════
+// STEP BUILDERS
+// ═══════════════════════════════════════════════
+function stepWrap(title, sub, body, canNext, nextLabel='ادامه →', showBack=true) {
+  return `<div class="step-wrap">
+    <div class="step-card">
+      <h2 class="step-title">${title}</h2>
+      ${sub ? `<p class="step-sub">${sub}</p>` : ''}
+      ${body}
+    </div>
+    <div class="step-actions">
+      <button class="btn-next" onclick="${canNext ? (nextLabel.includes('دریافت') ? 'finish()' : 'nextStep()') : ''}" ${canNext ? '' : 'disabled'}>${nextLabel}</button>
+      ${showBack ? `<button class="btn-back" onclick="prevStep()">← قبلی</button>` : ''}
+    </div>
+  </div>`;
+}
+
+function buildStep1() {
   const opts = [
-    { v: "accounting", l: "بله، در حوزه حسابداری کار می‌کنم" },
-    { v: "other_work", l: "بله، کار می‌کنم ولی حسابداری نیست" },
-    { v: "unemployed", l: "فعلاً مشغول به کار نیستم" },
-    { v: "student", l: "دانشجو / در حال تحصیل هستم" },
-    { v: "freelance", l: "به‌صورت پروژه‌ای یا فریلنسری کار می‌کنم" },
+    {v:"accounting", l:"بله، در حوزه حسابداری کار میکنم"},
+    {v:"other_work", l:"بله، کار میکنم ولی حسابداری نیست"},
+    {v:"unemployed", l:"فعلاً مشغول به کار نیستم"},
+    {v:"student", l:"دانشجو / در حال تحصیل هستم"},
+    {v:"freelance", l:"بهصورت پروژهای یا فریلنسری کار میکنم"},
   ];
   const expOpts = [
-    { v: "less6", l: "کمتر از ۶ ماه" }, { v: "6to12", l: "۶ ماه تا ۱ سال" },
-    { v: "1to2", l: "۱ تا ۲ سال" }, { v: "2to5", l: "۲ تا ۵ سال" }, { v: "5plus", l: "بیشتر از ۵ سال" },
+    {v:"less6",l:"کمتر از ۶ ماه"},{v:"6to12",l:"۶ ماه تا ۱ سال"},
+    {v:"1to2",l:"۱ تا ۲ سال"},{v:"2to5",l:"۲ تا ۵ سال"},{v:"5plus",l:"بیشتر از ۵ سال"},
   ];
-  const posOpts = ["کارآموز حسابداری", "کمک‌حسابدار", "حسابدار", "حسابدار ارشد", "سرپرست حسابداری", "مدیر مالی", "سایر"];
-
-  return (
-    <StepCard title="اول از همه، وضعیت فعلی خودت را مشخص کنیم." onNext={onNext} onBack={() => {}} showBack={false} canNext={!!answers.employment}>
-      <p style={{ fontSize: 15, fontWeight: 600, color: SLATE, marginBottom: 12 }}>الان مشغول به کار هستی؟</p>
-      {opts.map(o => <OptionCard key={o.v} label={o.l} selected={answers.employment === o.v} onClick={() => set("employment", o.v)} />)}
-
-      {answers.employment === "accounting" && (
-        <div style={{ marginTop: 24, paddingTop: 20, borderTop: "1px solid #F1F5F9" }}>
-          <p style={{ fontSize: 15, fontWeight: 600, color: SLATE, marginBottom: 12 }}>چند وقت است در حوزه حسابداری فعالیت می‌کنی؟</p>
-          {expOpts.map(o => <OptionCard key={o.v} label={o.l} selected={answers.expDuration === o.v} onClick={() => set("expDuration", o.v)} />)}
-          <p style={{ fontSize: 15, fontWeight: 600, color: SLATE, margin: "20px 0 12px" }}>الان بیشتر در چه موقعیتی فعالیت می‌کنی؟</p>
-          {posOpts.map(o => <OptionCard key={o} label={o} selected={answers.position === o} onClick={() => set("position", o)} />)}
-        </div>
-      )}
-    </StepCard>
-  );
+  const posOpts = ["کارآموز حسابداری","کمکحسابدار","حسابدار","حسابدار ارشد","سرپرست حسابداری","مدیر مالی","سایر"];
+  let body = `<p class="q-label">الان مشغول به کار هستی؟</p>`;
+  body += opts.map(o => optHTML(o.v, o.l, 'employment', false, answers.employment===o.v)).join('');
+  if (answers.employment === 'accounting') {
+    body += `<div class="divider">
+      <p class="q-label">چند وقت است در حوزه حسابداری فعالیت میکنی؟</p>
+      ${expOpts.map(o => optHTML(o.v, o.l, 'expDuration', false, answers.expDuration===o.v)).join('')}
+      <p class="q-label mt">الان بیشتر در چه موقعیتی فعالیت میکنی؟</p>
+      ${posOpts.map(o => optHTML(o, o, 'position', false, answers.position===o)).join('')}
+    </div>`;
+  }
+  const canNext = !!answers.employment;
+  return stepWrap('اول از همه، وضعیت فعلی خودت را مشخص کنیم.', '', body, canNext, 'ادامه →', false);
 }
 
-// ─── STEP 2: Real experience ──────────────────────────────────────
-function Step2({ answers, set, toggle, onNext, onBack }) {
-  const tasks = ["ثبت سند حسابداری", "دریافت و پرداخت", "صندوق و تنخواه", "بانک و مغایرت بانکی", "حساب‌های دریافتنی", "حساب‌های پرداختنی", "خرید و فروش", "انبار", "حقوق و دستمزد", "بیمه", "مالیات", "ارزش افزوده", "اظهارنامه مالیاتی", "صورت‌های مالی", "بستن حساب‌ها", "گزارش‌گیری مالی", "هیچ‌کدام"];
-  const stressOpts = ["ثبت سند", "کار با نرم‌افزار", "حقوق و دستمزد", "بیمه", "مالیات", "ارزش افزوده", "انبار", "مغایرت بانکی", "تهیه گزارش", "بستن حساب‌ها", "نمی‌دانم از کجا باید شروع کنم"];
+function buildStep2() {
+  const tasks = ["ثبت سند حسابداری","دریافت و پرداخت","صندوق و تنخواه","بانک و مغایرت بانکی","حسابهای دریافتنی","حسابهای پرداختنی","خرید و فروش","انبار","حقوق و دستمزد","بیمه","مالیات","ارزش افزوده","اظهارنامه مالیاتی","صورتهای مالی","بستن حسابها","گزارشگیری مالی","هیچکدام"];
+  const stressOpts = ["ثبت سند","کار با نرمافزار","حقوق و دستمزد","بیمه","مالیات","ارزش افزوده","انبار","مغایرت بانکی","تهیه گزارش","بستن حسابها","نمیدانم از کجا باید شروع کنم"];
   const sel = answers.accountingTasks || [];
+  const body = `
+    <p class="q-label">با کدامیک از موارد زیر واقعاً کار کردهای؟ <span class="q-note">(چندتایی)</span></p>
+    <div class="grid2">${tasks.map(t => optHTML(t, t, 'accountingTasks', true, sel.includes(t))).join('')}</div>
+    <p class="q-label mt">اگر فردا وارد یک شرکت شوی، کدام بخش برایت استرس بیشتری ایجاد میکند؟</p>
+    ${stressOpts.map(o => optHTML(o, o, 'stressArea', false, answers.stressArea===o)).join('')}
+  `;
   const canNext = sel.length > 0 && !!answers.stressArea;
-
-  return (
-    <StepCard title="حالا بریم سراغ تجربه واقعی؛ نه فقط چیزهایی که روی کاغذ بلدی." onNext={onNext} onBack={onBack} canNext={canNext}>
-      <p style={{ fontSize: 15, fontWeight: 600, color: SLATE, marginBottom: 12 }}>با کدام‌یک از موارد زیر واقعاً کار کرده‌ای؟ <span style={{ fontWeight: 400, color: MUTED, fontSize: 13 }}>(چندتایی)</span></p>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }}>
-        {tasks.map(t => <OptionCard key={t} label={t} selected={sel.includes(t)} onClick={() => toggle("accountingTasks", t)} multi />)}
-      </div>
-      <p style={{ fontSize: 15, fontWeight: 600, color: SLATE, margin: "20px 0 12px" }}>اگر فردا وارد یک شرکت شوی، کدام بخش برایت استرس بیشتری ایجاد می‌کند؟</p>
-      {stressOpts.map(o => <OptionCard key={o} label={o} selected={answers.stressArea === o} onClick={() => set("stressArea", o)} />)}
-    </StepCard>
-  );
+  return stepWrap('حالا بریم سراغ تجربه واقعی؛ نه فقط چیزهایی که روی کاغذ بلدی.', '', body, canNext);
 }
 
-// ─── STEP 3: Software ─────────────────────────────────────────────
-function Step3({ answers, set, toggle, onNext, onBack }) {
-  const sws = ["هلو", "سپیدار", "راهکاران", "پارمیس", "قیاس", "محک", "تدبیر", "نرم‌افزارهای اختصاصی شرکت", "Excel", "هیچ‌کدام"];
-  const sepModules = ["حسابداری", "دریافت و پرداخت", "فروش", "انبار", "حقوق و دستمزد", "دارایی ثابت", "هیچ‌کدام به‌صورت عملی"];
-  const adaptOpts = ["خیلی راحت", "نسبتاً راحت", "نیاز به آموزش دارم", "احتمالاً برایم سخت است", "تجربه‌ای ندارم"];
+function buildStep3() {
+  const sws = ["هلو","سپیدار","راهکاران","پارمیس","قیاس","محک","تدبیر","نرمافزارهای اختصاصی شرکت","Excel","هیچکدام"];
+  const sepModules = ["حسابداری","دریافت و پرداخت","فروش","انبار","حقوق و دستمزد","دارایی ثابت","هیچکدام بهصورت عملی"];
+  const adaptOpts = ["خیلی راحت","نسبتاً راحت","نیاز به آموزش دارم","احتمالاً برایم سخت است","تجربهای ندارم"];
   const sel = answers.software || [];
   const sepSel = answers.sepModules || [];
+  let body = `
+    <p class="q-label">با کدام نرمافزارهای حسابداری کار کردهای؟ <span class="q-note">(چندتایی)</span></p>
+    <div class="grid2">${sws.map(s => optHTML(s, s, 'software', true, sel.includes(s))).join('')}</div>
+  `;
+  if (sel.includes('هلو') && !sel.includes('سپیدار')) {
+    body += `<div class="inline-box">
+      <div class="inline-box-label">گفتی با هلو کار کردی. با سپیدار هم کار کردی؟</div>
+      ${["بله، مسلط هستم","کمی کار کردم","فقط اسمش را شنیدهام","خیر"].map(o => optHTML(o, o, 'sepExperience', false, answers.sepExperience===o)).join('')}
+    </div>`;
+  }
+  if (sel.includes('سپیدار')) {
+    body += `<p class="q-label mt">با کدام بخشهای سپیدار کار کردهای؟</p>
+    ${sepModules.map(m => optHTML(m, m, 'sepModules', true, sepSel.includes(m))).join('')}`;
+  }
+  body += `<p class="q-label mt">اگر فردا در یک شرکت بگویند از نرمافزار دیگری استفاده میکنیم، چقدر راحت میتوانی خودت را هماهنگ کنی؟</p>
+    ${adaptOpts.map(o => optHTML(o, o, 'adaptSoftware', false, answers.adaptSoftware===o)).join('')}`;
   const canNext = sel.length > 0 && !!answers.adaptSoftware;
-
-  return (
-    <StepCard title="حسابداری فقط دانستن مفاهیم نیست؛ باید بتوانی با ابزارهای واقعی کار کنی." onNext={onNext} onBack={onBack} canNext={canNext}>
-      <p style={{ fontSize: 15, fontWeight: 600, color: SLATE, marginBottom: 12 }}>با کدام نرم‌افزارهای حسابداری کار کرده‌ای؟ <span style={{ fontWeight: 400, color: MUTED, fontSize: 13 }}>(چندتایی)</span></p>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }}>
-        {sws.map(s => <OptionCard key={s} label={s} selected={sel.includes(s)} onClick={() => toggle("software", s)} multi />)}
-      </div>
-      {sel.includes("هلو") && !sel.includes("سپیدار") && (
-        <div style={{ marginTop: 16, padding: 16, background: BRAND_LIGHT, borderRadius: 12 }}>
-          <p style={{ fontSize: 14, color: BRAND, fontWeight: 600 }}>گفتی با هلو کار کردی. با سپیدار هم کار کردی؟</p>
-          {["بله، مسلط هستم", "کمی کار کردم", "فقط اسمش را شنیده‌ام", "خیر"].map(o =>
-            <OptionCard key={o} label={o} selected={answers.sepExperience === o} onClick={() => set("sepExperience", o)} />
-          )}
-        </div>
-      )}
-      {sel.includes("سپیدار") && (
-        <div style={{ marginTop: 16 }}>
-          <p style={{ fontSize: 15, fontWeight: 600, color: SLATE, marginBottom: 12 }}>با کدام بخش‌های سپیدار کار کرده‌ای؟</p>
-          {sepModules.map(m => <OptionCard key={m} label={m} selected={sepSel.includes(m)} onClick={() => toggle("sepModules", m)} multi />)}
-        </div>
-      )}
-      <p style={{ fontSize: 15, fontWeight: 600, color: SLATE, margin: "20px 0 12px" }}>اگر فردا در یک شرکت بگویند از نرم‌افزار دیگری استفاده می‌کنیم، چقدر راحت می‌توانی خودت را هماهنگ کنی؟</p>
-      {adaptOpts.map(o => <OptionCard key={o} label={o} selected={answers.adaptSoftware === o} onClick={() => set("adaptSoftware", o)} />)}
-    </StepCard>
-  );
+  return stepWrap('حسابداری فقط دانستن مفاهیم نیست؛ باید بتوانی با ابزارهای واقعی کار کنی.', '', body, canNext);
 }
 
-// ─── STEP 4: Excel ────────────────────────────────────────────────
-function Step4({ answers, set, toggle, onNext, onBack }) {
-  const levels = [{ v: "beginner", l: "مبتدی" }, { v: "medium", l: "متوسط" }, { v: "good", l: "خوب" }, { v: "pro", l: "حرفه‌ای" }];
-  const funcs = ["SUM", "IF", "SUMIF / SUMIFS", "VLOOKUP / XLOOKUP", "Pivot Table", "مرتب‌سازی و فیلتر", "گزارش‌گیری", "طراحی فایل مالی", "داشبورد", "هیچ‌کدام"];
+function buildStep4() {
+  const levels = [{v:"beginner",l:"مبتدی"},{v:"medium",l:"متوسط"},{v:"good",l:"خوب"},{v:"pro",l:"حرفهای"}];
+  const funcs = ["SUM","IF","SUMIF / SUMIFS","VLOOKUP / XLOOKUP","Pivot Table","مرتبسازی و فیلتر","گزارشگیری","طراحی فایل مالی","داشبورد","هیچکدام"];
   const sel = answers.excelFuncs || [];
-
-  return (
-    <StepCard title="حالا ببینیم چقدر با Excel راحتی." onNext={onNext} onBack={onBack} canNext={!!answers.excelLevel}>
-      <p style={{ fontSize: 15, fontWeight: 600, color: SLATE, marginBottom: 12 }}>سطح کار با Excel تو چطور است؟</p>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 20 }}>
-        {levels.map(l => (
-          <button key={l.v} onClick={() => set("excelLevel", l.v)} style={{
-            padding: "16px 12px", borderRadius: 12, border: `2px solid ${answers.excelLevel === l.v ? BRAND : "#E2E8F0"}`,
-            background: answers.excelLevel === l.v ? BRAND_LIGHT : WHITE, cursor: "pointer", fontSize: 15, fontWeight: 600,
-            color: answers.excelLevel === l.v ? BRAND : SLATE, fontFamily: "inherit", transition: "all .15s"
-          }}>{l.l}</button>
-        ))}
-      </div>
-      {answers.excelLevel && (
-        <>
-          <p style={{ fontSize: 15, fontWeight: 600, color: SLATE, marginBottom: 12 }}>کدام موارد را انجام داده‌ای؟ <span style={{ fontWeight: 400, color: MUTED, fontSize: 13 }}>(چندتایی)</span></p>
-          {funcs.map(f => <OptionCard key={f} label={f} selected={sel.includes(f)} onClick={() => toggle("excelFuncs", f)} multi />)}
-        </>
-      )}
-    </StepCard>
-  );
+  const lvlBtns = levels.map(l => `<button class="excel-btn ${answers.excelLevel===l.v?'selected':''}" onclick="selectOpt('excelLevel','${l.v}',false)">${l.l}</button>`).join('');
+  let body = `<p class="q-label">سطح کار با Excel تو چطور است؟</p>
+    <div class="excel-levels">${lvlBtns}</div>`;
+  if (answers.excelLevel) {
+    body += `<p class="q-label">کدام موارد را انجام دادهای؟ <span class="q-note">(چندتایی)</span></p>
+      ${funcs.map(f => optHTML(f, f, 'excelFuncs', true, sel.includes(f))).join('')}`;
+  }
+  return stepWrap('حالا ببینیم چقدر با Excel راحتی.', '', body, !!answers.excelLevel);
 }
-
-// ─── STEP 5: Knowledge ────────────────────────────────────────────
-function Step5({ answers, set, onNext, onBack }) {
+function buildStep5() {
   const qs = [
-    { k: "kq1", q: "فرض کن امروز یک شرکت برایت فاکتور خرید آورده. اولین کاری که به‌عنوان حسابدار باید انجام بدهی چیست؟", opts: [{ v: "a", l: "فاکتور را در پوشه بایگانی می‌کنم" }, { v: "b", l: "سند حسابداری ثبت می‌کنم" }, { v: "c", l: "به مدیر اطلاع می‌دهم" }, { v: "d", l: "اول موجودی انبار را چک می‌کنم" }] },
-    { k: "kq2", q: "اگر مانده حساب بانک شرکت با صورتحساب بانک متفاوت باشد، چه کاری انجام می‌دهی؟", opts: [{ v: "a", l: "مانده دفتر را اصلاح می‌کنم" }, { v: "b", l: "مغایرت‌گیری بانکی انجام می‌دهم و تفاوت را بررسی می‌کنم" }, { v: "c", l: "با بانک تماس می‌گیرم تا اشتباه آن‌ها را تأیید کنند" }, { v: "d", l: "اهمیتی ندارد، هر دو صحیح‌اند" }] },
-    { k: "kq3", q: "اگر کارفرما از تو بخواهد حقوق کارکنان را محاسبه کنی، چه اطلاعاتی لازم داری؟", opts: [{ v: "a", l: "فقط حقوق پایه کافی است" }, { v: "b", l: "حقوق پایه، اضافه‌کاری، مزایا، کسورات بیمه و مالیات" }, { v: "c", l: "فقط روزهای کارکرد کافی است" }, { v: "d", l: "این کار مربوط به منابع انسانی است نه حسابداری" }] },
-    { k: "kq4", q: "اگر یک سند حسابداری اشتباه ثبت شده باشد، چطور آن را اصلاح می‌کنی؟", opts: [{ v: "a", l: "سند اشتباه را حذف می‌کنم" }, { v: "b", l: "سند برگشتی ثبت می‌کنم و سند صحیح ثبت می‌کنم" }, { v: "c", l: "مستقیم عدد را در سند ویرایش می‌کنم" }, { v: "d", l: "به مدیر گزارش می‌دهم تا خودش تصمیم بگیرد" }] },
+    { k:"kq1", q:"فرض کن امروز یک شرکت برایت فاکتور خرید آورده. اولین کاری که بهعنوان حسابدار باید انجام بدهی چیست؟",
+      opts:[{v:"a",l:"فاکتور را در پوشه بایگانی میکنم"},{v:"b",l:"سند حسابداری ثبت میکنم"},{v:"c",l:"به مدیر اطلاع میدهم"},{v:"d",l:"اول موجودی انبار را چک میکنم"}] },
+    { k:"kq2", q:"اگر مانده حساب بانک شرکت با صورتحساب بانک متفاوت باشد، چه کاری انجام میدهی؟",
+      opts:[{v:"a",l:"مانده دفتر را اصلاح میکنم"},{v:"b",l:"مغایرتگیری بانکی انجام میدهم و تفاوت را بررسی میکنم"},{v:"c",l:"با بانک تماس میگیرم تا اشتباه آنها را تأیید کنند"},{v:"d",l:"اهمیتی ندارد، هر دو صحیحاند"}] },
+    { k:"kq3", q:"اگر کارفرما از تو بخواهد حقوق کارکنان را محاسبه کنی، چه اطلاعاتی لازم داری؟",
+      opts:[{v:"a",l:"فقط حقوق پایه کافی است"},{v:"b",l:"حقوق پایه، اضافهکاری، مزایا، کسورات بیمه و مالیات"},{v:"c",l:"فقط روزهای کارکرد کافی است"},{v:"d",l:"این کار مربوط به منابع انسانی است نه حسابداری"}] },
+    { k:"kq4", q:"اگر یک سند حسابداری اشتباه ثبت شده باشد، چطور آن را اصلاح میکنی؟",
+      opts:[{v:"a",l:"سند اشتباه را حذف میکنم"},{v:"b",l:"سند برگشتی ثبت میکنم و سند صحیح ثبت میکنم"},{v:"c",l:"مستقیم عدد را در سند ویرایش میکنم"},{v:"d",l:"به مدیر گزارش میدهم تا خودش تصمیم بگیرد"}] },
   ];
   const kq = answers.knowledgeAnswers || {};
+  let body = '';
+  qs.forEach((q, i) => {
+    body += `<div style="margin-bottom:24px;${i<qs.length-1?'padding-bottom:20px;border-bottom:1px solid #F1F5F9':''}">
+      <p style="font-size:14px;font-weight:600;color:var(--slate);margin-bottom:12px;line-height:1.6">
+        <span style="color:var(--brand);margin-left:6px">سؤال ${toPersian(i+1)}:</span>${q.q}
+      </p>
+      ${q.opts.map(o => optHTML(o.v, o.l, 'knowledgeAnswers_'+q.k, false, kq[q.k]===o.v)).join('')}
+    </div>`;
+  });
   const canNext = qs.every(q => kq[q.k]);
-
-  return (
-    <StepCard title="چند سؤال کوتاه برای سنجش دانش حسابداری." subtitle="سؤال‌ها کاربردی و شبیه محیط واقعی کار طراحی شده‌اند." onNext={onNext} onBack={onBack} canNext={canNext}>
-      {qs.map((q, i) => (
-        <div key={q.k} style={{ marginBottom: 24, paddingBottom: 20, borderBottom: i < qs.length - 1 ? "1px solid #F1F5F9" : "none" }}>
-          <p style={{ fontSize: 14, fontWeight: 600, color: SLATE, marginBottom: 12, lineHeight: 1.6 }}>
-            <span style={{ color: BRAND, marginLeft: 6 }}>سؤال {toPersian(i + 1)}:</span>{q.q}
-          </p>
-          {q.opts.map(o => (
-            <OptionCard key={o.v} label={o.l} selected={kq[q.k] === o.v}
-              onClick={() => set("knowledgeAnswers", { ...kq, [q.k]: o.v })} />
-          ))}
-        </div>
-      ))}
-    </StepCard>
-  );
+  return stepWrap('چند سؤال کوتاه برای سنجش دانش حسابداری.', 'سؤالها کاربردی و شبیه محیط واقعی کار طراحی شدهاند.', body, canNext);
 }
 
-// ─── STEP 6: Unemployed ───────────────────────────────────────────
-function Step6({ answers, set, toggle, onNext, onBack }) {
-  const reasons = ["تجربه کاری ندارم", "حسابداری را بلدم ولی اعتمادبه‌نفس ندارم", "آموزش دیده‌ام ولی عملی کار نکرده‌ام", "نرم‌افزارها را بلد نیستم", "برای مصاحبه‌های کاری آماده نیستم", "رزومه ندارم", "شغل مناسب پیدا نکرده‌ام", "نمی‌دانم دقیقاً از کجا شروع کنم", "قبلاً کار کردم ولی می‌خواهم دوباره وارد بازار کار شوم", "دلیل دیگری دارم"];
-  const helpAreas = ["روز اول کاری", "ثبت سند", "نرم‌افزار", "Excel", "حقوق و دستمزد", "بیمه", "مالیات", "گزارش‌گیری", "ارتباط با مدیر", "اعتمادبه‌نفس", "همه موارد"];
-  const goals = ["پیدا کردن اولین شغل", "تغییر شغل", "افزایش درآمد", "حرفه‌ای شدن", "گرفتن پروژه", "راه‌اندازی کار شخصی", "مهاجرت و تقویت مهارت", "فعلاً فقط یادگیری"];
-
-  if (answers.employment === "accounting" || answers.employment === "other_work" || answers.employment === "freelance") {
-    return <Step7 answers={answers} set={set} toggle={toggle} onNext={onNext} onBack={onBack} />;
-  }
-
-  return (
-    <StepCard title="پس بریم ببینیم چه چیزی جلوی ورودت به بازار کار را گرفته." onNext={onNext} onBack={onBack} canNext={!!answers.unemployedReason && !!answers.helpArea && !!answers.goal}>
-      <p style={{ fontSize: 15, fontWeight: 600, color: SLATE, marginBottom: 12 }}>مهم‌ترین دلیل اینکه الان مشغول به کار نیستی چیست؟</p>
-      {reasons.map(r => <OptionCard key={r} label={r} selected={answers.unemployedReason === r} onClick={() => set("unemployedReason", r)} />)}
-      <p style={{ fontSize: 15, fontWeight: 600, color: SLATE, margin: "20px 0 12px" }}>اگر یک شرکت فردا پیشنهاد کار بدهد، در کدام قسمت بیشتر نیاز به کمک داری؟</p>
-      {helpAreas.map(h => <OptionCard key={h} label={h} selected={answers.helpArea === h} onClick={() => set("helpArea", h)} />)}
-      <p style={{ fontSize: 15, fontWeight: 600, color: SLATE, margin: "20px 0 12px" }}>هدفت از یادگیری حسابداری بیشتر کدام است؟</p>
-      {goals.map(g => <OptionCard key={g} label={g} selected={answers.goal === g} onClick={() => set("goal", g)} />)}
-    </StepCard>
-  );
+function buildStep6() {
+  const emp = answers.employment;
+  if (emp === 'accounting' || emp === 'other_work' || emp === 'freelance') return buildStep7();
+  const reasons = ["تجربه کاری ندارم","حسابداری را بلدم ولی اعتمادبهنفس ندارم","آموزش دیدهام ولی عملی کار نکردهام","نرمافزارها را بلد نیستم","برای مصاحبههای کاری آماده نیستم","رزومه ندارم","شغل مناسب پیدا نکردهام","نمیدانم دقیقاً از کجا شروع کنم","قبلاً کار کردم ولی میخواهم دوباره وارد بازار کار شوم","دلیل دیگری دارم"];
+  const helpAreas = ["روز اول کاری","ثبت سند","نرمافزار","Excel","حقوق و دستمزد","بیمه","مالیات","گزارشگیری","ارتباط با مدیر","اعتمادبهنفس","همه موارد"];
+  const goals = ["پیدا کردن اولین شغل","تغییر شغل","افزایش درآمد","حرفهای شدن","گرفتن پروژه","راهاندازی کار شخصی","مهاجرت و تقویت مهارت","فعلاً فقط یادگیری"];
+  const body = `
+    <p class="q-label">مهمترین دلیل اینکه الان مشغول به کار نیستی چیست؟</p>
+    ${reasons.map(r => optHTML(r, r, 'unemployedReason', false, answers.unemployedReason===r)).join('')}
+    <p class="q-label mt">اگر یک شرکت فردا پیشنهاد کار بدهد، در کدام قسمت بیشتر نیاز به کمک داری؟</p>
+    ${helpAreas.map(h => optHTML(h, h, 'helpArea', false, answers.helpArea===h)).join('')}
+    <p class="q-label mt">هدفت از یادگیری حسابداری بیشتر کدام است؟</p>
+    ${goals.map(g => optHTML(g, g, 'goal', false, answers.goal===g)).join('')}
+  `;
+  const canNext = !!answers.unemployedReason && !!answers.helpArea && !!answers.goal;
+  return stepWrap('پس بریم ببینیم چه چیزی جلوی ورودت به بازار کار را گرفته.', '', body, canNext);
 }
 
-// ─── STEP 7: Employed ─────────────────────────────────────────────
-function Step7({ answers, set, toggle, onNext, onBack }) {
-  const strengths = ["حسابداری مالی", "مالیات", "حقوق و دستمزد", "بیمه", "Excel", "نرم‌افزارهای حسابداری", "حسابداری صنعتی", "حسابرسی", "تهیه گزارش‌های مالی", "مدیریت مالی", "سرپرستی حسابداری", "آمادگی برای ارتقای شغلی"];
-  const skills = ["تسلط به سپیدار", "تسلط به هلو", "Excel حرفه‌ای", "مالیات", "حقوق و دستمزد", "بیمه", "حسابرسی", "گزارش‌گیری حرفه‌ای", "صورت‌های مالی", "سایر"];
-
-  return (
-    <StepCard title="اگر همین الان حسابداری کار می‌کنی، وقتشه ببینیم چطور می‌تونی یک سطح بالاتر بری." onNext={onNext} onBack={onBack} canNext={!!answers.strengthArea && !!answers.newSkill}>
-      <p style={{ fontSize: 15, fontWeight: 600, color: SLATE, marginBottom: 12 }}>بیشتر دوست داری در کدام زمینه قوی‌تر شوی؟</p>
-      {strengths.map(s => <OptionCard key={s} label={s} selected={answers.strengthArea === s} onClick={() => set("strengthArea", s)} />)}
-      <p style={{ fontSize: 15, fontWeight: 600, color: SLATE, margin: "20px 0 12px" }}>اگر بخواهی همین امروز یک مهارت جدید به رزومه‌ات اضافه کنی، کدام را انتخاب می‌کنی؟</p>
-      {skills.map(s => <OptionCard key={s} label={s} selected={answers.newSkill === s} onClick={() => set("newSkill", s)} />)}
-    </StepCard>
-  );
+function buildStep7() {
+  const strengths = ["حسابداری مالی","مالیات","حقوق و دستمزد","بیمه","Excel","نرمافزارهای حسابداری","حسابداری صنعتی","حسابرسی","تهیه گزارشهای مالی","مدیریت مالی","سرپرستی حسابداری","آمادگی برای ارتقای شغلی"];
+  const skills = ["تسلط به سپیدار","تسلط به هلو","Excel حرفهای","مالیات","حقوق و دستمزد","بیمه","حسابرسی","گزارشگیری حرفهای","صورتهای مالی","سایر"];
+  const body = `
+    <p class="q-label">بیشتر دوست داری در کدام زمینه قویتر شوی؟</p>
+    ${strengths.map(s => optHTML(s, s, 'strengthArea', false, answers.strengthArea===s)).join('')}
+    <p class="q-label mt">اگر بخواهی همین امروز یک مهارت جدید به رزومهات اضافه کنی، کدام را انتخاب میکنی؟</p>
+    ${skills.map(s => optHTML(s, s, 'newSkill', false, answers.newSkill===s)).join('')}
+  `;
+  const canNext = !!answers.strengthArea && !!answers.newSkill;
+  return stepWrap('اگر همین الان حسابداری کار میکنی، وقتشه ببینیم چطور میتونی یک سطح بالاتر بری.', '', body, canNext);
 }
 
-// ─── STEP 8: Goals + Contact ──────────────────────────────────────
-function Step8({ answers, set, onNext, onBack }) {
-  const goals6m = ["اولین شغل حسابداری‌ام را پیدا کرده باشم", "به‌عنوان حسابدار مشغول به کار باشم", "در شرکت بهتری کار کنم", "حقوق بیشتری بگیرم", "در نرم‌افزارهای حسابداری مسلط باشم", "در مالیات و بیمه حرفه‌ای شده باشم", "بتوانم مستقل پروژه بگیرم", "برای ارتقای شغلی آماده باشم", "فقط دانش حسابداری‌ام را افزایش داده باشم"];
-
-  const inp = (key, placeholder, type = "text") => (
-    <input type={type} placeholder={placeholder} value={answers[key] || ""} onChange={e => set(key, e.target.value)}
-      style={{ width: "100%", padding: "13px 16px", borderRadius: 10, border: `2px solid ${answers[key] ? BRAND : "#E2E8F0"}`, fontSize: 15, fontFamily: "inherit", outline: "none", marginBottom: 10, color: SLATE, background: WHITE, direction: "rtl", transition: "border-color .15s" }} />
-  );
-
-  const canNext = !!answers.goal6m && !!answers.name && !!answers.phone;
-
-  return (
-    <StepCard title="آخرین مرحله؛ می‌خواهیم بدانیم مقصدت کجاست." onNext={onNext} onBack={onBack} canNext={canNext} nextLabel="دریافت نتیجه ارزیابی ✦">
-      <p style={{ fontSize: 15, fontWeight: 600, color: SLATE, marginBottom: 12 }}>۶ ماه دیگر دوست داری در چه نقطه‌ای باشی؟</p>
-      {goals6m.map(g => <OptionCard key={g} label={g} selected={answers.goal6m === g} onClick={() => set("goal6m", g)} />)}
-
-      <div style={{ marginTop: 24, paddingTop: 20, borderTop: "1px solid #F1F5F9" }}>
-        <p style={{ fontSize: 15, fontWeight: 600, color: SLATE, marginBottom: 14 }}>اطلاعات تماس — تا نتیجه ارزیابی برایت ارسال بشه</p>
-        {inp("name", "نام و نام خانوادگی *")}
-        {inp("phone", "شماره موبایل *", "tel")}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-          {inp("age", "سن")}
-          {inp("city", "شهر")}
-        </div>
-        <div style={{ padding: 14, background: BRAND_LIGHT, borderRadius: 10, border: `1px solid ${BRAND}30` }}>
-          <p style={{ fontSize: 13, color: BRAND, lineHeight: 1.7 }}>🎯 کارشناسان آکادمی نتیجه ارزیابی تو را بررسی می‌کنند و یک مشاوره رایگان ارائه می‌دهند.</p>
-        </div>
+function buildStep8() {
+  const goals6m = ["اولین شغل حسابداریام را پیدا کرده باشم","بهعنوان حسابدار مشغول به کار باشم","در شرکت بهتری کار کنم","حقوق بیشتری بگیرم","در نرمافزارهای حسابداری مسلط باشم","در مالیات و بیمه حرفهای شده باشم","بتوانم مستقل پروژه بگیرم","برای ارتقای شغلی آماده باشم","فقط دانش حسابداریام را افزایش داده باشم"];
+  const body = `
+    <p class="q-label">۶ ماه دیگر دوست داری در چه نقطهای باشی؟</p>
+    ${goals6m.map(g => optHTML(g, g, 'goal6m', false, answers.goal6m===g)).join('')}
+    <div class="divider">
+      <p class="q-label">اطلاعات تماس — تا نتیجه ارزیابی برایت ارسال بشه</p>
+      <input type="text" class="inp ${answers.name?'filled':''}" id="inp-name" placeholder="نام و نام خانوادگی *" value="${answers.name||''}" oninput="answers.name=this.value;updateNextBtn8()" >
+      <input type="tel" class="inp ${answers.phone?'filled':''}" id="inp-phone" placeholder="شماره موبایل *" value="${answers.phone||''}" oninput="answers.phone=this.value;updateNextBtn8()" >
+      <div class="contact-grid">
+        <input type="text" class="inp ${answers.age?'filled':''}" id="inp-age" placeholder="سن" value="${answers.age||''}" oninput="answers.age=this.value" >
+        <input type="text" class="inp ${answers.city?'filled':''}" id="inp-city" placeholder="شهر" value="${answers.city||''}" oninput="answers.city=this.value" >
       </div>
-    </StepCard>
-  );
-}
-
-// ─── RESULT ───────────────────────────────────────────────────────
-function Result({ answers, score, onRestart }) {
-  const level = getLevel(score);
-  const path = PATHS[level.path];
-
-  const positiveMsg = (() => {
-    if (score < 30) return "شروع خوبی داری؛ با مسیر درست و آموزش عملی، می‌توانی خیلی زودتر از آنچه فکر می‌کنی وارد بازار کار شوی.";
-    if (score < 60) return "پایه‌های خوبی داری؛ اما برای ورود مطمئن‌تر به بازار کار، پیشنهاد می‌کنیم مهارت عملی و کار با نرم‌افزار را تقویت کنی.";
-    if (score < 80) return "از مرحله شروع عبور کردی؛ حالا باید مهارت‌های عملی خودت را به سطح بازار کار برسانی و تخصص ایجاد کنی.";
-    return "تجربه کاری و دانش خوبی داری؛ مرحله بعدی برای تو، افزایش تسلط تخصصی و آماده شدن برای ارتقای شغلی است.";
-  })();
-
-  const weaknesses = (() => {
-    const w = [];
-    const tasks = answers.accountingTasks || [];
-    if (!tasks.includes("مالیات") && !tasks.includes("اظهارنامه مالیاتی")) w.push("مالیات و اظهارنامه");
-    if (!tasks.includes("حقوق و دستمزد")) w.push("حقوق و دستمزد");
-    const sw = answers.software || [];
-    if (!sw.includes("سپیدار") && !sw.includes("هلو")) w.push("نرم‌افزارهای حسابداری");
-    if (answers.excelLevel === "beginner" || !answers.excelLevel) w.push("Excel");
-    return w.slice(0, 3);
-  })();
-
-  return (
-    <div style={{ minHeight: "100vh", background: BG }}>
-      <div style={{ background: `linear-gradient(135deg, ${BRAND} 0%, #0A5E52 100%)`, padding: "48px 24px 80px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: -60, left: -60, width: 200, height: 200, borderRadius: "50%", background: "rgba(255,255,255,.05)" }}></div>
-        <div style={{ position: "absolute", bottom: -40, right: -40, width: 160, height: 160, borderRadius: "50%", background: "rgba(255,255,255,.07)" }}></div>
-        <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center", position: "relative" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 20px", borderRadius: 99, background: "rgba(255,255,255,.15)", marginBottom: 20 }}>
-            <span style={{ fontSize: 13, color: WHITE, fontWeight: 600 }}>ارزیابی تو کامل شد ✦</span>
-          </div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, color: WHITE, marginBottom: 8 }}>
-            {answers.name ? `${answers.name} عزیز` : "نتیجه ارزیابی تو"}
-          </h1>
-          <p style={{ fontSize: 16, color: "rgba(255,255,255,.8)", marginBottom: 32 }}>بر اساس پاسخ‌هایت، نتیجه ارزیابی حسابداری جاویدان:</p>
-          <div style={{ display: "flex", justifyContent: "center", gap: 20, flexWrap: "wrap" }}>
-            <div style={{ background: "rgba(255,255,255,.12)", borderRadius: 16, padding: "20px 32px", textAlign: "center", backdropFilter: "blur(10px)" }}>
-              <div style={{ fontSize: 40, fontWeight: 800, color: WHITE }}>{toPersian(score)}</div>
-              <div style={{ fontSize: 13, color: "rgba(255,255,255,.7)", marginTop: 4 }}>امتیاز از ۱۰۰</div>
-            </div>
-            <div style={{ background: "rgba(255,255,255,.12)", borderRadius: 16, padding: "20px 32px", textAlign: "center", backdropFilter: "blur(10px)" }}>
-              <div style={{ fontSize: 24, fontWeight: 800, color: GOLD }}>{level.label}</div>
-              <div style={{ fontSize: 13, color: "rgba(255,255,255,.7)", marginTop: 4 }}>سطح مهارتی</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div style={{ maxWidth: 640, margin: "-32px auto 0", padding: "0 16px 60px" }}>
-        {/* Positive message */}
-        <div style={{ background: WHITE, borderRadius: 20, padding: 24, boxShadow: "0 4px 20px #0001", marginBottom: 16, border: `2px solid ${BRAND_LIGHT}` }}>
-          <p style={{ fontSize: 15, color: SLATE, lineHeight: 1.8, fontWeight: 500 }}>💡 {positiveMsg}</p>
-        </div>
-
-        {/* Recommended path */}
-        <div style={{ background: WHITE, borderRadius: 20, padding: 24, boxShadow: "0 4px 20px #0001", marginBottom: 16 }}>
-          <p style={{ fontSize: 13, color: BRAND, fontWeight: 600, marginBottom: 8 }}>مسیر پیشنهادی آکادمی برای تو</p>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <span style={{ fontSize: 32 }}>{path.icon}</span>
-            <div>
-              <h3 style={{ fontSize: 18, fontWeight: 700, color: SLATE, marginBottom: 6 }}>{path.title}</h3>
-              <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.7 }}>{path.desc}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Weak areas */}
-        {weaknesses.length > 0 && (
-          <div style={{ background: WHITE, borderRadius: 20, padding: 24, boxShadow: "0 4px 20px #0001", marginBottom: 16 }}>
-            <p style={{ fontSize: 13, color: MUTED, fontWeight: 600, marginBottom: 12 }}>مهارت‌هایی که تقویتشان می‌تواند به تو کمک کند:</p>
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              {weaknesses.map(w => (
-                <span key={w} style={{ padding: "6px 14px", borderRadius: 99, background: `${GOLD}15`, color: GOLD, fontSize: 13, fontWeight: 600 }}>
-                  {w}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* CTA */}
-        <div style={{ background: `linear-gradient(135deg, ${SLATE} 0%, #0D1829 100%)`, borderRadius: 20, padding: 28, textAlign: "center", marginBottom: 12 }}>
-          <p style={{ fontSize: 16, color: WHITE, fontWeight: 700, marginBottom: 6 }}>مسیر پیشنهادی تو را با آموزش درست شروع کنیم.</p>
-          <p style={{ fontSize: 13, color: "rgba(255,255,255,.6)", marginBottom: 20 }}>آکادمی حسابداری جاویدان آماده راهنمایی شماست.</p>
-          <button style={{ width: "100%", padding: "16px", borderRadius: 12, border: "none", background: `linear-gradient(135deg, ${BRAND}, #0A5E52)`, color: WHITE, fontSize: 16, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", marginBottom: 10, boxShadow: `0 4px 20px ${BRAND}60` }}>
-            مشاهده مسیر آموزشی من ←
-          </button>
-          <button style={{ width: "100%", padding: "14px", borderRadius: 12, border: `2px solid rgba(255,255,255,.2)`, background: "transparent", color: WHITE, fontSize: 15, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
-            📞 مشاوره رایگان با آکادمی
-          </button>
-        </div>
-
-        <button onClick={onRestart} style={{ width: "100%", padding: "14px", borderRadius: 12, border: `2px solid #E2E8F0`, background: WHITE, color: MUTED, fontSize: 14, cursor: "pointer", fontFamily: "inherit" }}>
-          شروع مجدد ارزیابی
-        </button>
-      </div>
+      <div class="info-box"><p>🎯 کارشناسان آکادمی نتیجه ارزیابی تو را بررسی میکنند و یک مشاوره رایگان ارائه میدهند.</p></div>
     </div>
-  );
+  `;
+  const canNext = !!answers.goal6m && !!answers.name && !!answers.phone;
+  return stepWrap('آخرین مرحله؛ میخواهیم بدانیم مقصدت کجاست.', '', body, canNext, 'دریافت نتیجه ارزیابی ✦');
 }
 
-// ─── ADMIN PANEL ──────────────────────────────────────────────────
-function AdminPanel({ onBack }) {
-  const [pass, setPass] = useState("");
-  const [unlocked, setUnlocked] = useState(false);
-  const [subs, setSubs] = useState([]);
-  const [filter, setFilter] = useState({});
+function updateNextBtn8() {
+  const btn = document.querySelector('.btn-next');
+  if (btn) btn.disabled = !(answers.goal6m && answers.name && answers.phone);
+}
 
-  function unlock() {
-    if (pass === "javidan1403") { setUnlocked(true); setSubs(getSubmissions()); }
-    else alert("رمز اشتباه است");
+// ═══════════════════════════════════════════════
+// ATTACH LISTENERS (knowledge questions special case)
+// ═══════════════════════════════════════════════
+function attachListeners() {
+  // knowledge questions use special key format
+  document.querySelectorAll('[data-key^="knowledgeAnswers_"]').forEach(btn => {
+    btn.onclick = function() {
+      const parts = this.dataset.key.split('_');
+      const qKey = parts[1]; // e.g. kq1
+      const val = this.dataset.val;
+      if (!answers.knowledgeAnswers) answers.knowledgeAnswers = {};
+      answers.knowledgeAnswers[qKey] = val;
+      renderStep();
+    };
+  });
+}
+// ═══════════════════════════════════════════════
+// FINISH
+// ═══════════════════════════════════════════════
+function finish() {
+  const score = calcScore(answers);
+  const level = getLevel(score);
+  showScreen('result-screen');
+  renderResult(score, level);
+  if (answers.name || answers.phone) {
+    saveSubmission({ ...answers, score, level: level.label, path: level.path });
   }
+}
 
+function renderResult(score, level) {
+  const path = PATHS[level.path];
+  document.getElementById('res-name').textContent = answers.name ? answers.name + ' عزیز' : 'نتیجه ارزیابی تو';
+  document.getElementById('res-score').textContent = toPersian(score);
+  document.getElementById('res-level').textContent = level.label;
+  document.getElementById('res-path-icon').textContent = path.icon;
+  document.getElementById('res-path-title').textContent = path.title;
+  document.getElementById('res-path-desc').textContent = path.desc;
+
+  const positives = [
+    "شروع خوبی داری؛ با مسیر درست و آموزش عملی، میتوانی خیلی زودتر از آنچه فکر میکنی وارد بازار کار شوی.",
+    "پایههای خوبی داری؛ اما برای ورود مطمئنتر به بازار کار، پیشنهاد میکنیم مهارت عملی و کار با نرمافزار را تقویت کنی.",
+    "از مرحله شروع عبور کردی؛ حالا باید مهارتهای عملی خودت را به سطح بازار کار برسانی و تخصص ایجاد کنی.",
+    "تجربه کاری و دانش خوبی داری؛ مرحله بعدی برای تو، افزایش تسلط تخصصی و آماده شدن برای ارتقای شغلی است.",
+  ];
+  document.getElementById('res-positive').textContent = '💡 ' + positives[level.path - 1];
+
+  const tasks = answers.accountingTasks || [];
+  const sw = answers.software || [];
+  const weaknesses = [];
+  if (!tasks.includes('مالیات') && !tasks.includes('اظهارنامه مالیاتی')) weaknesses.push('مالیات و اظهارنامه');
+  if (!tasks.includes('حقوق و دستمزد')) weaknesses.push('حقوق و دستمزد');
+  if (!sw.includes('سپیدار') && !sw.includes('هلو')) weaknesses.push('نرمافزارهای حسابداری');
+  if (answers.excelLevel === 'beginner' || !answers.excelLevel) weaknesses.push('Excel');
+  const w = weaknesses.slice(0, 3);
+  const wCard = document.getElementById('res-weak-card');
+  const tagsDiv = document.getElementById('res-tags');
+  if (w.length > 0) {
+    wCard.style.display = 'block';
+    tagsDiv.innerHTML = w.map(x => `<span class="tag">${x}</span>`).join('');
+  } else {
+    wCard.style.display = 'none';
+  }
+  window.scrollTo(0, 0);
+}
+
+// ═══════════════════════════════════════════════
+// ADMIN
+// ═══════════════════════════════════════════════
+function adminLogin() {
+  const pass = document.getElementById('admin-pass').value;
+  if (pass === ADMIN_PASS) {
+    document.getElementById('admin-login-view').style.display = 'none';
+    document.getElementById('admin-dashboard-view').style.display = 'block';
+    renderDashboard();
+  } else {
+    alert('رمز اشتباه است');
+  }
+}
+
+function renderDashboard() {
+  const subs = getSubmissions();
   const stats = {
     total: subs.length,
-    beginner: subs.filter(s => s.level === "مبتدی").length,
-    learning: subs.filter(s => s.level === "در حال یادگیری").length,
-    semi: subs.filter(s => s.level === "نیمه‌حرفه‌ای").length,
-    pro: subs.filter(s => s.level === "حرفه‌ای").length,
-    employed: subs.filter(s => s.employment === "accounting").length,
-    unemployed: subs.filter(s => s.employment === "unemployed").length,
+    beginner: subs.filter(s => s.level === 'مبتدی').length,
+    learning: subs.filter(s => s.level === 'در حال یادگیری').length,
+    semi: subs.filter(s => s.level === 'نیمهحرفهای').length,
+    pro: subs.filter(s => s.level === 'حرفهای').length,
+    employed: subs.filter(s => s.employment === 'accounting').length,
+    unemployed: subs.filter(s => s.employment === 'unemployed').length,
   };
+  const statColors = { total:'#C9A94B', beginner:'#E8895A', learning:'#C9A94B', semi:'#0F7B6C', pro:'#3B7DD8', employed:'#22C55E', unemployed:'#F87171' };
+  const statLabels = { total:'کل شرکتکنندگان', beginner:'مبتدی', learning:'در حال یادگیری', semi:'نیمهحرفهای', pro:'حرفهای', employed:'شاغل در حسابداری', unemployed:'جویای کار' };
+  document.getElementById('admin-stats').innerHTML = Object.keys(stats).map(k =>
+    `<div class="stat-dark">
+      <div class="stat-dark-num" style="color:${statColors[k]}">${toPersian(stats[k])}</div>
+      <div class="stat-dark-label">${statLabels[k]}</div>
+    </div>`
+  ).join('');
 
-  const darkCard = (label, val, color = WHITE) => (
-    <div style={{ background: "#1E293B", borderRadius: 14, padding: "18px 20px" }}>
-      <div style={{ fontSize: 26, fontWeight: 800, color }}>{toPersian(val)}</div>
-      <div style={{ fontSize: 12, color: "#64748B", marginTop: 4 }}>{label}</div>
-    </div>
-  );
-
-  if (!unlocked) return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh" }}>
-      <div style={{ background: "#1E293B", borderRadius: 20, padding: 32, width: "90%", maxWidth: 360, textAlign: "center" }}>
-        <div style={{ width: 48, height: 48, borderRadius: 12, background: BRAND, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>🔐</div>
-        <h2 style={{ color: WHITE, fontSize: 18, fontWeight: 700, marginBottom: 6 }}>پنل مدیریت</h2>
-        <p style={{ color: "#64748B", fontSize: 13, marginBottom: 24 }}>آکادمی حسابداری جاویدان</p>
-        <input type="password" placeholder="رمز عبور" value={pass} onChange={e => setPass(e.target.value)} onKeyDown={e => e.key === "Enter" && unlock()}
-          style={{ width: "100%", padding: "13px 16px", borderRadius: 10, border: "2px solid #334155", background: "#0F172A", color: WHITE, fontSize: 15, fontFamily: "inherit", outline: "none", marginBottom: 12, direction: "rtl" }} />
-        <button onClick={unlock} style={{ width: "100%", padding: "13px", borderRadius: 10, border: "none", background: BRAND, color: WHITE, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", marginBottom: 12 }}>ورود</button>
-        <button onClick={onBack} style={{ width: "100%", padding: "11px", borderRadius: 10, border: "2px solid #334155", background: "transparent", color: "#64748B", fontSize: 14, cursor: "pointer", fontFamily: "inherit" }}>بازگشت</button>
+  if (subs.length === 0) {
+    document.getElementById('admin-table').innerHTML = `<div class="empty-state"><p style="color:#64748B;font-size:15px">هنوز هیچ فرمی تکمیل نشده است.</p></div>`;
+    return;
+  }
+  const rows = subs.map((s, i) => `<tr class="${i%2===1?'even':''}">
+    <td style="color:#fff">${s.name||'—'}</td>
+    <td style="color:#94A3B8;direction:ltr">${s.phone||'—'}</td>
+    <td style="color:#94A3B8">${s.city||'—'}</td>
+    <td><span class="level-tag">${s.level||'—'}</span></td>
+    <td style="color:#C9A94B;font-weight:700">${toPersian(s.score||0)}</td>
+    <td style="color:#94A3B8;font-size:12px">${s.employment==='accounting'?'شاغل':s.employment==='unemployed'?'جویای کار':'سایر'}</td>
+    <td style="color:#64748B;font-size:12px">${s.date||'—'}</td>
+  </tr>`).join('');
+  document.getElementById('admin-table').innerHTML = `
+    <div class="table-wrap">
+      <div class="table-head"><span>لیست شرکتکنندگان</span><span>${toPersian(subs.length)} نفر</span></div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr>${['نام','موبایل','شهر','سطح','امتیاز','وضعیت','تاریخ'].map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
       </div>
-    </div>
-  );
-
-  return (
-    <div style={{ minHeight: "100vh", background: "#0F172A", color: WHITE, padding: "24px 16px 60px", fontFamily: "inherit" }}>
-      <div style={{ maxWidth: 900, margin: "0 auto" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
-          <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: WHITE }}>داشبورد مدیریت</h1>
-            <p style={{ fontSize: 13, color: "#64748B", marginTop: 2 }}>آکادمی حسابداری جاویدان</p>
-          </div>
-          <button onClick={onBack} style={{ padding: "10px 18px", borderRadius: 10, border: "2px solid #334155", background: "transparent", color: "#64748B", fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>← خروج</button>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 12, marginBottom: 24 }}>
-          {darkCard("کل شرکت‌کنندگان", stats.total, GOLD)}
-          {darkCard("مبتدی", stats.beginner, "#E8895A")}
-          {darkCard("در حال یادگیری", stats.learning, GOLD)}
-          {darkCard("نیمه‌حرفه‌ای", stats.semi, BRAND)}
-          {darkCard("حرفه‌ای", stats.pro, "#3B7DD8")}
-          {darkCard("شاغل در حسابداری", stats.employed, "#22C55E")}
-          {darkCard("جویای کار", stats.unemployed, "#F87171")}
-        </div>
-
-        {subs.length === 0 ? (
-          <div style={{ background: "#1E293B", borderRadius: 16, padding: 40, textAlign: "center" }}>
-            <p style={{ color: "#64748B", fontSize: 15 }}>هنوز هیچ فرمی تکمیل نشده است.</p>
-            <p style={{ color: "#475569", fontSize: 13, marginTop: 8 }}>پسورد دمو: javidan1403</p>
-          </div>
-        ) : (
-          <div style={{ background: "#1E293B", borderRadius: 16, overflow: "hidden" }}>
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid #334155", display: "flex", justifyContent: "space-between" }}>
-              <span style={{ fontWeight: 700, fontSize: 15 }}>لیست شرکت‌کنندگان</span>
-              <span style={{ fontSize: 12, color: "#64748B" }}>{toPersian(subs.length)} نفر</span>
-            </div>
-            <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-                <thead>
-                  <tr style={{ background: "#0F172A" }}>
-                    {["نام", "موبایل", "شهر", "سطح", "امتیاز", "وضعیت", "تاریخ"].map(h => (
-                      <th key={h} style={{ padding: "12px 14px", textAlign: "right", color: "#64748B", fontWeight: 600, whiteSpace: "nowrap" }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {subs.map((s, i) => (
-                    <tr key={s.id} style={{ borderTop: "1px solid #334155", background: i % 2 === 0 ? "transparent" : "#1A2840" }}>
-                      <td style={{ padding: "12px 14px", color: WHITE }}>{s.name || "—"}</td>
-                      <td style={{ padding: "12px 14px", color: "#94A3B8", direction: "ltr" }}>{s.phone || "—"}</td>
-                      <td style={{ padding: "12px 14px", color: "#94A3B8" }}>{s.city || "—"}</td>
-                      <td style={{ padding: "12px 14px" }}><span style={{ padding: "3px 10px", borderRadius: 99, background: `${BRAND}30`, color: BRAND, fontWeight: 600, fontSize: 12 }}>{s.level || "—"}</span></td>
-                      <td style={{ padding: "12px 14px", color: GOLD, fontWeight: 700 }}>{toPersian(s.score || 0)}</td>
-                      <td style={{ padding: "12px 14px", color: "#94A3B8", fontSize: 12 }}>{s.employment === "accounting" ? "شاغل" : s.employment === "unemployed" ? "جویای کار" : "سایر"}</td>
-                      <td style={{ padding: "12px 14px", color: "#64748B", fontSize: 12 }}>{s.date || "—"}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+    </div>`;
 }
+</script>
+</body>
+</html>
