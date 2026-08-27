@@ -33,6 +33,21 @@ body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#
 .stat-label{font-size:11px;color:var(--muted);margin-top:2px}
 .dot-green{width:7px;height:7px;border-radius:50%;background:#22C55E;display:inline-block}
 
+/* ── VPN NOTICE ── */
+.vpn-notice{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 14px;
+  border-radius:99px;
+  background:rgba(201,169,75,.12);
+  border:1px solid rgba(201,169,75,.35);
+  font-size:11.5px;
+  color:#9A7A28;
+  font-weight:600;
+  margin-bottom:18px;
+}
+
 /* ── FORM SCREEN ── */
 #form-screen{background:var(--bg)}
 .sticky-header{background:#fff;border-bottom:1px solid #F1F5F9;position:sticky;top:0;z-index:50;padding:14px 24px 12px}
@@ -41,15 +56,12 @@ body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#
 .progress-fill{height:100%;background:linear-gradient(90deg,#0F7B6C,#C9A94B);border-radius:99px;transition:width .45s cubic-bezier(.4,0,.2,1)}
 
 /* ── SLIDES ── */
-/* FIX 1: slides-viewport حالا overflow:hidden داره و ارتفاع ثابت نداره */
 .slides-viewport{flex:1;overflow:hidden;position:relative}
 .slides-track{display:flex;height:100%;transition:transform .4s cubic-bezier(.4,0,.2,1)}
-/* FIX 1: هر slide اسکرول داخلی داره و ارتفاع محدوده */
 .slide{
   min-width:100vw;
   padding:20px 16px 100px;
   overflow-y:auto;
-  /* ارتفاع = کل صفحه منهای sticky-header (~62px) */
   height:calc(100vh - 62px);
   -webkit-overflow-scrolling:touch;
 }
@@ -61,12 +73,43 @@ body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#
 .step-card{background:#fff;border-radius:20px;padding:26px 22px;box-shadow:0 2px 16px rgba(15,123,108,.06);max-width:640px;margin:0 auto}
 .step-title{font-size:19px;font-weight:700;color:var(--slate);margin-bottom:6px;line-height:1.5}
 .step-sub{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.7}
-.q-label{font-size:14px;font-weight:600;color:var(--slate);margin-bottom:10px;margin-top:0}
+
+/* ── QUESTION GROUP ── */
+.q-group{
+  background:rgba(248,250,251,0.85);
+  border:1.5px solid rgba(15,123,108,.13);
+  border-radius:16px;
+  padding:18px 16px 14px;
+  margin-bottom:16px;
+  backdrop-filter:blur(6px);
+  position:relative;
+}
+.q-group + .q-group{margin-top:0}
+.q-group-single{
+  background:transparent;
+  border:none;
+  border-radius:0;
+  padding:0;
+  margin-bottom:0;
+}
+
+.q-label{font-size:14px;font-weight:600;color:var(--slate);margin-bottom:10px;margin-top:0;display:flex;align-items:center;gap:8px}
 .q-label.mt{margin-top:18px}
+.q-num{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:22px;height:22px;
+  border-radius:50%;
+  background:var(--brand);
+  color:#fff;
+  font-size:11px;
+  font-weight:700;
+  flex-shrink:0;
+}
 .q-note{font-weight:400;color:var(--muted);font-size:12px}
 .divider{border-top:1px solid #F1F5F9;margin-top:18px;padding-top:18px}
 
-/* FIX 1: انیمیشن ظاهر شدن آرام گزینه‌های جدید */
 .expandable-section{
   animation:expandDown .3s ease;
   overflow:hidden;
@@ -99,6 +142,74 @@ body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .info-box{padding:12px 14px;background:var(--brand-light);border-radius:10px;border:1px solid rgba(15,123,108,.25);margin-top:4px}
 .info-box p{font-size:13px;color:var(--brand);line-height:1.7}
+
+/* ── CONTACT SCREEN (Step 9) ── */
+.contact-screen-wrap{
+  max-width:640px;
+  margin:0 auto;
+  padding: 0 0 20px;
+}
+.contact-hero-strip{
+  background:linear-gradient(135deg,#0F7B6C,#0A5E52);
+  border-radius:20px;
+  padding:28px 24px 24px;
+  margin-bottom:18px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.contact-hero-strip::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:120px;height:120px;border-radius:50%;
+  background:rgba(255,255,255,.07);
+}
+.contact-hero-strip::after{
+  content:'';position:absolute;bottom:-30px;left:-30px;
+  width:90px;height:90px;border-radius:50%;
+  background:rgba(255,255,255,.05);
+}
+.contact-hero-icon{font-size:36px;margin-bottom:10px;position:relative;z-index:1}
+.contact-hero-title{font-size:18px;font-weight:800;color:#fff;margin-bottom:6px;position:relative;z-index:1}
+.contact-hero-sub{font-size:13px;color:rgba(255,255,255,.75);line-height:1.7;position:relative;z-index:1}
+
+.contact-card{
+  background:#fff;
+  border-radius:18px;
+  padding:22px;
+  box-shadow:0 2px 16px rgba(15,123,108,.06);
+  margin-bottom:14px;
+}
+.contact-section-label{
+  font-size:12px;
+  font-weight:700;
+  color:var(--brand);
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  margin-bottom:14px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.contact-section-label::after{
+  content:'';flex:1;height:1px;background:var(--brand-light);
+}
+.inp-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.inp-full{grid-column:1/-1}
+.inp-icon-wrap{position:relative}
+.inp-icon{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none}
+.inp.has-icon{padding-right:38px}
+.contact-promise{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:14px;
+  background:linear-gradient(135deg,rgba(15,123,108,.06),rgba(201,169,75,.06));
+  border-radius:12px;
+  border:1px solid rgba(15,123,108,.15);
+}
+.contact-promise-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.contact-promise p{font-size:12.5px;color:var(--muted);line-height:1.75}
+.contact-promise strong{color:var(--slate)}
 
 /* ── RESULT ── */
 #result-screen{background:var(--bg)}
@@ -137,6 +248,7 @@ body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#
   .grid2{grid-template-columns:1fr}
   .contact-grid{grid-template-columns:1fr}
   .result-cards{gap:10px}
+  .inp-row{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -157,13 +269,14 @@ body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#
   </header>
   <div class="hero-body">
     <div class="hero-inner">
+      <div class="vpn-notice">⚡ برای سرعت بهتر، VPN خود را خاموش کنید</div>
       <div class="badge">
         <span style="font-size:11px;color:var(--brand);font-weight:600">ارزیابی تخصصی مسیر شغلی حسابداری</span>
       </div>
       <h1 class="hero-title">حسابداری را در چه سطحی بلدی؟</h1>
-      <p class="hero-sub">در کمتر از ۵ دقیقه سطح مهارت، تجربه و مسیر شغلی خودت را ارزیابی کن و ببین برای حرفهایتر شدن دقیقاً روی چه مهارتهایی باید کار کنی.</p>
+      <p class="hero-sub">در کمتر از ۵ دقیقه سطح مهارت، تجربه و مسیر شغلی خودت را ارزیابی کن و ببین برای حرفه‌ای‌تر شدن دقیقاً روی چه مهارت‌هایی باید کار کنی.</p>
       <button class="btn-primary" onclick="startForm()">شروع ارزیابی ✦</button>
-      <p style="margin-top:12px;font-size:12px;color:var(--muted)">این ارزیابی حدود ۵ دقیقه زمان میبرد.</p>
+      <p style="margin-top:12px;font-size:12px;color:var(--muted)">این ارزیابی حدود ۵ دقیقه زمان می‌برد.</p>
       <div class="stats">
         <div class="stat-card"><div class="stat-num">۲۳۰۰+</div><div class="stat-label">نفر شرکت کرده</div></div>
         <div class="stat-card"><div class="stat-num">۸ مرحله</div><div class="stat-label">ارزیابی تخصصی</div></div>
@@ -178,9 +291,9 @@ body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#
   <div class="sticky-header" id="sticky-header">
     <div class="sticky-inner">
       <span style="font-weight:700;font-size:14px;color:var(--slate)">آکادمی جاویدان</span>
-      <span style="font-size:13px;color:var(--brand);font-weight:600" id="step-label">مرحله ۱ از ۸</span>
+      <span style="font-size:13px;color:var(--brand);font-weight:600" id="step-label">مرحله ۱ از ۹</span>
     </div>
-    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:12.5%"></div></div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:11%"></div></div>
   </div>
 
   <div class="slides-viewport" id="slides-viewport">
@@ -191,8 +304,8 @@ body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#
 
   <div class="step-actions">
     <div class="actions-inner">
-      <button class="btn-next" id="btn-next" onclick="nextStep()">ادامه →</button>
-      <button class="btn-back" id="btn-back" onclick="prevStep()" style="display:none">← قبلی</button>
+      <button class="btn-next" id="btn-next" onclick="nextStep()">← ادامه</button>
+      <button class="btn-back" id="btn-back" onclick="prevStep()" style="display:none">قبلی →</button>
     </div>
   </div>
 </div>
@@ -203,7 +316,7 @@ body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#
     <div class="result-inner">
       <div class="result-badge"><span style="font-size:13px;color:#fff;font-weight:600">ارزیابی تو کامل شد ✦</span></div>
       <h1 class="result-name" id="res-name">نتیجه ارزیابی تو</h1>
-      <p class="result-sub">بر اساس پاسخهایت، نتیجه ارزیابی حسابداری جاویدان:</p>
+      <p class="result-sub">بر اساس پاسخ‌هایت، نتیجه ارزیابی حسابداری جاویدان:</p>
       <div class="result-cards">
         <div class="result-card">
           <div class="result-score" id="res-score">۰</div>
@@ -229,7 +342,7 @@ body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#
       </div>
     </div>
     <div class="r-card" id="res-weak-card" style="display:none">
-      <p class="r-card-muted">مهارتهایی که تقویتشان میتواند به تو کمک کند:</p>
+      <p class="r-card-muted">مهارت‌هایی که تقویت‌شان می‌تواند به تو کمک کند:</p>
       <div class="tags" id="res-tags"></div>
     </div>
     <div class="cta-card">
@@ -243,16 +356,13 @@ body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#
 </div>
 
 <script>
-// ═══ CONFIG ═══
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbwA96clj8vnRr2RU_HG8F54zm-Bv1cXPRU64cH7Z5CfQXG_1zxfzX_IWM9o79UAIhAq/exec";
-const TOTAL_STEPS = 8;
+const TOTAL_STEPS = 9;
 
-// ═══ STATE ═══
 let currentStep = 1;
 let answers = {};
 let direction = 'right';
 
-// ═══ UTILS ═══
 function toPersian(n) {
   return String(n).replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
 }
@@ -263,15 +373,11 @@ function showScreen(id) {
   window.scrollTo(0,0);
 }
 
-// FIX 2: اسکرول به بالای slide فعلی
 function scrollSlideToTop() {
   const slide = document.querySelector(`[data-slide="${currentStep}"]`);
-  if (slide) {
-    slide.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  if (slide) slide.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// ═══ STORAGE & SHEETS ═══
 function loadDB() {
   try { const r = localStorage.getItem("javidan_db"); return r ? JSON.parse(r) : {submissions:[]}; }
   catch { return {submissions:[]}; }
@@ -298,7 +404,6 @@ async function sendToSheet(data) {
   } catch(e) { console.error("Sheet:", e); }
 }
 
-// ═══ SCORING ═══
 function calcScore(ans) {
   let score = 0;
   if (ans.employment === "accounting") score += 20;
@@ -321,18 +426,17 @@ function calcScore(ans) {
 function getLevel(score) {
   if (score < 30) return { label:"مبتدی", path:1 };
   if (score < 60) return { label:"در حال یادگیری", path:2 };
-  if (score < 80) return { label:"نیمهحرفهای", path:3 };
-  return { label:"حرفهای", path:4 };
+  if (score < 80) return { label:"نیمه‌حرفه‌ای", path:3 };
+  return { label:"حرفه‌ای", path:4 };
 }
 
 const PATHS = {
-  1: { title:"شروع از صفر تا ورود به بازار کار", desc:"پایههای حسابداری رو از صفر یاد میگیری و با مسیر عملی و ساختارمند، آماده اولین شغلت میشی.", icon:"🚀" },
-  2: { title:"تقویت مهارتهای عملی حسابداری", desc:"دانش پایه داری؛ با تمرین عملی روی نرمافزار، اسناد و گزارشگیری، مهارتت رو به سطح بازار کار میرسونی.", icon:"⚡" },
-  3: { title:"حسابدار حرفهای", desc:"از مرحله شروع عبور کردی؛ حالا نوبت تسلط کامل روی حقوق، مالیات، نرمافزارهای پیشرفته و گزارشهای مالیه.", icon:"💼" },
-  4: { title:"تخصص و ارتقای شغلی", desc:"پایه محکمی داری. مرحله بعدی: تخصص در مالیات، بیمه، Excel حرفهای، صورتهای مالی و مدیریت مالی.", icon:"🏆" },
+  1: { title:"شروع از صفر تا ورود به بازار کار", desc:"پایه‌های حسابداری رو از صفر یاد می‌گیری و با مسیر عملی و ساختارمند، آماده اولین شغلت می‌شی.", icon:"🚀" },
+  2: { title:"تقویت مهارت‌های عملی حسابداری", desc:"دانش پایه داری؛ با تمرین عملی روی نرم‌افزار، اسناد و گزارش‌گیری، مهارتت رو به سطح بازار کار می‌رسونی.", icon:"⚡" },
+  3: { title:"حسابدار حرفه‌ای", desc:"از مرحله شروع عبور کردی؛ حالا نوبت تسلط کامل روی حقوق، مالیات، نرم‌افزارهای پیشرفته و گزارش‌های مالیه.", icon:"💼" },
+  4: { title:"تخصص و ارتقای شغلی", desc:"پایه محکمی داری. مرحله بعدی: تخصص در مالیات، بیمه، Excel حرفه‌ای، صورت‌های مالی و مدیریت مالی.", icon:"🏆" },
 };
 
-// ═══ NAVIGATION ═══
 function startForm() {
   currentStep = 1; answers = {};
   showScreen('form-screen');
@@ -356,7 +460,6 @@ function nextStep() {
     updateProgress();
     updateNavButtons();
     refreshCurrentSlide();
-    // FIX 2: اسکرول خودکار به بالا بعد از رفتن به مرحله بعدی
     setTimeout(scrollSlideToTop, 50);
   } else {
     finish();
@@ -371,7 +474,6 @@ function prevStep() {
     updateProgress();
     updateNavButtons();
     refreshCurrentSlide();
-    // FIX 2: اسکرول خودکار به بالا موقع برگشت
     setTimeout(scrollSlideToTop, 50);
   }
 }
@@ -381,7 +483,6 @@ function goToSlide(index) {
   track.style.transform = `translateX(${index * 100}vw)`;
 }
 
-// FIX 1: محاسبه و تنظیم ارتفاع slides-viewport
 function updateSlidesViewportHeight() {
   const header = document.getElementById('sticky-header');
   const actions = document.querySelector('.step-actions');
@@ -390,13 +491,8 @@ function updateSlidesViewportHeight() {
   const actionsH = actions.offsetHeight;
   const viewportH = window.innerHeight - headerH - actionsH;
   const viewport = document.getElementById('slides-viewport');
-  if (viewport) {
-    viewport.style.height = viewportH + 'px';
-  }
-  // بروزرسانی ارتفاع همه slide‌ها
-  document.querySelectorAll('.slide').forEach(s => {
-    s.style.height = viewportH + 'px';
-  });
+  if (viewport) viewport.style.height = viewportH + 'px';
+  document.querySelectorAll('.slide').forEach(s => { s.style.height = viewportH + 'px'; });
 }
 
 window.addEventListener('resize', updateSlidesViewportHeight);
@@ -412,7 +508,7 @@ function updateNavButtons() {
   const btnNext = document.getElementById('btn-next');
   btnBack.style.display = currentStep > 1 ? 'block' : 'none';
   const isLast = currentStep === TOTAL_STEPS;
-  btnNext.textContent = isLast ? 'دریافت نتیجه ارزیابی ✦' : 'ادامه →';
+  btnNext.textContent = isLast ? '✦ دریافت نتیجه ارزیابی' : '← ادامه';
   btnNext.disabled = !canProceed();
 }
 
@@ -434,12 +530,12 @@ function canProceed() {
       return !!answers.unemployedReason && !!answers.helpArea && !!answers.goal;
     }
     case 7: return !!answers.strengthArea && !!answers.newSkill;
-    case 8: return !!answers.goal6m && !!answers.name && !!answers.phone;
+    case 8: return !!answers.goal6m;
+    case 9: return !!answers.name && !!answers.phone;
     default: return true;
   }
 }
 
-// ═══ SELECT OPTION ═══
 function selectOpt(key, val, multi) {
   if (multi) {
     const prev = answers[key] || [];
@@ -456,7 +552,6 @@ function selectKQ(qKey, val) {
   refreshCurrentSlide();
 }
 
-// FIX 1: refresh بدون از دست دادن موقعیت اسکرول
 function refreshCurrentSlide() {
   const slide = document.querySelector(`[data-slide="${currentStep}"]`);
   if (!slide) return;
@@ -466,7 +561,6 @@ function refreshCurrentSlide() {
   updateNavButtons();
 }
 
-// ═══ BUILD ALL SLIDES ═══
 function buildAllSlides() {
   const track = document.getElementById('slides-track');
   track.innerHTML = '';
@@ -490,11 +584,12 @@ function buildSlideContent(step) {
     case 6: return buildStep6();
     case 7: return buildStep7();
     case 8: return buildStep8();
+    case 9: return buildStep9();
   }
   return '';
 }
 
-// ═══ OPTION HELPER ═══
+// ── HELPERS ──
 function optHTML(value, label, key, multi=false, selected=false, onclick='') {
   const sel = selected ? 'selected' : '';
   const shape = multi ? 'opt-square' : 'opt-circle';
@@ -510,7 +605,17 @@ function isSelected(key, val) {
   return answers[key] === val;
 }
 
-// ═══ STEP BUILDERS ═══
+// question group helper: wraps content in glass card
+// num: question number (0 = no number badge)
+function qGroup(num, labelText, content, multi=false) {
+  const numBadge = num > 0 ? `<span class="q-num">${toPersian(num)}</span>` : '';
+  const noteStr = multi ? `<span class="q-note"> (چندتایی)</span>` : '';
+  return `<div class="q-group">
+    <p class="q-label">${numBadge}${labelText}${noteStr}</p>
+    ${content}
+  </div>`;
+}
+
 function cardWrap(title, sub, body) {
   return `<div class="step-card">
     <h2 class="step-title">${title}</h2>
@@ -519,86 +624,102 @@ function cardWrap(title, sub, body) {
   </div>`;
 }
 
-// FIX 1: گزینه‌های شرطی با انیمیشن آرام
+// ── STEP BUILDERS ──
 function buildStep1() {
   const opts = [
-    {v:"accounting", l:"بله، در حوزه حسابداری کار میکنم"},
-    {v:"other_work", l:"بله، کار میکنم ولی حسابداری نیست"},
+    {v:"accounting", l:"بله، در حوزه حسابداری کار می‌کنم"},
+    {v:"other_work", l:"بله، کار می‌کنم ولی حسابداری نیست"},
     {v:"unemployed", l:"فعلاً مشغول به کار نیستم"},
     {v:"student", l:"دانشجو / در حال تحصیل هستم"},
-    {v:"freelance", l:"بهصورت پروژهای یا فریلنسری کار میکنم"},
+    {v:"freelance", l:"به‌صورت پروژه‌ای یا فریلنسری کار می‌کنم"},
   ];
   const expOpts = [
     {v:"less6",l:"کمتر از ۶ ماه"},{v:"6to12",l:"۶ ماه تا ۱ سال"},
     {v:"1to2",l:"۱ تا ۲ سال"},{v:"2to5",l:"۲ تا ۵ سال"},{v:"5plus",l:"بیشتر از ۵ سال"},
   ];
-  const posOpts = ["کارآموز حسابداری","کمکحسابدار","حسابدار","حسابدار ارشد","سرپرست حسابداری","مدیر مالی","سایر"];
+  const posOpts = ["کارآموز حسابداری","کمک‌حسابدار","حسابدار","حسابدار ارشد","سرپرست حسابداری","مدیر مالی","سایر"];
 
-  let body = `<p class="q-label">الان مشغول به کار هستی؟</p>`;
-  body += opts.map(o => optHTML(o.v, o.l, 'employment', false, answers.employment===o.v)).join('');
+  // single question → no number badge
+  let mainBlock = qGroup(0, 'الان مشغول به کار هستی؟',
+    opts.map(o => optHTML(o.v, o.l, 'employment', false, answers.employment===o.v)).join('')
+  );
 
-  // FIX 1: گزینه‌های اضافه با div.expandable-section (انیمیشن) و بدون اسکرول اضافه
+  let extra = '';
   if (answers.employment === 'accounting') {
-    body += `<div class="expandable-section">
-      <div class="divider">
-        <p class="q-label">چند وقت است در حوزه حسابداری فعالیت میکنی؟</p>
-        ${expOpts.map(o => optHTML(o.v, o.l, 'expDuration', false, answers.expDuration===o.v)).join('')}
-        <p class="q-label mt">الان بیشتر در چه موقعیتی فعالیت میکنی؟</p>
-        ${posOpts.map(o => optHTML(o, o, 'position', false, answers.position===o)).join('')}
-      </div>
+    extra = `<div class="expandable-section">
+      ${qGroup(1, 'چند وقت است در حوزه حسابداری فعالیت می‌کنی؟',
+        expOpts.map(o => optHTML(o.v, o.l, 'expDuration', false, answers.expDuration===o.v)).join('')
+      )}
+      ${qGroup(2, 'الان بیشتر در چه موقعیتی فعالیت می‌کنی؟',
+        posOpts.map(o => optHTML(o, o, 'position', false, answers.position===o)).join('')
+      )}
     </div>`;
   }
-  return cardWrap('وضعیت فعلی خودت را مشخص کنیم.', '', body);
+
+  return cardWrap('وضعیت فعلی خودت را مشخص کنیم.', '', mainBlock + extra);
 }
 
 function buildStep2() {
-  const tasks = ["ثبت سند حسابداری","دریافت و پرداخت","صندوق و تنخواه","بانک و مغایرت بانکی","حسابهای دریافتنی","حسابهای پرداختنی","خرید و فروش","انبار","حقوق و دستمزد","بیمه","مالیات","ارزش افزوده","اظهارنامه مالیاتی","صورتهای مالی","بستن حسابها","گزارشگیری مالی","هیچکدام"];
-  const stressOpts = ["ثبت سند","کار با نرمافزار","حقوق و دستمزد","بیمه","مالیات","ارزش افزوده","انبار","مغایرت بانکی","تهیه گزارش","بستن حسابها","نمیدانم از کجا باید شروع کنم"];
+  const tasks = ["ثبت سند حسابداری","دریافت و پرداخت","صندوق و تنخواه","بانک و مغایرت بانکی","حساب‌های دریافتنی","حساب‌های پرداختنی","خرید و فروش","انبار","حقوق و دستمزد","بیمه","مالیات","ارزش افزوده","اظهارنامه مالیاتی","صورت‌های مالی","بستن حساب‌ها","گزارش‌گیری مالی","هیچ‌کدام"];
+  const stressOpts = ["ثبت سند","کار با نرم‌افزار","حقوق و دستمزد","بیمه","مالیات","ارزش افزوده","انبار","مغایرت بانکی","تهیه گزارش","بستن حساب‌ها","نمی‌دانم از کجا باید شروع کنم"];
   const sel = answers.accountingTasks || [];
   return cardWrap('تجربه واقعی خودت را مشخص کن.', '', `
-    <p class="q-label">با کدامیک از موارد زیر واقعاً کار کردهای؟ <span class="q-note">(چندتایی)</span></p>
-    <div class="grid2">${tasks.map(t => optHTML(t, t, 'accountingTasks', true, sel.includes(t))).join('')}</div>
-    <p class="q-label mt">اگر فردا وارد یک شرکت شوی، کدام بخش برایت استرس بیشتری ایجاد میکند؟</p>
-    ${stressOpts.map(o => optHTML(o, o, 'stressArea', false, answers.stressArea===o)).join('')}
+    ${qGroup(1, 'با کدام‌یک از موارد زیر واقعاً کار کرده‌ای؟',
+      `<div class="grid2">${tasks.map(t => optHTML(t, t, 'accountingTasks', true, sel.includes(t))).join('')}</div>`,
+      true
+    )}
+    ${qGroup(2, 'اگر فردا وارد یک شرکت شوی، کدام بخش برایت استرس بیشتری ایجاد می‌کند؟',
+      stressOpts.map(o => optHTML(o, o, 'stressArea', false, answers.stressArea===o)).join('')
+    )}
   `);
 }
 
 function buildStep3() {
-  const sws = ["هلو","سپیدار","راهکاران","پارمیس","قیاس","محک","تدبیر","نرمافزارهای اختصاصی شرکت","Excel","هیچکدام"];
-  const sepModules = ["حسابداری","دریافت و پرداخت","فروش","انبار","حقوق و دستمزد","دارایی ثابت","هیچکدام بهصورت عملی"];
-  const adaptOpts = ["خیلی راحت","نسبتاً راحت","نیاز به آموزش دارم","احتمالاً برایم سخت است","تجربهای ندارم"];
+  const sws = ["هلو","سپیدار","راهکاران","پارمیس","قیاس","محک","تدبیر","نرم‌افزارهای اختصاصی شرکت","Excel","هیچ‌کدام"];
+  const sepModules = ["حسابداری","دریافت و پرداخت","فروش","انبار","حقوق و دستمزد","دارایی ثابت","هیچ‌کدام به‌صورت عملی"];
+  const adaptOpts = ["خیلی راحت","نسبتاً راحت","نیاز به آموزش دارم","احتمالاً برایم سخت است","تجربه‌ای ندارم"];
   const sel = answers.software || [];
   const sepSel = answers.sepModules || [];
-  let body = `<p class="q-label">با کدام نرمافزارهای حسابداری کار کردهای؟ <span class="q-note">(چندتایی)</span></p>
-    <div class="grid2">${sws.map(s => optHTML(s, s, 'software', true, sel.includes(s))).join('')}</div>`;
+
+  let q1content = `<div class="grid2">${sws.map(s => optHTML(s, s, 'software', true, sel.includes(s))).join('')}</div>`;
   if (sel.includes('هلو') && !sel.includes('سپیدار')) {
-    body += `<div class="expandable-section"><div class="inline-box">
+    q1content += `<div class="expandable-section"><div class="inline-box">
       <div class="inline-box-label">گفتی با هلو کار کردی. با سپیدار هم کار کردی؟</div>
-      ${["بله، مسلط هستم","کمی کار کردم","فقط اسمش را شنیدهام","خیر"].map(o => optHTML(o, o, 'sepExperience', false, answers.sepExperience===o)).join('')}
+      ${["بله، مسلط هستم","کمی کار کردم","فقط اسمش را شنیده‌ام","خیر"].map(o => optHTML(o, o, 'sepExperience', false, answers.sepExperience===o)).join('')}
     </div></div>`;
   }
   if (sel.includes('سپیدار')) {
-    body += `<div class="expandable-section">
-      <p class="q-label mt">با کدام بخشهای سپیدار کار کردهای؟</p>
+    q1content += `<div class="expandable-section">
+      <p style="font-size:13px;color:var(--muted);margin:10px 0 8px;font-weight:600">با کدام بخش‌های سپیدار کار کرده‌ای؟</p>
       ${sepModules.map(m => optHTML(m, m, 'sepModules', true, sepSel.includes(m))).join('')}
     </div>`;
   }
-  body += `<p class="q-label mt">اگر فردا نرمافزار جدید معرفی شود، چقدر راحت هماهنگ میشوی؟</p>
-    ${adaptOpts.map(o => optHTML(o, o, 'adaptSoftware', false, answers.adaptSoftware===o)).join('')}`;
-  return cardWrap('کار با نرمافزارهای حسابداری.', 'حسابداری فقط دانستن مفاهیم نیست؛ باید با ابزارهای واقعی کار کنی.', body);
+
+  return cardWrap('کار با نرم‌افزارهای حسابداری.', 'حسابداری فقط دانستن مفاهیم نیست؛ باید با ابزارهای واقعی کار کنی.', `
+    ${qGroup(1, 'با کدام نرم‌افزارهای حسابداری کار کرده‌ای؟', q1content, true)}
+    ${qGroup(2, 'اگر فردا نرم‌افزار جدید معرفی شود، چقدر راحت هماهنگ می‌شوی؟',
+      adaptOpts.map(o => optHTML(o, o, 'adaptSoftware', false, answers.adaptSoftware===o)).join('')
+    )}
+  `);
 }
 
 function buildStep4() {
-  const levels = [{v:"beginner",l:"مبتدی"},{v:"medium",l:"متوسط"},{v:"good",l:"خوب"},{v:"pro",l:"حرفهای"}];
-  const funcs = ["SUM","IF","SUMIF / SUMIFS","VLOOKUP / XLOOKUP","Pivot Table","مرتبسازی و فیلتر","گزارشگیری","طراحی فایل مالی","داشبورد","هیچکدام"];
+  const levels = [{v:"beginner",l:"مبتدی"},{v:"medium",l:"متوسط"},{v:"good",l:"خوب"},{v:"pro",l:"حرفه‌ای"}];
+  const funcs = ["SUM","IF","SUMIF / SUMIFS","VLOOKUP / XLOOKUP","Pivot Table","مرتب‌سازی و فیلتر","گزارش‌گیری","طراحی فایل مالی","داشبورد","هیچ‌کدام"];
   const sel = answers.excelFuncs || [];
   const lvlBtns = levels.map(l => `<button class="excel-btn ${answers.excelLevel===l.v?'selected':''}" onclick="selectOpt('excelLevel','${l.v}',false)" type="button">${l.l}</button>`).join('');
-  let body = `<p class="q-label">سطح کار با Excel چطور است؟</p>
-    <div class="excel-levels">${lvlBtns}</div>`;
+
+  // single question (excel level) → no number
+  let body = qGroup(0, 'سطح کار با Excel چطور است؟',
+    `<div class="excel-levels">${lvlBtns}</div>`
+  );
+
   if (answers.excelLevel) {
     body += `<div class="expandable-section">
-      <p class="q-label">کدام موارد را انجام دادهای؟ <span class="q-note">(چندتایی)</span></p>
-      ${funcs.map(f => optHTML(f, f, 'excelFuncs', true, sel.includes(f))).join('')}
+      ${qGroup(0, 'کدام موارد را انجام داده‌ای؟',
+        funcs.map(f => optHTML(f, f, 'excelFuncs', true, sel.includes(f))).join(''),
+        true
+      )}
     </div>`;
   }
   return cardWrap('چقدر با Excel راحتی؟', '', body);
@@ -606,26 +727,24 @@ function buildStep4() {
 
 function buildStep5() {
   const qs = [
-    { k:"kq1", q:"فرض کن امروز یک شرکت برایت فاکتور خرید آورده. اولین کاری که بهعنوان حسابدار باید انجام بدهی چیست؟",
-      opts:[{v:"a",l:"فاکتور را در پوشه بایگانی میکنم"},{v:"b",l:"سند حسابداری ثبت میکنم"},{v:"c",l:"به مدیر اطلاع میدهم"},{v:"d",l:"اول موجودی انبار را چک میکنم"}] },
-    { k:"kq2", q:"اگر مانده حساب بانک شرکت با صورتحساب بانک متفاوت باشد، چه کاری انجام میدهی؟",
-      opts:[{v:"a",l:"مانده دفتر را اصلاح میکنم"},{v:"b",l:"مغایرتگیری بانکی انجام میدهم و تفاوت را بررسی میکنم"},{v:"c",l:"با بانک تماس میگیرم تا اشتباه آنها را تأیید کنند"},{v:"d",l:"اهمیتی ندارد، هر دو صحیحاند"}] },
+    { k:"kq1", q:"فرض کن امروز یک شرکت برایت فاکتور خرید آورده. اولین کاری که به‌عنوان حسابدار باید انجام بدهی چیست؟",
+      opts:[{v:"a",l:"فاکتور را در پوشه بایگانی می‌کنم"},{v:"b",l:"سند حسابداری ثبت می‌کنم"},{v:"c",l:"به مدیر اطلاع می‌دهم"},{v:"d",l:"اول موجودی انبار را چک می‌کنم"}] },
+    { k:"kq2", q:"اگر مانده حساب بانک شرکت با صورت‌حساب بانک متفاوت باشد، چه کاری انجام می‌دهی؟",
+      opts:[{v:"a",l:"مانده دفتر را اصلاح می‌کنم"},{v:"b",l:"مغایرت‌گیری بانکی انجام می‌دهم و تفاوت را بررسی می‌کنم"},{v:"c",l:"با بانک تماس می‌گیرم تا اشتباه آن‌ها را تأیید کنند"},{v:"d",l:"اهمیتی ندارد، هر دو صحیح‌اند"}] },
     { k:"kq3", q:"اگر کارفرما از تو بخواهد حقوق کارکنان را محاسبه کنی، چه اطلاعاتی لازم داری؟",
-      opts:[{v:"a",l:"فقط حقوق پایه کافی است"},{v:"b",l:"حقوق پایه، اضافهکاری، مزایا، کسورات بیمه و مالیات"},{v:"c",l:"فقط روزهای کارکرد کافی است"},{v:"d",l:"این کار مربوط به منابع انسانی است نه حسابداری"}] },
-    { k:"kq4", q:"اگر یک سند حسابداری اشتباه ثبت شده باشد، چطور آن را اصلاح میکنی؟",
-      opts:[{v:"a",l:"سند اشتباه را حذف میکنم"},{v:"b",l:"سند برگشتی ثبت میکنم و سند صحیح ثبت میکنم"},{v:"c",l:"مستقیم عدد را در سند ویرایش میکنم"},{v:"d",l:"به مدیر گزارش میدهم تا خودش تصمیم بگیرد"}] },
+      opts:[{v:"a",l:"فقط حقوق پایه کافی است"},{v:"b",l:"حقوق پایه، اضافه‌کاری، مزایا، کسورات بیمه و مالیات"},{v:"c",l:"فقط روزهای کارکرد کافی است"},{v:"d",l:"این کار مربوط به منابع انسانی است نه حسابداری"}] },
+    { k:"kq4", q:"اگر یک سند حسابداری اشتباه ثبت شده باشد، چطور آن را اصلاح می‌کنی؟",
+      opts:[{v:"a",l:"سند اشتباه را حذف می‌کنم"},{v:"b",l:"سند برگشتی ثبت می‌کنم و سند صحیح ثبت می‌کنم"},{v:"c",l:"مستقیم عدد را در سند ویرایش می‌کنم"},{v:"d",l:"به مدیر گزارش می‌دهم تا خودش تصمیم بگیرد"}] },
   ];
   const kq = answers.knowledgeAnswers || {};
   let body = '';
   qs.forEach((q, i) => {
-    body += `<div style="margin-bottom:20px;${i<qs.length-1?'padding-bottom:18px;border-bottom:1px solid #F1F5F9':''}">
-      <p style="font-size:13px;font-weight:600;color:var(--slate);margin-bottom:10px;line-height:1.6">
-        <span style="color:var(--brand);margin-left:5px">سؤال ${toPersian(i+1)}:</span>${q.q}
-      </p>
-      ${q.opts.map(o => optHTML(o.v, o.l, '', false, kq[q.k]===o.v, `selectKQ('${q.k}','${o.v}')`)).join('')}
-    </div>`;
+    body += qGroup(i+1,
+      `<span style="font-weight:600">${q.q}</span>`,
+      q.opts.map(o => optHTML(o.v, o.l, '', false, kq[q.k]===o.v, `selectKQ('${q.k}','${o.v}')`)).join('')
+    );
   });
-  return cardWrap('سنجش دانش حسابداری.', 'سؤالها کاربردی و شبیه محیط واقعی کار طراحی شدهاند.', body);
+  return cardWrap('سنجش دانش حسابداری.', 'سؤال‌ها کاربردی و شبیه محیط واقعی کار طراحی شده‌اند.', body);
 }
 
 function buildStep6() {
@@ -633,27 +752,32 @@ function buildStep6() {
   if (emp === 'accounting' || emp === 'other_work' || emp === 'freelance') {
     return buildStep7Content();
   }
-  const reasons = ["تجربه کاری ندارم","حسابداری را بلدم ولی اعتمادبهنفس ندارم","آموزش دیدهام ولی عملی کار نکردهام","نرمافزارها را بلد نیستم","برای مصاحبههای کاری آماده نیستم","رزومه ندارم","شغل مناسب پیدا نکردهام","نمیدانم دقیقاً از کجا شروع کنم","قبلاً کار کردم ولی میخواهم دوباره وارد بازار کار شوم","دلیل دیگری دارم"];
-  const helpAreas = ["روز اول کاری","ثبت سند","نرمافزار","Excel","حقوق و دستمزد","بیمه","مالیات","گزارشگیری","ارتباط با مدیر","اعتمادبهنفس","همه موارد"];
-  const goals = ["پیدا کردن اولین شغل","تغییر شغل","افزایش درآمد","حرفهای شدن","گرفتن پروژه","راهاندازی کار شخصی","مهاجرت و تقویت مهارت","فعلاً فقط یادگیری"];
+  const reasons = ["تجربه کاری ندارم","حسابداری را بلدم ولی اعتماد‌به‌نفس ندارم","آموزش دیده‌ام ولی عملی کار نکرده‌ام","نرم‌افزارها را بلد نیستم","برای مصاحبه‌های کاری آماده نیستم","رزومه ندارم","شغل مناسب پیدا نکرده‌ام","نمی‌دانم دقیقاً از کجا شروع کنم","قبلاً کار کردم ولی می‌خواهم دوباره وارد بازار کار شوم","دلیل دیگری دارم"];
+  const helpAreas = ["روز اول کاری","ثبت سند","نرم‌افزار","Excel","حقوق و دستمزد","بیمه","مالیات","گزارش‌گیری","ارتباط با مدیر","اعتماد‌به‌نفس","همه موارد"];
+  const goals = ["پیدا کردن اولین شغل","تغییر شغل","افزایش درآمد","حرفه‌ای شدن","گرفتن پروژه","راه‌اندازی کار شخصی","مهاجرت و تقویت مهارت","فعلاً فقط یادگیری"];
   return cardWrap('چه چیزی جلوی ورودت به بازار کار را گرفته؟', '', `
-    <p class="q-label">مهمترین دلیل اینکه الان مشغول به کار نیستی چیست؟</p>
-    ${reasons.map(r => optHTML(r, r, 'unemployedReason', false, answers.unemployedReason===r)).join('')}
-    <p class="q-label mt">اگر یک شرکت فردا پیشنهاد کار بدهد، در کدام قسمت بیشتر نیاز به کمک داری؟</p>
-    ${helpAreas.map(h => optHTML(h, h, 'helpArea', false, answers.helpArea===h)).join('')}
-    <p class="q-label mt">هدفت از یادگیری حسابداری بیشتر کدام است؟</p>
-    ${goals.map(g => optHTML(g, g, 'goal', false, answers.goal===g)).join('')}
+    ${qGroup(1, 'مهم‌ترین دلیل اینکه الان مشغول به کار نیستی چیست؟',
+      reasons.map(r => optHTML(r, r, 'unemployedReason', false, answers.unemployedReason===r)).join('')
+    )}
+    ${qGroup(2, 'اگر یک شرکت فردا پیشنهاد کار بدهد، در کدام قسمت بیشتر نیاز به کمک داری؟',
+      helpAreas.map(h => optHTML(h, h, 'helpArea', false, answers.helpArea===h)).join('')
+    )}
+    ${qGroup(3, 'هدفت از یادگیری حسابداری بیشتر کدام است؟',
+      goals.map(g => optHTML(g, g, 'goal', false, answers.goal===g)).join('')
+    )}
   `);
 }
 
 function buildStep7Content() {
-  const strengths = ["حسابداری مالی","مالیات","حقوق و دستمزد","بیمه","Excel","نرمافزارهای حسابداری","حسابداری صنعتی","حسابرسی","تهیه گزارشهای مالی","مدیریت مالی","سرپرستی حسابداری","آمادگی برای ارتقای شغلی"];
-  const skills = ["تسلط به سپیدار","تسلط به هلو","Excel حرفهای","مالیات","حقوق و دستمزد","بیمه","حسابرسی","گزارشگیری حرفهای","صورتهای مالی","سایر"];
-  return cardWrap('بریم یک سطح بالاتر.', 'در کدام زمینه میخواهی قویتر شوی؟', `
-    <p class="q-label">بیشتر دوست داری در کدام زمینه قویتر شوی؟</p>
-    ${strengths.map(s => optHTML(s, s, 'strengthArea', false, answers.strengthArea===s)).join('')}
-    <p class="q-label mt">اگر بخواهی همین امروز یک مهارت جدید به رزومهات اضافه کنی، کدام را انتخاب میکنی؟</p>
-    ${skills.map(s => optHTML(s, s, 'newSkill', false, answers.newSkill===s)).join('')}
+  const strengths = ["حسابداری مالی","مالیات","حقوق و دستمزد","بیمه","Excel","نرم‌افزارهای حسابداری","حسابداری صنعتی","حسابرسی","تهیه گزارش‌های مالی","مدیریت مالی","سرپرستی حسابداری","آمادگی برای ارتقای شغلی"];
+  const skills = ["تسلط به سپیدار","تسلط به هلو","Excel حرفه‌ای","مالیات","حقوق و دستمزد","بیمه","حسابرسی","گزارش‌گیری حرفه‌ای","صورت‌های مالی","سایر"];
+  return cardWrap('بریم یک سطح بالاتر.', 'در کدام زمینه می‌خواهی قوی‌تر شوی؟', `
+    ${qGroup(1, 'بیشتر دوست داری در کدام زمینه قوی‌تر شوی؟',
+      strengths.map(s => optHTML(s, s, 'strengthArea', false, answers.strengthArea===s)).join('')
+    )}
+    ${qGroup(2, 'اگر بخواهی همین امروز یک مهارت جدید به رزومه‌ات اضافه کنی، کدام را انتخاب می‌کنی؟',
+      skills.map(s => optHTML(s, s, 'newSkill', false, answers.newSkill===s)).join('')
+    )}
   `);
 }
 
@@ -662,26 +786,59 @@ function buildStep7() {
 }
 
 function buildStep8() {
-  const goals6m = ["اولین شغل حسابداریام را پیدا کرده باشم","بهعنوان حسابدار مشغول به کار باشم","در شرکت بهتری کار کنم","حقوق بیشتری بگیرم","در نرمافزارهای حسابداری مسلط باشم","در مالیات و بیمه حرفهای شده باشم","بتوانم مستقل پروژه بگیرم","برای ارتقای شغلی آماده باشم","فقط دانش حسابداریام را افزایش داده باشم"];
+  const goals6m = ["اولین شغل حسابداری‌ام را پیدا کرده باشم","به‌عنوان حسابدار مشغول به کار باشم","در شرکت بهتری کار کنم","حقوق بیشتری بگیرم","در نرم‌افزارهای حسابداری مسلط باشم","در مالیات و بیمه حرفه‌ای شده باشم","بتوانم مستقل پروژه بگیرم","برای ارتقای شغلی آماده باشم","فقط دانش حسابداری‌ام را افزایش داده باشم"];
   return cardWrap('آخرین مرحله — مقصدت کجاست؟', '', `
-    <p class="q-label">۶ ماه دیگر دوست داری در چه نقطهای باشی؟</p>
-    ${goals6m.map(g => optHTML(g, g, 'goal6m', false, answers.goal6m===g)).join('')}
-    <div class="divider">
-      <p class="q-label">اطلاعات تماس — تا نتیجه ارزیابی برایت ارسال شود</p>
-      <input type="text" class="inp" id="inp-name" placeholder="نام و نام خانوادگی *" value="${answers.name||''}"
-        oninput="answers.name=this.value;updateNavButtons()" autocomplete="name">
-      <input type="tel" class="inp" id="inp-phone" placeholder="شماره موبایل *" value="${answers.phone||''}"
-        oninput="answers.phone=this.value;updateNavButtons()" autocomplete="tel">
-      <div class="contact-grid">
-        <input type="text" class="inp" placeholder="سن" value="${answers.age||''}" oninput="answers.age=this.value" autocomplete="off">
-        <input type="text" class="inp" placeholder="شهر" value="${answers.city||''}" oninput="answers.city=this.value" autocomplete="off">
-      </div>
-      <div class="info-box"><p>🎯 کارشناسان آکادمی نتیجه ارزیابی تو را بررسی میکنند و یک مشاوره رایگان ارائه میدهند.</p></div>
-    </div>
+    ${qGroup(0, '۶ ماه دیگر دوست داری در چه نقطه‌ای باشی؟',
+      goals6m.map(g => optHTML(g, g, 'goal6m', false, answers.goal6m===g)).join('')
+    )}
   `);
 }
 
-// ═══ FINISH ═══
+function buildStep9() {
+  return `<div class="contact-screen-wrap">
+    <div class="contact-hero-strip">
+      <div class="contact-hero-icon">🎯</div>
+      <h2 class="contact-hero-title">تقریباً تمام شد!</h2>
+      <p class="contact-hero-sub">اطلاعات تماست را وارد کن تا نتیجه ارزیابی شخصی‌سازی‌شده برایت ارسال شود و یک مشاوره رایگان دریافت کنی.</p>
+    </div>
+
+    <div class="contact-card">
+      <div class="contact-section-label">اطلاعات شناسایی</div>
+      <div class="inp-icon-wrap">
+        <span class="inp-icon">👤</span>
+        <input type="text" class="inp has-icon" placeholder="نام و نام خانوادگی *" value="${answers.name||''}"
+          oninput="answers.name=this.value;updateNavButtons()" autocomplete="name">
+      </div>
+      <div class="inp-icon-wrap">
+        <span class="inp-icon">📱</span>
+        <input type="tel" class="inp has-icon" placeholder="شماره موبایل *" value="${answers.phone||''}"
+          oninput="answers.phone=this.value;updateNavButtons()" autocomplete="tel" dir="ltr" style="text-align:right">
+      </div>
+    </div>
+
+    <div class="contact-card">
+      <div class="contact-section-label">اطلاعات تکمیلی</div>
+      <div class="inp-row">
+        <div class="inp-icon-wrap">
+          <span class="inp-icon">🎂</span>
+          <input type="number" class="inp has-icon" placeholder="سن" value="${answers.age||''}" oninput="answers.age=this.value" min="15" max="70">
+        </div>
+        <div class="inp-icon-wrap">
+          <span class="inp-icon">📍</span>
+          <input type="text" class="inp has-icon" placeholder="شهر" value="${answers.city||''}" oninput="answers.city=this.value">
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-card">
+      <div class="contact-promise">
+        <span class="contact-promise-icon">🔒</span>
+        <p>اطلاعات تو <strong>کاملاً محرمانه</strong> است و فقط برای ارسال نتیجه ارزیابی و یک تماس مشاوره رایگان استفاده می‌شود.</p>
+      </div>
+    </div>
+  </div>`;
+}
+
 function finish() {
   const score = calcScore(answers);
   const level = getLevel(score);
@@ -699,9 +856,9 @@ function renderResult(score, level) {
   document.getElementById('res-path-title').textContent = path.title;
   document.getElementById('res-path-desc').textContent = path.desc;
   const positives = [
-    "شروع خوبی داری؛ با مسیر درست و آموزش عملی، میتوانی خیلی زودتر از آنچه فکر میکنی وارد بازار کار شوی.",
-    "پایههای خوبی داری؛ اما برای ورود مطمئنتر به بازار کار، پیشنهاد میکنیم مهارت عملی و کار با نرمافزار را تقویت کنی.",
-    "از مرحله شروع عبور کردی؛ حالا باید مهارتهای عملی خودت را به سطح بازار کار برسانی و تخصص ایجاد کنی.",
+    "شروع خوبی داری؛ با مسیر درست و آموزش عملی، می‌توانی خیلی زودتر از آنچه فکر می‌کنی وارد بازار کار شوی.",
+    "پایه‌های خوبی داری؛ اما برای ورود مطمئن‌تر به بازار کار، پیشنهاد می‌کنیم مهارت عملی و کار با نرم‌افزار را تقویت کنی.",
+    "از مرحله شروع عبور کردی؛ حالا باید مهارت‌های عملی خودت را به سطح بازار کار برسانی و تخصص ایجاد کنی.",
     "تجربه کاری و دانش خوبی داری؛ مرحله بعدی برای تو، افزایش تسلط تخصصی و آماده شدن برای ارتقای شغلی است.",
   ];
   document.getElementById('res-positive').textContent = '💡 ' + positives[level.path - 1];
@@ -710,7 +867,7 @@ function renderResult(score, level) {
   const weaknesses = [];
   if (!tasks.includes('مالیات') && !tasks.includes('اظهارنامه مالیاتی')) weaknesses.push('مالیات و اظهارنامه');
   if (!tasks.includes('حقوق و دستمزد')) weaknesses.push('حقوق و دستمزد');
-  if (!sw.includes('سپیدار') && !sw.includes('هلو')) weaknesses.push('نرمافزارهای حسابداری');
+  if (!sw.includes('سپیدار') && !sw.includes('هلو')) weaknesses.push('نرم‌افزارهای حسابداری');
   if (answers.excelLevel === 'beginner' || !answers.excelLevel) weaknesses.push('Excel');
   const w = weaknesses.slice(0, 3);
   const wCard = document.getElementById('res-weak-card');
