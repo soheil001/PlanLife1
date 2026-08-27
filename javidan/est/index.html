@@ -12,6 +12,7 @@ body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#
 @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideInRight{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:translateX(0)}}
 @keyframes slideInLeft{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+@keyframes expandDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 .screen{display:none}.screen.active{display:flex;flex-direction:column;min-height:100vh}
 
 /* ── HERO ── */
@@ -40,9 +41,19 @@ body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#
 .progress-fill{height:100%;background:linear-gradient(90deg,#0F7B6C,#C9A94B);border-radius:99px;transition:width .45s cubic-bezier(.4,0,.2,1)}
 
 /* ── SLIDES ── */
+/* FIX 1: slides-viewport حالا overflow:hidden داره و ارتفاع ثابت نداره */
 .slides-viewport{flex:1;overflow:hidden;position:relative}
 .slides-track{display:flex;height:100%;transition:transform .4s cubic-bezier(.4,0,.2,1)}
-.slide{min-width:100vw;padding:20px 16px 80px;overflow-y:auto}
+/* FIX 1: هر slide اسکرول داخلی داره و ارتفاع محدوده */
+.slide{
+  min-width:100vw;
+  padding:20px 16px 100px;
+  overflow-y:auto;
+  /* ارتفاع = کل صفحه منهای sticky-header (~62px) */
+  height:calc(100vh - 62px);
+  -webkit-overflow-scrolling:touch;
+}
+
 .slide-animate-right{animation:slideInRight .35s ease}
 .slide-animate-left{animation:slideInLeft .35s ease}
 
@@ -54,6 +65,12 @@ body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#
 .q-label.mt{margin-top:18px}
 .q-note{font-weight:400;color:var(--muted);font-size:12px}
 .divider{border-top:1px solid #F1F5F9;margin-top:18px;padding-top:18px}
+
+/* FIX 1: انیمیشن ظاهر شدن آرام گزینه‌های جدید */
+.expandable-section{
+  animation:expandDown .3s ease;
+  overflow:hidden;
+}
 
 /* ── ACTIONS ── */
 .step-actions{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-top:1px solid #F1F5F9;padding:12px 16px;z-index:60}
@@ -158,7 +175,7 @@ body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#
 
 <!-- ═══ FORM ═══ -->
 <div id="form-screen" class="screen">
-  <div class="sticky-header">
+  <div class="sticky-header" id="sticky-header">
     <div class="sticky-inner">
       <span style="font-weight:700;font-size:14px;color:var(--slate)">آکادمی جاویدان</span>
       <span style="font-size:13px;color:var(--brand);font-weight:600" id="step-label">مرحله ۱ از ۸</span>
@@ -233,16 +250,25 @@ const TOTAL_STEPS = 8;
 // ═══ STATE ═══
 let currentStep = 1;
 let answers = {};
-let direction = 'right'; // animation direction
+let direction = 'right';
 
 // ═══ UTILS ═══
 function toPersian(n) {
   return String(n).replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
 }
+
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
+}
+
+// FIX 2: اسکرول به بالای slide فعلی
+function scrollSlideToTop() {
+  const slide = document.querySelector(`[data-slide="${currentStep}"]`);
+  if (slide) {
+    slide.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }
 
 // ═══ STORAGE & SHEETS ═══
@@ -267,7 +293,6 @@ async function sendToSheet(data) {
     Object.entries(data).forEach(([k, v]) => {
       params.append(k, Array.isArray(v) ? v.join('، ') : (v || ''));
     });
-    // Use image trick for CORS-free GET
     const img = new Image();
     img.src = SHEET_URL + '?' + params.toString();
   } catch(e) { console.error("Sheet:", e); }
@@ -312,6 +337,7 @@ function startForm() {
   currentStep = 1; answers = {};
   showScreen('form-screen');
   buildAllSlides();
+  updateSlidesViewportHeight();
   updateProgress();
   updateNavButtons();
 }
@@ -330,6 +356,8 @@ function nextStep() {
     updateProgress();
     updateNavButtons();
     refreshCurrentSlide();
+    // FIX 2: اسکرول خودکار به بالا بعد از رفتن به مرحله بعدی
+    setTimeout(scrollSlideToTop, 50);
   } else {
     finish();
   }
@@ -343,6 +371,8 @@ function prevStep() {
     updateProgress();
     updateNavButtons();
     refreshCurrentSlide();
+    // FIX 2: اسکرول خودکار به بالا موقع برگشت
+    setTimeout(scrollSlideToTop, 50);
   }
 }
 
@@ -350,6 +380,26 @@ function goToSlide(index) {
   const track = document.getElementById('slides-track');
   track.style.transform = `translateX(${index * 100}vw)`;
 }
+
+// FIX 1: محاسبه و تنظیم ارتفاع slides-viewport
+function updateSlidesViewportHeight() {
+  const header = document.getElementById('sticky-header');
+  const actions = document.querySelector('.step-actions');
+  if (!header || !actions) return;
+  const headerH = header.offsetHeight;
+  const actionsH = actions.offsetHeight;
+  const viewportH = window.innerHeight - headerH - actionsH;
+  const viewport = document.getElementById('slides-viewport');
+  if (viewport) {
+    viewport.style.height = viewportH + 'px';
+  }
+  // بروزرسانی ارتفاع همه slide‌ها
+  document.querySelectorAll('.slide').forEach(s => {
+    s.style.height = viewportH + 'px';
+  });
+}
+
+window.addEventListener('resize', updateSlidesViewportHeight);
 
 function updateProgress() {
   const pct = Math.round((currentStep / TOTAL_STEPS) * 100);
@@ -389,7 +439,7 @@ function canProceed() {
   }
 }
 
-// ═══ SELECT OPTION (NO SCROLL) ═══
+// ═══ SELECT OPTION ═══
 function selectOpt(key, val, multi) {
   if (multi) {
     const prev = answers[key] || [];
@@ -406,7 +456,7 @@ function selectKQ(qKey, val) {
   refreshCurrentSlide();
 }
 
-// Refresh only the current slide's content without moving scroll
+// FIX 1: refresh بدون از دست دادن موقعیت اسکرول
 function refreshCurrentSlide() {
   const slide = document.querySelector(`[data-slide="${currentStep}"]`);
   if (!slide) return;
@@ -469,6 +519,7 @@ function cardWrap(title, sub, body) {
   </div>`;
 }
 
+// FIX 1: گزینه‌های شرطی با انیمیشن آرام
 function buildStep1() {
   const opts = [
     {v:"accounting", l:"بله، در حوزه حسابداری کار میکنم"},
@@ -482,14 +533,19 @@ function buildStep1() {
     {v:"1to2",l:"۱ تا ۲ سال"},{v:"2to5",l:"۲ تا ۵ سال"},{v:"5plus",l:"بیشتر از ۵ سال"},
   ];
   const posOpts = ["کارآموز حسابداری","کمکحسابدار","حسابدار","حسابدار ارشد","سرپرست حسابداری","مدیر مالی","سایر"];
+
   let body = `<p class="q-label">الان مشغول به کار هستی؟</p>`;
   body += opts.map(o => optHTML(o.v, o.l, 'employment', false, answers.employment===o.v)).join('');
+
+  // FIX 1: گزینه‌های اضافه با div.expandable-section (انیمیشن) و بدون اسکرول اضافه
   if (answers.employment === 'accounting') {
-    body += `<div class="divider">
-      <p class="q-label">چند وقت است در حوزه حسابداری فعالیت میکنی؟</p>
-      ${expOpts.map(o => optHTML(o.v, o.l, 'expDuration', false, answers.expDuration===o.v)).join('')}
-      <p class="q-label mt">الان بیشتر در چه موقعیتی فعالیت میکنی؟</p>
-      ${posOpts.map(o => optHTML(o, o, 'position', false, answers.position===o)).join('')}
+    body += `<div class="expandable-section">
+      <div class="divider">
+        <p class="q-label">چند وقت است در حوزه حسابداری فعالیت میکنی؟</p>
+        ${expOpts.map(o => optHTML(o.v, o.l, 'expDuration', false, answers.expDuration===o.v)).join('')}
+        <p class="q-label mt">الان بیشتر در چه موقعیتی فعالیت میکنی؟</p>
+        ${posOpts.map(o => optHTML(o, o, 'position', false, answers.position===o)).join('')}
+      </div>
     </div>`;
   }
   return cardWrap('وضعیت فعلی خودت را مشخص کنیم.', '', body);
@@ -516,14 +572,16 @@ function buildStep3() {
   let body = `<p class="q-label">با کدام نرمافزارهای حسابداری کار کردهای؟ <span class="q-note">(چندتایی)</span></p>
     <div class="grid2">${sws.map(s => optHTML(s, s, 'software', true, sel.includes(s))).join('')}</div>`;
   if (sel.includes('هلو') && !sel.includes('سپیدار')) {
-    body += `<div class="inline-box">
+    body += `<div class="expandable-section"><div class="inline-box">
       <div class="inline-box-label">گفتی با هلو کار کردی. با سپیدار هم کار کردی؟</div>
       ${["بله، مسلط هستم","کمی کار کردم","فقط اسمش را شنیدهام","خیر"].map(o => optHTML(o, o, 'sepExperience', false, answers.sepExperience===o)).join('')}
-    </div>`;
+    </div></div>`;
   }
   if (sel.includes('سپیدار')) {
-    body += `<p class="q-label mt">با کدام بخشهای سپیدار کار کردهای؟</p>
-    ${sepModules.map(m => optHTML(m, m, 'sepModules', true, sepSel.includes(m))).join('')}`;
+    body += `<div class="expandable-section">
+      <p class="q-label mt">با کدام بخشهای سپیدار کار کردهای؟</p>
+      ${sepModules.map(m => optHTML(m, m, 'sepModules', true, sepSel.includes(m))).join('')}
+    </div>`;
   }
   body += `<p class="q-label mt">اگر فردا نرمافزار جدید معرفی شود، چقدر راحت هماهنگ میشوی؟</p>
     ${adaptOpts.map(o => optHTML(o, o, 'adaptSoftware', false, answers.adaptSoftware===o)).join('')}`;
@@ -538,8 +596,10 @@ function buildStep4() {
   let body = `<p class="q-label">سطح کار با Excel چطور است؟</p>
     <div class="excel-levels">${lvlBtns}</div>`;
   if (answers.excelLevel) {
-    body += `<p class="q-label">کدام موارد را انجام دادهای؟ <span class="q-note">(چندتایی)</span></p>
-      ${funcs.map(f => optHTML(f, f, 'excelFuncs', true, sel.includes(f))).join('')}`;
+    body += `<div class="expandable-section">
+      <p class="q-label">کدام موارد را انجام دادهای؟ <span class="q-note">(چندتایی)</span></p>
+      ${funcs.map(f => optHTML(f, f, 'excelFuncs', true, sel.includes(f))).join('')}
+    </div>`;
   }
   return cardWrap('چقدر با Excel راحتی؟', '', body);
 }
