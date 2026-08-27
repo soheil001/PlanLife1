@@ -4,220 +4,180 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ارزیابی حسابداری | آکادمی جاویدان</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#1A2332;min-height:100vh}
-  ::selection{background:#E8F5F3}
-  ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#ddd;border-radius:3px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Vazirmatn',sans-serif;direction:rtl;background:#F8FAFB;color:#1A2332;min-height:100vh;overflow-x:hidden}
+:root{--brand:#0F7B6C;--brand-light:#E8F5F3;--gold:#C9A94B;--slate:#1A2332;--muted:#6B7A8D;--bg:#F8FAFB;--white:#fff}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideInRight{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+.screen{display:none}.screen.active{display:flex;flex-direction:column;min-height:100vh}
 
-  /* tokens */
-  :root{
-    --brand:#0F7B6C;--brand-light:#E8F5F3;--gold:#C9A94B;
-    --slate:#1A2332;--muted:#6B7A8D;--bg:#F8FAFB;--white:#FFFFFF;
-  }
+/* ── HERO ── */
+#hero{background:linear-gradient(160deg,#fff 0%,#E8F5F3 100%);align-items:center;justify-content:center}
+.hero-header{position:fixed;top:0;left:0;right:0;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.85);backdrop-filter:blur(12px);z-index:100;border-bottom:1px solid rgba(15,123,108,.08)}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;border-radius:10px;background:var(--brand);display:flex;align-items:center;justify-content:center}
+.hero-body{padding:100px 24px 60px;display:flex;align-items:center;justify-content:center;flex:1}
+.hero-inner{max-width:600px;width:100%;text-align:center;animation:fadeIn .6s ease}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 18px;border-radius:99px;background:rgba(15,123,108,.1);margin-bottom:24px;border:1px solid rgba(15,123,108,.25)}
+.hero-title{font-size:clamp(26px,5vw,44px);font-weight:800;color:var(--slate);line-height:1.35;margin-bottom:16px}
+.hero-sub{font-size:clamp(14px,2.5vw,17px);color:var(--muted);line-height:1.85;margin-bottom:36px;max-width:500px;margin-left:auto;margin-right:auto}
+.btn-primary{padding:17px 48px;border-radius:14px;border:none;cursor:pointer;background:linear-gradient(135deg,#0F7B6C,#0A5E52);color:#fff;font-size:18px;font-weight:700;font-family:'Vazirmatn',sans-serif;box-shadow:0 8px 28px rgba(15,123,108,.45);transition:transform .2s,box-shadow .2s;display:inline-block}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(15,123,108,.55)}
+.stats{display:flex;gap:14px;margin-top:40px;justify-content:center;flex-wrap:wrap}
+.stat-card{padding:12px 22px;background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.06);text-align:center;min-width:100px}
+.stat-num{font-size:19px;font-weight:800;color:var(--brand)}
+.stat-label{font-size:11px;color:var(--muted);margin-top:2px}
+.dot-green{width:7px;height:7px;border-radius:50%;background:#22C55E;display:inline-block}
 
-  /* animations */
-  @keyframes fadeSlide{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+/* ── FORM SCREEN ── */
+#form-screen{background:var(--bg)}
+.sticky-header{background:#fff;border-bottom:1px solid #F1F5F9;position:sticky;top:0;z-index:50;padding:14px 24px 12px}
+.sticky-inner{max-width:720px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.progress-track{height:5px;background:#E2E8F0;border-radius:99px;overflow:hidden;max-width:720px;margin:0 auto}
+.progress-fill{height:100%;background:linear-gradient(90deg,#0F7B6C,#C9A94B);border-radius:99px;transition:width .45s cubic-bezier(.4,0,.2,1)}
 
-  /* screens */
-  .screen{display:none}.screen.active{display:block}
+/* ── SLIDES ── */
+.slides-viewport{flex:1;overflow:hidden;position:relative}
+.slides-track{display:flex;height:100%;transition:transform .4s cubic-bezier(.4,0,.2,1)}
+.slide{min-width:100vw;padding:20px 16px 80px;overflow-y:auto}
+.slide-animate-right{animation:slideInRight .35s ease}
+.slide-animate-left{animation:slideInLeft .35s ease}
 
-  /* hero */
-  #hero{min-height:100vh;background:linear-gradient(160deg,#fff 0%,#E8F5F3 100%);display:flex;flex-direction:column}
-  .hero-header{padding:20px 24px;display:flex;justify-content:space-between;align-items:center;max-width:1100px;margin:0 auto;width:100%}
-  .logo{display:flex;align-items:center;gap:10px}
-  .logo-icon{width:38px;height:38px;border-radius:10px;background:var(--brand);display:flex;align-items:center;justify-content:center}
-  .hero-body{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px}
-  .hero-inner{max-width:680px;width:100%;text-align:center}
-  .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:99px;background:rgba(15,123,108,.1);margin-bottom:28px;border:1px solid rgba(15,123,108,.3)}
-  .hero-title{font-size:clamp(28px,5vw,46px);font-weight:800;color:var(--slate);line-height:1.35;margin-bottom:20px}
-  .hero-sub{font-size:clamp(15px,2.5vw,18px);color:var(--muted);line-height:1.8;margin-bottom:40px;max-width:540px;margin-left:auto;margin-right:auto}
-  .btn-primary{padding:18px 48px;border-radius:14px;border:none;cursor:pointer;background:linear-gradient(135deg,#0F7B6C,#0A5E52);color:#fff;font-size:18px;font-weight:700;font-family:'Vazirmatn',sans-serif;box-shadow:0 8px 32px rgba(15,123,108,.5);transition:transform .2s,box-shadow .2s}
-  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(15,123,108,.6)}
-  .stats{display:flex;gap:16px;margin-top:48px;justify-content:center;flex-wrap:wrap}
-  .stat-card{padding:14px 24px;background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.05);text-align:center;min-width:110px}
-  .stat-num{font-size:20px;font-weight:800;color:var(--brand)}
-  .stat-label{font-size:12px;color:var(--muted);margin-top:2px}
+/* ── CARD ── */
+.step-card{background:#fff;border-radius:20px;padding:26px 22px;box-shadow:0 2px 16px rgba(15,123,108,.06);max-width:640px;margin:0 auto}
+.step-title{font-size:19px;font-weight:700;color:var(--slate);margin-bottom:6px;line-height:1.5}
+.step-sub{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.7}
+.q-label{font-size:14px;font-weight:600;color:var(--slate);margin-bottom:10px;margin-top:0}
+.q-label.mt{margin-top:18px}
+.q-note{font-weight:400;color:var(--muted);font-size:12px}
+.divider{border-top:1px solid #F1F5F9;margin-top:18px;padding-top:18px}
 
-  /* progress */
-  .sticky-header{background:#fff;border-bottom:1px solid #F1F5F9;position:sticky;top:0;z-index:50;padding-bottom:12px}
-  .sticky-inner{max-width:640px;margin:0 auto;padding:14px 24px 0;display:flex;justify-content:space-between;align-items:center}
-  .progress-wrap{padding:8px 24px 0;max-width:640px;margin:0 auto}
-  .progress-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-  .progress-track{height:6px;background:#E2E8F0;border-radius:99px;overflow:hidden}
-  .progress-fill{height:100%;background:linear-gradient(90deg,#0F7B6C,#C9A94B);border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1)}
-  .progress-pct{text-align:left;margin-top:4px;font-size:12px;color:var(--muted)}
+/* ── ACTIONS ── */
+.step-actions{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-top:1px solid #F1F5F9;padding:12px 16px;z-index:60}
+.actions-inner{max-width:640px;margin:0 auto;display:flex;gap:10px;flex-direction:row-reverse}
+.btn-next{flex:1;padding:14px 24px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#0F7B6C,#0A5E52);color:#fff;font-size:16px;font-weight:700;font-family:'Vazirmatn',sans-serif;transition:all .2s;box-shadow:0 4px 14px rgba(15,123,108,.4)}
+.btn-next:disabled{background:#CBD5E1;box-shadow:none;cursor:not-allowed}
+.btn-back{padding:14px 18px;border-radius:12px;border:2px solid #E2E8F0;cursor:pointer;background:#fff;color:var(--muted);font-size:14px;font-family:'Vazirmatn',sans-serif;white-space:nowrap}
 
-  /* form */
-  #form-screen{min-height:100vh;background:var(--bg)}
-  .step-wrap{max-width:640px;margin:24px auto;padding:0 16px 80px;animation:fadeSlide .3s ease}
-  .step-card{background:#fff;border-radius:20px;padding:28px 24px;box-shadow:0 2px 16px rgba(15,123,108,.05),0 1px 4px rgba(0,0,0,.04)}
-  .step-title{font-size:20px;font-weight:700;color:var(--slate);margin-bottom:8px;line-height:1.5}
-  .step-sub{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.7}
-  .q-label{font-size:15px;font-weight:600;color:var(--slate);margin-bottom:12px;margin-top:0}
-  .q-label.mt{margin-top:20px}
-  .q-note{font-weight:400;color:var(--muted);font-size:13px}
-  .step-actions{display:flex;gap:10px;margin-top:14px;flex-direction:row-reverse}
-  .btn-next{flex:1;padding:14px 24px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#0F7B6C,#0A5E52);color:#fff;font-size:16px;font-weight:700;font-family:'Vazirmatn',sans-serif;transition:all .2s;box-shadow:0 4px 14px rgba(15,123,108,.4)}
-  .btn-next:disabled{background:#CBD5E1;box-shadow:none;cursor:not-allowed}
-  .btn-back{padding:14px 20px;border-radius:12px;border:2px solid #E2E8F0;cursor:pointer;background:#fff;color:var(--muted);font-size:15px;font-family:'Vazirmatn',sans-serif}
-  .divider{border-top:1px solid #F1F5F9;margin-top:20px;padding-top:20px}
+/* ── OPTIONS ── */
+.opt{display:flex;align-items:center;gap:10px;width:100%;padding:12px 14px;border-radius:11px;border:2px solid #E2E8F0;background:#fff;cursor:pointer;text-align:right;transition:border-color .15s,background .15s;margin-bottom:7px;font-size:14px;font-family:'Vazirmatn',sans-serif;color:var(--slate)}
+.opt.selected{border-color:var(--brand);background:var(--brand-light)}
+.opt-circle{width:18px;height:18px;border-radius:50%;flex-shrink:0;border:2px solid #CBD5E1;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.opt-square{width:18px;height:18px;border-radius:5px;flex-shrink:0;border:2px solid #CBD5E1;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.opt.selected .opt-circle,.opt.selected .opt-square{border-color:var(--brand);background:var(--brand)}
+.opt-text{flex:1}
+.check-svg{display:none}
+.opt.selected .check-svg{display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.excel-levels{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.excel-btn{padding:14px 10px;border-radius:11px;border:2px solid #E2E8F0;background:#fff;cursor:pointer;font-size:14px;font-weight:600;color:var(--slate);font-family:'Vazirmatn',sans-serif;transition:all .15s}
+.excel-btn.selected{border-color:var(--brand);background:var(--brand-light);color:var(--brand)}
+.inline-box{margin-top:14px;padding:14px;background:var(--brand-light);border-radius:11px}
+.inline-box-label{font-size:13px;color:var(--brand);font-weight:600;margin-bottom:8px}
+.inp{width:100%;padding:12px 14px;border-radius:10px;border:2px solid #E2E8F0;font-size:14px;font-family:'Vazirmatn',sans-serif;outline:none;margin-bottom:8px;color:var(--slate);background:#fff;direction:rtl;transition:border-color .15s}
+.inp:focus{border-color:var(--brand)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.info-box{padding:12px 14px;background:var(--brand-light);border-radius:10px;border:1px solid rgba(15,123,108,.25);margin-top:4px}
+.info-box p{font-size:13px;color:var(--brand);line-height:1.7}
 
-  /* options */
-  .opt{display:flex;align-items:center;gap:10px;width:100%;padding:13px 16px;border-radius:12px;border:2px solid #E2E8F0;background:#fff;cursor:pointer;text-align:right;transition:all .18s;margin-bottom:8px;font-size:15px;font-family:'Vazirmatn',sans-serif;color:var(--slate);box-shadow:0 1px 3px rgba(0,0,0,.04)}
-  .opt.selected{border-color:var(--brand);background:var(--brand-light);box-shadow:0 0 0 3px rgba(15,123,108,.13)}
-  .opt-circle{width:20px;height:20px;border-radius:50%;flex-shrink:0;border:2px solid #CBD5E1;background:transparent;display:flex;align-items:center;justify-content:center;transition:all .15s}
-  .opt-square{width:20px;height:20px;border-radius:6px;flex-shrink:0;border:2px solid #CBD5E1;background:transparent;display:flex;align-items:center;justify-content:center;transition:all .15s}
-  .opt.selected .opt-circle,.opt.selected .opt-square{border-color:var(--brand);background:var(--brand)}
-  .opt-text{flex:1}
-  .check-svg{display:none}
-  .opt.selected .check-svg{display:block}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0}
-  .excel-levels{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
-  .excel-btn{padding:16px 12px;border-radius:12px;border:2px solid #E2E8F0;background:#fff;cursor:pointer;font-size:15px;font-weight:600;color:var(--slate);font-family:'Vazirmatn',sans-serif;transition:all .15s}
-  .excel-btn.selected{border-color:var(--brand);background:var(--brand-light);color:var(--brand)}
-  .inline-box{margin-top:16px;padding:16px;background:var(--brand-light);border-radius:12px}
-  .inline-box-label{font-size:14px;color:var(--brand);font-weight:600;margin-bottom:8px}
-  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .inp{width:100%;padding:13px 16px;border-radius:10px;border:2px solid #E2E8F0;font-size:15px;font-family:'Vazirmatn',sans-serif;outline:none;margin-bottom:10px;color:var(--slate);background:#fff;direction:rtl;transition:border-color .15s}
-  .inp:focus,.inp.filled{border-color:var(--brand)}
-  .info-box{padding:14px;background:var(--brand-light);border-radius:10px;border:1px solid rgba(15,123,108,.3)}
-  .info-box p{font-size:13px;color:var(--brand);line-height:1.7}
+/* ── RESULT ── */
+#result-screen{background:var(--bg)}
+.result-hero{background:linear-gradient(135deg,#0F7B6C 0%,#0A5E52 100%);padding:48px 24px 80px;position:relative;overflow:hidden}
+.result-hero::before{content:'';position:absolute;top:-60px;left:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.05)}
+.result-hero::after{content:'';position:absolute;bottom:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.07)}
+.result-inner{max-width:620px;margin:0 auto;text-align:center;position:relative;z-index:1}
+.result-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 18px;border-radius:99px;background:rgba(255,255,255,.15);margin-bottom:18px}
+.result-name{font-size:26px;font-weight:800;color:#fff;margin-bottom:6px}
+.result-sub{font-size:15px;color:rgba(255,255,255,.8);margin-bottom:28px}
+.result-cards{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.result-card{background:rgba(255,255,255,.12);border-radius:16px;padding:18px 28px;text-align:center;backdrop-filter:blur(10px)}
+.result-score{font-size:38px;font-weight:800;color:#fff}
+.result-score-label{font-size:12px;color:rgba(255,255,255,.7);margin-top:3px}
+.result-level{font-size:22px;font-weight:800;color:var(--gold)}
+.result-body{max-width:620px;margin:-28px auto 0;padding:0 16px 60px}
+.r-card{background:#fff;border-radius:18px;padding:22px;box-shadow:0 4px 20px rgba(0,0,0,.04);margin-bottom:14px}
+.r-card-brand{border:2px solid var(--brand-light)}
+.r-card p{font-size:14px;color:var(--slate);line-height:1.8;font-weight:500}
+.r-card-label{font-size:12px;color:var(--brand);font-weight:600;margin-bottom:7px}
+.r-card-muted{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:10px}
+.path-wrap{display:flex;gap:12px;align-items:flex-start}
+.path-icon{font-size:30px}
+.path-title{font-size:17px;font-weight:700;color:var(--slate);margin-bottom:5px}
+.path-desc{font-size:13px;color:var(--muted);line-height:1.7}
+.tags{display:flex;gap:7px;flex-wrap:wrap}
+.tag{padding:5px 12px;border-radius:99px;background:rgba(201,169,75,.15);color:var(--gold);font-size:12px;font-weight:600}
+.cta-card{background:linear-gradient(135deg,#1A2332 0%,#0D1829 100%);border-radius:18px;padding:26px;text-align:center;margin-bottom:12px}
+.cta-title{font-size:15px;color:#fff;font-weight:700;margin-bottom:5px}
+.cta-sub{font-size:12px;color:rgba(255,255,255,.6);margin-bottom:18px}
+.btn-cta{width:100%;padding:15px;border-radius:11px;border:none;background:linear-gradient(135deg,#0F7B6C,#0A5E52);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:'Vazirmatn',sans-serif;margin-bottom:9px;box-shadow:0 4px 18px rgba(15,123,108,.6)}
+.btn-outline-white{width:100%;padding:13px;border-radius:11px;border:2px solid rgba(255,255,255,.2);background:transparent;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'Vazirmatn',sans-serif}
+.btn-restart{width:100%;padding:13px;border-radius:11px;border:2px solid #E2E8F0;background:#fff;color:var(--muted);font-size:13px;cursor:pointer;font-family:'Vazirmatn',sans-serif}
 
-  /* result */
-  #result-screen{min-height:100vh;background:var(--bg)}
-  .result-hero{background:linear-gradient(135deg,#0F7B6C 0%,#0A5E52 100%);padding:48px 24px 80px;position:relative;overflow:hidden}
-  .result-hero::before{content:'';position:absolute;top:-60px;left:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.05)}
-  .result-hero::after{content:'';position:absolute;bottom:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.07)}
-  .result-inner{max-width:640px;margin:0 auto;text-align:center;position:relative;z-index:1}
-  .result-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:99px;background:rgba(255,255,255,.15);margin-bottom:20px}
-  .result-name{font-size:28px;font-weight:800;color:#fff;margin-bottom:8px}
-  .result-sub{font-size:16px;color:rgba(255,255,255,.8);margin-bottom:32px}
-  .result-cards{display:flex;justify-content:center;gap:20px;flex-wrap:wrap}
-  .result-card{background:rgba(255,255,255,.12);border-radius:16px;padding:20px 32px;text-align:center;backdrop-filter:blur(10px)}
-  .result-score{font-size:40px;font-weight:800;color:#fff}
-  .result-score-label{font-size:13px;color:rgba(255,255,255,.7);margin-top:4px}
-  .result-level{font-size:24px;font-weight:800;color:var(--gold)}
-  .result-body{max-width:640px;margin:-32px auto 0;padding:0 16px 60px}
-  .r-card{background:#fff;border-radius:20px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,.04);margin-bottom:16px}
-  .r-card-brand{border:2px solid var(--brand-light)}
-  .r-card p{font-size:15px;color:var(--slate);line-height:1.8;font-weight:500}
-  .r-card-label{font-size:13px;color:var(--brand);font-weight:600;margin-bottom:8px}
-  .r-card-muted{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:12px}
-  .path-wrap{display:flex;gap:12px;align-items:flex-start}
-  .path-icon{font-size:32px}
-  .path-title{font-size:18px;font-weight:700;color:var(--slate);margin-bottom:6px}
-  .path-desc{font-size:14px;color:var(--muted);line-height:1.7}
-  .tags{display:flex;gap:8px;flex-wrap:wrap}
-  .tag{padding:6px 14px;border-radius:99px;background:rgba(201,169,75,.15);color:var(--gold);font-size:13px;font-weight:600}
-  .cta-card{background:linear-gradient(135deg,#1A2332 0%,#0D1829 100%);border-radius:20px;padding:28px;text-align:center;margin-bottom:12px}
-  .cta-title{font-size:16px;color:#fff;font-weight:700;margin-bottom:6px}
-  .cta-sub{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:20px}
-  .btn-cta{width:100%;padding:16px;border-radius:12px;border:none;background:linear-gradient(135deg,#0F7B6C,#0A5E52);color:#fff;font-size:16px;font-weight:700;cursor:pointer;font-family:'Vazirmatn',sans-serif;margin-bottom:10px;box-shadow:0 4px 20px rgba(15,123,108,.6)}
-  .btn-outline-white{width:100%;padding:14px;border-radius:12px;border:2px solid rgba(255,255,255,.2);background:transparent;color:#fff;font-size:15px;font-weight:600;cursor:pointer;font-family:'Vazirmatn',sans-serif}
-  .btn-restart{width:100%;padding:14px;border-radius:12px;border:2px solid #E2E8F0;background:#fff;color:var(--muted);font-size:14px;cursor:pointer;font-family:'Vazirmatn',sans-serif}
-
-  /* admin */
-  #admin-screen{min-height:100vh;background:#0F172A;color:#fff}
-  .admin-login{display:flex;align-items:center;justify-content:center;min-height:100vh}
-  .admin-login-card{background:#1E293B;border-radius:20px;padding:32px;width:90%;max-width:360px;text-align:center}
-  .admin-icon{width:48px;height:48px;border-radius:12px;background:var(--brand);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:20px}
-  .admin-title{color:#fff;font-size:18px;font-weight:700;margin-bottom:6px}
-  .admin-note{color:#64748B;font-size:13px;margin-bottom:24px}
-  .admin-inp{width:100%;padding:13px 16px;border-radius:10px;border:2px solid #334155;background:#0F172A;color:#fff;font-size:15px;font-family:'Vazirmatn',sans-serif;outline:none;margin-bottom:12px;direction:rtl}
-  .btn-admin-login{width:100%;padding:13px;border-radius:10px;border:none;background:var(--brand);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:'Vazirmatn',sans-serif;margin-bottom:12px}
-  .btn-admin-back{width:100%;padding:11px;border-radius:10px;border:2px solid #334155;background:transparent;color:#64748B;font-size:14px;cursor:pointer;font-family:'Vazirmatn',sans-serif}
-  .dashboard{padding:24px 16px 60px}
-  .dash-inner{max-width:900px;margin:0 auto}
-  .dash-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
-  .dash-title{font-size:22px;font-weight:800;color:#fff}
-  .dash-sub{font-size:13px;color:#64748B;margin-top:2px}
-  .btn-exit{padding:10px 18px;border-radius:10px;border:2px solid #334155;background:transparent;color:#64748B;font-size:13px;cursor:pointer;font-family:'Vazirmatn',sans-serif}
-  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:24px}
-  .stat-dark{background:#1E293B;border-radius:14px;padding:18px 20px}
-  .stat-dark-num{font-size:26px;font-weight:800}
-  .stat-dark-label{font-size:12px;color:#64748B;margin-top:4px}
-  .table-wrap{background:#1E293B;border-radius:16px;overflow:hidden}
-  .table-head{padding:16px 20px;border-bottom:1px solid #334155;display:flex;justify-content:space-between}
-  .table-head span:first-child{font-weight:700;font-size:15px}
-  .table-head span:last-child{font-size:12px;color:#64748B}
-  .table-scroll{overflow-x:auto}
-  table{width:100%;border-collapse:collapse;font-size:13px}
-  thead tr{background:#0F172A}
-  th{padding:12px 14px;text-align:right;color:#64748B;font-weight:600;white-space:nowrap}
-  td{padding:12px 14px}
-  tr.even{background:#1A2840}
-  .level-tag{padding:3px 10px;border-radius:99px;background:rgba(15,123,108,.3);color:var(--brand);font-weight:600;font-size:12px}
-  .empty-state{background:#1E293B;border-radius:16px;padding:40px;text-align:center}
-
-  /* dot */
-  .dot-green{width:8px;height:8px;border-radius:50%;background:#22C55E;display:inline-block}
-
-  @media(max-width:480px){
-    .grid2{grid-template-columns:1fr}
-    .excel-levels{grid-template-columns:1fr 1fr}
-    .contact-grid{grid-template-columns:1fr}
-    .result-cards{gap:12px}
-    .result-card{padding:16px 20px}
-  }
+@media(max-width:480px){
+  .grid2{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr}
+  .result-cards{gap:10px}
+}
 </style>
 </head>
 <body>
 
 <!-- ═══ HERO ═══ -->
 <div id="hero" class="screen active">
-  <div id="hero-screen">
-    <header class="hero-header">
-      <div class="logo">
-        <div class="logo-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 3h18v4H3V3zm0 6h12v4H3V9zm0 6h18v4H3v-4z" fill="white" opacity=".9"/></svg>
-        </div>
-        <span style="font-weight:700;font-size:16px;color:var(--slate)">آکادمی حسابداری جاویدان</span>
+  <header class="hero-header">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 3h18v4H3V3zm0 6h12v4H3V9zm0 6h18v4H3v-4z" fill="white" opacity=".9"/></svg>
       </div>
-      <span style="font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px">
-        <span class="dot-green"></span> ارزیابی رایگان
-      </span>
-    </header>
-    <div class="hero-body">
-      <div class="hero-inner">
-        <div class="badge">
-          <span style="font-size:12px;color:var(--brand);font-weight:600">ارزیابی تخصصی مسیر شغلی حسابداری</span>
-        </div>
-        <h1 class="hero-title">حسابداری را در چه سطحی بلدی؟</h1>
-        <p class="hero-sub">در کمتر از ۵ دقیقه سطح مهارت، تجربه و مسیر شغلی خودت را ارزیابی کن و ببین برای حرفهایتر شدن دقیقاً روی چه مهارتهایی باید کار کنی.</p>
-        <button class="btn-primary" onclick="startForm()">شروع ارزیابی ✦</button>
-        <p style="margin-top:14px;font-size:13px;color:var(--muted)">این ارزیابی حدود ۵ دقیقه زمان میبرد.</p>
-        <div class="stats">
-          <div class="stat-card"><div class="stat-num">۲۳۰۰+</div><div class="stat-label">نفر شرکت کرده</div></div>
-          <div class="stat-card"><div class="stat-num">۸ مرحله</div><div class="stat-label">ارزیابی تخصصی</div></div>
-          <div class="stat-card"><div class="stat-num">رایگان</div><div class="stat-label">بدون هزینه</div></div>
-        </div>
+      <span style="font-weight:700;font-size:15px;color:var(--slate)">آکادمی حسابداری جاویدان</span>
+    </div>
+    <span style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px">
+      <span class="dot-green"></span> ارزیابی رایگان
+    </span>
+  </header>
+  <div class="hero-body">
+    <div class="hero-inner">
+      <div class="badge">
+        <span style="font-size:11px;color:var(--brand);font-weight:600">ارزیابی تخصصی مسیر شغلی حسابداری</span>
+      </div>
+      <h1 class="hero-title">حسابداری را در چه سطحی بلدی؟</h1>
+      <p class="hero-sub">در کمتر از ۵ دقیقه سطح مهارت، تجربه و مسیر شغلی خودت را ارزیابی کن و ببین برای حرفهایتر شدن دقیقاً روی چه مهارتهایی باید کار کنی.</p>
+      <button class="btn-primary" onclick="startForm()">شروع ارزیابی ✦</button>
+      <p style="margin-top:12px;font-size:12px;color:var(--muted)">این ارزیابی حدود ۵ دقیقه زمان میبرد.</p>
+      <div class="stats">
+        <div class="stat-card"><div class="stat-num">۲۳۰۰+</div><div class="stat-label">نفر شرکت کرده</div></div>
+        <div class="stat-card"><div class="stat-num">۸ مرحله</div><div class="stat-label">ارزیابی تخصصی</div></div>
+        <div class="stat-card"><div class="stat-num">رایگان</div><div class="stat-label">بدون هزینه</div></div>
       </div>
     </div>
   </div>
-  <button onclick="goAdmin()" style="position:fixed;bottom:16px;left:16px;padding:8px 14px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;font-size:12px;color:var(--muted);cursor:pointer;font-family:'Vazirmatn',sans-serif">پنل مدیریت</button>
 </div>
 
 <!-- ═══ FORM ═══ -->
 <div id="form-screen" class="screen">
   <div class="sticky-header">
     <div class="sticky-inner">
-      <span style="font-weight:700;font-size:15px;color:var(--slate)">آکادمی حسابداری جاویدان</span>
-      <span style="font-size:13px;color:var(--brand);font-weight:600" id="time-left-top">⏱ ۵ دقیقه تا پایان</span>
+      <span style="font-weight:700;font-size:14px;color:var(--slate)">آکادمی جاویدان</span>
+      <span style="font-size:13px;color:var(--brand);font-weight:600" id="step-label">مرحله ۱ از ۸</span>
     </div>
-    <div class="progress-wrap">
-      <div class="progress-meta">
-        <span style="font-size:13px;color:var(--muted);font-weight:500" id="step-label">مرحله ۱ از ۸</span>
-        <span style="font-size:13px;color:var(--brand);font-weight:600" id="time-left-bar">⏱ ۵ دقیقه تا پایان</span>
-      </div>
-      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:12.5%"></div></div>
-      <div class="progress-pct" id="progress-pct">۱۲٪</div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:12.5%"></div></div>
+  </div>
+
+  <div class="slides-viewport" id="slides-viewport">
+    <div class="slides-track" id="slides-track">
+      <!-- slides built by JS -->
     </div>
   </div>
-  <div id="step-container"></div>
+
+  <div class="step-actions">
+    <div class="actions-inner">
+      <button class="btn-next" id="btn-next" onclick="nextStep()">ادامه →</button>
+      <button class="btn-back" id="btn-back" onclick="prevStep()" style="display:none">← قبلی</button>
+    </div>
+  </div>
 </div>
 
 <!-- ═══ RESULT ═══ -->
@@ -265,68 +225,27 @@
   </div>
 </div>
 
-<!-- ═══ ADMIN ═══ -->
-<div id="admin-screen" class="screen">
-  <div id="admin-login-view" class="admin-login">
-    <div class="admin-login-card">
-      <div class="admin-icon">🔐</div>
-      <h2 class="admin-title">پنل مدیریت</h2>
-      <p class="admin-note">آکادمی حسابداری جاویدان</p>
-      <input type="password" id="admin-pass" class="admin-inp" placeholder="رمز عبور" onkeydown="if(event.key==='Enter')adminLogin()">
-      <button class="btn-admin-login" onclick="adminLogin()">ورود</button>
-      <button class="btn-admin-back" onclick="goHero()">بازگشت</button>
-    </div>
-  </div>
-  <div id="admin-dashboard-view" style="display:none">
-    <div class="dashboard">
-      <div class="dash-inner">
-        <div class="dash-header">
-          <div>
-            <div class="dash-title">داشبورد مدیریت</div>
-            <div class="dash-sub">آکادمی حسابداری جاویدان</div>
-          </div>
-          <button class="btn-exit" onclick="goHero()">← خروج</button>
-        </div>
-        <div class="stats-grid" id="admin-stats"></div>
-        <div id="admin-table"></div>
-      </div>
-    </div>
-  </div>
-</div>
 <script>
-// ═══════════════════════════════════════════════
-// CONFIG
-// ═══════════════════════════════════════════════
+// ═══ CONFIG ═══
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbwA96clj8vnRr2RU_HG8F54zm-Bv1cXPRU64cH7Z5CfQXG_1zxfzX_IWM9o79UAIhAq/exec";
-const ADMIN_PASS = "javidan1403";
 const TOTAL_STEPS = 8;
 
-// ═══════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════
+// ═══ STATE ═══
 let currentStep = 1;
 let answers = {};
+let direction = 'right'; // animation direction
 
-// ═══════════════════════════════════════════════
-// UTILS
-// ═══════════════════════════════════════════════
+// ═══ UTILS ═══
 function toPersian(n) {
   return String(n).replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
 }
-
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
 }
 
-function getTimeLeft(step) {
-  const times = [5,4,3,3,2,2,1,1];
-  return toPersian(times[Math.min(step-1,7)] || 1);
-}
-
-// ═══════════════════════════════════════════════
-// STORAGE & SHEETS
-// ═══════════════════════════════════════════════
+// ═══ STORAGE & SHEETS ═══
 function loadDB() {
   try { const r = localStorage.getItem("javidan_db"); return r ? JSON.parse(r) : {submissions:[]}; }
   catch { return {submissions:[]}; }
@@ -339,23 +258,22 @@ function saveSubmission(data) {
   db.submissions.push(entry);
   saveDB(db);
   sendToSheet(entry);
+  return entry;
 }
 
 async function sendToSheet(data) {
   try {
-    await fetch(SHEET_URL, {
-      method: "POST", mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
+    const params = new URLSearchParams();
+    Object.entries(data).forEach(([k, v]) => {
+      params.append(k, Array.isArray(v) ? v.join('، ') : (v || ''));
     });
-  } catch(e) { console.error("Sheet error:", e); }
+    // Use image trick for CORS-free GET
+    const img = new Image();
+    img.src = SHEET_URL + '?' + params.toString();
+  } catch(e) { console.error("Sheet:", e); }
 }
 
-function getSubmissions() { return loadDB().submissions; }
-
-// ═══════════════════════════════════════════════
-// SCORING
-// ═══════════════════════════════════════════════
+// ═══ SCORING ═══
 function calcScore(ans) {
   let score = 0;
   if (ans.employment === "accounting") score += 20;
@@ -389,13 +307,13 @@ const PATHS = {
   4: { title:"تخصص و ارتقای شغلی", desc:"پایه محکمی داری. مرحله بعدی: تخصص در مالیات، بیمه، Excel حرفهای، صورتهای مالی و مدیریت مالی.", icon:"🏆" },
 };
 
-// ═══════════════════════════════════════════════
-// NAVIGATION
-// ═══════════════════════════════════════════════
+// ═══ NAVIGATION ═══
 function startForm() {
   currentStep = 1; answers = {};
   showScreen('form-screen');
-  renderStep();
+  buildAllSlides();
+  updateProgress();
+  updateNavButtons();
 }
 
 function restartForm() {
@@ -403,95 +321,151 @@ function restartForm() {
   showScreen('hero');
 }
 
-function goAdmin() { showScreen('admin-screen'); }
-function goHero() {
-  document.getElementById('admin-login-view').style.display = 'flex';
-  document.getElementById('admin-dashboard-view').style.display = 'none';
-  document.getElementById('admin-pass').value = '';
-  showScreen('hero');
-}
-
 function nextStep() {
-  if (currentStep < TOTAL_STEPS) { currentStep++; renderStep(); }
-  else finish();
+  if (!canProceed()) return;
+  if (currentStep < TOTAL_STEPS) {
+    direction = 'right';
+    currentStep++;
+    goToSlide(currentStep - 1);
+    updateProgress();
+    updateNavButtons();
+    refreshCurrentSlide();
+  } else {
+    finish();
+  }
 }
 
 function prevStep() {
-  if (currentStep > 1) { currentStep--; renderStep(); }
+  if (currentStep > 1) {
+    direction = 'left';
+    currentStep--;
+    goToSlide(currentStep - 1);
+    updateProgress();
+    updateNavButtons();
+    refreshCurrentSlide();
+  }
+}
+
+function goToSlide(index) {
+  const track = document.getElementById('slides-track');
+  track.style.transform = `translateX(${index * 100}vw)`;
 }
 
 function updateProgress() {
   const pct = Math.round((currentStep / TOTAL_STEPS) * 100);
   document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('progress-pct').textContent = toPersian(pct) + '٪';
   document.getElementById('step-label').textContent = 'مرحله ' + toPersian(currentStep) + ' از ' + toPersian(TOTAL_STEPS);
-  const t = getTimeLeft(currentStep);
-  document.getElementById('time-left-top').textContent = '⏱ ' + t + ' دقیقه تا پایان';
-  document.getElementById('time-left-bar').textContent = '⏱ ' + t + ' دقیقه تا پایان';
 }
 
-function renderStep() {
-  updateProgress();
-  const c = document.getElementById('step-container');
-  c.innerHTML = '';
+function updateNavButtons() {
+  const btnBack = document.getElementById('btn-back');
+  const btnNext = document.getElementById('btn-next');
+  btnBack.style.display = currentStep > 1 ? 'block' : 'none';
+  const isLast = currentStep === TOTAL_STEPS;
+  btnNext.textContent = isLast ? 'دریافت نتیجه ارزیابی ✦' : 'ادامه →';
+  btnNext.disabled = !canProceed();
+}
+
+function canProceed() {
   switch(currentStep) {
-    case 1: c.innerHTML = buildStep1(); break;
-    case 2: c.innerHTML = buildStep2(); break;
-    case 3: c.innerHTML = buildStep3(); break;
-    case 4: c.innerHTML = buildStep4(); break;
-    case 5: c.innerHTML = buildStep5(); break;
-    case 6: c.innerHTML = buildStep6(); break;
-    case 7: c.innerHTML = buildStep7(); break;
-    case 8: c.innerHTML = buildStep8(); break;
+    case 1: return !!answers.employment;
+    case 2: return (answers.accountingTasks||[]).length > 0 && !!answers.stressArea;
+    case 3: return (answers.software||[]).length > 0 && !!answers.adaptSoftware;
+    case 4: return !!answers.excelLevel;
+    case 5: {
+      const kq = answers.knowledgeAnswers || {};
+      return ['kq1','kq2','kq3','kq4'].every(k => kq[k]);
+    }
+    case 6: {
+      const emp = answers.employment;
+      if (emp === 'accounting' || emp === 'other_work' || emp === 'freelance') {
+        return !!answers.strengthArea && !!answers.newSkill;
+      }
+      return !!answers.unemployedReason && !!answers.helpArea && !!answers.goal;
+    }
+    case 7: return !!answers.strengthArea && !!answers.newSkill;
+    case 8: return !!answers.goal6m && !!answers.name && !!answers.phone;
+    default: return true;
   }
-  attachListeners();
-  window.scrollTo(0,0);
 }
 
-// ═══════════════════════════════════════════════
-// OPTION HELPERS
-// ═══════════════════════════════════════════════
-function optHTML(value, label, key, multi=false, selected=false) {
+// ═══ SELECT OPTION (NO SCROLL) ═══
+function selectOpt(key, val, multi) {
+  if (multi) {
+    const prev = answers[key] || [];
+    answers[key] = prev.includes(val) ? prev.filter(v=>v!==val) : [...prev, val];
+  } else {
+    answers[key] = val;
+  }
+  refreshCurrentSlide();
+}
+
+function selectKQ(qKey, val) {
+  if (!answers.knowledgeAnswers) answers.knowledgeAnswers = {};
+  answers.knowledgeAnswers[qKey] = val;
+  refreshCurrentSlide();
+}
+
+// Refresh only the current slide's content without moving scroll
+function refreshCurrentSlide() {
+  const slide = document.querySelector(`[data-slide="${currentStep}"]`);
+  if (!slide) return;
+  const scrollTop = slide.scrollTop;
+  slide.innerHTML = buildSlideContent(currentStep);
+  slide.scrollTop = scrollTop;
+  updateNavButtons();
+}
+
+// ═══ BUILD ALL SLIDES ═══
+function buildAllSlides() {
+  const track = document.getElementById('slides-track');
+  track.innerHTML = '';
+  for (let i = 1; i <= TOTAL_STEPS; i++) {
+    const div = document.createElement('div');
+    div.className = 'slide';
+    div.dataset.slide = i;
+    div.innerHTML = buildSlideContent(i);
+    track.appendChild(div);
+  }
+  track.style.transform = 'translateX(0)';
+}
+
+function buildSlideContent(step) {
+  switch(step) {
+    case 1: return buildStep1();
+    case 2: return buildStep2();
+    case 3: return buildStep3();
+    case 4: return buildStep4();
+    case 5: return buildStep5();
+    case 6: return buildStep6();
+    case 7: return buildStep7();
+    case 8: return buildStep8();
+  }
+  return '';
+}
+
+// ═══ OPTION HELPER ═══
+function optHTML(value, label, key, multi=false, selected=false, onclick='') {
   const sel = selected ? 'selected' : '';
   const shape = multi ? 'opt-square' : 'opt-circle';
-  return `<button class="opt ${sel}" onclick="selectOpt('${key}','${escVal(value)}',${multi})" data-key="${key}" data-val="${escVal(value)}">
-    <span class="${shape}"><svg class="check-svg" width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg></span>
+  const clickFn = onclick || `selectOpt('${key}','${escVal(value)}',${multi})`;
+  return `<button class="opt ${sel}" onclick="${clickFn}" type="button">
+    <span class="${shape}"><svg class="check-svg" width="9" height="7" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg></span>
     <span class="opt-text">${label}</span>
   </button>`;
 }
-
 function escVal(v) { return v.replace(/'/g,"&#39;").replace(/"/g,'&quot;'); }
-
 function isSelected(key, val) {
   if (Array.isArray(answers[key])) return answers[key].includes(val);
   return answers[key] === val;
 }
 
-function selectOpt(key, val, multi) {
-  if (multi) {
-    const prev = answers[key] || [];
-    if (prev.includes(val)) answers[key] = prev.filter(v => v !== val);
-    else answers[key] = [...prev, val];
-  } else {
-    answers[key] = val;
-  }
-  renderStep();
-}
-
-// ═══════════════════════════════════════════════
-// STEP BUILDERS
-// ═══════════════════════════════════════════════
-function stepWrap(title, sub, body, canNext, nextLabel='ادامه →', showBack=true) {
-  return `<div class="step-wrap">
-    <div class="step-card">
-      <h2 class="step-title">${title}</h2>
-      ${sub ? `<p class="step-sub">${sub}</p>` : ''}
-      ${body}
-    </div>
-    <div class="step-actions">
-      <button class="btn-next" onclick="${canNext ? (nextLabel.includes('دریافت') ? 'finish()' : 'nextStep()') : ''}" ${canNext ? '' : 'disabled'}>${nextLabel}</button>
-      ${showBack ? `<button class="btn-back" onclick="prevStep()">← قبلی</button>` : ''}
-    </div>
+// ═══ STEP BUILDERS ═══
+function cardWrap(title, sub, body) {
+  return `<div class="step-card">
+    <h2 class="step-title">${title}</h2>
+    ${sub ? `<p class="step-sub">${sub}</p>` : ''}
+    ${body}
   </div>`;
 }
 
@@ -518,22 +492,19 @@ function buildStep1() {
       ${posOpts.map(o => optHTML(o, o, 'position', false, answers.position===o)).join('')}
     </div>`;
   }
-  const canNext = !!answers.employment;
-  return stepWrap('اول از همه، وضعیت فعلی خودت را مشخص کنیم.', '', body, canNext, 'ادامه →', false);
+  return cardWrap('وضعیت فعلی خودت را مشخص کنیم.', '', body);
 }
 
 function buildStep2() {
   const tasks = ["ثبت سند حسابداری","دریافت و پرداخت","صندوق و تنخواه","بانک و مغایرت بانکی","حسابهای دریافتنی","حسابهای پرداختنی","خرید و فروش","انبار","حقوق و دستمزد","بیمه","مالیات","ارزش افزوده","اظهارنامه مالیاتی","صورتهای مالی","بستن حسابها","گزارشگیری مالی","هیچکدام"];
   const stressOpts = ["ثبت سند","کار با نرمافزار","حقوق و دستمزد","بیمه","مالیات","ارزش افزوده","انبار","مغایرت بانکی","تهیه گزارش","بستن حسابها","نمیدانم از کجا باید شروع کنم"];
   const sel = answers.accountingTasks || [];
-  const body = `
+  return cardWrap('تجربه واقعی خودت را مشخص کن.', '', `
     <p class="q-label">با کدامیک از موارد زیر واقعاً کار کردهای؟ <span class="q-note">(چندتایی)</span></p>
     <div class="grid2">${tasks.map(t => optHTML(t, t, 'accountingTasks', true, sel.includes(t))).join('')}</div>
     <p class="q-label mt">اگر فردا وارد یک شرکت شوی، کدام بخش برایت استرس بیشتری ایجاد میکند؟</p>
     ${stressOpts.map(o => optHTML(o, o, 'stressArea', false, answers.stressArea===o)).join('')}
-  `;
-  const canNext = sel.length > 0 && !!answers.stressArea;
-  return stepWrap('حالا بریم سراغ تجربه واقعی؛ نه فقط چیزهایی که روی کاغذ بلدی.', '', body, canNext);
+  `);
 }
 
 function buildStep3() {
@@ -542,10 +513,8 @@ function buildStep3() {
   const adaptOpts = ["خیلی راحت","نسبتاً راحت","نیاز به آموزش دارم","احتمالاً برایم سخت است","تجربهای ندارم"];
   const sel = answers.software || [];
   const sepSel = answers.sepModules || [];
-  let body = `
-    <p class="q-label">با کدام نرمافزارهای حسابداری کار کردهای؟ <span class="q-note">(چندتایی)</span></p>
-    <div class="grid2">${sws.map(s => optHTML(s, s, 'software', true, sel.includes(s))).join('')}</div>
-  `;
+  let body = `<p class="q-label">با کدام نرمافزارهای حسابداری کار کردهای؟ <span class="q-note">(چندتایی)</span></p>
+    <div class="grid2">${sws.map(s => optHTML(s, s, 'software', true, sel.includes(s))).join('')}</div>`;
   if (sel.includes('هلو') && !sel.includes('سپیدار')) {
     body += `<div class="inline-box">
       <div class="inline-box-label">گفتی با هلو کار کردی. با سپیدار هم کار کردی؟</div>
@@ -556,25 +525,25 @@ function buildStep3() {
     body += `<p class="q-label mt">با کدام بخشهای سپیدار کار کردهای؟</p>
     ${sepModules.map(m => optHTML(m, m, 'sepModules', true, sepSel.includes(m))).join('')}`;
   }
-  body += `<p class="q-label mt">اگر فردا در یک شرکت بگویند از نرمافزار دیگری استفاده میکنیم، چقدر راحت میتوانی خودت را هماهنگ کنی؟</p>
+  body += `<p class="q-label mt">اگر فردا نرمافزار جدید معرفی شود، چقدر راحت هماهنگ میشوی؟</p>
     ${adaptOpts.map(o => optHTML(o, o, 'adaptSoftware', false, answers.adaptSoftware===o)).join('')}`;
-  const canNext = sel.length > 0 && !!answers.adaptSoftware;
-  return stepWrap('حسابداری فقط دانستن مفاهیم نیست؛ باید بتوانی با ابزارهای واقعی کار کنی.', '', body, canNext);
+  return cardWrap('کار با نرمافزارهای حسابداری.', 'حسابداری فقط دانستن مفاهیم نیست؛ باید با ابزارهای واقعی کار کنی.', body);
 }
 
 function buildStep4() {
   const levels = [{v:"beginner",l:"مبتدی"},{v:"medium",l:"متوسط"},{v:"good",l:"خوب"},{v:"pro",l:"حرفهای"}];
   const funcs = ["SUM","IF","SUMIF / SUMIFS","VLOOKUP / XLOOKUP","Pivot Table","مرتبسازی و فیلتر","گزارشگیری","طراحی فایل مالی","داشبورد","هیچکدام"];
   const sel = answers.excelFuncs || [];
-  const lvlBtns = levels.map(l => `<button class="excel-btn ${answers.excelLevel===l.v?'selected':''}" onclick="selectOpt('excelLevel','${l.v}',false)">${l.l}</button>`).join('');
-  let body = `<p class="q-label">سطح کار با Excel تو چطور است؟</p>
+  const lvlBtns = levels.map(l => `<button class="excel-btn ${answers.excelLevel===l.v?'selected':''}" onclick="selectOpt('excelLevel','${l.v}',false)" type="button">${l.l}</button>`).join('');
+  let body = `<p class="q-label">سطح کار با Excel چطور است؟</p>
     <div class="excel-levels">${lvlBtns}</div>`;
   if (answers.excelLevel) {
     body += `<p class="q-label">کدام موارد را انجام دادهای؟ <span class="q-note">(چندتایی)</span></p>
       ${funcs.map(f => optHTML(f, f, 'excelFuncs', true, sel.includes(f))).join('')}`;
   }
-  return stepWrap('حالا ببینیم چقدر با Excel راحتی.', '', body, !!answers.excelLevel);
+  return cardWrap('چقدر با Excel راحتی؟', '', body);
 }
+
 function buildStep5() {
   const qs = [
     { k:"kq1", q:"فرض کن امروز یک شرکت برایت فاکتور خرید آورده. اولین کاری که بهعنوان حسابدار باید انجام بدهی چیست؟",
@@ -589,100 +558,76 @@ function buildStep5() {
   const kq = answers.knowledgeAnswers || {};
   let body = '';
   qs.forEach((q, i) => {
-    body += `<div style="margin-bottom:24px;${i<qs.length-1?'padding-bottom:20px;border-bottom:1px solid #F1F5F9':''}">
-      <p style="font-size:14px;font-weight:600;color:var(--slate);margin-bottom:12px;line-height:1.6">
-        <span style="color:var(--brand);margin-left:6px">سؤال ${toPersian(i+1)}:</span>${q.q}
+    body += `<div style="margin-bottom:20px;${i<qs.length-1?'padding-bottom:18px;border-bottom:1px solid #F1F5F9':''}">
+      <p style="font-size:13px;font-weight:600;color:var(--slate);margin-bottom:10px;line-height:1.6">
+        <span style="color:var(--brand);margin-left:5px">سؤال ${toPersian(i+1)}:</span>${q.q}
       </p>
-      ${q.opts.map(o => optHTML(o.v, o.l, 'knowledgeAnswers_'+q.k, false, kq[q.k]===o.v)).join('')}
+      ${q.opts.map(o => optHTML(o.v, o.l, '', false, kq[q.k]===o.v, `selectKQ('${q.k}','${o.v}')`)).join('')}
     </div>`;
   });
-  const canNext = qs.every(q => kq[q.k]);
-  return stepWrap('چند سؤال کوتاه برای سنجش دانش حسابداری.', 'سؤالها کاربردی و شبیه محیط واقعی کار طراحی شدهاند.', body, canNext);
+  return cardWrap('سنجش دانش حسابداری.', 'سؤالها کاربردی و شبیه محیط واقعی کار طراحی شدهاند.', body);
 }
 
 function buildStep6() {
   const emp = answers.employment;
-  if (emp === 'accounting' || emp === 'other_work' || emp === 'freelance') return buildStep7();
+  if (emp === 'accounting' || emp === 'other_work' || emp === 'freelance') {
+    return buildStep7Content();
+  }
   const reasons = ["تجربه کاری ندارم","حسابداری را بلدم ولی اعتمادبهنفس ندارم","آموزش دیدهام ولی عملی کار نکردهام","نرمافزارها را بلد نیستم","برای مصاحبههای کاری آماده نیستم","رزومه ندارم","شغل مناسب پیدا نکردهام","نمیدانم دقیقاً از کجا شروع کنم","قبلاً کار کردم ولی میخواهم دوباره وارد بازار کار شوم","دلیل دیگری دارم"];
   const helpAreas = ["روز اول کاری","ثبت سند","نرمافزار","Excel","حقوق و دستمزد","بیمه","مالیات","گزارشگیری","ارتباط با مدیر","اعتمادبهنفس","همه موارد"];
   const goals = ["پیدا کردن اولین شغل","تغییر شغل","افزایش درآمد","حرفهای شدن","گرفتن پروژه","راهاندازی کار شخصی","مهاجرت و تقویت مهارت","فعلاً فقط یادگیری"];
-  const body = `
+  return cardWrap('چه چیزی جلوی ورودت به بازار کار را گرفته؟', '', `
     <p class="q-label">مهمترین دلیل اینکه الان مشغول به کار نیستی چیست؟</p>
     ${reasons.map(r => optHTML(r, r, 'unemployedReason', false, answers.unemployedReason===r)).join('')}
     <p class="q-label mt">اگر یک شرکت فردا پیشنهاد کار بدهد، در کدام قسمت بیشتر نیاز به کمک داری؟</p>
     ${helpAreas.map(h => optHTML(h, h, 'helpArea', false, answers.helpArea===h)).join('')}
     <p class="q-label mt">هدفت از یادگیری حسابداری بیشتر کدام است؟</p>
     ${goals.map(g => optHTML(g, g, 'goal', false, answers.goal===g)).join('')}
-  `;
-  const canNext = !!answers.unemployedReason && !!answers.helpArea && !!answers.goal;
-  return stepWrap('پس بریم ببینیم چه چیزی جلوی ورودت به بازار کار را گرفته.', '', body, canNext);
+  `);
 }
 
-function buildStep7() {
+function buildStep7Content() {
   const strengths = ["حسابداری مالی","مالیات","حقوق و دستمزد","بیمه","Excel","نرمافزارهای حسابداری","حسابداری صنعتی","حسابرسی","تهیه گزارشهای مالی","مدیریت مالی","سرپرستی حسابداری","آمادگی برای ارتقای شغلی"];
   const skills = ["تسلط به سپیدار","تسلط به هلو","Excel حرفهای","مالیات","حقوق و دستمزد","بیمه","حسابرسی","گزارشگیری حرفهای","صورتهای مالی","سایر"];
-  const body = `
+  return cardWrap('بریم یک سطح بالاتر.', 'در کدام زمینه میخواهی قویتر شوی؟', `
     <p class="q-label">بیشتر دوست داری در کدام زمینه قویتر شوی؟</p>
     ${strengths.map(s => optHTML(s, s, 'strengthArea', false, answers.strengthArea===s)).join('')}
     <p class="q-label mt">اگر بخواهی همین امروز یک مهارت جدید به رزومهات اضافه کنی، کدام را انتخاب میکنی؟</p>
     ${skills.map(s => optHTML(s, s, 'newSkill', false, answers.newSkill===s)).join('')}
-  `;
-  const canNext = !!answers.strengthArea && !!answers.newSkill;
-  return stepWrap('اگر همین الان حسابداری کار میکنی، وقتشه ببینیم چطور میتونی یک سطح بالاتر بری.', '', body, canNext);
+  `);
+}
+
+function buildStep7() {
+  return buildStep7Content();
 }
 
 function buildStep8() {
   const goals6m = ["اولین شغل حسابداریام را پیدا کرده باشم","بهعنوان حسابدار مشغول به کار باشم","در شرکت بهتری کار کنم","حقوق بیشتری بگیرم","در نرمافزارهای حسابداری مسلط باشم","در مالیات و بیمه حرفهای شده باشم","بتوانم مستقل پروژه بگیرم","برای ارتقای شغلی آماده باشم","فقط دانش حسابداریام را افزایش داده باشم"];
-  const body = `
+  return cardWrap('آخرین مرحله — مقصدت کجاست؟', '', `
     <p class="q-label">۶ ماه دیگر دوست داری در چه نقطهای باشی؟</p>
     ${goals6m.map(g => optHTML(g, g, 'goal6m', false, answers.goal6m===g)).join('')}
     <div class="divider">
-      <p class="q-label">اطلاعات تماس — تا نتیجه ارزیابی برایت ارسال بشه</p>
-      <input type="text" class="inp ${answers.name?'filled':''}" id="inp-name" placeholder="نام و نام خانوادگی *" value="${answers.name||''}" oninput="answers.name=this.value;updateNextBtn8()" >
-      <input type="tel" class="inp ${answers.phone?'filled':''}" id="inp-phone" placeholder="شماره موبایل *" value="${answers.phone||''}" oninput="answers.phone=this.value;updateNextBtn8()" >
+      <p class="q-label">اطلاعات تماس — تا نتیجه ارزیابی برایت ارسال شود</p>
+      <input type="text" class="inp" id="inp-name" placeholder="نام و نام خانوادگی *" value="${answers.name||''}"
+        oninput="answers.name=this.value;updateNavButtons()" autocomplete="name">
+      <input type="tel" class="inp" id="inp-phone" placeholder="شماره موبایل *" value="${answers.phone||''}"
+        oninput="answers.phone=this.value;updateNavButtons()" autocomplete="tel">
       <div class="contact-grid">
-        <input type="text" class="inp ${answers.age?'filled':''}" id="inp-age" placeholder="سن" value="${answers.age||''}" oninput="answers.age=this.value" >
-        <input type="text" class="inp ${answers.city?'filled':''}" id="inp-city" placeholder="شهر" value="${answers.city||''}" oninput="answers.city=this.value" >
+        <input type="text" class="inp" placeholder="سن" value="${answers.age||''}" oninput="answers.age=this.value" autocomplete="off">
+        <input type="text" class="inp" placeholder="شهر" value="${answers.city||''}" oninput="answers.city=this.value" autocomplete="off">
       </div>
       <div class="info-box"><p>🎯 کارشناسان آکادمی نتیجه ارزیابی تو را بررسی میکنند و یک مشاوره رایگان ارائه میدهند.</p></div>
     </div>
-  `;
-  const canNext = !!answers.goal6m && !!answers.name && !!answers.phone;
-  return stepWrap('آخرین مرحله؛ میخواهیم بدانیم مقصدت کجاست.', '', body, canNext, 'دریافت نتیجه ارزیابی ✦');
+  `);
 }
 
-function updateNextBtn8() {
-  const btn = document.querySelector('.btn-next');
-  if (btn) btn.disabled = !(answers.goal6m && answers.name && answers.phone);
-}
-
-// ═══════════════════════════════════════════════
-// ATTACH LISTENERS (knowledge questions special case)
-// ═══════════════════════════════════════════════
-function attachListeners() {
-  // knowledge questions use special key format
-  document.querySelectorAll('[data-key^="knowledgeAnswers_"]').forEach(btn => {
-    btn.onclick = function() {
-      const parts = this.dataset.key.split('_');
-      const qKey = parts[1]; // e.g. kq1
-      const val = this.dataset.val;
-      if (!answers.knowledgeAnswers) answers.knowledgeAnswers = {};
-      answers.knowledgeAnswers[qKey] = val;
-      renderStep();
-    };
-  });
-}
-// ═══════════════════════════════════════════════
-// FINISH
-// ═══════════════════════════════════════════════
+// ═══ FINISH ═══
 function finish() {
   const score = calcScore(answers);
   const level = getLevel(score);
   showScreen('result-screen');
   renderResult(score, level);
-  if (answers.name || answers.phone) {
-    saveSubmission({ ...answers, score, level: level.label, path: level.path });
-  }
+  saveSubmission({ ...answers, score, level: level.label, path: level.path });
 }
 
 function renderResult(score, level) {
@@ -693,7 +638,6 @@ function renderResult(score, level) {
   document.getElementById('res-path-icon').textContent = path.icon;
   document.getElementById('res-path-title').textContent = path.title;
   document.getElementById('res-path-desc').textContent = path.desc;
-
   const positives = [
     "شروع خوبی داری؛ با مسیر درست و آموزش عملی، میتوانی خیلی زودتر از آنچه فکر میکنی وارد بازار کار شوی.",
     "پایههای خوبی داری؛ اما برای ورود مطمئنتر به بازار کار، پیشنهاد میکنیم مهارت عملی و کار با نرمافزار را تقویت کنی.",
@@ -701,7 +645,6 @@ function renderResult(score, level) {
     "تجربه کاری و دانش خوبی داری؛ مرحله بعدی برای تو، افزایش تسلط تخصصی و آماده شدن برای ارتقای شغلی است.",
   ];
   document.getElementById('res-positive').textContent = '💡 ' + positives[level.path - 1];
-
   const tasks = answers.accountingTasks || [];
   const sw = answers.software || [];
   const weaknesses = [];
@@ -711,73 +654,10 @@ function renderResult(score, level) {
   if (answers.excelLevel === 'beginner' || !answers.excelLevel) weaknesses.push('Excel');
   const w = weaknesses.slice(0, 3);
   const wCard = document.getElementById('res-weak-card');
-  const tagsDiv = document.getElementById('res-tags');
   if (w.length > 0) {
     wCard.style.display = 'block';
-    tagsDiv.innerHTML = w.map(x => `<span class="tag">${x}</span>`).join('');
-  } else {
-    wCard.style.display = 'none';
-  }
-  window.scrollTo(0, 0);
-}
-
-// ═══════════════════════════════════════════════
-// ADMIN
-// ═══════════════════════════════════════════════
-function adminLogin() {
-  const pass = document.getElementById('admin-pass').value;
-  if (pass === ADMIN_PASS) {
-    document.getElementById('admin-login-view').style.display = 'none';
-    document.getElementById('admin-dashboard-view').style.display = 'block';
-    renderDashboard();
-  } else {
-    alert('رمز اشتباه است');
-  }
-}
-
-function renderDashboard() {
-  const subs = getSubmissions();
-  const stats = {
-    total: subs.length,
-    beginner: subs.filter(s => s.level === 'مبتدی').length,
-    learning: subs.filter(s => s.level === 'در حال یادگیری').length,
-    semi: subs.filter(s => s.level === 'نیمهحرفهای').length,
-    pro: subs.filter(s => s.level === 'حرفهای').length,
-    employed: subs.filter(s => s.employment === 'accounting').length,
-    unemployed: subs.filter(s => s.employment === 'unemployed').length,
-  };
-  const statColors = { total:'#C9A94B', beginner:'#E8895A', learning:'#C9A94B', semi:'#0F7B6C', pro:'#3B7DD8', employed:'#22C55E', unemployed:'#F87171' };
-  const statLabels = { total:'کل شرکتکنندگان', beginner:'مبتدی', learning:'در حال یادگیری', semi:'نیمهحرفهای', pro:'حرفهای', employed:'شاغل در حسابداری', unemployed:'جویای کار' };
-  document.getElementById('admin-stats').innerHTML = Object.keys(stats).map(k =>
-    `<div class="stat-dark">
-      <div class="stat-dark-num" style="color:${statColors[k]}">${toPersian(stats[k])}</div>
-      <div class="stat-dark-label">${statLabels[k]}</div>
-    </div>`
-  ).join('');
-
-  if (subs.length === 0) {
-    document.getElementById('admin-table').innerHTML = `<div class="empty-state"><p style="color:#64748B;font-size:15px">هنوز هیچ فرمی تکمیل نشده است.</p></div>`;
-    return;
-  }
-  const rows = subs.map((s, i) => `<tr class="${i%2===1?'even':''}">
-    <td style="color:#fff">${s.name||'—'}</td>
-    <td style="color:#94A3B8;direction:ltr">${s.phone||'—'}</td>
-    <td style="color:#94A3B8">${s.city||'—'}</td>
-    <td><span class="level-tag">${s.level||'—'}</span></td>
-    <td style="color:#C9A94B;font-weight:700">${toPersian(s.score||0)}</td>
-    <td style="color:#94A3B8;font-size:12px">${s.employment==='accounting'?'شاغل':s.employment==='unemployed'?'جویای کار':'سایر'}</td>
-    <td style="color:#64748B;font-size:12px">${s.date||'—'}</td>
-  </tr>`).join('');
-  document.getElementById('admin-table').innerHTML = `
-    <div class="table-wrap">
-      <div class="table-head"><span>لیست شرکتکنندگان</span><span>${toPersian(subs.length)} نفر</span></div>
-      <div class="table-scroll">
-        <table>
-          <thead><tr>${['نام','موبایل','شهر','سطح','امتیاز','وضعیت','تاریخ'].map(h=>`<th>${h}</th>`).join('')}</tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
-      </div>
-    </div>`;
+    document.getElementById('res-tags').innerHTML = w.map(x => `<span class="tag">${x}</span>`).join('');
+  } else { wCard.style.display = 'none'; }
 }
 </script>
 </body>
