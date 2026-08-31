@@ -512,13 +512,15 @@
 
 // =====================================================
 // ✅ تنظیمات دسته‌بندی‌ها — فقط اینجا تغییر بده
+// ⚠️ توجه: کدهای اشتراک دیگر اینجا نیستند! کدها الان توی
+// جدول subscription_codes روی Supabase نگه‌داری میشن و از
+// طریق Edge Function (verify-subscription-code) چک میشن.
 // برای هر دوره: comingSoon: true یعنی هنوز فعال نیست
 // و با کلیک فقط پیام "به‌زودی اضافه می‌شود" نشان می‌دهد
 // =====================================================
 const categoryConfig = {
     "دوره کدهای پشت‌ پرده پول": {
         cover: "http://fs3.centraldnserver.com/~planlife/pics/Servat/moneyplanlife.JPG",
-        codes: ["S1034", "S9999", "S7020", "S6620", "S1414", "S8181", "S7920", "S3399", "S2170", "S1468"],
         pricing: { old: "۸،۶۵۰،۰۰۰", new: "۳،۹۶۰،۰۰۰", hasDiscount: true },
         episodes: [
             { episode: 0, duration: "12:05", src: "http://fs3.centraldnserver.com/~planlife/doreha/kargahservatsazi/Moarefi_ dore_servat.m4a", isIntro: true },
@@ -532,7 +534,6 @@ const categoryConfig = {
     },
     "دوره چطور حالم خوب باشه ؟": {
         cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
-        codes: ["99999", "TA999", "Ehsas"],
         pricing: { price: "۳،۹۶۰،۰۰۰", hasDiscount: false },
         episodes: [
             { episode: 0, duration: "04:45", src: "http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a", isIntro: true },
@@ -545,7 +546,6 @@ const categoryConfig = {
     },
     "دوره هماهنگی با جریان خلقت": {
         cover: "http://fs3.centraldnserver.com/~planlife/pics/IMG_2461.jpeg",
-        codes: ["88888", "ESH88", "Love"],
         pricing: { old: "۹،۳۶۰،۰۰۰", new: "۳،۹۶۰،۰۰۰", hasDiscount: true },
         comingSoon: false,
         episodes: [
@@ -563,7 +563,6 @@ const categoryConfig = {
     },
     "دوره خود باوری (اعتماد به نفس)": {
         cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
-        codes: ["11111", "ET111", "Etemad"],
         pricing: { old: "۹،۳۶۰،۰۰۰", new: "۲،۹۶۰،۰۰۰", hasDiscount: true },
         comingSoon: true,
         episodes: [
@@ -577,7 +576,6 @@ const categoryConfig = {
     },
     "دوره پذیرش احساس لیاقت": {
         cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
-        codes: ["22222", "EL222", "Liyaghat"],
         pricing: { old: "۹،۳۶۰،۰۰۰", new: "۳،۳۳۰،۰۰۰", hasDiscount: true },
         comingSoon: true,
         episodes: [
@@ -598,7 +596,6 @@ const categoryConfig = {
     },
     "دوره نفوذ به لایه‌های پنهانِ ذهن": {
         cover: "http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg",
-        codes: ["33333", "ZE333", "Zehn"],
         pricing: { price: "۳،۶۹۰،۰۰۰", hasDiscount: false },
         comingSoon: true,
         episodes: [
@@ -662,16 +659,12 @@ Object.entries(categoryConfig).forEach(([catName, cfg]) => {
     });
 });
 
-const subscriptionCodes = {};
-Object.entries(categoryConfig).forEach(([name, cfg]) => {
-    subscriptionCodes[name] = cfg.codes;
-});
-
 // =====================================================
 
 const SUPABASE_URL      = 'https://hjzzvzxhrqovvducnxha.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
 const DELETE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/delete-course-comment`;
+const VERIFY_CODE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/verify-subscription-code`;
 const ADMIN_API_PASSWORD = 'So@21072933@';
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -716,6 +709,19 @@ async function deleteCourseCommentRemote(commentId) {
         if (!res.ok) throw new Error(json.error || ('HTTP ' + res.status));
         return true;
     } catch(e) { console.warn('Edge function delete:', e); alert('خطا در حذف نظر: ' + e.message); return false; }
+}
+
+// ✅ چک کردن کد اشتراک از طریق Edge Function (نه محلی!)
+async function verifySubscriptionCodeRemote(category, code) {
+    try {
+        const res = await fetch(VERIFY_CODE_FUNCTION_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+            body: JSON.stringify({ category, code })
+        });
+        const json = await res.json();
+        return !!json.valid;
+    } catch(e) { console.warn('Verify code error:', e); return false; }
 }
 
 const ADMIN_CODE = "admin2933";
@@ -1043,7 +1049,7 @@ function checkAdminCode() {
     const code = document.getElementById('adminCodeInput').value.trim();
     if (code === ADMIN_CODE) {
         isAdmin = true;
-        Object.keys(subscriptionCodes).forEach(c => unlockedCategories[c] = true);
+        Object.keys(categoryConfig).forEach(c => unlockedCategories[c] = true);
         updateAdminHeader();
         document.getElementById('modalContent').innerHTML = `
             <div style="font-size:70px;">👑</div>
@@ -1105,12 +1111,14 @@ function showSubscriptionModal(category) {
     document.getElementById('subscriptionModal').classList.add('active');
 }
 
-function checkUnlockCode() {
+// ✅ حالا این تابع async شده و به‌جای چک محلی، از Supabase سوال می‌پرسه
+async function checkUnlockCode() {
     const code = document.getElementById('unlockCode').value.trim();
     const category = window.currentUnlockCategory;
+
     if (code === ADMIN_CODE) {
         isAdmin = true;
-        Object.keys(subscriptionCodes).forEach(c => unlockedCategories[c] = true);
+        Object.keys(categoryConfig).forEach(c => unlockedCategories[c] = true);
         updateAdminHeader();
         document.getElementById('modalContent').innerHTML = `
             <div style="font-size:70px;">👑</div>
@@ -1120,7 +1128,14 @@ function checkUnlockCode() {
         if (currentTrackKey) loadComments(courseData[currentTrackIndex].title, courseData[currentTrackIndex].episode);
         return;
     }
-    if (subscriptionCodes[category] && subscriptionCodes[category].includes(code)) {
+
+    const btn = document.querySelector('#modalContent .modal-btn');
+    const originalText = btn ? btn.textContent : '';
+    if (btn) { btn.textContent = '⏳ در حال بررسی...'; btn.disabled = true; }
+
+    const isValid = await verifySubscriptionCodeRemote(category, code);
+
+    if (isValid) {
         unlockedCategories[category] = true;
         document.getElementById('modalContent').innerHTML = `
             <div style="font-size:70px;color:#00ff88;">✅</div>
