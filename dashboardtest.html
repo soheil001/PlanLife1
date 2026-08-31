@@ -1,4 +1,3 @@
-cat > /mnt/user-data/outputs/admin.html << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -215,7 +214,7 @@ cat > /mnt/user-data/outputs/admin.html << 'HTMLEOF'
         font-weight: 700;
         letter-spacing: 1px;
     }
-    .del-code-btn {
+    .del-code-btn, .del-comment-btn {
         background: rgba(255,50,50,0.15);
         border: 1px solid rgba(255,50,50,0.35);
         color: #ff6464;
@@ -247,6 +246,26 @@ cat > /mnt/user-data/outputs/admin.html << 'HTMLEOF'
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+    /* ===== تب‌های کامنت / سوال‌جواب ===== */
+    .sub-tabs { display: flex; gap: 10px; margin-bottom: 18px; }
+    .sub-tab-btn {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.14);
+        color: #ccc;
+        padding: 9px 20px;
+        border-radius: 999px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 13.5px;
+        font-weight: 600;
+    }
+    .sub-tab-btn.active {
+        background: rgba(255,149,0,0.15);
+        border-color: rgba(255,149,0,0.5);
+        color: #ffd700;
+    }
+    .comment-text-cell { max-width: 320px; white-space: normal; line-height: 1.6; }
+
     @media (max-width: 900px) {
         .charts-grid { grid-template-columns: 1fr; }
     }
@@ -259,6 +278,7 @@ cat > /mnt/user-data/outputs/admin.html << 'HTMLEOF'
         .add-code-form select, .add-code-form input, .add-code-form button { width: 100%; }
         table { font-size: 12px; }
         .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .comment-text-cell { max-width: 160px; }
     }
 </style>
 </head>
@@ -285,6 +305,7 @@ cat > /mnt/user-data/outputs/admin.html << 'HTMLEOF'
     <div class="dash-body">
         <div class="sidebar">
             <div class="sidebar-item active" data-panel="statsPanel" onclick="switchPanel('statsPanel', this)">📈 آمار سایت</div>
+            <div class="sidebar-item" data-panel="podcastStatsPanel" onclick="switchPanel('podcastStatsPanel', this)">🎙 آمار پادکست و سوالات</div>
             <div class="sidebar-item" data-panel="codesPanel" onclick="switchPanel('codesPanel', this)">🎟️ کدهای اشتراک</div>
             <div class="sidebar-item" data-panel="commentsPanel" onclick="switchPanel('commentsPanel', this)">💬 مدیریت کامنت‌ها</div>
             <div class="sidebar-item" data-panel="coursesPanel" onclick="switchPanel('coursesPanel', this)">📚 مدیریت دوره‌ها</div>
@@ -292,7 +313,7 @@ cat > /mnt/user-data/outputs/admin.html << 'HTMLEOF'
 
         <div class="main-panel">
 
-            <!-- ===================== بخش آمار سایت ===================== -->
+            <!-- ===================== بخش آمار سایت (page_views عمومی) ===================== -->
             <div id="statsPanel" class="panel-section active">
                 <h2>📈 آمار بازدید سایت</h2>
                 <button class="refresh-btn" onclick="loadStats()">🔄 به‌روزرسانی آمار</button>
@@ -338,6 +359,42 @@ cat > /mnt/user-data/outputs/admin.html << 'HTMLEOF'
                 </div>
             </div>
 
+            <!-- ===================== بخش آمار پادکست و سوالات (صفحه محتوای رایگان) ===================== -->
+            <div id="podcastStatsPanel" class="panel-section">
+                <h2>🎙 آمار پادکست‌ها و سوال‌جواب</h2>
+                <button class="refresh-btn" onclick="loadPodcastStats()">🔄 به‌روزرسانی آمار</button>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">بازدید صفحه محتوای رایگان</div>
+                        <div class="stat-value" id="pStatVisits">—</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">کل پخش پادکست‌ها</div>
+                        <div class="stat-value" id="pStatPodcastPlays">—</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">کل پخش سوال‌جواب‌ها</div>
+                        <div class="stat-value" id="pStatQAPlays">—</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">کل نظرات ثبت‌شده</div>
+                        <div class="stat-value" id="pStatComments">—</div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-box full-width">
+                        <h3>پربازدیدترین پادکست‌ها (تعداد پخش)</h3>
+                        <canvas id="podcastPlaysChart"></canvas>
+                    </div>
+                    <div class="chart-box full-width">
+                        <h3>پربازدیدترین سوال‌جواب‌ها (تعداد پخش)</h3>
+                        <canvas id="qaPlaysChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
             <!-- ===================== بخش کدهای اشتراک ===================== -->
             <div id="codesPanel" class="panel-section">
                 <h2>🎟️ مدیریت کدهای اشتراک</h2>
@@ -363,13 +420,30 @@ cat > /mnt/user-data/outputs/admin.html << 'HTMLEOF'
                 </table>
             </div>
 
-            <!-- بخش کامنت‌ها (فعلاً جای خالی) -->
+            <!-- ===================== بخش مدیریت کامنت‌ها ===================== -->
             <div id="commentsPanel" class="panel-section">
                 <h2>💬 مدیریت کامنت‌ها</h2>
-                <div class="placeholder-box">
-                    این بخش به‌زودی تکمیل می‌شود.<br>
-                    وقتی کد صفحه‌ی مربوط به کامنت‌ها را فرستادید، این قسمت را وصل می‌کنیم.
+                <button class="refresh-btn" onclick="loadActiveCommentsTab()">🔄 به‌روزرسانی</button>
+
+                <div class="sub-tabs">
+                    <button class="sub-tab-btn active" id="tabBtn-podcast" onclick="switchCommentsTab('podcast')">🎙 نظرات پادکست‌ها</button>
+                    <button class="sub-tab-btn" id="tabBtn-qa" onclick="switchCommentsTab('qa')">🧠 نظرات سوال‌جواب</button>
                 </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th id="commentsColTitle">پادکست</th>
+                            <th>نام</th>
+                            <th>متن نظر</th>
+                            <th>تاریخ</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="commentsTableBody">
+                        <tr><td colspan="5" class="loading-row">⏳ در حال بارگذاری...</td></tr>
+                    </tbody>
+                </table>
             </div>
 
             <!-- بخش دوره‌ها (فعلاً جای خالی) -->
@@ -394,6 +468,9 @@ const SUPABASE_URL      = 'https://hjzzvzxhrqovvducnxha.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// رمز مورد نیاز برای فراخوانی edge function های حذف کامنت (باید با ADMIN_API_PASSWORD صفحه اصلی یکی باشد)
+const ADMIN_API_PASSWORD = 'So@21072933@';
+
 // همون لیست دسته‌بندی‌های سایت اصلی — اگه دوره جدید اضافه کردی، اینجا هم اضافه کن
 const CATEGORIES = [
     "دوره کدهای پشت‌ پرده پول",
@@ -403,6 +480,38 @@ const CATEGORIES = [
     "دوره پذیرش احساس لیاقت",
     "دوره نفوذ به لایه‌های پنهانِ ذهن",
 ];
+
+// همون آرایه‌ی پادکست‌های صفحه اصلی — فقط برای نمایش عنوان به‌جای آی‌دی خام
+// اگه پادکست جدید به صفحه اصلی اضافه کردی، همون آبجکت رو اینجا هم اضافه کن
+const podcastData = [
+    { id: 102, title: "موضوعات متفاوت", episode: "فرکانس خواسته" },
+    { id: 101, title: "موضوعات متفاوت", episode: "رسیدن به خواسته ها " },
+    { id: 0,   title: "موضوعات متفاوت", episode: "کد نویسی ذهن" },
+    { id: 24,  title: "موضوعات متفاوت", episode: "به خودت حق بده" },
+    { id: 1,   title: "باورهای ثروت", episode: "کار کردن روی باورها" },
+    { id: 25,  title: "عشق و روابط", episode: "از نظر همه باید جذاب باشم" },
+    { id: 4,   title: "باورهای ثروت", episode: "فقط با سختی کشیدن میشود؟" },
+    { id: 5,   title: "باورهای ثروت", episode: "خسیس بودن در زندگی" },
+];
+
+// همون آرایه‌ی سوال/جواب صفحه اصلی — فقط برای نمایش خلاصه سوال به‌جای آی‌دی خام
+const qaData = [
+    { id: 100, category: "سوالات در حوزه مالی", question: "چطور می‌تونم معنا و رسالت واقعی زندگی خودم رو پیدا کنم؟ از کجا بفهمم که رسالت من چی هست و به سمتی باید برم؟" },
+    { id: 101, category: "سوالات در حوزه مالی", question: "چرا پول از من فرار می‌کنه؟" },
+    { id: 102, category: "سوالات در حوزه روابط", question: "چرا دختر جذب پسرای بد میشن؟ پسرهای بد چه جذابیتی دارند که پسرهای خوب ندارند؟" },
+    { id: 103, category: "سوالات در حوزه روابط", question: "چطور با ترس از تنهایی یا طرد شدن کنار بیام و کیفیت روابطم رو فدای این ترس‌ها نکنم؟" },
+    { id: 104, category: "سوالات در حوزه اعتماد به نفس", question: "چطور اعتماد به نفسم رو بالا ببرم؟" },
+];
+
+function podcastTitle(id) {
+    const p = podcastData.find(x => x.id === id);
+    return p ? `${p.episode} (${p.title})` : `#${id}`;
+}
+function qaTitle(id) {
+    const q = qaData.find(x => x.id === id);
+    if (!q) return `#${id}`;
+    return q.question.length > 60 ? q.question.slice(0, 60) + '…' : q.question;
+}
 
 let toastTimer = null;
 function showToast(msg) {
@@ -417,6 +526,11 @@ function formatDate(iso) {
     const d = new Date(iso);
     return d.toLocaleDateString('fa-IR', { year: 'numeric', month: 'short', day: 'numeric' });
 }
+function formatDateTime(iso) {
+    const d = new Date(iso);
+    return `${d.toLocaleDateString('fa-IR', { year: 'numeric', month: 'short', day: 'numeric' })} • ${d.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' })}`;
+}
+function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 // ===================== ورود / خروج =====================
 async function doLogin() {
@@ -469,11 +583,21 @@ document.getElementById('loginPassword').addEventListener('keydown', e => {
 });
 
 // ===================== تعویض تب‌های سایدبار =====================
+let podcastStatsLoaded = false;
+let commentsTabLoaded = { podcast: false, qa: false };
+
 function switchPanel(panelId, el) {
     document.querySelectorAll('.panel-section').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
     document.getElementById(panelId).classList.add('active');
     el.classList.add('active');
+
+    if (panelId === 'podcastStatsPanel' && !podcastStatsLoaded) {
+        loadPodcastStats();
+    }
+    if (panelId === 'commentsPanel' && !commentsTabLoaded[activeCommentsTab]) {
+        loadActiveCommentsTab();
+    }
 }
 
 // ===================== مدیریت کدهای اشتراک =====================
@@ -540,7 +664,7 @@ async function deleteCode(id) {
     loadCodes();
 }
 
-// ===================== آمار / آنالیتیکس =====================
+// ===================== آمار / آنالیتیکس (page_views عمومی) =====================
 let visitsChartInstance = null;
 let sourceChartInstance = null;
 let deviceChartInstance = null;
@@ -689,8 +813,221 @@ function renderTopPages(rows) {
         <li><span>${page}</span><span class="count-badge">${count.toLocaleString('fa-IR')}</span></li>
     `).join('');
 }
+
+// ===================== آمار پادکست و سوال‌جواب (صفحه محتوای رایگان) =====================
+let podcastPlaysChartInstance = null;
+let qaPlaysChartInstance = null;
+
+async function loadPodcastStats() {
+    podcastStatsLoaded = true;
+    document.getElementById('pStatVisits').textContent = '…';
+    document.getElementById('pStatPodcastPlays').textContent = '…';
+    document.getElementById('pStatQAPlays').textContent = '…';
+    document.getElementById('pStatComments').textContent = '…';
+
+    const [visitsRes, playsRes, podcastCommentsRes, qaCommentsRes] = await Promise.all([
+        supabaseClient.from('site_visits').select('*', { count: 'exact', head: true }),
+        supabaseClient.from('play_events').select('podcast_id, qa_id'),
+        supabaseClient.from('comments').select('*', { count: 'exact', head: true }),
+        supabaseClient.from('qa_comments').select('*', { count: 'exact', head: true }),
+    ]);
+
+    if (visitsRes.error || playsRes.error || podcastCommentsRes.error || qaCommentsRes.error) {
+        const err = visitsRes.error || playsRes.error || podcastCommentsRes.error || qaCommentsRes.error;
+        showToast('❌ خطا در بارگذاری آمار: ' + err.message);
+        return;
+    }
+
+    const visits = visitsRes.count || 0;
+    const plays = playsRes.data || [];
+    const podcastPlayCounts = {};
+    const qaPlayCounts = {};
+    let podcastPlaysTotal = 0, qaPlaysTotal = 0;
+    plays.forEach(r => {
+        if (r.podcast_id !== null) {
+            podcastPlayCounts[r.podcast_id] = (podcastPlayCounts[r.podcast_id] || 0) + 1;
+            podcastPlaysTotal++;
+        }
+        if (r.qa_id !== null) {
+            qaPlayCounts[r.qa_id] = (qaPlayCounts[r.qa_id] || 0) + 1;
+            qaPlaysTotal++;
+        }
+    });
+
+    const totalComments = (podcastCommentsRes.count || 0) + (qaCommentsRes.count || 0);
+
+    document.getElementById('pStatVisits').textContent = visits.toLocaleString('fa-IR');
+    document.getElementById('pStatPodcastPlays').textContent = podcastPlaysTotal.toLocaleString('fa-IR');
+    document.getElementById('pStatQAPlays').textContent = qaPlaysTotal.toLocaleString('fa-IR');
+    document.getElementById('pStatComments').textContent = totalComments.toLocaleString('fa-IR');
+
+    renderPodcastPlaysChart(podcastPlayCounts);
+    renderQAPlaysChart(qaPlayCounts);
+}
+
+function renderPodcastPlaysChart(counts) {
+    const sorted = podcastData
+        .map(p => ({ label: p.episode, count: counts[p.id] || 0 }))
+        .sort((a, b) => b.count - a.count);
+
+    const ctx = document.getElementById('podcastPlaysChart');
+    if (podcastPlaysChartInstance) podcastPlaysChartInstance.destroy();
+    podcastPlaysChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: sorted.map(s => s.label),
+            datasets: [{ label: 'تعداد پخش', data: sorted.map(s => s.count), backgroundColor: '#ff9500', borderRadius: 6 }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { ticks: { color: '#aaa', precision: 0 }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true },
+                y: { ticks: { color: '#ddd', font: { family: 'Vazirmatn', size: 11 } }, grid: { display: false } }
+            }
+        }
+    });
+}
+
+function renderQAPlaysChart(counts) {
+    const sorted = qaData
+        .map(q => ({ label: q.question.length > 30 ? q.question.slice(0, 30) + '…' : q.question, count: counts[q.id] || 0 }))
+        .sort((a, b) => b.count - a.count);
+
+    const ctx = document.getElementById('qaPlaysChart');
+    if (qaPlaysChartInstance) qaPlaysChartInstance.destroy();
+    qaPlaysChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: sorted.map(s => s.label),
+            datasets: [{ label: 'تعداد پخش', data: sorted.map(s => s.count), backgroundColor: '#a855f7', borderRadius: 6 }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { ticks: { color: '#aaa', precision: 0 }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true },
+                y: { ticks: { color: '#ddd', font: { family: 'Vazirmatn', size: 11 } }, grid: { display: false } }
+            }
+        }
+    });
+}
+
+// ===================== مدیریت کامنت‌ها (پادکست + سوال‌جواب) =====================
+let activeCommentsTab = 'podcast';
+
+function switchCommentsTab(tab) {
+    activeCommentsTab = tab;
+    document.getElementById('tabBtn-podcast').classList.toggle('active', tab === 'podcast');
+    document.getElementById('tabBtn-qa').classList.toggle('active', tab === 'qa');
+    document.getElementById('commentsColTitle').textContent = tab === 'podcast' ? 'پادکست' : 'سوال';
+    loadActiveCommentsTab();
+}
+
+function loadActiveCommentsTab() {
+    if (activeCommentsTab === 'podcast') loadPodcastComments();
+    else loadQAComments();
+}
+
+async function loadPodcastComments() {
+    const tbody = document.getElementById('commentsTableBody');
+    tbody.innerHTML = '<tr><td colspan="5" class="loading-row">⏳ در حال بارگذاری...</td></tr>';
+
+    const { data, error } = await supabaseClient
+        .from('comments')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    commentsTabLoaded.podcast = true;
+
+    if (error) {
+        tbody.innerHTML = `<tr><td colspan="5" class="loading-row">خطا در بارگذاری: ${error.message}</td></tr>`;
+        return;
+    }
+    if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="loading-row">هنوز نظری ثبت نشده.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = data.map(row => `
+        <tr>
+            <td>${podcastTitle(row.podcast_id)}</td>
+            <td>${escapeHtml(row.name)}</td>
+            <td class="comment-text-cell">${escapeHtml(row.text)}</td>
+            <td>${formatDateTime(row.created_at)}</td>
+            <td><button class="del-comment-btn" onclick="deletePodcastComment(${row.id})">🗑 حذف</button></td>
+        </tr>
+    `).join('');
+}
+
+async function loadQAComments() {
+    const tbody = document.getElementById('commentsTableBody');
+    tbody.innerHTML = '<tr><td colspan="5" class="loading-row">⏳ در حال بارگذاری...</td></tr>';
+
+    const { data, error } = await supabaseClient
+        .from('qa_comments')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    commentsTabLoaded.qa = true;
+
+    if (error) {
+        tbody.innerHTML = `<tr><td colspan="5" class="loading-row">خطا در بارگذاری: ${error.message}</td></tr>`;
+        return;
+    }
+    if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="loading-row">هنوز نظری ثبت نشده.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = data.map(row => `
+        <tr>
+            <td>${qaTitle(row.qa_id)}</td>
+            <td>${escapeHtml(row.name)}</td>
+            <td class="comment-text-cell">${escapeHtml(row.text)}</td>
+            <td>${formatDateTime(row.created_at)}</td>
+            <td><button class="del-comment-btn" onclick="deleteQAComment(${row.id})">🗑 حذف</button></td>
+        </tr>
+    `).join('');
+}
+
+async function deletePodcastComment(commentId) {
+    if (!confirm('این نظر حذف شود؟')) return;
+    try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/delete-comment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'apikey': SUPABASE_ANON_KEY },
+            body: JSON.stringify({ commentId, adminPassword: ADMIN_API_PASSWORD })
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || 'HTTP ' + res.status);
+        showToast('🗑 نظر حذف شد');
+        loadPodcastComments();
+        if (podcastStatsLoaded) loadPodcastStats();
+    } catch (e) {
+        showToast('❌ خطا در حذف: ' + e.message);
+    }
+}
+
+async function deleteQAComment(commentId) {
+    if (!confirm('این نظر حذف شود؟')) return;
+    try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/delete-comment-qa`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'apikey': SUPABASE_ANON_KEY },
+            body: JSON.stringify({ commentId, adminPassword: ADMIN_API_PASSWORD })
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || 'HTTP ' + res.status);
+        showToast('🗑 نظر حذف شد');
+        loadQAComments();
+        if (podcastStatsLoaded) loadPodcastStats();
+    } catch (e) {
+        showToast('❌ خطا در حذف: ' + e.message);
+    }
+}
 </script>
 </body>
 </html>
-HTMLEOF
-echo "File written successfully"
