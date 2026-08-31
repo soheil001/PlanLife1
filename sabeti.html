@@ -8,188 +8,264 @@
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #0a0806;
-    --bg-2: #120e0a;
-    --panel: #161109;
-    --panel-2: #1c150c;
-    --line: #2b2115;
-    --gold: #d8ad4c;
-    --gold-bright: #f2cc6b;
-    --gold-dim: #a9873f;
-    --text: #f3ede0;
-    --text-dim: #b7ac97;
-    --text-faint: #7c7362;
-    --green: #4fae6d;
+    --bg:#0a0806;
+    --bg-2:#120e0a;
+    --panel:#161109;
+    --panel-2:#1c150c;
+    --line:#2b2115;
+    --gold:#d8ad4c;
+    --gold-bright:#f2cc6b;
+    --gold-dim:#a9873f;
+    --text:#f3ede0;
+    --text-dim:#b7ac97;
+    --text-faint:#7c7362;
+    --green:#4fae6d;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Vazirmatn', sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Vazirmatn',sans-serif;
     line-height:1.6;
     overflow-x:hidden;
   }
   a{color:inherit;text-decoration:none;}
   .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
 
-  /* HEADER */
+  /* ─── HEADER ─── */
   header{
     position:sticky;top:0;z-index:50;
-    background:rgba(10,8,6,.86);
-    backdrop-filter:blur(10px);
+    background:rgba(10,8,6,.88);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
     border-bottom:1px solid var(--line);
   }
   .nav{
     display:flex;align-items:center;justify-content:space-between;
-    padding:18px 32px;max-width:1180px;margin:0 auto;
+    padding:16px 32px;max-width:1180px;margin:0 auto;
   }
-  .brand{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:700;color:var(--gold-bright);}
+  .brand{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;color:var(--gold-bright);}
   .brand .mark{
-    width:38px;height:38px;border:1.5px solid var(--gold);border-radius:10px;
-    display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:15px;
-    transform:rotate(45deg);
+    width:36px;height:36px;border:1.5px solid var(--gold);border-radius:9px;
+    display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:14px;
+    transform:rotate(45deg);flex-shrink:0;
   }
-  .brand .mark span{transform:rotate(-45deg);}
-  .navlinks{display:flex;align-items:center;gap:34px;font-size:15px;color:var(--text-dim);}
-  .navlinks a{position:relative;padding-bottom:6px;transition:color .2s;}
+  .brand .mark span{transform:rotate(-45deg);display:block;}
+  .navlinks{display:flex;align-items:center;gap:30px;font-size:15px;color:var(--text-dim);}
+  .navlinks a{position:relative;padding-bottom:5px;transition:color .2s;}
   .navlinks a:hover{color:var(--gold-bright);}
   .navlinks a.active{color:var(--gold-bright);}
   .navlinks a.active::after{
-    content:"";position:absolute;bottom:0;right:0;left:0;height:2px;background:var(--gold-bright);border-radius:2px;
+    content:"";position:absolute;bottom:0;right:0;left:0;
+    height:2px;background:var(--gold-bright);border-radius:2px;
   }
-  .navicons{display:flex;align-items:center;gap:16px;}
+  .navicons{display:flex;align-items:center;gap:12px;}
   .icon-btn{
-    width:38px;height:38px;border:1px solid var(--line);border-radius:50%;
+    width:36px;height:36px;border:1px solid var(--line);border-radius:50%;
     display:flex;align-items:center;justify-content:center;color:var(--text-dim);
-    font-size:16px;transition:.2s;cursor:pointer;
+    font-size:15px;transition:.2s;cursor:pointer;
   }
   .icon-btn:hover{border-color:var(--gold);color:var(--gold-bright);}
 
-  /* HERO */
-  .hero{position:relative;padding:96px 32px 60px;text-align:center;overflow:hidden;}
+  /* ─── HERO ─── */
+  .hero{
+    position:relative;
+    min-height:560px;
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+    text-align:center;
+  }
+  /* slide image fills the entire hero */
+  .hero-bg{
+    position:absolute;inset:0;
+    background-image:url('http://fs3.centraldnserver.com/~planlife/pics/sabeti/slide.png');
+    background-size:cover;
+    background-position:center;
+    z-index:0;
+  }
+  /* dark overlay so text is readable */
+  .hero-bg::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(
+      to bottom,
+      rgba(10,8,6,.55) 0%,
+      rgba(10,8,6,.38) 40%,
+      rgba(10,8,6,.72) 85%,
+      rgba(10,8,6,.96) 100%
+    );
+  }
+  .hero-content{
+    position:relative;z-index:1;
+    padding:100px 24px 120px;
+    max-width:720px;
+    margin:0 auto;
+  }
   .hero-eyebrow{
     display:flex;align-items:center;justify-content:center;gap:12px;
-    color:var(--gold);font-size:14.5px;letter-spacing:.2px;margin-bottom:22px;
+    color:var(--gold);font-size:14px;margin-bottom:20px;
   }
-  .hero-eyebrow .dash{width:34px;height:1px;background:var(--gold-dim);}
+  .hero-eyebrow .dash{width:32px;height:1px;background:var(--gold-dim);}
   .hero h1{
-    font-size:clamp(38px,6vw,68px);font-weight:800;color:var(--gold-bright);
-    line-height:1.28;margin-bottom:26px;
-    text-shadow:0 0 46px rgba(216,173,76,.25);
+    font-size:clamp(34px,5.5vw,64px);font-weight:800;color:var(--gold-bright);
+    line-height:1.28;margin-bottom:22px;
+    text-shadow:0 2px 32px rgba(0,0,0,.7), 0 0 60px rgba(216,173,76,.2);
   }
   .hero p{
-    max-width:600px;margin:0 auto;color:var(--text-dim);font-size:17px;
-  }
-  .hero-art{
-    position:relative;margin-top:56px;height:340px;border-radius:0;
-    background-image: url('http://fs3.centraldnserver.com/~planlife/pics/sabeti/slide.png');
-    background-size:cover;background-position:center;
-    -webkit-mask-image: linear-gradient(to bottom, black 78%, transparent 100%);
-            mask-image: linear-gradient(to bottom, black 78%, transparent 100%);
-  }
-  .hero-art::before{
-    content:"";position:absolute;inset:0;
-    background:linear-gradient(180deg, rgba(10,8,6,0) 0%, rgba(10,8,6,.15) 60%, rgba(10,8,6,.85) 100%);
+    font-size:clamp(14px,2.2vw,17px);color:var(--text-dim);
+    text-shadow:0 1px 8px rgba(0,0,0,.8);
+    max-width:520px;margin:0 auto;
   }
 
-  /* PRICES */
-  .prices{padding:70px 32px 40px;}
+  /* ─── PRICES ─── */
+  .prices{padding:70px 32px 40px;max-width:1180px;margin:0 auto;}
   .prices-head{text-align:center;margin-bottom:8px;}
-  .prices-head h2{font-size:28px;font-weight:700;color:var(--gold-bright);margin-bottom:14px;}
+  .prices-head h2{font-size:26px;font-weight:700;color:var(--gold-bright);margin-bottom:14px;}
   .prices-meta{
-    display:inline-flex;align-items:center;gap:8px;color:var(--text-faint);font-size:13.5px;
-    border:1px solid var(--line);padding:7px 16px;border-radius:20px;margin-bottom:44px;
+    display:inline-flex;align-items:center;gap:8px;color:var(--text-faint);font-size:13px;
+    border:1px solid var(--line);padding:6px 16px;border-radius:20px;margin-bottom:44px;
   }
   .price-grid{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:18px;
+    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px;
   }
+
+  /* ── glassmorphism card ── */
   .price-card{
-    background:linear-gradient(160deg, var(--panel-2), var(--panel));
-    border:1px solid var(--line);border-radius:16px;
-    padding:28px 20px;text-align:center;
-    transition:border-color .25s, transform .25s;
+    background:rgba(255,255,255,.04);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    border:1px solid rgba(216,173,76,.18);
+    border-radius:20px;
+    padding:26px 18px;text-align:center;
+    position:relative;overflow:hidden;
+    transition:border-color .28s, transform .28s, box-shadow .28s;
+    box-shadow:0 8px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.07);
   }
-  .price-card:hover{border-color:var(--gold-dim);transform:translateY(-3px);}
+  /* subtle gold shimmer top edge */
+  .price-card::before{
+    content:"";position:absolute;top:0;right:0;left:0;height:1px;
+    background:linear-gradient(90deg, transparent, rgba(242,204,107,.45), transparent);
+  }
+  .price-card:hover{
+    border-color:rgba(216,173,76,.45);
+    transform:translateY(-5px);
+    box-shadow:0 16px 48px rgba(0,0,0,.45), 0 0 24px rgba(216,173,76,.1),
+               inset 0 1px 0 rgba(255,255,255,.1);
+  }
   .price-card .icon{
-    width:68px;height:68px;margin:0 auto 18px;border-radius:14px;
-    background:radial-gradient(circle at 35% 30%, #3a2c14, #171008 70%);
-    display:flex;align-items:center;justify-content:center;font-size:30px;
-    border:1px solid var(--line);
+    width:64px;height:64px;margin:0 auto 16px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, rgba(216,173,76,.25), rgba(10,8,6,.6) 70%);
+    display:flex;align-items:center;justify-content:center;font-size:28px;
+    border:1px solid rgba(216,173,76,.25);
+    box-shadow:0 4px 16px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.08);
   }
-  .price-card h3{font-size:15.5px;font-weight:600;color:var(--text);margin-bottom:2px;}
-  .price-card .sub{font-size:12px;color:var(--text-faint);margin-bottom:14px;}
-  .price-card .amount{font-size:21px;font-weight:800;color:var(--gold-bright);margin-bottom:6px;}
+  .price-card h3{font-size:15px;font-weight:600;color:var(--text);margin-bottom:2px;}
+  .price-card .sub{font-size:11.5px;color:var(--text-faint);margin-bottom:14px;min-height:18px;}
+  .price-card .amount{
+    font-size:20px;font-weight:800;color:var(--gold-bright);margin-bottom:6px;
+    text-shadow:0 0 20px rgba(242,204,107,.3);
+  }
   .price-card .unit{
-    display:flex;align-items:center;justify-content:center;gap:6px;
-    font-size:12.5px;color:var(--text-faint);
+    display:flex;align-items:center;justify-content:center;gap:5px;
+    font-size:12px;color:var(--text-faint);
   }
   .price-card .unit .up{color:var(--green);font-size:13px;}
 
+  /* CTA */
   .cta-wrap{display:flex;justify-content:center;padding:50px 0 10px;}
   .cta-btn{
     display:inline-flex;align-items:center;gap:14px;
-    background:linear-gradient(135deg, var(--gold-bright), var(--gold-dim));
+    background:linear-gradient(135deg,var(--gold-bright),var(--gold-dim));
     color:#1a1305;font-weight:700;font-size:17px;
-    padding:18px 54px;border-radius:14px;
-    box-shadow:0 12px 34px rgba(216,173,76,.22);
-    transition:transform .2s, box-shadow .2s;
-    cursor:pointer;border:none;
+    padding:17px 52px;border-radius:14px;
+    box-shadow:0 10px 32px rgba(216,173,76,.25);
+    transition:transform .2s,box-shadow .2s;
+    cursor:pointer;border:none;font-family:'Vazirmatn',sans-serif;
   }
-  .cta-btn:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(216,173,76,.32);}
+  .cta-btn:hover{transform:translateY(-2px);box-shadow:0 16px 42px rgba(216,173,76,.35);}
 
-  /* FEATURES */
-  .features{padding:80px 32px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:60px;}
-  .feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;text-align:center;}
+  /* ─── FEATURES ─── */
+  .features{
+    padding:72px 32px;
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    margin-top:60px;
+  }
+  .feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;text-align:center;}
   .feature .ficon{
     width:52px;height:52px;margin:0 auto 16px;border-radius:50%;
-    background:var(--panel-2);border:1px solid var(--line);
-    display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--gold);
+    background:rgba(255,255,255,.04);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(216,173,76,.2);
+    display:flex;align-items:center;justify-content:center;font-size:21px;
   }
-  .feature h4{font-size:15.5px;font-weight:600;margin-bottom:6px;}
-  .feature p{font-size:13px;color:var(--text-faint);}
+  .feature h4{font-size:15px;font-weight:600;margin-bottom:6px;color:var(--text);}
+  .feature p{font-size:12.5px;color:var(--text-faint);}
 
-  /* FOOTER */
+  /* ─── FOOTER ─── */
   footer{padding:70px 32px 24px;}
   .footer-grid{
-    display:grid;grid-template-columns:1.4fr 1fr 1fr 1.3fr;gap:40px;margin-bottom:50px;
+    display:grid;grid-template-columns:1.4fr 1fr 1fr 1.3fr;gap:40px;
+    max-width:1180px;margin:0 auto 50px;
   }
-  .footer-col h5{font-size:15px;font-weight:700;color:var(--gold-bright);margin-bottom:20px;}
-  .footer-col p{font-size:13px;color:var(--text-faint);margin-bottom:16px;}
-  .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:12px;}
+  .footer-col h5{font-size:15px;font-weight:700;color:var(--gold-bright);margin-bottom:18px;}
+  .footer-col p{font-size:13px;color:var(--text-faint);margin-bottom:14px;line-height:1.7;}
+  .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:11px;}
   .footer-col ul a{font-size:13.5px;color:var(--text-dim);transition:color .2s;}
   .footer-col ul a:hover{color:var(--gold-bright);}
-  .subscribe-box{display:flex;gap:0;margin-bottom:14px;}
+  .subscribe-box{margin-bottom:12px;}
   .subscribe-box input{
-    flex:1;background:var(--panel-2);border:1px solid var(--line);
-    color:var(--text);padding:12px 16px;border-radius:10px;font-family:inherit;font-size:13px;
+    width:100%;background:rgba(255,255,255,.04);
+    backdrop-filter:blur(8px);
+    border:1px solid var(--line);border-radius:10px;
+    color:var(--text);padding:11px 14px;font-family:'Vazirmatn',sans-serif;font-size:13px;
     text-align:right;
   }
+  .subscribe-box input:focus{outline:none;border-color:var(--gold-dim);}
   .sub-btn{
-    margin-top:12px;width:100%;background:var(--gold);color:#1a1305;font-weight:700;
-    border:none;padding:12px;border-radius:10px;font-family:inherit;font-size:14px;cursor:pointer;
+    margin-top:10px;width:100%;background:var(--gold);color:#1a1305;font-weight:700;
+    border:none;padding:11px;border-radius:10px;font-family:'Vazirmatn',sans-serif;
+    font-size:14px;cursor:pointer;transition:background .2s;
   }
-  .socials{display:flex;gap:12px;margin-top:18px;}
+  .sub-btn:hover{background:var(--gold-bright);}
+  .socials{display:flex;gap:10px;margin-top:18px;}
   .socials a{
     width:36px;height:36px;border:1px solid var(--line);border-radius:50%;
     display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:15px;
+    transition:border-color .2s,color .2s;
   }
+  .socials a:hover{border-color:var(--gold);color:var(--gold-bright);}
   .footer-bottom{
-    text-align:center;padding-top:26px;border-top:1px solid var(--line);
+    text-align:center;padding-top:24px;border-top:1px solid var(--line);
     font-size:12.5px;color:var(--text-faint);
+    max-width:1180px;margin:0 auto;
   }
 
+  /* ─── RESPONSIVE ─── */
   @media(max-width:980px){
     .navlinks{display:none;}
     .price-grid{grid-template-columns:repeat(2,1fr);}
-    .feature-grid{grid-template-columns:repeat(2,1fr);gap:36px;}
+    .feature-grid{grid-template-columns:repeat(2,1fr);gap:32px;}
     .footer-grid{grid-template-columns:1fr 1fr;}
   }
-  @media(max-width:560px){
-    .price-grid{grid-template-columns:1fr;}
-    .footer-grid{grid-template-columns:1fr;}
-    .hero{padding:70px 20px 40px;}
-    .wrap,.nav,.prices,.features,footer{padding-left:20px;padding-right:20px;}
+  @media(max-width:600px){
+    .nav{padding:14px 18px;}
+    .brand{font-size:15px;}
+    .hero-content{padding:80px 20px 100px;}
+    /* 2 columns on mobile for price cards */
+    .price-grid{grid-template-columns:repeat(2,1fr);gap:12px;}
+    .price-card{padding:18px 12px;border-radius:16px;}
+    .price-card .icon{width:52px;height:52px;font-size:22px;margin-bottom:12px;}
+    .price-card h3{font-size:13px;}
+    .price-card .amount{font-size:16px;}
+    .price-card .unit{font-size:11px;}
+    .price-card .sub{font-size:10.5px;}
+    .prices{padding:50px 16px 30px;}
+    .prices-head h2{font-size:22px;}
+    .feature-grid{grid-template-columns:repeat(2,1fr);gap:24px;}
+    .features{padding:50px 18px;}
+    .footer-grid{grid-template-columns:1fr;gap:32px;}
+    footer{padding:50px 18px 20px;}
+    .cta-btn{font-size:15px;padding:15px 36px;}
   }
 </style>
 </head>
@@ -197,7 +273,10 @@
 
 <header>
   <div class="nav">
-    <div class="brand"><span class="mark"><span>M</span></span> طلای آب شده ی ثابتی</div>
+    <div class="brand">
+      <span class="mark"><span>M</span></span>
+      طلای آب شده ی ثابتی
+    </div>
     <nav class="navlinks">
       <a href="#" class="active">صفحه اصلی</a>
       <a href="#prices">قیمت ها</a>
@@ -212,86 +291,97 @@
   </div>
 </header>
 
+<!-- HERO: image as background, text on top -->
 <section class="hero">
-  <div class="hero-eyebrow"><span class="dash"></span> سرمایه گذاری مطمئن، آینده ای روشن <span class="dash"></span></div>
-  <h1>طلای آب شده ی ثابتی</h1>
-  <p>خرید و فروش طلای آب شده با بهترین قیمت بازار و تضمین اصالت</p>
-  <div class="hero-art"></div>
-</section>
-
-<section class="prices" id="prices">
-  <div class="prices-head">
-    <h2>قیمت انواع طلا و سکه</h2>
-    <div class="prices-meta">🕒 آخرین بروزرسانی: ۱۱ شهریور ۱۴۰۳ - ۱۴:۳۰</div>
-  </div>
-
-  <div class="price-grid">
-    <div class="price-card">
-      <div class="icon">🪙</div>
-      <h3>طلای آب شده</h3>
-      <div class="sub">(۱۶ عیار)</div>
-      <div class="amount">۳,۴۵۰,۰۰۰</div>
-      <div class="unit"><span class="up">↗</span> تومان / گرم</div>
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="dash"></span>
+      سرمایه گذاری مطمئن، آینده ای روشن
+      <span class="dash"></span>
     </div>
-    <div class="price-card">
-      <div class="icon">💍</div>
-      <h3>طلای ۱۸ عیار</h3>
-      <div class="sub">&nbsp;</div>
-      <div class="amount">۳,۶۵۰,۰۰۰</div>
-      <div class="unit"><span class="up">↗</span> تومان / گرم</div>
-    </div>
-    <div class="price-card">
-      <div class="icon">💍</div>
-      <h3>طلای ۲۴ عیار</h3>
-      <div class="sub">&nbsp;</div>
-      <div class="amount">۴,۸۵۰,۰۰۰</div>
-      <div class="unit"><span class="up">↗</span> تومان / گرم</div>
-    </div>
-    <div class="price-card">
-      <div class="icon">💎</div>
-      <h3>طلای دست دوم</h3>
-      <div class="sub">&nbsp;</div>
-      <div class="amount">۳,۲۵۰,۰۰۰</div>
-      <div class="unit"><span class="up">↗</span> تومان / گرم</div>
-    </div>
-  </div>
-
-  <div class="price-grid">
-    <div class="price-card">
-      <div class="icon">🥇</div>
-      <h3>سکه امامی</h3>
-      <div class="sub">&nbsp;</div>
-      <div class="amount">۳۷,۸۰۰,۰۰۰</div>
-      <div class="unit"><span class="up">↗</span> تومان</div>
-    </div>
-    <div class="price-card">
-      <div class="icon">🥇</div>
-      <h3>سکه بهار آزادی</h3>
-      <div class="sub">&nbsp;</div>
-      <div class="amount">۳۴,۲۰۰,۰۰۰</div>
-      <div class="unit"><span class="up">↗</span> تومان</div>
-    </div>
-    <div class="price-card">
-      <div class="icon">🥇</div>
-      <h3>نیم سکه</h3>
-      <div class="sub">&nbsp;</div>
-      <div class="amount">۲۰,۵۰۰,۰۰۰</div>
-      <div class="unit"><span class="up">↗</span> تومان</div>
-    </div>
-    <div class="price-card">
-      <div class="icon">🥇</div>
-      <h3>ربع سکه</h3>
-      <div class="sub">&nbsp;</div>
-      <div class="amount">۱۲,۵۰۰,۰۰۰</div>
-      <div class="unit"><span class="up">↗</span> تومان</div>
-    </div>
-  </div>
-
-  <div class="cta-wrap">
-    <button class="cta-btn">✦ معامله ←</button>
+    <h1>طلای آب شده ی ثابتی</h1>
+    <p>خرید و فروش طلای آب شده با بهترین قیمت بازار و تضمین اصالت</p>
   </div>
 </section>
 
+<!-- PRICES -->
+<section id="prices">
+  <div class="prices">
+    <div class="prices-head">
+      <h2>قیمت انواع طلا و سکه</h2>
+      <div class="prices-meta">🕒 آخرین بروزرسانی: ۱۱ شهریور ۱۴۰۳ - ۱۴:۳۰</div>
+    </div>
+
+    <div class="price-grid">
+      <div class="price-card">
+        <div class="icon">🪙</div>
+        <h3>طلای آب شده</h3>
+        <div class="sub">(۱۶ عیار)</div>
+        <div class="amount">۳,۴۵۰,۰۰۰</div>
+        <div class="unit"><span class="up">↗</span> تومان / گرم</div>
+      </div>
+      <div class="price-card">
+        <div class="icon">💍</div>
+        <h3>طلای ۱۸ عیار</h3>
+        <div class="sub">&nbsp;</div>
+        <div class="amount">۳,۶۵۰,۰۰۰</div>
+        <div class="unit"><span class="up">↗</span> تومان / گرم</div>
+      </div>
+      <div class="price-card">
+        <div class="icon">💍</div>
+        <h3>طلای ۲۴ عیار</h3>
+        <div class="sub">&nbsp;</div>
+        <div class="amount">۴,۸۵۰,۰۰۰</div>
+        <div class="unit"><span class="up">↗</span> تومان / گرم</div>
+      </div>
+      <div class="price-card">
+        <div class="icon">💎</div>
+        <h3>طلای دست دوم</h3>
+        <div class="sub">&nbsp;</div>
+        <div class="amount">۳,۲۵۰,۰۰۰</div>
+        <div class="unit"><span class="up">↗</span> تومان / گرم</div>
+      </div>
+    </div>
+
+    <div class="price-grid">
+      <div class="price-card">
+        <div class="icon">🥇</div>
+        <h3>سکه امامی</h3>
+        <div class="sub">&nbsp;</div>
+        <div class="amount">۳۷,۸۰۰,۰۰۰</div>
+        <div class="unit"><span class="up">↗</span> تومان</div>
+      </div>
+      <div class="price-card">
+        <div class="icon">🥇</div>
+        <h3>سکه بهار آزادی</h3>
+        <div class="sub">&nbsp;</div>
+        <div class="amount">۳۴,۲۰۰,۰۰۰</div>
+        <div class="unit"><span class="up">↗</span> تومان</div>
+      </div>
+      <div class="price-card">
+        <div class="icon">🥇</div>
+        <h3>نیم سکه</h3>
+        <div class="sub">&nbsp;</div>
+        <div class="amount">۲۰,۵۰۰,۰۰۰</div>
+        <div class="unit"><span class="up">↗</span> تومان</div>
+      </div>
+      <div class="price-card">
+        <div class="icon">🥇</div>
+        <h3>ربع سکه</h3>
+        <div class="sub">&nbsp;</div>
+        <div class="amount">۱۲,۵۰۰,۰۰۰</div>
+        <div class="unit"><span class="up">↗</span> تومان</div>
+      </div>
+    </div>
+
+    <div class="cta-wrap">
+      <button class="cta-btn">✦ معامله ←</button>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
 <section class="features">
   <div class="wrap feature-grid">
     <div class="feature">
@@ -317,8 +407,9 @@
   </div>
 </section>
 
+<!-- FOOTER -->
 <footer>
-  <div class="wrap footer-grid">
+  <div class="footer-grid">
     <div class="footer-col">
       <h5>خبرنامه</h5>
       <p>برای دریافت آخرین اخبار و قیمت ها ایمیل خود را وارد کنید.</p>
