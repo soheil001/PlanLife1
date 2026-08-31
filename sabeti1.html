@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>طلای ثابتی - پنل معاملات</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0806;
+  --bg2:#0f0c08;
+  --panel:#141009;
+  --panel2:#1a1409;
+  --glass:rgba(255,255,255,.045);
+  --glass2:rgba(255,255,255,.07);
+  --line:rgba(216,173,76,.15);
+  --line2:rgba(216,173,76,.28);
+  --gold:#d8ad4c;
+  --gold-bright:#f2cc6b;
+  --gold-dim:#a9873f;
+  --text:#f3ede0;
+  --text-dim:#b7ac97;
+  --text-faint:#7c7362;
+  --green:#3dba70;
+  --red:#e05555;
+  --blue:#4a90d9;
+  --r:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Vazirmatn',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none;}
+
+/* ═══════════════════════════════════
+   PAGE SYSTEM
+════════════════════════════════════ */
+.page{display:none;min-height:100vh;}
+.page.active{display:flex;}
+
+/* ═══════════════════════════════════
+   LOGIN PAGE
+════════════════════════════════════ */
+#page-login{
+  align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 0%, rgba(216,173,76,.12) 0%, transparent 70%),
+             radial-gradient(ellipse at 80% 100%, rgba(120,80,10,.1) 0%, transparent 60%),
+             var(--bg);
+  padding:24px;
+}
+.login-box{
+  width:100%;max-width:420px;
+  background:var(--glass);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:1px solid var(--line2);
+  border-radius:24px;
+  padding:48px 40px;
+  box-shadow:0 24px 64px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.07);
+  position:relative;overflow:hidden;
+}
+.login-box::before{
+  content:"";position:absolute;top:0;right:0;left:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(242,204,107,.5),transparent);
+}
+.login-logo{
+  text-align:center;margin-bottom:36px;
+}
+.login-logo .mark{
+  width:60px;height:60px;border:2px solid var(--gold);border-radius:15px;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;font-size:26px;
+  transform:rotate(45deg);
+  background:rgba(216,173,76,.08);
+  box-shadow:0 0 32px rgba(216,173,76,.15);
+}
+.login-logo .mark span{transform:rotate(-45deg);display:block;}
+.login-logo h2{font-size:20px;font-weight:700;color:var(--gold-bright);margin-bottom:4px;}
+.login-logo p{font-size:13px;color:var(--text-faint);}
+
+.field{margin-bottom:20px;}
+.field label{
+  display:block;font-size:13px;color:var(--text-dim);margin-bottom:8px;font-weight:500;
+}
+.field input{
+  width:100%;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(216,173,76,.2);
+  border-radius:12px;
+  color:var(--text);
+  padding:13px 16px;
+  font-family:'Vazirmatn',sans-serif;
+  font-size:14px;
+  text-align:right;
+  transition:border-color .2s, box-shadow .2s;
+}
+.field input:focus{
+  outline:none;
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(216,173,76,.1);
+}
+.login-err{
+  color:var(--red);font-size:13px;text-align:center;
+  margin-bottom:14px;min-height:20px;
+  display:none;
+}
+.login-err.show{display:block;}
+.btn-gold{
+  width:100%;
+  background:linear-gradient(135deg,var(--gold-bright),var(--gold-dim));
+  color:#1a1305;font-weight:700;font-size:15px;
+  border:none;padding:14px;border-radius:12px;
+  font-family:'Vazirmatn',sans-serif;cursor:pointer;
+  box-shadow:0 8px 24px rgba(216,173,76,.25);
+  transition:transform .18s, box-shadow .18s;
+}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(216,173,76,.35);}
+.btn-gold:active{transform:translateY(0);}
+.login-hint{text-align:center;margin-top:20px;font-size:12px;color:var(--text-faint);}
+.login-hint span{color:var(--gold);font-weight:600;}
+
+/* ═══════════════════════════════════
+   DASHBOARD PAGE
+════════════════════════════════════ */
+#page-dash{
+  flex-direction:column;
+  background:var(--bg);
+  min-height:100vh;
+}
+
+/* ── Dash Header ── */
+.dash-header{
+  position:sticky;top:0;z-index:40;
+  background:rgba(10,8,6,.9);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line);
+  padding:0 28px;
+}
+.dash-header-inner{
+  max-width:1300px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 0;
+  gap:16px;
+}
+.dh-brand{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;color:var(--gold-bright);}
+.dh-mark{
+  width:34px;height:34px;border:1.5px solid var(--gold);border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  transform:rotate(45deg);font-size:13px;color:var(--gold);
+  background:rgba(216,173,76,.07);
+}
+.dh-mark span{transform:rotate(-45deg);display:block;}
+.dh-center{display:flex;align-items:center;gap:24px;flex:1;justify-content:center;}
+.dh-stat{text-align:center;}
+.dh-stat .label{font-size:11px;color:var(--text-faint);margin-bottom:2px;}
+.dh-stat .val{font-size:13px;font-weight:600;color:var(--text-dim);}
+.dh-stat .val.green{color:var(--green);}
+.dh-right{display:flex;align-items:center;gap:12px;}
+.user-pill{
+  display:flex;align-items:center;gap:9px;
+  background:var(--glass);
+  border:1px solid var(--line);
+  border-radius:30px;padding:7px 14px;
+  font-size:13px;
+}
+.user-pill .avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold-dim),var(--gold-bright));
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:#1a1305;font-weight:700;
+}
+.btn-logout{
+  background:none;border:1px solid var(--line);border-radius:8px;
+  color:var(--text-faint);font-size:12px;padding:6px 12px;cursor:pointer;
+  font-family:'Vazirmatn',sans-serif;transition:.2s;
+}
+.btn-logout:hover{border-color:var(--red);color:var(--red);}
+
+/* ── Dash Body ── */
+.dash-body{max-width:1300px;margin:0 auto;padding:32px 28px 60px;}
+
+/* ── Summary Cards ── */
+.summary-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;
+}
+.sum-card{
+  background:var(--glass);
+  backdrop-filter:blur(16px);
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  padding:22px 20px;
+  position:relative;overflow:hidden;
+  transition:border-color .25s,transform .25s;
+}
+.sum-card:hover{border-color:var(--line2);transform:translateY(-3px);}
+.sum-card::before{
+  content:"";position:absolute;top:0;right:0;left:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(242,204,107,.35),transparent);
+}
+.sum-card .sc-label{font-size:12px;color:var(--text-faint);margin-bottom:8px;}
+.sum-card .sc-val{font-size:22px;font-weight:800;color:var(--gold-bright);margin-bottom:4px;}
+.sum-card .sc-sub{font-size:11.5px;color:var(--text-dim);}
+.sum-card .sc-icon{
+  position:absolute;top:18px;left:18px;
+  width:38px;height:38px;border-radius:10px;
+  background:rgba(216,173,76,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+}
+
+/* ── Products Table ── */
+.section-title{
+  font-size:18px;font-weight:700;color:var(--gold-bright);
+  margin-bottom:18px;display:flex;align-items:center;gap:10px;
+}
+.section-title::after{
+  content:"";flex:1;height:1px;
+  background:linear-gradient(90deg,var(--line),transparent);
+}
+.last-update{
+  font-size:12px;color:var(--text-faint);font-weight:400;
+  display:flex;align-items:center;gap:6px;
+}
+.live-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 6px var(--green);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+.products-table{
+  background:var(--glass);
+  backdrop-filter:blur(16px);
+  border:1px solid var(--line);
+  border-radius:20px;overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+}
+.pt-head{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr 1fr;
+  padding:14px 24px;
+  background:rgba(216,173,76,.05);
+  border-bottom:1px solid var(--line);
+  font-size:12px;color:var(--text-faint);font-weight:600;
+}
+.pt-row{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr 1fr;
+  padding:18px 24px;
+  border-bottom:1px solid rgba(255,255,255,.04);
+  align-items:center;
+  transition:background .2s;
+}
+.pt-row:last-child{border-bottom:none;}
+.pt-row:hover{background:rgba(255,255,255,.025);}
+.pt-name{display:flex;align-items:center;gap:12px;}
+.pt-name .picon{
+  width:42px;height:42px;border-radius:12px;
+  background:radial-gradient(circle at 35% 30%,rgba(216,173,76,.25),rgba(10,8,6,.6));
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  border:1px solid rgba(216,173,76,.2);flex-shrink:0;
+}
+.pt-name .pname{font-size:14.5px;font-weight:600;}
+.pt-name .psub{font-size:11.5px;color:var(--text-faint);margin-top:2px;}
+.price-buy{font-size:14px;font-weight:700;color:var(--gold-bright);}
+.price-sell{font-size:14px;font-weight:700;color:var(--text-dim);}
+.change{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:13px;font-weight:600;padding:4px 10px;border-radius:20px;
+}
+.change.up{color:var(--green);background:rgba(61,186,112,.12);}
+.change.dn{color:var(--red);background:rgba(224,85,85,.12);}
+.btn-buy{
+  background:linear-gradient(135deg,#2ea05a,#1e7a42);
+  color:#fff;font-weight:700;font-size:13px;
+  border:none;padding:9px 20px;border-radius:10px;
+  font-family:'Vazirmatn',sans-serif;cursor:pointer;
+  box-shadow:0 4px 14px rgba(46,160,90,.25);
+  transition:transform .18s,box-shadow .18s;
+}
+.btn-buy:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(46,160,90,.35);}
+
+/* ═══════════════════════════════════
+   TRADE MODAL
+════════════════════════════════════ */
+.overlay{
+  position:fixed;inset:0;z-index:100;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s;
+}
+.overlay.open{opacity:1;pointer-events:all;}
+.modal{
+  background:linear-gradient(160deg,#1e1608,#120e08);
+  border:1px solid var(--line2);
+  border-radius:24px;
+  padding:36px 32px;
+  width:100%;max-width:440px;
+  position:relative;
+  box-shadow:0 32px 80px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.07);
+  transform:scale(.94) translateY(12px);
+  transition:transform .28s cubic-bezier(.34,1.3,.64,1);
+}
+.overlay.open .modal{transform:scale(1) translateY(0);}
+.modal::before{
+  content:"";position:absolute;top:0;right:0;left:0;height:1px;border-radius:24px 24px 0 0;
+  background:linear-gradient(90deg,transparent,rgba(242,204,107,.55),transparent);
+}
+.modal-close{
+  position:absolute;top:16px;left:16px;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);
+  color:var(--text-dim);font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:.2s;
+}
+.modal-close:hover{background:rgba(224,85,85,.15);border-color:var(--red);color:var(--red);}
+.modal-title{
+  font-size:19px;font-weight:700;color:var(--gold-bright);
+  text-align:center;margin-bottom:8px;
+}
+.modal-product{font-size:13px;color:var(--text-faint);text-align:center;margin-bottom:24px;}
+
+/* toggle */
+.type-toggle{
+  display:flex;gap:0;background:rgba(255,255,255,.05);
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:24px;
+}
+.type-btn{
+  flex:1;padding:11px;text-align:center;font-family:'Vazirmatn',sans-serif;
+  font-size:14px;font-weight:600;border:none;cursor:pointer;
+  background:none;color:var(--text-faint);transition:.2s;
+}
+.type-btn.buy.sel{background:rgba(46,160,90,.2);color:var(--green);}
+.type-btn.sell.sel{background:rgba(224,85,85,.2);color:var(--red);}
+
+.mfield{margin-bottom:18px;}
+.mfield label{display:block;font-size:12.5px;color:var(--text-dim);margin-bottom:7px;}
+.mfield input{
+  width:100%;background:rgba(255,255,255,.04);
+  border:1px solid rgba(216,173,76,.18);border-radius:11px;
+  color:var(--text);padding:12px 14px;
+  font-family:'Vazirmatn',sans-serif;font-size:14px;text-align:right;
+  transition:border-color .2s,box-shadow .2s;
+}
+.mfield input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(216,173,76,.1);}
+.mfield input[readonly]{color:var(--gold-bright);font-weight:700;cursor:default;}
+
+.total-box{
+  background:rgba(216,173,76,.07);
+  border:1px solid rgba(216,173,76,.2);
+  border-radius:12px;padding:16px;text-align:center;margin-bottom:22px;
+}
+.total-box .t-label{font-size:12px;color:var(--text-faint);margin-bottom:6px;}
+.total-box .t-val{font-size:22px;font-weight:800;color:var(--gold-bright);}
+.total-box .t-unit{font-size:12px;color:var(--text-dim);margin-top:2px;}
+
+.btn-confirm{
+  width:100%;
+  background:linear-gradient(135deg,var(--gold-bright),var(--gold-dim));
+  color:#1a1305;font-weight:700;font-size:15px;
+  border:none;padding:14px;border-radius:12px;
+  font-family:'Vazirmatn',sans-serif;cursor:pointer;
+  box-shadow:0 8px 24px rgba(216,173,76,.25);
+  transition:transform .18s,box-shadow .18s;
+}
+.btn-confirm:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(216,173,76,.35);}
+
+/* ═══════════════════════════════════
+   TIMER MODAL
+════════════════════════════════════ */
+.timer-overlay{
+  position:fixed;inset:0;z-index:110;
+  background:rgba(0,0,0,.75);
+  backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s;
+}
+.timer-overlay.open{opacity:1;pointer-events:all;}
+.timer-modal{
+  background:linear-gradient(160deg,#1e1608,#120e08);
+  border:1px solid var(--line2);
+  border-radius:28px;padding:44px 36px;
+  width:100%;max-width:380px;text-align:center;
+  box-shadow:0 32px 80px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.07);
+  position:relative;
+}
+.timer-modal::before{
+  content:"";position:absolute;top:0;right:0;left:0;height:1px;border-radius:28px 28px 0 0;
+  background:linear-gradient(90deg,transparent,rgba(242,204,107,.55),transparent);
+}
+
+/* SVG circle timer */
+.circle-timer{position:relative;width:140px;height:140px;margin:0 auto 28px;}
+.circle-timer svg{transform:rotate(-90deg);}
+.circle-bg{fill:none;stroke:rgba(255,255,255,.06);stroke-width:8;}
+.circle-prog{
+  fill:none;stroke:var(--gold-bright);stroke-width:8;
+  stroke-linecap:round;
+  stroke-dasharray:376;
+  stroke-dashoffset:0;
+  transition:stroke-dashoffset 1s linear;
+  filter:drop-shadow(0 0 8px rgba(242,204,107,.5));
+}
+.circle-num{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+}
+.circle-num .sec{font-size:38px;font-weight:800;color:var(--gold-bright);line-height:1;}
+.circle-num .sec-label{font-size:11px;color:var(--text-faint);margin-top:4px;}
+
+.timer-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:10px;}
+.timer-desc{font-size:13.5px;color:var(--text-dim);line-height:1.7;margin-bottom:26px;}
+
+.trade-summary{
+  background:rgba(255,255,255,.04);border:1px solid var(--line);
+  border-radius:14px;padding:16px;text-align:right;margin-bottom:24px;
+}
+.ts-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;}
+.ts-row .k{font-size:12px;color:var(--text-faint);}
+.ts-row .v{font-size:13px;color:var(--text);font-weight:600;}
+.ts-row .v.gold{color:var(--gold-bright);}
+.ts-row .v.green{color:var(--green);}
+.ts-row .v.red{color:var(--red);}
+
+.status-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 22px;border-radius:30px;font-size:13.5px;font-weight:600;
+  background:rgba(61,186,112,.1);border:1px solid rgba(61,186,112,.25);color:var(--green);
+}
+.status-badge.waiting{
+  background:rgba(216,173,76,.1);border-color:rgba(216,173,76,.25);color:var(--gold);
+}
+.spinner{
+  width:14px;height:14px;border:2px solid rgba(61,186,112,.3);
+  border-top-color:var(--green);border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+.spinner.gold{border-color:rgba(216,173,76,.3);border-top-color:var(--gold);}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.timer-done{display:none;}
+.timer-done.show{display:flex;flex-direction:column;align-items:center;gap:14px;}
+
+/* ═══════════════════════════════════
+   TOAST
+════════════════════════════════════ */
+.toast{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:rgba(26,18,5,.95);border:1px solid var(--line2);
+  border-radius:12px;padding:13px 22px;font-size:13.5px;color:var(--text);
+  box-shadow:0 8px 24px rgba(0,0,0,.5);z-index:200;
+  opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ═══════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════ */
+@media(max-width:900px){
+  .summary-row{grid-template-columns:repeat(2,1fr);}
+  .pt-head,.pt-row{
+    grid-template-columns:2fr 1fr 1fr 100px;
+  }
+  .pt-head>*:nth-child(3),.pt-row>*:nth-child(3){display:none;}
+  .dh-center{display:none;}
+}
+@media(max-width:600px){
+  .dash-body{padding:20px 16px 50px;}
+  .dash-header{padding:0 16px;}
+  .summary-row{grid-template-columns:1fr 1fr;gap:12px;}
+  .pt-head,.pt-row{grid-template-columns:1fr 1fr 90px;}
+  .pt-head>*:nth-child(2),.pt-row>*:nth-child(2),
+  .pt-head>*:nth-child(3),.pt-row>*:nth-child(3){display:none;}
+  .modal,.timer-modal{padding:28px 20px;}
+  .dh-brand span:last-child{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ LOGIN PAGE ═══════ -->
+<div id="page-login" class="page active">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="mark"><span>M</span></div>
+      <h2>ورود به پنل معاملات</h2>
+      <p>طلای آب شده ی ثابتی</p>
+    </div>
+    <div class="field">
+      <label>نام کاربری</label>
+      <input type="text" id="inp-user" placeholder="نام کاربری خود را وارد کنید" autocomplete="username">
+    </div>
+    <div class="field">
+      <label>رمز عبور</label>
+      <input type="password" id="inp-pass" placeholder="رمز عبور خود را وارد کنید" autocomplete="current-password">
+    </div>
+    <div class="login-err" id="login-err">نام کاربری یا رمز عبور اشتباه است</div>
+    <button class="btn-gold" onclick="doLogin()">ورود به حساب</button>
+    <div class="login-hint">
+      اطلاعات تست: <span>soheil</span> / <span>12345</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ DASHBOARD PAGE ═══════ -->
+<div id="page-dash" class="page">
+
+  <!-- Header -->
+  <header class="dash-header">
+    <div class="dash-header-inner">
+      <div class="dh-brand">
+        <div class="dh-mark"><span>M</span></div>
+        <span>طلای ثابتی</span>
+      </div>
+      <div class="dh-center">
+        <div class="dh-stat">
+          <div class="label">طلا جهانی (دلار/اونس)</div>
+          <div class="val green">۲,۳۸۵.۴۰ ↗</div>
+        </div>
+        <div class="dh-stat">
+          <div class="label">دلار / تومان</div>
+          <div class="val">۶۰,۴۰۰</div>
+        </div>
+        <div class="dh-stat">
+          <div class="label">بازار</div>
+          <div class="val green">● باز</div>
+        </div>
+      </div>
+      <div class="dh-right">
+        <div class="user-pill">
+          <div class="avatar" id="dash-avatar">S</div>
+          <span id="dash-username">کاربر</span>
+        </div>
+        <button class="btn-logout" onclick="doLogout()">خروج</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Body -->
+  <div class="dash-body">
+
+    <!-- Summary -->
+    <div class="summary-row">
+      <div class="sum-card">
+        <div class="sc-icon">🏆</div>
+        <div class="sc-label">وضعیت حساب</div>
+        <div class="sc-val" style="font-size:16px;color:var(--green);">فعال</div>
+        <div class="sc-sub">تایید شده</div>
+      </div>
+      <div class="sum-card">
+        <div class="sc-icon">📊</div>
+        <div class="sc-label">معاملات امروز</div>
+        <div class="sc-val">۰</div>
+        <div class="sc-sub">معامله</div>
+      </div>
+      <div class="sum-card">
+        <div class="sc-icon">💰</div>
+        <div class="sc-label">حجم معاملات</div>
+        <div class="sc-val">—</div>
+        <div class="sc-sub">تومان</div>
+      </div>
+      <div class="sum-card">
+        <div class="sc-icon">🕒</div>
+        <div class="sc-label">آخرین بروزرسانی</div>
+        <div class="sc-val" id="last-update-time" style="font-size:14px;">—</div>
+        <div class="sc-sub">قیمت‌ها</div>
+      </div>
+    </div>
+
+    <!-- Products -->
+    <div class="section-title">
+      لیست محصولات طلا و سکه
+      <span class="last-update">
+        <span class="live-dot"></span>
+        قیمت زنده
+      </span>
+    </div>
+
+    <div class="products-table">
+      <div class="pt-head">
+        <div>محصول</div>
+        <div>قیمت خرید (تومان)</div>
+        <div>قیمت فروش (تومان)</div>
+        <div>تغییر</div>
+        <div></div>
+      </div>
+      <div id="products-body"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════ TRADE MODAL ═══════ -->
+<div class="overlay" id="trade-overlay" onclick="closeTradeIfBg(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeTrade()">✕</button>
+    <div class="modal-title">ثبت معامله</div>
+    <div class="modal-product" id="m-product-name">طلای آب شده</div>
+
+    <div class="type-toggle">
+      <button class="type-btn buy sel" id="btn-type-buy" onclick="setType('buy')">خرید</button>
+      <button class="type-btn sell" id="btn-type-sell" onclick="setType('sell')">فروش</button>
+    </div>
+
+    <div class="mfield">
+      <label>وزن (گرم)</label>
+      <input type="number" id="m-weight" placeholder="مثال: ۱۰" min="0.1" step="0.1" oninput="calcTotal()">
+    </div>
+    <div class="mfield">
+      <label>قیمت هر گرم (تومان)</label>
+      <input type="number" id="m-price" readonly>
+    </div>
+
+    <div class="total-box">
+      <div class="t-label">مبلغ کل</div>
+      <div class="t-val" id="m-total">—</div>
+      <div class="t-unit">تومان</div>
+    </div>
+
+    <button class="btn-confirm" onclick="confirmTrade()">✓ تایید معامله</button>
+  </div>
+</div>
+
+<!-- ═══════ TIMER MODAL ═══════ -->
+<div class="timer-overlay" id="timer-overlay">
+  <div class="timer-modal">
+
+    <!-- active timer -->
+    <div id="timer-active">
+      <div class="circle-timer">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle class="circle-bg" cx="70" cy="70" r="60"/>
+          <circle class="circle-prog" id="circle-prog" cx="70" cy="70" r="60"/>
+        </svg>
+        <div class="circle-num">
+          <div class="sec" id="timer-sec">30</div>
+          <div class="sec-label">ثانیه</div>
+        </div>
+      </div>
+      <div class="timer-title">در حال پردازش معامله...</div>
+      <div class="timer-desc">۳۰ ثانیه صبر کنید تا عملیات توسط مدیریت تایید شود</div>
+      <div class="trade-summary" id="timer-summary"></div>
+      <div class="status-badge">
+        <div class="spinner"></div>
+        در حال ارسال به مدیریت
+      </div>
+    </div>
+
+    <!-- done state -->
+    <div class="timer-done" id="timer-done">
+      <div style="font-size:52px;margin-bottom:4px;">✅</div>
+      <div class="timer-title">درخواست ثبت شد</div>
+      <div class="trade-summary" id="timer-summary-done"></div>
+      <div class="status-badge waiting">
+        <div class="spinner gold"></div>
+        در انتظار تایید مدیریت
+      </div>
+      <button class="btn-gold" style="margin-top:24px;padding:13px 32px;width:auto" onclick="closeTimer()">بازگشت به پنل</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─────────────────────────────
+   AUTH
+───────────────────────────── */
+const USERS = { soheil: '12345' };
+let currentUser = null;
+let tradeCount = 0;
+let tradeProduct = null;
+let tradeType = 'buy';
+let timerInterval = null;
+
+function doLogin(){
+  const u = document.getElementById('inp-user').value.trim();
+  const p = document.getElementById('inp-pass').value.trim();
+  const err = document.getElementById('login-err');
+  if(USERS[u] && USERS[u] === p){
+    currentUser = u;
+    err.classList.remove('show');
+    showDash();
+  } else {
+    err.classList.add('show');
+    document.getElementById('inp-pass').value='';
+  }
+}
+document.addEventListener('keydown', e=>{
+  if(e.key==='Enter') doLogin();
+});
+
+function doLogout(){
+  currentUser=null;
+  showPage('page-login');
+  document.getElementById('inp-user').value='';
+  document.getElementById('inp-pass').value='';
+}
+
+function showDash(){
+  document.getElementById('dash-username').textContent = currentUser;
+  document.getElementById('dash-avatar').textContent = currentUser[0].toUpperCase();
+  updateTime();
+  renderProducts();
+  showPage('page-dash');
+}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ─────────────────────────────
+   MOCK API — قابل اتصال به API واقعی
+───────────────────────────── */
+const PRODUCTS = [
+  { id:'melted', icon:'🪙', name:'طلای آب شده', sub:'۱۶ عیار', buyPrice:3450000, sellPrice:3380000, change:+1.2 },
+  { id:'18k',    icon:'💍', name:'طلای ۱۸ عیار', sub:'طلا کار شده', buyPrice:3650000, sellPrice:3580000, change:+0.8 },
+  { id:'24k',    icon:'💎', name:'طلای ۲۴ عیار', sub:'خالص', buyPrice:4850000, sellPrice:4760000, change:+1.5 },
+  { id:'used',   icon:'🔁', name:'طلای دست دوم', sub:'با گواهی', buyPrice:3250000, sellPrice:3180000, change:-0.3 },
+  { id:'emami',  icon:'🥇', name:'سکه امامی', sub:'تمام', buyPrice:37800000, sellPrice:37200000, change:+2.1, unit:'عدد' },
+  { id:'bahar',  icon:'🏅', name:'سکه بهار آزادی', sub:'تمام', buyPrice:34200000, sellPrice:33600000, change:+1.7, unit:'عدد' },
+  { id:'nim',    icon:'🪙', name:'نیم سکه', sub:'', buyPrice:20500000, sellPrice:20100000, change:+0.9, unit:'عدد' },
+  { id:'rob',    icon:'🪙', name:'ربع سکه', sub:'', buyPrice:12500000, sellPrice:12250000, change:-0.2, unit:'عدد' },
+];
+
+// آماده اتصال به API قیمت طلا
+async function fetchPrices(){
+  // TODO: fetch('https://your-gold-api.com/prices')
+  // شبیه‌سازی نوسان قیمت
+  return PRODUCTS.map(p=>({
+    ...p,
+    buyPrice: p.buyPrice + Math.floor((Math.random()-.5)*p.buyPrice*.002),
+    change: +(p.change + (Math.random()-.5)*.2).toFixed(2)
+  }));
+}
+
+function fmt(n){ return n.toLocaleString('fa-IR'); }
+function updateTime(){
+  const now = new Date();
+  const t = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  document.getElementById('last-update-time').textContent = t;
+}
+
+async function renderProducts(){
+  const data = await fetchPrices();
+  const body = document.getElementById('products-body');
+  body.innerHTML = data.map(p=>`
+    <div class="pt-row">
+      <div class="pt-name">
+        <div class="picon">${p.icon}</div>
+        <div><div class="pname">${p.name}</div><div class="psub">${p.sub}</div></div>
+      </div>
+      <div class="price-buy">${fmt(p.buyPrice)}</div>
+      <div class="price-sell">${fmt(p.sellPrice)}</div>
+      <div>
+        <span class="change ${p.change>=0?'up':'dn'}">
+          ${p.change>=0?'↗':'↘'} ${Math.abs(p.change)}٪
+        </span>
+      </div>
+      <div>
+        <button class="btn-buy" onclick="openTrade('${p.id}')">خرید / فروش</button>
+      </div>
+    </div>
+  `).join('');
+  updateTime();
+}
+
+// رفرش قیمت هر ۳۰ ثانیه
+setInterval(renderProducts, 30000);
+
+/* ─────────────────────────────
+   TRADE MODAL
+───────────────────────────── */
+function openTrade(id){
+  tradeProduct = PRODUCTS.find(p=>p.id===id);
+  tradeType = 'buy';
+  document.getElementById('m-product-name').textContent = tradeProduct.name;
+  document.getElementById('m-price').value = tradeProduct.buyPrice;
+  document.getElementById('m-weight').value = '';
+  document.getElementById('m-total').textContent = '—';
+  setType('buy');
+  document.getElementById('trade-overlay').classList.add('open');
+}
+
+function closeTrade(){
+  document.getElementById('trade-overlay').classList.remove('open');
+}
+
+function closeTradeIfBg(e){
+  if(e.target===document.getElementById('trade-overlay')) closeTrade();
+}
+
+function setType(t){
+  tradeType = t;
+  document.getElementById('btn-type-buy').className  = 'type-btn buy'  + (t==='buy'?' sel':'');
+  document.getElementById('btn-type-sell').className = 'type-btn sell' + (t==='sell'?' sel':'');
+  document.getElementById('m-price').value =
+    t==='buy' ? tradeProduct.buyPrice : tradeProduct.sellPrice;
+  calcTotal();
+}
+
+function calcTotal(){
+  const w = parseFloat(document.getElementById('m-weight').value)||0;
+  const pr = parseFloat(document.getElementById('m-price').value)||0;
+  const total = w * pr;
+  document.getElementById('m-total').textContent = total>0 ? fmt(Math.round(total)) : '—';
+}
+
+function confirmTrade(){
+  const w = parseFloat(document.getElementById('m-weight').value)||0;
+  if(w<=0){ showToast('⚠️ وزن را وارد کنید'); return; }
+  closeTrade();
+  startTimer();
+}
+
+/* ─────────────────────────────
+   TIMER
+───────────────────────────── */
+function startTimer(){
+  const TOTAL = 30;
+  let remaining = TOTAL;
+  const circ = 2 * Math.PI * 60; // 376.99
+
+  const w = parseFloat(document.getElementById('m-weight').value)||0;
+  const pr = parseFloat(document.getElementById('m-price').value)||0;
+  const total = Math.round(w * pr);
+
+  const summaryHTML = `
+    <div class="ts-row"><span class="k">کاربر</span><span class="v">${currentUser}</span></div>
+    <div class="ts-row"><span class="k">نوع معامله</span><span class="v ${tradeType==='buy'?'green':'red'}">${tradeType==='buy'?'خرید':'فروش'}</span></div>
+    <div class="ts-row"><span class="k">محصول</span><span class="v">${tradeProduct.name}</span></div>
+    <div class="ts-row"><span class="k">وزن</span><span class="v">${w} ${tradeProduct.unit||'گرم'}</span></div>
+    <div class="ts-row"><span class="k">قیمت هر گرم</span><span class="v">${fmt(pr)}</span></div>
+    <div class="ts-row"><span class="k">مبلغ کل</span><span class="v gold">${fmt(total)} تومان</span></div>
+  `;
+
+  document.getElementById('timer-summary').innerHTML = summaryHTML;
+  document.getElementById('timer-summary-done').innerHTML = summaryHTML;
+
+  document.getElementById('timer-active').style.display='block';
+  document.getElementById('timer-done').classList.remove('show');
+  document.getElementById('timer-overlay').classList.add('open');
+
+  // send to management (stub)
+  sendToManagement({
+    user: currentUser,
+    type: tradeType,
+    product: tradeProduct.name,
+    weight: w,
+    pricePerUnit: pr,
+    total,
+    time: new Date().toISOString(),
+    status: 'pending'
+  });
+
+  // animate
+  const prog = document.getElementById('circle-prog');
+  const secEl = document.getElementById('timer-sec');
+  prog.style.strokeDashoffset = 0;
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(()=>{
+    remaining--;
+    secEl.textContent = remaining;
+    prog.style.strokeDashoffset = circ * (1 - remaining/TOTAL);
+    if(remaining<=0){
+      clearInterval(timerInterval);
+      showDone();
+      tradeCount++;
+      document.querySelectorAll('.sum-card .sc-val')[1].textContent = tradeCount;
+    }
+  },1000);
+}
+
+function showDone(){
+  document.getElementById('timer-active').style.display='none';
+  document.getElementById('timer-done').classList.add('show');
+}
+
+function closeTimer(){
+  document.getElementById('timer-overlay').classList.remove('open');
+  clearInterval(timerInterval);
+}
+
+/* ─────────────────────────────
+   MANAGEMENT API STUB
+   آماده اتصال به دیتابیس / داشبورد مدیریت
+───────────────────────────── */
+async function sendToManagement(data){
+  console.log('[Management API] New trade request:', data);
+  // TODO: replace with real endpoint
+  // await fetch('/api/admin/trades', {
+  //   method: 'POST',
+  //   headers: {'Content-Type':'application/json', 'Authorization':'Bearer TOKEN'},
+  //   body: JSON.stringify(data)
+  // });
+  return { success: true };
+}
+
+/* ─────────────────────────────
+   TOAST
+───────────────────────────── */
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+</script>
+</body>
+</html>
