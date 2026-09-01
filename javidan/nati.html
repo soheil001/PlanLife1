@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نتایج دانشجویان</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #5B3DEB;
+    --purple-light: #7B5FFF;
+    --purple-pale: #F0ECFF;
+    --purple-pale2: #EDE8FF;
+    --dark: #1A1035;
+    --grey: #6B7280;
+    --grey-light: #F5F4FA;
+    --white: #ffffff;
+    --card-radius: 14px;
+    --shadow: 0 2px 16px rgba(91,61,235,0.10);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Vazirmatn', sans-serif;
+    background: var(--white);
+    color: var(--dark);
+    direction: rtl;
+    line-height: 1.7;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--purple-pale) 0%, #fff 60%);
+    padding: 72px 24px 56px;
+  }
+
+  .hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .hero-text { order: 2; }
+
+  .hero-eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--purple);
+    background: var(--purple-pale2);
+    border-radius: 20px;
+    padding: 4px 14px;
+    margin-bottom: 16px;
+  }
+
+  .hero-title {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 18px;
+    color: var(--dark);
+  }
+
+  .hero-desc {
+    font-size: 15px;
+    color: var(--grey);
+    max-width: 460px;
+    margin-bottom: 36px;
+  }
+
+  .stats {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .stat-item { text-align: center; }
+
+  .stat-num {
+    display: block;
+    font-size: clamp(24px, 3vw, 34px);
+    font-weight: 800;
+    color: var(--purple);
+    line-height: 1.1;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--grey);
+    margin-top: 4px;
+  }
+
+  /* Hero video collage */
+  .hero-visual { order: 1; }
+
+  .collage {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    background: var(--dark);
+    box-shadow: 0 8px 40px rgba(91,61,235,0.18);
+  }
+
+  .collage-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+    height: 100%;
+  }
+
+  .collage-grid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .collage-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(26,16,53,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .play-btn {
+    width: 64px;
+    height: 64px;
+    background: rgba(255,255,255,0.92);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .play-btn:hover { transform: scale(1.08); }
+
+  .play-btn svg { margin-right: -3px; }
+
+  /* ── MAIN SECTION ── */
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 24px;
+  }
+
+  /* ── FILTER TABS ── */
+  .filter-bar {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+
+  .filter-btn {
+    padding: 9px 22px;
+    border-radius: 30px;
+    border: 1.5px solid #DDD8F7;
+    background: var(--white);
+    color: var(--grey);
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--purple);
+    color: var(--purple);
+    background: var(--purple-pale);
+  }
+
+  .filter-btn.active {
+    background: var(--purple);
+    color: var(--white);
+    border-color: var(--purple);
+    font-weight: 600;
+  }
+
+  /* ── VIDEO GRID ── */
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 24px;
+  }
+
+  .video-card {
+    background: var(--white);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid #EEE9FF;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: none;
+  }
+
+  .video-card.visible {
+    display: block;
+  }
+
+  .video-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(91,61,235,0.16);
+  }
+
+  .video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 60%;
+    background: var(--dark);
+    overflow: hidden;
+  }
+
+  .video-wrapper iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .card-body {
+    padding: 16px;
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+
+  .card-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--purple);
+    margin-bottom: 2px;
+  }
+
+  .card-course {
+    font-size: 12px;
+    color: var(--grey);
+  }
+
+  .card-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+  }
+
+  .badge-0 { background: #EDE8FF; color: var(--purple); }
+  .badge-1 { background: #E0F7F0; color: #0E8A65; }
+  .badge-2 { background: #FFF3E0; color: #C47A00; }
+  .badge-3 { background: #FCE4EC; color: #C62828; }
+
+  /* ── CTA FOOTER ── */
+  .cta-section {
+    background: var(--purple-pale);
+    border-radius: 20px;
+    margin: 0 24px 60px;
+    padding: 48px 32px;
+    text-align: center;
+    max-width: 1052px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cta-title {
+    font-size: clamp(20px, 3vw, 30px);
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+
+  .cta-desc {
+    font-size: 15px;
+    color: var(--grey);
+    margin-bottom: 28px;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--purple);
+    color: var(--white);
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 14px 32px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.18s, transform 0.18s;
+  }
+
+  .cta-btn:hover {
+    background: var(--purple-light);
+    transform: translateY(-2px);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero-inner {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .hero-text { order: 1; }
+    .hero-visual { order: 2; }
+    .stats { gap: 20px; }
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 48px 16px 40px; }
+    .section { padding: 40px 16px; }
+    .video-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+    .filter-btn { font-size: 13px; padding: 8px 16px; }
+    .cta-section { padding: 32px 20px; margin: 0 16px 48px; }
+  }
+
+  @media (max-width: 420px) {
+    .video-grid { grid-template-columns: 1fr; }
+    .stats { justify-content: space-around; }
+  }
+
+  /* No results */
+  .no-results {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 48px 0;
+    color: var(--grey);
+    font-size: 15px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <span class="hero-eyebrow">نتایج دانشجویان ما</span>
+      <h1 class="hero-title">نتایج واقعی،<br>از زبان دانشجوها</h1>
+      <p class="hero-desc">در این بخش می‌توانید تجربه‌ی واقعی دانشجوهایی که مسیر یادگیری خود را با ما شروع کردند و به نتایج فوق‌العاده‌ای رسیدند را ببینید.</p>
+      <div class="stats">
+        <div class="stat-item">
+          <span class="stat-num">+۱۲۰۰</span>
+          <span class="stat-label">دانشجوی موفق</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">+۸۵۰</span>
+          <span class="stat-label">نفر تغییر شغل</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">+۹۵٪</span>
+          <span class="stat-label">رضایت دانشجوها</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="collage">
+        <div class="collage-grid">
+          <img src="https://via.placeholder.com/300x225/1A1035/ffffff?text=+" alt="">
+          <img src="https://via.placeholder.com/300x225/2D1F6B/ffffff?text=+" alt="">
+          <img src="https://via.placeholder.com/300x225/3D2A8A/ffffff?text=+" alt="">
+          <img src="https://via.placeholder.com/300x225/5B3DEB/ffffff?text=+" alt="">
+        </div>
+        <div class="collage-overlay">
+          <div class="play-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <polygon points="8,5 19,12 8,19" fill="#5B3DEB"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── VIDEOS SECTION ── -->
+<div class="section">
+
+  <!-- Filter tabs -->
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-btn active" data-cat="all">همه</button>
+    <button class="filter-btn" data-cat="0">دوره پایه</button>
+    <button class="filter-btn" data-cat="1">دوره پیشرفته ۱</button>
+    <button class="filter-btn" data-cat="2">دوره پیشرفته ۲</button>
+    <button class="filter-btn" data-cat="3">دوره مالیاتی</button>
+  </div>
+
+  <!-- Video Grid -->
+  <div class="video-grid" id="videoGrid">
+    <div class="no-results" id="noResults">ویدیویی در این دسته‌بندی وجود ندارد.</div>
+  </div>
+</div>
+
+<!-- ── CTA ── -->
+<div class="cta-section">
+  <h2 class="cta-title">شما هم می‌توانید جزو نفرات بعدی باشید</h2>
+  <p class="cta-desc">همین حالا مسیر موفقیت خود را شروع کنید.</p>
+  <a href="#" class="cta-btn">
+    مشاهده دوره‌ها
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+    </svg>
+  </a>
+</div>
+
+<script>
+// ── DATA ──
+// Categories: 0=پایه, 1=پیشرفته۱, 2=پیشرفته۲, 3=مالیاتی
+// Videos distributed across categories (46 videos total)
+const videos = [
+  // دوره پایه (cat 0) — 12 videos
+  { id: 'cUEHl',   cat: 0, title: 'آشنایی با مفاهیم پایه', name: 'محمد کریمی',  course: 'دوره پایه' },
+  { id: 'ta9Kr',   cat: 0, title: 'شروع مسیر یادگیری', name: 'سارا احمدی',   course: 'دوره پایه' },
+  { id: 'dofx0hr', cat: 0, title: 'اولین قدم‌های موفقیت', name: 'علی رضایی',   course: 'دوره پایه' },
+  { id: 'sggf82s', cat: 0, title: 'تجربه‌ی اولین دوره', name: 'مریم مرادی',   course: 'دوره پایه' },
+  { id: 'gqieex6', cat: 0, title: 'از صفر تا نتیجه', name: 'امین حسینی',   course: 'دوره پایه' },
+  { id: 'eqmm2b0', cat: 0, title: 'یادگیری اصولی و درست', name: 'نگین شفعی',   course: 'دوره پایه' },
+  { id: 'nujnezm', cat: 0, title: 'انگیزه‌ی من برای شروع', name: 'رضا محمدی',   course: 'دوره پایه' },
+  { id: 'ldv39j1', cat: 0, title: 'تغییر مسیر شغلی با دوره پایه', name: 'الهه بهشتی',   course: 'دوره پایه' },
+  { id: 'HRDrB',   cat: 0, title: 'نتایج فوق‌العاده در کوتاه‌ترین زمان', name: 'فاطمه نوری',   course: 'دوره پایه' },
+  { id: 'DXOuk',   cat: 0, title: 'پیشنهادم به همه', name: 'حسن قاسمی',   course: 'دوره پایه' },
+  { id: 'ENosX',   cat: 0, title: 'موفقیت با برنامه‌ریزی درست', name: 'زینب کمالی',   course: 'دوره پایه' },
+  { id: 'MEc9A',   cat: 0, title: 'از عدم اطمینان تا اعتماد به نفس', name: 'بهنام صادقی',   course: 'دوره پایه' },
+
+  // دوره پیشرفته ۱ (cat 1) — 12 videos
+  { id: 'MvPun',   cat: 1, title: 'مهارت‌های پیشرفته‌ام را کسب کردم', name: 'نیلوفر حیدری',  course: 'دوره پیشرفته ۱' },
+  { id: '8PhBb',   cat: 1, title: 'ورود به بازار کار حرفه‌ای', name: 'کامران موسوی',  course: 'دوره پیشرفته ۱' },
+  { id: 'yhYzS',   cat: 1, title: 'افزایش درآمد با مهارت‌های جدید', name: 'شیرین رستمی',  course: 'دوره پیشرفته ۱' },
+  { id: 'L3uOM',   cat: 1, title: 'پروژه‌های واقعی و تجربه عملی', name: 'داریوش کرمی',  course: 'دوره پیشرفته ۱' },
+  { id: '1obsP',   cat: 1, title: 'از دانشجو تا متخصص', name: 'مهسا احمدپور', course: 'دوره پیشرفته ۱' },
+  { id: 'xuyv9',   cat: 1, title: 'رشد حرفه‌ای سریع', name: 'سیاوش ملکی',   course: 'دوره پیشرفته ۱' },
+  { id: 'HLk9b',   cat: 1, title: 'اشتغال در شرکت‌های برتر', name: 'آرزو قربانی',  course: 'دوره پیشرفته ۱' },
+  { id: 'mCWRx',   cat: 1, title: 'کار تیمی و مهارت‌های نرم', name: 'وحید رحیمی',   course: 'دوره پیشرفته ۱' },
+  { id: 'xZcwF',   cat: 1, title: 'از تئوری تا عمل', name: 'پریسا ظفری',   course: 'دوره پیشرفته ۱' },
+  { id: 'HPUke',   cat: 1, title: 'بازار کار و چالش‌های آن', name: 'میثم حسن‌پور', course: 'دوره پیشرفته ۱' },
+  { id: 'DAlEg',   cat: 1, title: 'موفقیت در مصاحبه‌های شغلی', name: 'غزاله نادری',  course: 'دوره پیشرفته ۱' },
+  { id: 'vhu53',   cat: 1, title: 'درآمد فریلنسری بالاتر از انتظار', name: 'احسان ولوی',   course: 'دوره پیشرفته ۱' },
+
+  // دوره پیشرفته ۲ (cat 2) — 12 videos
+  { id: 'h70qF',   cat: 2, title: 'تسلط بر مهارت‌های تخصصی', name: 'کیانا فراهانی',  course: 'دوره پیشرفته ۲' },
+  { id: 'qdXSg',   cat: 2, title: 'پروژه‌های بزرگ و واقعی', name: 'سهیل یزدانی',   course: 'دوره پیشرفته ۲' },
+  { id: 'amJe7',   cat: 2, title: 'کار با تیم‌های بین‌المللی', name: 'نازنین مصطفوی', course: 'دوره پیشرفته ۲' },
+  { id: '4lXEh',   cat: 2, title: 'راه‌اندازی کسب‌وکار مستقل', name: 'علیرضا سلطانی', course: 'دوره پیشرفته ۲' },
+  { id: 'HdoJu',   cat: 2, title: 'مدیریت پروژه‌های پیچیده', name: 'مونا خانجانی',  course: 'دوره پیشرفته ۲' },
+  { id: 'tIPZv',   cat: 2, title: 'از دانشجو تا مدیر تیم', name: 'فرزاد شیرازی',  course: 'دوره پیشرفته ۲' },
+  { id: 'ptejy',   cat: 2, title: 'درآمد دلاری با مهارت ایرانی', name: 'سپیده کاظمی',  course: 'دوره پیشرفته ۲' },
+  { id: '0dMGb',   cat: 2, title: 'اتوماسیون و بهره‌وری بالاتر', name: 'حمید رضوانی',  course: 'دوره پیشرفته ۲' },
+  { id: 'LcPQg',   cat: 2, title: 'مشاوره با تیم‌های بزرگ', name: 'شقایق بهرامی',  course: 'دوره پیشرفته ۲' },
+  { id: 'hbToH',   cat: 2, title: 'کارآفرینی با دانش حرفه‌ای', name: 'پدرام قادری',   course: 'دوره پیشرفته ۲' },
+  { id: '8xJoj',   cat: 2, title: 'نتایج ملموس در ۶ ماه', name: 'مهناز دهقانی',  course: 'دوره پیشرفته ۲' },
+  { id: 'LSdts',   cat: 2, title: 'ارتقاء سطح و تخصص', name: 'رامین مظلومی',  course: 'دوره پیشرفته ۲' },
+
+  // دوره مالیاتی (cat 3) — 10 videos
+  { id: '2GvCl',   cat: 3, title: 'تسلط بر قوانین مالیاتی', name: 'مریم حسینی',   course: 'دوره مالیاتی' },
+  { id: 'xDTJG',   cat: 3, title: 'اظهارنامه مالیاتی بدون استرس', name: 'کاوه صمدی',    course: 'دوره مالیاتی' },
+  { id: 'yocav',   cat: 3, title: 'صرفه‌جویی مالیاتی قانونی', name: 'لیلا شریفی',   course: 'دوره مالیاتی' },
+  { id: 'VDugc',   cat: 3, title: 'حسابداری مالیاتی شرکت‌ها', name: 'توحید امینی',   course: 'دوره مالیاتی' },
+  { id: 'cUEHl',   cat: 3, title: 'کار با نرم‌افزارهای مالیاتی', name: 'سمانه جوادی',  course: 'دوره مالیاتی' },
+  { id: 'yhYzS',   cat: 3, title: 'مالیات بر ارزش افزوده عملی', name: 'بابک کریم‌پور', course: 'دوره مالیاتی' },
+  { id: 'HPUke',   cat: 3, title: 'مشاوره مالیاتی حرفه‌ای', name: 'نسرین قاسمی',  course: 'دوره مالیاتی' },
+  { id: 'xZcwF',   cat: 3, title: 'بهینه‌سازی ساختار مالیاتی', name: 'حمیدرضا زند',  course: 'دوره مالیاتی' },
+  { id: '8PhBb',   cat: 3, title: 'قراردادهای مالیاتی و حقوقی', name: 'زهرا میرزایی',  course: 'دوره مالیاتی' },
+  { id: 'tIPZv',   cat: 3, title: 'گزارش‌دهی دقیق مالیاتی', name: 'امیرعلی صفوی',  course: 'دوره مالیاتی' },
+];
+
+const catNames = ['دوره پایه', 'دوره پیشرفته ۱', 'دوره پیشرفته ۲', 'دوره مالیاتی'];
+
+function buildCards() {
+  const grid = document.getElementById('videoGrid');
+  videos.forEach((v, i) => {
+    const card = document.createElement('div');
+    card.className = 'video-card visible';
+    card.dataset.cat = v.cat;
+    card.innerHTML = `
+      <div class="video-wrapper">
+        <iframe src="https://www.aparat.com/video/video/embed/videohash/${v.id}/vt/frame" 
+                allowfullscreen allow="autoplay" loading="lazy" title="${v.title}"></iframe>
+      </div>
+      <div class="card-body">
+        <span class="card-badge badge-${v.cat}">${catNames[v.cat]}</span>
+        <div class="card-title">${v.title}</div>
+        <div class="card-name">${v.name}</div>
+        <div class="card-course">${v.course}</div>
+      </div>
+    `;
+    grid.insertBefore(card, document.getElementById('noResults'));
+  });
+}
+
+function filterCards(cat) {
+  const cards = document.querySelectorAll('.video-card');
+  let visible = 0;
+  cards.forEach(card => {
+    const show = cat === 'all' || card.dataset.cat === cat;
+    card.classList.toggle('visible', show);
+    if (show) visible++;
+  });
+  document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+}
+
+// Init
+buildCards();
+
+// Filter bar
+document.getElementById('filterBar').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filterCards(btn.dataset.cat);
+});
+</script>
+</body>
+</html>
