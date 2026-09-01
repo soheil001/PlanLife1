@@ -1,143 +1,688 @@
+cat > /home/claude/students-results.html << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نتایج دانشجویان | جاویدان</title>
+<title>نتایج دانشجویان آکادمی حسابداری جاویدان | بهترین دوره آموزش حسابداری</title>
+<meta name="description" content="نتایج واقعی دانشجویان آکادمی حسابداری جاویدان. مشاهده تجربه موفق بیش از ۱۲۰۰ دانشجو در دوره‌های مقدماتی، پیشرفته و مالیاتی. همین الان ثبت‌نام کن.">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --purple:#5B3DEB;--purple-light:#7B5FFF;
-  --purple-pale:#F0ECFF;--purple-pale2:#EDE8FF;
-  --green:#0E8A65;--green-pale:#E0F7F0;
-  --orange:#C47A00;--orange-pale:#FFF3E0;
-  --red:#C62828;--red-pale:#FCE4EC;
-  --dark:#1A1035;--grey:#6B7280;--white:#fff;
-  --radius:14px;--shadow:0 2px 16px rgba(91,61,235,.10);
-}
-html{scroll-behavior:smooth}
-body{font-family:'Vazirmatn',sans-serif;background:var(--white);color:var(--dark);direction:rtl;line-height:1.7}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* NAV */
-.top-nav{background:#fff;border-bottom:1px solid #EEE9FF;padding:12px 24px}
-.back-btn{display:inline-flex;align-items:center;gap:8px;color:var(--purple);font-size:14px;font-weight:600;text-decoration:none;background:var(--purple-pale);border-radius:30px;padding:8px 18px;transition:background .18s}
-.back-btn:hover{background:var(--purple-pale2)}
+  :root {
+    --purple: #5B3DEB;
+    --purple-light: #7B5FFF;
+    --purple-pale: #F0ECFF;
+    --purple-pale2: #EDE8FF;
+    --dark: #1A1035;
+    --grey: #6B7280;
+    --grey-light: #F5F4FA;
+    --white: #ffffff;
+    --card-radius: 14px;
+    --shadow: 0 2px 16px rgba(91,61,235,0.10);
+    --green: #0E8A65;
+    --green-pale: #E0F7F0;
+    --orange: #C47A00;
+    --orange-pale: #FFF3E0;
+    --red: #C62828;
+    --red-pale: #FCE4EC;
+  }
 
-/* HERO */
-.hero{background:linear-gradient(135deg,var(--purple-pale) 0%,#fff 60%);padding:72px 24px 56px}
-.hero-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
-.hero-visual{order:1}.hero-text{order:2}
-.hero-eyebrow{display:inline-block;font-size:13px;font-weight:600;color:var(--purple);background:var(--purple-pale2);border-radius:20px;padding:4px 14px;margin-bottom:16px}
-.hero-title{font-size:clamp(28px,4vw,44px);font-weight:800;line-height:1.3;margin-bottom:18px}
-.hero-desc{font-size:15px;color:var(--grey);max-width:460px;margin-bottom:36px}
-.stats{display:flex;gap:32px;flex-wrap:wrap}
-.stat-item{text-align:center}
-.stat-num{display:block;font-size:clamp(24px,3vw,34px);font-weight:800;color:var(--purple);line-height:1.1}
-.stat-label{font-size:12px;color:var(--grey);margin-top:4px}
-.hero-video-wrap{position:relative;border-radius:20px;overflow:hidden;box-shadow:0 8px 40px rgba(91,61,235,.20);background:#000;aspect-ratio:16/9;width:100%}
-.hero-video-wrap video{width:100%;height:100%;display:block;object-fit:cover}
+  html { scroll-behavior: smooth; }
 
-/* SECTION */
-.section{max-width:1100px;margin:0 auto;padding:60px 24px}
+  body {
+    font-family: 'Vazirmatn', sans-serif;
+    background: var(--white);
+    color: var(--dark);
+    direction: rtl;
+    line-height: 1.7;
+  }
 
-/* FILTER */
-.filter-bar{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:40px}
-.filter-btn{padding:9px 22px;border-radius:30px;border:1.5px solid #DDD8F7;background:var(--white);color:var(--grey);font-family:'Vazirmatn',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all .18s;white-space:nowrap}
-.filter-btn:hover{border-color:var(--purple);color:var(--purple);background:var(--purple-pale)}
-.filter-btn.active{background:var(--purple);color:#fff;border-color:var(--purple);font-weight:600}
-.filter-btn[data-cat="0"].active{background:var(--purple);border-color:var(--purple)}
-.filter-btn[data-cat="1"].active{background:var(--green);border-color:var(--green)}
-.filter-btn[data-cat="2"].active{background:var(--orange);border-color:var(--orange)}
-.filter-btn[data-cat="3"].active{background:var(--red);border-color:var(--red)}
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--purple-pale) 0%, #fff 60%);
+    padding: 72px 24px 56px;
+  }
 
-/* GRID */
-.video-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-.video-card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:1px solid #EEE9FF;transition:transform .2s,box-shadow .2s;display:none}
-.video-card.visible{display:flex;flex-direction:column}
-.video-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(91,61,235,.16)}
-.video-wrapper{position:relative;width:100%;padding-top:60%;background:var(--dark);flex-shrink:0}
-.video-wrapper iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
-.card-body{padding:14px;display:flex;flex-direction:column;flex:1}
-.card-badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 9px;border-radius:12px;margin-bottom:6px;align-self:flex-start}
-.badge-0{background:var(--purple-pale2);color:var(--purple)}
-.badge-1{background:var(--green-pale);color:var(--green)}
-.badge-2{background:var(--orange-pale);color:var(--orange)}
-.badge-3{background:var(--red-pale);color:var(--red)}
-.card-title{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:10px;line-height:1.5;flex:1}
+  .hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
 
-/* ACCORDION */
-.accordion{border-radius:10px;overflow:hidden;border:1px solid #EEE9FF;margin-top:auto}
-.accordion-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--purple-pale);border:none;font-family:'Vazirmatn',sans-serif;font-size:12px;font-weight:600;color:var(--purple);cursor:pointer;transition:background .18s;text-align:right}
-.accordion-toggle:hover{background:var(--purple-pale2)}
-.accordion-toggle svg{flex-shrink:0;transition:transform .25s}
-.accordion-toggle.open svg{transform:rotate(180deg)}
-.accordion-body{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease;background:#faf9ff;padding:0 12px}
-.accordion-body.open{max-height:600px;padding:14px 12px}
+  .hero-visual { order: 1; }
+  .hero-text   { order: 2; }
 
-/* CTA inside accordion */
-.acc-enroll-btn{display:inline-flex;align-items:center;gap:6px;background:var(--purple);color:#fff;font-family:'Vazirmatn',sans-serif;font-size:12px;font-weight:700;padding:9px 18px;border-radius:20px;text-decoration:none;transition:background .18s;margin-bottom:12px;width:100%;justify-content:center}
-.acc-enroll-btn:hover{background:var(--purple-light)}
+  .hero-eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--purple);
+    background: var(--purple-pale2);
+    border-radius: 20px;
+    padding: 4px 14px;
+    margin-bottom: 16px;
+  }
 
-.accordion-body p{font-size:12px;color:var(--grey);line-height:1.9;margin-bottom:10px}
-.accordion-body .kw-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:0}
-.accordion-body .kw-tag{font-size:10px;background:var(--purple-pale2);color:var(--purple);border-radius:20px;padding:2px 8px}
+  .hero-title {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 18px;
+    color: var(--dark);
+  }
 
-/* CTA */
-.cta-section{background:var(--purple-pale);border-radius:20px;padding:48px 32px;text-align:center;max-width:1052px;margin:0 auto 60px}
-.cta-title{font-size:clamp(20px,3vw,30px);font-weight:800;margin-bottom:10px}
-.cta-desc{font-size:15px;color:var(--grey);margin-bottom:28px}
-.cta-btn{display:inline-flex;align-items:center;gap:10px;background:var(--purple);color:#fff;font-family:'Vazirmatn',sans-serif;font-size:15px;font-weight:700;padding:14px 32px;border-radius:30px;border:none;cursor:pointer;text-decoration:none;transition:background .18s,transform .18s}
-.cta-btn:hover{background:var(--purple-light);transform:translateY(-2px)}
-.no-results{grid-column:1/-1;text-align:center;padding:48px 0;color:var(--grey);font-size:15px;display:none}
+  .hero-desc {
+    font-size: 15px;
+    color: var(--grey);
+    max-width: 460px;
+    margin-bottom: 36px;
+  }
 
-/* RESPONSIVE */
-@media(max-width:1024px){.video-grid{grid-template-columns:repeat(3,1fr);gap:20px}}
-@media(max-width:768px){
-  .hero-inner{grid-template-columns:1fr;gap:28px}
-  .hero-text{order:1}.hero-visual{order:2}
-  .stats{gap:20px}
-  .video-grid{grid-template-columns:1fr;gap:16px}
-  .card-body{padding:10px}
-  .filter-btn{font-size:12px;padding:7px 14px}
-  .cta-section{padding:32px 20px;margin:0 16px 48px}
-}
-@media(max-width:600px){.hero{padding:40px 16px 36px}.section{padding:36px 16px}}
+  .stats {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .stat-item { text-align: center; }
+
+  .stat-num {
+    display: block;
+    font-size: clamp(24px, 3vw, 34px);
+    font-weight: 800;
+    color: var(--purple);
+    line-height: 1.1;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--grey);
+    margin-top: 4px;
+  }
+
+  .hero-video-wrap {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(91,61,235,0.20);
+    background: #000;
+    aspect-ratio: 16/9;
+    width: 100%;
+  }
+
+  .hero-video-wrap video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* ── MAIN SECTION ── */
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 24px;
+  }
+
+  /* ── FILTER TABS ── */
+  .filter-bar {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+
+  .filter-btn {
+    padding: 9px 22px;
+    border-radius: 30px;
+    border: 1.5px solid #DDD8F7;
+    background: var(--white);
+    color: var(--grey);
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--purple);
+    color: var(--purple);
+    background: var(--purple-pale);
+  }
+
+  .filter-btn.active {
+    background: var(--purple);
+    color: var(--white);
+    border-color: var(--purple);
+    font-weight: 600;
+  }
+
+  /* ── VIDEO GRID ── */
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+
+  .video-card {
+    background: var(--white);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid #EEE9FF;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: none;
+  }
+
+  .video-card.visible {
+    display: block;
+  }
+
+  .video-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(91,61,235,0.16);
+  }
+
+  .video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 60%;
+    background: var(--dark);
+    overflow: hidden;
+  }
+
+  .video-wrapper iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .card-body {
+    padding: 14px;
+  }
+
+  /* ── BADGES ROW ── */
+  .badges-row {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  .card-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 12px;
+  }
+
+  .badge-0 { background: var(--purple-pale2); color: var(--purple); }
+  .badge-1 { background: var(--green-pale); color: var(--green); }
+  .badge-2 { background: var(--orange-pale); color: var(--orange); }
+  .badge-3 { background: var(--red-pale); color: var(--red); }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+
+  /* ── ACCORDION ── */
+  .accordion {
+    border: 1px solid #EEE9FF;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+
+  .accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 12px;
+    cursor: pointer;
+    background: var(--grey-light);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--dark);
+    user-select: none;
+    transition: background 0.15s;
+    gap: 8px;
+  }
+
+  .accordion-header:hover {
+    background: var(--purple-pale);
+    color: var(--purple);
+  }
+
+  .accordion-header .acc-icon {
+    transition: transform 0.25s;
+    flex-shrink: 0;
+    color: var(--purple);
+  }
+
+  .accordion-header.open .acc-icon {
+    transform: rotate(180deg);
+  }
+
+  .accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    background: #fff;
+  }
+
+  .accordion-body.open {
+    max-height: 400px;
+  }
+
+  .accordion-inner {
+    padding: 12px;
+  }
+
+  .accordion-text {
+    font-size: 11.5px;
+    color: var(--grey);
+    line-height: 1.7;
+    margin-bottom: 10px;
+  }
+
+  .acc-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--purple);
+    color: var(--white);
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.18s, transform 0.15s;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .acc-cta-btn:hover {
+    background: var(--purple-light);
+    transform: translateY(-1px);
+  }
+
+  /* ── SEO CONTENT SECTION ── */
+  .seo-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+    border-top: 1px solid #EEE9FF;
+  }
+
+  .seo-section h2 {
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 16px;
+    margin-top: 40px;
+  }
+
+  .seo-section h2:first-of-type {
+    margin-top: 0;
+  }
+
+  .seo-section h3 {
+    font-size: clamp(15px, 2vw, 18px);
+    font-weight: 700;
+    color: var(--purple);
+    margin-bottom: 10px;
+    margin-top: 28px;
+  }
+
+  .seo-section p {
+    font-size: 14.5px;
+    color: #444;
+    line-height: 1.9;
+    margin-bottom: 14px;
+  }
+
+  /* ── TABLE ── */
+  .seo-table-wrap {
+    overflow-x: auto;
+    margin: 20px 0 28px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+  }
+
+  .seo-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 560px;
+  }
+
+  .seo-table thead {
+    background: var(--purple);
+    color: var(--white);
+  }
+
+  .seo-table th {
+    padding: 12px 14px;
+    text-align: right;
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .seo-table td {
+    padding: 11px 14px;
+    border-bottom: 1px solid #EEE9FF;
+    color: #333;
+    vertical-align: top;
+  }
+
+  .seo-table tbody tr:nth-child(even) {
+    background: var(--grey-light);
+  }
+
+  .seo-table tbody tr:hover {
+    background: var(--purple-pale);
+  }
+
+  /* ── FAQ ── */
+  .faq-list {
+    margin-top: 16px;
+  }
+
+  .faq-item {
+    border: 1px solid #EEE9FF;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+
+  .faq-q {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    cursor: pointer;
+    background: var(--grey-light);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark);
+    gap: 10px;
+    transition: background 0.15s;
+  }
+
+  .faq-q:hover {
+    background: var(--purple-pale);
+    color: var(--purple);
+  }
+
+  .faq-q .faq-icon {
+    flex-shrink: 0;
+    transition: transform 0.25s;
+    color: var(--purple);
+  }
+
+  .faq-q.open .faq-icon {
+    transform: rotate(180deg);
+  }
+
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: #fff;
+  }
+
+  .faq-a.open {
+    max-height: 600px;
+  }
+
+  .faq-a-inner {
+    padding: 14px 16px;
+    font-size: 13.5px;
+    color: #555;
+    line-height: 1.8;
+  }
+
+  /* ── CTA FOOTER ── */
+  .cta-section {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+    border-radius: 20px;
+    padding: 56px 40px;
+    text-align: center;
+    max-width: 1052px;
+    margin: 0 auto 60px;
+    color: var(--white);
+  }
+
+  .cta-title {
+    font-size: clamp(20px, 3vw, 32px);
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: var(--white);
+  }
+
+  .cta-desc {
+    font-size: 15px;
+    color: rgba(255,255,255,0.82);
+    margin-bottom: 32px;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cta-btn-group {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--white);
+    color: var(--purple);
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 14px 32px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.18s, box-shadow 0.18s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+
+  .cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+
+  .cta-btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    color: var(--white);
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 13px 28px;
+    border-radius: 30px;
+    border: 2px solid rgba(255,255,255,0.6);
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.18s, transform 0.18s;
+  }
+
+  .cta-btn-outline:hover {
+    border-color: var(--white);
+    transform: translateY(-3px);
+  }
+
+  /* trust badges under cta */
+  .cta-trust {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .cta-trust-item {
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* No results */
+  .no-results {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 48px 0;
+    color: var(--grey);
+    font-size: 15px;
+    display: none;
+  }
+
+  /* internal links bar */
+  .internal-links {
+    background: var(--grey-light);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 28px 0;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .internal-links-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-left: 6px;
+  }
+
+  .internal-link-btn {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--purple);
+    background: var(--white);
+    border: 1.5px solid #DDD8F7;
+    border-radius: 20px;
+    padding: 5px 14px;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+
+  .internal-link-btn:hover {
+    background: var(--purple);
+    color: var(--white);
+    border-color: var(--purple);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .video-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  }
+
+  @media (max-width: 768px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 28px; }
+    .hero-text   { order: 1; }
+    .hero-visual { order: 2; }
+    .stats { gap: 20px; }
+    .video-grid { grid-template-columns: 1fr; gap: 16px; }
+    .card-body { padding: 10px; }
+    .card-title { font-size: 12px; }
+    .filter-btn { font-size: 12px; padding: 7px 14px; }
+    .cta-section { padding: 40px 20px; margin: 0 16px 48px; }
+    .seo-section { padding: 32px 16px 48px; }
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 40px 16px 36px; }
+    .section { padding: 36px 16px; }
+    .video-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  }
+
+  @media (max-width: 420px) {
+    .video-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<div class="top-nav">
-  <a href="https://jaavidan.ir" class="back-btn">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B3DEB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+<!-- ── TOP NAV ── -->
+<div style="background:#fff; border-bottom:1px solid #EEE9FF; padding:12px 24px;">
+  <a href="https://jaavidan.ir" style="display:inline-flex; align-items:center; gap:8px; color:#5B3DEB; font-family:'Vazirmatn',sans-serif; font-size:14px; font-weight:600; text-decoration:none; background:#F0ECFF; border-radius:30px; padding:8px 18px; transition:background 0.18s;" onmouseover="this.style.background='#EDE8FF'" onmouseout="this.style.background='#F0ECFF'">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B3DEB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"/>
+    </svg>
     بازگشت به خانه
   </a>
 </div>
 
-<!-- HERO -->
+<!-- ── HERO ── -->
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-visual">
       <div class="hero-video-wrap">
-        <video src="https://jaavidan.ir/videos/4_5785285810584555267.mp4" controls preload="metadata" playsinline></video>
+        <video
+          src="https://jaavidan.ir/videos/4_5785285810584555267.mp4"
+          controls
+          preload="metadata"
+          playsinline
+        ></video>
       </div>
     </div>
     <div class="hero-text">
       <span class="hero-eyebrow">نتایج دانشجویان ما</span>
-      <h1 class="hero-title">نتایج واقعی،<br>از زبان دانشجوها</h1>
-      <p class="hero-desc">در این بخش می‌توانید تجربه‌ی واقعی دانشجوهایی که مسیر یادگیری خود را با ما شروع کردند و به نتایج فوق‌العاده‌ای رسیدند را ببینید.</p>
+      <h1 class="hero-title">نتایج واقعی دانشجویان<br>آکادمی حسابداری جاویدان</h1>
+      <p class="hero-desc">در این صفحه تجربه واقعی دانشجویانی را می‌بینید که از صفر تا حرفه‌ای‌شدن در حسابداری این مسیر را با ما طی کرده‌اند و وارد بازار کار شدند.</p>
       <div class="stats">
-        <div class="stat-item"><span class="stat-num">+۱۲۰۰</span><span class="stat-label">دانشجوی موفق</span></div>
-        <div class="stat-item"><span class="stat-num">+۸۵۰</span><span class="stat-label">نفر تغییر شغل</span></div>
-        <div class="stat-item"><span class="stat-num">+۹۵٪</span><span class="stat-label">رضایت دانشجوها</span></div>
+        <div class="stat-item">
+          <span class="stat-num">+۱۲۰۰</span>
+          <span class="stat-label">دانشجوی موفق</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">+۸۵۰</span>
+          <span class="stat-label">نفر تغییر شغل</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">+۹۵٪</span>
+          <span class="stat-label">رضایت دانشجوها</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- VIDEOS -->
+<!-- ── VIDEOS SECTION ── -->
 <div class="section">
+
   <div class="filter-bar" id="filterBar">
     <button class="filter-btn active" data-cat="all">همه</button>
     <button class="filter-btn" data-cat="0">دوره پایه</button>
@@ -145,381 +690,409 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--white);color:var(--dark
     <button class="filter-btn" data-cat="2">دوره پیشرفته ۲</button>
     <button class="filter-btn" data-cat="3">دوره مالیاتی</button>
   </div>
+
   <div class="video-grid" id="videoGrid">
     <div class="no-results" id="noResults">ویدیویی در این دسته‌بندی وجود ندارد.</div>
   </div>
 </div>
 
-<!-- CTA -->
+<!-- ── SEO CONTENT ── -->
+<div class="seo-section" itemscope itemtype="https://schema.org/EducationalOrganization">
+
+  <!-- Internal Links -->
+  <div class="internal-links">
+    <span class="internal-links-label">مرتبط:</span>
+    <a href="https://jaavidan.ir/courses" class="internal-link-btn">دوره‌های آموزش حسابداری</a>
+    <a href="https://jaavidan.ir/buy" class="internal-link-btn">خرید پکیج آموزشی</a>
+    <a href="https://jaavidan.ir/tax" class="internal-link-btn">آموزش حسابداری مالیاتی</a>
+    <a href="https://jaavidan.ir/holoo" class="internal-link-btn">آموزش نرم‌افزار هلو</a>
+    <a href="https://jaavidan.ir/sepidaar" class="internal-link-btn">آموزش نرم‌افزار سپیدار</a>
+    <a href="https://jaavidan.ir/contact" class="internal-link-btn">تماس با ما</a>
+  </div>
+
+  <h2>آکادمی حسابداری جاویدان؛ از صفر تا بازار کار</h2>
+  <p>آکادمی حسابداری جاویدان یکی از تخصصی‌ترین مراکز آموزش حسابداری در ایران است که با هدف تربیت حسابداران حرفه‌ای و آماده برای بازار کار تأسیس شده است. چیزی که این آکادمی را از سایر دوره‌های آموزش حسابداری متمایز می‌کند، رویکرد کاملاً عملی آن است؛ دانشجویان از همان ابتدا با نمونه‌های واقعی، اسناد مالی حقیقی و نرم‌افزارهای پرکاربرد در شرکت‌های ایرانی کار می‌کنند.</p>
+
+  <p>بیش از ۱۲۰۰ دانشجو تاکنون این مسیر را طی کرده‌اند. برخی از صفر مطلق شروع کردند، بدون هیچ پیش‌زمینه‌ای از حسابداری. برخی دیگر حسابداری می‌دانستند اما نمی‌توانستند در بازار کار جایی برای خود پیدا کنند. هر دو گروه پس از گذراندن دوره‌ها به نتایج چشمگیری رسیدند که بخشی از آن را در ویدیوهای بالا دیدید.</p>
+
+  <h2>چرا یادگیری حسابداری برای ورود به بازار کار ضروری است؟</h2>
+  <p>حسابداری یکی از پایدارترین و پرتقاضاترین مشاغل در ایران و جهان است. هر کسب‌وکاری، از یک مغازه کوچک تا یک شرکت بزرگ بین‌المللی، به حسابدار نیاز دارد. اما بازار کار ایران در سال‌های اخیر تغییر کرده؛ تنها داشتن مدرک حسابداری کافی نیست. کارفرماها دنبال حسابدارانی می‌گردند که:</p>
+  <p>با نرم‌افزارهای مالی مثل <a href="https://jaavidan.ir/holoo" style="color:var(--purple);font-weight:600;">هلو</a> و <a href="https://jaavidan.ir/sepidaar" style="color:var(--purple);font-weight:600;">سپیدار</a> کار کنند. قوانین مالیاتی به‌روز را بدانند. توانایی تهیه اظهارنامه مالیاتی و گزارش‌های مالی را داشته باشند. بتوانند حقوق و دستمزد، بیمه و مالیات بر ارزش افزوده را مدیریت کنند.</p>
+
+  <p>آکادمی جاویدان دقیقاً این شکاف را پر می‌کند؛ آموزشی که هم نظری است و هم عملی، و مستقیماً به بازار کار وصل است.</p>
+
+  <h2>انواع دوره‌های آموزش حسابداری در آکادمی جاویدان</h2>
+
+  <h3>آموزش حسابداری مقدماتی (از پایه)</h3>
+  <p>اگر هیچ پیش‌زمینه‌ای در حسابداری ندارید، دوره پایه آکادمی جاویدان برای شماست. در این دوره، از اصول اولیه حسابداری مثل ثبت اسناد، دفتر روزنامه، ترازنامه و صورت سود و زیان شروع می‌شود و به‌تدریج به مباحث پیچیده‌تر می‌رسد. یکی از دانشجویان که قبلاً در حوزه‌ای کاملاً متفاوت کار می‌کرد، پس از گذراندن دوره پایه توانست در یک شرکت بازرگانی به‌عنوان حسابدار مشغول به کار شود.</p>
+
+  <h3>آموزش حسابداری مالیاتی</h3>
+  <p>آموزش حسابداری مالیاتی یکی از تخصصی‌ترین و پرتقاضاترین بخش‌های حسابداری است. در دوره مالیاتی آکادمی جاویدان، دانشجویان با انواع مالیات‌ها (مالیات بر درآمد، مالیات بر ارزش افزوده، مالیات حقوق و دستمزد)، روش‌های تنظیم اظهارنامه مالیاتی و قوانین به‌روز سازمان امور مالیاتی آشنا می‌شوند. این مهارت به‌قدری ارزشمند است که خیلی از حسابداران بعد از گذراندن دوره مالیاتی، به مشاوران مالیاتی مستقل تبدیل می‌شوند.</p>
+
+  <h3>آموزش حسابداری صنعتی</h3>
+  <p>حسابداری صنعتی یا حسابداری بهای تمام‌شده، برای کسانی طراحی شده که می‌خواهند در کارخانه‌ها، شرکت‌های تولیدی یا صنعتی کار کنند. محاسبه بهای تمام‌شده محصولات، سیستم‌های هزینه‌یابی و تجزیه‌وتحلیل انحرافات از مباحث اصلی این دوره است.</p>
+
+  <h3>آموزش حسابداری حقوق و دستمزد</h3>
+  <p>تهیه لیست حقوق، محاسبه بیمه و مالیات حقوق، اضافه‌کاری، مرخصی و سایر مزایا از جمله مهارت‌هایی است که در این بخش آموزش داده می‌شود. این مهارت در هر شرکتی با هر اندازه‌ای ضروری است.</p>
+
+  <h3>آموزش حسابداری با نرم‌افزار هلو</h3>
+  <p>نرم‌افزار هلو یکی از پرکاربردترین نرم‌افزارهای حسابداری در میان کسب‌وکارهای کوچک و متوسط ایرانی است. در دوره آموزش حسابداری هلو، از نصب و راه‌اندازی تا ثبت فاکتور، انبارداری و گزارش‌گیری، همه چیز به‌صورت عملی آموزش داده می‌شود.</p>
+
+  <h3>آموزش حسابداری با نرم‌افزار سپیدار</h3>
+  <p>سپیدار سیستم یکی از محصولات همکاران سیستم است که در شرکت‌های متوسط و بزرگ بسیار استفاده می‌شود. تسلط بر نرم‌افزار سپیدار می‌تواند به‌طور قابل توجهی ارزش شما را در بازار کار بالا ببرد.</p>
+
+  <h3>آموزش حسابداری با اکسل</h3>
+  <p>اکسل ابزار قدرتمندی است که در کنار هر نرم‌افزار حسابداری کاربرد دارد. از تهیه گزارش‌های مقایسه‌ای تا مدل‌سازی مالی و تجزیه‌وتحلیل داده‌های مالی، آموزش اکسل برای حسابداران یک مزیت رقابتی واقعی محسوب می‌شود.</p>
+
+  <h3>آموزش حسابداری پیمانکاری</h3>
+  <p>حسابداری پیمانکاری یک حوزه تخصصی با قوانین و استانداردهای خاص خود است. این دوره برای کسانی مناسب است که می‌خواهند در شرکت‌های پیمانکاری، ساختمانی یا عمرانی کار کنند.</p>
+
+  <h2>مقایسه دوره‌های آموزش حسابداری جاویدان</h2>
+  <div class="seo-table-wrap">
+    <table class="seo-table">
+      <thead>
+        <tr>
+          <th>نوع دوره</th>
+          <th>مناسب برای</th>
+          <th>مهارت‌های اصلی</th>
+          <th>نتیجه نهایی</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>دوره پایه</strong></td>
+          <td>افراد بدون پیش‌زمینه، تغییر شغل</td>
+          <td>اصول حسابداری، ثبت اسناد، ترازنامه</td>
+          <td>ورود به بازار کار به‌عنوان حسابدار</td>
+        </tr>
+        <tr>
+          <td><strong>دوره پیشرفته ۱</strong></td>
+          <td>حسابداران مبتدی با پایه ضعیف</td>
+          <td>حقوق و دستمزد، هلو، گزارش‌گیری</td>
+          <td>حسابدار مستقل و فریلنسر</td>
+        </tr>
+        <tr>
+          <td><strong>دوره پیشرفته ۲</strong></td>
+          <td>حسابداران با تجربه متوسط</td>
+          <td>سپیدار، مدیریت پروژه مالی، اکسل</td>
+          <td>حسابدار ارشد یا مدیر مالی</td>
+        </tr>
+        <tr>
+          <td><strong>دوره مالیاتی</strong></td>
+          <td>حسابداران شاغل، صاحبان کسب‌وکار</td>
+          <td>مالیات بر ارزش افزوده، اظهارنامه، مشاوره</td>
+          <td>مشاور مالیاتی مستقل یا متخصص</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>سوالات متداول درباره آموزش حسابداری</h2>
+  <div class="faq-list" itemscope itemtype="https://schema.org/FAQPage">
+
+    <!-- FAQ items -->
+    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="faq-q" tabindex="0" role="button" aria-expanded="false">
+        <span itemprop="name">آیا آموزش حسابداری از صفر امکان‌پذیر است؟</span>
+        <svg class="faq-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div class="faq-a-inner" itemprop="text">بله، کاملاً امکان‌پذیر است. بیش از ۶۰٪ دانشجویان آکادمی جاویدان بدون هیچ سابقه‌ای در حسابداری شروع کردند. دوره پایه طوری طراحی شده که فرد را از ابتدایی‌ترین مفاهیم (مثل درک دارایی، بدهی و سرمایه) تا مراحل عملی ثبت اسناد و کار با نرم‌افزار حسابداری راهنمایی می‌کند.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="faq-q" tabindex="0" role="button" aria-expanded="false">
+        <span itemprop="name">بهترین دوره آموزش حسابداری چیست؟</span>
+        <svg class="faq-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div class="faq-a-inner" itemprop="text">بهترین دوره آموزش حسابداری بستگی به هدف شما دارد. اگر تازه‌کار هستید، دوره پایه آکادمی جاویدان بهترین نقطه شروع است. اگر شاغل هستید و می‌خواهید مهارت مالیاتی کسب کنید، دوره تخصصی مالیاتی را پیشنهاد می‌کنیم. معیارهای انتخاب بهترین دوره: آموزش عملی با نرم‌افزار، پشتیبانی پس از دوره، معرفی به بازار کار و به‌روز بودن محتوا.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="faq-q" tabindex="0" role="button" aria-expanded="false">
+        <span itemprop="name">چقدر زمان لازم است حسابداری یاد بگیریم؟</span>
+        <svg class="faq-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div class="faq-a-inner" itemprop="text">با یک برنامه منظم و هدفمند، در ۳ تا ۶ ماه می‌توان مهارت کافی برای ورود به بازار کار حسابداری را کسب کرد. دوره پایه آکادمی جاویدان در حدود ۳ ماه مهارت‌های پایه را پوشش می‌دهد. البته سرعت یادگیری به تعداد ساعت مطالعه روزانه و انجام تمرین‌های عملی بستگی دارد.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="faq-q" tabindex="0" role="button" aria-expanded="false">
+        <span itemprop="name">آیا بعد از آموزش حسابداری می‌توان وارد بازار کار شد؟</span>
+        <svg class="faq-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div class="faq-a-inner" itemprop="text">بله. بیش از ۸۵۰ نفر از دانشجویان آکادمی جاویدان پس از اتمام دوره‌ها وارد بازار کار شدند. آکادمی علاوه بر آموزش، در معرفی دانشجویان به کارفرمایان همکار نیز کمک می‌کند. مهم‌تر از همه، چون آموزش‌ها عملی هستند، دانشجویان از روز اول کار می‌توانند در محیط واقعی کار کنند.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="faq-q" tabindex="0" role="button" aria-expanded="false">
+        <span itemprop="name">آیا آموزش حسابداری مالیاتی سخت است؟</span>
+        <svg class="faq-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div class="faq-a-inner" itemprop="text">حسابداری مالیاتی نسبت به حسابداری عمومی تخصصی‌تر است، اما با روش آموزشی درست، قابل یادگیری برای همه است. قوانین مالیاتی ایران پیچیدگی‌های خاص خود را دارد، اما اگر ابتدا پایه‌های حسابداری را محکم کرده باشید، یادگیری مالیات بسیار ساده‌تر خواهد بود. دوره مالیاتی آکادمی جاویدان با مثال‌های واقعی و پرونده‌های واقعی مالیاتی تدریس می‌شود.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="faq-q" tabindex="0" role="button" aria-expanded="false">
+        <span itemprop="name">تفاوت حسابداری مقدماتی و بازار کار چیست؟</span>
+        <svg class="faq-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div class="faq-a-inner" itemprop="text">حسابداری مقدماتی تئوری و پایه‌های نظری حسابداری را پوشش می‌دهد؛ مثل آنچه در کتاب‌های درسی یاد می‌گیرید. اما حسابداری بازار کار، مهارت‌های عملی است که کارفرماها دنبالش می‌گردند: کار با نرم‌افزار، تهیه اسناد واقعی، مدیریت مالیات و حقوق. آکادمی جاویدان ترکیبی از هر دو را ارائه می‌دهد تا دانشجو هم درک نظری و هم توانایی عملی داشته باشد.</td>
+      </div>
+    </div>
+
+    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="faq-q" tabindex="0" role="button" aria-expanded="false">
+        <span itemprop="name">آیا می‌توان آموزش حسابداری را در منزل یاد گرفت؟</span>
+        <svg class="faq-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div class="faq-a-inner" itemprop="text">بله، دوره‌های آکادمی جاویدان به‌صورت آنلاین و قابل مشاهده در منزل ارائه می‌شوند. شما می‌توانید با یک لپ‌تاپ یا حتی گوشی هوشمند، در هر ساعتی از شبانه‌روز، آموزش‌ها را ببینید و تمرین کنید. این امکان باعث شده بسیاری از خانم‌های خانه‌دار، افراد شاغل در مشاغل دیگر و ساکنان شهرستان‌ها بتوانند از این آموزش‌ها بهره‌مند شوند.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="faq-q" tabindex="0" role="button" aria-expanded="false">
+        <span itemprop="name">بهترین نرم‌افزار حسابداری برای یادگیری کدام است؟</span>
+        <svg class="faq-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div class="faq-a-inner" itemprop="text">برای کسب‌وکارهای کوچک و متوسط، نرم‌افزار هلو بسیار پرکاربرد است و یادگیری آن برای ورود سریع به بازار کار توصیه می‌شود. برای شرکت‌های بزرگ‌تر، سپیدار سیستم (همکاران سیستم) رایج‌ترین انتخاب است. آکادمی جاویدان آموزش هر دو نرم‌افزار را در دوره‌های مربوطه ارائه می‌دهد.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="faq-q" tabindex="0" role="button" aria-expanded="false">
+        <span itemprop="name">آیا برای آموزش حسابداری به مدرک دانشگاهی نیاز است؟</span>
+        <svg class="faq-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div class="faq-a-inner" itemprop="text">خیر. بسیاری از کارفرمایان امروزی مهارت عملی را بر مدرک ترجیح می‌دهند. کسی که بتواند با نرم‌افزار کار کند، اظهارنامه مالیاتی تنظیم کند و لیست حقوق را درست حساب کند، بدون توجه به مدرک تحصیلی‌اش استخدام می‌شود. البته گواهینامه‌های معتبر از موسسات شناخته‌شده می‌تواند در فرآیند استخدام کمک‌کننده باشد.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="faq-q" tabindex="0" role="button" aria-expanded="false">
+        <span itemprop="name">قیمت دوره آموزش حسابداری چقدر است؟</span>
+        <svg class="faq-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div class="faq-a-inner" itemprop="text">قیمت دوره‌های آکادمی جاویدان با توجه به محتوا و سطح هر دوره متفاوت است. برای اطلاع از جزئیات قیمت‌گذاری و پکیج‌های ترکیبی که صرفه‌جویی بیشتری دارند، به صفحه دوره‌ها مراجعه کنید. اغلب پکیج‌های ترکیبی نسبت به خرید جداگانه هر دوره به‌صرفه‌تر هستند.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="faq-q" tabindex="0" role="button" aria-expanded="false">
+        <span itemprop="name">آموزش حسابداری پیمانکاری چه تفاوتی با حسابداری عمومی دارد؟</span>
+        <svg class="faq-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div class="faq-a-inner" itemprop="text">حسابداری پیمانکاری قوانین و استانداردهای خاصی دارد که در حسابداری عمومی وجود ندارد. مثلاً روش‌های شناسایی درآمد در پروژه‌های بلندمدت، نحوه ثبت پیش‌دریافت‌ها و پیش‌پرداخت‌ها، و محاسبه سود دوره‌ای در پروژه‌های در دست اجرا از ویژگی‌های خاص حسابداری پیمانکاری است. این تخصص در شرکت‌های عمرانی و ساختمانی بسیار ارزشمند است.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="faq-q" tabindex="0" role="button" aria-expanded="false">
+        <span itemprop="name">آیا آموزش حسابداری با اکسل کافی است؟</span>
+        <svg class="faq-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div class="faq-a-inner" itemprop="text">اکسل یک ابزار مکمل است، نه جایگزین نرم‌افزار حسابداری. بسیاری از شرکت‌های کوچک از اکسل برای حسابداری ابتدایی استفاده می‌کنند، اما برای گزارش‌دهی دقیق، مدیریت مالیات و انبارداری، به نرم‌افزارهای تخصصی مثل هلو یا سپیدار نیاز است. توصیه می‌کنیم آموزش اکسل را در کنار آموزش نرم‌افزارهای حسابداری دنبال کنید.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="faq-q" tabindex="0" role="button" aria-expanded="false">
+        <span itemprop="name">بهترین روش آموزش حسابداری خرید و فروش چیست؟</span>
+        <svg class="faq-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div class="faq-a-inner" itemprop="text">آموزش حسابداری خرید و فروش بهتر است با مثال‌های واقعی و اسناد واقعی یاد گرفته شود. ثبت فاکتور خرید، محاسبه مالیات بر ارزش افزوده، ثبت برگشت از خرید و فروش، و تهیه گزارش‌های خرید و فروش از مباحث اصلی این حوزه است. در دوره‌های آکادمی جاویدان، تمام این موارد با نرم‌افزار و اسناد واقعی تمرین می‌شود.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="faq-q" tabindex="0" role="button" aria-expanded="false">
+        <span itemprop="name">آیا آموزش حسابداری صنعتی برای تغییر شغل مناسب است؟</span>
+        <svg class="faq-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div class="faq-a-inner" itemprop="text">حسابداری صنعتی یکی از تخصصی‌ترین و کم‌رقیب‌ترین شاخه‌های حسابداری است. اگر سابقه کار در محیط‌های صنعتی دارید یا به این حوزه علاقه دارید، یادگیری حسابداری صنعتی می‌تواند شما را در بازار کار بسیار متمایز کند. برای شروع، بهتر است ابتدا مبانی حسابداری عمومی را بیاموزید و سپس وارد حسابداری صنعتی شوید.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="faq-q" tabindex="0" role="button" aria-expanded="false">
+        <span itemprop="name">چطور بفهمم کدام دوره آموزش حسابداری برایم مناسب است؟</span>
+        <svg class="faq-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <div class="faq-a-inner" itemprop="text">سه سوال از خودتان بپرسید: اول، الان چه سطحی از دانش حسابداری دارم؟ دوم، هدف من چیست (استخدام، فریلنس، ارتقاء شغلی یا مستقل شدن)؟ سوم، در کدام حوزه می‌خواهم کار کنم (تجاری، صنعتی، مالیاتی)؟ پاسخ به این سه سوال دوره مناسب را به شما نشان می‌دهد. همچنین تیم مشاوره آکادمی جاویدان می‌تواند رایگان راهنمایی کند.</div>
+      </div>
+    </div>
+
+  </div><!-- end faq-list -->
+
+</div><!-- end seo-section -->
+
+<!-- ── CTA ── -->
 <div class="cta-section">
-  <h2 class="cta-title">شما هم می‌توانید جزو نفرات بعدی باشید</h2>
-  <p class="cta-desc">همین حالا مسیر موفقیت خود را شروع کنید.</p>
-  <a href="https://jaavidan.ir" class="cta-btn">
-    مشاهده دوره‌ها
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-  </a>
+  <h2 class="cta-title">شما هم می‌توانید نفر بعدی باشید</h2>
+  <p class="cta-desc">بیش از ۱۲۰۰ نفر قبل از شما این مسیر را طی کردند و به نتایجی رسیدند که خودشان هم باورشان نمی‌شد. امروز یک قدم بردارید.</p>
+  <div class="cta-btn-group">
+    <a href="https://jaavidan.ir/courses" class="cta-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      مشاهده دوره‌ها و ثبت‌نام
+    </a>
+    <a href="https://jaavidan.ir/contact" class="cta-btn-outline">
+      مشاوره رایگان
+    </a>
+  </div>
+  <div class="cta-trust">
+    <span class="cta-trust-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      +۱۲۰۰ دانشجوی موفق
+    </span>
+    <span class="cta-trust-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      آموزش کاملاً عملی
+    </span>
+    <span class="cta-trust-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      پشتیبانی تا ورود به بازار کار
+    </span>
+    <span class="cta-trust-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      قابل مشاهده در منزل
+    </span>
+  </div>
 </div>
 
 <script>
-const catNames = ['دوره پایه','دوره پیشرفته ۱','دوره پیشرفته ۲','دوره مالیاتی'];
-
-// Each video: id, cat, title, accordionText, keywords[]
 const videos = [
-
-  // ─── دوره پایه (cat:0) ──────────────────────────────────────────
-  {
-    id:'cUEHl', cat:0,
-    title:'چطور بدون هیچ سابقه‌ای وارد دنیای حسابداری شدم',
-    text:'وقتی تصمیم گرفتم آموزش حسابداری مقدماتی را جدی بگیرم، فکر نمی‌کردم در کمتر از شش ماه بتوانم استخدام شوم. دوره پایه جاویدان به‌گونه‌ای طراحی شده که یادگیری آموزش حسابداری از پایه را برای مبتدیان کاملاً ممکن می‌کند؛ بدون پیش‌نیاز دانشگاهی، بدون اتلاف وقت، و با مثال‌هایی کاملاً کاربردی از بازار کار واقعی.',
-    kws:['آموزش حسابداری مقدماتی','آموزش حسابداری از پایه','آموزش حسابداری بازار کار']
-  },
-  {
-    id:'ta9Kr', cat:0,
-    title:'از خانه‌داری تا حسابدار شرکت؛ مسیری که باور نمی‌کردم',
-    text:'آموزش حسابداری در منزل برای من یک رویا بود که جاویدان آن را واقعی کرد. با زمان‌بندی آزاد و محتوای ساختارمند، توانستم در کنار مسئولیت‌های خانه، تمام مفاهیم پایه را به‌صورت عملی یاد بگیرم و پس از اتمام دوره، موقعیت شغلی مناسبی پیدا کنم. اگر دنبال آموزش حسابداری رایگان هستید، از نمونه‌درس‌های رایگان سایت شروع کنید.',
-    kws:['آموزش حسابداری در منزل','آموزش حسابداری رایگان','آموزش حسابداری مقدماتی']
-  },
-  {
-    id:'dofx0hr', cat:0,
-    title:'با این دوره فهمیدم حسابداری یاد گرفتنی است',
-    text:'قبل از جاویدان، چندین دوره آموزش حسابداری رایگان در اینترنت دیدم اما هیچ‌کدام مسیر مشخصی نداشتند. دوره پایه جاویدان با ساختار گام‌به‌گام آموزش حسابداری از پایه، دقیقاً همان چیزی بود که نیاز داشتم. حالا با اطمینان می‌توانم صورت‌های مالی اولیه را تهیه کنم و در مصاحبه‌های شغلی حرف برای گفتن دارم.',
-    kws:['آموزش حسابداری رایگان','آموزش حسابداری از پایه','آموزش حسابداری مقدماتی']
-  },
-  {
-    id:'sggf82s', cat:0,
-    title:'اولین حقوقم از حسابداری؛ یک سال پس از شروع دوره',
-    text:'یکی از بزرگ‌ترین دغدغه‌های کسانی که می‌خواهند آموزش حسابداری بازار کار را شروع کنند، این است که آیا واقعاً می‌توانند بدون مدرک رسمی وارد بازار شوند؟ تجربه من نشان داد بله. دوره پایه جاویدان نه‌فقط مفاهیم، بلکه مهارت‌های عملی لازم برای ورود به بازار کار را به‌شکلی قابل‌فهم آموزش می‌دهد.',
-    kws:['آموزش حسابداری بازار کار','آموزش حسابداری مقدماتی','آموزش حسابداری از پایه']
-  },
-  {
-    id:'gqieex6', cat:0,
-    title:'بهترین تصمیم شغلی عمرم: شروع دوره پایه حسابداری',
-    text:'وقتی دنبال بهترین دوره آموزش حسابداری می‌گشتم، نظرات واقعی دانشجوها مرا به جاویدان رساند. محتوا کامل، مدرس صبور، و پشتیبانی عالی — این سه عامل کنار هم باعث شدند یادگیری برایم لذت‌بخش باشد نه اجبار. الان با اطمینان می‌توانم بگویم این بهترین پکیج آموزش حسابداری فارسی‌زبانانی است که دیدم.',
-    kws:['بهترین دوره آموزش حسابداری','بهترین پکیج آموزش حسابداری','بهترین سایت آموزش حسابداری']
-  },
-  {
-    id:'eqmm2b0', cat:0,
-    title:'گام‌به‌گام تا اولین قرارداد حسابداری‌ام',
-    text:'آموزش حسابداری خرید و فروش یکی از مباحثی بود که همیشه برایم مبهم بود. در دوره پایه جاویدان، این مبحث با مثال‌های کاملاً واقعی تدریس می‌شود؛ از ثبت فاکتور خرید گرفته تا تسویه‌حساب فروش. این شفافیت در آموزش بود که به من کمک کرد اولین قرارداد مستقل حسابداری‌ام را ببندم.',
-    kws:['آموزش حسابداری خرید و فروش','آموزش حسابداری خرید و فروش کالا','آموزش حسابداری فروش']
-  },
-  {
-    id:'nujnezm', cat:0,
-    title:'تغییر شغل در ۳۵ سالگی با آموزش حسابداری',
-    text:'خیلی‌ها فکر می‌کنند تغییر شغل در میانسالی ممکن نیست. من در ۳۵ سالگی، با خرید پکیج آموزش حسابداری جاویدان، این باور را نقض کردم. مطالب کاملاً به‌روز، پشتیبانی آنلاین، و ساختار یادگیری هوشمند به من کمک کرد در کمتر از یک سال حرفه‌ام را عوض کنم.',
-    kws:['خرید پکیج آموزش حسابداری','آموزش حسابداری از پایه','بهترین دوره آموزش حسابداری']
-  },
-  {
-    id:'ldv39j1', cat:0,
-    title:'آموزش حسابداری که واقعاً به درد کار می‌خورد',
-    text:'تفاوت دوره پایه جاویدان با سایر دوره‌ها در کاربردی بودن آن است. مباحثی مثل آموزش حسابداری خرید و فروش پودمان ۱ که معمولاً به‌صورت تئوری تدریس می‌شوند، در جاویدان با نرم‌افزار و فایل‌های تمرینی واقعی آموزش داده می‌شوند. این تجربه عملی بود که آمادگی واقعی کار را در من ایجاد کرد.',
-    kws:['آموزش حسابداری خرید و فروش پودمان ۱','آموزش حسابداری خرید و فروش','آموزش حسابداری بازار کار']
-  },
-  {
-    id:'HRDrB', cat:0,
-    title:'از ترس از اعداد تا عشق به حسابداری',
-    text:'راستش همیشه از حسابداری می‌ترسیدم. اما دوره پایه جاویدان با زبانی ساده و مثال‌های روزمره نشان داد که آموزش حسابداری مقدماتی نه‌تنها سخت نیست، بلکه می‌تواند جذاب باشد. حالا کسی هستم که دوستان و خانواده‌ام برای سؤالات مالی‌شان به سراغم می‌آیند.',
-    kws:['آموزش حسابداری مقدماتی','آموزش حسابداری از پایه','بهترین سایت آموزش حسابداری']
-  },
-  {
-    id:'DXOuk', cat:0,
-    title:'دوره‌ای که ارزش هر ریالش را دارد',
-    text:'قبل از ثبت‌نام، نگران قیمت دوره آموزش حسابداری بودم. اما وقتی نتیجه را دیدم، فهمیدم این سرمایه‌گذاری هوشمندانه‌ترین تصمیم مالی عمرم بود. الان با درآمدی که از حسابداری دارم، هزینه دوره در اولین ماه کاری جبران شد. برای کسانی که سؤال دارند قیمت دوره آموزش حسابداری ارزشش را دارد یا نه، جواب من قطعاً بله است.',
-    kws:['قیمت دوره آموزش حسابداری','بهترین پکیج آموزش حسابداری','آموزش حسابداری بازار کار']
-  },
-  {
-    id:'ENosX', cat:0,
-    title:'چرا جاویدان را به همه توصیه می‌کنم',
-    text:'وقتی دنبال بهترین سایت آموزش حسابداری می‌گشتم، با سایت‌های زیادی روبه‌رو شدم. اما جاویدان یک تفاوت اساسی داشت: پشتیبانی واقعی پس از آموزش. هر وقت در حین کار با مشکل مواجه می‌شدم، پاسخ می‌گرفتم. این حمایت مستمر بود که از یک دانشجوی ساده، یک حسابدار حرفه‌ای ساخت.',
-    kws:['بهترین سایت آموزش حسابداری','بهترین سایت های آموزش حسابداری','بهترین دوره آموزش حسابداری']
-  },
-  {
-    id:'MEc9A', cat:0,
-    title:'از کتاب درسی تا بازار کار واقعی حسابداری',
-    text:'بسیاری از کتاب‌های آموزش حسابداری فقط تئوری هستند و شکاف بزرگی با بازار کار دارند. بهترین کتاب آموزش حسابداری مقدماتی هم نمی‌تواند جای تمرین عملی را بگیرد. دوره پایه جاویدان این شکاف را پر می‌کند؛ با پروژه‌های واقعی، نمونه سندها، و آموزش نرم‌افزارهای رایج بازار.',
-    kws:['بهترین کتاب آموزش حسابداری','بهترین کتاب آموزش حسابداری مقدماتی','آموزش حسابداری بازار کار']
-  },
-
-  // ─── دوره پیشرفته ۱ (cat:1) ─────────────────────────────────────
-  {
-    id:'MvPun', cat:1,
-    title:'نرم‌افزار هلو را در یک ماه تسلط پیدا کردم',
-    text:'آموزش حسابداری هلو یکی از پرتقاضاترین مهارت‌های بازار کار است و دوره پیشرفته ۱ جاویدان آن را از صفر تا صد پوشش می‌دهد. از ثبت اسناد اولیه گرفته تا گزارش‌گیری پیشرفته — همه چیز با پروژه‌های عملی آموزش داده می‌شود. بعد از اتمام دوره، درآمدم به‌طور قابل‌توجهی افزایش یافت.',
-    kws:['آموزش حسابداری هلو','آموزش حسابداری بازار کار','بهترین برنامه آموزش حسابداری']
-  },
-  {
-    id:'8PhBb', cat:1,
-    title:'سپیدار بلد بودن؛ کلید ورود به شرکت‌های بزرگ',
-    text:'شرکت‌های معتبر اغلب دنبال کسانی می‌گردند که آموزش حسابداری سپیدار را جدی گرفته باشند. دوره پیشرفته ۱ جاویدان با پوشش کامل نرم‌افزار سپیدار، از جمله آموزش حسابداری فروش سپیدار و ماژول‌های مرتبط، مرا برای مصاحبه‌های شغلی سطح بالا آماده کرد. حالا در یکی از بهترین شرکت‌های تهران کار می‌کنم.',
-    kws:['آموزش حسابداری سپیدار','آموزش حسابداری فروش سپیدار','آموزش حسابداری بازار کار']
-  },
-  {
-    id:'yhYzS', cat:1,
-    title:'چطور با یادگیری نرم‌افزارهای حسابداری درآمدم دو برابر شد',
-    text:'آموزش حسابداری بازار کار فراتر از تئوری است؛ یعنی تسلط بر ابزارهایی که کارفرماها به آن‌ها نیاز دارند. دوره پیشرفته ۱ جاویدان شامل آموزش حسابداری پارسیان، هلو و سپیدار است. این ترکیب مهارتی باعث شد در کمتر از سه ماه پس از اتمام دوره، پیشنهاد کاری بهتری دریافت کنم.',
-    kws:['آموزش حسابداری بازار کار','آموزش حسابداری پارسیان','آموزش حسابداری هلو']
-  },
-  {
-    id:'L3uOM', cat:1,
-    title:'پارسیان یاد گرفتم، اعتمادبه‌نفسم برگشت',
-    text:'همیشه فکر می‌کردم آموزش حسابداری پارسیان خیلی سخت است. اما محتوای دوره پیشرفته ۱ جاویدان نشان داد که با راهنمایی درست، این نرم‌افزار هم قابل یادگیری است. حالا در شرکتی که از پارسیان استفاده می‌کند مشغول به کار هستم و با اطمینان تمام ماژول‌ها را اداره می‌کنم.',
-    kws:['آموزش حسابداری پارسیان','آموزش حسابداری بازار کار','بهترین موسسه آموزش حسابداری در تهران']
-  },
-  {
-    id:'1obsP', cat:1,
-    title:'از دانشجوی تازه‌کار تا متخصص نرم‌افزارهای حسابداری',
-    text:'وقتی دنبال بهترین موسسه آموزش حسابداری در تهران می‌گشتم، می‌خواستم جایی که هم تئوری و هم عملیات واقعی را آموزش دهد. جاویدان این دو را با هم دارد. دوره پیشرفته ۱ مرا از یک حسابدار مبتدی به متخصصی تبدیل کرد که می‌تواند با چندین نرم‌افزار به‌طور همزمان کار کند.',
-    kws:['بهترین موسسه آموزش حسابداری در تهران','بهترین موسسه های آموزش حسابداری','آموزش حسابداری بازار کار']
-  },
-  {
-    id:'xuyv9', cat:1,
-    title:'آموزش حسابداری فروش که واقعاً کاربردی بود',
-    text:'آموزش حسابداری فروش در اغلب دوره‌ها به‌صورت سطحی پوشش داده می‌شود. اما دوره پیشرفته ۱ جاویدان شامل آموزش حسابداری فروش همکاران سیستم، راهکاران سیستم، و ثبت فاکتورهای اقساطی است. این جامعیت بود که مرا از سایر داوطلبان متمایز کرد و به کارم رسید.',
-    kws:['آموزش حسابداری فروش','آموزش حسابداری فروش همکاران سیستم','آموزش حسابداری فروش اقساطی']
-  },
-  {
-    id:'HLk9b', cat:1,
-    title:'یادگیری حسابداری فروش اقساطی؛ مهارتی که همه می‌خواهند',
-    text:'شرکت‌های بازرگانی به حسابدارانی نیاز دارند که آموزش حسابداری فروش اقساطی را به‌خوبی بدانند. این مهارت در دوره پیشرفته ۱ جاویدان با مثال‌های کامل از دنیای واقعی تدریس می‌شود. بعد از اتمام دوره، موقعیت شغلی خوبی با تمرکز روی فروش اقساطی پیدا کردم.',
-    kws:['آموزش حسابداری فروش اقساطی','آموزش حسابداری فروش','بهترین دوره آموزش حسابداری']
-  },
-  {
-    id:'mCWRx', cat:1,
-    title:'با دوره پیشرفته ۱، گزینه‌های شغلی‌ام ۳ برابر شد',
-    text:'قبل از دوره پیشرفته ۱ جاویدان، فقط می‌توانستم برای مشاغل ابتدایی درخواست بدهم. اما بعد از یادگیری نرم‌افزارهای تخصصی و آموزش حسابداری خرید خارجی، دامنه مشاغل مناسبم به‌شکل چشمگیری گسترش یافت. شرکت‌های واردکننده‌ای که قبلاً در دسترسم نبودند، حالا مرا دعوت به مصاحبه می‌کنند.',
-    kws:['آموزش حسابداری خرید خارجی','آموزش حسابداری خرید و فروش','آموزش حسابداری بازار کار']
-  },
-  {
-    id:'xZcwF', cat:1,
-    title:'بهترین برنامه آموزشی که تا حالا تجربه کردم',
-    text:'از نظر ساختار و کیفیت، جاویدان بهترین برنامه آموزش حسابداری است که تجربه کرده‌ام. محتوا به‌روز است، اساتید حرفه‌ای هستند، و پشتیبانی واقعی وجود دارد. اگر بین چند آموزشگاه مقایسه می‌کنید و دنبال بهترین مرکز آموزش حسابداری هستید، توصیه می‌کنم نظرات دانشجوهای جاویدان را بخوانید.',
-    kws:['بهترین برنامه آموزش حسابداری','بهترین مرکز آموزش حسابداری','بهترین مرکز آموزش حسابداری در تهران']
-  },
-  {
-    id:'HPUke', cat:1,
-    title:'هم هلو، هم سپیدار؛ ترکیبی که کارفرماها می‌خواهند',
-    text:'یکی از رازهای موفقیت در بازار کار حسابداری، تسلط همزمان بر چند نرم‌افزار است. دوره پیشرفته ۱ جاویدان آموزش حسابداری هلو و آموزش حسابداری سپیدار را در کنار هم پوشش می‌دهد. این مهارت ترکیبی باعث شد در مذاکره حقوق، جایگاه بهتری داشته باشم.',
-    kws:['آموزش حسابداری هلو','آموزش حسابداری سپیدار','بهترین دوره آموزش حسابداری']
-  },
-  {
-    id:'DAlEg', cat:1,
-    title:'مصاحبه‌ای که بدون دوره ممکن نبود',
-    text:'در مصاحبه استخدامی از من خواستند با نرم‌افزار آموزش حسابداری فروش راهکاران سیستم کار کنم. دقیقاً همان چیزی که در دوره پیشرفته ۱ جاویدان یاد گرفته بودم. این آمادگی عملی بود که باعث شد از بین ده نفر داوطلب، من انتخاب شوم.',
-    kws:['آموزش حسابداری فروش راهکاران سیستم','آموزش حسابداری فروش','بهترین دوره آموزش حسابداری']
-  },
-  {
-    id:'vhu53', cat:1,
-    title:'درآمد فریلنسری حسابداری که باورم نمی‌شد',
-    text:'بعد از دوره پیشرفته ۱، تصمیم گرفتم فریلنسر شوم. آموزش حسابداری خرید دین و سایر مباحث تخصصی که در جاویدان یاد گرفتم، باعث شد بتوانم پروژه‌های پیچیده‌تر قبول کنم و حق‌الزحمه بالاتری بگیرم. الان درآمد ماهیانه‌ام از هر شغل قبلی‌ام بیشتر است.',
-    kws:['آموزش حسابداری خرید دین','آموزش حسابداری بازار کار','بهترین پکیج آموزش حسابداری']
-  },
-
-  // ─── دوره پیشرفته ۲ (cat:2) ─────────────────────────────────────
-  {
-    id:'h70qF', cat:2,
-    title:'حسابداری صنعتی؛ تخصصی که بازار کم دارد',
-    text:'آموزش حسابداری صنعتی یکی از نادرترین تخصص‌ها در بازار کار ایران است. دوره پیشرفته ۲ جاویدان با پوشش کامل این حوزه، از بهای تمام‌شده گرفته تا حسابداری مراکز هزینه، مرا به یکی از متخصصانی تبدیل کرد که کارفرماها برای جذبشان رقابت می‌کنند.',
-    kws:['آموزش حسابداری صنعتی','آموزش حسابداری قیمت تمام شده','بهترین دوره آموزش حسابداری']
-  },
-  {
-    id:'qdXSg', cat:2,
-    title:'پیمانکاری یاد گرفتم، قرارداد بزرگ گرفتم',
-    text:'آموزش حسابداری پیمانکاری یکی از پیچیده‌ترین شاخه‌های حسابداری است. دوره پیشرفته ۲ جاویدان این مبحث را به زبانی ساده و با پروژه‌های واقعی آموزش می‌دهد. بعد از اتمام دوره، توانستم اولین قرارداد حسابداری پیمانکاری‌ام را ببندم که درآمدش به‌تنهایی هزینه دوره را چند برابر جبران کرد.',
-    kws:['آموزش حسابداری پیمانکاری','آموزش حسابداری صنعتی','قیمت دوره آموزش حسابداری']
-  },
-  {
-    id:'amJe7', cat:2,
-    title:'اکسل حسابداری؛ وقتی کار نصف می‌شود',
-    text:'آموزش حسابداری با اکسل برای من یک انقلاب بود. کارهایی که قبلاً ساعت‌ها وقت می‌گرفتند، حالا در چند دقیقه انجام می‌شوند. دوره پیشرفته ۲ جاویدان فرمول‌ها، توابع مالی، و داشبوردهای حسابداری را از صفر تا پیشرفته پوشش می‌دهد. هر حسابداری که این مهارت را داشته باشد، در چشم کارفرما متفاوت است.',
-    kws:['آموزش حسابداری با اکسل','آموزش حسابداری صنعتی','بهترین برنامه آموزش حسابداری']
-  },
-  {
-    id:'4lXEh', cat:2,
-    title:'با دانش دوره پیشرفته، دفتر حسابداری خودم را باز کردم',
-    text:'رویایم داشتن دفتر حسابداری مستقل بود. دوره پیشرفته ۲ جاویدان با آموزش حسابداری پیمانکاری، صنعتی، و قیمت تمام‌شده، ابزارهایی که برای این استقلال نیاز داشتم را در اختیارم گذاشت. الان دفتر خودم را دارم و مشتریانی از صنایع مختلف به من اعتماد می‌کنند.',
-    kws:['آموزش حسابداری پیمانکاری','آموزش حسابداری صنعتی','بهترین مرکز آموزش حسابداری در تهران']
-  },
-  {
-    id:'HdoJu', cat:2,
-    title:'مدیریت مالی شرکت را در دست گرفتم',
-    text:'قبل از دوره پیشرفته ۲، توانایی مدیریت مالی کامل یک شرکت متوسط را نداشتم. آموزش حسابداری صنعتی و آموزش حسابداری قیمت تمام‌شده که در این دوره یاد گرفتم، دیدگاه مالی‌ام را کاملاً تغییر داد. الان مسئول تمام گزارش‌های مالی و بودجه‌ریزی شرکتی هستم که در آن کار می‌کنم.',
-    kws:['آموزش حسابداری صنعتی','آموزش حسابداری قیمت تمام شده','بهترین دوره آموزش حسابداری']
-  },
-  {
-    id:'tIPZv', cat:2,
-    title:'قیمت تمام‌شده؛ مهارتی که مدیران می‌خواهند',
-    text:'آموزش حسابداری قیمت تمام‌شده به مدیران کمک می‌کند تصمیمات بهتری بگیرند. وقتی این مهارت را در دوره پیشرفته ۲ جاویدان کامل یاد گرفتم، مدیران ارشد شرکت شروع کردند نظرم را در تصمیمات مهم می‌پرسیدند. این ارتقاء موقعیت نتیجه مستقیم سرمایه‌گذاری در آموزش بود.',
-    kws:['آموزش حسابداری قیمت تمام شده','آموزش حسابداری صنعتی','قیمت دوره آموزش حسابداری']
-  },
-  {
-    id:'ptejy', cat:2,
-    title:'درآمد دلاری با حسابداری پیشرفته؛ ممکن است',
-    text:'با تخصص در آموزش حسابداری خرید خارجی که در دوره پیشرفته ۲ یاد گرفتم، توانستم با شرکت‌های واردکننده همکاری کنم. بخشی از پرداخت‌هایم به‌صورت ارزی است. این سطح از تخصص بدون یادگیری اصولی آموزش حسابداری با اکسل و سایر ابزارهای پیشرفته ممکن نبود.',
-    kws:['آموزش حسابداری خرید خارجی','آموزش حسابداری با اکسل','بهترین دوره آموزش حسابداری']
-  },
-  {
-    id:'0dMGb', cat:2,
-    title:'اتوماسیون حسابداری؛ آینده حرفه‌ای که باید الان شروع کرد',
-    text:'آموزش حسابداری با اکسل در دوره پیشرفته ۲ جاویدان فراتر از فرمول‌های پایه است. ماکروها، پاورکوئری، و داشبوردهای خودکار — این‌ها ابزارهایی هستند که حسابداری مدرن بدون‌شان ناقص است. با یادگیری این مهارت‌ها، توانستم فرآیند گزارش‌دهی شرکت را اتوماتیک کنم و در وقت و هزینه صرفه‌جویی قابل‌توجهی ایجاد کنم.',
-    kws:['آموزش حسابداری با اکسل','آموزش حسابداری صنعتی','بهترین برنامه آموزش حسابداری']
-  },
-  {
-    id:'LcPQg', cat:2,
-    title:'جاویدان؛ بهترین مرکز آموزش حسابداری که دیدم',
-    text:'بعد از تجربه چند آموزشگاه مختلف، می‌توانم با اطمینان بگویم جاویدان بهترین مراکز آموزش حسابداری در تهران است. نه به‌خاطر تبلیغات، بلکه به‌خاطر نتیجه‌ای که دادند. دوره پیشرفته ۲ مرا به سطحی رساند که قیمت آموزش حسابداری در تبریز یا تهران هم دیگر برایم مانعی نیست، چون درآمدم آن را توجیه می‌کند.',
-    kws:['بهترین مراکز آموزش حسابداری در تهران','بهترین مرکز آموزش حسابداری در تهران','قیمت آموزش حسابداری در تبریز']
-  },
-  {
-    id:'hbToH', cat:2,
-    title:'کارآفرینی با پشتوانه دانش حسابداری پیشرفته',
-    text:'بسیاری از کسب‌وکارها به‌دلیل ضعف در مدیریت مالی شکست می‌خورند. من با یادگیری آموزش حسابداری پیمانکاری و آموزش حسابداری قیمت تمام‌شده در دوره پیشرفته ۲ جاویدان، این پشتوانه را دارم. الان کسب‌وکار کوچکم را با اطمینان اداره می‌کنم و می‌دانم هر تصمیم مالی بر سودآوری چه تأثیری دارد.',
-    kws:['آموزش حسابداری پیمانکاری','آموزش حسابداری قیمت تمام شده','بهترین دوره آموزش حسابداری']
-  },
-  {
-    id:'8xJoj', cat:2,
-    title:'اکسل حسابداری؛ وقتی همکارانت متعجب می‌شوند',
-    text:'وقتی اولین داشبورد مالی اکسل را برای مدیرمان ارائه دادم، واکنش‌ها باورنکردنی بود. آموزش حسابداری با اکسل که در دوره پیشرفته ۲ جاویدان یاد گرفتم، این امکان را داد. گزارش‌هایی که قبلاً روزها وقت می‌گرفتند، حالا در چند ساعت آماده می‌شوند و از نظر بصری هم حرفه‌ای هستند.',
-    kws:['آموزش حسابداری با اکسل','آموزش حسابداری صنعتی','بهترین دوره آموزش حسابداری']
-  },
-  {
-    id:'LSdts', cat:2,
-    title:'ارتقاء شغلی که سه سال منتظرش بودم',
-    text:'سه سال در یک شرکت صنعتی کار کردم بدون اینکه ترفیع بگیرم. بعد از دوره پیشرفته ۲ جاویدان و یادگیری آموزش حسابداری صنعتی تخصصی، مدیریت مالی ارشد به سراغم آمد. ارتقاء شغلی‌ای که انتظارش را نداشتم، مستقیماً نتیجه سرمایه‌گذاری در یادگیری بود.',
-    kws:['آموزش حسابداری صنعتی','آموزش حسابداری قیمت تمام شده','بهترین دوره آموزش حسابداری']
-  },
-
-  // ─── دوره مالیاتی (cat:3) ────────────────────────────────────────
-  {
-    id:'2GvCl', cat:3,
-    title:'مالیات دیگر ترسناک نیست؛ بعد از این دوره',
-    text:'آموزش حسابداری مالیاتی برای خیلی‌ها با اضطراب همراه است. اما دوره مالیاتی جاویدان با زبانی شفاف و مثال‌های کاربردی نشان می‌دهد که این حوزه هم یاد گرفتنی است. از قانون مالیات مستقیم تا ارزش افزوده — همه چیز به‌صورت سیستماتیک آموزش داده می‌شود. بعد از این دوره، مشتریانی که قبلاً نمی‌توانستم بپذیرم، الان خدمات می‌دهم.',
-    kws:['آموزش حسابداری مالیاتی','بهترین کتاب آموزش حسابداری مالیاتی','بهترین دوره آموزش حسابداری']
-  },
-  {
-    id:'xDTJG', cat:3,
-    title:'اظهارنامه مالیاتی بدون استرس؛ از رویا تا واقعیت',
-    text:'قبل از دوره مالیاتی جاویدان، فصل تسلیم اظهارنامه برایم کابوس بود. دوره آموزش حسابداری مالیاتی جاویدان این کابوس را به فرصت تبدیل کرد. حالا نه‌تنها اظهارنامه شرکتم را با اطمینان پر می‌کنم، بلکه به مشتریانم هم در این زمینه مشاوره می‌دهم و درآمد مناسبی از این خدمت دارم.',
-    kws:['آموزش حسابداری مالیاتی','آموزش حسابداری مالیاتی pdf','بهترین دوره آموزش حسابداری']
-  },
-  {
-    id:'yocav', cat:3,
-    title:'منابع رایگان کافی نیستند؛ این دوره مالیاتی فرق دارد',
-    text:'آموزش حسابداری مالیاتی pdf و فایل‌های رایگان زیادی در اینترنت وجود دارد، اما هیچ‌کدام ساختار آموزشی منسجمی ندارند. دوره مالیاتی جاویدان با منطق آموزشی مشخص، از پایه‌های قانونی شروع می‌کند و به محاسبات پیچیده می‌رسد. این انسجام بود که یادگیری را ماندگار کرد.',
-    kws:['آموزش حسابداری مالیاتی pdf','آموزش حسابداری مالیاتی','بهترین کتاب آموزش حسابداری مالیاتی']
-  },
-  {
-    id:'VDugc', cat:3,
-    title:'حسابداری مالیاتی شرکت‌ها؛ تخصصی که پول می‌سازد',
-    text:'آموزش حسابداری مالیاتی شرکت‌ها یکی از پردرآمدترین تخصص‌های حسابداری است. دوره مالیاتی جاویدان تمام جوانب این حوزه را پوشش می‌دهد؛ از مالیات شرکت‌های سهامی تا مشارکت‌های مدنی. این تخصص به‌تنهایی چند مشتری ثابت برایم آورده که درآمدشان قابل‌توجه است.',
-    kws:['آموزش حسابداری مالیاتی','بهترین کتاب آموزش حسابداری مالیاتی','آموزش حسابداری بازار کار']
-  },
-  {
-    id:'cUEHl', cat:3,
-    title:'از صفر تا متخصص مالیاتی؛ یک سفر شش ماهه',
-    text:'بدون هیچ پیش‌زمینه مالیاتی، دوره مالیاتی جاویدان را شروع کردم. آموزش حسابداری مالیاتی در این دوره از مفاهیم پایه قانون مالیات‌های مستقیم شروع می‌شود و به مباحث تخصصی ارزش‌افزوده و تکالیف مالیاتی می‌رسد. شش ماه بعد، اولین پرونده مالیاتی مستقلم را پذیرفتم.',
-    kws:['آموزش حسابداری مالیاتی','آموزش حسابداری مالیاتی pdf','بهترین دوره آموزش حسابداری']
-  },
-  {
-    id:'yhYzS', cat:3,
-    title:'مالیات بر ارزش افزوده را حرفه‌ای می‌دانم',
-    text:'آموزش حسابداری مالیاتی بدون پوشش کامل ارزش‌افزوده ناقص است. دوره مالیاتی جاویدان این مبحث را با تمام جزئیات آموزش می‌دهد؛ از ثبت فاکتورهای رسمی گرفته تا ارائه اظهارنامه فصلی. این دانش به من کمک کرد که در مذاکرات با اداره مالیات با اطمینان و مستند عمل کنم.',
-    kws:['آموزش حسابداری مالیاتی','آموزش حسابداری فروش','بهترین دوره آموزش حسابداری']
-  },
-  {
-    id:'HPUke', cat:3,
-    title:'بهترین کتاب مالیاتی؟ این دوره از هر کتابی بهتر است',
-    text:'سال‌ها دنبال بهترین کتاب آموزش حسابداری مالیاتی بودم. هیچ‌کدام نمی‌توانستند ابهامات عملی را برطرف کنند. دوره مالیاتی جاویدان این ابهامات را با مثال‌های واقعی و تمرین‌های عملی رفع کرد. ترکیب تئوری و عمل در این دوره چیزی است که هیچ کتابی نمی‌تواند ارائه دهد.',
-    kws:['بهترین کتاب آموزش حسابداری مالیاتی','آموزش حسابداری مالیاتی pdf','آموزش حسابداری مالیاتی']
-  },
-  {
-    id:'xZcwF', cat:3,
-    title:'حقوق و دستمزد و مالیات؛ دو مهارت در یک دوره',
-    text:'آموزش حسابداری حقوق و دستمزد بدون آموزش مالیات بر درآمد حقوق ناقص است. دوره مالیاتی جاویدان هر دو را به‌صورت یکپارچه آموزش می‌دهد. حالا می‌توانم لیست حقوق شرکت را با تمام کسورات قانونی، بیمه، و مالیات تهیه کنم — مهارتی که تقریباً هر شرکتی به آن نیاز دارد.',
-    kws:['آموزش حسابداری حقوق و دستمزد','آموزش حسابداری مالیاتی','بهترین دوره آموزش حسابداری']
-  },
-  {
-    id:'8PhBb', cat:3,
-    title:'راهکاران سیستم و مالیات؛ ترکیب قدرتمند',
-    text:'آموزش حسابداری فروش راهکاران سیستم در کنار آموزش حسابداری مالیاتی، یک ترکیب قدرتمند برای حسابداران شرکت‌های بزرگ است. دوره مالیاتی جاویدان این دو را با هم پوشش می‌دهد. با این ترکیب مهارتی، توانستم در یک شرکت تولیدی بزرگ استخدام شوم که قبلاً سطح درخواستم نبود.',
-    kws:['آموزش حسابداری فروش راهکاران سیستم','آموزش حسابداری مالیاتی','بهترین دوره آموزش حسابداری']
-  },
-  {
-    id:'tIPZv', cat:3,
-    title:'قیمت دوره مالیاتی در برابر درآمدی که آورد',
-    text:'وقتی درباره قیمت آموزش حسابداری در تهران یا تبریز تحقیق می‌کردم، جاویدان گران‌ترین نبود اما قطعاً بهترین نسبت قیمت به کیفیت را داشت. دوره مالیاتی در چند ماه اول کاری، هزینه‌اش را جبران کرد. اگر مالیات را جدی بگیرید، این دوره سرمایه‌گذاری با بازگشت سریع است.',
-    kws:['قیمت آموزش حسابداری در تبریز','قیمت دوره آموزش حسابداری','آموزش حسابداری مالیاتی']
-  },
+  { id: 'cUEHl',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'ta9Kr',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'dofx0hr', title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'sggf82s', title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'gqieex6', title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'eqmm2b0', title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'nujnezm', title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'ldv39j1', title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'HRDrB',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'DXOuk',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'ENosX',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'MEc9A',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'MvPun',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: '8PhBb',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'yhYzS',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'L3uOM',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: '1obsP',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'xuyv9',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'HLk9b',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'mCWRx',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'xZcwF',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'HPUke',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'DAlEg',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'vhu53',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'h70qF',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'qdXSg',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'amJe7',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: '4lXEh',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'HdoJu',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'tIPZv',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'ptejy',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: '0dMGb',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'LcPQg',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'hbToH',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: '8xJoj',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'LSdts',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: '2GvCl',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'xDTJG',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'yocav',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
+  { id: 'VDugc',   title: 'نتیجه‌ی دوست عزیزمون از دوره‌ها', text: 'متن اینجا' },
 ];
 
-function buildCards(){
-  const grid = document.getElementById('videoGrid');
-  const noRes = document.getElementById('noResults');
+// All badges for every card (all 3 course levels shown together)
+const allBadges = [
+  '<span class="card-badge badge-0">دوره پایه</span>',
+  '<span class="card-badge badge-1">دوره پیشرفته ۱</span>',
+  '<span class="card-badge badge-2">دوره پیشرفته ۲</span>'
+].join('');
 
-  videos.forEach((v)=>{
-    const kwHTML = v.kws.map(k=>`<span class="kw-tag">${k}</span>`).join('');
+function buildCards() {
+  const grid = document.getElementById('videoGrid');
+  videos.forEach((v, idx) => {
+    const accId = 'acc-' + idx;
     const card = document.createElement('div');
-    card.className='video-card visible';
-    card.dataset.cat=v.cat;
-    card.innerHTML=`
+    card.className = 'video-card visible';
+    card.innerHTML = `
       <div class="video-wrapper">
         <iframe src="https://www.aparat.com/video/video/embed/videohash/${v.id}/vt/frame"
-          allowfullscreen allow="autoplay" loading="lazy" title="${v.title}"></iframe>
+                allowfullscreen allow="autoplay" loading="lazy" title="${v.title}"></iframe>
       </div>
       <div class="card-body">
-        <span class="card-badge badge-${v.cat}">${catNames[v.cat]}</span>
+        <div class="badges-row">${allBadges}</div>
         <div class="card-title">${v.title}</div>
-        <div class="accordion">
-          <button class="accordion-toggle" onclick="toggleAcc(this)" type="button">
-            تجربه این دانشجو
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="accordion-body">
-            <a href="https://jaavidan.ir" class="acc-enroll-btn" target="_blank">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-              شرکت در دوره
-            </a>
-            <p>${v.text}</p>
-            <div class="kw-tags">${kwHTML}</div>
+        <div class="accordion" id="${accId}">
+          <div class="accordion-header" role="button" tabindex="0" aria-expanded="false" aria-controls="${accId}-body">
+            <span>توضیحات بیشتر</span>
+            <svg class="acc-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="accordion-body" id="${accId}-body" role="region">
+            <div class="accordion-inner">
+              <p class="accordion-text">${v.text}</p>
+              <a href="https://jaavidan.ir" class="acc-cta-btn" target="_blank" rel="noopener">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                شرکت در دوره‌ها
+              </a>
+            </div>
           </div>
         </div>
-      </div>`;
-    grid.insertBefore(card, noRes);
+      </div>
+    `;
+    grid.insertBefore(card, document.getElementById('noResults'));
+  });
+
+  // Accordion toggle
+  document.querySelectorAll('.accordion-header').forEach(header => {
+    const toggle = () => {
+      const isOpen = header.classList.contains('open');
+      header.classList.toggle('open', !isOpen);
+      header.setAttribute('aria-expanded', String(!isOpen));
+      const body = header.nextElementSibling;
+      body.classList.toggle('open', !isOpen);
+    };
+    header.addEventListener('click', toggle);
+    header.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
   });
 }
 
-function toggleAcc(btn){
-  const body = btn.nextElementSibling;
-  const isOpen = body.classList.contains('open');
-  document.querySelectorAll('.accordion-body.open').forEach(b=>{
-    b.classList.remove('open');
-    b.previousElementSibling.classList.remove('open');
+// FAQ toggle
+function initFAQ() {
+  document.querySelectorAll('.faq-q').forEach(q => {
+    const toggle = () => {
+      const isOpen = q.classList.contains('open');
+      q.classList.toggle('open', !isOpen);
+      q.setAttribute('aria-expanded', String(!isOpen));
+      q.nextElementSibling.classList.toggle('open', !isOpen);
+    };
+    q.addEventListener('click', toggle);
+    q.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
   });
-  if(!isOpen){
-    body.classList.add('open');
-    btn.classList.add('open');
-  }
-}
-
-function filterCards(cat){
-  const cards=document.querySelectorAll('.video-card');
-  let vis=0;
-  cards.forEach(c=>{
-    const show=cat==='all'||c.dataset.cat===cat;
-    c.classList.toggle('visible',show);
-    if(show)vis++;
-  });
-  document.getElementById('noResults').style.display=vis===0?'block':'none';
 }
 
 buildCards();
-
-document.getElementById('filterBar').addEventListener('click',e=>{
-  const btn=e.target.closest('.filter-btn');
-  if(!btn)return;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  filterCards(btn.dataset.cat);
-});
+initFAQ();
 </script>
 </body>
 </html>
