@@ -27,9 +27,55 @@
 html, body {
   font-family: var(--font);
   min-height: 100vh;
-  background: linear-gradient(160deg, #F97316 0%, #EA580C 40%, #C2410C 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #ffa3a1 100%);
+  background-attachment: fixed;
   color: #fff;
   overflow-x: hidden;
+  position: relative;
+}
+
+/* افکت‌های پس‌زمینه موجی */
+html::before {
+  content: '';
+  position: fixed;
+  top: -100px;
+  right: -200px;
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  filter: blur(80px);
+  animation: floatWave 15s ease-in-out infinite;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  bottom: -300px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1200px;
+  height: 600px;
+  background: radial-gradient(ellipse 600px 300px at 50% 100%, rgba(255,255,255,0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(100px);
+  animation: sway 12s ease-in-out infinite;
+}
+
+@keyframes floatWave {
+  0%, 100% { transform: translateY(0px) translateX(0px) scale(1); }
+  25% { transform: translateY(-40px) translateX(20px) scale(1.05); }
+  50% { transform: translateY(-20px) translateX(-10px) scale(1); }
+  75% { transform: translateY(30px) translateX(30px) scale(0.95); }
+}
+
+@keyframes sway {
+  0%, 100% { transform: translateX(-50%) translateY(0px) rotateZ(0deg); }
+  33% { transform: translateX(-50%) translateY(-30px) rotateZ(-2deg); }
+  66% { transform: translateX(-50%) translateY(20px) rotateZ(2deg); }
 }
 
 /* ───── HEADER ───── */
@@ -42,7 +88,7 @@ header {
   align-items: center;
   padding: 0 28px;
   height: 62px;
-  background: rgba(180,45,5,0.55);
+  background: rgba(100,70,180,0.35);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255,255,255,0.15);
@@ -51,7 +97,7 @@ header {
 .header-right { display: flex; align-items: center; gap: 18px; }
 
 .logo { font-size: 20px; font-weight: 700; color: #fff; white-space: nowrap; }
-.logo span { color: var(--orange-light); }
+.logo span { color: #ffa3a1; }
 
 .header-tagline {
   display: flex; flex-direction: column; gap: 1px;
@@ -77,11 +123,11 @@ header {
 .btn-glass.primary:hover { background: rgba(255,255,255,0.35); }
 
 /* ───── TABS ───── */
-.tabs-section { padding: 0 0 80px; position: relative; }
+.tabs-section { padding: 0 0 80px; position: relative; z-index: 10; }
 
 .tabs-wrapper {
   position: sticky; top: 62px; z-index: 90;
-  background: rgba(180,45,5,0.45);
+  background: rgba(100,70,180,0.3);
   backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid rgba(255,255,255,0.1);
   padding: 10px 0 0;
@@ -124,7 +170,7 @@ header {
 /* ───── JOB DROPDOWN ───── */
 .job-dropdown {
   display: none; position: absolute; top: calc(100% + 8px); right: 0;
-  min-width: 230px; background: rgba(160,40,0,0.88);
+  min-width: 230px; background: rgba(100,70,180,0.85);
   backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255,255,255,0.2); border-radius: 16px;
   padding: 8px; z-index: 200; box-shadow: 0 16px 48px rgba(0,0,0,0.3);
@@ -140,6 +186,8 @@ header {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
   gap: 14px; padding: 20px 20px 0;
+  position: relative;
+  z-index: 10;
 }
 
 .story-card {
@@ -149,7 +197,6 @@ header {
   background: rgba(0,0,0,0.15);
   border: 1px solid rgba(255,255,255,0.18);
   transition: transform 0.22s, box-shadow 0.22s;
-  /* ضد اسکرین‌شات: user-select و pointer-events */
   -webkit-user-select: none; user-select: none;
 }
 .story-card:hover { transform: scale(1.03); box-shadow: 0 16px 40px rgba(0,0,0,0.3); }
@@ -181,7 +228,7 @@ header {
 .popup-overlay.open { display: flex; }
 
 .popup-box {
-  background: linear-gradient(145deg, rgba(210,70,10,0.96), rgba(160,38,0,0.98));
+  background: linear-gradient(145deg, rgba(102,126,234,0.96), rgba(118,75,162,0.98));
   border: 1px solid rgba(255,255,255,0.2);
   border-radius: 24px; width: 100%; max-width: 860px;
   max-height: 92vh; overflow: hidden;
@@ -201,7 +248,7 @@ header {
 }
 .popup-close:hover { background: rgba(255,255,255,0.28); }
 
-/* ── بخش عکس (اشتراکی) با لایه محافظ ── */
+/* ── بخش عکس ── */
 .popup-left {
   flex: 1; min-width: 0; position: relative; min-height: 480px;
   overflow: hidden;
@@ -209,22 +256,19 @@ header {
 .popup-left img {
   width: 100%; height: 100%; object-fit: cover; display: block;
   pointer-events: none; -webkit-user-drag: none; user-drag: none;
-  /* blur برای غیر مشترک — کلاس .unblurred حذفش میکنه */
   filter: blur(14px) brightness(0.7);
   transition: filter 0.4s;
   -webkit-user-select: none; user-select: none;
 }
 .popup-left.unblurred img { filter: none; }
 
-/* لایه شفاف ضد اسکرین‌شات */
 .anti-screenshot {
   position: absolute; inset: 0; z-index: 2;
   background: transparent;
-  /* کمی overlay که اسکرین‌شات رو دیفیوز میکنه */
   mix-blend-mode: overlay;
   pointer-events: none;
 }
-/* واترمارک ظریف */
+
 .watermark {
   position: absolute; inset: 0; z-index: 3;
   display: flex; align-items: center; justify-content: center;
@@ -241,7 +285,6 @@ header {
   pointer-events: none;
 }
 
-/* پیغام خرید روی بلور */
 .blur-cta {
   position: absolute; inset: 0; z-index: 4;
   display: flex; flex-direction: column;
@@ -256,7 +299,7 @@ header {
 .blur-cta p { font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.6; max-width: 200px; }
 .blur-cta .btn-sub {
   padding: 10px 24px; border-radius: 50px;
-  background: #fff; color: var(--orange-deep);
+  background: #fff; color: #667eea;
   font-family: var(--font); font-size: 14px; font-weight: 700;
   border: none; cursor: pointer;
   box-shadow: 0 4px 16px rgba(0,0,0,0.2);
@@ -335,7 +378,7 @@ header {
 .btn-subscribe {
   display: flex; align-items: center; justify-content: center;
   gap: 8px; padding: 13px; border-radius: 12px;
-  background: #fff; border: none; color: var(--orange-deep);
+  background: #fff; border: none; color: #667eea;
   font-family: var(--font); font-size: 14px; font-weight: 700;
   cursor: pointer; transition: transform 0.18s, box-shadow 0.18s;
   box-shadow: 0 4px 16px rgba(0,0,0,0.2);
@@ -351,6 +394,8 @@ header {
 .contact-footer {
   text-align: center; padding: 40px 24px 32px;
   color: rgba(255,255,255,0.55); font-size: 13px;
+  position: relative;
+  z-index: 10;
 }
 .contact-footer a { color: rgba(255,255,255,0.85); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.3); }
 
@@ -364,7 +409,6 @@ header {
 }
 @media (max-width: 400px) { .stories-grid { grid-template-columns: repeat(2, 1fr); } }
 
-/* ── غیرفعال کردن راست‌کلیک و drag ── */
 img { -webkit-user-drag: none; user-drag: none; }
 </style>
 </head>
@@ -448,7 +492,6 @@ img { -webkit-user-drag: none; user-drag: none; }
       <img id="popupImg" src="" alt="استوری" oncontextmenu="return false;" draggable="false">
       <div class="anti-screenshot"></div>
       <div class="watermark"><span class="watermark-text">استوری۲۲ — story22.ir</span></div>
-      <!-- فقط برای غیر مشترک -->
       <div class="blur-cta" id="blurCta">
         <div class="blur-cta-icon">🔒</div>
         <p>برای مشاهده تصویر کامل اشتراک تهیه کنید</p>
@@ -463,7 +506,6 @@ img { -webkit-user-drag: none; user-drag: none; }
         <div class="popup-tags" id="popupTags"></div>
       </div>
 
-      <!-- ترمینال پرامپت — برای رایگان یا مشترک -->
       <div class="terminal" id="terminalBox">
         <div class="terminal-bar">
           <div class="terminal-dot"></div>
@@ -480,7 +522,6 @@ img { -webkit-user-drag: none; user-drag: none; }
         </div>
       </div>
 
-      <!-- پیام خرید — فقط برای اشتراکی + بدون اشتراک -->
       <div id="subscribeSection" style="display:none">
         <div class="no-sub-msg">
           <p>این پرامپت فقط برای اعضای اشتراکی در دسترس است.</p>
@@ -587,7 +628,6 @@ function openPopup(id) {
 
   const canSee = s.free || hasSubscription;
 
-  // عکس: blur یا واضح
   if(canSee) {
     left.classList.add('unblurred');
     blurCta.style.display = 'none';
@@ -596,11 +636,9 @@ function openPopup(id) {
     blurCta.style.display = 'flex';
   }
 
-  // پرامپت: نمایش یا مخفی
   if(canSee) {
     terminal.style.display = 'flex';
     subSection.style.display = 'none';
-    // تایپ انیمیشن
     const el = document.getElementById('popupPromptText');
     el.textContent = '';
     let i = 0;
@@ -655,7 +693,6 @@ scroll.addEventListener('touchmove', e => { scroll.scrollLeft=scrollLeft-(e.touc
 scroll.addEventListener('touchend', updateThumb);
 document.addEventListener('keydown', e => { if(e.key==='Escape') closePopup(); });
 
-// غیرفعال کردن راست‌کلیک روی کل صفحه
 document.addEventListener('contextmenu', e => { if(e.target.tagName==='IMG') e.preventDefault(); });
 
 renderGrid('all');
