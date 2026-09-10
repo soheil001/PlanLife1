@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>استوری ۲۲</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --orange-deep: #C2410C;
+  --orange-mid: #EA580C;
+  --orange-bright: #F97316;
+  --orange-light: #FED7AA;
+  --glass-bg: rgba(255,255,255,0.13);
+  --glass-border: rgba(255,255,255,0.28);
+  --glass-hover: rgba(255,255,255,0.22);
+  --card-radius: 18px;
+  --font: 'Vazirmatn', sans-serif;
+  --green: #16a34a;
+  --green-light: rgba(22,163,74,0.82);
+  --yellow: #a17800;
+  --yellow-light: rgba(161,120,0,0.82);
+}
+
+html, body {
+  font-family: var(--font);
+  min-height: 100vh;
+  background: linear-gradient(160deg, #F97316 0%, #EA580C 40%, #C2410C 100%);
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* ───── HEADER ───── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 28px;
+  height: 62px;
+  background: rgba(180,45,5,0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.header-right { display: flex; align-items: center; gap: 18px; }
+
+.logo { font-size: 20px; font-weight: 700; color: #fff; white-space: nowrap; }
+.logo span { color: var(--orange-light); }
+
+.header-tagline {
+  display: flex; flex-direction: column; gap: 1px;
+  border-right: 1.5px solid rgba(255,255,255,0.25);
+  padding-right: 18px;
+}
+.header-tagline .ht-main { font-size: 13px; font-weight: 600; color: #fff; line-height: 1.3; }
+.header-tagline .ht-sub  { font-size: 11px; color: rgba(255,255,255,0.65); line-height: 1.3; }
+
+.header-btns { display: flex; gap: 8px; }
+
+.btn-glass {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 18px; border-radius: 50px;
+  font-family: var(--font); font-size: 13px; font-weight: 500;
+  cursor: pointer; border: 1px solid var(--glass-border);
+  background: var(--glass-bg); color: #fff;
+  backdrop-filter: blur(10px);
+  transition: background 0.2s, transform 0.15s; text-decoration: none;
+}
+.btn-glass:hover { background: var(--glass-hover); transform: translateY(-1px); }
+.btn-glass.primary { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.45); font-weight: 600; }
+.btn-glass.primary:hover { background: rgba(255,255,255,0.35); }
+
+/* ───── TABS ───── */
+.tabs-section { padding: 0 0 80px; position: relative; }
+
+.tabs-wrapper {
+  position: sticky; top: 62px; z-index: 90;
+  background: rgba(180,45,5,0.45);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 10px 0 0;
+}
+
+.tabs-scroll {
+  overflow-x: auto; overflow-y: visible;
+  cursor: grab; user-select: none;
+  padding: 0 20px 8px;
+  scrollbar-width: none; -ms-overflow-style: none;
+}
+.tabs-scroll::-webkit-scrollbar { display: none; }
+.tabs-scroll.dragging { cursor: grabbing; }
+
+.tabs-inner { display: inline-flex; gap: 6px; white-space: nowrap; }
+
+.tab-btn {
+  display: inline-flex; align-items: center;
+  padding: 9px 20px; border-radius: 50px;
+  font-family: var(--font); font-size: 13px; font-weight: 600;
+  cursor: pointer; border: 1.5px solid rgba(255,255,255,0.32);
+  background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.92);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  white-space: nowrap; position: relative;
+}
+.tab-btn:hover { background: rgba(255,255,255,0.25); color: #fff; border-color: rgba(255,255,255,0.5); }
+.tab-btn.active { background: rgba(255,255,255,0.35); border-color: rgba(255,255,255,0.65); color: #fff; font-weight: 700; }
+
+.scroll-track {
+  height: 2px; background: rgba(255,255,255,0.12);
+  margin: 0 20px; border-radius: 2px; position: relative; overflow: hidden;
+}
+.scroll-thumb {
+  height: 100%; background: rgba(255,255,255,0.45);
+  border-radius: 2px; position: absolute; top: 0;
+  transition: left 0.1s, width 0.1s;
+}
+
+/* ───── JOB DROPDOWN ───── */
+.job-dropdown {
+  display: none; position: absolute; top: calc(100% + 8px); right: 0;
+  min-width: 230px; background: rgba(160,40,0,0.88);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 16px;
+  padding: 8px; z-index: 200; box-shadow: 0 16px 48px rgba(0,0,0,0.3);
+  max-height: 320px; overflow-y: auto;
+}
+.job-dropdown.open { display: block; }
+.job-item { padding: 9px 14px; border-radius: 10px; font-size: 13px; color: rgba(255,255,255,0.9); cursor: pointer; transition: background 0.15s; }
+.job-item:hover { background: rgba(255,255,255,0.15); color: #fff; }
+.tab-with-drop { position: relative; }
+
+/* ───── GRID ───── */
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+  gap: 14px; padding: 20px 20px 0;
+}
+
+.story-card {
+  border-radius: var(--card-radius); overflow: hidden;
+  cursor: pointer; position: relative;
+  aspect-ratio: 9/16;
+  background: rgba(0,0,0,0.15);
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: transform 0.22s, box-shadow 0.22s;
+  /* ضد اسکرین‌شات: user-select و pointer-events */
+  -webkit-user-select: none; user-select: none;
+}
+.story-card:hover { transform: scale(1.03); box-shadow: 0 16px 40px rgba(0,0,0,0.3); }
+
+.story-card img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  pointer-events: none;
+  -webkit-user-drag: none; user-drag: none;
+}
+
+/* بج رایگان / اشتراکی */
+.badge {
+  position: absolute; top: 10px; right: 10px;
+  font-size: 10px; font-weight: 700;
+  padding: 3px 9px; border-radius: 20px;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  z-index: 2; letter-spacing: 0.3px;
+}
+.badge-free   { background: var(--green-light);  color: #fff; border: 1px solid rgba(134,239,172,0.5); }
+.badge-premium{ background: var(--yellow-light); color: #FEF08A; border: 1px solid rgba(253,224,71,0.45); }
+
+/* ───── POPUP ───── */
+.popup-overlay {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  align-items: center; justify-content: center; padding: 16px;
+}
+.popup-overlay.open { display: flex; }
+
+.popup-box {
+  background: linear-gradient(145deg, rgba(210,70,10,0.96), rgba(160,38,0,0.98));
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 24px; width: 100%; max-width: 860px;
+  max-height: 92vh; overflow: hidden;
+  display: flex; flex-direction: row;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.45);
+  position: relative;
+}
+
+.popup-close {
+  position: absolute; top: 14px; left: 14px;
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.12); color: #fff;
+  font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10; transition: background 0.2s;
+}
+.popup-close:hover { background: rgba(255,255,255,0.28); }
+
+/* ── بخش عکس (اشتراکی) با لایه محافظ ── */
+.popup-left {
+  flex: 1; min-width: 0; position: relative; min-height: 480px;
+  overflow: hidden;
+}
+.popup-left img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  pointer-events: none; -webkit-user-drag: none; user-drag: none;
+  /* blur برای غیر مشترک — کلاس .unblurred حذفش میکنه */
+  filter: blur(14px) brightness(0.7);
+  transition: filter 0.4s;
+  -webkit-user-select: none; user-select: none;
+}
+.popup-left.unblurred img { filter: none; }
+
+/* لایه شفاف ضد اسکرین‌شات */
+.anti-screenshot {
+  position: absolute; inset: 0; z-index: 2;
+  background: transparent;
+  /* کمی overlay که اسکرین‌شات رو دیفیوز میکنه */
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+/* واترمارک ظریف */
+.watermark {
+  position: absolute; inset: 0; z-index: 3;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none; opacity: 0;
+  transition: opacity 0.3s;
+}
+.popup-left.unblurred .watermark { opacity: 1; }
+.watermark-text {
+  font-size: 13px; font-weight: 700;
+  color: rgba(255,255,255,0.12);
+  transform: rotate(-35deg);
+  white-space: nowrap; letter-spacing: 2px;
+  text-shadow: none; user-select: none;
+  pointer-events: none;
+}
+
+/* پیغام خرید روی بلور */
+.blur-cta {
+  position: absolute; inset: 0; z-index: 4;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px; padding: 24px;
+  background: rgba(0,0,0,0.35);
+  text-align: center;
+  transition: opacity 0.3s;
+}
+.popup-left.unblurred .blur-cta { display: none; }
+.blur-cta-icon { font-size: 36px; }
+.blur-cta p { font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.6; max-width: 200px; }
+.blur-cta .btn-sub {
+  padding: 10px 24px; border-radius: 50px;
+  background: #fff; color: var(--orange-deep);
+  font-family: var(--font); font-size: 14px; font-weight: 700;
+  border: none; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  transition: transform 0.18s;
+}
+.blur-cta .btn-sub:hover { transform: translateY(-1px); }
+
+/* ── بخش پرامپت ── */
+.popup-right {
+  width: 320px; flex-shrink: 0;
+  padding: 28px 22px; display: flex;
+  flex-direction: column; gap: 16px;
+  overflow-y: auto;
+  border-right: 1px solid rgba(255,255,255,0.12);
+}
+
+.popup-story-title { font-size: 17px; font-weight: 700; color: #fff; line-height: 1.4; }
+
+.popup-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.popup-tag {
+  font-size: 11px; padding: 3px 10px; border-radius: 20px;
+  background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* ── ترمینال پرامپت ── */
+.terminal {
+  background: #0d1117;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px; overflow: hidden;
+  flex: 1; display: flex; flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+.terminal-bar {
+  background: #1c2128;
+  padding: 10px 14px;
+  display: flex; align-items: center; gap: 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.terminal-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.terminal-dot:nth-child(1) { background: #ff5f57; }
+.terminal-dot:nth-child(2) { background: #febc2e; }
+.terminal-dot:nth-child(3) { background: #28c840; }
+.terminal-title {
+  font-size: 11px; color: rgba(255,255,255,0.35);
+  margin-right: 8px; font-family: monospace;
+}
+.terminal-body {
+  padding: 16px; flex: 1;
+  font-size: 12.5px; line-height: 1.7;
+  color: #e6edf3; font-family: 'Courier New', monospace;
+  direction: rtl; text-align: right;
+  overflow-y: auto;
+}
+.terminal-body .prompt-prefix {
+  color: #7ee787; font-weight: 700; margin-left: 6px;
+}
+.terminal-body .prompt-text { color: #cdd9e5; }
+.terminal-footer {
+  padding: 10px 14px; background: #1c2128;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  display: flex; gap: 8px;
+}
+.btn-copy-term {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  gap: 6px; padding: 8px;
+  border-radius: 8px; border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.08); color: #e6edf3;
+  font-family: var(--font); font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: background 0.2s;
+}
+.btn-copy-term:hover { background: rgba(255,255,255,0.16); }
+
+.btn-subscribe {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; padding: 13px; border-radius: 12px;
+  background: #fff; border: none; color: var(--orange-deep);
+  font-family: var(--font); font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: transform 0.18s, box-shadow 0.18s;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.btn-subscribe:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.28); }
+
+.no-sub-msg p {
+  font-size: 13px; color: rgba(255,255,255,0.72);
+  margin-bottom: 14px; line-height: 1.6;
+}
+
+/* ───── FOOTER ───── */
+.contact-footer {
+  text-align: center; padding: 40px 24px 32px;
+  color: rgba(255,255,255,0.55); font-size: 13px;
+}
+.contact-footer a { color: rgba(255,255,255,0.85); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.3); }
+
+/* ───── MOBILE ───── */
+@media (max-width: 640px) {
+  .header-tagline { display: none; }
+  .popup-box { flex-direction: column; max-height: 94vh; border-radius: 20px; }
+  .popup-left { min-height: 220px; max-height: 36vh; }
+  .popup-right { width: 100%; border-right: none; border-top: 1px solid rgba(255,255,255,0.12); padding: 16px; }
+  .stories-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+}
+@media (max-width: 400px) { .stories-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* ── غیرفعال کردن راست‌کلیک و drag ── */
+img { -webkit-user-drag: none; user-drag: none; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-right">
+    <div class="header-tagline">
+      <span class="ht-main">پلتفرم هوشمند استوری‌سازی</span>
+      <span class="ht-sub">استوری‌های حرفه‌ای با یک کلیک</span>
+    </div>
+    <div class="logo">استوری<span>۲۲</span></div>
+  </div>
+  <div class="header-btns">
+    <a href="#contact" class="btn-glass">تماس با ما</a>
+    <button class="btn-glass primary" onclick="openLogin()">ورود / ثبت‌نام</button>
+  </div>
+</header>
+
+<!-- TABS + GRID -->
+<section class="tabs-section" id="tabs-section">
+  <div class="tabs-wrapper">
+    <div class="tabs-scroll" id="tabsScroll">
+      <div class="tabs-inner" id="tabsInner">
+        <button class="tab-btn active" onclick="switchTab('all',this)">همه استوری‌ها</button>
+        <button class="tab-btn" onclick="switchTab('trend',this)">ترند روز</button>
+        <div class="tab-with-drop">
+          <button class="tab-btn" id="jobTabBtn" onclick="toggleJobDrop(event)">
+            حوزه فعالیت <span style="font-size:10px;opacity:0.7;margin-right:2px">▾</span>
+          </button>
+          <div class="job-dropdown" id="jobDropdown">
+            <div class="job-item" onclick="selectJob('طراحی گرافیک')">طراحی گرافیک</div>
+            <div class="job-item" onclick="selectJob('فروشگاه آنلاین')">فروشگاه آنلاین</div>
+            <div class="job-item" onclick="selectJob('کافه و رستوران')">کافه و رستوران</div>
+            <div class="job-item" onclick="selectJob('آرایشگاه و زیبایی')">آرایشگاه و زیبایی</div>
+            <div class="job-item" onclick="selectJob('عکاسی')">عکاسی</div>
+            <div class="job-item" onclick="selectJob('مد و پوشاک')">مد و پوشاک</div>
+            <div class="job-item" onclick="selectJob('فیتنس و ورزش')">فیتنس و ورزش</div>
+            <div class="job-item" onclick="selectJob('روانشناسی')">روانشناسی</div>
+            <div class="job-item" onclick="selectJob('معماری و دکوراسیون')">معماری و دکوراسیون</div>
+            <div class="job-item" onclick="selectJob('آموزش زبان')">آموزش زبان</div>
+            <div class="job-item" onclick="selectJob('پزشکی و سلامت')">پزشکی و سلامت</div>
+            <div class="job-item" onclick="selectJob('حقوق')">حقوق</div>
+            <div class="job-item" onclick="selectJob('ساخت و ساز')">ساخت و ساز</div>
+            <div class="job-item" onclick="selectJob('موسیقی')">موسیقی</div>
+            <div class="job-item" onclick="selectJob('آشپزی')">آشپزی</div>
+            <div class="job-item" onclick="selectJob('اقتصاد و مالی')">اقتصاد و مالی</div>
+            <div class="job-item" onclick="selectJob('فناوری')">فناوری</div>
+            <div class="job-item" onclick="selectJob('گردشگری')">گردشگری</div>
+            <div class="job-item" onclick="selectJob('نویسندگی')">نویسندگی</div>
+            <div class="job-item" onclick="selectJob('عروسی و مجالس')">عروسی و مجالس</div>
+          </div>
+        </div>
+        <button class="tab-btn" onclick="switchTab('text',this)">تکست</button>
+        <button class="tab-btn" onclick="switchTab('avatar',this)">آواتار</button>
+        <button class="tab-btn" onclick="switchTab('edu',this)">آموزشی و درسی</button>
+        <button class="tab-btn" onclick="switchTab('product',this)">معرفی محصول</button>
+        <button class="tab-btn" onclick="switchTab('motivate',this)">انگیزشی</button>
+        <button class="tab-btn" onclick="switchTab('reel',this)">ریلز و ویدیو</button>
+        <button class="tab-btn" onclick="switchTab('seasonal',this)">مناسبتی</button>
+      </div>
+    </div>
+    <div class="scroll-track"><div class="scroll-thumb" id="scrollThumb"></div></div>
+  </div>
+  <div class="stories-grid" id="storiesGrid"></div>
+</section>
+
+<footer class="contact-footer" id="contact">
+  <p>برای ارتباط با ما: <a href="mailto:info@story22.ir">info@story22.ir</a></p>
+  <p style="margin-top:8px;font-size:11px;opacity:0.4">© ۱۴۰۴ استوری۲۲ — تمامی حقوق محفوظ است</p>
+</footer>
+
+<!-- POPUP -->
+<div class="popup-overlay" id="popupOverlay" onclick="closePopupOnOverlay(event)">
+  <div class="popup-box" id="popupBox">
+    <button class="popup-close" onclick="closePopup()">✕</button>
+
+    <!-- بخش عکس -->
+    <div class="popup-left" id="popupLeft">
+      <img id="popupImg" src="" alt="استوری" oncontextmenu="return false;" draggable="false">
+      <div class="anti-screenshot"></div>
+      <div class="watermark"><span class="watermark-text">استوری۲۲ — story22.ir</span></div>
+      <!-- فقط برای غیر مشترک -->
+      <div class="blur-cta" id="blurCta">
+        <div class="blur-cta-icon">🔒</div>
+        <p>برای مشاهده تصویر کامل اشتراک تهیه کنید</p>
+        <button class="btn-sub" onclick="openSubscribe()">خرید اشتراک</button>
+      </div>
+    </div>
+
+    <!-- بخش پرامپت -->
+    <div class="popup-right">
+      <div>
+        <div class="popup-story-title" id="popupTitle"></div>
+        <div class="popup-tags" id="popupTags"></div>
+      </div>
+
+      <!-- ترمینال پرامپت — برای رایگان یا مشترک -->
+      <div class="terminal" id="terminalBox">
+        <div class="terminal-bar">
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <span class="terminal-title">prompt.txt — استوری۲۲</span>
+        </div>
+        <div class="terminal-body" id="terminalBody">
+          <span class="prompt-prefix">$</span>
+          <span class="prompt-text" id="popupPromptText"></span>
+        </div>
+        <div class="terminal-footer">
+          <button class="btn-copy-term" onclick="copyPrompt()">📋 کپی پرامپت</button>
+        </div>
+      </div>
+
+      <!-- پیام خرید — فقط برای اشتراکی + بدون اشتراک -->
+      <div id="subscribeSection" style="display:none">
+        <div class="no-sub-msg">
+          <p>این پرامپت فقط برای اعضای اشتراکی در دسترس است.</p>
+          <button class="btn-subscribe" onclick="openSubscribe()">🔐 خرید اشتراک</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const stories = [
+  {
+    id:1, title:'استوری محصول لوکس', free:false,
+    img:'http://fs3.centraldnserver.com/~planlife/pics/story/story1/IMG_2487.jpeg',
+    tags:['product','trend','all'],
+    prompt:'یک استوری اینستاگرام با پس‌زمینه گرادیانت طلایی طراحی کن. محصول در مرکز با نور طلایی نرم قرار گیرد. فونت فارسی وزیر برای متن، رنگ سفید با سایه ملایم. حاشیه‌های گرد با افکت شیشه‌ای. حس لوکس و ممتاز. نسبت ۹:۱۶.'
+  },
+  {
+    id:2, title:'استوری انیمیشن ترند', free:true,
+    img:'http://fs3.centraldnserver.com/~planlife/pics/story/story1/F0FC4F98-99EB-494A-A8FC-240266E37D8D.gif',
+    tags:['trend','all','reel'],
+    prompt:'یک استوری پویا با انیمیشن‌های نرم ورودی طراحی کن. عناصر یکی یکی با افکت fade-in ظاهر شوند. پالت رنگی ترند: بنفش ملایم و نارنجی گرم. متن اصلی با تایپوگرافی بولد فارسی در مرکز. پس‌زمینه dark با ذرات نورانی شناور.'
+  },
+  {
+    id:3, title:'استوری پادکست مینیمال', free:true,
+    img:'http://fs3.centraldnserver.com/~planlife/pics/podcast_free/4AD48B99-0DD5-45E6-879F-B1D7E21EF676.png',
+    tags:['edu','all','text'],
+    prompt:'استوری معرفی پادکست با پس‌زمینه تیره کربنی. موج‌های صوتی متحرک در مرکز با رنگ سبز نئون. نام پادکست با فونت وزیرماتن bold در بالا. شماره قسمت و موضوع در پایین با فونت نازک‌تر. لوگو برند در گوشه. حس حرفه‌ای رادیویی.'
+  },
+  {
+    id:4, title:'استوری سبک زندگی', free:false,
+    img:'https://fs3.centraldnserver.com/~planlife/pics/podcast_free/IMG_2187.jpeg',
+    tags:['all','motivate','avatar'],
+    prompt:'استوری سبک زندگی با پس‌زمینه بژ گرم و بافت کتان. عکس پرتره در قاب دایره یا مربع گرد در مرکز. متن انگیزشی کوتاه بالا با فونت ایتالیک ظریف. اسم برند پایین با فاصله‌گذاری زیاد بین حروف. تزئین با خطوط ظریف هندسی.'
+  },
+  {
+    id:5, title:'استوری انگیزشی پرقدرت', free:false,
+    img:'https://fs3.centraldnserver.com/~planlife/pics/podcast_free/IMG_2409.jpeg',
+    tags:['motivate','all','text'],
+    prompt:'استوری با جمله انگیزشی قوی در کل صفحه. فونت فارسی بسیار بولد سایز بزرگ. پس‌زمینه با رنگ سیر و کنتراست بالا. نور موضعی از بالا روی متن. کلمه کلیدی یک رنگ متفاوت. زیرنویس کوچک در پایین. افکت grain ظریف روی کل تصویر.'
+  },
+  {
+    id:6, title:'استوری آموزشی گام‌به‌گام', free:true,
+    img:'https://fs3.centraldnserver.com/~planlife/pics/podcast_free/IMG_2789.jpeg',
+    tags:['edu','all','text'],
+    prompt:'استوری آموزشی با ۳ تا ۵ نکته کلیدی در قالب لیست. پس‌زمینه روشن با رنگ‌های ملایم. هر نکته با یک دایره رنگی شماره‌دار کنارش. عنوان اصلی بالا با خط زیر رنگی. آیکون‌های ساده فلت کنار هر آیتم. حس صمیمی و آموزشی.'
+  },
+];
+
+let currentTab = 'all';
+let hasSubscription = false;
+
+function tagLabel(t) {
+  const map = {trend:'ترند',edu:'آموزشی',text:'تکست',avatar:'آواتار',product:'محصول',motivate:'انگیزشی',reel:'ریلز',seasonal:'مناسبتی',job:'حرفه‌ای'};
+  return map[t] || t;
+}
+
+function renderGrid(tab) {
+  const grid = document.getElementById('storiesGrid');
+  const filtered = stories.filter(s => s.tags.includes(tab));
+  grid.innerHTML = filtered.map(s => {
+    const badge = s.free
+      ? `<span class="badge badge-free">رایگان</span>`
+      : `<span class="badge badge-premium">اشتراکی</span>`;
+    return `
+    <div class="story-card" onclick="openPopup(${s.id})" oncontextmenu="return false;">
+      ${badge}
+      <img src="${s.img}" alt="" loading="lazy" draggable="false" oncontextmenu="return false;">
+    </div>`;
+  }).join('');
+}
+
+function switchTab(tab, btn) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderGrid(tab);
+  closeJobDrop();
+}
+
+function toggleJobDrop(e) { e.stopPropagation(); document.getElementById('jobDropdown').classList.toggle('open'); }
+function closeJobDrop() { document.getElementById('jobDropdown').classList.remove('open'); }
+function selectJob(job) {
+  document.getElementById('jobTabBtn').innerHTML = `${job} <span style="font-size:10px;opacity:0.7;margin-right:2px">▾</span>`;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('jobTabBtn').classList.add('active');
+  closeJobDrop(); renderGrid('job');
+}
+document.addEventListener('click', closeJobDrop);
+
+function openPopup(id) {
+  const s = stories.find(x => x.id === id);
+  if(!s) return;
+
+  const left = document.getElementById('popupLeft');
+  const terminal = document.getElementById('terminalBox');
+  const subSection = document.getElementById('subscribeSection');
+  const blurCta = document.getElementById('blurCta');
+
+  document.getElementById('popupImg').src = s.img;
+  document.getElementById('popupTitle').textContent = s.title;
+  document.getElementById('popupTags').innerHTML = s.tags.filter(t=>t!=='all').map(t=>`<span class="popup-tag">${tagLabel(t)}</span>`).join('');
+
+  const canSee = s.free || hasSubscription;
+
+  // عکس: blur یا واضح
+  if(canSee) {
+    left.classList.add('unblurred');
+    blurCta.style.display = 'none';
+  } else {
+    left.classList.remove('unblurred');
+    blurCta.style.display = 'flex';
+  }
+
+  // پرامپت: نمایش یا مخفی
+  if(canSee) {
+    terminal.style.display = 'flex';
+    subSection.style.display = 'none';
+    // تایپ انیمیشن
+    const el = document.getElementById('popupPromptText');
+    el.textContent = '';
+    let i = 0;
+    const txt = s.prompt;
+    const t = setInterval(() => {
+      el.textContent += txt[i++];
+      if(i >= txt.length) clearInterval(t);
+    }, 18);
+  } else {
+    terminal.style.display = 'none';
+    subSection.style.display = 'block';
+  }
+
+  document.getElementById('popupOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePopup() {
+  document.getElementById('popupOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closePopupOnOverlay(e) { if(e.target === document.getElementById('popupOverlay')) closePopup(); }
+
+function copyPrompt() {
+  const text = document.getElementById('popupPromptText').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.btn-copy-term');
+    btn.textContent = '✅ کپی شد!';
+    setTimeout(() => { btn.textContent = '📋 کپی پرامپت'; }, 2000);
+  });
+}
+
+function openSubscribe() { alert('صفحه خرید اشتراک — به زودی'); }
+function openLogin() { alert('ورود / ثبت‌نام — به زودی'); }
+
+// Drag scroll
+const scroll = document.getElementById('tabsScroll');
+const thumb  = document.getElementById('scrollThumb');
+let isDragging=false, startX, scrollLeft;
+function updateThumb() {
+  const ratio = scroll.scrollWidth/scroll.clientWidth;
+  const tw = Math.max(30, scroll.clientWidth/ratio);
+  const tx = (scroll.scrollLeft/(scroll.scrollWidth-scroll.clientWidth))*(scroll.clientWidth-tw);
+  thumb.style.width = tw+'px'; thumb.style.left=(isNaN(tx)?0:tx)+'px';
+}
+scroll.addEventListener('scroll', updateThumb);
+scroll.addEventListener('mousedown', e => { isDragging=true; startX=e.pageX-scroll.offsetLeft; scrollLeft=scroll.scrollLeft; scroll.classList.add('dragging'); });
+document.addEventListener('mouseup', () => { isDragging=false; scroll.classList.remove('dragging'); });
+document.addEventListener('mousemove', e => { if(!isDragging) return; e.preventDefault(); scroll.scrollLeft=scrollLeft-(e.pageX-scroll.offsetLeft-startX); });
+scroll.addEventListener('touchstart', e => { startX=e.touches[0].pageX-scroll.offsetLeft; scrollLeft=scroll.scrollLeft; }, {passive:true});
+scroll.addEventListener('touchmove', e => { scroll.scrollLeft=scrollLeft-(e.touches[0].pageX-scroll.offsetLeft-startX); }, {passive:true});
+scroll.addEventListener('touchend', updateThumb);
+document.addEventListener('keydown', e => { if(e.key==='Escape') closePopup(); });
+
+// غیرفعال کردن راست‌کلیک روی کل صفحه
+document.addEventListener('contextmenu', e => { if(e.target.tagName==='IMG') e.preventDefault(); });
+
+renderGrid('all');
+updateThumb();
+</script>
+</body>
+</html>
