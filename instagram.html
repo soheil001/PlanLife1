@@ -1,637 +1,553 @@
-import { useState, useEffect } from "react";
+<!DOCTYPE html>
+<html lang="en" data-mode="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>InstaManager — Demo</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.6.0/dist/tabler-icons.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --surface-0:#0f0f0f;--surface-1:#181818;--surface-2:#222;--surface-3:#2a2a2a;
+  --text-primary:#f0f0f0;--text-secondary:#a0a0a0;--text-muted:#666;
+  --border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.14);
+  --bg-accent:rgba(59,130,246,0.12);--text-accent:#60a5fa;--border-accent:rgba(59,130,246,0.3);--fill-accent:#3b82f6;
+  --bg-success:rgba(34,197,94,0.1);--text-success:#4ade80;--border-success:rgba(34,197,94,0.25);--fill-success:#22c55e;
+  --bg-warning:rgba(251,191,36,0.1);--text-warning:#fbbf24;--border-warning:rgba(251,191,36,0.25);
+  --bg-danger:rgba(239,68,68,0.1);--text-danger:#f87171;--border-danger:rgba(239,68,68,0.3);
+  --radius:8px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--surface-0);color:var(--text-primary);display:flex;min-height:100vh;font-size:14px}
+button{font-family:inherit;cursor:pointer}
+input{font-family:inherit}
 
-const TOTAL_ACCOUNTS = 20;
+/* Layout */
+#sidebar{width:220px;flex-shrink:0;background:var(--surface-1);border-right:0.5px solid var(--border);display:flex;flex-direction:column;height:100vh;position:sticky;top:0;transition:width .2s;overflow:hidden}
+#sidebar.collapsed{width:60px}
+#main{flex:1;display:flex;flex-direction:column;min-width:0}
+#header{background:var(--surface-1);border-bottom:0.5px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+#content{padding:24px;flex:1;display:flex;flex-direction:column;gap:24px}
 
-const initialAccounts = Array.from({ length: TOTAL_ACCOUNTS }, (_, i) => ({
-  id: i + 1,
-  label: `Account ${String(i + 1).padStart(2, "0")}`,
-  username: "",
-  password: "",
-  status: "disconnected",
-  selected: true,
+/* Sidebar */
+.sidebar-top{padding:18px 14px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--border);gap:8px}
+.sidebar-brand{display:flex;flex-direction:column;gap:2px}
+.sidebar-brand .name{font-weight:500;font-size:15px;color:var(--text-primary);white-space:nowrap}
+.sidebar-brand .sub{font-size:11px;color:var(--text-muted);white-space:nowrap}
+.sidebar-toggle{background:none;border:none;color:var(--text-secondary);font-size:20px;padding:4px;border-radius:var(--radius);line-height:1}
+.sidebar-toggle:hover{color:var(--text-primary)}
+nav{flex:1;padding:10px 8px;display:flex;flex-direction:column;gap:2px}
+.nav-btn{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius);border:none;background:transparent;color:var(--text-secondary);font-size:14px;text-align:left;white-space:nowrap;overflow:hidden;width:100%;transition:background .15s}
+.nav-btn.active{background:var(--bg-accent);color:var(--text-accent)}
+.nav-btn:hover:not(.active){background:rgba(255,255,255,0.05)}
+.nav-btn i{font-size:18px;flex-shrink:0}
+.collapsed .nav-btn{justify-content:center;padding:9px}
+.collapsed .nav-label{display:none}
+.sidebar-footer{padding:12px 14px;border-top:0.5px solid var(--border);font-size:11px;color:var(--text-muted);white-space:nowrap;overflow:hidden}
+.collapsed .sidebar-footer{display:none}
+.collapsed .sidebar-brand{display:none}
+
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+.stat-card{background:var(--surface-1);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:4px}
+.stat-label{font-size:12px;color:var(--text-muted)}
+.stat-value{font-size:28px;font-weight:500}
+
+/* Account cards */
+.accounts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.acc-card{background:var(--surface-2);border-radius:12px;border:0.5px solid var(--border);padding:14px 16px;display:flex;flex-direction:column;gap:12px;transition:border-color .2s}
+.acc-card.connected{border-color:var(--border-success)}
+.acc-top{display:flex;align-items:center;gap:10px}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--bg-accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--text-accent);flex-shrink:0}
+.acc-info{flex:1;min-width:0}
+.acc-name{font-weight:500;font-size:14px;color:var(--text-primary);margin-bottom:3px}
+.status-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500}
+.status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.acc-fields{display:flex;flex-direction:column;gap:6px}
+.acc-input{font-size:13px;padding:7px 10px;border-radius:var(--radius);border:0.5px solid var(--border);background:transparent;color:var(--text-primary);outline:none;width:100%;transition:border-color .15s,background .15s}
+.acc-input:focus{border-color:var(--border-accent);background:var(--surface-1)}
+.acc-input[readonly]{opacity:.7}
+.acc-btns{display:flex;gap:8px}
+.btn-connect{flex:1;padding:7px 0;font-size:13px;border-radius:var(--radius);border:0.5px solid var(--border-accent);background:var(--bg-accent);color:var(--text-accent);font-weight:500;transition:opacity .15s}
+.btn-connect:disabled{background:var(--bg-success);border-color:var(--border-success);color:var(--text-success);cursor:default;opacity:1}
+.btn-edit{padding:7px 14px;font-size:13px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:transparent;color:var(--text-secondary);font-weight:500}
+.btn-edit:hover{background:rgba(255,255,255,0.05)}
+.btn-edit.saving{background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent)}
+
+/* Section titles */
+.section-title{font-size:15px;font-weight:500;color:var(--text-primary);margin-bottom:14px}
+
+/* Command panel */
+.cmd-wrap{display:flex;gap:16px;flex-wrap:wrap}
+.cmd-left{flex:1 1 320px;background:var(--surface-2);border-radius:12px;border:0.5px solid var(--border);padding:20px}
+.cmd-right{flex:1 1 240px;background:var(--surface-2);border-radius:12px;border:0.5px solid var(--border);padding:20px;display:flex;flex-direction:column;gap:10px}
+.field-label{font-size:13px;color:var(--text-secondary);font-weight:500;margin-bottom:6px;display:block}
+.url-input{font-size:14px;padding:10px 14px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:var(--surface-1);color:var(--text-primary);outline:none;width:100%}
+.url-input:focus{border-color:var(--border-accent)}
+.placeholder-box{background:var(--surface-1);border-radius:var(--radius);border:0.5px dashed var(--border-strong);padding:14px;margin:12px 0}
+.placeholder-box .ph-title{font-size:12px;color:var(--text-muted);font-weight:500}
+.placeholder-box .ph-sub{font-size:12px;color:var(--text-muted);margin-top:4px}
+.btn-run{width:100%;padding:11px;font-size:14px;font-weight:500;border-radius:var(--radius);border:none;background:var(--fill-accent);color:#fff;transition:opacity .15s}
+.btn-run:disabled{background:var(--surface-1);color:var(--text-muted);cursor:default}
+.demo-banner{background:var(--bg-warning);border:0.5px solid var(--border-warning);border-radius:var(--radius);padding:10px 14px;font-size:12px;color:var(--text-warning);font-weight:500;margin-bottom:14px}
+.success-banner{background:var(--bg-success);border:0.5px solid var(--border-success);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--text-success);font-weight:500;margin-top:12px;display:none}
+.error-msg{font-size:12px;color:var(--text-danger);margin-top:4px;display:none}
+
+/* Processing list */
+.proc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px;margin-top:12px}
+.proc-item{background:var(--surface-1);border-radius:var(--radius);border:0.5px solid var(--border);padding:7px 10px;display:flex;justify-content:space-between;align-items:center;font-size:12px}
+.proc-status{font-size:11px}
+
+/* Account select list */
+.sel-header{display:flex;align-items:center;justify-content:space-between}
+.sel-btns{display:flex;gap:8px}
+.btn-sel{flex:1;padding:6px;font-size:12px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:transparent;color:var(--text-secondary)}
+.btn-sel:hover{background:rgba(255,255,255,0.05)}
+.sel-list{display:flex;flex-direction:column;gap:4px;max-height:420px;overflow-y:auto;margin-top:4px}
+.sel-item{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:var(--radius);cursor:pointer;border:0.5px solid var(--border);transition:background .15s}
+.sel-item.checked{background:var(--bg-accent);border-color:var(--border-accent)}
+.sel-item input[type=checkbox]{accent-color:var(--fill-accent)}
+.sel-name{flex:1;font-size:13px;color:var(--text-primary)}
+
+/* History */
+.history-list{display:flex;flex-direction:column;gap:8px}
+.hist-item{background:var(--surface-2);border-radius:var(--radius);border:0.5px solid var(--border);padding:10px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.hist-date{font-size:12px;color:var(--text-muted);min-width:160px}
+.hist-url{font-size:12px;color:var(--text-primary);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.hist-count{font-size:12px;color:var(--text-secondary);white-space:nowrap}
+.hist-badge{font-size:11px;font-weight:500;padding:3px 9px;border-radius:99px;background:var(--bg-success);color:var(--text-success);white-space:nowrap}
+
+/* Notification */
+#notif{position:fixed;bottom:24px;right:24px;z-index:100;background:var(--surface-2);border:0.5px solid var(--border-success);border-radius:10px;padding:12px 18px;max-width:320px;display:none;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+#notif.show{display:flex}
+.notif-icon{color:var(--text-success);font-size:16px}
+.notif-msg{font-size:13px;color:var(--text-primary);flex:1}
+.notif-close{background:none;border:none;color:var(--text-muted);font-size:18px;cursor:pointer;line-height:1;padding:0}
+
+/* Settings */
+.settings-card{background:var(--surface-2);border-radius:12px;border:0.5px solid var(--border);padding:20px;max-width:540px;display:flex;flex-direction:column;gap:18px}
+.settings-field{display:flex;flex-direction:column;gap:6px}
+.settings-input{font-size:14px;padding:9px 12px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:var(--surface-1);color:var(--text-primary);outline:none}
+.settings-input:focus{border-color:var(--border-accent)}
+
+/* Overview mini list */
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+.ov-item{background:var(--surface-2);border-radius:var(--radius);border:0.5px solid var(--border);padding:8px 12px;display:flex;align-items:center;justify-content:space-between}
+
+/* Header badge */
+.demo-pill{font-size:11px;font-weight:500;padding:4px 10px;border-radius:99px;background:var(--bg-warning);color:var(--text-warning)}
+
+/* Responsive */
+@media(max-width:640px){
+  #sidebar{position:fixed;z-index:50;height:100%}
+  #sidebar:not(.collapsed){width:200px}
+  .cmd-wrap{flex-direction:column}
+  .accounts-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="sidebar-top">
+    <div class="sidebar-brand">
+      <span class="name">InstaManager</span>
+      <span class="sub">Demo mode</span>
+    </div>
+    <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar">
+      <i class="ti ti-layout-sidebar-left-collapse" id="sidebar-icon"></i>
+    </button>
+  </div>
+  <nav>
+    <button class="nav-btn active" onclick="navigate('dashboard',this)" data-page="dashboard">
+      <i class="ti ti-layout-dashboard"></i><span class="nav-label">Dashboard</span>
+    </button>
+    <button class="nav-btn" onclick="navigate('accounts',this)" data-page="accounts">
+      <i class="ti ti-users"></i><span class="nav-label">Accounts</span>
+    </button>
+    <button class="nav-btn" onclick="navigate('commands',this)" data-page="commands">
+      <i class="ti ti-terminal-2"></i><span class="nav-label">Commands</span>
+    </button>
+    <button class="nav-btn" onclick="navigate('history',this)" data-page="history">
+      <i class="ti ti-history"></i><span class="nav-label">History</span>
+    </button>
+    <button class="nav-btn" onclick="navigate('settings',this)" data-page="settings">
+      <i class="ti ti-settings"></i><span class="nav-label">Settings</span>
+    </button>
+  </nav>
+  <div class="sidebar-footer" id="sidebar-footer">0 / 20 connected</div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <div id="header">
+    <h1 style="font-size:16px;font-weight:500" id="page-title">Dashboard</h1>
+    <span class="demo-pill">Demo mode</span>
+  </div>
+  <div id="content"></div>
+</div>
+
+<!-- NOTIFICATION -->
+<div id="notif">
+  <span class="notif-icon">✓</span>
+  <span class="notif-msg" id="notif-msg"></span>
+  <button class="notif-close" onclick="hideNotif()">×</button>
+</div>
+
+<script>
+const TOTAL = 20;
+let accounts = Array.from({length:TOTAL},(_,i)=>({
+  id:i+1,
+  label:`Account ${String(i+1).padStart(2,'0')}`,
+  username:'',password:'',
+  status:'disconnected',
+  selected:true
 }));
+let commandHistory=[];
+let sidebarCollapsed=false;
+let currentPage='dashboard';
+let notifTimer=null;
 
-function Avatar({ label }) {
-  const initials = label.replace("Account ", "");
-  return (
-    <div style={{
-      width: 44, height: 44, borderRadius: "50%",
-      background: "var(--bg-accent)", display: "flex",
-      alignItems: "center", justifyContent: "center",
-      fontSize: 13, fontWeight: 500, color: "var(--text-accent)",
-      flexShrink: 0,
-    }}>
-      {initials}
-    </div>
-  );
+// ---------- SIDEBAR ----------
+function toggleSidebar(){
+  sidebarCollapsed=!sidebarCollapsed;
+  const sb=document.getElementById('sidebar');
+  const ic=document.getElementById('sidebar-icon');
+  if(sidebarCollapsed){
+    sb.classList.add('collapsed');
+    ic.className='ti ti-layout-sidebar-left-expand';
+  } else {
+    sb.classList.remove('collapsed');
+    ic.className='ti ti-layout-sidebar-left-collapse';
+  }
 }
 
-function StatusBadge({ status }) {
-  const connected = status === "connected";
-  return (
-    <span style={{
-      display: "inline-flex", alignItems: "center", gap: 5,
-      fontSize: 12, fontWeight: 500,
-      color: connected ? "var(--text-success)" : "var(--text-secondary)",
-    }}>
-      <span style={{
-        width: 7, height: 7, borderRadius: "50%", flexShrink: 0,
-        background: connected ? "var(--fill-success)" : "var(--border-strong)",
-      }} />
-      {connected ? "Connected" : "Not connected"}
-    </span>
-  );
+// ---------- NAVIGATION ----------
+const pageTitles={dashboard:'Dashboard',accounts:'Accounts',commands:'Commands',history:'History',settings:'Settings'};
+function navigate(page,btn){
+  currentPage=page;
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.getElementById('page-title').textContent=pageTitles[page]||page;
+  render();
 }
 
-function AccountCard({ account, onConnect, onEdit, onToggleSelect, showSelect }) {
-  const [localUser, setLocalUser] = useState(account.username);
-  const [localPass, setLocalPass] = useState(account.password);
-  const [editing, setEditing] = useState(false);
+// ---------- NOTIFICATION ----------
+function showNotif(msg){
+  clearTimeout(notifTimer);
+  document.getElementById('notif-msg').textContent=msg;
+  document.getElementById('notif').classList.add('show');
+  notifTimer=setTimeout(hideNotif,3500);
+}
+function hideNotif(){document.getElementById('notif').classList.remove('show')}
 
-  const handleEdit = () => {
-    if (editing) onEdit(account.id, localUser, localPass);
-    setEditing(!editing);
-  };
+// ---------- STATS ----------
+function statsHTML(){
+  const conn=accounts.filter(a=>a.status==='connected').length;
+  const cr=commandHistory.length;
+  return `<div class="stats-grid">
+    <div class="stat-card"><span class="stat-label">Total accounts</span><span class="stat-value" style="color:var(--text-primary)">${TOTAL}</span></div>
+    <div class="stat-card"><span class="stat-label">Connected</span><span class="stat-value" style="color:var(--text-success)">${conn}</span></div>
+    <div class="stat-card"><span class="stat-label">Not connected</span><span class="stat-value" style="color:var(--text-secondary)">${TOTAL-conn}</span></div>
+    <div class="stat-card"><span class="stat-label">Commands run</span><span class="stat-value" style="color:var(--text-accent)">${cr}</span></div>
+  </div>`;
+}
 
-  return (
-    <div style={{
-      background: "var(--surface-2)", borderRadius: 12,
-      border: `0.5px solid ${account.status === "connected" ? "var(--border-success)" : "var(--border)"}`,
-      padding: "1rem 1.25rem", display: "flex", flexDirection: "column", gap: 12,
-      transition: "border-color 0.2s",
-    }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        {showSelect && (
-          <input type="checkbox" checked={account.selected}
-            onChange={() => onToggleSelect(account.id)}
-            style={{ width: 15, height: 15, accentColor: "var(--fill-accent)", flexShrink: 0 }} />
-        )}
-        <Avatar label={account.label} />
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ margin: 0, fontWeight: 500, fontSize: 14, color: "var(--text-primary)" }}>
-            {account.label}
-          </p>
-          <StatusBadge status={account.status} />
-        </div>
-      </div>
+// ---------- STATUS BADGE ----------
+function badgeHTML(status){
+  const conn=status==='connected';
+  return `<span class="status-badge" style="color:${conn?'var(--text-success)':'var(--text-secondary)'}">
+    <span class="status-dot" style="background:${conn?'var(--fill-success)':'var(--border-strong)'}"></span>
+    ${conn?'Connected':'Not connected'}
+  </span>`;
+}
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-        <input
-          type="text" placeholder="Username" value={localUser}
-          readOnly={!editing}
-          onChange={e => setLocalUser(e.target.value)}
-          style={{
-            fontSize: 13, padding: "6px 10px", borderRadius: "var(--radius)",
-            border: "0.5px solid var(--border)", background: editing ? "var(--surface-1)" : "transparent",
-            color: "var(--text-primary)", outline: "none", width: "100%", boxSizing: "border-box",
-          }}
-        />
-        <input
-          type="password" placeholder="Password" value={localPass}
-          readOnly={!editing}
-          onChange={e => setLocalPass(e.target.value)}
-          style={{
-            fontSize: 13, padding: "6px 10px", borderRadius: "var(--radius)",
-            border: "0.5px solid var(--border)", background: editing ? "var(--surface-1)" : "transparent",
-            color: "var(--text-primary)", outline: "none", width: "100%", boxSizing: "border-box",
-          }}
-        />
-      </div>
-
-      <div style={{ display: "flex", gap: 8 }}>
-        <button onClick={() => onConnect(account.id)}
-          disabled={account.status === "connected"}
-          style={{
-            flex: 1, padding: "6px 0", fontSize: 13, borderRadius: "var(--radius)",
-            border: "0.5px solid var(--border-accent)",
-            background: account.status === "connected" ? "var(--bg-success)" : "var(--bg-accent)",
-            color: account.status === "connected" ? "var(--text-success)" : "var(--text-accent)",
-            cursor: account.status === "connected" ? "default" : "pointer",
-            fontWeight: 500,
-          }}>
-          {account.status === "connected" ? "Connected" : "Connect"}
-        </button>
-        <button onClick={handleEdit}
-          style={{
-            padding: "6px 14px", fontSize: 13, borderRadius: "var(--radius)",
-            border: "0.5px solid var(--border-strong)",
-            background: editing ? "var(--bg-accent)" : "transparent",
-            color: editing ? "var(--text-accent)" : "var(--text-secondary)",
-            cursor: "pointer", fontWeight: 500,
-          }}>
-          {editing ? "Save" : "Edit"}
-        </button>
+// ---------- ACCOUNT CARD ----------
+function accountCardHTML(a,showSelect=false){
+  const initials=a.label.replace('Account ','');
+  return `<div class="acc-card${a.status==='connected'?' connected':''}" id="card-${a.id}">
+    <div class="acc-top">
+      ${showSelect?`<input type="checkbox" ${a.selected?'checked':''} onchange="toggleSelect(${a.id})" style="width:15px;height:15px;accent-color:var(--fill-accent);flex-shrink:0">`:''}
+      <div class="avatar">${initials}</div>
+      <div class="acc-info">
+        <div class="acc-name">${a.label}</div>
+        <div id="badge-${a.id}">${badgeHTML(a.status)}</div>
       </div>
     </div>
-  );
-}
-
-function DashboardStats({ accounts, commandsRun }) {
-  const connected = accounts.filter(a => a.status === "connected").length;
-  const stats = [
-    { label: "Total accounts", value: TOTAL_ACCOUNTS },
-    { label: "Connected", value: connected, color: "var(--text-success)" },
-    { label: "Not connected", value: TOTAL_ACCOUNTS - connected, color: "var(--text-secondary)" },
-    { label: "Commands run", value: commandsRun, color: "var(--text-accent)" },
-  ];
-  return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12 }}>
-      {stats.map(s => (
-        <div key={s.label} style={{
-          background: "var(--surface-1)", borderRadius: "var(--radius)",
-          padding: "1rem", display: "flex", flexDirection: "column", gap: 4,
-        }}>
-          <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{s.label}</span>
-          <span style={{ fontSize: 28, fontWeight: 500, color: s.color || "var(--text-primary)" }}>
-            {s.value}
-          </span>
-        </div>
-      ))}
+    <div class="acc-fields">
+      <input class="acc-input" id="user-${a.id}" type="text" placeholder="Username" value="${a.username}" readonly>
+      <input class="acc-input" id="pass-${a.id}" type="password" placeholder="Password" value="${a.password}" readonly>
     </div>
-  );
-}
-
-function Notification({ msg, onClose }) {
-  useEffect(() => {
-    const t = setTimeout(onClose, 3500);
-    return () => clearTimeout(t);
-  }, [msg]);
-
-  if (!msg) return null;
-  return (
-    <div style={{
-      position: "fixed", bottom: 24, right: 24, zIndex: 100,
-      background: "var(--surface-2)", border: "0.5px solid var(--border-success)",
-      borderRadius: 10, padding: "12px 18px", maxWidth: 320,
-      boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
-      display: "flex", alignItems: "center", gap: 10,
-    }}>
-      <span style={{ color: "var(--text-success)", fontSize: 16 }}>✓</span>
-      <span style={{ fontSize: 13, color: "var(--text-primary)" }}>{msg}</span>
-      <button onClick={onClose} style={{
-        marginLeft: "auto", background: "none", border: "none",
-        cursor: "pointer", color: "var(--text-muted)", fontSize: 16, lineHeight: 1,
-      }}>×</button>
-    </div>
-  );
-}
-
-function CommandPanel({ accounts, onCommandRun }) {
-  const [url, setUrl] = useState("");
-  const [phase, setPhase] = useState("idle");
-  const [urlError, setUrlError] = useState("");
-
-  const selectedAccounts = accounts.filter(a => a.selected);
-
-  const handleRun = async () => {
-    if (!url.trim()) {
-      setUrlError("Paste an Instagram URL first.");
-      return;
-    }
-    setUrlError("");
-    setPhase("preparing");
-    await new Promise(r => setTimeout(r, 900));
-    setPhase("processing");
-    await new Promise(r => setTimeout(r, 2200));
-    setPhase("done");
-    onCommandRun(url.trim(), selectedAccounts.length);
-    setTimeout(() => setPhase("idle"), 3000);
-  };
-
-  const phaseLabel = (id) => {
-    if (phase === "idle") return "Ready";
-    if (phase === "preparing") return "Preparing…";
-    if (phase === "processing") return "Processing";
-    if (phase === "done") return "Done";
-  };
-  const phaseColor = (id) => {
-    if (phase === "processing") return "var(--text-warning)";
-    if (phase === "done") return "var(--text-success)";
-    return "var(--text-secondary)";
-  };
-
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-      <div style={{
-        background: "var(--bg-warning)", border: "0.5px solid var(--border-warning)",
-        borderRadius: "var(--radius)", padding: "10px 14px",
-        fontSize: 12, color: "var(--text-warning)", fontWeight: 500,
-      }}>
-        Demo mode — Instagram integration not connected
-      </div>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-        <label style={{ fontSize: 13, color: "var(--text-secondary)", fontWeight: 500 }}>
-          Instagram post / reel URL
-        </label>
-        <input
-          type="text" value={url} placeholder="Paste URL here…"
-          onChange={e => { setUrl(e.target.value); setUrlError(""); }}
-          style={{
-            fontSize: 14, padding: "10px 14px", borderRadius: "var(--radius)",
-            border: `0.5px solid ${urlError ? "var(--border-danger)" : "var(--border-strong)"}`,
-            background: "var(--surface-1)", color: "var(--text-primary)",
-            outline: "none", width: "100%", boxSizing: "border-box",
-          }}
-        />
-        {urlError && <span style={{ fontSize: 12, color: "var(--text-danger)" }}>{urlError}</span>}
-      </div>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        <p style={{ margin: 0, fontSize: 13, color: "var(--text-muted)" }}>
-          Command preview: open / view the provided Instagram URL
-        </p>
-        <p style={{ margin: 0, fontSize: 13, color: "var(--text-secondary)" }}>
-          {selectedAccounts.length} of {TOTAL_ACCOUNTS} accounts selected
-        </p>
-      </div>
-
-      {/* ── COMMAND EXECUTION PLACEHOLDER ── */}
-      <div style={{
-        background: "var(--surface-1)", borderRadius: 10,
-        border: "0.5px dashed var(--border-strong)", padding: "14px 18px",
-      }}>
-        <p style={{ margin: 0, fontSize: 12, color: "var(--text-muted)", fontWeight: 500 }}>
-          PLACEHOLDER — Instagram execution logic goes here
-        </p>
-        <p style={{ margin: "4px 0 0", fontSize: 12, color: "var(--text-muted)" }}>
-          Real account dispatch, authentication, and viewing logic will be wired here in a future version.
-        </p>
-      </div>
-
-      <button onClick={handleRun} disabled={phase !== "idle"}
-        style={{
-          padding: "11px 0", fontSize: 14, fontWeight: 500, borderRadius: "var(--radius)",
-          border: "none", background: phase !== "idle" ? "var(--surface-1)" : "var(--fill-accent)",
-          color: phase !== "idle" ? "var(--text-muted)" : "var(--on-accent)",
-          cursor: phase !== "idle" ? "default" : "pointer", width: "100%",
-        }}>
-        {phase === "idle" && "Run command (demo)"}
-        {phase === "preparing" && "Preparing…"}
-        {phase === "processing" && "Processing…"}
-        {phase === "done" && "Demo completed"}
+    <div class="acc-btns">
+      <button class="btn-connect" id="conn-btn-${a.id}" onclick="connectAccount(${a.id})" ${a.status==='connected'?'disabled':''}>
+        ${a.status==='connected'?'Connected':'Connect'}
       </button>
-
-      {phase !== "idle" && (
-        <div style={{
-          display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 6,
-        }}>
-          {selectedAccounts.map(a => (
-            <div key={a.id} style={{
-              background: "var(--surface-1)", borderRadius: "var(--radius)",
-              border: "0.5px solid var(--border)", padding: "6px 10px",
-              display: "flex", justifyContent: "space-between", alignItems: "center",
-            }}>
-              <span style={{ fontSize: 12, color: "var(--text-primary)" }}>{a.label}</span>
-              <span style={{ fontSize: 11, color: phaseColor(a.id) }}>{phaseLabel(a.id)}</span>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {phase === "done" && (
-        <div style={{
-          background: "var(--bg-success)", border: "0.5px solid var(--border-success)",
-          borderRadius: "var(--radius)", padding: "10px 14px",
-          fontSize: 13, color: "var(--text-success)", fontWeight: 500,
-        }}>
-          Demo completed — no real Instagram action was performed.
-        </div>
-      )}
+      <button class="btn-edit" id="edit-btn-${a.id}" onclick="editAccount(${a.id})">Edit</button>
     </div>
-  );
+  </div>`;
 }
 
-function CommandHistory({ history }) {
-  if (history.length === 0) return (
-    <div style={{ textAlign: "center", padding: "2rem 0", color: "var(--text-muted)", fontSize: 14 }}>
-      No commands run yet. Run a command to see history here.
-    </div>
-  );
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      {history.map((h, i) => (
-        <div key={i} style={{
-          background: "var(--surface-2)", borderRadius: "var(--radius)",
-          border: "0.5px solid var(--border)", padding: "10px 14px",
-          display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10,
-        }}>
-          <span style={{ fontSize: 12, color: "var(--text-muted)", minWidth: 140 }}>{h.date}</span>
-          <span style={{
-            fontSize: 12, color: "var(--text-primary)", flex: 1,
-            overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0,
-          }}>{h.url}</span>
-          <span style={{ fontSize: 12, color: "var(--text-secondary)" }}>{h.accounts} accounts</span>
-          <span style={{
-            fontSize: 11, fontWeight: 500, padding: "2px 8px", borderRadius: 99,
-            background: "var(--bg-success)", color: "var(--text-success)",
-          }}>Demo completed</span>
-        </div>
-      ))}
-    </div>
-  );
+// ---------- CONNECT ----------
+function connectAccount(id){
+  const a=accounts.find(x=>x.id===id);
+  if(!a||a.status==='connected') return;
+  a.status='connected';
+  updateSidebarFooter();
+  // Update card in place
+  const card=document.getElementById(`card-${id}`);
+  if(card) card.classList.add('connected');
+  const badge=document.getElementById(`badge-${id}`);
+  if(badge) badge.innerHTML=badgeHTML('connected');
+  const btn=document.getElementById(`conn-btn-${id}`);
+  if(btn){btn.textContent='Connected';btn.disabled=true;btn.style.background='var(--bg-success)';btn.style.borderColor='var(--border-success)';btn.style.color='var(--text-success)';}
+  showNotif(`${a.label} connected (demo mode)`);
+  // Update stats if visible
+  if(document.getElementById('stats-wrap')) document.getElementById('stats-wrap').innerHTML=statsHTML();
 }
 
-const NAV_ITEMS = [
-  { id: "dashboard", icon: "ti-layout-dashboard", label: "Dashboard" },
-  { id: "accounts", icon: "ti-users", label: "Accounts" },
-  { id: "commands", icon: "ti-terminal-2", label: "Commands" },
-  { id: "history", icon: "ti-history", label: "History" },
-  { id: "settings", icon: "ti-settings", label: "Settings" },
-];
-
-export default function App() {
-  const [accounts, setAccounts] = useState(initialAccounts);
-  const [notification, setNotification] = useState("");
-  const [commandHistory, setCommandHistory] = useState([]);
-  const [activeNav, setActiveNav] = useState("dashboard");
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  const connected = accounts.filter(a => a.status === "connected").length;
-
-  const handleConnect = (id) => {
-    setAccounts(prev => prev.map(a =>
-      a.id === id ? { ...a, status: "connected" } : a
-    ));
-    const acc = accounts.find(a => a.id === id);
-    setNotification(`${acc.label} connected (demo mode)`);
-  };
-
-  const handleEdit = (id, username, password) => {
-    setAccounts(prev => prev.map(a =>
-      a.id === id ? { ...a, username, password } : a
-    ));
-  };
-
-  const handleToggleSelect = (id) => {
-    setAccounts(prev => prev.map(a =>
-      a.id === id ? { ...a, selected: !a.selected } : a
-    ));
-  };
-
-  const handleSelectAll = () => setAccounts(prev => prev.map(a => ({ ...a, selected: true })));
-  const handleDeselectAll = () => setAccounts(prev => prev.map(a => ({ ...a, selected: false })));
-
-  const handleCommandRun = (url, count) => {
-    const now = new Date();
-    const dateStr = now.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) +
-      " — " + now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
-    setCommandHistory(prev => [{ date: dateStr, url, accounts: count }, ...prev]);
-  };
-
-  const selectedCount = accounts.filter(a => a.selected).length;
-
-  const sidebarW = sidebarOpen ? 220 : 60;
-
-  return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "var(--surface-0)", fontFamily: "var(--font-sans)" }}>
-      {/* Sidebar */}
-      <aside style={{
-        width: sidebarW, flexShrink: 0, background: "var(--surface-1)",
-        borderRight: "0.5px solid var(--border)", display: "flex",
-        flexDirection: "column", transition: "width 0.2s", overflow: "hidden",
-        position: "sticky", top: 0, height: "100vh",
-      }}>
-        <div style={{
-          padding: sidebarOpen ? "20px 16px 16px" : "20px 8px 16px",
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          borderBottom: "0.5px solid var(--border)",
-        }}>
-          {sidebarOpen && (
-            <div>
-              <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: "var(--text-primary)" }}>
-                InstaManager
-              </p>
-              <p style={{ margin: 0, fontSize: 11, color: "var(--text-muted)" }}>Demo mode</p>
-            </div>
-          )}
-          <button onClick={() => setSidebarOpen(o => !o)} style={{
-            background: "none", border: "none", cursor: "pointer",
-            color: "var(--text-secondary)", fontSize: 18, padding: 4,
-          }}>
-            <i className={`ti ${sidebarOpen ? "ti-layout-sidebar-left-collapse" : "ti-layout-sidebar-left-expand"}`} aria-hidden="true" />
-          </button>
-        </div>
-
-        <nav style={{ flex: 1, padding: "12px 8px", display: "flex", flexDirection: "column", gap: 2 }}>
-          {NAV_ITEMS.map(item => (
-            <button key={item.id} onClick={() => setActiveNav(item.id)}
-              title={!sidebarOpen ? item.label : undefined}
-              style={{
-                display: "flex", alignItems: "center", gap: 10,
-                padding: sidebarOpen ? "9px 12px" : "9px", borderRadius: "var(--radius)",
-                border: "none", cursor: "pointer", textAlign: "left",
-                background: activeNav === item.id ? "var(--bg-accent)" : "transparent",
-                color: activeNav === item.id ? "var(--text-accent)" : "var(--text-secondary)",
-                fontSize: 14, fontWeight: activeNav === item.id ? 500 : 400,
-                whiteSpace: "nowrap", overflow: "hidden",
-                justifyContent: sidebarOpen ? "flex-start" : "center",
-              }}>
-              <i className={`ti ${item.icon}`} style={{ fontSize: 18, flexShrink: 0 }} aria-hidden="true" />
-              {sidebarOpen && item.label}
-            </button>
-          ))}
-        </nav>
-
-        {sidebarOpen && (
-          <div style={{ padding: "12px 16px", borderTop: "0.5px solid var(--border)" }}>
-            <p style={{ margin: 0, fontSize: 11, color: "var(--text-muted)" }}>
-              {connected}/{TOTAL_ACCOUNTS} accounts connected
-            </p>
-          </div>
-        )}
-      </aside>
-
-      {/* Main */}
-      <main style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
-        {/* Header */}
-        <header style={{
-          background: "var(--surface-1)", borderBottom: "0.5px solid var(--border)",
-          padding: "0 24px", height: 56, display: "flex", alignItems: "center",
-          justifyContent: "space-between", position: "sticky", top: 0, zIndex: 10,
-        }}>
-          <h1 style={{ margin: 0, fontSize: 16, fontWeight: 500, color: "var(--text-primary)" }}>
-            {NAV_ITEMS.find(n => n.id === activeNav)?.label}
-          </h1>
-          <div style={{
-            fontSize: 11, fontWeight: 500, padding: "4px 10px", borderRadius: 99,
-            background: "var(--bg-warning)", color: "var(--text-warning)",
-          }}>
-            Demo mode
-          </div>
-        </header>
-
-        {/* Content */}
-        <div style={{ padding: 24, flex: 1, display: "flex", flexDirection: "column", gap: 24 }}>
-
-          {/* DASHBOARD */}
-          {activeNav === "dashboard" && (
-            <>
-              <DashboardStats accounts={accounts} commandsRun={commandHistory.length} />
-              <div>
-                <h2 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 500, color: "var(--text-primary)" }}>
-                  Recent activity
-                </h2>
-                {commandHistory.length === 0 ? (
-                  <p style={{ margin: 0, fontSize: 14, color: "var(--text-muted)" }}>
-                    No commands run yet. Head to Commands to get started.
-                  </p>
-                ) : (
-                  <CommandHistory history={commandHistory.slice(0, 5)} />
-                )}
-              </div>
-              <div>
-                <h2 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 500, color: "var(--text-primary)" }}>
-                  Account overview
-                </h2>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 8 }}>
-                  {accounts.map(a => (
-                    <div key={a.id} style={{
-                      background: "var(--surface-2)", borderRadius: "var(--radius)",
-                      border: "0.5px solid var(--border)", padding: "8px 12px",
-                      display: "flex", alignItems: "center", justifyContent: "space-between",
-                    }}>
-                      <span style={{ fontSize: 13, color: "var(--text-primary)" }}>{a.label}</span>
-                      <StatusBadge status={a.status} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* ACCOUNTS */}
-          {activeNav === "accounts" && (
-            <>
-              <DashboardStats accounts={accounts} commandsRun={commandHistory.length} />
-              <div>
-                <h2 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 500, color: "var(--text-primary)" }}>
-                  All accounts
-                </h2>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
-                  {accounts.map(a => (
-                    <AccountCard key={a.id} account={a}
-                      onConnect={handleConnect} onEdit={handleEdit}
-                      onToggleSelect={handleToggleSelect} showSelect={false} />
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* COMMANDS */}
-          {activeNav === "commands" && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 860 }}>
-              <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-                {/* Left: command form */}
-                <div style={{
-                  flex: "1 1 320px", background: "var(--surface-2)", borderRadius: 12,
-                  border: "0.5px solid var(--border)", padding: "1.25rem",
-                }}>
-                  <h2 style={{ margin: "0 0 16px", fontSize: 15, fontWeight: 500 }}>Commands</h2>
-                  <CommandPanel accounts={accounts} onCommandRun={handleCommandRun} />
-                </div>
-
-                {/* Right: account selection */}
-                <div style={{
-                  flex: "1 1 240px", background: "var(--surface-2)", borderRadius: 12,
-                  border: "0.5px solid var(--border)", padding: "1.25rem",
-                  display: "flex", flexDirection: "column", gap: 10,
-                }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <h2 style={{ margin: 0, fontSize: 15, fontWeight: 500 }}>Select accounts</h2>
-                    <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{selectedCount} selected</span>
-                  </div>
-                  <div style={{ display: "flex", gap: 8 }}>
-                    <button onClick={handleSelectAll} style={{
-                      flex: 1, padding: "6px 0", fontSize: 12, borderRadius: "var(--radius)",
-                      border: "0.5px solid var(--border-strong)", background: "transparent",
-                      color: "var(--text-secondary)", cursor: "pointer",
-                    }}>Select all</button>
-                    <button onClick={handleDeselectAll} style={{
-                      flex: 1, padding: "6px 0", fontSize: 12, borderRadius: "var(--radius)",
-                      border: "0.5px solid var(--border-strong)", background: "transparent",
-                      color: "var(--text-secondary)", cursor: "pointer",
-                    }}>Deselect all</button>
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 4, overflowY: "auto", maxHeight: 420 }}>
-                    {accounts.map(a => (
-                      <label key={a.id} style={{
-                        display: "flex", alignItems: "center", gap: 10, padding: "7px 10px",
-                        borderRadius: "var(--radius)", cursor: "pointer",
-                        background: a.selected ? "var(--bg-accent)" : "transparent",
-                        border: `0.5px solid ${a.selected ? "var(--border-accent)" : "var(--border)"}`,
-                        transition: "background 0.15s",
-                      }}>
-                        <input type="checkbox" checked={a.selected}
-                          onChange={() => handleToggleSelect(a.id)}
-                          style={{ accentColor: "var(--fill-accent)" }} />
-                        <span style={{ fontSize: 13, color: "var(--text-primary)", flex: 1 }}>{a.label}</span>
-                        <StatusBadge status={a.status} />
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* HISTORY */}
-          {activeNav === "history" && (
-            <div style={{ maxWidth: 860 }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-                <h2 style={{ margin: 0, fontSize: 15, fontWeight: 500 }}>Command history</h2>
-                <span style={{ fontSize: 13, color: "var(--text-muted)" }}>{commandHistory.length} commands</span>
-              </div>
-              <CommandHistory history={commandHistory} />
-            </div>
-          )}
-
-          {/* SETTINGS */}
-          {activeNav === "settings" && (
-            <div style={{ maxWidth: 540 }}>
-              <h2 style={{ margin: "0 0 20px", fontSize: 15, fontWeight: 500 }}>Settings</h2>
-              <div style={{
-                background: "var(--surface-2)", borderRadius: 12,
-                border: "0.5px solid var(--border)", padding: "1.25rem",
-                display: "flex", flexDirection: "column", gap: 18,
-              }}>
-                {[
-                  { label: "App name", placeholder: "InstaManager" },
-                  { label: "Default delay between accounts (ms)", placeholder: "500" },
-                  { label: "Webhook URL (future)", placeholder: "https://…" },
-                ].map(f => (
-                  <div key={f.label} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                    <label style={{ fontSize: 13, color: "var(--text-secondary)", fontWeight: 500 }}>{f.label}</label>
-                    <input type="text" placeholder={f.placeholder}
-                      style={{
-                        fontSize: 14, padding: "9px 12px", borderRadius: "var(--radius)",
-                        border: "0.5px solid var(--border-strong)",
-                        background: "var(--surface-1)", color: "var(--text-primary)", outline: "none",
-                      }} />
-                  </div>
-                ))}
-                <div style={{
-                  background: "var(--surface-1)", borderRadius: "var(--radius)",
-                  border: "0.5px dashed var(--border-strong)", padding: "12px 14px",
-                  fontSize: 12, color: "var(--text-muted)",
-                }}>
-                  Backend integration (Supabase, API keys, proxy config) will be wired here in a future version.
-                </div>
-                <button style={{
-                  padding: "9px 0", fontSize: 14, fontWeight: 500, borderRadius: "var(--radius)",
-                  border: "none", background: "var(--fill-accent)", color: "var(--on-accent)",
-                  cursor: "pointer",
-                }}>
-                  Save settings
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </main>
-
-      <Notification msg={notification} onClose={() => setNotification("")} />
-    </div>
-  );
+// ---------- EDIT ----------
+let editingIds=new Set();
+function editAccount(id){
+  const btn=document.getElementById(`edit-btn-${id}`);
+  const userInput=document.getElementById(`user-${id}`);
+  const passInput=document.getElementById(`pass-${id}`);
+  if(editingIds.has(id)){
+    // Save
+    const a=accounts.find(x=>x.id===id);
+    a.username=userInput.value;
+    a.password=passInput.value;
+    userInput.readOnly=true;
+    passInput.readOnly=true;
+    userInput.style.background='transparent';
+    passInput.style.background='transparent';
+    btn.textContent='Edit';
+    btn.classList.remove('saving');
+    editingIds.delete(id);
+  } else {
+    // Edit mode
+    userInput.readOnly=false;
+    passInput.readOnly=false;
+    userInput.style.background='var(--surface-1)';
+    passInput.style.background='var(--surface-1)';
+    btn.textContent='Save';
+    btn.classList.add('saving');
+    editingIds.add(id);
+    userInput.focus();
+  }
 }
+
+// ---------- SELECT ----------
+function toggleSelect(id){
+  const a=accounts.find(x=>x.id===id);
+  if(a) a.selected=!a.selected;
+  updateSelCount();
+  updateSelItems();
+}
+function selectAll(){accounts.forEach(a=>a.selected=true);updateSelCount();updateSelItems();}
+function deselectAll(){accounts.forEach(a=>a.selected=false);updateSelCount();updateSelItems();}
+function updateSelCount(){
+  const el=document.getElementById('sel-count');
+  if(el) el.textContent=`${accounts.filter(a=>a.selected).length} selected`;
+}
+function updateSelItems(){
+  accounts.forEach(a=>{
+    const item=document.getElementById(`sel-item-${a.id}`);
+    const cb=document.getElementById(`sel-cb-${a.id}`);
+    if(item){
+      item.className=`sel-item${a.selected?' checked':''}`;
+    }
+    if(cb) cb.checked=a.selected;
+  });
+}
+function updateSidebarFooter(){
+  const conn=accounts.filter(a=>a.status==='connected').length;
+  document.getElementById('sidebar-footer').textContent=`${conn} / ${TOTAL} connected`;
+}
+
+// ---------- COMMAND RUN ----------
+let cmdRunning=false;
+async function runCommand(){
+  if(cmdRunning) return;
+  const urlEl=document.getElementById('cmd-url');
+  const errEl=document.getElementById('url-error');
+  const runBtn=document.getElementById('run-btn');
+  const successEl=document.getElementById('success-banner');
+  const procGrid=document.getElementById('proc-grid');
+  if(!urlEl.value.trim()){
+    errEl.style.display='block';
+    return;
+  }
+  errEl.style.display='none';
+  cmdRunning=true;
+  const selected=accounts.filter(a=>a.selected);
+  // Preparing
+  runBtn.textContent='Preparing…';runBtn.disabled=true;
+  successEl.style.display='none';
+  procGrid.innerHTML=selected.map(a=>`
+    <div class="proc-item" id="proc-${a.id}">
+      <span>${a.label}</span>
+      <span class="proc-status" style="color:var(--text-muted)">Preparing…</span>
+    </div>`).join('');
+  procGrid.style.display='grid';
+  await sleep(800);
+  // Processing
+  runBtn.textContent='Processing…';
+  selected.forEach(a=>{
+    const el=document.getElementById(`proc-${a.id}`);
+    if(el) el.querySelector('.proc-status').innerHTML=`<span style="color:var(--text-warning)">Processing</span>`;
+  });
+  await sleep(2000);
+  // Done
+  selected.forEach(a=>{
+    const el=document.getElementById(`proc-${a.id}`);
+    if(el) el.querySelector('.proc-status').innerHTML=`<span style="color:var(--text-success)">Done</span>`;
+  });
+  // Save history
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+
+    ' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  commandHistory.unshift({date:dateStr,url:urlEl.value.trim(),accounts:selected.length});
+  runBtn.textContent='Demo completed';
+  successEl.style.display='block';
+  await sleep(2500);
+  runBtn.textContent='Run command (demo)';runBtn.disabled=false;
+  procGrid.style.display='none';
+  successEl.style.display='none';
+  cmdRunning=false;
+  // update stats
+  if(document.getElementById('stats-wrap')) document.getElementById('stats-wrap').innerHTML=statsHTML();
+}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+
+// ---------- HISTORY HTML ----------
+function historyHTML(list){
+  if(!list.length) return `<p style="text-align:center;color:var(--text-muted);padding:2rem 0">No commands run yet.</p>`;
+  return `<div class="history-list">${list.map(h=>`
+    <div class="hist-item">
+      <span class="hist-date">${h.date}</span>
+      <span class="hist-url" title="${h.url}">${h.url}</span>
+      <span class="hist-count">${h.accounts} accounts</span>
+      <span class="hist-badge">Demo completed</span>
+    </div>`).join('')}</div>`;
+}
+
+// ---------- RENDER ----------
+function render(){
+  const el=document.getElementById('content');
+  if(currentPage==='dashboard') el.innerHTML=renderDashboard();
+  else if(currentPage==='accounts') el.innerHTML=renderAccounts();
+  else if(currentPage==='commands') el.innerHTML=renderCommands();
+  else if(currentPage==='history') el.innerHTML=renderHistory();
+  else if(currentPage==='settings') el.innerHTML=renderSettings();
+}
+
+function renderDashboard(){
+  const recentHist=commandHistory.slice(0,5);
+  return `
+    <div id="stats-wrap">${statsHTML()}</div>
+    <div>
+      <div class="section-title">Recent activity</div>
+      ${historyHTML(recentHist)}
+    </div>
+    <div>
+      <div class="section-title">Account overview</div>
+      <div class="overview-grid">
+        ${accounts.map(a=>`
+          <div class="ov-item">
+            <span style="font-size:13px;color:var(--text-primary)">${a.label}</span>
+            ${badgeHTML(a.status)}
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function renderAccounts(){
+  return `
+    <div id="stats-wrap">${statsHTML()}</div>
+    <div>
+      <div class="section-title">All accounts</div>
+      <div class="accounts-grid">${accounts.map(a=>accountCardHTML(a,false)).join('')}</div>
+    </div>`;
+}
+
+function renderCommands(){
+  const sel=accounts.filter(a=>a.selected);
+  return `
+    <div class="cmd-wrap">
+      <div class="cmd-left">
+        <div class="section-title">Commands</div>
+        <div class="demo-banner">Demo mode — Instagram integration not connected</div>
+        <label class="field-label">Instagram post / reel URL</label>
+        <input class="url-input" id="cmd-url" type="text" placeholder="Paste URL here…" oninput="document.getElementById('url-error').style.display='none'">
+        <div class="error-msg" id="url-error">Paste an Instagram URL first.</div>
+        <div class="placeholder-box">
+          <div class="ph-title">PLACEHOLDER — Instagram execution logic goes here</div>
+          <div class="ph-sub">Real account dispatch and viewing logic will be wired here in a future version.</div>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">
+          Command preview: open / view the provided Instagram URL<br>
+          <span style="color:var(--text-secondary)">${sel.length} of ${TOTAL} accounts selected</span>
+        </p>
+        <button class="btn-run" id="run-btn" onclick="runCommand()">Run command (demo)</button>
+        <div class="success-banner" id="success-banner">Demo completed — no real Instagram action was performed.</div>
+        <div class="proc-grid" id="proc-grid" style="display:none"></div>
+      </div>
+      <div class="cmd-right">
+        <div class="sel-header">
+          <span class="section-title" style="margin:0">Select accounts</span>
+          <span style="font-size:12px;color:var(--text-muted)" id="sel-count">${sel.length} selected</span>
+        </div>
+        <div class="sel-btns">
+          <button class="btn-sel" onclick="selectAll()">Select all</button>
+          <button class="btn-sel" onclick="deselectAll()">Deselect all</button>
+        </div>
+        <div class="sel-list">
+          ${accounts.map(a=>`
+            <label class="sel-item${a.selected?' checked':''}" id="sel-item-${a.id}" onclick="toggleSelect(${a.id})">
+              <input type="checkbox" id="sel-cb-${a.id}" ${a.selected?'checked':''} onclick="event.stopPropagation();toggleSelect(${a.id})" style="accent-color:var(--fill-accent)">
+              <span class="sel-name">${a.label}</span>
+              ${badgeHTML(a.status)}
+            </label>`).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderHistory(){
+  return `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div class="section-title" style="margin:0">Command history</div>
+      <span style="font-size:13px;color:var(--text-muted)">${commandHistory.length} commands</span>
+    </div>
+    ${historyHTML(commandHistory)}`;
+}
+
+function renderSettings(){
+  return `
+    <div class="section-title">Settings</div>
+    <div class="settings-card">
+      <div class="settings-field">
+        <label class="field-label">App name</label>
+        <input class="settings-input" type="text" placeholder="InstaManager">
+      </div>
+      <div class="settings-field">
+        <label class="field-label">Default delay between accounts (ms)</label>
+        <input class="settings-input" type="number" placeholder="500">
+      </div>
+      <div class="settings-field">
+        <label class="field-label">Webhook URL (future)</label>
+        <input class="settings-input" type="text" placeholder="https://…">
+      </div>
+      <div class="placeholder-box">
+        <div class="ph-title">PLACEHOLDER — Backend integration</div>
+        <div class="ph-sub">Supabase, API keys, and proxy config will be wired here in a future version.</div>
+      </div>
+      <button class="btn-run" style="margin-top:4px">Save settings</button>
+    </div>`;
+}
+
+// Init
+render();
+</script>
+</body>
+</html>
