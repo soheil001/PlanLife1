@@ -44,7 +44,7 @@
       padding: .55rem 2rem;
     }
     .top-bar-social { display: flex; gap: 1rem; align-items: center; }
-    .top-bar-social svg { width: 14px; height: 14px; fill: var(--white); }
+    .top-bar-social svg { width: 14px; height: 14px; fill: var(--white); cursor: pointer; }
     .top-bar-lang { font-size: .72rem; letter-spacing: .08em; cursor: pointer; }
 
     /* ── NAV ── */
@@ -58,6 +58,11 @@
       top: 0;
       z-index: 100;
       border-bottom: 1px solid var(--stone);
+    }
+
+    .nav-left {
+      flex: 1;
+      display: flex;
     }
 
     .nav-links {
@@ -86,6 +91,9 @@
       text-decoration: none;
       color: var(--black);
       flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .nav-logo span {
       display: block;
@@ -94,11 +102,28 @@
       letter-spacing: .28em;
       color: var(--mid);
       margin-top: .2rem;
+      font-weight: 300;
+    }
+
+    .nav-right {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 1rem;
     }
 
     .nav-icons {
       display: flex;
       gap: 1.2rem;
+      align-items: center;
+    }
+    .nav-icons button {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
       align-items: center;
     }
     .nav-icons svg {
@@ -139,6 +164,9 @@
       background: var(--white);
       padding: 1.5rem 2rem;
       border-bottom: 1px solid var(--stone);
+      position: sticky;
+      top: 61px;
+      z-index: 99;
     }
     .mobile-menu.open { display: flex; }
     .mobile-menu a {
@@ -149,7 +177,9 @@
       color: var(--black);
       padding: .65rem 0;
       border-bottom: 1px solid var(--stone);
+      transition: color .2s;
     }
+    .mobile-menu a:hover { color: var(--gold); }
 
     /* ── HERO SLIDER ── */
     .hero {
@@ -176,7 +206,6 @@
       display: block;
     }
 
-    /* ── HERO CONTENT OVERLAY ── */
     .hero-content {
       position: absolute;
       inset: 0;
@@ -237,10 +266,10 @@
       pointer-events: all;
       transition: background .25s, color .25s;
       width: fit-content;
+      cursor: pointer;
     }
     .hero-cta:hover { background: var(--gold); color: var(--white); }
 
-    /* Podium Marbella script watermark (top right) */
     .hero-watermark {
       position: absolute;
       top: 2.5rem;
@@ -346,6 +375,7 @@
       overflow: hidden;
       border: 2px solid transparent;
       transition: border-color .3s, transform .3s;
+      flex-shrink: 0;
     }
     .cat-item:hover .cat-circle {
       border-color: var(--gold);
@@ -434,9 +464,10 @@
       height: 100%;
       object-fit: cover;
       object-position: center top;
-      transition: transform .5s ease;
+      transition: transform .6s cubic-bezier(.25,.46,.45,.94);
+      display: block;
     }
-    .product-card:hover .product-img-wrap img { transform: scale(1.04); }
+    .product-card:hover .product-img-wrap img { transform: scale(1.05); }
 
     .product-badge {
       position: absolute;
@@ -448,8 +479,12 @@
       letter-spacing: .12em;
       text-transform: uppercase;
       padding: .3rem .6rem;
+      z-index: 1;
     }
-    .product-badge.sale { background: var(--gold); }
+    .product-badge.sale {
+      background: var(--gold);
+      color: var(--white);
+    }
 
     .product-wish {
       position: absolute;
@@ -457,13 +492,17 @@
       right: .8rem;
       width: 32px;
       height: 32px;
-      background: rgba(255,255,255,.85);
+      background: rgba(255,255,255,.9);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       backdrop-filter: blur(4px);
+      z-index: 1;
+      transition: background .2s;
+      border: none;
     }
+    .product-wish:hover { background: var(--white); }
     .product-wish svg {
       width: 16px;
       height: 16px;
@@ -471,8 +510,32 @@
       fill: none;
       stroke-width: 1.4;
       transition: fill .2s, stroke .2s;
+      pointer-events: none;
     }
-    .product-wish:hover svg { fill: var(--gold); stroke: var(--gold); }
+    .product-wish.active svg { fill: var(--gold); stroke: var(--gold); }
+
+    /* Quick view overlay on product card */
+    .product-quick-btn {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(13,13,13,.88);
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: .65rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      padding: .75rem;
+      text-align: center;
+      transform: translateY(100%);
+      transition: transform .3s cubic-bezier(.25,.46,.45,.94);
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      z-index: 2;
+    }
+    .product-img-wrap:hover .product-quick-btn { transform: translateY(0); }
 
     .product-info {
       padding: .9rem 0 0;
@@ -482,19 +545,26 @@
       font-size: 1rem;
       font-weight: 400;
       letter-spacing: .02em;
-      margin-bottom: .3rem;
+      margin-bottom: .35rem;
     }
     .product-price {
       font-size: .82rem;
       color: var(--black);
       letter-spacing: .06em;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
     }
     .product-price .original {
       color: var(--mid);
       text-decoration: line-through;
-      margin-right: .4rem;
+      font-size: .78rem;
     }
-    .product-price .sale-price { color: #c0392b; }
+    .product-price .sale-price {
+      color: #c0392b;
+      font-weight: 500;
+      font-size: .88rem;
+    }
 
     /* ── FEATURE BANNER ── */
     .feature-banner {
@@ -561,6 +631,7 @@
       background: rgba(255,255,255,.08);
       transition: background .25s;
       width: fit-content;
+      cursor: pointer;
     }
     .btn-outline-white:hover { background: rgba(255,255,255,.2); }
 
@@ -653,7 +724,10 @@
       letter-spacing: .08em;
       padding: .9rem 1.2rem;
       outline: none;
+      transition: border-color .2s;
+      min-width: 0;
     }
+    .newsletter-form input:focus { border-color: rgba(255,255,255,.6); }
     .newsletter-form input::placeholder { color: rgba(255,255,255,.4); }
     .newsletter-form button {
       background: var(--white);
@@ -666,7 +740,8 @@
       padding: .9rem 1.6rem;
       cursor: pointer;
       white-space: nowrap;
-      transition: background .2s, color .2s;
+      transition: background .2s, color .2s, border-color .2s;
+      flex-shrink: 0;
     }
     .newsletter-form button:hover { background: var(--gold); border-color: var(--gold); color: var(--white); }
 
@@ -802,12 +877,322 @@
     }
     .footer-bottom-links a:hover { color: rgba(255,255,255,.7); }
 
+    /* ══════════════════════════════════════════════
+       QUICK VIEW POPUP
+    ══════════════════════════════════════════════ */
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .35s ease, background .35s ease;
+    }
+    .popup-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+      background: rgba(0,0,0,.55);
+    }
+
+    .popup-panel {
+      background: var(--white);
+      width: 100%;
+      max-width: 920px;
+      max-height: 90vh;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      transform: translateY(24px) scale(.98);
+      transition: transform .38s cubic-bezier(.25,.46,.45,.94);
+      overscroll-behavior: contain;
+    }
+    .popup-overlay.open .popup-panel {
+      transform: translateY(0) scale(1);
+    }
+
+    .popup-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: var(--white);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: background .2s;
+    }
+    .popup-close:hover { background: var(--cream); }
+    .popup-close svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--black);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .popup-img-side {
+      position: relative;
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      background: var(--stone);
+    }
+    .popup-img-side img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+    .popup-badge {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: var(--black);
+      color: var(--white);
+      font-size: .6rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: .3rem .6rem;
+      z-index: 1;
+    }
+    .popup-badge.sale { background: var(--gold); }
+
+    .popup-info-side {
+      padding: 2.5rem 2rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      overflow-y: auto;
+    }
+
+    .popup-eyebrow {
+      font-size: .62rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--mid);
+    }
+
+    .popup-name {
+      font-family: var(--serif);
+      font-size: 1.8rem;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: .02em;
+    }
+
+    .popup-price-row {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+    }
+    .popup-price-current {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 500;
+      letter-spacing: .04em;
+    }
+    .popup-price-current.sale-active { color: #c0392b; }
+    .popup-price-original {
+      font-size: .9rem;
+      color: var(--mid);
+      text-decoration: line-through;
+      letter-spacing: .04em;
+    }
+    .popup-save-tag {
+      background: var(--gold);
+      color: var(--white);
+      font-size: .58rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: .2rem .5rem;
+    }
+
+    .popup-desc {
+      font-size: .82rem;
+      color: rgba(13,13,13,.7);
+      line-height: 1.8;
+      letter-spacing: .02em;
+    }
+
+    .popup-divider {
+      height: 1px;
+      background: var(--stone);
+    }
+
+    .popup-option-label {
+      font-size: .65rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--black);
+      margin-bottom: .6rem;
+      display: block;
+    }
+
+    /* Color swatches */
+    .popup-colors {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+    .color-swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform .2s, border-color .2s;
+      outline: none;
+    }
+    .color-swatch:hover { transform: scale(1.12); }
+    .color-swatch.selected { border-color: var(--black); }
+
+    /* Size selector */
+    .popup-sizes {
+      display: flex;
+      gap: .4rem;
+      flex-wrap: wrap;
+    }
+    .size-btn {
+      min-width: 38px;
+      height: 38px;
+      border: 1px solid var(--stone);
+      background: transparent;
+      font-family: var(--sans);
+      font-size: .72rem;
+      letter-spacing: .08em;
+      cursor: pointer;
+      transition: border-color .2s, background .2s, color .2s;
+      padding: 0 .5rem;
+    }
+    .size-btn:hover { border-color: var(--black); }
+    .size-btn.selected {
+      background: var(--black);
+      color: var(--white);
+      border-color: var(--black);
+    }
+
+    /* Quantity */
+    .popup-qty {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 1px solid var(--stone);
+      width: fit-content;
+    }
+    .qty-btn {
+      width: 38px;
+      height: 38px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      color: var(--black);
+      transition: background .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qty-btn:hover { background: var(--cream); }
+    .qty-display {
+      width: 44px;
+      height: 38px;
+      border-left: 1px solid var(--stone);
+      border-right: 1px solid var(--stone);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .85rem;
+      font-family: var(--sans);
+      letter-spacing: .06em;
+      user-select: none;
+    }
+
+    /* Action buttons */
+    .popup-actions {
+      display: flex;
+      flex-direction: column;
+      gap: .6rem;
+      margin-top: auto;
+    }
+
+    .popup-wish-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .popup-wish-btn {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--sans);
+      font-size: .68rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--mid);
+      transition: color .2s;
+    }
+    .popup-wish-btn:hover { color: var(--black); }
+    .popup-wish-btn svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.4;
+      transition: fill .2s;
+    }
+    .popup-wish-btn.active { color: var(--gold); }
+    .popup-wish-btn.active svg { fill: var(--gold); stroke: var(--gold); }
+
+    .btn-bag {
+      width: 100%;
+      background: var(--black);
+      color: var(--white);
+      border: 1px solid var(--black);
+      font-family: var(--sans);
+      font-size: .72rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      padding: .95rem;
+      cursor: pointer;
+      transition: background .25s, color .25s;
+    }
+    .btn-bag:hover { background: var(--gold); border-color: var(--gold); }
+
+    .btn-buy-now {
+      width: 100%;
+      background: transparent;
+      color: var(--black);
+      border: 1px solid var(--stone);
+      font-family: var(--sans);
+      font-size: .72rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      padding: .95rem;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+    }
+    .btn-buy-now:hover { border-color: var(--black); background: var(--cream); }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 1100px) {
       .products-grid { grid-template-columns: repeat(3, 1fr); }
     }
+
     @media (max-width: 900px) {
-      .nav-links, .nav-left { display: none; }
+      .nav-left { display: none; }
       .hamburger { display: flex; }
       .products-grid { grid-template-columns: repeat(2, 1fr); }
       .feature-banner { grid-template-columns: 1fr; }
@@ -828,7 +1213,28 @@
       .newsletter { flex-direction: column; align-items: flex-start; }
       .newsletter-social { align-items: flex-start; }
       .newsletter-form { max-width: 100%; width: 100%; }
+
+      /* Popup tablet */
+      .popup-panel { max-width: 680px; }
     }
+
+    @media (max-width: 680px) {
+      /* Popup mobile: single column */
+      .popup-panel {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+        max-height: 95vh;
+      }
+      .popup-img-side {
+        aspect-ratio: 4/3;
+      }
+      .popup-info-side {
+        padding: 1.5rem 1.2rem 1.5rem;
+        gap: 1rem;
+      }
+      .popup-name { font-size: 1.4rem; }
+    }
+
     @media (max-width: 600px) {
       /* Hero */
       .hero { height: 78vw; min-height: 380px; }
@@ -854,7 +1260,6 @@
       .products-section { padding: 2.5rem 1rem; }
       .categories { padding: 2rem 1rem; }
 
-      /* Feature right - mobile */
       .feature-right { min-height: 260px; max-height: 300px; }
       .feature-right-overlay {
         flex-direction: row;
@@ -867,7 +1272,6 @@
       .trust-icon svg { width: 20px; height: 20px; }
       .trust-label { font-size: .58rem; }
 
-      /* Footer - 2 columns on mobile */
       footer { padding: 2.5rem 1rem 1.2rem; }
       .footer-grid {
         grid-template-columns: 1fr 1fr;
@@ -885,55 +1289,99 @@
       }
       .footer-bottom-links { gap: 1rem; }
 
-      /* Newsletter */
       .newsletter { padding: 3rem 1rem; }
       .newsletter-text p { font-size: 1.7rem; }
       .newsletter-social { align-items: flex-start; }
       .newsletter-logo span { text-align: left; }
+
+      /* Popup overlay padding on small screens */
+      .popup-overlay { padding: 0; align-items: flex-end; }
+      .popup-panel {
+        border-radius: 0;
+        max-height: 95vh;
+      }
     }
+
+    /* Focus styles for accessibility */
+    :focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+      }
+    }
+
+    /* Scrollbar for popup */
+    .popup-panel::-webkit-scrollbar { width: 4px; }
+    .popup-panel::-webkit-scrollbar-track { background: var(--cream); }
+    .popup-panel::-webkit-scrollbar-thumb { background: var(--stone); }
+    .popup-info-side::-webkit-scrollbar { width: 4px; }
+    .popup-info-side::-webkit-scrollbar-track { background: var(--cream); }
+    .popup-info-side::-webkit-scrollbar-thumb { background: var(--stone); }
   </style>
 </head>
 <body>
 
 <!-- TOP BAR -->
-<div class="top-bar">
-  <span>Envío gratis en pedidos superiores a 100€</span>
+<div class="top-bar" role="banner">
+  <span>Envío gratis en pedidos superiores a 100 €</span>
   <div style="display:flex;align-items:center;gap:1rem;">
-    <span class="top-bar-lang">Español ▾</span>
-    <div class="top-bar-social">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.77 1.52V6.73a4.85 4.85 0 01-1-.04z"/></svg>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+    <span class="top-bar-lang" role="button" tabindex="0" aria-label="Cambiar idioma">Español ▾</span>
+    <div class="top-bar-social" aria-label="Redes sociales">
+      <a href="#" aria-label="Instagram" style="display:flex;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </a>
+      <a href="#" aria-label="TikTok" style="display:flex;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.77 1.52V6.73a4.85 4.85 0 01-1-.04z"/></svg>
+      </a>
+      <a href="#" aria-label="Pinterest" style="display:flex;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+      </a>
     </div>
   </div>
 </div>
 
 <!-- NAV -->
-<nav>
-  <ul class="nav-links nav-left">
-    <li><a href="#">Inicio</a></li>
-    <li><a href="#">Tienda</a></li>
-    <li><a href="#">Colecciones</a></li>
-    <li><a href="#">Nosotros</a></li>
-  </ul>
+<nav role="navigation" aria-label="Navegación principal">
+  <div class="nav-left">
+    <ul class="nav-links" role="list">
+      <li><a href="#">Inicio</a></li>
+      <li><a href="#">Tienda</a></li>
+      <li><a href="#">Colecciones</a></li>
+      <li><a href="#">Nosotros</a></li>
+    </ul>
+  </div>
 
-  <a href="#" class="nav-logo">PODIUM<span>MARBELLA</span></a>
+  <a href="#" class="nav-logo" aria-label="Podium Marbella - Inicio">PODIUM<span>MARBELLA</span></a>
 
-  <div style="display:flex;align-items:center;gap:1rem;flex:1;justify-content:flex-end;">
-    <div class="nav-icons">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+  <div class="nav-right">
+    <div class="nav-icons" role="toolbar" aria-label="Acciones">
+      <button aria-label="Buscar">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button aria-label="Mi cuenta">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+      <button aria-label="Lista de deseos">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      </button>
+      <button aria-label="Bolsa de compra">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      </button>
     </div>
-    <button class="hamburger" id="hamburger" aria-label="Menú">
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
       <span></span><span></span><span></span>
     </button>
   </div>
 </nav>
 
 <!-- MOBILE MENU -->
-<div class="mobile-menu" id="mobileMenu">
+<div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Menú móvil" aria-hidden="true">
   <a href="#">Inicio</a>
   <a href="#">Tienda</a>
   <a href="#">Colecciones</a>
@@ -942,85 +1390,97 @@
 </div>
 
 <!-- HERO SLIDER -->
-<section class="hero">
-  <div class="hero-slide active" id="slide-0">
-    <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/S1.png" alt="Podium Marbella" />
+<section class="hero" aria-label="Campaña destacada">
+  <div class="hero-slide active" id="slide-0" role="img" aria-label="Podium Marbella – colección actual">
+    <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/S1.png" alt="Podium Marbella – colección actual" loading="eager" />
   </div>
 
-  <!-- Hero Text Overlay (always visible, on top of slides) -->
   <div class="hero-content">
     <p class="hero-eyebrow">Moda Femenina</p>
-    <h1 class="hero-title">Estilo que<em>te hace brillar</em></h1>
+    <h1 class="hero-title">Estilo que <em>te hace brillar</em></h1>
     <p class="hero-desc">Descubre las últimas tendencias en moda femenina. Elegancia, calidad y estilo en cada detalle.</p>
     <a href="#" class="hero-cta">Comprar ahora →</a>
   </div>
 
-  <!-- Watermark top right -->
-  <div class="hero-watermark">
+  <div class="hero-watermark" aria-hidden="true">
     <span class="hero-watermark-script">Podium Marbella</span>
     <span class="hero-watermark-tagline">More than fashion · It's a lifestyle</span>
   </div>
 
-  <div class="hero-controls">
-    <div class="hero-slide-counter">
+  <div class="hero-controls" aria-label="Controles del slider">
+    <div class="hero-slide-counter" aria-hidden="true">
       <span class="slide-num active-num">01</span>
       <span class="slide-line"></span>
       <span class="slide-num">02</span>
       <span class="slide-num">03</span>
     </div>
     <div class="hero-arrows">
-      <button class="hero-arrow" onclick="prevSlide()">&#8592;</button>
-      <button class="hero-arrow" onclick="nextSlide()">&#8594;</button>
+      <button class="hero-arrow" onclick="prevSlide()" aria-label="Slide anterior">&#8592;</button>
+      <button class="hero-arrow" onclick="nextSlide()" aria-label="Siguiente slide">&#8594;</button>
     </div>
   </div>
 </section>
 
 <!-- CATEGORIES -->
-<section class="categories">
+<section class="categories" aria-labelledby="cat-heading">
+  <h2 id="cat-heading" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Categorías</h2>
   <div class="cat-grid">
     <a href="#" class="cat-item">
-      <div class="cat-circle"><img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/D1.jpeg" alt="Vestidos" /></div>
+      <div class="cat-circle"><img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/D1.jpeg" alt="Vestidos" loading="lazy" /></div>
       <span class="cat-label">Vestidos</span>
     </a>
     <a href="#" class="cat-item">
-      <div class="cat-circle"><img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/D2.jpeg" alt="Conjuntos" /></div>
+      <div class="cat-circle"><img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/D2.jpeg" alt="Conjuntos" loading="lazy" /></div>
       <span class="cat-label">Conjuntos</span>
     </a>
     <a href="#" class="cat-item">
-      <div class="cat-circle"><img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/D3.jpeg" alt="Tops" /></div>
+      <div class="cat-circle"><img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/D3.jpeg" alt="Tops" loading="lazy" /></div>
       <span class="cat-label">Tops</span>
     </a>
     <a href="#" class="cat-item">
-      <div class="cat-circle"><img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/D4.jpeg" alt="Pantalones" /></div>
+      <div class="cat-circle"><img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/D4.jpeg" alt="Pantalones" loading="lazy" /></div>
       <span class="cat-label">Pantalones</span>
     </a>
     <a href="#" class="cat-item">
-      <div class="cat-circle"><img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/D5.jpeg" alt="Faldas" /></div>
+      <div class="cat-circle"><img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/D5.jpeg" alt="Faldas" loading="lazy" /></div>
       <span class="cat-label">Faldas</span>
     </a>
     <a href="#" class="cat-item">
-      <div class="cat-circle"><img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/D6.jpeg" alt="Outlet" /></div>
+      <div class="cat-circle"><img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/D6.jpeg" alt="Outlet" loading="lazy" /></div>
       <span class="cat-label">Outlet</span>
     </a>
   </div>
 </section>
 
 <!-- PRODUCTS -->
-<section class="products-section">
+<section class="products-section" aria-labelledby="products-heading">
   <div class="section-header">
     <div>
       <p class="section-eyebrow">Lo más nuevo</p>
-      <h2 class="section-title">Tus Favoritos</h2>
+      <h2 class="section-title" id="products-heading">Tus Favoritos</h2>
     </div>
     <a href="#" class="see-all">Ver todos →</a>
   </div>
 
-  <div class="products-grid">
-    <div class="product-card">
+  <div class="products-grid" role="list">
+
+    <div class="product-card" role="listitem">
       <div class="product-img-wrap">
-        <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/M1.jpeg" alt="Vestido largo satinado" />
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/M1.jpeg" alt="Vestido largo satinado" loading="lazy" />
         <span class="product-badge">Nuevo</span>
-        <div class="product-wish"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+        <button class="product-wish" aria-label="Añadir Vestido largo satinado a favoritos">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+        <button class="product-quick-btn" aria-label="Vista rápida de Vestido largo satinado"
+          data-name="Vestido largo satinado"
+          data-price="89,00"
+          data-badge="Nuevo"
+          data-badge-type=""
+          data-img="http://fs3.centraldnserver.com/~planlife/pics/marbella/M1.jpeg"
+          data-desc="Vestido largo de raso con caída perfecta. Ideal para noches especiales o eventos formales. Disponible en varios colores."
+          data-colors="#1a1a2e,#8b5e83,#c9a96e,#f0e6d3">
+          Vista rápida
+        </button>
       </div>
       <div class="product-info">
         <p class="product-name">Vestido largo satinado</p>
@@ -1028,11 +1488,23 @@
       </div>
     </div>
 
-    <div class="product-card">
+    <div class="product-card" role="listitem">
       <div class="product-img-wrap">
-        <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/M2.jpeg" alt="Conjunto blazer y pantalón" />
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/M2.jpeg" alt="Conjunto blazer y pantalón" loading="lazy" />
         <span class="product-badge">Nuevo</span>
-        <div class="product-wish"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+        <button class="product-wish" aria-label="Añadir Conjunto blazer y pantalón a favoritos">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+        <button class="product-quick-btn"
+          data-name="Conjunto blazer y pantalón"
+          data-price="129,00"
+          data-badge="Nuevo"
+          data-badge-type=""
+          data-img="http://fs3.centraldnserver.com/~planlife/pics/marbella/M2.jpeg"
+          data-desc="Elegante conjunto de blazer estructurado y pantalón palazzo. Un look de oficina que transita perfectamente al ocio."
+          data-colors="#2c2c2c,#b8a48a,#e8e2d9,#4a4a6a">
+          Vista rápida
+        </button>
       </div>
       <div class="product-info">
         <p class="product-name">Conjunto blazer y pantalón</p>
@@ -1040,11 +1512,23 @@
       </div>
     </div>
 
-    <div class="product-card">
+    <div class="product-card" role="listitem">
       <div class="product-img-wrap">
-        <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/M3.jpeg" alt="Top tirantes" />
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/M3.jpeg" alt="Top tirantes" loading="lazy" />
         <span class="product-badge">Más vendido</span>
-        <div class="product-wish"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+        <button class="product-wish" aria-label="Añadir Top tirantes a favoritos">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+        <button class="product-quick-btn"
+          data-name="Top tirantes"
+          data-price="39,00"
+          data-badge="Más vendido"
+          data-badge-type=""
+          data-img="http://fs3.centraldnserver.com/~planlife/pics/marbella/M3.jpeg"
+          data-desc="Top de tirantes ajustable con escote en V. Tejido suave y transpirable, perfecto para el verano. Combínalo con tus prendas favoritas."
+          data-colors="#ffffff,#f7c5a0,#7a9e9f,#2c2c2c">
+          Vista rápida
+        </button>
       </div>
       <div class="product-info">
         <p class="product-name">Top tirantes</p>
@@ -1052,11 +1536,23 @@
       </div>
     </div>
 
-    <div class="product-card">
+    <div class="product-card" role="listitem">
       <div class="product-img-wrap">
-        <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/M4.jpeg" alt="Vestido lino" />
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/M4.jpeg" alt="Vestido lino" loading="lazy" />
         <span class="product-badge">Nuevo</span>
-        <div class="product-wish"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+        <button class="product-wish" aria-label="Añadir Vestido lino a favoritos">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+        <button class="product-quick-btn"
+          data-name="Vestido lino"
+          data-price="79,00"
+          data-badge="Nuevo"
+          data-badge-type=""
+          data-img="http://fs3.centraldnserver.com/~planlife/pics/marbella/M4.jpeg"
+          data-desc="Vestido midi de lino natural con tejido fresco y ligero. El atuendo perfecto para días de verano en la costa."
+          data-colors="#f5f0e8,#c9a96e,#8a8278,#4a3728">
+          Vista rápida
+        </button>
       </div>
       <div class="product-info">
         <p class="product-name">Vestido lino</p>
@@ -1064,23 +1560,51 @@
       </div>
     </div>
 
-    <div class="product-card">
+    <div class="product-card" role="listitem">
       <div class="product-img-wrap">
-        <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/M5.jpeg" alt="Mono elegante" />
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/M5.jpeg" alt="Mono elegante" loading="lazy" />
         <span class="product-badge sale">Rebajas</span>
-        <div class="product-wish"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+        <button class="product-wish" aria-label="Añadir Mono elegante a favoritos">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+        <button class="product-quick-btn"
+          data-name="Mono elegante"
+          data-price="69,00"
+          data-original-price="99,00"
+          data-badge="Rebajas"
+          data-badge-type="sale"
+          data-img="http://fs3.centraldnserver.com/~planlife/pics/marbella/M5.jpeg"
+          data-desc="Mono de corte recto con cinturón integrado. Silueta elegante que estiliza la figura. Tejido de alta calidad con caída impecable."
+          data-colors="#0d0d0d,#8b5e83,#c0392b,#2c5f6e">
+          Vista rápida
+        </button>
       </div>
       <div class="product-info">
         <p class="product-name">Mono elegante</p>
-        <p class="product-price"><span class="original">€ 99,00</span><span class="sale-price">€ 69,00</span></p>
+        <p class="product-price">
+          <span class="original">€ 99,00</span>
+          <span class="sale-price">€ 69,00</span>
+        </p>
       </div>
     </div>
 
-    <div class="product-card">
+    <div class="product-card" role="listitem">
       <div class="product-img-wrap">
-        <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/M6.jpeg" alt="Falda midi plisada" />
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/M6.jpeg" alt="Falda midi plisada" loading="lazy" />
         <span class="product-badge">Nuevo</span>
-        <div class="product-wish"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+        <button class="product-wish" aria-label="Añadir Falda midi plisada a favoritos">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+        <button class="product-quick-btn"
+          data-name="Falda midi plisada"
+          data-price="59,00"
+          data-badge="Nuevo"
+          data-badge-type=""
+          data-img="http://fs3.centraldnserver.com/~planlife/pics/marbella/M6.jpeg"
+          data-desc="Falda midi de tul plisado con movimiento fluido. Romántica y versátil, ideal tanto para el día como para la noche."
+          data-colors="#f7c5a0,#c9a96e,#8b5e83,#ffffff">
+          Vista rápida
+        </button>
       </div>
       <div class="product-info">
         <p class="product-name">Falda midi plisada</p>
@@ -1088,24 +1612,37 @@
       </div>
     </div>
 
-    <div class="product-card">
+    <div class="product-card" role="listitem">
       <div class="product-img-wrap">
-        <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/M7.jpeg" alt="Camisa oversize" />
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/M7.jpeg" alt="Camisa oversize" loading="lazy" />
         <span class="product-badge">Nuevo</span>
-        <div class="product-wish"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+        <button class="product-wish" aria-label="Añadir Camisa oversize a favoritos">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+        <button class="product-quick-btn"
+          data-name="Camisa oversize"
+          data-price="49,00"
+          data-badge="Nuevo"
+          data-badge-type=""
+          data-img="http://fs3.centraldnserver.com/~planlife/pics/marbella/M7.jpeg"
+          data-desc="Camisa oversize de algodón con botones dorados. Estilo relajado y sofisticado. Llévala por dentro o por fuera para distintos looks."
+          data-colors="#ffffff,#f5f0e8,#2c5f6e,#4a3728">
+          Vista rápida
+        </button>
       </div>
       <div class="product-info">
         <p class="product-name">Camisa oversize</p>
         <p class="product-price">€ 49,00</p>
       </div>
     </div>
+
   </div>
 </section>
 
 <!-- FEATURE BANNER -->
 <section class="feature-banner">
   <div class="feature-left">
-    <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/S2.png" alt="La moda que te acompaña" />
+    <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/S2.png" alt="La moda que te acompaña – Podium Marbella" loading="lazy" />
     <div class="feature-overlay">
       <p class="feature-eyebrow">Podium Marbella</p>
       <h2 class="feature-title">La moda que<br><em>te acompaña</em></h2>
@@ -1115,22 +1652,30 @@
   </div>
 
   <div class="feature-right">
-    <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/S3.png" alt="Podium Marbella Brand" />
-    <div class="feature-right-overlay">
+    <img src="http://fs3.centraldnserver.com/~planlife/pics/marbella/S3.png" alt="Podium Marbella – calidad y confianza" loading="lazy" />
+    <div class="feature-right-overlay" aria-label="Ventajas de compra">
       <div class="trust-item">
-        <div class="trust-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <div class="trust-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
         <span class="trust-label">Calidad Premium</span>
       </div>
       <div class="trust-item">
-        <div class="trust-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+        <div class="trust-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
         <span class="trust-label">Envío Rápido</span>
       </div>
       <div class="trust-item">
-        <div class="trust-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg></div>
+        <div class="trust-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+        </div>
         <span class="trust-label">Devoluciones Fáciles</span>
       </div>
       <div class="trust-item">
-        <div class="trust-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+        <div class="trust-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
         <span class="trust-label">Pago Seguro</span>
       </div>
     </div>
@@ -1138,26 +1683,32 @@
 </section>
 
 <!-- NEWSLETTER -->
-<section class="newsletter">
+<section class="newsletter" aria-labelledby="newsletter-heading">
   <div class="newsletter-text">
-    <h2>Sé la primera en conocer</h2>
+    <h2 id="newsletter-heading">Sé la primera en conocer</h2>
     <p><em>nuestras novedades</em></p>
   </div>
 
-  <div class="newsletter-form">
-    <input type="email" placeholder="Tu correo electrónico" />
-    <button>Suscribirme →</button>
+  <div class="newsletter-form" role="form" aria-label="Suscripción al boletín">
+    <input type="email" placeholder="Tu correo electrónico" aria-label="Correo electrónico" autocomplete="email" />
+    <button type="button">Suscribirme →</button>
   </div>
 
   <div class="newsletter-social">
     <div>
-      <p class="newsletter-logo">PODIUM<span>MARBELLA</span></p>
+      <p class="newsletter-logo" aria-label="Podium Marbella">PODIUM<span>MARBELLA</span></p>
     </div>
-    <p class="newsletter-follow">Follow us</p>
-    <div class="social-icons">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.77 1.52V6.73a4.85 4.85 0 01-1-.04z"/></svg>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+    <p class="newsletter-follow">Síguenos</p>
+    <div class="social-icons" aria-label="Redes sociales">
+      <a href="#" aria-label="Instagram">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </a>
+      <a href="#" aria-label="TikTok">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.77 1.52V6.73a4.85 4.85 0 01-1-.04z"/></svg>
+      </a>
+      <a href="#" aria-label="Pinterest">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+      </a>
     </div>
   </div>
 </section>
@@ -1195,10 +1746,16 @@
     <div class="footer-col footer-contact">
       <h4>Contacto</h4>
       <p>hola@podiummarbella.com</p>
-      <div class="footer-contact-socials">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.77 1.52V6.73a4.85 4.85 0 01-1-.04z"/></svg>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+      <div class="footer-contact-socials" aria-label="Redes sociales">
+        <a href="#" aria-label="Instagram">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <a href="#" aria-label="TikTok">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.77 1.52V6.73a4.85 4.85 0 01-1-.04z"/></svg>
+        </a>
+        <a href="#" aria-label="Pinterest">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+        </a>
       </div>
     </div>
   </div>
@@ -1212,39 +1769,334 @@
   </div>
 </footer>
 
+<!-- QUICK VIEW POPUP -->
+<div class="popup-overlay" id="popupOverlay" role="dialog" aria-modal="true" aria-labelledby="popupProductName" aria-hidden="true">
+  <div class="popup-panel" id="popupPanel">
+    <button class="popup-close" id="popupClose" aria-label="Cerrar">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <!-- Image side -->
+    <div class="popup-img-side">
+      <img id="popupImg" src="" alt="" />
+      <span class="popup-badge" id="popupBadge"></span>
+    </div>
+
+    <!-- Info side -->
+    <div class="popup-info-side">
+      <p class="popup-eyebrow">Podium Marbella</p>
+      <h2 class="popup-name" id="popupProductName"></h2>
+
+      <div class="popup-price-row" id="popupPriceRow"></div>
+
+      <p class="popup-desc" id="popupDesc"></p>
+
+      <div class="popup-divider"></div>
+
+      <!-- Colors -->
+      <div>
+        <span class="popup-option-label">Color — <span id="popupColorName" style="font-weight:400;text-transform:none;letter-spacing:0;">seleccionar</span></span>
+        <div class="popup-colors" id="popupColors" role="radiogroup" aria-label="Seleccionar color"></div>
+      </div>
+
+      <!-- Sizes -->
+      <div>
+        <span class="popup-option-label">Talla</span>
+        <div class="popup-sizes" id="popupSizes" role="radiogroup" aria-label="Seleccionar talla"></div>
+      </div>
+
+      <!-- Quantity -->
+      <div>
+        <span class="popup-option-label">Cantidad</span>
+        <div class="popup-qty" role="group" aria-label="Cantidad">
+          <button class="qty-btn" id="qtyMinus" aria-label="Reducir cantidad">−</button>
+          <span class="qty-display" id="qtyDisplay" aria-live="polite">1</span>
+          <button class="qty-btn" id="qtyPlus" aria-label="Aumentar cantidad">+</button>
+        </div>
+      </div>
+
+      <div class="popup-divider"></div>
+
+      <!-- Actions -->
+      <div class="popup-actions">
+        <div class="popup-wish-row">
+          <button class="popup-wish-btn" id="popupWishBtn" aria-label="Añadir a favoritos" aria-pressed="false">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            Añadir a favoritos
+          </button>
+        </div>
+        <button class="btn-bag" id="btnBag">Añadir a la bolsa</button>
+        <button class="btn-buy-now" id="btnBuyNow">Comprar ahora</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
+  'use strict';
+
+  /* ── HERO SLIDER ── */
   let currentSlide = 0;
   const totalSlides = 1;
 
   function goSlide(n) {
     const slides = document.querySelectorAll('.hero-slide');
-    slides.forEach(s => s.classList.remove('active'));
+    slides.forEach(function(s) { s.classList.remove('active'); });
     currentSlide = ((n % totalSlides) + totalSlides) % totalSlides;
-    slides[currentSlide].classList.add('active');
+    if (slides[currentSlide]) slides[currentSlide].classList.add('active');
   }
 
   function nextSlide() { goSlide(currentSlide + 1); }
   function prevSlide() { goSlide(currentSlide - 1); }
 
-  setInterval(nextSlide, 5000);
+  var heroInterval = setInterval(nextSlide, 5000);
 
-  const hamburger = document.getElementById('hamburger');
-  const mobileMenu = document.getElementById('mobileMenu');
-  hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('open');
-    mobileMenu.classList.toggle('open');
+  /* ── HAMBURGER ── */
+  var hamburger = document.getElementById('hamburger');
+  var mobileMenu = document.getElementById('mobileMenu');
+
+  hamburger.addEventListener('click', function() {
+    var isOpen = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    mobileMenu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
   });
 
-  document.querySelectorAll('.product-wish').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const svg = btn.querySelector('svg');
-      const isActive = btn.dataset.active === 'true';
-      svg.style.fill = isActive ? 'none' : 'var(--gold)';
-      svg.style.stroke = isActive ? 'var(--black)' : 'var(--gold)';
-      btn.dataset.active = !isActive;
+  /* ── WISH BUTTONS (product cards) ── */
+  document.querySelectorAll('.product-wish').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var isActive = btn.classList.toggle('active');
+      btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      var label = btn.getAttribute('aria-label') || '';
+      if (isActive) {
+        btn.setAttribute('aria-label', label.replace('Añadir', 'Quitar'));
+      } else {
+        btn.setAttribute('aria-label', label.replace('Quitar', 'Añadir'));
+      }
     });
   });
-</script>
 
+  /* ── QUICK VIEW POPUP ── */
+  var overlay = document.getElementById('popupOverlay');
+  var panel = document.getElementById('popupPanel');
+  var popupClose = document.getElementById('popupClose');
+  var qty = 1;
+  var prevFocus = null;
+
+  var colorNames = {
+    '#1a1a2e': 'Azul medianoche',
+    '#8b5e83': 'Malva',
+    '#c9a96e': 'Dorado arena',
+    '#f0e6d3': 'Crema',
+    '#2c2c2c': 'Carbón',
+    '#b8a48a': 'Champán',
+    '#e8e2d9': 'Piedra',
+    '#4a4a6a': 'Pizarra',
+    '#ffffff': 'Blanco',
+    '#f7c5a0': 'Melocotón',
+    '#7a9e9f': 'Aqua',
+    '#f5f0e8': 'Marfil',
+    '#4a3728': 'Marrón oscuro',
+    '#0d0d0d': 'Negro',
+    '#c0392b': 'Rojo',
+    '#2c5f6e': 'Verde azulado',
+    '#f5f0e8': 'Marfil',
+    '#4a3728': 'Café'
+  };
+
+  function openPopup(btn) {
+    var data = btn.dataset;
+    prevFocus = document.activeElement;
+
+    // Image
+    document.getElementById('popupImg').src = data.img || '';
+    document.getElementById('popupImg').alt = data.name || '';
+
+    // Badge
+    var badge = document.getElementById('popupBadge');
+    badge.textContent = data.badge || '';
+    badge.className = 'popup-badge' + (data.badgeType === 'sale' ? ' sale' : '');
+    badge.style.display = data.badge ? '' : 'none';
+
+    // Name
+    document.getElementById('popupProductName').textContent = data.name || '';
+
+    // Price
+    var priceRow = document.getElementById('popupPriceRow');
+    priceRow.innerHTML = '';
+    if (data.originalPrice) {
+      var origEl = document.createElement('span');
+      origEl.className = 'popup-price-original';
+      origEl.textContent = '€ ' + data.originalPrice;
+
+      var curEl = document.createElement('span');
+      curEl.className = 'popup-price-current sale-active';
+      curEl.textContent = '€ ' + data.price;
+
+      var saveEl = document.createElement('span');
+      saveEl.className = 'popup-save-tag';
+      var origNum = parseFloat(data.originalPrice.replace(',', '.'));
+      var curNum = parseFloat(data.price.replace(',', '.'));
+      var pct = Math.round((1 - curNum / origNum) * 100);
+      saveEl.textContent = '−' + pct + '%';
+
+      priceRow.appendChild(origEl);
+      priceRow.appendChild(curEl);
+      priceRow.appendChild(saveEl);
+    } else {
+      var priceEl = document.createElement('span');
+      priceEl.className = 'popup-price-current';
+      priceEl.textContent = '€ ' + (data.price || '—');
+      priceRow.appendChild(priceEl);
+    }
+
+    // Description
+    document.getElementById('popupDesc').textContent = data.desc || '';
+
+    // Colors
+    var colorsEl = document.getElementById('popupColors');
+    colorsEl.innerHTML = '';
+    if (data.colors) {
+      data.colors.split(',').forEach(function(hex, i) {
+        hex = hex.trim();
+        var sw = document.createElement('button');
+        sw.className = 'color-swatch' + (i === 0 ? ' selected' : '');
+        sw.style.background = hex;
+        sw.setAttribute('aria-label', colorNames[hex] || hex);
+        sw.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
+        sw.setAttribute('title', colorNames[hex] || hex);
+        if (i === 0) {
+          document.getElementById('popupColorName').textContent = colorNames[hex] || hex;
+        }
+        sw.addEventListener('click', function() {
+          colorsEl.querySelectorAll('.color-swatch').forEach(function(s) {
+            s.classList.remove('selected');
+            s.setAttribute('aria-pressed', 'false');
+          });
+          sw.classList.add('selected');
+          sw.setAttribute('aria-pressed', 'true');
+          document.getElementById('popupColorName').textContent = colorNames[hex] || hex;
+        });
+        colorsEl.appendChild(sw);
+      });
+    }
+
+    // Sizes
+    var sizesEl = document.getElementById('popupSizes');
+    sizesEl.innerHTML = '';
+    ['XS', 'S', 'M', 'L', 'XL'].forEach(function(sz, i) {
+      var btn2 = document.createElement('button');
+      btn2.className = 'size-btn' + (i === 1 ? ' selected' : '');
+      btn2.textContent = sz;
+      btn2.setAttribute('aria-label', 'Talla ' + sz);
+      btn2.setAttribute('aria-pressed', i === 1 ? 'true' : 'false');
+      btn2.addEventListener('click', function() {
+        sizesEl.querySelectorAll('.size-btn').forEach(function(s) {
+          s.classList.remove('selected');
+          s.setAttribute('aria-pressed', 'false');
+        });
+        btn2.classList.add('selected');
+        btn2.setAttribute('aria-pressed', 'true');
+      });
+      sizesEl.appendChild(btn2);
+    });
+
+    // Qty
+    qty = 1;
+    document.getElementById('qtyDisplay').textContent = '1';
+
+    // Wish state
+    var wishBtn = document.getElementById('popupWishBtn');
+    wishBtn.classList.remove('active');
+    wishBtn.setAttribute('aria-pressed', 'false');
+
+    // Open
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    // Focus trap
+    setTimeout(function() { popupClose.focus(); }, 50);
+  }
+
+  function closePopup() {
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (prevFocus) prevFocus.focus();
+  }
+
+  // Attach quick view buttons
+  document.querySelectorAll('.product-quick-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      openPopup(btn);
+    });
+  });
+
+  // Close button
+  popupClose.addEventListener('click', closePopup);
+
+  // Click outside
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closePopup();
+  });
+
+  // ESC key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closePopup();
+  });
+
+  // Focus trap inside popup
+  panel.addEventListener('keydown', function(e) {
+    if (e.key !== 'Tab') return;
+    var focusable = panel.querySelectorAll('button:not([disabled]), input, [tabindex]:not([tabindex="-1"])');
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  // Quantity
+  document.getElementById('qtyMinus').addEventListener('click', function() {
+    if (qty > 1) { qty--; document.getElementById('qtyDisplay').textContent = qty; }
+  });
+  document.getElementById('qtyPlus').addEventListener('click', function() {
+    if (qty < 99) { qty++; document.getElementById('qtyDisplay').textContent = qty; }
+  });
+
+  // Popup wish toggle
+  document.getElementById('popupWishBtn').addEventListener('click', function() {
+    var isActive = this.classList.toggle('active');
+    this.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+  });
+
+  // Add to bag / buy now (front-end only)
+  document.getElementById('btnBag').addEventListener('click', function() {
+    var name = document.getElementById('popupProductName').textContent;
+    this.textContent = '✓ Añadido a la bolsa';
+    this.style.background = 'var(--gold)';
+    this.style.borderColor = 'var(--gold)';
+    var self = this;
+    setTimeout(function() {
+      self.textContent = 'Añadir a la bolsa';
+      self.style.background = '';
+      self.style.borderColor = '';
+    }, 2000);
+  });
+
+  document.getElementById('btnBuyNow').addEventListener('click', function() {
+    closePopup();
+  });
+
+</script>
 </body>
 </html>
+HTMLEOF
+echo "Done"
+Output
+Done
