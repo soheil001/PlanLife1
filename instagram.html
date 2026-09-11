@@ -1,0 +1,637 @@
+import { useState, useEffect } from "react";
+
+const TOTAL_ACCOUNTS = 20;
+
+const initialAccounts = Array.from({ length: TOTAL_ACCOUNTS }, (_, i) => ({
+  id: i + 1,
+  label: `Account ${String(i + 1).padStart(2, "0")}`,
+  username: "",
+  password: "",
+  status: "disconnected",
+  selected: true,
+}));
+
+function Avatar({ label }) {
+  const initials = label.replace("Account ", "");
+  return (
+    <div style={{
+      width: 44, height: 44, borderRadius: "50%",
+      background: "var(--bg-accent)", display: "flex",
+      alignItems: "center", justifyContent: "center",
+      fontSize: 13, fontWeight: 500, color: "var(--text-accent)",
+      flexShrink: 0,
+    }}>
+      {initials}
+    </div>
+  );
+}
+
+function StatusBadge({ status }) {
+  const connected = status === "connected";
+  return (
+    <span style={{
+      display: "inline-flex", alignItems: "center", gap: 5,
+      fontSize: 12, fontWeight: 500,
+      color: connected ? "var(--text-success)" : "var(--text-secondary)",
+    }}>
+      <span style={{
+        width: 7, height: 7, borderRadius: "50%", flexShrink: 0,
+        background: connected ? "var(--fill-success)" : "var(--border-strong)",
+      }} />
+      {connected ? "Connected" : "Not connected"}
+    </span>
+  );
+}
+
+function AccountCard({ account, onConnect, onEdit, onToggleSelect, showSelect }) {
+  const [localUser, setLocalUser] = useState(account.username);
+  const [localPass, setLocalPass] = useState(account.password);
+  const [editing, setEditing] = useState(false);
+
+  const handleEdit = () => {
+    if (editing) onEdit(account.id, localUser, localPass);
+    setEditing(!editing);
+  };
+
+  return (
+    <div style={{
+      background: "var(--surface-2)", borderRadius: 12,
+      border: `0.5px solid ${account.status === "connected" ? "var(--border-success)" : "var(--border)"}`,
+      padding: "1rem 1.25rem", display: "flex", flexDirection: "column", gap: 12,
+      transition: "border-color 0.2s",
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        {showSelect && (
+          <input type="checkbox" checked={account.selected}
+            onChange={() => onToggleSelect(account.id)}
+            style={{ width: 15, height: 15, accentColor: "var(--fill-accent)", flexShrink: 0 }} />
+        )}
+        <Avatar label={account.label} />
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{ margin: 0, fontWeight: 500, fontSize: 14, color: "var(--text-primary)" }}>
+            {account.label}
+          </p>
+          <StatusBadge status={account.status} />
+        </div>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        <input
+          type="text" placeholder="Username" value={localUser}
+          readOnly={!editing}
+          onChange={e => setLocalUser(e.target.value)}
+          style={{
+            fontSize: 13, padding: "6px 10px", borderRadius: "var(--radius)",
+            border: "0.5px solid var(--border)", background: editing ? "var(--surface-1)" : "transparent",
+            color: "var(--text-primary)", outline: "none", width: "100%", boxSizing: "border-box",
+          }}
+        />
+        <input
+          type="password" placeholder="Password" value={localPass}
+          readOnly={!editing}
+          onChange={e => setLocalPass(e.target.value)}
+          style={{
+            fontSize: 13, padding: "6px 10px", borderRadius: "var(--radius)",
+            border: "0.5px solid var(--border)", background: editing ? "var(--surface-1)" : "transparent",
+            color: "var(--text-primary)", outline: "none", width: "100%", boxSizing: "border-box",
+          }}
+        />
+      </div>
+
+      <div style={{ display: "flex", gap: 8 }}>
+        <button onClick={() => onConnect(account.id)}
+          disabled={account.status === "connected"}
+          style={{
+            flex: 1, padding: "6px 0", fontSize: 13, borderRadius: "var(--radius)",
+            border: "0.5px solid var(--border-accent)",
+            background: account.status === "connected" ? "var(--bg-success)" : "var(--bg-accent)",
+            color: account.status === "connected" ? "var(--text-success)" : "var(--text-accent)",
+            cursor: account.status === "connected" ? "default" : "pointer",
+            fontWeight: 500,
+          }}>
+          {account.status === "connected" ? "Connected" : "Connect"}
+        </button>
+        <button onClick={handleEdit}
+          style={{
+            padding: "6px 14px", fontSize: 13, borderRadius: "var(--radius)",
+            border: "0.5px solid var(--border-strong)",
+            background: editing ? "var(--bg-accent)" : "transparent",
+            color: editing ? "var(--text-accent)" : "var(--text-secondary)",
+            cursor: "pointer", fontWeight: 500,
+          }}>
+          {editing ? "Save" : "Edit"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function DashboardStats({ accounts, commandsRun }) {
+  const connected = accounts.filter(a => a.status === "connected").length;
+  const stats = [
+    { label: "Total accounts", value: TOTAL_ACCOUNTS },
+    { label: "Connected", value: connected, color: "var(--text-success)" },
+    { label: "Not connected", value: TOTAL_ACCOUNTS - connected, color: "var(--text-secondary)" },
+    { label: "Commands run", value: commandsRun, color: "var(--text-accent)" },
+  ];
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12 }}>
+      {stats.map(s => (
+        <div key={s.label} style={{
+          background: "var(--surface-1)", borderRadius: "var(--radius)",
+          padding: "1rem", display: "flex", flexDirection: "column", gap: 4,
+        }}>
+          <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{s.label}</span>
+          <span style={{ fontSize: 28, fontWeight: 500, color: s.color || "var(--text-primary)" }}>
+            {s.value}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Notification({ msg, onClose }) {
+  useEffect(() => {
+    const t = setTimeout(onClose, 3500);
+    return () => clearTimeout(t);
+  }, [msg]);
+
+  if (!msg) return null;
+  return (
+    <div style={{
+      position: "fixed", bottom: 24, right: 24, zIndex: 100,
+      background: "var(--surface-2)", border: "0.5px solid var(--border-success)",
+      borderRadius: 10, padding: "12px 18px", maxWidth: 320,
+      boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
+      display: "flex", alignItems: "center", gap: 10,
+    }}>
+      <span style={{ color: "var(--text-success)", fontSize: 16 }}>✓</span>
+      <span style={{ fontSize: 13, color: "var(--text-primary)" }}>{msg}</span>
+      <button onClick={onClose} style={{
+        marginLeft: "auto", background: "none", border: "none",
+        cursor: "pointer", color: "var(--text-muted)", fontSize: 16, lineHeight: 1,
+      }}>×</button>
+    </div>
+  );
+}
+
+function CommandPanel({ accounts, onCommandRun }) {
+  const [url, setUrl] = useState("");
+  const [phase, setPhase] = useState("idle");
+  const [urlError, setUrlError] = useState("");
+
+  const selectedAccounts = accounts.filter(a => a.selected);
+
+  const handleRun = async () => {
+    if (!url.trim()) {
+      setUrlError("Paste an Instagram URL first.");
+      return;
+    }
+    setUrlError("");
+    setPhase("preparing");
+    await new Promise(r => setTimeout(r, 900));
+    setPhase("processing");
+    await new Promise(r => setTimeout(r, 2200));
+    setPhase("done");
+    onCommandRun(url.trim(), selectedAccounts.length);
+    setTimeout(() => setPhase("idle"), 3000);
+  };
+
+  const phaseLabel = (id) => {
+    if (phase === "idle") return "Ready";
+    if (phase === "preparing") return "Preparing…";
+    if (phase === "processing") return "Processing";
+    if (phase === "done") return "Done";
+  };
+  const phaseColor = (id) => {
+    if (phase === "processing") return "var(--text-warning)";
+    if (phase === "done") return "var(--text-success)";
+    return "var(--text-secondary)";
+  };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <div style={{
+        background: "var(--bg-warning)", border: "0.5px solid var(--border-warning)",
+        borderRadius: "var(--radius)", padding: "10px 14px",
+        fontSize: 12, color: "var(--text-warning)", fontWeight: 500,
+      }}>
+        Demo mode — Instagram integration not connected
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        <label style={{ fontSize: 13, color: "var(--text-secondary)", fontWeight: 500 }}>
+          Instagram post / reel URL
+        </label>
+        <input
+          type="text" value={url} placeholder="Paste URL here…"
+          onChange={e => { setUrl(e.target.value); setUrlError(""); }}
+          style={{
+            fontSize: 14, padding: "10px 14px", borderRadius: "var(--radius)",
+            border: `0.5px solid ${urlError ? "var(--border-danger)" : "var(--border-strong)"}`,
+            background: "var(--surface-1)", color: "var(--text-primary)",
+            outline: "none", width: "100%", boxSizing: "border-box",
+          }}
+        />
+        {urlError && <span style={{ fontSize: 12, color: "var(--text-danger)" }}>{urlError}</span>}
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <p style={{ margin: 0, fontSize: 13, color: "var(--text-muted)" }}>
+          Command preview: open / view the provided Instagram URL
+        </p>
+        <p style={{ margin: 0, fontSize: 13, color: "var(--text-secondary)" }}>
+          {selectedAccounts.length} of {TOTAL_ACCOUNTS} accounts selected
+        </p>
+      </div>
+
+      {/* ── COMMAND EXECUTION PLACEHOLDER ── */}
+      <div style={{
+        background: "var(--surface-1)", borderRadius: 10,
+        border: "0.5px dashed var(--border-strong)", padding: "14px 18px",
+      }}>
+        <p style={{ margin: 0, fontSize: 12, color: "var(--text-muted)", fontWeight: 500 }}>
+          PLACEHOLDER — Instagram execution logic goes here
+        </p>
+        <p style={{ margin: "4px 0 0", fontSize: 12, color: "var(--text-muted)" }}>
+          Real account dispatch, authentication, and viewing logic will be wired here in a future version.
+        </p>
+      </div>
+
+      <button onClick={handleRun} disabled={phase !== "idle"}
+        style={{
+          padding: "11px 0", fontSize: 14, fontWeight: 500, borderRadius: "var(--radius)",
+          border: "none", background: phase !== "idle" ? "var(--surface-1)" : "var(--fill-accent)",
+          color: phase !== "idle" ? "var(--text-muted)" : "var(--on-accent)",
+          cursor: phase !== "idle" ? "default" : "pointer", width: "100%",
+        }}>
+        {phase === "idle" && "Run command (demo)"}
+        {phase === "preparing" && "Preparing…"}
+        {phase === "processing" && "Processing…"}
+        {phase === "done" && "Demo completed"}
+      </button>
+
+      {phase !== "idle" && (
+        <div style={{
+          display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 6,
+        }}>
+          {selectedAccounts.map(a => (
+            <div key={a.id} style={{
+              background: "var(--surface-1)", borderRadius: "var(--radius)",
+              border: "0.5px solid var(--border)", padding: "6px 10px",
+              display: "flex", justifyContent: "space-between", alignItems: "center",
+            }}>
+              <span style={{ fontSize: 12, color: "var(--text-primary)" }}>{a.label}</span>
+              <span style={{ fontSize: 11, color: phaseColor(a.id) }}>{phaseLabel(a.id)}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {phase === "done" && (
+        <div style={{
+          background: "var(--bg-success)", border: "0.5px solid var(--border-success)",
+          borderRadius: "var(--radius)", padding: "10px 14px",
+          fontSize: 13, color: "var(--text-success)", fontWeight: 500,
+        }}>
+          Demo completed — no real Instagram action was performed.
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CommandHistory({ history }) {
+  if (history.length === 0) return (
+    <div style={{ textAlign: "center", padding: "2rem 0", color: "var(--text-muted)", fontSize: 14 }}>
+      No commands run yet. Run a command to see history here.
+    </div>
+  );
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      {history.map((h, i) => (
+        <div key={i} style={{
+          background: "var(--surface-2)", borderRadius: "var(--radius)",
+          border: "0.5px solid var(--border)", padding: "10px 14px",
+          display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10,
+        }}>
+          <span style={{ fontSize: 12, color: "var(--text-muted)", minWidth: 140 }}>{h.date}</span>
+          <span style={{
+            fontSize: 12, color: "var(--text-primary)", flex: 1,
+            overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0,
+          }}>{h.url}</span>
+          <span style={{ fontSize: 12, color: "var(--text-secondary)" }}>{h.accounts} accounts</span>
+          <span style={{
+            fontSize: 11, fontWeight: 500, padding: "2px 8px", borderRadius: 99,
+            background: "var(--bg-success)", color: "var(--text-success)",
+          }}>Demo completed</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const NAV_ITEMS = [
+  { id: "dashboard", icon: "ti-layout-dashboard", label: "Dashboard" },
+  { id: "accounts", icon: "ti-users", label: "Accounts" },
+  { id: "commands", icon: "ti-terminal-2", label: "Commands" },
+  { id: "history", icon: "ti-history", label: "History" },
+  { id: "settings", icon: "ti-settings", label: "Settings" },
+];
+
+export default function App() {
+  const [accounts, setAccounts] = useState(initialAccounts);
+  const [notification, setNotification] = useState("");
+  const [commandHistory, setCommandHistory] = useState([]);
+  const [activeNav, setActiveNav] = useState("dashboard");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const connected = accounts.filter(a => a.status === "connected").length;
+
+  const handleConnect = (id) => {
+    setAccounts(prev => prev.map(a =>
+      a.id === id ? { ...a, status: "connected" } : a
+    ));
+    const acc = accounts.find(a => a.id === id);
+    setNotification(`${acc.label} connected (demo mode)`);
+  };
+
+  const handleEdit = (id, username, password) => {
+    setAccounts(prev => prev.map(a =>
+      a.id === id ? { ...a, username, password } : a
+    ));
+  };
+
+  const handleToggleSelect = (id) => {
+    setAccounts(prev => prev.map(a =>
+      a.id === id ? { ...a, selected: !a.selected } : a
+    ));
+  };
+
+  const handleSelectAll = () => setAccounts(prev => prev.map(a => ({ ...a, selected: true })));
+  const handleDeselectAll = () => setAccounts(prev => prev.map(a => ({ ...a, selected: false })));
+
+  const handleCommandRun = (url, count) => {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) +
+      " — " + now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+    setCommandHistory(prev => [{ date: dateStr, url, accounts: count }, ...prev]);
+  };
+
+  const selectedCount = accounts.filter(a => a.selected).length;
+
+  const sidebarW = sidebarOpen ? 220 : 60;
+
+  return (
+    <div style={{ display: "flex", minHeight: "100vh", background: "var(--surface-0)", fontFamily: "var(--font-sans)" }}>
+      {/* Sidebar */}
+      <aside style={{
+        width: sidebarW, flexShrink: 0, background: "var(--surface-1)",
+        borderRight: "0.5px solid var(--border)", display: "flex",
+        flexDirection: "column", transition: "width 0.2s", overflow: "hidden",
+        position: "sticky", top: 0, height: "100vh",
+      }}>
+        <div style={{
+          padding: sidebarOpen ? "20px 16px 16px" : "20px 8px 16px",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          borderBottom: "0.5px solid var(--border)",
+        }}>
+          {sidebarOpen && (
+            <div>
+              <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: "var(--text-primary)" }}>
+                InstaManager
+              </p>
+              <p style={{ margin: 0, fontSize: 11, color: "var(--text-muted)" }}>Demo mode</p>
+            </div>
+          )}
+          <button onClick={() => setSidebarOpen(o => !o)} style={{
+            background: "none", border: "none", cursor: "pointer",
+            color: "var(--text-secondary)", fontSize: 18, padding: 4,
+          }}>
+            <i className={`ti ${sidebarOpen ? "ti-layout-sidebar-left-collapse" : "ti-layout-sidebar-left-expand"}`} aria-hidden="true" />
+          </button>
+        </div>
+
+        <nav style={{ flex: 1, padding: "12px 8px", display: "flex", flexDirection: "column", gap: 2 }}>
+          {NAV_ITEMS.map(item => (
+            <button key={item.id} onClick={() => setActiveNav(item.id)}
+              title={!sidebarOpen ? item.label : undefined}
+              style={{
+                display: "flex", alignItems: "center", gap: 10,
+                padding: sidebarOpen ? "9px 12px" : "9px", borderRadius: "var(--radius)",
+                border: "none", cursor: "pointer", textAlign: "left",
+                background: activeNav === item.id ? "var(--bg-accent)" : "transparent",
+                color: activeNav === item.id ? "var(--text-accent)" : "var(--text-secondary)",
+                fontSize: 14, fontWeight: activeNav === item.id ? 500 : 400,
+                whiteSpace: "nowrap", overflow: "hidden",
+                justifyContent: sidebarOpen ? "flex-start" : "center",
+              }}>
+              <i className={`ti ${item.icon}`} style={{ fontSize: 18, flexShrink: 0 }} aria-hidden="true" />
+              {sidebarOpen && item.label}
+            </button>
+          ))}
+        </nav>
+
+        {sidebarOpen && (
+          <div style={{ padding: "12px 16px", borderTop: "0.5px solid var(--border)" }}>
+            <p style={{ margin: 0, fontSize: 11, color: "var(--text-muted)" }}>
+              {connected}/{TOTAL_ACCOUNTS} accounts connected
+            </p>
+          </div>
+        )}
+      </aside>
+
+      {/* Main */}
+      <main style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
+        {/* Header */}
+        <header style={{
+          background: "var(--surface-1)", borderBottom: "0.5px solid var(--border)",
+          padding: "0 24px", height: 56, display: "flex", alignItems: "center",
+          justifyContent: "space-between", position: "sticky", top: 0, zIndex: 10,
+        }}>
+          <h1 style={{ margin: 0, fontSize: 16, fontWeight: 500, color: "var(--text-primary)" }}>
+            {NAV_ITEMS.find(n => n.id === activeNav)?.label}
+          </h1>
+          <div style={{
+            fontSize: 11, fontWeight: 500, padding: "4px 10px", borderRadius: 99,
+            background: "var(--bg-warning)", color: "var(--text-warning)",
+          }}>
+            Demo mode
+          </div>
+        </header>
+
+        {/* Content */}
+        <div style={{ padding: 24, flex: 1, display: "flex", flexDirection: "column", gap: 24 }}>
+
+          {/* DASHBOARD */}
+          {activeNav === "dashboard" && (
+            <>
+              <DashboardStats accounts={accounts} commandsRun={commandHistory.length} />
+              <div>
+                <h2 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 500, color: "var(--text-primary)" }}>
+                  Recent activity
+                </h2>
+                {commandHistory.length === 0 ? (
+                  <p style={{ margin: 0, fontSize: 14, color: "var(--text-muted)" }}>
+                    No commands run yet. Head to Commands to get started.
+                  </p>
+                ) : (
+                  <CommandHistory history={commandHistory.slice(0, 5)} />
+                )}
+              </div>
+              <div>
+                <h2 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 500, color: "var(--text-primary)" }}>
+                  Account overview
+                </h2>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 8 }}>
+                  {accounts.map(a => (
+                    <div key={a.id} style={{
+                      background: "var(--surface-2)", borderRadius: "var(--radius)",
+                      border: "0.5px solid var(--border)", padding: "8px 12px",
+                      display: "flex", alignItems: "center", justifyContent: "space-between",
+                    }}>
+                      <span style={{ fontSize: 13, color: "var(--text-primary)" }}>{a.label}</span>
+                      <StatusBadge status={a.status} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ACCOUNTS */}
+          {activeNav === "accounts" && (
+            <>
+              <DashboardStats accounts={accounts} commandsRun={commandHistory.length} />
+              <div>
+                <h2 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 500, color: "var(--text-primary)" }}>
+                  All accounts
+                </h2>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
+                  {accounts.map(a => (
+                    <AccountCard key={a.id} account={a}
+                      onConnect={handleConnect} onEdit={handleEdit}
+                      onToggleSelect={handleToggleSelect} showSelect={false} />
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* COMMANDS */}
+          {activeNav === "commands" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 860 }}>
+              <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+                {/* Left: command form */}
+                <div style={{
+                  flex: "1 1 320px", background: "var(--surface-2)", borderRadius: 12,
+                  border: "0.5px solid var(--border)", padding: "1.25rem",
+                }}>
+                  <h2 style={{ margin: "0 0 16px", fontSize: 15, fontWeight: 500 }}>Commands</h2>
+                  <CommandPanel accounts={accounts} onCommandRun={handleCommandRun} />
+                </div>
+
+                {/* Right: account selection */}
+                <div style={{
+                  flex: "1 1 240px", background: "var(--surface-2)", borderRadius: 12,
+                  border: "0.5px solid var(--border)", padding: "1.25rem",
+                  display: "flex", flexDirection: "column", gap: 10,
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <h2 style={{ margin: 0, fontSize: 15, fontWeight: 500 }}>Select accounts</h2>
+                    <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{selectedCount} selected</span>
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button onClick={handleSelectAll} style={{
+                      flex: 1, padding: "6px 0", fontSize: 12, borderRadius: "var(--radius)",
+                      border: "0.5px solid var(--border-strong)", background: "transparent",
+                      color: "var(--text-secondary)", cursor: "pointer",
+                    }}>Select all</button>
+                    <button onClick={handleDeselectAll} style={{
+                      flex: 1, padding: "6px 0", fontSize: 12, borderRadius: "var(--radius)",
+                      border: "0.5px solid var(--border-strong)", background: "transparent",
+                      color: "var(--text-secondary)", cursor: "pointer",
+                    }}>Deselect all</button>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4, overflowY: "auto", maxHeight: 420 }}>
+                    {accounts.map(a => (
+                      <label key={a.id} style={{
+                        display: "flex", alignItems: "center", gap: 10, padding: "7px 10px",
+                        borderRadius: "var(--radius)", cursor: "pointer",
+                        background: a.selected ? "var(--bg-accent)" : "transparent",
+                        border: `0.5px solid ${a.selected ? "var(--border-accent)" : "var(--border)"}`,
+                        transition: "background 0.15s",
+                      }}>
+                        <input type="checkbox" checked={a.selected}
+                          onChange={() => handleToggleSelect(a.id)}
+                          style={{ accentColor: "var(--fill-accent)" }} />
+                        <span style={{ fontSize: 13, color: "var(--text-primary)", flex: 1 }}>{a.label}</span>
+                        <StatusBadge status={a.status} />
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* HISTORY */}
+          {activeNav === "history" && (
+            <div style={{ maxWidth: 860 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+                <h2 style={{ margin: 0, fontSize: 15, fontWeight: 500 }}>Command history</h2>
+                <span style={{ fontSize: 13, color: "var(--text-muted)" }}>{commandHistory.length} commands</span>
+              </div>
+              <CommandHistory history={commandHistory} />
+            </div>
+          )}
+
+          {/* SETTINGS */}
+          {activeNav === "settings" && (
+            <div style={{ maxWidth: 540 }}>
+              <h2 style={{ margin: "0 0 20px", fontSize: 15, fontWeight: 500 }}>Settings</h2>
+              <div style={{
+                background: "var(--surface-2)", borderRadius: 12,
+                border: "0.5px solid var(--border)", padding: "1.25rem",
+                display: "flex", flexDirection: "column", gap: 18,
+              }}>
+                {[
+                  { label: "App name", placeholder: "InstaManager" },
+                  { label: "Default delay between accounts (ms)", placeholder: "500" },
+                  { label: "Webhook URL (future)", placeholder: "https://…" },
+                ].map(f => (
+                  <div key={f.label} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    <label style={{ fontSize: 13, color: "var(--text-secondary)", fontWeight: 500 }}>{f.label}</label>
+                    <input type="text" placeholder={f.placeholder}
+                      style={{
+                        fontSize: 14, padding: "9px 12px", borderRadius: "var(--radius)",
+                        border: "0.5px solid var(--border-strong)",
+                        background: "var(--surface-1)", color: "var(--text-primary)", outline: "none",
+                      }} />
+                  </div>
+                ))}
+                <div style={{
+                  background: "var(--surface-1)", borderRadius: "var(--radius)",
+                  border: "0.5px dashed var(--border-strong)", padding: "12px 14px",
+                  fontSize: 12, color: "var(--text-muted)",
+                }}>
+                  Backend integration (Supabase, API keys, proxy config) will be wired here in a future version.
+                </div>
+                <button style={{
+                  padding: "9px 0", fontSize: 14, fontWeight: 500, borderRadius: "var(--radius)",
+                  border: "none", background: "var(--fill-accent)", color: "var(--on-accent)",
+                  cursor: "pointer",
+                }}>
+                  Save settings
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
+
+      <Notification msg={notification} onClose={() => setNotification("")} />
+    </div>
+  );
+}
