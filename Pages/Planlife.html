@@ -13,343 +13,330 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --gold:#d4af37;
-  --gold2:#f5c842;
-  --gold3:#ffd060;
-  --bg:#060608;
-  --card-bg:rgba(255,255,255,0.06);
-  --card-border:rgba(212,175,55,0.35);
-  --text:rgba(255,255,255,0.9);
-  --text-muted:rgba(255,255,255,0.55);
+  --gold:#d4af37;--gold2:#f5c842;--gold3:#ffd060;
+  --bg:#060608;--text:rgba(255,255,255,0.9);--text-muted:rgba(255,255,255,0.55);
 }
 html,body{
   font-family:'Vazirmatn',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  overflow-x:hidden;
-  -webkit-tap-highlight-color:transparent;
+  background:var(--bg);color:var(--text);
+  overflow-x:hidden;-webkit-tap-highlight-color:transparent;
 }
 
-/* ── BG IMAGE FULL PAGE ── */
+/* ── BG: اسلاید ثابت، هنگام اسکرول کمی تاریک‌تر می‌شه ── */
 .page-bg{
-  position:fixed;top:0;left:0;right:0;bottom:0;
-  z-index:0;
-  background:
-    linear-gradient(180deg,
-      rgba(6,6,8,0.18) 0%,
-      rgba(6,6,8,0.25) 30%,
-      rgba(6,6,8,0.55) 70%,
-      rgba(6,6,8,0.92) 100%
-    ),
-    url('http://fs3.centraldnserver.com/~planlife/pics/planlifenew/slide.jpeg') center top / cover no-repeat;
+  position:fixed;top:0;left:0;right:0;bottom:0;z-index:0;
+  background:url('http://fs3.centraldnserver.com/~planlife/pics/planlifenew/slide.jpeg') center top / cover no-repeat;
   pointer-events:none;
+  transition:filter 0.3s ease;
+}
+/* لایه تاریکی پایه */
+.page-bg-overlay{
+  position:fixed;top:0;left:0;right:0;bottom:0;z-index:1;
+  background:linear-gradient(180deg,
+    rgba(6,6,8,0.15) 0%,
+    rgba(6,6,8,0.2) 20%,
+    rgba(6,6,8,0.5) 60%,
+    rgba(6,6,8,0.92) 100%
+  );
+  pointer-events:none;
+  transition:background 0.3s ease;
+}
+/* وقتی اسکرول شد — لایه اضافه برای تاریک‌تر شدن */
+.page-bg-scroll-dim{
+  position:fixed;top:0;left:0;right:0;bottom:0;z-index:2;
+  background:rgba(6,6,8,0);
+  pointer-events:none;
+  transition:background 0.4s ease;
+}
+.page-bg-scroll-dim.active{
+  background:rgba(6,6,8,0.45);
 }
 
 /* ── HEADER ── */
 header{
   position:fixed;top:0;left:0;right:0;z-index:200;
-  height:60px;
+  height:62px;
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 20px;
+  padding:0 16px;
   background:rgba(0,0,0,0.3);
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   border-bottom:1px solid rgba(212,175,55,0.12);
 }
-.hdr-left{display:flex;align-items:center;gap:10px;}
-.hdr-menu{
-  width:42px;height:42px;border-radius:12px;
+.hdr-icons-group{display:flex;align-items:center;gap:8px;}
+.hdr-icon-btn{
+  width:40px;height:40px;border-radius:12px;
   background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:20px;color:white;
+  cursor:pointer;font-size:16px;color:white;flex-shrink:0;
 }
 .hdr-center{
   display:flex;flex-direction:column;align-items:center;gap:1px;
   position:absolute;left:50%;transform:translateX(-50%);
 }
-.hdr-logo-row{display:flex;align-items:center;gap:8px;}
-.hdr-compass{
-  width:28px;height:28px;
-  filter:drop-shadow(0 0 6px rgba(212,175,55,0.8));
-}
+.hdr-logo-row{display:flex;align-items:center;gap:7px;}
+.hdr-compass{width:26px;height:26px;filter:drop-shadow(0 0 6px rgba(212,175,55,0.8));}
 .hdr-title{
-  font-family:'Cinzel',serif;font-size:22px;font-weight:900;
-  color:var(--gold3);
-  text-shadow:0 0 20px rgba(212,175,55,0.7);
-  letter-spacing:2px;
+  font-family:'Cinzel',serif;font-size:20px;font-weight:900;
+  color:var(--gold3);text-shadow:0 0 18px rgba(212,175,55,0.7);letter-spacing:2px;
 }
-.hdr-sub{
-  font-size:8.5px;font-weight:500;letter-spacing:3px;
-  color:rgba(212,175,55,0.6);
-}
-.hdr-right{display:flex;align-items:center;gap:12px;}
-.hdr-icon{
-  width:38px;height:38px;border-radius:10px;
-  background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:17px;color:rgba(255,255,255,0.8);
-}
+.hdr-sub{font-size:8px;font-weight:500;letter-spacing:3px;color:rgba(212,175,55,0.6);}
 
-/* ── MAIN CONTENT ── */
-.main{
-  position:relative;z-index:10;
-  padding-top:60px;
-  padding-bottom:120px;
-}
+/* ── MAIN ── */
+.main{position:relative;z-index:10;padding-top:62px;padding-bottom:130px;}
 
-/* ── HERO SECTION ── */
+/* ── HERO — بازطراحی موبایل‌اول ── */
 .hero{
-  min-height:420px;
-  padding:36px 20px 0;
-  display:flex;align-items:flex-start;
   position:relative;
+  min-height:min(85vh,600px);
+  padding:28px 16px 200px;
+  display:flex;flex-direction:column;
+  align-items:flex-end;/* تکست سمت راست */
+  text-align:right;
 }
+/* تکست روی تصویر — سمت راست، کمپکت */
 .hero-text{
-  flex:1;max-width:55%;
-  padding-top:20px;
+  width:100%;
+  max-width:100%;
+  padding-top:10px;
 }
 .hero-eyebrow{
-  font-size:12px;color:var(--gold3);
-  letter-spacing:1px;margin-bottom:10px;
-  opacity:0.8;
+  font-size:11px;color:var(--gold3);letter-spacing:1px;
+  margin-bottom:8px;opacity:0.85;
+  display:flex;align-items:center;justify-content:flex-end;gap:5px;
 }
 .hero-h1{
-  font-family:'Cinzel','Vazirmatn',serif;
-  font-size:clamp(28px,7vw,42px);
+  font-family:'Vazirmatn',sans-serif;
+  font-size:clamp(22px,5.5vw,38px);
   font-weight:900;color:white;
-  line-height:1.25;
-  text-shadow:0 2px 20px rgba(0,0,0,0.7);
-  margin-bottom:14px;
+  line-height:1.3;
+  text-shadow:0 2px 20px rgba(0,0,0,0.8);
+  margin-bottom:10px;
 }
-.hero-h1 span{color:var(--gold3);}
+/* PLANLIFE اول با Cinzel */
+.hero-h1-brand{
+  font-family:'Cinzel',serif;
+  font-size:clamp(26px,6vw,44px);
+  font-weight:900;
+  color:var(--gold3);
+  text-shadow:0 0 24px rgba(212,175,55,0.8),0 2px 20px rgba(0,0,0,0.8);
+  display:block;margin-bottom:6px;
+}
 .hero-desc{
-  font-size:13px;font-weight:400;
-  color:rgba(255,255,255,0.72);
-  line-height:1.8;margin-bottom:24px;
+  font-size:12.5px;font-weight:400;
+  color:rgba(255,255,255,0.68);
+  line-height:1.75;margin-bottom:20px;
 }
 .hero-btn{
   display:inline-flex;align-items:center;gap:8px;
-  padding:12px 22px;
-  background:rgba(255,255,255,0.1);
-  border:1.5px solid rgba(212,175,55,0.6);
+  padding:11px 22px;
+  background:rgba(255,255,255,0.08);
+  border:1.5px solid rgba(212,175,55,0.65);
   border-radius:30px;
-  color:var(--gold3);
-  font-family:'Vazirmatn',sans-serif;
-  font-size:14px;font-weight:700;
-  text-decoration:none;cursor:pointer;
+  color:var(--gold3);font-family:'Vazirmatn',sans-serif;
+  font-size:14px;font-weight:700;text-decoration:none;
   backdrop-filter:blur(10px);
-  transition:all 0.2s;
-  box-shadow:0 0 20px rgba(212,175,55,0.2);
+  box-shadow:0 0 18px rgba(212,175,55,0.2);
 }
-.hero-btn:hover{background:rgba(212,175,55,0.2);}
+/* کارت روی هرو — پایین چپ */
 .hero-card{
   position:absolute;
-  bottom:0;left:20px;
-  width:155px;
-  background:rgba(15,10,25,0.85);
-  border:1px solid rgba(212,175,55,0.4);
-  border-radius:16px;
-  padding:12px;
-  backdrop-filter:blur(16px);
-  box-shadow:0 8px 32px rgba(0,0,0,0.6),0 0 20px rgba(212,175,55,0.15);
+  bottom:20px;left:16px;
+  width:min(155px, 40vw);
+  background:rgba(12,8,22,0.88);
+  border:1px solid rgba(212,175,55,0.45);
+  border-radius:16px;padding:11px;
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  box-shadow:0 8px 32px rgba(0,0,0,0.65),0 0 18px rgba(212,175,55,0.15);
 }
 .hero-card-badge{
-  display:flex;align-items:center;gap:5px;
-  font-size:9px;font-weight:700;color:var(--gold3);
-  margin-bottom:8px;
-}
-.hero-card-img{
-  width:100%;aspect-ratio:4/3;
-  border-radius:10px;overflow:hidden;
-  margin-bottom:8px;
-}
-.hero-card-img img{width:100%;height:100%;object-fit:cover;}
-.hero-card-title{
-  font-size:12px;font-weight:800;color:white;
-  margin-bottom:3px;
-}
-.hero-card-sub{
-  font-size:10px;color:rgba(255,255,255,0.55);
-  margin-bottom:8px;
-}
-.hero-card-link{
   display:flex;align-items:center;gap:4px;
-  font-size:10.5px;font-weight:700;color:var(--gold3);
-  text-decoration:none;
+  font-size:9px;font-weight:700;color:var(--gold3);margin-bottom:7px;
+}
+.hero-card-img{width:100%;aspect-ratio:4/3;border-radius:9px;overflow:hidden;margin-bottom:7px;}
+.hero-card-img img{width:100%;height:100%;object-fit:cover;}
+.hero-card-title{font-size:11.5px;font-weight:800;color:white;margin-bottom:3px;}
+.hero-card-sub{font-size:9.5px;color:rgba(255,255,255,0.5);margin-bottom:7px;line-height:1.4;}
+.hero-card-link{
+  display:flex;align-items:center;gap:3px;
+  font-size:10px;font-weight:700;color:var(--gold3);text-decoration:none;
 }
 
-/* ── STORIES STRIP ── */
-.stories-section{
-  padding:28px 0 0;
+/* دسکتاپ هرو */
+@media(min-width:768px){
+  .hero{
+    flex-direction:row;align-items:flex-start;
+    padding:40px 40px 60px;min-height:480px;
+  }
+  .hero-text{max-width:52%;text-align:right;}
+  .hero-h1{font-size:clamp(30px,3.5vw,46px);}
+  .hero-h1-brand{font-size:clamp(34px,4vw,52px);}
+  .hero-card{
+    position:static;margin-right:auto;
+    width:180px;align-self:flex-start;margin-top:10px;margin-left:0;
+  }
 }
-.stories-title-row{
-  padding:0 20px;margin-bottom:16px;
-  display:flex;align-items:center;justify-content:center;
+@media(min-width:1024px){
+  .hero{max-width:1100px;margin:0 auto;padding:60px 60px 80px;}
+  .hero-text{max-width:50%;}
 }
+
+/* ── STORIES ── */
+.stories-section{padding:24px 0 0;}
 .stories-scroll{
   display:flex;flex-direction:row;direction:ltr;
-  gap:14px;overflow-x:auto;overflow-y:hidden;
-  padding:4px 20px 8px;
-  scroll-behavior:smooth;-webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
+  gap:13px;overflow-x:auto;overflow-y:hidden;
+  padding:4px 16px 8px;
+  scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none;
 }
 .stories-scroll::-webkit-scrollbar{display:none;}
-
 .story-item{
-  display:flex;flex-direction:column;
-  align-items:center;gap:6px;flex-shrink:0;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  flex-shrink:0;cursor:pointer;
 }
 .story-ring{
-  width:70px;height:70px;border-radius:50%;padding:2.5px;
+  width:68px;height:68px;border-radius:50%;padding:2.5px;
   background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888,#833ab4,#405de6);
 }
 .story-item.seen .story-ring{background:rgba(255,255,255,0.15);}
 .story-avatar{
   width:100%;height:100%;border-radius:50%;
-  border:2.5px solid rgba(6,6,8,0.95);
-  overflow:hidden;
+  border:2.5px solid rgba(6,6,8,0.95);overflow:hidden;
 }
 .story-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 .story-label{
-  font-size:10px;font-weight:600;
-  color:rgba(255,255,255,0.8);text-align:center;
-  max-width:68px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-size:9.5px;font-weight:600;color:rgba(255,255,255,0.8);
+  text-align:center;max-width:66px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;
 }
 
-/* ── SECTION TITLE ── */
-.section-header{
-  text-align:center;padding:36px 20px 20px;
-}
+/* ── SECTION HEADER ── */
+.section-header{text-align:center;padding:32px 20px 18px;}
 .section-divider{
-  display:flex;align-items:center;justify-content:center;
-  gap:10px;margin-bottom:14px;
+  display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;
 }
-.section-divider-line{
-  width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--gold));
-}
+.section-divider-line{width:36px;height:1px;background:linear-gradient(90deg,transparent,var(--gold));}
 .section-divider-line.r{background:linear-gradient(90deg,var(--gold),transparent);}
-.section-divider svg{width:22px;height:22px;filter:drop-shadow(0 0 5px rgba(212,175,55,0.8));}
-.section-h2{
-  font-size:20px;font-weight:900;color:white;
-  margin-bottom:6px;
+.section-divider svg{width:20px;height:20px;filter:drop-shadow(0 0 5px rgba(212,175,55,0.8));}
+.section-h2{font-size:19px;font-weight:900;color:white;margin-bottom:5px;}
+.section-sub{font-size:12px;color:rgba(255,255,255,0.5);}
+
+/* ── CATEGORIES GRID — دقیقاً مثل کد اصلی ── */
+.services-grid{
+  display:flex;flex-wrap:wrap;
+  gap:14px;width:100%;max-width:420px;
+  margin:0 auto;padding:0 14px;
 }
-.section-sub{
-  font-size:12.5px;color:rgba(255,255,255,0.55);
+.services-grid a{text-decoration:none;color:white;width:calc(50% - 7px);display:block;}
+.service-box{
+  background:rgba(255,255,255,0.10);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-radius:22px;padding:13px 8px 11px;text-align:center;
+  cursor:pointer;height:210px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  border:1px solid rgba(212,175,55,0.5);
+  box-shadow:0 8px 36px rgba(0,0,0,0.55),0 0 22px rgba(212,175,55,0.2);
+  width:100%;transition:transform 0.2s;
+}
+.service-box:active{transform:scale(0.97);}
+.service-box img{
+  width:130px;height:130px;object-fit:cover;
+  border-radius:16px;border:2px solid rgba(255,255,255,0.25);
+}
+.service-box span{
+  font-size:15px;font-weight:800;color:white;
+  text-shadow:0 0 10px rgba(212,175,55,0.3);
+}
+/* کارت کد نویسی ذهنی */
+.mindcode-box{
+  background:#000!important;
+  border:1px solid rgba(0,255,65,0.45)!important;
+  box-shadow:0 8px 36px rgba(0,0,0,0.8),0 0 18px rgba(0,255,65,0.15)!important;
+  position:relative;overflow:hidden;
+}
+.mindcode-box::before{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background-image:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,255,65,0.02) 3px,rgba(0,255,65,0.02) 4px);
+  pointer-events:none;border-radius:22px;z-index:0;
+}
+.mc-terminal{
+  width:108px;height:86px;background:#000;
+  border:1px solid rgba(0,255,65,0.5);border-radius:7px;
+  padding:6px 8px;font-family:'Share Tech Mono','Courier New',monospace;
+  font-size:9px;color:#00ff41;overflow:hidden;line-height:1.55;
+  text-align:left;direction:ltr;position:relative;z-index:1;
+}
+.mc-prompt{color:rgba(0,255,65,0.45);margin-bottom:2px;font-size:8px;}
+.mc-code{animation:matrix-scroll 3s linear infinite;}
+@keyframes matrix-scroll{0%{transform:translateY(0);}100%{transform:translateY(-54px);}}
+.mc-title{
+  font-family:'Vazirmatn',sans-serif;font-size:15px;font-weight:900;
+  color:#00ff41;text-shadow:0 0 10px #00ff41,0 0 20px rgba(0,255,65,0.4);
+  position:relative;z-index:1;
+}
+.mc-sub{
+  font-family:'Share Tech Mono','Courier New',monospace;
+  font-size:8px;color:rgba(0,255,65,0.4);letter-spacing:2px;position:relative;z-index:1;
 }
 
-/* ── CATEGORIES GRID ── */
-.cat-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  padding:0 16px;
-  max-width:900px;margin:0 auto;
-}
 @media(min-width:600px){
-  .cat-grid{grid-template-columns:1fr 1fr 1fr 1fr;}
+  .services-grid{max-width:860px;gap:16px;padding:0 24px;}
+  .services-grid a{width:calc(25% - 12px);}
+  .service-box{height:220px;}
 }
-.cat-card{
-  position:relative;
-  border-radius:18px;overflow:hidden;
-  aspect-ratio:1/1.1;
-  cursor:pointer;
-  border:1px solid rgba(212,175,55,0.2);
-  transition:transform 0.2s,box-shadow 0.2s;
-  text-decoration:none;
-  display:block;
-}
-.cat-card:active{transform:scale(0.97);}
-.cat-card img{
-  width:100%;height:100%;object-fit:cover;
-  display:block;
-  transition:transform 0.4s;
-}
-.cat-card:hover img{transform:scale(1.04);}
-.cat-card-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.2) 50%,transparent 100%);
-}
-.cat-card-body{
-  position:absolute;bottom:0;left:0;right:0;
-  padding:10px 12px;
-}
-.cat-card-title{
-  font-size:14px;font-weight:800;color:white;
-  display:flex;align-items:center;gap:5px;
-  margin-bottom:3px;
-  text-shadow:0 1px 8px rgba(0,0,0,0.8);
-}
-.cat-card-title svg{width:14px;height:14px;flex-shrink:0;}
-.cat-card-sub{
-  font-size:10.5px;color:rgba(255,255,255,0.6);
-  line-height:1.4;
+@media(min-width:1024px){
+  .services-grid{max-width:1080px;padding:0 32px;}
 }
 
 /* ── QUOTE BANNER ── */
 .quote-banner{
-  margin:28px 16px;
+  margin:26px 14px;
   background:rgba(255,255,255,0.04);
-  border:1px solid rgba(212,175,55,0.25);
-  border-radius:20px;
-  padding:28px 20px;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
+  border:1px solid rgba(212,175,55,0.22);
+  border-radius:18px;padding:26px 18px;text-align:center;
+  position:relative;overflow:hidden;max-width:700px;
 }
+@media(min-width:700px){.quote-banner{margin:26px auto;}}
 .quote-banner-bg{
   position:absolute;inset:0;
-  background:url('http://fs3.centraldnserver.com/~planlife/pics/planlifenew/slide.jpeg') center 60% / cover no-repeat;
-  opacity:0.12;
+  background:url('http://fs3.centraldnserver.com/~planlife/pics/planlifenew/slide.jpeg') center 60%/cover no-repeat;
+  opacity:0.1;
 }
-.quote-text{
-  position:relative;z-index:1;
-  font-size:16px;font-weight:700;color:white;
-  line-height:1.7;margin-bottom:10px;
-}
+.quote-text{position:relative;z-index:1;font-size:15px;font-weight:700;color:white;line-height:1.7;margin-bottom:9px;}
 .quote-text span{color:var(--gold3);}
-.quote-author{
-  position:relative;z-index:1;
-  font-size:12px;color:rgba(212,175,55,0.7);
-  font-weight:500;letter-spacing:2px;
-}
+.quote-author{position:relative;z-index:1;font-size:11px;color:rgba(212,175,55,0.65);font-weight:500;letter-spacing:2px;}
 
 /* ── TRUST BADGES ── */
 .trust-section{
-  padding:20px 16px;
-  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  padding:18px 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;
   max-width:700px;margin:0 auto;
 }
-@media(min-width:600px){
-  .trust-section{grid-template-columns:repeat(4,1fr);}
-}
+@media(min-width:600px){.trust-section{grid-template-columns:repeat(4,1fr);}}
 .trust-item{
-  display:flex;flex-direction:column;align-items:center;gap:6px;
-  padding:14px 10px;
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(212,175,55,0.15);
-  border-radius:16px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:12px 8px;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(212,175,55,0.13);border-radius:14px;text-align:center;
 }
-.trust-icon{font-size:26px;}
-.trust-label{font-size:11px;font-weight:700;color:var(--gold3);}
-.trust-sub{font-size:10px;color:rgba(255,255,255,0.5);}
+.trust-icon{font-size:24px;}
+.trust-label{font-size:10.5px;font-weight:700;color:var(--gold3);}
+.trust-sub{font-size:9.5px;color:rgba(255,255,255,0.45);}
 
 /* ── BOTTOM NAV ── */
 .bottom-nav{
   position:fixed;bottom:0;left:0;right:0;z-index:300;
-  padding:0 16px calc(10px + env(safe-area-inset-bottom));
+  padding:0 14px calc(10px + env(safe-area-inset-bottom));
 }
 .bottom-nav-inner{
   display:flex;align-items:center;justify-content:space-around;
-  background:rgba(10,8,20,0.85);
+  background:rgba(8,6,18,0.88);
   backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:28px;
+  border:1px solid rgba(255,255,255,0.1);border-radius:28px;
   padding:6px 4px 8px;
-  box-shadow:0 8px 32px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.12);
+  box-shadow:0 8px 32px rgba(0,0,0,0.65),inset 0 1px 0 rgba(255,255,255,0.12);
   position:relative;
 }
 .bottom-nav-inner::before{
   content:'';position:absolute;top:0;left:10%;right:10%;
-  height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);
+  height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
 }
 .nav-item{
   display:flex;flex-direction:column;align-items:center;gap:3px;
@@ -360,25 +347,17 @@ header{
 .nav-icon-wrap{
   width:40px;height:40px;border-radius:12px;
   display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);
   transition:all 0.3s;
 }
-.nav-label{
-  font-size:9.5px;font-weight:700;
-  color:rgba(255,255,255,0.4);
-  font-family:'Vazirmatn',sans-serif;
-  white-space:nowrap;
-}
+.nav-label{font-size:9.5px;font-weight:700;color:rgba(255,255,255,0.4);white-space:nowrap;}
 .nav-item.active .nav-icon-wrap{
-  background:rgba(212,175,55,0.15);
-  border-color:rgba(212,175,55,0.5);
+  background:rgba(212,175,55,0.15);border-color:rgba(212,175,55,0.5);
   box-shadow:0 0 14px rgba(212,175,55,0.25);
 }
 .nav-item.active .nav-label{color:var(--gold3);}
 .nav-item svg{width:22px;height:22px;}
 
-/* center item */
 .nav-item-center{
   display:flex;flex-direction:column;align-items:center;gap:3px;
   cursor:pointer;padding:0 6px 2px;
@@ -401,9 +380,7 @@ header{
 }
 .nav-center-orb svg{width:28px;height:28px;}
 .nav-center-label{
-  font-size:9.5px;font-weight:700;
-  color:rgba(212,175,55,0.8);
-  font-family:'Vazirmatn',sans-serif;
+  font-size:9.5px;font-weight:700;color:rgba(212,175,55,0.8);
   margin-top:-18px;letter-spacing:0.5px;
 }
 
@@ -422,12 +399,10 @@ header{
 }
 .story-modal-content{position:absolute;inset:0;z-index:1;background:#000;
   display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.story-modal-content img,.story-modal-content video{
-  width:100%;height:100%;object-fit:cover;display:block;}
+.story-modal-content img,.story-modal-content video{width:100%;height:100%;object-fit:cover;display:block;}
 .story-progress-bar{
   position:absolute;top:0;left:0;right:0;z-index:10;
-  display:flex;gap:3px;direction:ltr;
-  padding:10px 12px 6px;
+  display:flex;gap:3px;direction:ltr;padding:10px 12px 6px;
   background:linear-gradient(to bottom,rgba(0,0,0,0.55),transparent);
 }
 .progress-seg{flex:1;height:2.5px;background:rgba(255,255,255,0.28);border-radius:3px;overflow:hidden;}
@@ -441,10 +416,7 @@ header{
   direction:rtl;justify-content:space-between;flex-direction:row-reverse;
 }
 .story-logo-section{display:flex;align-items:center;gap:6px;}
-.story-logo-img{
-  width:34px;height:34px;border-radius:50%;
-  border:1.5px solid rgba(255,255,255,0.2);overflow:hidden;
-}
+.story-logo-img{width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.2);overflow:hidden;}
 .story-logo-img img{width:100%;height:100%;object-fit:cover;}
 .story-branding-text{font-size:14px;font-weight:700;color:white;text-shadow:0 1px 6px rgba(0,0,0,0.7);}
 .story-modal-close{font-size:22px;color:white;cursor:pointer;padding:4px 6px;}
@@ -452,19 +424,16 @@ header{
 .story-nav-right{right:0;}.story-nav-left{left:0;}
 .story-footer{
   position:absolute;bottom:0;left:0;right:0;z-index:10;
-  display:flex;flex-direction:column;gap:10px;
-  padding:40px 14px 18px;
+  display:flex;flex-direction:column;gap:10px;padding:40px 14px 18px;
   background:linear-gradient(to top,rgba(0,0,0,0.72) 60%,transparent);
 }
 .story-caption{font-size:13px;font-weight:500;color:rgba(255,255,255,0.95);
   text-align:center;line-height:1.6;text-shadow:0 1px 8px rgba(0,0,0,0.9);}
 .story-action-btn{
   display:none;align-items:center;justify-content:center;
-  width:100%;padding:12px 16px;
-  background:rgba(255,255,255,0.13);
+  width:100%;padding:12px 16px;background:rgba(255,255,255,0.13);
   border:1.2px solid rgba(212,175,55,0.6);border-radius:20px;
-  color:#ffd060;font-family:'Vazirmatn',sans-serif;
-  font-size:15px;font-weight:800;text-decoration:none;cursor:pointer;
+  color:#ffd060;font-family:'Vazirmatn',sans-serif;font-size:15px;font-weight:800;text-decoration:none;cursor:pointer;
 }
 .story-action-btn.show{display:flex;}
 
@@ -476,9 +445,9 @@ header{
 #menu-overlay.active{opacity:1;pointer-events:auto;}
 .side-menu{
   position:fixed;top:0;right:0;width:260px;height:100vh;
-  background:rgba(10,8,20,0.92);
+  background:rgba(8,6,18,0.93);
   backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);
-  border-left:1px solid rgba(212,175,55,0.25);
+  border-left:1px solid rgba(212,175,55,0.22);
   box-shadow:-12px 0 40px rgba(0,0,0,0.7);
   z-index:200;transform:translateX(100%);transition:transform 0.45s ease;
   padding:22px 16px 28px;display:flex;flex-direction:column;overflow-y:auto;
@@ -486,25 +455,21 @@ header{
 .side-menu.open{transform:translateX(0);}
 .menu-header{
   display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:22px;padding-bottom:14px;
-  border-bottom:1px solid rgba(212,175,55,0.2);
+  margin-bottom:20px;padding-bottom:13px;border-bottom:1px solid rgba(212,175,55,0.18);
 }
 .menu-header h2{font-size:20px;font-weight:900;color:var(--gold);font-family:'Cinzel',serif;}
-.close-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;
-  font-size:22px;color:var(--gold);cursor:pointer;border-radius:50%;}
+.close-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--gold);cursor:pointer;border-radius:50%;}
 .menu-items{display:flex;flex-direction:column;gap:8px;}
 .menu-item{
-  background:rgba(255,255,255,0.05);border:1px solid rgba(212,175,55,0.15);
+  background:rgba(255,255,255,0.05);border:1px solid rgba(212,175,55,0.13);
   border-radius:14px;padding:13px 16px;
-  display:flex;align-items:center;text-decoration:none;color:white;
-  font-size:15px;font-weight:700;
+  display:flex;align-items:center;text-decoration:none;color:white;font-size:15px;font-weight:700;
 }
 .menu-item .text{flex:1;}
 
 /* ── SUBSCRIPTION MODAL ── */
 #subscription-overlay{
-  position:fixed;top:0;left:0;right:0;bottom:0;
-  background:rgba(0,0,0,0.65);
+  position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.65);
   backdrop-filter:blur(8px);z-index:9999;
   display:flex;align-items:center;justify-content:center;
   opacity:0;pointer-events:none;transition:opacity 0.3s;
@@ -512,8 +477,7 @@ header{
 #subscription-overlay.visible{opacity:1;pointer-events:auto;}
 .subscription-modal{
   width:calc(100% - 48px);max-width:320px;
-  background:rgba(20,15,35,0.95);
-  border:1.5px solid rgba(212,175,55,0.5);
+  background:rgba(14,10,28,0.96);border:1.5px solid rgba(212,175,55,0.5);
   border-radius:24px;padding:28px 24px 24px;text-align:center;
   transform:scale(0.92) translateY(20px);opacity:0;
   transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s;
@@ -527,10 +491,9 @@ header{
 .sub-input-group{margin-bottom:16px;}
 .sub-input-label{display:block;font-size:11.5px;font-weight:700;color:rgba(212,175,55,0.9);margin-bottom:6px;text-align:right;}
 .sub-input{
-  width:100%;padding:10px 14px;
-  background:rgba(255,255,255,0.08);border:1.5px solid rgba(212,175,55,0.4);
-  border-radius:12px;color:white;font-family:'Vazirmatn',sans-serif;
-  font-size:13px;text-align:right;direction:rtl;outline:none;
+  width:100%;padding:10px 14px;background:rgba(255,255,255,0.08);
+  border:1.5px solid rgba(212,175,55,0.4);border-radius:12px;color:white;
+  font-family:'Vazirmatn',sans-serif;font-size:13px;text-align:right;direction:rtl;outline:none;
 }
 .sub-btn-group{display:flex;flex-direction:column;gap:8px;}
 .sub-enter-btn,.sub-buy-btn,.sub-close-btn{
@@ -539,30 +502,14 @@ header{
 }
 .sub-enter-btn{background:linear-gradient(135deg,#d4af37,#f5c842,#b8860b);color:#1a0033;}
 .sub-buy-btn{background:rgba(255,255,255,0.08);border:1.5px solid rgba(212,175,55,0.4);color:var(--gold3);}
-.sub-close-btn{background:rgba(255,255,255,0.05);border:1.5px solid rgba(212,175,55,0.2);color:rgba(255,255,255,0.6);}
-
-/* RESPONSIVE */
-@media(min-width:700px){
-  .hero{max-width:900px;margin:0 auto;padding:40px 40px 0;}
-  .hero-text{max-width:50%;}
-  .cat-grid{max-width:900px;margin:0 auto;padding:0 24px;}
-  .stories-scroll{padding:4px 32px 8px;}
-  .bottom-nav{max-width:600px;left:50%;right:auto;transform:translateX(-50%);border-radius:28px;}
-  .quote-banner{margin:28px auto;max-width:700px;}
-  .trust-section{max-width:700px;}
-}
-@media(min-width:1024px){
-  .hero{padding:60px 60px 0;max-width:1100px;}
-  .hero-h1{font-size:52px;}
-  .cat-grid{grid-template-columns:repeat(4,1fr);max-width:1100px;gap:16px;padding:0 32px;}
-  .hero-card{bottom:20px;left:auto;right:60px;width:200px;}
-  header{padding:0 40px;}
-}
+.sub-close-btn{background:rgba(255,255,255,0.05);border:1.5px solid rgba(212,175,55,0.18);color:rgba(255,255,255,0.55);}
 </style>
 </head>
 <body>
 
 <div class="page-bg"></div>
+<div class="page-bg-overlay"></div>
+<div class="page-bg-scroll-dim" id="scroll-dim"></div>
 
 <!-- SUBSCRIPTION MODAL -->
 <div id="subscription-overlay" onclick="handleSubOverlay(event)">
@@ -606,20 +553,21 @@ header{
 
 <!-- HEADER -->
 <header>
-  <div class="hdr-left">
-    <div class="hdr-menu" onclick="toggleMenu()">☰</div>
+  <div class="hdr-icons-group">
+    <div class="hdr-icon-btn">👤</div>
+    <div class="hdr-icon-btn">🔍</div>
   </div>
   <div class="hdr-center">
     <div class="hdr-logo-row">
       <svg class="hdr-compass" viewBox="0 0 48 48" fill="none">
         <circle cx="24" cy="24" r="22" stroke="#d4af37" stroke-width="2"/>
-        <circle cx="24" cy="24" r="16" stroke="rgba(212,175,55,0.4)" stroke-width="1"/>
+        <circle cx="24" cy="24" r="15" stroke="rgba(212,175,55,0.35)" stroke-width="1"/>
         <path d="M24 8 L28 24 L24 22 L20 24 Z" fill="#d4af37"/>
         <path d="M24 40 L20 24 L24 26 L28 24 Z" fill="rgba(212,175,55,0.5)"/>
         <path d="M8 24 L24 20 L22 24 L24 28 Z" fill="rgba(212,175,55,0.5)"/>
         <path d="M40 24 L24 28 L26 24 L24 20 Z" fill="#d4af37"/>
         <circle cx="24" cy="24" r="2.5" fill="#fff"/>
-        <text x="24" y="6" text-anchor="middle" fill="#d4af37" font-size="5" font-weight="bold">N</text>
+        <text x="24" y="6.5" text-anchor="middle" fill="#d4af37" font-size="5" font-weight="bold">N</text>
         <text x="24" y="45" text-anchor="middle" fill="#d4af37" font-size="5">S</text>
         <text x="43" y="25.5" text-anchor="middle" fill="#d4af37" font-size="5">E</text>
         <text x="5" y="25.5" text-anchor="middle" fill="#d4af37" font-size="5">W</text>
@@ -628,10 +576,7 @@ header{
     </div>
     <div class="hdr-sub">THINK · BELIEVE · CREATE</div>
   </div>
-  <div class="hdr-right">
-    <div class="hdr-icon">🔍</div>
-    <div class="hdr-icon">👤</div>
-  </div>
+  <div class="hdr-icon-btn" onclick="toggleMenu()">☰</div>
 </header>
 
 <div id="menu-overlay" onclick="closeMenu()"></div>
@@ -665,21 +610,20 @@ header{
   <section class="hero">
     <div class="hero-text">
       <div class="hero-eyebrow">✦ رشد شخصی</div>
-      <h1 class="hero-h1">
-        <span>P</span>LAN<span>LIFE</span><br>
-        با تغییر باورهایت،<br>زندگی بهتری بساز.
-      </h1>
+      <span class="hero-h1-brand">PLANLIFE</span>
+      <h1 class="hero-h1">با تغییر باورهایت،<br>زندگی بهتری بساز.</h1>
       <p class="hero-desc">آموزش، الهام، تمرین و ابزارهایی برای رشد فردی<br>و ساختن نسخه بهتر خودت</p>
       <a href="https://planlife.ir/Pages/Doreha/index.html" class="hero-btn">شروع مسیر ←</a>
     </div>
+    <!-- کارت: دوره‌ها به جای کتابخانه -->
     <div class="hero-card">
-      <div class="hero-card-badge">📚 محتوای ویژه</div>
+      <div class="hero-card-badge">🎓 محتوای ویژه</div>
       <div class="hero-card-img">
-        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه پلن لایف">
+        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780955091/IMG_1737_ei1f5w.png" alt="دوره‌های PlanLife">
       </div>
-      <div class="hero-card-title">کتابخانه پلن لایف</div>
-      <div class="hero-card-sub">بهترین کتاب‌ها برای تغییر ذهن و زندگی</div>
-      <a href="https://planlife.ir/Pages/Book/index.html" class="hero-card-link">مشاهده کتابخانه ←</a>
+      <div class="hero-card-title">دوره‌های پلن لایف</div>
+      <div class="hero-card-sub">آموزش‌های تخصصی قانون جذب و رشد فردی</div>
+      <a href="https://planlife.ir/Pages/Doreha/index.html" class="hero-card-link">مشاهده دوره‌ها ←</a>
     </div>
   </section>
 
@@ -697,7 +641,7 @@ header{
         <div class="story-label">پادکست</div>
       </div>
       <div class="story-item" data-index="1"
-           data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"
+           data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/dore-jadid-jaryan.mov"
            data-caption="دوره‌های تخصصی قانون جذب و باور 🚀"
            data-btn-show="true" data-btn-text="مشاهده دوره‌ها"
            data-btn-link="https://planlife.ir/Pages/Doreha/index.html">
@@ -707,7 +651,7 @@ header{
         <div class="story-label">دوره‌ها</div>
       </div>
       <div class="story-item" data-index="2"
-           data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg"
+           data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/Library-1.mp4"
            data-caption="کتابخانه — بهترین کتاب‌های رشد فردی 📚"
            data-btn-show="true" data-btn-text="ورود به کتابخانه"
            data-btn-link="https://planlife.ir/Pages/Book/index.html">
@@ -717,7 +661,7 @@ header{
         <div class="story-label">کتابخانه</div>
       </div>
       <div class="story-item" data-index="3"
-           data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png"
+           data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/majale-story.mov"
            data-caption="مجله ماورایی — مقالات انگیزشی 📰"
            data-btn-show="true" data-btn-text="ورود به مجله"
            data-btn-link="https://planlife.ir/Pages/Magazine/index.html">
@@ -727,7 +671,7 @@ header{
         <div class="story-label">مجله</div>
       </div>
       <div class="story-item" data-index="4"
-           data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg"
+           data-img="http://fs3.centraldnserver.com/~planlife/pics/story/story1/tabliq-tamrinat.mp4"
            data-caption="تمرینات مجازی روزانه 🧘"
            data-btn-show="true" data-btn-text="شروع تمرین"
            data-btn-link="https://planlife.ir/Pages/Tamrin/index.html">
@@ -757,16 +701,6 @@ header{
         <div class="story-label">تابلو آرزو</div>
       </div>
       <div class="story-item" data-index="7"
-           data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png"
-           data-caption="موزیک‌های انگیزشی برای آرامش ذهن 🎵"
-           data-btn-show="true" data-btn-text="گوش دادن"
-           data-btn-link="https://planlife.ir/Pages/Music/index.html">
-        <div class="story-ring"><div class="story-avatar">
-          <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="موزیک">
-        </div></div>
-        <div class="story-label">موزیک</div>
-      </div>
-      <div class="story-item" data-index="8"
            data-img="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg"
            data-caption="جعبه کمک‌های اولیه روانی 🩺"
            data-btn-show="true" data-btn-text="مشاهده"
@@ -776,10 +710,20 @@ header{
         </div></div>
         <div class="story-label">کمک اولیه</div>
       </div>
+      <div class="story-item" data-index="8"
+           data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png"
+           data-caption="موزیک‌های انگیزشی برای آرامش ذهن 🎵"
+           data-btn-show="true" data-btn-text="گوش دادن"
+           data-btn-link="https://planlife.ir/Pages/Music/index.html">
+        <div class="story-ring"><div class="story-avatar">
+          <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="موزیک">
+        </div></div>
+        <div class="story-label">موزیک</div>
+      </div>
     </div>
   </section>
 
-  <!-- CATEGORIES SECTION -->
+  <!-- CATEGORIES — دقیقاً ساختار کد اصلی -->
   <section>
     <div class="section-header">
       <div class="section-divider">
@@ -798,110 +742,102 @@ header{
       <p class="section-sub">از این بخش‌ها شروع کن و مسیر رشد خودت رو بساز.</p>
     </div>
 
-    <div class="cat-grid">
-      <a class="cat-card" href="https://planlife.ir/Pages/Mindcoding/index.html" title="قانون جذب">
-        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="قانون جذب">
-        <div class="cat-card-overlay"></div>
-        <div class="cat-card-body">
-          <div class="cat-card-title">
-            <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#d4af37" stroke-width="1.2"/><path d="M8 4v4l3 2" stroke="#d4af37" stroke-width="1.2" stroke-linecap="round"/></svg>
-            قانون جذب
+    <div class="services-grid">
+      <a href="https://planlife.ir/Pages/podcasts_free/index.html" title="پادکست‌های رایگان">
+        <div class="service-box">
+          <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست رایگان">
+          <span>پادکست رایگان</span>
+        </div>
+      </a>
+      <a href="https://planlife.ir/Pages/Doreha/index.html" title="دوره‌ها">
+        <div class="service-box">
+          <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌ها">
+          <span>دوره ها</span>
+        </div>
+      </a>
+      <a href="https://planlife.ir/Pages/Magazine/index.html" title="مجله">
+        <div class="service-box">
+          <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="مجله ماورایی">
+          <span>مجله ماورایی 📰</span>
+        </div>
+      </a>
+      <a href="https://planlife.ir/Pages/Mindcoding/index.html" title="کد نویسی ذهنی">
+        <div class="service-box mindcode-box">
+          <div class="mc-terminal">
+            <div class="mc-prompt">root@mind:~$</div>
+            <div class="mc-code">
+              if(belief){<br>
+              &nbsp;rewrite();<br>
+              }<br>
+              RAS.update();<br>
+              grow(life);<br>
+              mind++;<br>
+              if(belief){<br>
+              &nbsp;rewrite();<br>
+            </div>
           </div>
-          <div class="cat-card-sub">جذب خواسته‌ها، خلق واقعیت</div>
+          <span class="mc-title">کد نویسی ذهنی</span>
+          <span class="mc-sub">تغییر باور و افکار</span>
         </div>
       </a>
-      <a class="cat-card" href="https://planlife.ir/Pages/Mindcoding/index.html" title="باور">
-        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="باور">
-        <div class="cat-card-overlay"></div>
-        <div class="cat-card-body">
-          <div class="cat-card-title">
-            <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#d4af37" stroke-width="1.2"/><path d="M5 8l2 2 4-4" stroke="#d4af37" stroke-width="1.2" stroke-linecap="round"/></svg>
-            باور
-          </div>
-          <div class="cat-card-sub">قدرت باور، ساختن آینده</div>
+      <a href="https://planlife.ir/Pages/Tamrin/index.html" title="تمرینات مجازی">
+        <div class="service-box">
+          <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرینات مجازی">
+          <span>تمرینات مجازی</span>
         </div>
       </a>
-      <a class="cat-card" href="https://planlife.ir/Pages/Tamrin/index.html" title="رشد فردی">
-        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781599306/IMG_1979_xcccao.jpg" alt="رشد فردی">
-        <div class="cat-card-overlay"></div>
-        <div class="cat-card-body">
-          <div class="cat-card-title">
-            <svg viewBox="0 0 16 16" fill="none"><path d="M8 2 L8 14 M3 7 L8 2 L13 7" stroke="#d4af37" stroke-width="1.2" stroke-linecap="round"/></svg>
-            رشد فردی ←
-          </div>
-          <div class="cat-card-sub">نسخه بهتر خودت باش</div>
+      <a href="https://planlife.ir/Pages/paksazi/index.html" title="پاکسازی ذهنی">
+        <div class="service-box">
+          <img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" alt="پاکسازی ذهنی">
+          <span>پاکسازی ذهنی 💭</span>
         </div>
       </a>
-      <a class="cat-card" href="https://planlife.ir/Pages/Tamrin/index.html" title="تمرینات ذهنی">
-        <img src="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg" alt="تمرینات ذهنی">
-        <div class="cat-card-overlay"></div>
-        <div class="cat-card-body">
-          <div class="cat-card-title">تمرینات ذهنی</div>
-          <div class="cat-card-sub">آرامش ذهن، تمرکز و انرژی</div>
+      <a href="https://planlife.ir/Pages/visionboard/index.html" title="تابلو آرزوها">
+        <div class="service-box">
+          <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg" alt="تابلو آرزوها">
+          <span>تابلو آرزوها 🔖</span>
         </div>
       </a>
-      <a class="cat-card" href="https://planlife.ir/Pages/podcasts_free/index.html" title="پادکست">
-        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست">
-        <div class="cat-card-overlay"></div>
-        <div class="cat-card-body">
-          <div class="cat-card-title">پادکست</div>
-          <div class="cat-card-sub">شنیدنی‌های الهام‌بخش</div>
+      <a href="https://planlife.ir/Pages/Book/index.html" title="کتابخانه">
+        <div class="service-box">
+          <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه">
+          <span>کتابخانه 📚</span>
         </div>
       </a>
-      <a class="cat-card" href="https://planlife.ir/Pages/Doreha/index.html" title="دوره‌ها">
-        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780955091/IMG_1737_ei1f5w.png" alt="دوره‌ها">
-        <div class="cat-card-overlay"></div>
-        <div class="cat-card-body">
-          <div class="cat-card-title">دوره‌ها ←</div>
-          <div class="cat-card-sub">آموزش‌های کاربردی و حرفه‌ای</div>
+      <a href="https://planlife.ir/Pages/komakavaliye/index.html" title="جعبه کمک های اولیه">
+        <div class="service-box">
+          <img src="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg" alt="جعبه کمک های اولیه">
+          <span>جعبه کمک های اولیه</span>
         </div>
       </a>
-      <a class="cat-card" href="https://planlife.ir/Pages/Book/index.html" title="کتابخانه">
-        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه">
-        <div class="cat-card-overlay"></div>
-        <div class="cat-card-body">
-          <div class="cat-card-title">کتابخانه ←</div>
-          <div class="cat-card-sub">کتاب‌های زندگی‌ساز</div>
+      <a href="javascript:void(0)" onclick="openSubModal('ترک عادت')" title="ترک عادت">
+        <div class="service-box">
+          <img src="http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2276.jpeg" alt="ترک عادت">
+          <span>ترک عادت</span>
         </div>
       </a>
-      <a class="cat-card" href="https://planlife.ir/Pages/Magazine/index.html" title="مجله">
-        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="مجله">
-        <div class="cat-card-overlay"></div>
-        <div class="cat-card-body">
-          <div class="cat-card-title">مجله</div>
-          <div class="cat-card-sub">مقالات، ایده‌ها، الهام‌ها</div>
+      <a href="javascript:void(0)" onclick="openSubModal('نقشه ی راه')" title="نقشه راه">
+        <div class="service-box">
+          <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781599306/IMG_1979_xcccao.jpg" alt="نقشه راه">
+          <span>نقشه راه</span>
         </div>
       </a>
-      <a class="cat-card" href="https://planlife.ir/Pages/paksazi/index.html" title="پاکسازی ذهن">
-        <img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" alt="پاکسازی ذهن">
-        <div class="cat-card-overlay"></div>
-        <div class="cat-card-body">
-          <div class="cat-card-title">پاکسازی ذهن ←</div>
-          <div class="cat-card-sub">رها شدن از افکار منفی</div>
+      <a href="https://planlife.ir/Pages/Music/index.html" title="موزیک">
+        <div class="service-box">
+          <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="موزیک ها">
+          <span>موزیک ها</span>
         </div>
       </a>
-      <a class="cat-card" href="https://planlife.ir/Pages/visionboard/index.html" title="تابلو آرزوها">
-        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg" alt="تابلو آرزوها">
-        <div class="cat-card-overlay"></div>
-        <div class="cat-card-body">
-          <div class="cat-card-title">تابلو آرزوها ←</div>
-          <div class="cat-card-sub">تصویر کن، باور کن، بساز</div>
+      <a href="javascript:void(0)" onclick="openSubModal('تمرینات تخصصی')" title="تمرینات تخصصی">
+        <div class="service-box">
+          <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780955091/IMG_1737_ei1f5w.png" alt="تمرینات تخصصی">
+          <span>تمرینات تخصصی</span>
         </div>
       </a>
-      <a class="cat-card" href="https://planlife.ir/Pages/Music/index.html" title="موزیک">
-        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="موزیک">
-        <div class="cat-card-overlay"></div>
-        <div class="cat-card-body">
-          <div class="cat-card-title">موزیک ←</div>
-          <div class="cat-card-sub">موسیقی برای حال بهتر</div>
-        </div>
-      </a>
-      <a class="cat-card" href="javascript:void(0)" onclick="openSubModal('نقشه ی راه')" title="نقشه راه">
-        <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781599306/IMG_1979_xcccao.jpg" alt="نقشه راه">
-        <div class="cat-card-overlay"></div>
-        <div class="cat-card-body">
-          <div class="cat-card-title">نقشه راه</div>
-          <div class="cat-card-sub">مسیر مشخص، اهداف بزرگ</div>
+      <a href="javascript:void(0)" onclick="openSubModal('چک لیست روزانه')" title="چک لیست روزانه">
+        <div class="service-box">
+          <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg" alt="چک لیست روزانه">
+          <span>چک لیست روزانه📜</span>
         </div>
       </a>
     </div>
@@ -918,7 +854,7 @@ header{
   <div class="trust-section">
     <div class="trust-item">
       <div class="trust-icon">🛡️</div>
-      <div class="trust-label">محیط امن</div>
+      <div class="trust-label">محیط امن و الهام‌بخش</div>
       <div class="trust-sub">همیشه همراه شما</div>
     </div>
     <div class="trust-item">
@@ -943,48 +879,7 @@ header{
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="bottom-nav-inner">
-    <a class="nav-item" id="nav-exercises" href="https://planlife.ir/Pages/Tamrin/index.html">
-      <div class="nav-icon-wrap">
-        <svg viewBox="0 0 24 24" fill="none">
-          <rect x="4.5" y="3.5" width="15" height="17" rx="2.5" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
-          <path d="M8 11.3L10 13.3L14.5 8.8" stroke="rgba(255,255,255,0.7)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-          <line x1="8" y1="16" x2="16" y2="16" stroke="rgba(255,255,255,0.5)" stroke-width="1.4" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <span class="nav-label">تمرینات</span>
-    </a>
-    <a class="nav-item" id="nav-courses" href="https://planlife.ir/Pages/Doreha/index.html">
-      <div class="nav-icon-wrap">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path d="M12 3L22 8L12 13L2 8L12 3Z" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.7)" stroke-width="1.3" stroke-linejoin="round"/>
-          <path d="M6 10.2V15C6 16.5 8.7 18 12 18C15.3 18 18 16.5 18 15V10.2" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-        </svg>
-      </div>
-      <span class="nav-label">دوره‌ها</span>
-    </a>
-    <a class="nav-item-center" id="nav-explore" href="https://planlife.ir">
-      <div class="nav-center-orb">
-        <svg viewBox="0 0 48 48" fill="none">
-          <circle cx="24" cy="24" r="20" stroke="#d4af37" stroke-width="1.5"/>
-          <path d="M24 8 L28 24 L24 22 L20 24 Z" fill="#d4af37"/>
-          <path d="M24 40 L20 24 L24 26 L28 24 Z" fill="rgba(212,175,55,0.5)"/>
-          <path d="M8 24 L24 20 L22 24 L24 28 Z" fill="rgba(212,175,55,0.5)"/>
-          <path d="M40 24 L24 28 L26 24 L24 20 Z" fill="#d4af37"/>
-          <circle cx="24" cy="24" r="3" fill="#fff"/>
-        </svg>
-      </div>
-      <span class="nav-center-label">خانه</span>
-    </a>
-    <a class="nav-item" id="nav-podcast" href="https://planlife.ir/Pages/podcasts_free/index.html">
-      <div class="nav-icon-wrap">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path d="M4 13.5C4 8.25 7.58 4 12 4C16.42 4 20 8.25 20 13.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-          <rect x="3" y="13" width="3.4" height="6" rx="1.6" fill="rgba(255,255,255,0.7)"/>
-          <rect x="17.6" y="13" width="3.4" height="6" rx="1.6" fill="rgba(255,255,255,0.7)"/>
-        </svg>
-      </div>
-      <span class="nav-label">پادکست‌ها</span>
-    </a>
+    <!-- خانه -->
     <a class="nav-item active" id="nav-home" href="https://planlife.ir">
       <div class="nav-icon-wrap">
         <svg viewBox="0 0 24 24" fill="none">
@@ -993,21 +888,92 @@ header{
       </div>
       <span class="nav-label">خانه</span>
     </a>
+    <!-- پادکست -->
+    <a class="nav-item" id="nav-podcast" href="https://planlife.ir/Pages/podcasts_free/index.html">
+      <div class="nav-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M4 13.5C4 8.25 7.58 4 12 4C16.42 4 20 8.25 20 13.5" stroke="rgba(255,255,255,0.65)" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+          <rect x="3" y="13" width="3.4" height="6" rx="1.6" fill="rgba(255,255,255,0.65)"/>
+          <rect x="17.6" y="13" width="3.4" height="6" rx="1.6" fill="rgba(255,255,255,0.65)"/>
+        </svg>
+      </div>
+      <span class="nav-label">پادکست‌ها</span>
+    </a>
+    <!-- Explore — وسط -->
+    <a class="nav-item-center" id="nav-explore" href="https://planlife.ir/Pages/Explore/index.html">
+      <div class="nav-center-orb">
+        <svg viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="19" stroke="#d4af37" stroke-width="1.5"/>
+          <path d="M30 18L26 26L18 30L22 22L30 18Z" fill="#d4af37" stroke="white" stroke-width="0.4" stroke-linejoin="round"/>
+          <circle cx="24" cy="24" r="2" fill="white"/>
+        </svg>
+      </div>
+      <span class="nav-center-label">Explore</span>
+    </a>
+    <!-- دوره‌ها -->
+    <a class="nav-item" id="nav-courses" href="https://planlife.ir/Pages/Doreha/index.html">
+      <div class="nav-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M12 3L22 8L12 13L2 8L12 3Z" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.65)" stroke-width="1.3" stroke-linejoin="round"/>
+          <path d="M6 10.2V15C6 16.5 8.7 18 12 18C15.3 18 18 16.5 18 15V10.2" stroke="rgba(255,255,255,0.65)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <span class="nav-label">دوره‌ها</span>
+    </a>
+    <!-- تمرینات -->
+    <a class="nav-item" id="nav-exercises" href="https://planlife.ir/Pages/Tamrin/index.html">
+      <div class="nav-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none">
+          <rect x="4.5" y="3.5" width="15" height="17" rx="2.5" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.65)" stroke-width="1.5"/>
+          <path d="M8 11.3L10 13.3L14.5 8.8" stroke="rgba(255,255,255,0.65)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="8" y1="16" x2="16" y2="16" stroke="rgba(255,255,255,0.45)" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="nav-label">تمرینات</span>
+    </a>
   </div>
 </nav>
 
 <script>
+// ── SCROLL DIM ──
+(function(){
+  var dim=document.getElementById('scroll-dim');
+  var threshold=60;
+  window.addEventListener('scroll',function(){
+    if((window.scrollY||window.pageYOffset)>threshold){
+      dim.classList.add('active');
+    }else{
+      dim.classList.remove('active');
+    }
+  },{passive:true});
+})();
+
 // ── SUBSCRIPTION ──
 var VALID_CODE='admin2933',currentTarget='';
-var PAGE_LINKS={'ترک عادت':'https://planlife.ir/Pages/ranj-lezat/index.html','نقشه ی راه':'https://planlife.ir/Pages/naghsherah/index.html','تمرینات تخصصی':'https://planlife.ir/Pages/tamrintakhasosi/index.html','چک لیست روزانه':'https://planlife.ir/Pages/cheklist/index.html'};
-function openSubModal(t){currentTarget=t;document.getElementById('subscription-overlay').classList.add('visible');document.getElementById('subscription-code').value='';setTimeout(function(){document.getElementById('subscription-code').focus();},300);}
-function closeSubModal(){document.getElementById('subscription-overlay').classList.remove('visible');currentTarget='';}
+var PAGE_LINKS={
+  'ترک عادت':'https://planlife.ir/Pages/ranj-lezat/index.html',
+  'نقشه ی راه':'https://planlife.ir/Pages/naghsherah/index.html',
+  'تمرینات تخصصی':'https://planlife.ir/Pages/tamrintakhasosi/index.html',
+  'چک لیست روزانه':'https://planlife.ir/Pages/cheklist/index.html'
+};
+function openSubModal(t){
+  currentTarget=t;
+  document.getElementById('subscription-overlay').classList.add('visible');
+  document.getElementById('subscription-code').value='';
+  setTimeout(function(){document.getElementById('subscription-code').focus();},300);
+}
+function closeSubModal(){
+  document.getElementById('subscription-overlay').classList.remove('visible');currentTarget='';
+}
 function handleSubOverlay(e){if(e.target===document.getElementById('subscription-overlay'))closeSubModal();}
 function verifySubscription(){
   var code=document.getElementById('subscription-code').value.trim();
   if(code===VALID_CODE){var link=PAGE_LINKS[currentTarget];if(link)window.location.href=link;else alert('صفحه پیدا نشد.');}
   else{alert('کد اشتراک اشتباه است!');document.getElementById('subscription-code').focus();}
 }
+document.getElementById('subscription-code').addEventListener('keydown',function(e){
+  if(e.key==='Enter')verifySubscription();
+});
 
 // ── MENU ──
 function toggleMenu(){document.getElementById('side-menu').classList.contains('open')?closeMenu():openMenu();}
@@ -1017,17 +983,17 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu();
 
 // ── STORIES ──
 var stories=[],storyIndex=0,storyTimer=null;
-var SEEN_KEY='pl_stories_seen',DAY_MS=86400000;
-
+var SEEN_KEY='pl_stories_seen_v2',DAY_MS=86400000;
 function getSeenMap(){try{var r=localStorage.getItem(SEEN_KEY);if(!r)return{};var m=JSON.parse(r),now=Date.now(),c={};Object.keys(m).forEach(function(k){if(now-m[k]<DAY_MS)c[k]=m[k];});return c;}catch(e){return{};}}
 function markSeen(idx){try{var m=getSeenMap();m[idx]=Date.now();localStorage.setItem(SEEN_KEY,JSON.stringify(m));}catch(e){}}
 function isSeen(idx){return Object.prototype.hasOwnProperty.call(getSeenMap(),idx);}
-
 function initStories(){
   document.querySelectorAll('.story-item').forEach(function(item){
     var idx=parseInt(item.dataset.index,10);
     var seen=isSeen(idx);
-    stories.push({el:item,img:item.dataset.img||'',caption:item.dataset.caption||'',btnShow:(item.dataset.btnShow||'').toLowerCase()==='true',btnText:item.dataset.btnText||'',btnLink:item.dataset.btnLink||'',seen:seen});
+    stories.push({el:item,img:item.dataset.img||'',caption:item.dataset.caption||'',
+      btnShow:(item.dataset.btnShow||'').toLowerCase()==='true',
+      btnText:item.dataset.btnText||'',btnLink:item.dataset.btnLink||'',seen:seen});
     if(seen)item.classList.add('seen');
     item.addEventListener('click',function(){openStoryModal(parseInt(item.dataset.index,10));});
   });
@@ -1048,7 +1014,10 @@ function closeStoryModal(){
   document.body.style.position='';document.body.style.top='';document.body.style.width='';
   window.scrollTo(0,savedScrollY);
 }
-function isVideo(url){var ext=url.toLowerCase().split('?')[0].split('.').pop();return['mp4','webm','ogg','mov','avi','m4v'].includes(ext)||url.indexOf('/video/upload/')>=0;}
+function isVideo(url){
+  var ext=url.toLowerCase().split('?')[0].split('.').pop();
+  return['mp4','webm','ogg','mov','avi','m4v'].includes(ext)||url.indexOf('/video/upload/')>=0;
+}
 function renderStoryModal(){
   var s=stories[storyIndex];if(!s){closeStoryModal();return;}
   s.seen=true;s.el.classList.add('seen');markSeen(storyIndex);
@@ -1082,15 +1051,19 @@ function updateVideoProgress(video){
   video.addEventListener('ended',function(){fill.style.width='100%';});
 }
 function showPlayBtn(video,container){
-  var ov=document.createElement('div');ov.style.cssText='position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);cursor:pointer;';
-  var b=document.createElement('div');b.style.cssText='width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-size:28px;';b.textContent='▶';
-  ov.appendChild(b);ov.addEventListener('click',function(){video.play();ov.remove();});container.appendChild(ov);
+  var ov=document.createElement('div');
+  ov.style.cssText='position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);cursor:pointer;';
+  var b=document.createElement('div');
+  b.style.cssText='width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-size:28px;';
+  b.textContent='▶';ov.appendChild(b);
+  ov.addEventListener('click',function(){video.play();ov.remove();});container.appendChild(ov);
 }
 function buildProgressBar(){
   var bar=document.getElementById('story-progress-bar');bar.innerHTML='';
   stories.forEach(function(s,i){
     var seg=document.createElement('div');seg.className='progress-seg';
-    if(i<storyIndex)seg.classList.add('done');if(i===storyIndex)seg.classList.add('active');
+    if(i<storyIndex)seg.classList.add('done');
+    if(i===storyIndex)seg.classList.add('active');
     var fill=document.createElement('div');fill.className='progress-seg-fill';seg.appendChild(fill);bar.appendChild(seg);
   });
 }
@@ -1098,7 +1071,8 @@ function startStoryTimer(){clearStoryTimer();storyTimer=setTimeout(function(){st
 function clearStoryTimer(){if(storyTimer){clearTimeout(storyTimer);storyTimer=null;}}
 function storyNavigate(dir){
   clearStoryTimer();storyIndex+=dir;
-  if(storyIndex<0)storyIndex=0;if(storyIndex>=stories.length){closeStoryModal();return;}
+  if(storyIndex<0)storyIndex=0;
+  if(storyIndex>=stories.length){closeStoryModal();return;}
   renderStoryModal();buildProgressBar();startStoryTimer();
 }
 document.getElementById('story-modal').addEventListener('click',function(e){if(e.target===this)closeStoryModal();});
@@ -1109,7 +1083,10 @@ function initDragScroll(){
   el.addEventListener('mousedown',function(e){isDown=true;startX=e.pageX-el.offsetLeft;scrollLeft=el.scrollLeft;});
   el.addEventListener('mouseleave',function(){isDown=false;});
   el.addEventListener('mouseup',function(){isDown=false;});
-  el.addEventListener('mousemove',function(e){if(!isDown)return;e.preventDefault();el.scrollLeft=scrollLeft-(e.pageX-el.offsetLeft-startX)*1.3;});
+  el.addEventListener('mousemove',function(e){
+    if(!isDown)return;e.preventDefault();
+    el.scrollLeft=scrollLeft-(e.pageX-el.offsetLeft-startX)*1.3;
+  });
 }
 
 window.onload=function(){initStories();};
