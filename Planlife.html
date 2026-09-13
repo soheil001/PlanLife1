@@ -62,6 +62,8 @@ header{
   display:flex;align-items:center;justify-content:center;
   cursor:pointer;font-size:20px;color:white;
 }
+
+/* موبایل: لوگو نمایش داده میشه */
 .hdr-center{
   display:flex;flex-direction:column;align-items:center;gap:1px;
   position:absolute;left:50%;transform:translateX(-50%);
@@ -96,18 +98,20 @@ header{
   padding-bottom:120px;
 }
 
-/* ── HERO SECTION ── */
+/* ── HERO SECTION - موبایل: flex column ── */
 .hero{
-  min-height:380px;
-  padding:28px 16px 0;
-  display:flex;align-items:flex-start;
+  min-height:auto;
+  padding:20px 16px 24px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
   position:relative;
 }
 .hero-text{
   flex:1;
-  /* فضا برای کارت سمت چپ */
-  padding-left:170px;
-  padding-top:14px;
+  padding-left:0;
+  padding-top:0;
+  text-align:right;
 }
 .hero-eyebrow{
   font-size:11px;color:var(--gold3);
@@ -144,11 +148,15 @@ header{
 }
 .hero-btn:hover{background:rgba(212,175,55,0.2);}
 
-/* ── HERO CARD ── */
+/* ── HERO CARD - موبایل: افقی، زیر متن ── */
 .hero-card{
-  position:absolute;
-  bottom:0;left:16px;
-  width:150px;
+  position:relative;
+  bottom:auto;left:auto;
+  width:100%;
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  gap:12px;
   background:rgba(15,10,25,0.85);
   border:1px solid rgba(212,175,55,0.4);
   border-radius:16px;
@@ -159,16 +167,19 @@ header{
 .hero-card-badge{
   display:flex;align-items:center;gap:5px;
   font-size:9px;font-weight:700;color:var(--gold3);
-  margin-bottom:7px;
+  margin-bottom:5px;
 }
 .hero-card-img{
-  width:100%;aspect-ratio:4/3;
+  width:80px;
+  flex-shrink:0;
+  aspect-ratio:4/3;
   border-radius:10px;overflow:hidden;
-  margin-bottom:7px;
+  margin-bottom:0;
 }
 .hero-card-img img{width:100%;height:100%;object-fit:cover;}
+.hero-card-info{flex:1;}
 .hero-card-title{
-  font-size:11.5px;font-weight:800;color:white;
+  font-size:12px;font-weight:800;color:white;
   margin-bottom:3px;
 }
 .hero-card-sub{
@@ -185,10 +196,6 @@ header{
 /* ── STORIES STRIP ── */
 .stories-section{
   padding:28px 0 0;
-}
-.stories-title-row{
-  padding:0 20px;margin-bottom:16px;
-  display:flex;align-items:center;justify-content:center;
 }
 .stories-scroll{
   display:flex;flex-direction:row;direction:ltr;
@@ -546,22 +553,57 @@ header{
 .sub-buy-btn{background:rgba(255,255,255,0.08);border:1.5px solid rgba(212,175,55,0.4);color:var(--gold3);}
 .sub-close-btn{background:rgba(255,255,255,0.05);border:1.5px solid rgba(212,175,55,0.2);color:rgba(255,255,255,0.6);}
 
-/* RESPONSIVE */
+/* ── RESPONSIVE ── */
 @media(min-width:700px){
-  .hero{max-width:900px;margin:0 auto;padding:40px 40px 0;}
-  .hero-text{padding-left:0;max-width:50%;padding-top:20px;}
-  .hero-card{bottom:0;left:auto;right:40px;width:155px;}
+  /* دسکتاپ: لوگو و بک‌گراند هدر مخفی */
+  .hdr-center{ display:none; }
+  header{
+    background:transparent;
+    backdrop-filter:none;-webkit-backdrop-filter:none;
+    border-bottom:none;
+  }
+
+  /* دسکتاپ: hero به حالت horizontal */
+  .hero{
+    flex-direction:row;
+    min-height:380px;
+    padding:40px 40px 0;
+    align-items:flex-start;
+    max-width:900px;
+    margin:0 auto;
+  }
+  .hero-text{
+    max-width:55%;
+    padding-top:20px;
+  }
+  /* دسکتاپ: کارت به absolute سمت چپ */
+  .hero-card{
+    position:absolute;
+    bottom:0;
+    left:40px;
+    right:auto;
+    width:155px;
+    flex-direction:column;
+    gap:0;
+  }
+  .hero-card-img{
+    width:100%;
+    margin-bottom:7px;
+  }
+  .hero-card-info{flex:unset;width:100%;}
+
   .cat-grid{max-width:900px;margin:0 auto;padding:0 24px;}
   .stories-scroll{padding:4px 32px 8px;}
   .bottom-nav{max-width:600px;left:50%;right:auto;transform:translateX(-50%);border-radius:28px;}
   .quote-banner{margin:28px auto;max-width:700px;}
   .trust-section{max-width:700px;}
 }
+
 @media(min-width:1024px){
   .hero{padding:60px 60px 0;max-width:1100px;}
   .hero-h1{font-size:42px;}
   .cat-grid{grid-template-columns:repeat(4,1fr);max-width:1100px;gap:16px;padding:0 32px;}
-  .hero-card{bottom:20px;left:auto;right:60px;width:200px;}
+  .hero-card{bottom:20px;left:60px;width:200px;}
   header{padding:0 40px;}
 }
 </style>
@@ -615,6 +657,7 @@ header{
   <div class="hdr-left">
     <div class="hdr-menu" onclick="toggleMenu()">☰</div>
   </div>
+  <!-- لوگو: فقط در موبایل نمایش داده می‌شه -->
   <div class="hdr-center">
     <div class="hdr-logo-row">
       <svg class="hdr-compass" viewBox="0 0 48 48" fill="none">
@@ -669,18 +712,8 @@ header{
 
   <!-- HERO -->
   <section class="hero">
-    <!-- کارت دوره‌ها - سمت چپ -->
-    <div class="hero-card">
-      <div class="hero-card-badge">🎓 دوره‌های ویژه</div>
-      <div class="hero-card-img">
-        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌های پلن لایف">
-      </div>
-      <div class="hero-card-title">دوره‌های PlanLife</div>
-      <div class="hero-card-sub">آموزش‌های تخصصی قانون جذب و رشد فردی</div>
-      <a href="https://planlife.ir/Pages/Doreha/index.html" class="hero-card-link">مشاهده دوره‌ها ←</a>
-    </div>
 
-    <!-- متن هیرو - سمت راست -->
+    <!-- متن هیرو - اول در موبایل، سمت راست در دسکتاپ -->
     <div class="hero-text">
       <div class="hero-eyebrow">✦ رشد شخصی</div>
       <h1 class="hero-h1">
@@ -690,6 +723,20 @@ header{
       <p class="hero-desc">آموزش، الهام، تمرین و ابزارهایی<br>برای رشد فردی و ساختن<br>نسخه بهتر خودت</p>
       <a href="https://planlife.ir/Pages/Doreha/index.html" class="hero-btn">شروع مسیر ←</a>
     </div>
+
+    <!-- کارت دوره‌ها - دوم در موبایل (افقی)، سمت چپ در دسکتاپ (absolute) -->
+    <div class="hero-card">
+      <div class="hero-card-img">
+        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌های پلن لایف">
+      </div>
+      <div class="hero-card-info">
+        <div class="hero-card-badge">🎓 دوره‌های ویژه</div>
+        <div class="hero-card-title">دوره‌های PlanLife</div>
+        <div class="hero-card-sub">آموزش‌های تخصصی قانون جذب و رشد فردی</div>
+        <a href="https://planlife.ir/Pages/Doreha/index.html" class="hero-card-link">مشاهده دوره‌ها ←</a>
+      </div>
+    </div>
+
   </section>
 
   <!-- STORIES -->
