@@ -448,49 +448,21 @@ img{display:block;max-width:100%;}
 .bottom-nav{display:none;}
 
 /* =====================================================
-   RESPONSIVE — MOBILE FIX (کل ستون راست تمام‌عرض)
+   RESPONSIVE — MOBILE IFRAME FULLSCREEN FIX
    ===================================================== */
 @media (max-width:960px){
+  /* Body normal mode */
   body{padding:0;}
-  .shell{border-radius:0;padding:10px 10px 100px;}
+  .shell{border-radius:0;padding:10px 10px 90px;}
   .tabs{display:none;}
   .search-box{max-width:none;}
   .burger{display:flex;align-items:center;justify-content:center;}
-
-  /* layout: ستون‌ها زیر هم */
-  .layout{flex-direction:column;gap:var(--gap);}
-
-  /* sidebar مخفی */
+  .layout{flex-direction:column;}
   .sidebar{display:none;}
-
-  /* ستون اصلی: تمام عرض */
-  .main-col{width:100%;min-width:0;}
-
-  /* ستون راست: تمام عرض — این بود اشکال اصلی */
-  .right-col{
-    width:100% !important;
-    min-width:0;
-    max-width:100%;
-    flex-shrink:0;
-    order:3;
-  }
-
-  /* پنل‌های داخل right-col هم تمام عرض */
-  .right-col .panel,
-  .right-col .finance-panel {
-    width:100%;
-    box-sizing:border-box;
-  }
-
-  /* هیرو: ستونی */
+  .right-col{width:100%;order:3;}
   .hero{flex-direction:column;}
   .hero-media{width:100%;aspect-ratio:16/11;}
-
-  /* گرید کارت‌ها: دو ستون */
   .cards-grid{grid-template-columns:repeat(2,1fr);}
-
-  /* چت باکس در موبایل کمی بلندتر */
-  .assist-body{height:180px;}
 
   /* === IFRAME MODE FULL WIDTH === */
   body.iframe-open{
@@ -511,6 +483,7 @@ img{display:block;max-width:100%;}
     width:100%;
     min-width:0;
   }
+  /* iframe-view full viewport */
   body.iframe-open #iframe-view.active{
     position:fixed;
     top:0;
@@ -553,10 +526,11 @@ img{display:block;max-width:100%;}
   .bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:9.5px;font-weight:700;flex:1;padding:6px 0;border-radius:14px;}
   .bn-item.active{color:var(--blue);}
   .bn-item svg{width:20px;height:20px;}
+  /* hide bottom nav when iframe is open */
   body.iframe-open .bottom-nav{display:none;}
 }
 
-@media (max-width:1100px) and (min-width:961px){
+@media (max-width:1100px){
   .right-col{width:265px;}
   .cards-grid{grid-template-columns:repeat(2,1fr);gap:12px;}
 }
@@ -568,8 +542,6 @@ img{display:block;max-width:100%;}
   .login-btn{padding:10px;border-radius:12px;}
   .hero-title{font-size:17px;}
   .hero-desc{font-size:12px;}
-  .fp-chips{gap:5px;}
-  .fp-chip{padding:5px 9px;font-size:10.5px;}
 }
 </style>
 </head>
@@ -859,10 +831,10 @@ img{display:block;max-width:100%;}
 
     </main>
 
-    <!-- RIGHT COLUMN -->
+    <!-- RIGHT COLUMN — ترتیب: چت باکس، داشبورد، فعالیت‌های اخیر، مدرسین -->
     <aside class="right-col">
 
-      <!-- 1. دستیار -->
+      <!-- 1. دستیار (چت باکس) -->
       <div class="panel">
         <div class="panel-title"><h3>دستیار <b>PlanLife</b></h3></div>
         <div class="assist-body" id="chat-output"></div>
@@ -874,7 +846,7 @@ img{display:block;max-width:100%;}
         </div>
       </div>
 
-      <!-- 2. داشبورد پیشرفت -->
+      <!-- 2. داشبورد آمار پیشرفت -->
       <div class="finance-panel" id="finance-panel">
         <div class="fp-toprow">
           <div class="fp-title">پیشرفت <span>من</span></div>
@@ -1136,4 +1108,399 @@ function switchAuthTab(mode){
 function showAuthError(msg){ var el=document.getElementById('auth-error'); el.textContent=msg; el.classList.add('show'); }
 
 async function submitAuth(){
-  var emai
+  var email    = document.getElementById('auth-email').value.trim();
+  var password = document.getElementById('auth-password').value;
+  document.getElementById('auth-error').classList.remove('show');
+  if(!email||!password){ showAuthError('ایمیل و رمز عبور رو وارد کن.'); return; }
+  if(password.length<6){ showAuthError('رمز عبور باید حداقل ۶ کاراکتر باشه.'); return; }
+  document.getElementById('auth-loading').classList.add('show');
+  document.getElementById('auth-submit-btn').disabled=true;
+  var result = authMode==='login'
+    ? await sb.auth.signInWithPassword({email,password})
+    : await sb.auth.signUp({email,password});
+  document.getElementById('auth-loading').classList.remove('show');
+  document.getElementById('auth-submit-btn').disabled=false;
+  if(result.error){ showAuthError(translateAuthError(result.error.message)); return; }
+  if(authMode==='signup'&&result.data.user&&!result.data.session){ showAuthError('حساب ساخته شد! ایمیلت رو چک کن.'); return; }
+  currentUser=result.data.user; await loadProfile(); updateAuthUI(); closeSubscriptionModal();
+  loadProgressData();
+  if(pendingLockedTitle){ var t=pendingLockedTitle; pendingLockedTitle=''; openLockedContent(t); }
+}
+
+function translateAuthError(msg){
+  if(/Invalid login credentials/i.test(msg)) return 'ایمیل یا رمز عبور اشتباهه.';
+  if(/User already registered/i.test(msg)) return 'این ایمیل قبلاً ثبت‌نام شده.';
+  if(/Password should be/i.test(msg)) return 'رمز عبور حداقل ۶ کاراکتر باشه.';
+  return msg;
+}
+
+function openLockedContent(title){
+  if(!currentUser){ pendingLockedTitle=title; openSubscriptionModal(); return; }
+  if(currentProfile&&currentProfile.subscription_status==='premium'){
+    var link=PAGE_LINKS[title];
+    if(link) loadInIframe(link,title);
+    else loadInIframe('https://planlife.ir/Pages/Doreha/dore.html','دوره‌ها');
+  } else {
+    alert('این بخش نیاز به اشتراک ویژه داره.');
+  }
+}
+
+/* ====== NAVIGATION ====== */
+var PAGE_ICONS={
+  'دوره‌ها':'📚','پادکست':'🎙️','پادکست رایگان':'🎙️','پادکست‌های رایگان':'🎙️',
+  'کتابخانه':'📖','مجله ماورایی':'📰','کدنویسی ذهنی':'💻','پاکسازی ذهنی':'💭',
+  'تمرینات مجازی':'🏃','مدیتیشن روزانه':'🧘','تابلو آرزوها':'🔖',
+  'جعبه کمک‌های اولیه':'🩺','موزیک‌ها':'🎵','تمرینات تخصصی':'💪',
+};
+
+function navigateTo(url,tabEl,title){
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  if(tabEl) tabEl.classList.add('active');
+  if(url==='home'){goHome();return;}
+  loadInIframe(url,title||url);
+}
+
+function navigateSide(url,btnId,title){
+  document.querySelectorAll('.side-btn').forEach(function(b){b.classList.remove('active');});
+  if(btnId){var btn=document.getElementById(btnId);if(btn)btn.classList.add('active');}
+  if(url==='home'){goHome();return;}
+  loadInIframe(url,title||url);
+}
+
+function loadInIframe(url,title){
+  var homeView  = document.getElementById('home-view');
+  var iframeView= document.getElementById('iframe-view');
+  var iframe    = document.getElementById('main-iframe');
+  var loading   = document.getElementById('iframe-loading');
+
+  homeView.style.display='none';
+  iframeView.classList.add('active');
+  loading.classList.add('active');
+  iframe.style.display='none';
+
+  document.getElementById('iframe-page-title').textContent=title||'در حال بارگذاری...';
+  document.getElementById('iframe-favicon').textContent=PAGE_ICONS[title]||'🌐';
+  document.getElementById('loading-text').textContent='در حال بارگذاری '+(title||'صفحه')+'...';
+
+  iframe.src=url;
+
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+
+  /* ---- MOBILE FULL-SCREEN MODE ---- */
+  if(window.innerWidth <= 960){
+    document.body.classList.add('iframe-open');
+    document.documentElement.style.overflow = 'hidden';
+  }
+
+  window.scrollTo(0,0);
+}
+
+function iframeLoaded(){
+  document.getElementById('iframe-loading').classList.remove('active');
+  document.getElementById('main-iframe').style.display='block';
+}
+function iframeError(){ document.getElementById('iframe-loading').classList.remove('active'); }
+function reloadIframe(){
+  var iframe=document.getElementById('main-iframe');
+  if(iframe.src){
+    document.getElementById('iframe-loading').classList.add('active');
+    iframe.style.display='none';
+    iframe.src=iframe.src;
+  }
+}
+
+function goHome(){
+  var iframeView=document.getElementById('iframe-view');
+  var homeView=document.getElementById('home-view');
+  iframeView.classList.remove('active');
+  homeView.style.display='flex';
+  document.getElementById('main-iframe').src='';
+
+  document.querySelectorAll('.side-btn').forEach(function(b){b.classList.remove('active');});
+  var hb=document.getElementById('sb-home'); if(hb) hb.classList.add('active');
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  var ft=document.querySelector('.tab'); if(ft) ft.classList.add('active');
+
+  /* ---- RESTORE MOBILE NORMAL MODE ---- */
+  document.body.classList.remove('iframe-open');
+  document.documentElement.style.overflow = '';
+
+  window.scrollTo(0,0);
+}
+
+function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawer-overlay').classList.add('open');}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawer-overlay').classList.remove('open');}
+function setBn(el){document.querySelectorAll('.bn-item').forEach(function(i){i.classList.remove('active');});el.classList.add('active');}
+
+/* ====== HERO SLIDER ====== */
+var heroSlides=[
+  {img:'https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg',
+   title:'دوره‌های جدید رشد فردی',desc:'مجموعه‌ای تازه از دوره‌های تخصصی قانون جذب، تقویت باور و تغییر رفتار.',
+   status:'ظرفیت باز',cta:'مشاهده دوره‌ها',url:'https://planlife.ir/Pages/Doreha/dore.html',urlTitle:'دوره‌ها',btnId:'sb-courses'},
+  {img:'https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png',
+   title:'پادکست‌های رایگان',desc:'قسمت‌های تازه درباره قانون جذب و تغییر افکار، هر هفته منتشر می‌شود.',
+   status:'قسمت جدید',cta:'شنیدن پادکست‌ها',url:'https://planlife.ir/Pages/podcasts_free/index.html',urlTitle:'پادکست رایگان',btnId:'sb-podcast'},
+  {img:'http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png',
+   title:'پاکسازی ذهن از افکار منفی',desc:'یک تمرین هدایت‌شده برای رها کردن افکار منفی و بازسازی باورهای تازه.',
+   status:'۱۰ دقیقه',cta:'شروع پاکسازی ذهن',url:'https://planlife.ir/Pages/paksazi/index.html',urlTitle:'پاکسازی ذهنی',btnId:null}
+];
+var heroIdx=0;
+function renderHero(){
+  var s=heroSlides[heroIdx];
+  document.getElementById('hero-img').src=s.img;
+  document.getElementById('hero-title').textContent=s.title;
+  document.getElementById('hero-desc').textContent=s.desc;
+  document.getElementById('hero-status').textContent=s.status;
+  document.getElementById('hero-cta').textContent=s.cta;
+  document.getElementById('hero-cta').onclick=function(){navigateSide(s.url,s.btnId,s.urlTitle);};
+  document.querySelector('.hero-creator .other').onclick=function(){navigateSide(s.url,s.btnId,s.urlTitle);};
+}
+function heroNav(dir){ heroIdx=(heroIdx+dir+heroSlides.length)%heroSlides.length; renderHero(); }
+function heroTab(el){ document.querySelectorAll('.hero-tab').forEach(function(t){t.classList.remove('active');}); el.classList.add('active'); }
+
+var countdownSec=2*3600+59*60+59;
+function toFa(n){ return String(n).padStart(2,'0').replace(/[0-9]/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[d];}); }
+setInterval(function(){
+  countdownSec--; if(countdownSec<0) countdownSec=3*3600;
+  var h=Math.floor(countdownSec/3600),m=Math.floor((countdownSec%3600)/60),s=countdownSec%60;
+  document.getElementById('hero-countdown').textContent=toFa(h)+':'+toFa(m)+':'+toFa(s);
+},1000);
+
+/* ====== ASSISTANT CHAT ====== */
+var QA_URL="https://raw.githubusercontent.com/soheil001/planlife1/main/qa.json";
+var qaData=null;
+function loadQA(){ return fetch(QA_URL+"?t="+Date.now()).then(function(r){return r.json();}).then(function(d){qaData=d;}).catch(function(){}); }
+function normalize(t){ return t.toLowerCase().replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/‌/g,' ').replace(/[،؟!٪]/g,' ').trim(); }
+function scoreEntry(entry,userWords,userText){
+  var score=0,expanded=userWords.slice();
+  if(qaData&&qaData.synonyms){
+    Object.keys(qaData.synonyms).forEach(function(k){
+      var forms=[k].concat(qaData.synonyms[k]).map(normalize);
+      if(userWords.some(function(w){return forms.indexOf(w)>=0;})) expanded=expanded.concat(forms);
+    });
+  }
+  entry.questions.forEach(function(q){
+    var nq=normalize(q);
+    if(nq===normalize(userText)){score+=1000;return;}
+    if(normalize(userText).indexOf(nq)>=0||nq.indexOf(normalize(userText))>=0) score+=80;
+  });
+  var allQWords=entry.questions.map(function(q){return normalize(q);}).join(' ').split(/\s+/);
+  var tagWords=(entry.tags||[]).map(function(t){return normalize(t);});
+  expanded.forEach(function(w){
+    if(w.length<2)return;
+    if(allQWords.some(function(qw){return qw.indexOf(w)>=0||w.indexOf(qw)>=0;})) score+=15;
+    if(tagWords.some(function(tw){return tw.indexOf(w)>=0||w.indexOf(tw)>=0;})) score+=20;
+  });
+  return score;
+}
+function findAnswer(userText){
+  if(!qaData||!qaData.qa) return null;
+  var words=normalize(userText).split(/\s+/).filter(function(w){return w.length>1;});
+  var best=0,ans=null;
+  qaData.qa.forEach(function(e){var s=scoreEntry(e,words,userText);if(s>best){best=s;ans=e.answer;}});
+  return best>=15?ans:(qaData.default_response||null);
+}
+function addMessage(text,type){
+  var out=document.getElementById('chat-output');
+  var div=document.createElement('div');
+  div.className=type==='user'?'msg-user':'msg-bot';
+  div.innerHTML=text.replace(/\n/g,'<br>');
+  out.appendChild(div);out.scrollTop=out.scrollHeight;
+}
+function showThinking(){
+  var out=document.getElementById('chat-output');
+  var div=document.createElement('div');
+  div.className='msg-bot';div.id='thinking-indicator';
+  div.innerHTML='<div class="thinking-dots">در حال فکر کردن <span>.</span><span>.</span><span>.</span></div>';
+  out.appendChild(div);out.scrollTop=out.scrollHeight;
+}
+function removeThinking(){var el=document.getElementById('thinking-indicator');if(el)el.remove();}
+var isSending=false;
+function sendMessage(){
+  if(isSending)return;
+  var input=document.getElementById('user-input');
+  var text=input.value.trim();
+  if(!text)return;
+  isSending=true;input.disabled=true;
+  addMessage(text,'user');input.value='';
+  showThinking();
+  setTimeout(function(){
+    removeThinking();
+    var answer=findAnswer(text);
+    var reply=answer||'سوال جالبیه! می‌تونی از کاردها بالا هم کمک بگیری یا سوالت رو جور دیگه‌ای بپرسی 😊';
+    addMessage(reply,'bot');
+    input.disabled=false;input.focus();isSending=false;
+  },900);
+}
+
+/* ====== FINANCE PROGRESS WIDGET ====== */
+var _fpEntries=[];
+var _fpFilter='morning';
+
+function toFaNum(n){ return String(Math.round(n)).replace(/[0-9]/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[d];}); }
+
+async function loadProgressData(){
+  if(!currentUser) return;
+  try {
+    var now = new Date().toISOString();
+    var res = await sb.from('exercise_entries').select('entry_type, created_at').eq('user_id', currentUser.id).gt('expires_at', now).order('created_at',{ascending:false});
+    _fpEntries = (res.data||[]).map(function(r){ return {type: r.entry_type, ts: new Date(r.created_at).getTime()}; });
+    fpRenderWidget();
+  } catch(e){}
+}
+
+function fpResetWidget(){ _fpEntries=[]; fpRenderWidget(); }
+function fpGetFiltered(filter){ if(filter==='all') return _fpEntries; return _fpEntries.filter(function(e){return e.type===filter;}); }
+
+function fpRenderWidget(){
+  var entries=fpGetFiltered(_fpFilter);
+  var now=Date.now(),weekMs=7*24*60*60*1000;
+  var thisWeek=entries.filter(function(e){return e.ts>=now-weekMs;}).length;
+  var lastWeek=entries.filter(function(e){return e.ts>=now-2*weekMs&&e.ts<now-weekMs;}).length;
+  var pct=lastWeek>0?Math.round((thisWeek-lastWeek)/lastWeek*100):(thisWeek>0?100:0);
+  var numEl=document.getElementById('fp-num'),badgeEl=document.getElementById('fp-badge'),decEl=document.getElementById('fp-dec');
+  if(numEl) numEl.textContent=toFaNum(thisWeek);
+  if(decEl) decEl.textContent='تمرین';
+  if(badgeEl){ badgeEl.textContent=(pct>=0?'+':'')+toFaNum(Math.abs(pct))+'٪'; badgeEl.className='fp-badge'+(pct<0?' negative':''); }
+  fpDrawChart(entries);
+}
+
+function fpDrawChart(entries){
+  var canvas=document.getElementById('fp-canvas');
+  if(!canvas) return;
+  var W=canvas.offsetWidth||240;
+  canvas.width=W; canvas.height=66;
+  var ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,66);
+  var days=7,counts=new Array(days).fill(0),now=Date.now();
+  entries.forEach(function(e){ var d=Math.floor((now-e.ts)/(24*60*60*1000)); if(d>=0&&d<days) counts[days-1-d]++; });
+  var maxC=Math.max.apply(null,counts)||1;
+  var pts=counts.map(function(c,i){ return {x:i*(W/(days-1)),y:56-(c/maxC)*44}; });
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x,pts[0].y);
+  for(var i=1;i<pts.length;i++){ var cpx=(pts[i-1].x+pts[i].x)/2; ctx.bezierCurveTo(cpx,pts[i-1].y,cpx,pts[i].y,pts[i].x,pts[i].y); }
+  ctx.lineTo(pts[pts.length-1].x,66);ctx.lineTo(pts[0].x,66);ctx.closePath();
+  var fillGrad=ctx.createLinearGradient(0,0,0,66);
+  fillGrad.addColorStop(0,'rgba(61,220,132,.22)');fillGrad.addColorStop(1,'rgba(61,220,132,.01)');
+  ctx.fillStyle=fillGrad;ctx.fill();
+  ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
+  for(var j=1;j<pts.length;j++){ var cx=(pts[j-1].x+pts[j].x)/2; ctx.bezierCurveTo(cx,pts[j-1].y,cx,pts[j].y,pts[j].x,pts[j].y); }
+  var lineGrad=ctx.createLinearGradient(0,0,W,0);
+  lineGrad.addColorStop(0,'#3ddc84');lineGrad.addColorStop(1,'#c8f04a');
+  ctx.strokeStyle=lineGrad;ctx.lineWidth=2.2;ctx.lineJoin='round';ctx.stroke();
+  var lp=pts[pts.length-1];
+  ctx.beginPath();ctx.arc(lp.x,lp.y,4.5,0,Math.PI*2);ctx.fillStyle='#c8f04a';ctx.fill();
+  ctx.beginPath();ctx.arc(lp.x,lp.y,7,0,Math.PI*2);ctx.fillStyle='rgba(200,240,74,.18)';ctx.fill();
+  canvas._pts=pts;canvas._counts=counts;
+}
+
+(function(){
+  var canvas,dot,label;
+  function setup(){
+    canvas=document.getElementById('fp-canvas');dot=document.getElementById('fp-hover-dot');label=document.getElementById('fp-hover-label');
+    if(!canvas||!dot||!label) return;
+    canvas.addEventListener('mousemove',onMove);canvas.addEventListener('mouseleave',onLeave);
+    canvas.addEventListener('touchmove',function(e){e.preventDefault();onMove(e.touches[0]);},{passive:false});
+    canvas.addEventListener('touchend',onLeave);
+  }
+  function onMove(e){
+    if(!canvas._pts) return;
+    var rect=canvas.getBoundingClientRect();
+    var mx=(e.clientX-rect.left)*(canvas.width/rect.width);
+    var nearest=canvas._pts.reduce(function(best,p,i){return Math.abs(p.x-mx)<Math.abs(best.p.x-mx)?{p,i}:best;},{p:canvas._pts[0],i:0});
+    var p=nearest.p,i=nearest.i;
+    var scaleX=rect.width/canvas.width,scaleY=rect.height/canvas.height;
+    dot.style.display='block';dot.style.left=(p.x*scaleX)+'px';dot.style.top=(p.y*scaleY)+'px';
+    var count=canvas._counts?canvas._counts[i]:0;
+    var dayLabels=['ش','ی','د','س','چ','پ','ج'];
+    var today=new Date().getDay();var dayIdx=(today-(6-i)+7)%7;
+    label.style.display='block';label.style.left=(p.x*scaleX)+'px';label.style.top=(p.y*scaleY)+'px';
+    label.textContent=dayLabels[dayIdx]+' | '+toFaNum(count)+' تمرین';
+  }
+  function onLeave(){ if(dot)dot.style.display='none'; if(label)label.style.display='none'; }
+  document.addEventListener('DOMContentLoaded',setup);
+})();
+
+function fpSwitchChip(el,filter){
+  document.querySelectorAll('.fp-chip').forEach(function(c){c.classList.remove('active');});
+  el.classList.add('active');_fpFilter=filter;fpRenderWidget();
+}
+
+window.addEventListener('resize',function(){ fpRenderWidget(); });
+
+/* ====== PROGRESS POPUP ====== */
+function openProgressOverlay(){
+  var ov=document.getElementById('progress-overlay');
+  ov.classList.add('active');document.body.style.overflow='hidden';
+  renderProgressPopup();
+}
+function closeProgressOverlay(){ document.getElementById('progress-overlay').classList.remove('active');document.body.style.overflow=''; }
+function handleProgressOverlay(e){ if(e.target===document.getElementById('progress-overlay')) closeProgressOverlay(); }
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeProgressOverlay(); });
+
+function renderProgressPopup(){
+  var counts={morning:0,night:0,events:0,gratitude:0};
+  _fpEntries.forEach(function(e){if(counts[e.type]!==undefined) counts[e.type]++;});
+  document.getElementById('pp-morning').textContent=toFaNum(counts.morning);
+  document.getElementById('pp-night').textContent=toFaNum(counts.night);
+  document.getElementById('pp-events').textContent=toFaNum(counts.events);
+  document.getElementById('pp-grat').textContent=toFaNum(counts.gratitude);
+  drawPopupBarChart();drawPopupDistBars(counts);
+}
+
+function drawPopupBarChart(){
+  var canvas=document.getElementById('ps-bar-canvas');
+  if(!canvas) return;
+  var W=canvas.parentElement.clientWidth-32;
+  canvas.width=W;canvas.height=110;
+  var ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,110);
+  var days=7,now=Date.now(),counts=new Array(days).fill(0);
+  _fpEntries.forEach(function(e){ var d=Math.floor((now-e.ts)/(24*60*60*1000)); if(d>=0&&d<days) counts[days-1-d]++; });
+  var dayNames=['ش','ی','د','س','چ','پ','ج'];
+  var today=new Date().getDay();
+  var labelsEl=document.getElementById('ps-day-labels');
+  if(labelsEl){ labelsEl.innerHTML=''; for(var li=0;li<days;li++){ var sp=document.createElement('span'); sp.textContent=dayNames[(today-(days-1-li)+7)%7]; labelsEl.appendChild(sp); } }
+  var maxC=Math.max.apply(null,counts)||1;
+  var barW=Math.floor((W-20)/(days*1.6));
+  var gap=Math.floor((W-20-barW*days)/(days-1));
+  counts.forEach(function(c,i){
+    var x=10+i*(barW+gap),h=c?Math.max(10,(c/maxC)*82):4,y=96-h,r=Math.min(barW/2,6);
+    ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+barW,y,x+barW,y+h,r);ctx.lineTo(x+barW,y+h);ctx.lineTo(x,y+h);ctx.arcTo(x,y,x+barW,y,r);ctx.closePath();
+    var g=ctx.createLinearGradient(0,y,0,y+h);
+    if(c===maxC&&c>0){g.addColorStop(0,'#c8f04a');g.addColorStop(1,'rgba(200,240,74,.2)');}
+    else{g.addColorStop(0,'#3a70ff');g.addColorStop(1,'rgba(58,112,255,.2)');}
+    ctx.fillStyle=g;ctx.fill();
+  });
+}
+
+function drawPopupDistBars(counts){
+  var total=Object.values(counts).reduce(function(a,b){return a+b;},0)||1;
+  var types=[
+    {lbl:'🌅 صبح',key:'morning',color:'#3ddc84'},
+    {lbl:'🌙 شب',key:'night',color:'#60a5fa'},
+    {lbl:'✨ اتفاقات',key:'events',color:'#fbbf24'},
+    {lbl:'🙏 شکرگذاری',key:'gratitude',color:'#f472b6'},
+  ];
+  var el=document.getElementById('ps-dist-bars');
+  if(!el) return;
+  el.innerHTML='';
+  types.forEach(function(t){
+    var pct=Math.round(counts[t.key]/total*100);
+    var row=document.createElement('div');row.className='ps-dist-row';
+    row.innerHTML='<div class="ps-dist-lbl">'+t.lbl+'</div><div class="ps-dist-track"><div class="ps-dist-fill" style="width:'+pct+'%;background:'+t.color+';"></div></div><div class="ps-dist-count">'+toFaNum(counts[t.key])+'</div>';
+    el.appendChild(row);
+  });
+}
+
+/* ====== INIT ====== */
+window.onload=function(){
+  loadQA().then(function(){
+    addMessage('به PlanLife خوش اومدی 🌟 هر سوالی درباره قانون جذب و رشد فردی داری بپرس!','bot');
+  });
+  renderHero();
+  initAuth();
+  fpRenderWidget();
+};
+</script>
+</body>
+</html>
