@@ -297,10 +297,8 @@ img{display:block;max-width:100%;}
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:14px;
-  /* بدون padding — grid مستقیماً روی background قرار می‌گیره */
 }
 
-/* هر کارت یه box سفید کاملاً مجزا روی background خاکستری */
 .card{
   background:#ffffff;
   border:none;
@@ -315,7 +313,6 @@ img{display:block;max-width:100%;}
   transform:translateY(-3px);
 }
 
-/* Cover image — taller, more impactful like NFT cards */
 .card .thumb{
   position:relative;border-radius:12px;overflow:hidden;
   aspect-ratio:1/0.88;background:#eef0f3;
@@ -334,7 +331,6 @@ img{display:block;max-width:100%;}
 .card .price{font-size:11px;color:var(--muted);padding:0 2px;}
 .card .price b{color:var(--ink);font-weight:700;}
 
-/* Buttons — like NFT "History" / "Buy Now" */
 .card .btn-row{display:flex;gap:7px;margin-top:2px;}
 .card .btn-row a,.card .btn-row button,.card .btn-row span{
   flex:1;text-align:center;font-size:11.5px;font-weight:700;padding:9px 0;border-radius:9px;
@@ -345,7 +341,6 @@ img{display:block;max-width:100%;}
 .card .btn-row .primary{background:var(--blue);border-color:var(--blue);color:#fff;}
 .card .btn-row .primary:hover{background:var(--blue-ink);}
 
-/* Mind coding special thumb */
 .mind-thumb{
   aspect-ratio:1/0.88;border-radius:12px;background:#04120a;position:relative;overflow:hidden;
   display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;
@@ -447,7 +442,7 @@ img{display:block;max-width:100%;}
 .drawer h2{font-size:16px;font-weight:800;margin-bottom:16px;}
 .drawer-item{display:block;padding:12px 14px;border-radius:12px;font-size:13.5px;font-weight:700;margin-bottom:6px;background:var(--hair);}
 
-/* ===== SUBSCRIPTION MODAL ===== */
+/* ===== AUTH MODAL ===== */
 #subscription-overlay{position:fixed;inset:0;background:rgba(18,20,28,.6);backdrop-filter:blur(6px);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.3s;}
 #subscription-overlay.visible{opacity:1;pointer-events:auto;}
 .sub-modal{width:calc(100% - 48px);max-width:320px;background:#fff;border-radius:22px;padding:24px 22px;text-align:center;box-shadow:0 30px 70px rgba(0,0,0,.35);}
@@ -462,6 +457,16 @@ img{display:block;max-width:100%;}
 .sub-enter{background:var(--blue);color:#fff;}
 .sub-buy{background:var(--hair);color:var(--ink);}
 .sub-close{background:none;color:var(--muted);}
+.auth-toggle{display:flex;gap:6px;background:var(--hair);border-radius:999px;padding:4px;margin-bottom:16px;}
+.auth-toggle button{flex:1;background:none;border:none;padding:9px 0;border-radius:999px;font-size:12.5px;font-weight:700;color:var(--muted);cursor:pointer;transition:.15s;}
+.auth-toggle button.active{background:#fff;color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.auth-error{font-size:11.5px;color:var(--red);margin:-8px 0 12px;text-align:right;display:none;}
+.auth-error.show{display:block;}
+.auth-loading{font-size:12px;color:var(--muted);margin-bottom:10px;display:none;}
+.auth-loading.show{display:block;}
+.user-chip{display:flex;align-items:center;gap:8px;}
+.user-chip .u-name{font-size:12.5px;font-weight:700;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.user-chip .logout-x{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;}
 
 /* ===== BOTTOM NAV (mobile) ===== */
 .bottom-nav{display:none;}
@@ -528,19 +533,18 @@ img{display:block;max-width:100%;}
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#6b7280" stroke-width="2"/><path d="M21 21L16.65 16.65" stroke="#6b7280" stroke-width="2" stroke-linecap="round"/></svg>
       <input placeholder="جستجوی تمرین، دوره یا مقاله...">
     </div>
-    <button class="login-btn" onclick="openSubscriptionModal('ورود')">
+    <button class="login-btn" id="auth-btn" onclick="openSubscriptionModal()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 12C14.2 12 16 10.2 16 8C16 5.8 14.2 4 12 4C9.8 4 8 5.8 8 8C8 10.2 9.8 12 12 12Z" stroke="white" stroke-width="1.8"/><path d="M4 20C4 16.7 7.6 14 12 14C16.4 14 20 16.7 20 20" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
-      <span>ورود</span>
+      <span id="auth-btn-label">ورود</span>
     </button>
   </div>
 
   <!-- LAYOUT -->
   <div class="layout">
 
-    <!-- SIDEBAR با لوگو + hover شناور -->
+    <!-- SIDEBAR -->
     <aside class="sidebar">
 
-      <!-- Logo در بالای sidebar -->
       <div class="sidebar-logo" onclick="goHome()" title="خانه">
         <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
       </div>
@@ -582,7 +586,7 @@ img{display:block;max-width:100%;}
       <div class="side-gap"></div>
 
       <button class="side-plus" title="پیشنهاد امروز" onclick="navigateSide('https://planlife.ir/Pages/paksazi/index.html', null, 'پاکسازی ذهنی')">+</button>
-      <div class="side-avatar" onclick="openSubscriptionModal('ورود')"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="پروفایل"></div>
+      <div class="side-avatar" id="side-avatar" onclick="openSubscriptionModal()"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="پروفایل"></div>
     </aside>
 
     <!-- MAIN COLUMN -->
@@ -634,7 +638,7 @@ img{display:block;max-width:100%;}
           </div>
         </div>
 
-        <!-- SERVICES GRID — header card جداگانه، کارت‌ها مستقیم روی bg -->
+        <!-- SERVICES GRID -->
         <div class="section-card" style="padding:16px 18px;">
           <div class="section-head">
             <div style="display:flex;align-items:baseline;gap:6px;">
@@ -646,7 +650,6 @@ img{display:block;max-width:100%;}
 
         </div><!-- /section-card header -->
 
-        <!-- کارت‌ها مستقیم روی background بدون wrapper -->
         <div class="cards-grid">
 
             <div class="card">
@@ -746,8 +749,8 @@ img{display:block;max-width:100%;}
               <h3>ترک عادت</h3>
               <div class="price">نیازمند اشتراک</div>
               <div class="btn-row">
-                <span onclick="openSubscriptionModal('ترک عادت')">درباره</span>
-                <span class="primary" onclick="openSubscriptionModal('ترک عادت')">ورود</span>
+                <span onclick="openLockedContent('ترک عادت')">درباره</span>
+                <span class="primary" onclick="openLockedContent('ترک عادت')">ورود</span>
               </div>
             </div>
 
@@ -756,8 +759,8 @@ img{display:block;max-width:100%;}
               <h3>نقشه راه</h3>
               <div class="price">نیازمند اشتراک</div>
               <div class="btn-row">
-                <span onclick="openSubscriptionModal('نقشه ی راه')">درباره</span>
-                <span class="primary" onclick="openSubscriptionModal('نقشه ی راه')">ورود</span>
+                <span onclick="openLockedContent('نقشه ی راه')">درباره</span>
+                <span class="primary" onclick="openLockedContent('نقشه ی راه')">ورود</span>
               </div>
             </div>
 
@@ -776,8 +779,8 @@ img{display:block;max-width:100%;}
               <h3>تمرینات تخصصی</h3>
               <div class="price">نیازمند اشتراک</div>
               <div class="btn-row">
-                <span onclick="openSubscriptionModal('تمرینات تخصصی')">درباره</span>
-                <span class="primary" onclick="openSubscriptionModal('تمرینات تخصصی')">ورود</span>
+                <span onclick="openLockedContent('تمرینات تخصصی')">درباره</span>
+                <span class="primary" onclick="openLockedContent('تمرینات تخصصی')">ورود</span>
               </div>
             </div>
 
@@ -786,8 +789,8 @@ img{display:block;max-width:100%;}
               <h3>چک‌لیست روزانه 📜</h3>
               <div class="price">نیازمند اشتراک</div>
               <div class="btn-row">
-                <span onclick="openSubscriptionModal('چک لیست روزانه')">درباره</span>
-                <span class="primary" onclick="openSubscriptionModal('چک لیست روزانه')">ورود</span>
+                <span onclick="openLockedContent('چک لیست روزانه')">درباره</span>
+                <span class="primary" onclick="openLockedContent('چک لیست روزانه')">ورود</span>
               </div>
             </div>
 
@@ -925,30 +928,207 @@ img{display:block;max-width:100%;}
   <a class="drawer-item" href="javascript:void(0)" onclick="navigateSide('https://planlife.ir/Pages/visionboard/index.html',null,'تابلو آرزوها');closeDrawer()">تابلو آرزوها 🔖</a>
   <a class="drawer-item" href="javascript:void(0)" onclick="navigateSide('https://planlife.ir/Pages/Book/index.html','sb-book','کتابخانه');closeDrawer()">کتابخانه 📚</a>
   <a class="drawer-item" href="javascript:void(0)" onclick="navigateSide('https://planlife.ir/Pages/komakavaliye/index.html',null,'جعبه کمک‌های اولیه');closeDrawer()">جعبه کمک‌های اولیه</a>
-  <a class="drawer-item" href="javascript:void(0)" onclick="openSubscriptionModal('ترک عادت');closeDrawer()">ترک عادت</a>
-  <a class="drawer-item" href="javascript:void(0)" onclick="openSubscriptionModal('نقشه ی راه');closeDrawer()">نقشه راه</a>
+  <a class="drawer-item" href="javascript:void(0)" onclick="openLockedContent('ترک عادت');closeDrawer()">ترک عادت</a>
+  <a class="drawer-item" href="javascript:void(0)" onclick="openLockedContent('نقشه ی راه');closeDrawer()">نقشه راه</a>
   <a class="drawer-item" href="javascript:void(0)" onclick="navigateSide('https://planlife.ir/Pages/Music/index.html',null,'موزیک‌ها');closeDrawer()">موزیک‌ها</a>
-  <a class="drawer-item" href="javascript:void(0)" onclick="openSubscriptionModal('تمرینات تخصصی');closeDrawer()">تمرینات تخصصی</a>
-  <a class="drawer-item" href="javascript:void(0)" onclick="openSubscriptionModal('چک لیست روزانه');closeDrawer()">چک‌لیست روزانه 📜</a>
+  <a class="drawer-item" href="javascript:void(0)" onclick="openLockedContent('تمرینات تخصصی');closeDrawer()">تمرینات تخصصی</a>
+  <a class="drawer-item" href="javascript:void(0)" onclick="openLockedContent('چک لیست روزانه');closeDrawer()">چک‌لیست روزانه 📜</a>
 </div>
 
-<!-- SUBSCRIPTION MODAL -->
+<!-- AUTH MODAL -->
 <div id="subscription-overlay" onclick="handleSubOverlay(event)">
-  <div class="sub-modal">
+  <div class="sub-modal" onclick="event.stopPropagation()">
     <span class="ic">🔐</span>
-    <h3>تأیید دسترسی</h3>
-    <p>این بخش مخصوص اعضای دوره است. کد اشتراک خودت رو وارد کن.</p>
-    <label>کد اشتراک</label>
-    <input type="password" id="subscription-code" placeholder="کد را وارد کنید">
+    <h3 id="auth-title">ورود به حساب کاربری</h3>
+    <p id="auth-desc">با ایمیل و رمز عبورت وارد شو یا یه حساب جدید بساز.</p>
+
+    <div class="auth-toggle">
+      <button id="tab-login" class="active" onclick="switchAuthTab('login')">ورود</button>
+      <button id="tab-signup" onclick="switchAuthTab('signup')">ثبت‌نام</button>
+    </div>
+
+    <label>ایمیل</label>
+    <input type="email" id="auth-email" placeholder="you@example.com" autocomplete="email">
+
+    <label>رمز عبور</label>
+    <input type="password" id="auth-password" placeholder="حداقل ۶ کاراکتر" autocomplete="current-password">
+
+    <div class="auth-error" id="auth-error"></div>
+    <div class="auth-loading" id="auth-loading">در حال ارسال...</div>
+
     <div class="row">
-      <button class="sub-enter" onclick="verifySubscription()">ورود</button>
-      <button class="sub-buy" onclick="goToCourses()">خرید دوره</button>
+      <button class="sub-enter" id="auth-submit-btn" onclick="submitAuth()">ورود</button>
       <button class="sub-close" onclick="closeSubscriptionModal()">بستن</button>
     </div>
   </div>
 </div>
 
+<!-- Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+/* ===================== SUPABASE SETUP ===================== */
+var SUPABASE_URL = 'https://hjzzvzxhrqovvducnxha.supabase.co';
+var SUPABASE_KEY = 'sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
+var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+var currentUser = null;
+var currentProfile = null;
+var authMode = 'login'; // 'login' or 'signup'
+var pendingLockedTitle = ''; // which locked card the user tried to open
+
+/* Locked pages map (kept for after-login redirect) */
+var PAGE_LINKS = {
+  'ترک عادت': 'https://planlife.ir/Pages/ranj-lezat/index.html',
+  'نقشه ی راه': 'https://planlife.ir/Pages/naghsherah/index.html',
+  'تمرینات تخصصی': 'https://planlife.ir/Pages/tamrintakhasosi/index.html',
+  'چک لیست روزانه': 'https://planlife.ir/Pages/cheklist/index.html'
+};
+
+/* Check session on load */
+async function initAuth(){
+  var { data } = await sb.auth.getSession();
+  if (data.session) {
+    currentUser = data.session.user;
+    await loadProfile();
+  }
+  updateAuthUI();
+
+  sb.auth.onAuthStateChange(function(event, session){
+    currentUser = session ? session.user : null;
+    if (currentUser) { loadProfile().then(updateAuthUI); }
+    else { currentProfile = null; updateAuthUI(); }
+  });
+}
+
+async function loadProfile(){
+  if(!currentUser) return;
+  var { data, error } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+  if (!error) currentProfile = data;
+}
+
+function updateAuthUI(){
+  var label = document.getElementById('auth-btn-label');
+  var avatarImg = document.querySelector('#side-avatar img');
+  if (currentUser) {
+    label.textContent = (currentUser.email || 'حساب من').split('@')[0];
+    document.getElementById('auth-btn').onclick = function(){ openAccountMenu(); };
+    document.getElementById('side-avatar').onclick = function(){ openAccountMenu(); };
+  } else {
+    label.textContent = 'ورود';
+    document.getElementById('auth-btn').onclick = function(){ openSubscriptionModal(); };
+    document.getElementById('side-avatar').onclick = function(){ openSubscriptionModal(); };
+  }
+}
+
+function openAccountMenu(){
+  var msg = currentUser.email + '\n\nوضعیت اشتراک: ' + (currentProfile && currentProfile.subscription_status === 'premium' ? 'ویژه ✅' : 'رایگان') + '\n\nخروج از حساب؟';
+  if (confirm(msg)) {
+    sb.auth.signOut().then(function(){ updateAuthUI(); goHome(); });
+  }
+}
+
+/* ===================== AUTH MODAL ===================== */
+function openSubscriptionModal(){
+  pendingLockedTitle = '';
+  document.getElementById('auth-error').classList.remove('show');
+  document.getElementById('subscription-overlay').classList.add('visible');
+  document.getElementById('auth-email').value = '';
+  document.getElementById('auth-password').value = '';
+  switchAuthTab('login');
+}
+function closeSubscriptionModal(){
+  document.getElementById('subscription-overlay').classList.remove('visible');
+}
+function handleSubOverlay(e){ if(e.target===document.getElementById('subscription-overlay')) closeSubscriptionModal(); }
+
+function switchAuthTab(mode){
+  authMode = mode;
+  document.getElementById('tab-login').classList.toggle('active', mode==='login');
+  document.getElementById('tab-signup').classList.toggle('active', mode==='signup');
+  document.getElementById('auth-submit-btn').textContent = mode==='login' ? 'ورود' : 'ساخت حساب';
+  document.getElementById('auth-title').textContent = mode==='login' ? 'ورود به حساب کاربری' : 'ساخت حساب جدید';
+  document.getElementById('auth-error').classList.remove('show');
+}
+
+function showAuthError(msg){
+  var el = document.getElementById('auth-error');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+async function submitAuth(){
+  var email = document.getElementById('auth-email').value.trim();
+  var password = document.getElementById('auth-password').value;
+  document.getElementById('auth-error').classList.remove('show');
+
+  if(!email || !password){
+    showAuthError('ایمیل و رمز عبور رو وارد کن.');
+    return;
+  }
+  if(password.length < 6){
+    showAuthError('رمز عبور باید حداقل ۶ کاراکتر باشه.');
+    return;
+  }
+
+  document.getElementById('auth-loading').classList.add('show');
+  document.getElementById('auth-submit-btn').disabled = true;
+
+  var result;
+  if(authMode === 'login'){
+    result = await sb.auth.signInWithPassword({ email: email, password: password });
+  } else {
+    result = await sb.auth.signUp({ email: email, password: password });
+  }
+
+  document.getElementById('auth-loading').classList.remove('show');
+  document.getElementById('auth-submit-btn').disabled = false;
+
+  if(result.error){
+    showAuthError(translateAuthError(result.error.message));
+    return;
+  }
+
+  if(authMode === 'signup' && result.data.user && !result.data.session){
+    showAuthError('حساب ساخته شد! اگه تأیید ایمیل فعاله، ایمیلت رو چک کن.');
+    return;
+  }
+
+  currentUser = result.data.user;
+  await loadProfile();
+  updateAuthUI();
+  closeSubscriptionModal();
+
+  if(pendingLockedTitle){
+    var t = pendingLockedTitle;
+    pendingLockedTitle = '';
+    openLockedContent(t);
+  }
+}
+
+function translateAuthError(msg){
+  if(/Invalid login credentials/i.test(msg)) return 'ایمیل یا رمز عبور اشتباهه.';
+  if(/User already registered/i.test(msg)) return 'این ایمیل قبلاً ثبت‌نام شده. وارد شو.';
+  if(/Password should be/i.test(msg)) return 'رمز عبور باید حداقل ۶ کاراکتر باشه.';
+  return msg;
+}
+
+/* ===================== LOCKED CONTENT GATING ===================== */
+function openLockedContent(title){
+  if(!currentUser){
+    pendingLockedTitle = title;
+    openSubscriptionModal();
+    return;
+  }
+  if(currentProfile && currentProfile.subscription_status === 'premium'){
+    var link = PAGE_LINKS[title];
+    if(link) loadInIframe(link, title);
+    else loadInIframe('https://planlife.ir/Pages/Doreha/dore.html', 'دوره‌ها');
+  } else {
+    alert('این بخش نیاز به اشتراک ویژه داره. برای فعال‌سازی اشتراک با ما در ارتباط باش.');
+  }
+}
+
+/* ===================== EXISTING SITE LOGIC ===================== */
 var PAGE_ICONS = {
   'دوره‌ها': '📚','پادکست': '🎙️','پادکست رایگان': '🎙️','پادکست‌های رایگان': '🎙️',
   'کتابخانه': '📖','مجله ماورایی': '📰','کدنویسی ذهنی': '💻','پاکسازی ذهنی': '💭',
@@ -1030,39 +1210,6 @@ function goHome() {
 function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawer-overlay').classList.add('open');}
 function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawer-overlay').classList.remove('open');}
 function setBn(el){document.querySelectorAll('.bn-item').forEach(function(i){i.classList.remove('active');});el.classList.add('active');}
-
-var VALID_CODE = 'admin2933';
-var currentTargetPage = '';
-var PAGE_LINKS = {
-  'ترک عادت': 'https://planlife.ir/Pages/ranj-lezat/index.html',
-  'نقشه ی راه': 'https://planlife.ir/Pages/naghsherah/index.html',
-  'تمرینات تخصصی': 'https://planlife.ir/Pages/tamrintakhasosi/index.html',
-  'چک لیست روزانه': 'https://planlife.ir/Pages/cheklist/index.html'
-};
-function openSubscriptionModal(title){
-  currentTargetPage = title;
-  document.getElementById('subscription-overlay').classList.add('visible');
-  document.getElementById('subscription-code').value='';
-  document.getElementById('subscription-code').focus();
-}
-function closeSubscriptionModal(){
-  document.getElementById('subscription-overlay').classList.remove('visible');
-  currentTargetPage='';
-}
-function handleSubOverlay(e){ if(e.target===document.getElementById('subscription-overlay')) closeSubscriptionModal(); }
-function verifySubscription(){
-  var code = document.getElementById('subscription-code').value.trim();
-  if(code===VALID_CODE){
-    var link = PAGE_LINKS[currentTargetPage];
-    closeSubscriptionModal();
-    if(link) loadInIframe(link, currentTargetPage);
-    else loadInIframe('https://planlife.ir/Pages/Doreha/dore.html', 'دوره‌ها');
-  } else {
-    alert('کد اشتراک اشتباه است!');
-    document.getElementById('subscription-code').focus();
-  }
-}
-function goToCourses(){ closeSubscriptionModal(); loadInIframe('https://planlife.ir/Pages/Doreha/dore.html', 'دوره‌ها'); }
 
 var heroSlides = [
   {img:'https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg',
@@ -1179,6 +1326,7 @@ window.onload = function(){
     addMessage('به PlanLife خوش اومدی 🌟 هر سوالی درباره قانون جذب و رشد فردی داری بپرس!','bot');
   });
   renderHero();
+  initAuth();
 };
 </script>
 </body>
