@@ -280,8 +280,8 @@ img{display:block;max-width:100%;}
 /* ===== SECTION HEADER ===== */
 .section-head{
   display:flex;align-items:center;justify-content:space-between;
-  padding-bottom:14px;
-  border-bottom:1.5px solid #eaecf0;
+  padding-bottom:0;
+  border-bottom:none;
   margin-bottom:0;
 }
 .section-head h2{font-size:15.5px;font-weight:800;}
@@ -292,28 +292,27 @@ img{display:block;max-width:100%;}
   background:var(--hair);
 }
 
-/* ===== CARDS GRID — NFT marketplace style, cards separated with gap ===== */
+/* ===== CARDS GRID — float مستقیم روی bg-page ===== */
 .cards-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:16px;
-  padding-top:16px;
+  gap:14px;
+  /* بدون padding — grid مستقیماً روی background قرار می‌گیره */
 }
 
-/* Each card is its own standalone white box — like NFT marketplace */
+/* هر کارت یه box سفید کاملاً مجزا روی background خاکستری */
 .card{
-  background:var(--section);
-  border:1.5px solid rgba(0,0,0,0.07);
+  background:#ffffff;
+  border:none;
   border-radius:var(--radius-lg);
   padding:10px 10px 12px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+  box-shadow:0 2px 10px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.05);
   display:flex;flex-direction:column;gap:9px;
-  transition:.2s;
+  transition:.22s cubic-bezier(.25,.8,.25,1);
 }
 .card:hover{
-  box-shadow:0 8px 24px rgba(0,0,0,.12), 0 0 0 1.5px rgba(47,111,237,.18);
-  transform:translateY(-2px);
-  border-color:rgba(47,111,237,.2);
+  box-shadow:0 10px 28px rgba(0,0,0,.13), 0 0 0 1.5px rgba(47,111,237,.22);
+  transform:translateY(-3px);
 }
 
 /* Cover image — taller, more impactful like NFT cards */
@@ -472,7 +471,7 @@ img{display:block;max-width:100%;}
    =================================================== */
 @media (max-width:1100px){
   .right-col{width:265px;}
-  .cards-grid{grid-template-columns:repeat(2,1fr);}
+  .cards-grid{grid-template-columns:repeat(2,1fr);gap:12px;}
 }
 @media (max-width:960px){
   body{padding:0;}
@@ -499,6 +498,7 @@ img{display:block;max-width:100%;}
 }
 @media (max-width:480px){
   .cards-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .cards-grid .card{border-radius:var(--radius-md);}
   .login-btn span{display:none;}
   .login-btn{padding:10px;border-radius:12px;}
   .hero-title{font-size:17px;}
@@ -634,8 +634,8 @@ img{display:block;max-width:100%;}
           </div>
         </div>
 
-        <!-- SERVICES GRID — section-card wrapper only for header, cards float freely -->
-        <div class="section-card" style="padding-bottom:4px;">
+        <!-- SERVICES GRID — header card جداگانه، کارت‌ها مستقیم روی bg -->
+        <div class="section-card" style="padding:16px 18px;">
           <div class="section-head">
             <div style="display:flex;align-items:baseline;gap:6px;">
               <h2>همه سرویس‌ها</h2>
@@ -644,7 +644,10 @@ img{display:block;max-width:100%;}
             <div class="sort">امروز ▾</div>
           </div>
 
-          <div class="cards-grid">
+        </div><!-- /section-card header -->
+
+        <!-- کارت‌ها مستقیم روی background بدون wrapper -->
+        <div class="cards-grid">
 
             <div class="card">
               <div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست رایگان"><span class="badge">رایگان</span></div>
@@ -788,8 +791,7 @@ img{display:block;max-width:100%;}
               </div>
             </div>
 
-          </div><!-- /cards-grid -->
-        </div><!-- /section-card -->
+        </div><!-- /cards-grid -->
 
       </div><!-- /home-view -->
 
