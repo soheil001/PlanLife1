@@ -32,7 +32,6 @@ button{font-family:inherit;}
 a{color:inherit;text-decoration:none;}
 img{display:block;max-width:100%;}
 
-/* PAGE SHELL — just a container, transparent bg */
 .shell{
   max-width:1300px;
   margin:0 auto;
@@ -87,23 +86,48 @@ img{display:block;max-width:100%;}
 
 /* ===== SIDEBAR ===== */
 .sidebar{
-  width:68px;flex-shrink:0;
+  width:72px;flex-shrink:0;
   background:var(--section);
   border-radius:var(--radius-xl);
   box-shadow:var(--section-shadow);
   display:flex;flex-direction:column;align-items:center;
-  gap:8px;padding:14px 0 12px;
+  gap:4px;padding:12px 0 12px;
   position:sticky;top:calc(16px);
 }
-.side-btn{
+
+/* logo in sidebar */
+.sidebar-logo{
+  width:42px;height:42px;border-radius:12px;overflow:hidden;
+  margin-bottom:8px;cursor:pointer;
+}
+.sidebar-logo img{width:100%;height:100%;object-fit:cover;}
+
+.side-divider{width:32px;height:1.5px;background:var(--hair);border-radius:2px;margin:4px 0;}
+
+/* Floating hover pill — wraps each button */
+.side-item{
+  position:relative;
+  width:100%;
+  display:flex;
+  justify-content:center;
+}
+
+/* The floating highlight blob that travels up/down */
+.side-item .side-btn{
+  position:relative;
+  z-index:1;
   width:46px;height:46px;border-radius:14px;
   display:flex;align-items:center;justify-content:center;
   background:transparent;border:none;cursor:pointer;color:var(--muted);
-  transition:.18s;
+  transition:color .18s, background .18s;
 }
-.side-btn.active{background:var(--blue);color:#fff;box-shadow:0 6px 16px rgba(47,111,237,.32);}
-.side-btn:not(.active):hover{background:#eef0f4;}
-.side-divider{width:32px;height:1.5px;background:var(--hair);border-radius:2px;margin:2px 0;}
+.side-btn.active{background:var(--blue);color:#fff;box-shadow:0 6px 18px rgba(47,111,237,.38);}
+.side-btn:not(.active):hover{
+  background:rgba(47,111,237,.1);
+  color:var(--blue);
+  border-radius:14px;
+}
+
 .side-gap{flex:1;}
 .side-plus{
   width:44px;height:44px;border-radius:14px;background:var(--lime);
@@ -177,7 +201,7 @@ img{display:block;max-width:100%;}
 }
 @keyframes spin{to{transform:rotate(360deg);}}
 
-/* ===== SECTION CARD — the base for every white block ===== */
+/* ===== SECTION CARD ===== */
 .section-card{
   background:var(--section);
   border-radius:var(--radius-xl);
@@ -258,7 +282,7 @@ img{display:block;max-width:100%;}
   display:flex;align-items:center;justify-content:space-between;
   padding-bottom:14px;
   border-bottom:1.5px solid #eaecf0;
-  margin-bottom:16px;
+  margin-bottom:0;
 }
 .section-head h2{font-size:15.5px;font-weight:800;}
 .section-head .count{font-size:11.5px;color:var(--muted);font-weight:500;margin-right:6px;}
@@ -268,19 +292,35 @@ img{display:block;max-width:100%;}
   background:var(--hair);
 }
 
-/* ===== CARDS GRID ===== */
-.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+/* ===== CARDS GRID — NFT marketplace style, cards separated with gap ===== */
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  padding-top:16px;
+}
+
+/* Each card is its own standalone white box — like NFT marketplace */
 .card{
   background:var(--section);
-  border:1.5px solid var(--section-border);
+  border:1.5px solid rgba(0,0,0,0.07);
   border-radius:var(--radius-lg);
-  padding:10px;
-  box-shadow:0 1px 4px rgba(0,0,0,0.05);
+  padding:10px 10px 12px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
   display:flex;flex-direction:column;gap:9px;
-  transition:.18s;
+  transition:.2s;
 }
-.card:hover{box-shadow:0 4px 18px rgba(0,0,0,.10);transform:translateY(-1px);}
-.card .thumb{position:relative;border-radius:11px;overflow:hidden;aspect-ratio:1/0.82;background:#eef0f3;}
+.card:hover{
+  box-shadow:0 8px 24px rgba(0,0,0,.12), 0 0 0 1.5px rgba(47,111,237,.18);
+  transform:translateY(-2px);
+  border-color:rgba(47,111,237,.2);
+}
+
+/* Cover image — taller, more impactful like NFT cards */
+.card .thumb{
+  position:relative;border-radius:12px;overflow:hidden;
+  aspect-ratio:1/0.88;background:#eef0f3;
+}
 .card .thumb img{width:100%;height:100%;object-fit:cover;}
 .card .badge{
   position:absolute;top:8px;left:8px;background:rgba(18,20,28,.72);color:#fff;
@@ -291,10 +331,12 @@ img{display:block;max-width:100%;}
   position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;
   background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;font-size:14px;
 }
-.card h3{font-size:13.5px;font-weight:800;}
-.card .price{font-size:11px;color:var(--muted);}
+.card h3{font-size:13px;font-weight:800;padding:0 2px;}
+.card .price{font-size:11px;color:var(--muted);padding:0 2px;}
 .card .price b{color:var(--ink);font-weight:700;}
-.card .btn-row{display:flex;gap:7px;}
+
+/* Buttons — like NFT "History" / "Buy Now" */
+.card .btn-row{display:flex;gap:7px;margin-top:2px;}
 .card .btn-row a,.card .btn-row button,.card .btn-row span{
   flex:1;text-align:center;font-size:11.5px;font-weight:700;padding:9px 0;border-radius:9px;
   border:1.5px solid #e0e3e9;background:var(--hair);cursor:pointer;color:var(--ink);display:block;
@@ -304,8 +346,9 @@ img{display:block;max-width:100%;}
 .card .btn-row .primary{background:var(--blue);border-color:var(--blue);color:#fff;}
 .card .btn-row .primary:hover{background:var(--blue-ink);}
 
+/* Mind coding special thumb */
 .mind-thumb{
-  aspect-ratio:1/0.82;border-radius:11px;background:#04120a;position:relative;overflow:hidden;
+  aspect-ratio:1/0.88;border-radius:12px;background:#04120a;position:relative;overflow:hidden;
   display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;
 }
 .mind-term{
@@ -363,7 +406,6 @@ img{display:block;max-width:100%;}
 .mini-card .t{font-size:11.5px;font-weight:700;margin-bottom:2px;}
 .mini-card .p{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;}
 
-/* divider inside panels */
 .panel-divider{height:1.5px;background:#f0f1f4;border-radius:2px;margin:12px 0;}
 
 .hist-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1.5px solid #f2f3f6;}
@@ -456,7 +498,7 @@ img{display:block;max-width:100%;}
   #main-iframe{min-height:calc(100vh - 180px);}
 }
 @media (max-width:480px){
-  .cards-grid{grid-template-columns:repeat(2,1fr);gap:9px;}
+  .cards-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
   .login-btn span{display:none;}
   .login-btn{padding:10px;border-radius:12px;}
   .hero-title{font-size:17px;}
@@ -468,7 +510,7 @@ img{display:block;max-width:100%;}
 
 <div class="shell">
 
-  <!-- TOPBAR — white section card -->
+  <!-- TOPBAR -->
   <div class="topbar">
     <button class="burger" onclick="openDrawer()">☰</button>
     <div class="brand">
@@ -495,25 +537,50 @@ img{display:block;max-width:100%;}
   <!-- LAYOUT -->
   <div class="layout">
 
-    <!-- SIDEBAR — its own white card -->
+    <!-- SIDEBAR با لوگو + hover شناور -->
     <aside class="sidebar">
-      <button class="side-btn active" id="sb-home" title="خانه" onclick="navigateSide('home', 'sb-home')">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M3.5 11L12 4L20.5 11V19.5C20.5 20.05 20.05 20.5 19.5 20.5H14.5V14H9.5V20.5H4.5C3.95 20.5 3.5 20.05 3.5 19.5V11Z" fill="currentColor" fill-opacity=".95"/></svg>
-      </button>
-      <button class="side-btn" id="sb-podcast" title="پادکست‌ها" onclick="navigateSide('https://planlife.ir/podcastfree.html', 'sb-podcast', 'پادکست‌های رایگان')">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 13.5C4 8.25 7.58 4 12 4C16.42 4 20 8.25 20 13.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><rect x="3" y="13" width="3.4" height="6" rx="1.6" fill="currentColor"/><rect x="17.6" y="13" width="3.4" height="6" rx="1.6" fill="currentColor"/></svg>
-      </button>
-      <button class="side-btn" id="sb-book" title="کتابخانه" onclick="navigateSide('https://planlife.ir/Pages/Book/index.html', 'sb-book', 'کتابخانه')">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11V19H5.5C4.7 19 4 18.3 4 17.5V5.5Z" fill="currentColor" fill-opacity=".95"/><path d="M13 4H18.5C19.3 4 20 4.7 20 5.5V17.5C20 18.3 19.3 19 18.5 19H13V4Z" fill="currentColor" fill-opacity=".55"/></svg>
-      </button>
-      <button class="side-btn" id="sb-courses" title="دوره‌ها" onclick="navigateSide('https://planlife.ir/Pages/Doreha/dore.html', 'sb-courses', 'دوره‌ها')">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="4.5" y="3.5" width="15" height="17" rx="4" stroke="currentColor" stroke-width="1.7"/><path d="M8 11.3L10 13.3L14.5 8.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
+
+      <!-- Logo در بالای sidebar -->
+      <div class="sidebar-logo" onclick="goHome()" title="خانه">
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
+      </div>
+
       <div class="side-divider"></div>
-      <button class="side-btn" title="بیشتر" onclick="openDrawer()">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="6" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="18" r="1.6" fill="currentColor"/></svg>
-      </button>
+
+      <div class="side-item">
+        <button class="side-btn active" id="sb-home" title="خانه" onclick="navigateSide('home', 'sb-home')">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M3.5 11L12 4L20.5 11V19.5C20.5 20.05 20.05 20.5 19.5 20.5H14.5V14H9.5V20.5H4.5C3.95 20.5 3.5 20.05 3.5 19.5V11Z" fill="currentColor" fill-opacity=".95"/></svg>
+        </button>
+      </div>
+
+      <div class="side-item">
+        <button class="side-btn" id="sb-podcast" title="پادکست‌ها" onclick="navigateSide('https://planlife.ir/podcastfree.html', 'sb-podcast', 'پادکست‌های رایگان')">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 13.5C4 8.25 7.58 4 12 4C16.42 4 20 8.25 20 13.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><rect x="3" y="13" width="3.4" height="6" rx="1.6" fill="currentColor"/><rect x="17.6" y="13" width="3.4" height="6" rx="1.6" fill="currentColor"/></svg>
+        </button>
+      </div>
+
+      <div class="side-item">
+        <button class="side-btn" id="sb-book" title="کتابخانه" onclick="navigateSide('https://planlife.ir/Pages/Book/index.html', 'sb-book', 'کتابخانه')">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11V19H5.5C4.7 19 4 18.3 4 17.5V5.5Z" fill="currentColor" fill-opacity=".95"/><path d="M13 4H18.5C19.3 4 20 4.7 20 5.5V17.5C20 18.3 19.3 19 18.5 19H13V4Z" fill="currentColor" fill-opacity=".55"/></svg>
+        </button>
+      </div>
+
+      <div class="side-item">
+        <button class="side-btn" id="sb-courses" title="دوره‌ها" onclick="navigateSide('https://planlife.ir/Pages/Doreha/dore.html', 'sb-courses', 'دوره‌ها')">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="4.5" y="3.5" width="15" height="17" rx="4" stroke="currentColor" stroke-width="1.7"/><path d="M8 11.3L10 13.3L14.5 8.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <div class="side-divider"></div>
+
+      <div class="side-item">
+        <button class="side-btn" title="بیشتر" onclick="openDrawer()">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="6" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="18" r="1.6" fill="currentColor"/></svg>
+        </button>
+      </div>
+
       <div class="side-gap"></div>
+
       <button class="side-plus" title="پیشنهاد امروز" onclick="navigateSide('https://planlife.ir/Pages/paksazi/index.html', null, 'پاکسازی ذهنی')">+</button>
       <div class="side-avatar" onclick="openSubscriptionModal('ورود')"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="پروفایل"></div>
     </aside>
@@ -524,7 +591,7 @@ img{display:block;max-width:100%;}
       <!-- HOME VIEW -->
       <div id="home-view">
 
-        <!-- HERO — white section card -->
+        <!-- HERO -->
         <div class="section-card hero">
           <div class="hero-media">
             <img id="hero-img" src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌های رشد فردی">
@@ -567,8 +634,8 @@ img{display:block;max-width:100%;}
           </div>
         </div>
 
-        <!-- SERVICES GRID — white section card -->
-        <div class="section-card">
+        <!-- SERVICES GRID — section-card wrapper only for header, cards float freely -->
+        <div class="section-card" style="padding-bottom:4px;">
           <div class="section-head">
             <div style="display:flex;align-items:baseline;gap:6px;">
               <h2>همه سرویس‌ها</h2>
@@ -721,8 +788,8 @@ img{display:block;max-width:100%;}
               </div>
             </div>
 
-          </div>
-        </div>
+          </div><!-- /cards-grid -->
+        </div><!-- /section-card -->
 
       </div><!-- /home-view -->
 
@@ -751,7 +818,7 @@ img{display:block;max-width:100%;}
 
     </main>
 
-    <!-- RIGHT COLUMN — each panel is its own white card -->
+    <!-- RIGHT COLUMN -->
     <aside class="right-col">
 
       <div class="panel panel-dark">
@@ -887,8 +954,6 @@ var PAGE_ICONS = {
   'جعبه کمک‌های اولیه': '🩺','موزیک‌ها': '🎵','تمرینات تخصصی': '💪',
 };
 
-var currentSideBtn = 'sb-home';
-
 function navigateTo(url, tabEl, title) {
   document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
   if (tabEl) tabEl.classList.add('active');
@@ -901,7 +966,6 @@ function navigateSide(url, btnId, title) {
   if (btnId) {
     var btn = document.getElementById(btnId);
     if (btn) btn.classList.add('active');
-    currentSideBtn = btnId;
   }
   if (url === 'home') { goHome(); return; }
   loadInIframe(url, title || url);
