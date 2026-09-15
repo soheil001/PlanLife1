@@ -102,6 +102,77 @@ img{display:block;max-width:100%;}
 .main-col{flex:1 1 0;min-width:0;}
 .right-col{width:300px;flex-shrink:0;display:flex;flex-direction:column;gap:16px;}
 
+/* ===== HOME VIEW ===== */
+#home-view{ display:block; }
+
+/* ===== IFRAME VIEW ===== */
+#iframe-view{
+  display:none;
+  flex-direction:column;
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  border:1px solid #eef0f3;
+  box-shadow:var(--shadow-card);
+  background:#fff;
+  min-height:calc(100vh - 160px);
+}
+#iframe-view.active{ display:flex; }
+
+.iframe-topbar{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;
+  background:var(--hair);
+  border-bottom:1px solid #e4e7ec;
+  flex-shrink:0;
+}
+.iframe-back{
+  display:flex;align-items:center;gap:6px;
+  background:#fff;border:1px solid #e4e7ec;
+  color:var(--ink);font-size:12.5px;font-weight:700;
+  padding:7px 13px;border-radius:999px;cursor:pointer;
+  white-space:nowrap;
+}
+.iframe-back:hover{background:var(--hair);}
+.iframe-title-bar{
+  flex:1;display:flex;align-items:center;gap:8px;
+  background:#fff;border:1px solid #e4e7ec;
+  border-radius:999px;padding:7px 14px;
+}
+.iframe-title-bar .favicon{font-size:13px;}
+.iframe-title-bar .page-title{font-size:12px;font-weight:600;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.iframe-reload{
+  width:30px;height:30px;border-radius:50%;
+  background:#fff;border:1px solid #e4e7ec;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:14px;
+  transition:.2s;
+}
+.iframe-reload:hover{background:var(--hair);}
+
+#main-iframe{
+  width:100%;
+  flex:1;
+  border:none;
+  min-height:calc(100vh - 220px);
+}
+
+/* Loading state */
+.iframe-loading{
+  display:none;
+  align-items:center;justify-content:center;
+  flex-direction:column;gap:12px;
+  min-height:300px;
+  color:var(--muted);font-size:13px;font-weight:600;
+}
+.iframe-loading.active{ display:flex; }
+.spinner{
+  width:32px;height:32px;border-radius:50%;
+  border:3px solid #eef0f3;
+  border-top-color:var(--blue);
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
 /* ===== HERO ===== */
 .hero{
   display:flex;gap:18px;background:var(--hair);
@@ -199,9 +270,9 @@ img{display:block;max-width:100%;}
 .card .price{font-size:11.5px;color:var(--muted);}
 .card .price b{color:var(--ink);font-weight:700;}
 .card .btn-row{display:flex;gap:8px;}
-.card .btn-row a,.card .btn-row button{
+.card .btn-row a,.card .btn-row button,.card .btn-row span{
   flex:1;text-align:center;font-size:12px;font-weight:700;padding:9px 0;border-radius:10px;
-  border:1px solid #e4e7ec;background:#fff;cursor:pointer;color:var(--ink);
+  border:1px solid #e4e7ec;background:#fff;cursor:pointer;color:var(--ink);display:block;
 }
 .card .btn-row .primary{background:var(--blue);border-color:var(--blue);color:#fff;}
 
@@ -339,6 +410,7 @@ img{display:block;max-width:100%;}
   .bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:9.5px;font-weight:700;flex:1;padding:6px 0;border-radius:14px;}
   .bn-item.active{color:var(--blue);}
   .bn-item svg{width:20px;height:20px;}
+  #main-iframe{min-height:calc(100vh - 180px);}
 }
 @media (max-width:480px){
   .cards-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
@@ -361,11 +433,11 @@ img{display:block;max-width:100%;}
       <span>PlanLife</span>
     </div>
     <div class="tabs">
-      <div class="tab active">همه سرویس‌ها</div>
-      <div class="tab" onclick="location.href='https://planlife.ir/Pages/Doreha/dore.html'">دوره‌ها</div>
-      <div class="tab" onclick="location.href='https://planlife.ir/Pages/podcasts_free/index.html'">پادکست</div>
-      <div class="tab" onclick="location.href='https://planlife.ir/Pages/Book/index.html'">کتابخانه</div>
-      <div class="tab" onclick="location.href='https://planlife.ir/Pages/Magazine/index.html'">مجله</div>
+      <div class="tab active" onclick="navigateTo('home', this)">همه سرویس‌ها</div>
+      <div class="tab" onclick="navigateTo('https://planlife.ir/Pages/Doreha/dore.html', this, 'دوره‌ها')">دوره‌ها</div>
+      <div class="tab" onclick="navigateTo('https://planlife.ir/Pages/podcasts_free/index.html', this, 'پادکست')">پادکست</div>
+      <div class="tab" onclick="navigateTo('https://planlife.ir/Pages/Book/index.html', this, 'کتابخانه')">کتابخانه</div>
+      <div class="tab" onclick="navigateTo('https://planlife.ir/Pages/Magazine/index.html', this, 'مجله')">مجله</div>
     </div>
     <div class="search-box">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#6b7280" stroke-width="2"/><path d="M21 21L16.65 16.65" stroke="#6b7280" stroke-width="2" stroke-linecap="round"/></svg>
@@ -382,191 +454,254 @@ img{display:block;max-width:100%;}
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
-      <button class="side-btn active" title="خانه">
+      <button class="side-btn active" id="sb-home" title="خانه" onclick="navigateSide('home', 'sb-home')">
         <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M3.5 11L12 4L20.5 11V19.5C20.5 20.05 20.05 20.5 19.5 20.5H14.5V14H9.5V20.5H4.5C3.95 20.5 3.5 20.05 3.5 19.5V11Z" fill="currentColor" fill-opacity=".95"/></svg>
       </button>
-      <button class="side-btn" title="پادکست‌ها" onclick="location.href='https://planlife.ir/Pages/podcasts_free/index.html'">
+      <button class="side-btn" id="sb-podcast" title="پادکست‌ها" onclick="navigateSide('https://planlife.ir/Pages/podcasts_free/index.html', 'sb-podcast', 'پادکست‌های رایگان')">
         <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 13.5C4 8.25 7.58 4 12 4C16.42 4 20 8.25 20 13.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><rect x="3" y="13" width="3.4" height="6" rx="1.6" fill="currentColor"/><rect x="17.6" y="13" width="3.4" height="6" rx="1.6" fill="currentColor"/></svg>
       </button>
-      <button class="side-btn" title="کتابخانه" onclick="location.href='https://planlife.ir/Pages/Book/index.html'">
+      <button class="side-btn" id="sb-book" title="کتابخانه" onclick="navigateSide('https://planlife.ir/Pages/Book/index.html', 'sb-book', 'کتابخانه')">
         <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11V19H5.5C4.7 19 4 18.3 4 17.5V5.5Z" fill="currentColor" fill-opacity=".95"/><path d="M13 4H18.5C19.3 4 20 4.7 20 5.5V17.5C20 18.3 19.3 19 18.5 19H13V4Z" fill="currentColor" fill-opacity=".55"/></svg>
       </button>
-      <!-- دوره‌ها — لینک به صفحه جدید -->
-      <button class="side-btn" title="دوره‌ها" onclick="location.href='https://planlife.ir/Pages/Doreha/dore.html'">
+      <button class="side-btn" id="sb-courses" title="دوره‌ها" onclick="navigateSide('https://planlife.ir/Pages/Doreha/dore.html', 'sb-courses', 'دوره‌ها')">
         <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="4.5" y="3.5" width="15" height="17" rx="4" stroke="currentColor" stroke-width="1.7"/><path d="M8 11.3L10 13.3L14.5 8.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <button class="side-btn" title="بیشتر" onclick="openDrawer()">
         <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="6" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="18" r="1.6" fill="currentColor"/></svg>
       </button>
       <div class="side-gap"></div>
-      <button class="side-plus" title="پیشنهاد امروز" onclick="location.href='https://planlife.ir/Pages/paksazi/index.html'">+</button>
+      <button class="side-plus" title="پیشنهاد امروز" onclick="navigateSide('https://planlife.ir/Pages/paksazi/index.html', null, 'پاکسازی ذهنی')">+</button>
       <div class="side-avatar" onclick="openSubscriptionModal('ورود')"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="پروفایل"></div>
     </aside>
 
     <!-- MAIN COLUMN -->
     <main class="main-col">
 
-      <!-- HERO -->
-      <div class="hero">
-        <div class="hero-media">
-          <img id="hero-img" src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌های رشد فردی">
-          <div class="hero-avatars">
-            <div class="av"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt=""></div>
-            <div class="av"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt=""></div>
-            <div class="av"><img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" alt=""></div>
-            <div class="count">۲k+</div>
-          </div>
-          <div class="hero-timer"><span class="dot"></span><span id="hero-countdown">۰۲:۵۹:۵۹</span></div>
-          <div class="hero-nav">
-            <button onclick="heroNav(-1)">‹</button>
-            <button onclick="heroNav(1)">›</button>
-          </div>
-        </div>
-        <div class="hero-body">
-          <div class="hero-tabs">
-            <div class="hero-tab active" data-tab="0" onclick="heroTab(this,0)">توضیحات</div>
-            <div class="hero-tab" data-tab="1" onclick="heroTab(this,1)">مدرسین</div>
-            <div class="hero-tab" data-tab="2" onclick="heroTab(this,2)">نظرات</div>
-          </div>
-          <div class="hero-date" id="hero-date">بروزرسانی امروز، ساعت ۱۲:۰۱</div>
-          <div class="hero-title" id="hero-title">دوره‌های جدید رشد فردی</div>
-          <div class="hero-desc" id="hero-desc">مجموعه‌ای تازه از دوره‌های تخصصی قانون جذب، تقویت باور و تغییر رفتار. مطمئن شو جای خودت رو رزرو کردی.</div>
-          <div class="hero-creator">
-            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="مدرس">
-            <div class="who">
-              <div class="lbl">مدرس دوره</div>
-              <div class="name">تیم PlanLife</div>
+      <!-- HOME VIEW -->
+      <div id="home-view">
+
+        <!-- HERO -->
+        <div class="hero">
+          <div class="hero-media">
+            <img id="hero-img" src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌های رشد فردی">
+            <div class="hero-avatars">
+              <div class="av"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt=""></div>
+              <div class="av"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt=""></div>
+              <div class="av"><img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" alt=""></div>
+              <div class="count">۲k+</div>
             </div>
-            <div class="other" onclick="location.href='https://planlife.ir/Pages/Doreha/dore.html'">سایر دوره‌ها ›</div>
-          </div>
-          <div class="hero-cta-row">
-            <div>
-              <div class="status">وضعیت ثبت‌نام</div>
-              <div class="val" id="hero-status">ظرفیت باز</div>
+            <div class="hero-timer"><span class="dot"></span><span id="hero-countdown">۰۲:۵۹:۵۹</span></div>
+            <div class="hero-nav">
+              <button onclick="heroNav(-1)">‹</button>
+              <button onclick="heroNav(1)">›</button>
             </div>
-            <button id="hero-cta" onclick="location.href='https://planlife.ir/Pages/Doreha/dore.html'">مشاهده دوره‌ها</button>
           </div>
-        </div>
-      </div>
-
-      <!-- SERVICES GRID -->
-      <div class="section-head">
-        <div style="display:flex;align-items:baseline;gap:8px;">
-          <h2>همه سرویس‌ها</h2>
-          <span class="count">(۱۴ مورد)</span>
-        </div>
-        <div class="sort">امروز ▾</div>
-      </div>
-
-      <div class="cards-grid">
-
-        <div class="card">
-          <div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست رایگان"><span class="badge">رایگان</span></div>
-          <h3>پادکست رایگان</h3>
-          <div class="price">قانون جذب و افکار مثبت — <b>هفتگی</b></div>
-          <div class="btn-row"><a href="https://planlife.ir/Pages/podcasts_free/index.html">درباره</a><a class="primary" href="https://planlife.ir/Pages/podcasts_free/index.html">شنیدن</a></div>
-        </div>
-
-        <!-- دوره‌ها → صفحه جدید -->
-        <div class="card">
-          <div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌ها"><span class="badge">پرطرفدار</span></div>
-          <h3>دوره‌ها</h3>
-          <div class="price">مسیرهای آموزشی — <b>۶ دوره</b></div>
-          <div class="btn-row">
-            <a href="https://planlife.ir/Pages/Doreha/dore.html">درباره</a>
-            <a class="primary" href="https://planlife.ir/Pages/Doreha/dore.html">ورود</a>
+          <div class="hero-body">
+            <div class="hero-tabs">
+              <div class="hero-tab active" data-tab="0" onclick="heroTab(this,0)">توضیحات</div>
+              <div class="hero-tab" data-tab="1" onclick="heroTab(this,1)">مدرسین</div>
+              <div class="hero-tab" data-tab="2" onclick="heroTab(this,2)">نظرات</div>
+            </div>
+            <div class="hero-date" id="hero-date">بروزرسانی امروز، ساعت ۱۲:۰۱</div>
+            <div class="hero-title" id="hero-title">دوره‌های جدید رشد فردی</div>
+            <div class="hero-desc" id="hero-desc">مجموعه‌ای تازه از دوره‌های تخصصی قانون جذب، تقویت باور و تغییر رفتار. مطمئن شو جای خودت رو رزرو کردی.</div>
+            <div class="hero-creator">
+              <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="مدرس">
+              <div class="who">
+                <div class="lbl">مدرس دوره</div>
+                <div class="name">تیم PlanLife</div>
+              </div>
+              <div class="other" onclick="navigateSide('https://planlife.ir/Pages/Doreha/dore.html', 'sb-courses', 'دوره‌ها')">سایر دوره‌ها ›</div>
+            </div>
+            <div class="hero-cta-row">
+              <div>
+                <div class="status">وضعیت ثبت‌نام</div>
+                <div class="val" id="hero-status">ظرفیت باز</div>
+              </div>
+              <button id="hero-cta" onclick="navigateSide('https://planlife.ir/Pages/Doreha/dore.html', 'sb-courses', 'دوره‌ها')">مشاهده دوره‌ها</button>
+            </div>
           </div>
         </div>
 
-        <div class="card">
-          <div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="مجله ماورایی"></div>
-          <h3>مجله ماورایی 📰</h3>
-          <div class="price">مقالات تازه — <b>هفتگی</b></div>
-          <div class="btn-row"><a href="https://planlife.ir/Pages/Magazine/index.html">درباره</a><a class="primary" href="https://planlife.ir/Pages/Magazine/index.html">ورود</a></div>
-        </div>
-
-        <a href="https://planlife.ir/Pages/Mindcoding/index.html" style="text-decoration:none;color:inherit;">
-        <div class="card">
-          <div class="mind-thumb">
-            <div class="mind-term">root@mind:~$<br>if(belief){<br>&nbsp;rewrite();<br>}<br>grow(life);</div>
+        <!-- SERVICES GRID -->
+        <div class="section-head">
+          <div style="display:flex;align-items:baseline;gap:8px;">
+            <h2>همه سرویس‌ها</h2>
+            <span class="count">(۱۴ مورد)</span>
           </div>
-          <h3>کد نویسی ذهنی</h3>
-          <div class="price">تغییر باور و افکار</div>
-          <div class="btn-row"><span>درباره</span><span class="primary">ورود</span></div>
-        </div>
-        </a>
-
-        <div class="card">
-          <div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرینات مجازی"></div>
-          <h3>تمرینات مجازی</h3>
-          <div class="price">تمرین روزانه — <b>۱۰ دقیقه</b></div>
-          <div class="btn-row"><a href="https://planlife.ir/Pages/Tamrin/index.html">درباره</a><a class="primary" href="https://planlife.ir/Pages/Tamrin/index.html">شروع</a></div>
+          <div class="sort">امروز ▾</div>
         </div>
 
-        <div class="card">
-          <div class="thumb"><img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" alt="پاکسازی ذهنی"></div>
-          <h3>پاکسازی ذهنی 💭</h3>
-          <div class="price">رهایی از افکار منفی</div>
-          <div class="btn-row"><a href="https://planlife.ir/Pages/paksazi/index.html">درباره</a><a class="primary" href="https://planlife.ir/Pages/paksazi/index.html">شروع</a></div>
-        </div>
+        <div class="cards-grid">
 
-        <div class="card">
-          <div class="thumb"><img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg" alt="تابلو آرزوها"></div>
-          <h3>تابلو آرزوها 🔖</h3>
-          <div class="price">ویژوالایزیشن — <b>شخصی‌سازی</b></div>
-          <div class="btn-row"><a href="https://planlife.ir/Pages/visionboard/index.html">درباره</a><a class="primary" href="https://planlife.ir/Pages/visionboard/index.html">ساخت</a></div>
-        </div>
+          <div class="card">
+            <div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست رایگان"><span class="badge">رایگان</span></div>
+            <h3>پادکست رایگان</h3>
+            <div class="price">قانون جذب و افکار مثبت — <b>هفتگی</b></div>
+            <div class="btn-row">
+              <span onclick="navigateSide('https://planlife.ir/Pages/podcasts_free/index.html', 'sb-podcast', 'پادکست رایگان')">درباره</span>
+              <span class="primary" onclick="navigateSide('https://planlife.ir/Pages/podcasts_free/index.html', 'sb-podcast', 'پادکست رایگان')">شنیدن</span>
+            </div>
+          </div>
 
-        <div class="card">
-          <div class="thumb"><img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه"></div>
-          <h3>کتابخانه 📚</h3>
-          <div class="price">کتاب‌های رشد فردی</div>
-          <div class="btn-row"><a href="https://planlife.ir/Pages/Book/index.html">درباره</a><a class="primary" href="https://planlife.ir/Pages/Book/index.html">ورود</a></div>
-        </div>
+          <div class="card">
+            <div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌ها"><span class="badge">پرطرفدار</span></div>
+            <h3>دوره‌ها</h3>
+            <div class="price">مسیرهای آموزشی — <b>۶ دوره</b></div>
+            <div class="btn-row">
+              <span onclick="navigateSide('https://planlife.ir/Pages/Doreha/dore.html', 'sb-courses', 'دوره‌ها')">درباره</span>
+              <span class="primary" onclick="navigateSide('https://planlife.ir/Pages/Doreha/dore.html', 'sb-courses', 'دوره‌ها')">ورود</span>
+            </div>
+          </div>
 
-        <div class="card">
-          <div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg" alt="کمک های اولیه"></div>
-          <h3>جعبه کمک‌های اولیه</h3>
-          <div class="price">تندرستی روانی</div>
-          <div class="btn-row"><a href="https://planlife.ir/Pages/komakavaliye/index.html">درباره</a><a class="primary" href="https://planlife.ir/Pages/komakavaliye/index.html">مشاهده</a></div>
-        </div>
+          <div class="card">
+            <div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="مجله ماورایی"></div>
+            <h3>مجله ماورایی 📰</h3>
+            <div class="price">مقالات تازه — <b>هفتگی</b></div>
+            <div class="btn-row">
+              <span onclick="navigateSide('https://planlife.ir/Pages/Magazine/index.html', null, 'مجله ماورایی')">درباره</span>
+              <span class="primary" onclick="navigateSide('https://planlife.ir/Pages/Magazine/index.html', null, 'مجله ماورایی')">ورود</span>
+            </div>
+          </div>
 
-        <div class="card">
-          <div class="thumb"><img src="http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2276.jpeg" alt="ترک عادت"><span class="badge lock">قفل</span></div>
-          <h3>ترک عادت</h3>
-          <div class="price">نیازمند اشتراک</div>
-          <div class="btn-row"><span onclick="openSubscriptionModal('ترک عادت')">درباره</span><button class="primary" onclick="openSubscriptionModal('ترک عادت')">ورود</button></div>
-        </div>
+          <div class="card" onclick="navigateSide('https://planlife.ir/Pages/Mindcoding/index.html', null, 'کدنویسی ذهنی')" style="cursor:pointer;">
+            <div class="mind-thumb">
+              <div class="mind-term">root@mind:~$<br>if(belief){<br>&nbsp;rewrite();<br>}<br>grow(life);</div>
+            </div>
+            <h3>کد نویسی ذهنی</h3>
+            <div class="price">تغییر باور و افکار</div>
+            <div class="btn-row">
+              <span onclick="event.stopPropagation();navigateSide('https://planlife.ir/Pages/Mindcoding/index.html', null, 'کدنویسی ذهنی')">درباره</span>
+              <span class="primary" onclick="event.stopPropagation();navigateSide('https://planlife.ir/Pages/Mindcoding/index.html', null, 'کدنویسی ذهنی')">ورود</span>
+            </div>
+          </div>
 
-        <div class="card">
-          <div class="thumb"><img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781599306/IMG_1979_xcccao.jpg" alt="نقشه راه"><span class="badge lock">قفل</span></div>
-          <h3>نقشه راه</h3>
-          <div class="price">نیازمند اشتراک</div>
-          <div class="btn-row"><span onclick="openSubscriptionModal('نقشه ی راه')">درباره</span><button class="primary" onclick="openSubscriptionModal('نقشه ی راه')">ورود</button></div>
-        </div>
+          <div class="card">
+            <div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرینات مجازی"></div>
+            <h3>تمرینات مجازی</h3>
+            <div class="price">تمرین روزانه — <b>۱۰ دقیقه</b></div>
+            <div class="btn-row">
+              <span onclick="navigateSide('https://planlife.ir/Pages/Tamrin/index.html', null, 'تمرینات مجازی')">درباره</span>
+              <span class="primary" onclick="navigateSide('https://planlife.ir/Pages/Tamrin/index.html', null, 'تمرینات مجازی')">شروع</span>
+            </div>
+          </div>
 
-        <div class="card">
-          <div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="موزیک"></div>
-          <h3>موزیک‌ها</h3>
-          <div class="price">موزیک انگیزشی و مدیتیشن</div>
-          <div class="btn-row"><a href="https://planlife.ir/Pages/Music/index.html">درباره</a><a class="primary" href="https://planlife.ir/Pages/Music/index.html">گوش دادن</a></div>
-        </div>
+          <div class="card">
+            <div class="thumb"><img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" alt="پاکسازی ذهنی"></div>
+            <h3>پاکسازی ذهنی 💭</h3>
+            <div class="price">رهایی از افکار منفی</div>
+            <div class="btn-row">
+              <span onclick="navigateSide('https://planlife.ir/Pages/paksazi/index.html', null, 'پاکسازی ذهنی')">درباره</span>
+              <span class="primary" onclick="navigateSide('https://planlife.ir/Pages/paksazi/index.html', null, 'پاکسازی ذهنی')">شروع</span>
+            </div>
+          </div>
 
-        <div class="card">
-          <div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780955091/IMG_1737_ei1f5w.png" alt="تمرینات تخصصی"><span class="badge lock">قفل</span></div>
-          <h3>تمرینات تخصصی</h3>
-          <div class="price">نیازمند اشتراک</div>
-          <div class="btn-row"><span onclick="openSubscriptionModal('تمرینات تخصصی')">درباره</span><button class="primary" onclick="openSubscriptionModal('تمرینات تخصصی')">ورود</button></div>
-        </div>
+          <div class="card">
+            <div class="thumb"><img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg" alt="تابلو آرزوها"></div>
+            <h3>تابلو آرزوها 🔖</h3>
+            <div class="price">ویژوالایزیشن — <b>شخصی‌سازی</b></div>
+            <div class="btn-row">
+              <span onclick="navigateSide('https://planlife.ir/Pages/visionboard/index.html', null, 'تابلو آرزوها')">درباره</span>
+              <span class="primary" onclick="navigateSide('https://planlife.ir/Pages/visionboard/index.html', null, 'تابلو آرزوها')">ساخت</span>
+            </div>
+          </div>
 
-        <div class="card">
-          <div class="thumb"><img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg" alt="چک لیست روزانه"><span class="badge lock">قفل</span></div>
-          <h3>چک‌لیست روزانه 📜</h3>
-          <div class="price">نیازمند اشتراک</div>
-          <div class="btn-row"><span onclick="openSubscriptionModal('چک لیست روزانه')">درباره</span><button class="primary" onclick="openSubscriptionModal('چک لیست روزانه')">ورود</button></div>
-        </div>
+          <div class="card">
+            <div class="thumb"><img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه"></div>
+            <h3>کتابخانه 📚</h3>
+            <div class="price">کتاب‌های رشد فردی</div>
+            <div class="btn-row">
+              <span onclick="navigateSide('https://planlife.ir/Pages/Book/index.html', 'sb-book', 'کتابخانه')">درباره</span>
+              <span class="primary" onclick="navigateSide('https://planlife.ir/Pages/Book/index.html', 'sb-book', 'کتابخانه')">ورود</span>
+            </div>
+          </div>
 
+          <div class="card">
+            <div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg" alt="کمک های اولیه"></div>
+            <h3>جعبه کمک‌های اولیه</h3>
+            <div class="price">تندرستی روانی</div>
+            <div class="btn-row">
+              <span onclick="navigateSide('https://planlife.ir/Pages/komakavaliye/index.html', null, 'جعبه کمک‌های اولیه')">درباره</span>
+              <span class="primary" onclick="navigateSide('https://planlife.ir/Pages/komakavaliye/index.html', null, 'جعبه کمک‌های اولیه')">مشاهده</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="thumb"><img src="http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2276.jpeg" alt="ترک عادت"><span class="badge lock">قفل</span></div>
+            <h3>ترک عادت</h3>
+            <div class="price">نیازمند اشتراک</div>
+            <div class="btn-row">
+              <span onclick="openSubscriptionModal('ترک عادت')">درباره</span>
+              <span class="primary" onclick="openSubscriptionModal('ترک عادت')">ورود</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="thumb"><img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781599306/IMG_1979_xcccao.jpg" alt="نقشه راه"><span class="badge lock">قفل</span></div>
+            <h3>نقشه راه</h3>
+            <div class="price">نیازمند اشتراک</div>
+            <div class="btn-row">
+              <span onclick="openSubscriptionModal('نقشه ی راه')">درباره</span>
+              <span class="primary" onclick="openSubscriptionModal('نقشه ی راه')">ورود</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="موزیک"></div>
+            <h3>موزیک‌ها</h3>
+            <div class="price">موزیک انگیزشی و مدیتیشن</div>
+            <div class="btn-row">
+              <span onclick="navigateSide('https://planlife.ir/Pages/Music/index.html', null, 'موزیک‌ها')">درباره</span>
+              <span class="primary" onclick="navigateSide('https://planlife.ir/Pages/Music/index.html', null, 'موزیک‌ها')">گوش دادن</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780955091/IMG_1737_ei1f5w.png" alt="تمرینات تخصصی"><span class="badge lock">قفل</span></div>
+            <h3>تمرینات تخصصی</h3>
+            <div class="price">نیازمند اشتراک</div>
+            <div class="btn-row">
+              <span onclick="openSubscriptionModal('تمرینات تخصصی')">درباره</span>
+              <span class="primary" onclick="openSubscriptionModal('تمرینات تخصصی')">ورود</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="thumb"><img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781593386/IMG_1964_ssiqyq.jpg" alt="چک لیست روزانه"><span class="badge lock">قفل</span></div>
+            <h3>چک‌لیست روزانه 📜</h3>
+            <div class="price">نیازمند اشتراک</div>
+            <div class="btn-row">
+              <span onclick="openSubscriptionModal('چک لیست روزانه')">درباره</span>
+              <span class="primary" onclick="openSubscriptionModal('چک لیست روزانه')">ورود</span>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /home-view -->
+
+      <!-- IFRAME VIEW -->
+      <div id="iframe-view">
+        <div class="iframe-topbar">
+          <button class="iframe-back" onclick="goHome()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            بازگشت
+          </button>
+          <div class="iframe-title-bar">
+            <span class="favicon" id="iframe-favicon">🌐</span>
+            <span class="page-title" id="iframe-page-title">در حال بارگذاری...</span>
+          </div>
+          <button class="iframe-reload" onclick="reloadIframe()" title="بارگذاری مجدد">↺</button>
+        </div>
+        <div class="iframe-loading" id="iframe-loading">
+          <div class="spinner"></div>
+          <span id="loading-text">در حال بارگذاری صفحه...</span>
+        </div>
+        <iframe id="main-iframe" src="" frameborder="0" allowfullscreen
+          onload="iframeLoaded()"
+          onerror="iframeError()">
+        </iframe>
       </div>
+
     </main>
 
     <!-- RIGHT COLUMN -->
@@ -585,7 +720,7 @@ img{display:block;max-width:100%;}
         <svg class="spark" viewBox="0 0 260 60" preserveAspectRatio="none">
           <polyline points="0,45 40,40 80,48 120,25 160,32 200,14 240,20 260,10" fill="none" stroke="#3ddc84" stroke-width="2.5"/>
         </svg>
-        <button class="panel-cta" onclick="location.href='https://planlife.ir/Pages/Tamrin/index.html'">ادامه تمرین امروز</button>
+        <button class="panel-cta" onclick="navigateSide('https://planlife.ir/Pages/Tamrin/index.html', null, 'تمرینات مجازی')">ادامه تمرین امروز</button>
       </div>
 
       <div class="panel">
@@ -596,12 +731,12 @@ img{display:block;max-width:100%;}
           <button class="follow">دنبال کردن +</button>
         </div>
         <div class="mini-cards">
-          <div class="mini-card" onclick="location.href='https://planlife.ir/Pages/Tamrin/index.html'">
+          <div class="mini-card" onclick="navigateSide('https://planlife.ir/Pages/Tamrin/index.html', null, 'مدیتیشن روزانه')" style="cursor:pointer;">
             <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="مدیتیشن روزانه">
             <div class="t">مدیتیشن روزانه</div>
             <div class="p">🟢 رایگان</div>
           </div>
-          <div class="mini-card" onclick="location.href='https://planlife.ir/Pages/Mindcoding/index.html'">
+          <div class="mini-card" onclick="navigateSide('https://planlife.ir/Pages/Mindcoding/index.html', null, 'کدنویسی ذهنی')" style="cursor:pointer;">
             <img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" alt="کدنویسی ذهنی">
             <div class="t">کدنویسی ذهنی</div>
             <div class="p">🟢 رایگان</div>
@@ -640,20 +775,19 @@ img{display:block;max-width:100%;}
 
 <!-- BOTTOM NAV (mobile) -->
 <nav class="bottom-nav">
-  <div class="bn-item active" onclick="setBn(this)">
+  <div class="bn-item active" id="bn-home" onclick="navigateSide('home','sb-home');setBn(this)">
     <svg viewBox="0 0 24 24" fill="none"><path d="M3.5 11L12 4L20.5 11V19.5C20.5 20.05 20.05 20.5 19.5 20.5H14.5V14H9.5V20.5H4.5C3.95 20.5 3.5 20.05 3.5 19.5V11Z" fill="currentColor"/></svg>
     خانه
   </div>
-  <div class="bn-item" onclick="location.href='https://planlife.ir/Pages/podcasts_free/index.html'">
+  <div class="bn-item" id="bn-podcast" onclick="navigateSide('https://planlife.ir/Pages/podcasts_free/index.html','sb-podcast','پادکست');setBn(this)">
     <svg viewBox="0 0 24 24" fill="none"><path d="M4 13.5C4 8.25 7.58 4 12 4C16.42 4 20 8.25 20 13.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><rect x="3" y="13" width="3.4" height="6" rx="1.6" fill="currentColor"/><rect x="17.6" y="13" width="3.4" height="6" rx="1.6" fill="currentColor"/></svg>
     پادکست
   </div>
-  <!-- دوره‌ها → صفحه جدید -->
-  <div class="bn-item" onclick="location.href='https://planlife.ir/Pages/Doreha/dore.html'">
+  <div class="bn-item" id="bn-courses" onclick="navigateSide('https://planlife.ir/Pages/Doreha/dore.html','sb-courses','دوره‌ها');setBn(this)">
     <svg viewBox="0 0 24 24" fill="none"><path d="M12 3L22 8L12 13L2 8L12 3Z" fill="currentColor"/></svg>
     دوره‌ها
   </div>
-  <div class="bn-item" onclick="location.href='https://planlife.ir/Pages/Tamrin/index.html'">
+  <div class="bn-item" id="bn-exercise" onclick="navigateSide('https://planlife.ir/Pages/Tamrin/index.html',null,'تمرینات مجازی');setBn(this)">
     <svg viewBox="0 0 24 24" fill="none"><rect x="4.5" y="3.5" width="15" height="17" rx="4" stroke="currentColor" stroke-width="1.7"/><path d="M8 11.3L10 13.3L14.5 8.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
     تمرینات
   </div>
@@ -667,20 +801,19 @@ img{display:block;max-width:100%;}
 <div id="drawer-overlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
   <h2>PlanLife</h2>
-  <a class="drawer-item" href="https://planlife.ir">خانه</a>
-  <a class="drawer-item" href="https://planlife.ir/Pages/podcasts_free/index.html">پادکست‌های رایگان</a>
-  <!-- دوره‌ها → صفحه جدید -->
-  <a class="drawer-item" href="https://planlife.ir/Pages/Doreha/dore.html">دوره‌ها 📚</a>
-  <a class="drawer-item" href="https://planlife.ir/Pages/Magazine/index.html">مجله ماورایی 📰</a>
-  <a class="drawer-item" href="https://planlife.ir/Pages/Mindcoding/index.html">کد نویسی ذهنی</a>
-  <a class="drawer-item" href="https://planlife.ir/Pages/visionboard/index.html">تابلو آرزوها 🔖</a>
-  <a class="drawer-item" href="https://planlife.ir/Pages/Book/index.html">کتابخانه 📚</a>
-  <a class="drawer-item" href="https://planlife.ir/Pages/komakavaliye/index.html">جعبه کمک‌های اولیه</a>
-  <a class="drawer-item" href="javascript:void(0)" onclick="openSubscriptionModal('ترک عادت')">ترک عادت</a>
-  <a class="drawer-item" href="javascript:void(0)" onclick="openSubscriptionModal('نقشه ی راه')">نقشه راه</a>
-  <a class="drawer-item" href="https://planlife.ir/Pages/Music/index.html">موزیک‌ها</a>
-  <a class="drawer-item" href="javascript:void(0)" onclick="openSubscriptionModal('تمرینات تخصصی')">تمرینات تخصصی</a>
-  <a class="drawer-item" href="javascript:void(0)" onclick="openSubscriptionModal('چک لیست روزانه')">چک‌لیست روزانه 📜</a>
+  <a class="drawer-item" href="javascript:void(0)" onclick="navigateSide('home','sb-home');closeDrawer()">خانه</a>
+  <a class="drawer-item" href="javascript:void(0)" onclick="navigateSide('https://planlife.ir/Pages/podcasts_free/index.html','sb-podcast','پادکست رایگان');closeDrawer()">پادکست‌های رایگان</a>
+  <a class="drawer-item" href="javascript:void(0)" onclick="navigateSide('https://planlife.ir/Pages/Doreha/dore.html','sb-courses','دوره‌ها');closeDrawer()">دوره‌ها 📚</a>
+  <a class="drawer-item" href="javascript:void(0)" onclick="navigateSide('https://planlife.ir/Pages/Magazine/index.html',null,'مجله ماورایی');closeDrawer()">مجله ماورایی 📰</a>
+  <a class="drawer-item" href="javascript:void(0)" onclick="navigateSide('https://planlife.ir/Pages/Mindcoding/index.html',null,'کدنویسی ذهنی');closeDrawer()">کد نویسی ذهنی</a>
+  <a class="drawer-item" href="javascript:void(0)" onclick="navigateSide('https://planlife.ir/Pages/visionboard/index.html',null,'تابلو آرزوها');closeDrawer()">تابلو آرزوها 🔖</a>
+  <a class="drawer-item" href="javascript:void(0)" onclick="navigateSide('https://planlife.ir/Pages/Book/index.html','sb-book','کتابخانه');closeDrawer()">کتابخانه 📚</a>
+  <a class="drawer-item" href="javascript:void(0)" onclick="navigateSide('https://planlife.ir/Pages/komakavaliye/index.html',null,'جعبه کمک‌های اولیه');closeDrawer()">جعبه کمک‌های اولیه</a>
+  <a class="drawer-item" href="javascript:void(0)" onclick="openSubscriptionModal('ترک عادت');closeDrawer()">ترک عادت</a>
+  <a class="drawer-item" href="javascript:void(0)" onclick="openSubscriptionModal('نقشه ی راه');closeDrawer()">نقشه راه</a>
+  <a class="drawer-item" href="javascript:void(0)" onclick="navigateSide('https://planlife.ir/Pages/Music/index.html',null,'موزیک‌ها');closeDrawer()">موزیک‌ها</a>
+  <a class="drawer-item" href="javascript:void(0)" onclick="openSubscriptionModal('تمرینات تخصصی');closeDrawer()">تمرینات تخصصی</a>
+  <a class="drawer-item" href="javascript:void(0)" onclick="openSubscriptionModal('چک لیست روزانه');closeDrawer()">چک‌لیست روزانه 📜</a>
 </div>
 
 <!-- SUBSCRIPTION MODAL -->
@@ -700,6 +833,134 @@ img{display:block;max-width:100%;}
 </div>
 
 <script>
+/* ===== PAGE ICONS MAP ===== */
+var PAGE_ICONS = {
+  'دوره‌ها': '📚',
+  'پادکست': '🎙️',
+  'پادکست رایگان': '🎙️',
+  'پادکست‌های رایگان': '🎙️',
+  'کتابخانه': '📖',
+  'مجله ماورایی': '📰',
+  'کدنویسی ذهنی': '💻',
+  'پاکسازی ذهنی': '💭',
+  'تمرینات مجازی': '🏃',
+  'مدیتیشن روزانه': '🧘',
+  'تابلو آرزوها': '🔖',
+  'جعبه کمک‌های اولیه': '🩺',
+  'موزیک‌ها': '🎵',
+  'تمرینات تخصصی': '💪',
+};
+
+/* ===== NAVIGATION CORE ===== */
+var currentSideBtn = 'sb-home';
+
+function navigateTo(url, tabEl, title) {
+  // Update top tabs active state
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  if (tabEl) tabEl.classList.add('active');
+
+  if (url === 'home') {
+    goHome();
+    return;
+  }
+  loadInIframe(url, title || url);
+}
+
+function navigateSide(url, btnId, title) {
+  // Update sidebar active state
+  document.querySelectorAll('.side-btn').forEach(function(b){ b.classList.remove('active'); });
+  if (btnId) {
+    var btn = document.getElementById(btnId);
+    if (btn) btn.classList.add('active');
+    currentSideBtn = btnId;
+  }
+
+  if (url === 'home') {
+    goHome();
+    return;
+  }
+  loadInIframe(url, title || url);
+}
+
+function loadInIframe(url, title) {
+  var homeView = document.getElementById('home-view');
+  var iframeView = document.getElementById('iframe-view');
+  var iframe = document.getElementById('main-iframe');
+  var loading = document.getElementById('iframe-loading');
+  var pageTitle = document.getElementById('iframe-page-title');
+  var favicon = document.getElementById('iframe-favicon');
+  var loadingText = document.getElementById('loading-text');
+
+  // Show iframe view, hide home
+  homeView.style.display = 'none';
+  iframeView.classList.add('active');
+
+  // Show loading state
+  loading.classList.add('active');
+  iframe.style.display = 'none';
+
+  // Set title and icon
+  pageTitle.textContent = title || 'در حال بارگذاری...';
+  favicon.textContent = PAGE_ICONS[title] || '🌐';
+  loadingText.textContent = 'در حال بارگذاری ' + (title || 'صفحه') + '...';
+
+  // Load the URL
+  iframe.src = url;
+
+  // Update top tabs - deselect all
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+
+  // Scroll to top of main area
+  document.querySelector('.main-col').scrollTop = 0;
+  window.scrollTo(0, 0);
+}
+
+function iframeLoaded() {
+  var loading = document.getElementById('iframe-loading');
+  var iframe = document.getElementById('main-iframe');
+  loading.classList.remove('active');
+  iframe.style.display = 'block';
+}
+
+function iframeError() {
+  var loading = document.getElementById('iframe-loading');
+  var loadingText = document.getElementById('loading-text');
+  loading.classList.remove('active');
+  loadingText.textContent = 'خطا در بارگذاری صفحه';
+}
+
+function reloadIframe() {
+  var iframe = document.getElementById('main-iframe');
+  var loading = document.getElementById('iframe-loading');
+  if (iframe.src) {
+    loading.classList.add('active');
+    iframe.style.display = 'none';
+    iframe.src = iframe.src;
+  }
+}
+
+function goHome() {
+  var homeView = document.getElementById('home-view');
+  var iframeView = document.getElementById('iframe-view');
+  var iframe = document.getElementById('main-iframe');
+
+  iframeView.classList.remove('active');
+  homeView.style.display = 'block';
+  iframe.src = '';
+
+  // Reset sidebar
+  document.querySelectorAll('.side-btn').forEach(function(b){ b.classList.remove('active'); });
+  var homeBtn = document.getElementById('sb-home');
+  if (homeBtn) homeBtn.classList.add('active');
+
+  // Reset top tab
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  var firstTab = document.querySelector('.tab');
+  if (firstTab) firstTab.classList.add('active');
+
+  window.scrollTo(0, 0);
+}
+
 /* ===== DRAWER ===== */
 function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawer-overlay').classList.add('open');}
 function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawer-overlay').classList.remove('open');}
@@ -731,28 +992,33 @@ function verifySubscription(){
   var code = document.getElementById('subscription-code').value.trim();
   if(code===VALID_CODE){
     var link = PAGE_LINKS[currentTargetPage];
-    if(link) window.location.href = link; else window.location.href='https://planlife.ir/Pages/Doreha/dore.html';
+    closeSubscriptionModal();
+    if(link) loadInIframe(link, currentTargetPage);
+    else loadInIframe('https://planlife.ir/Pages/Doreha/dore.html', 'دوره‌ها');
   } else {
     alert('کد اشتراک اشتباه است!');
     document.getElementById('subscription-code').focus();
   }
 }
-function goToCourses(){ window.location.href='https://planlife.ir/Pages/Doreha/dore.html'; }
+function goToCourses(){ closeSubscriptionModal(); loadInIframe('https://planlife.ir/Pages/Doreha/dore.html', 'دوره‌ها'); }
 
 /* ===== HERO ===== */
 var heroSlides = [
   {img:'https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg',
    title:'دوره‌های جدید رشد فردی',
    desc:'مجموعه‌ای تازه از دوره‌های تخصصی قانون جذب، تقویت باور و تغییر رفتار. مطمئن شو جای خودت رو رزرو کردی.',
-   status:'ظرفیت باز', cta:'مشاهده دوره‌ها', link:'https://planlife.ir/Pages/Doreha/dore.html'},
+   status:'ظرفیت باز', cta:'مشاهده دوره‌ها',
+   url:'https://planlife.ir/Pages/Doreha/dore.html', urlTitle:'دوره‌ها', btnId:'sb-courses'},
   {img:'https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png',
    title:'پادکست‌های رایگان',
    desc:'قسمت‌های تازه درباره قانون جذب و تغییر افکار، هر هفته منتشر می‌شود.',
-   status:'قسمت جدید', cta:'شنیدن پادکست‌ها', link:'https://planlife.ir/Pages/podcasts_free/index.html'},
+   status:'قسمت جدید', cta:'شنیدن پادکست‌ها',
+   url:'https://planlife.ir/Pages/podcasts_free/index.html', urlTitle:'پادکست رایگان', btnId:'sb-podcast'},
   {img:'http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png',
    title:'پاکسازی ذهن از افکار منفی',
    desc:'یک تمرین هدایت‌شده برای رها کردن افکار منفی و بازسازی باورهای تازه.',
-   status:'۱۰ دقیقه', cta:'شروع پاکسازی ذهن', link:'https://planlife.ir/Pages/paksazi/index.html'}
+   status:'۱۰ دقیقه', cta:'شروع پاکسازی ذهن',
+   url:'https://planlife.ir/Pages/paksazi/index.html', urlTitle:'پاکسازی ذهنی', btnId:null}
 ];
 var heroIdx = 0;
 function renderHero(){
@@ -762,7 +1028,8 @@ function renderHero(){
   document.getElementById('hero-desc').textContent = s.desc;
   document.getElementById('hero-status').textContent = s.status;
   document.getElementById('hero-cta').textContent = s.cta;
-  document.getElementById('hero-cta').onclick = function(){ location.href = s.link; };
+  document.getElementById('hero-cta').onclick = function(){ navigateSide(s.url, s.btnId, s.urlTitle); };
+  document.querySelector('.hero-creator .other').onclick = function(){ navigateSide(s.url, s.btnId, s.urlTitle); };
 }
 function heroNav(dir){
   heroIdx = (heroIdx + dir + heroSlides.length) % heroSlides.length;
@@ -772,6 +1039,7 @@ function heroTab(el, i){
   document.querySelectorAll('.hero-tab').forEach(function(t){t.classList.remove('active');});
   el.classList.add('active');
 }
+
 /* countdown */
 var countdownSec = 2*3600 + 59*60 + 59;
 function toFa(n){ return String(n).padStart(2,'0').replace(/[0-9]/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[d];}); }
@@ -847,7 +1115,7 @@ function sendMessage(){
   setTimeout(function(){
     removeThinking();
     var answer = findAnswer(text);
-    var reply = answer || 'سوال جالبیه! می‌تونی از کارت‌های بالا هم کمک بگیری یا سوالت رو جور دیگه‌ای بپرسی 😊';
+    var reply = answer || 'سوال جالبیه! می‌تونی از کاردها بالا هم کمک بگیری یا سوالت رو جور دیگه‌ای بپرسی 😊';
     addMessage(reply,'bot');
     input.disabled=false; input.focus(); isSending=false;
   }, 900);
