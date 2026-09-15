@@ -3,1238 +3,1557 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#eef2f6">
-<title>PlanLife | پادکست های رایگان</title>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#e2e6eb">
+<title>PlanLife - محتوای رایگان</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&family=Playfair+Display:ital,wght@1,700&family=Cormorant+Garamond:wght@700&display=swap" rel="stylesheet">
 <style>
+/* =============================================
+   ROOT TOKENS — تم صفحه اصلی
+   ============================================= */
 :root {
-  --bg1: #e6efe9;
-  --bg2: #dde9f6;
-  --shell: #ffffff;
-  --ink: #12141c;
-  --muted: #6b7280;
-  --hair: #eef0f3;
-  --blue: #2f6fed;
-  --blue-ink: #1e4fc9;
-  --lime: #d8f24c;
-  --lime-ink: #4b5a10;
-  --panel: #12141c;
-  --panel2: #1b1f2a;
-  --green: #3ddc84;
-  --red: #ff5470;
-  --radius-xl: 30px;
-  --radius-lg: 22px;
-  --radius-md: 16px;
-  --radius-sm: 12px;
-  --shadow-card: 0 10px 30px rgba(18, 20, 28, 0.06);
+  --bg-page:    #d8dde4;
+  --shell:      #f4f5f7;
+  --section:    #ffffff;
+  --section-border: rgba(0,0,0,0.09);
+  --section-shadow: 0 2px 12px rgba(0,0,0,0.07), 0 0 0 1.5px rgba(0,0,0,0.06);
+  --ink:        #12141c;
+  --muted:      #6b7280;
+  --hair:       #eef0f3;
+  --blue:       #2f6fed;
+  --blue-ink:   #1e4fc9;
+  --accent:     #ff9500;
+  --accent-dk:  #cc7700;
+  --radius-xl:  22px;
+  --radius-lg:  18px;
+  --radius-md:  14px;
+  --radius-sm:  10px;
+  --gap:        14px;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
+/* =============================================
+   BASE
+   ============================================= */
+* { margin: 0; padding: 0; box-sizing: border-box; }
 html, body {
-  height: 100%;
   font-family: 'Vazirmatn', sans-serif;
+  background: var(--bg-page);
   color: var(--ink);
+  min-height: 100dvh;
 }
 
-body {
-  background: linear-gradient(160deg, var(--bg1), var(--bg2));
-  min-height: 100vh;
-  padding: 22px;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-img {
-  display: block;
-  max-width: 100%;
-}
-
-/* ===== SHELL ===== */
-.shell {
-  max-width: 1280px;
-  margin: 0 auto;
-  background: var(--shell);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 30px 80px rgba(18, 20, 28, 0.12);
-  padding: 18px 22px 22px;
-  min-height: calc(100vh - 44px);
-}
-
-/* ===== TOPBAR ===== */
-.topbar {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 6px 4px 18px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-}
-
-.brand img {
-  width: 38px;
-  height: 38px;
-  border-radius: 11px;
-  object-fit: cover;
-}
-
-.brand span {
-  font-weight: 800;
-  font-size: 17px;
-  letter-spacing: 0.2px;
-}
-
-.back-btn {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 26px;
-  cursor: pointer;
-  color: var(--ink);
-  padding: 6px;
-  margin-right: 10px;
-}
-
-.topbar-title {
-  flex: 1;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--ink);
-}
-
-.sort-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--muted);
-  border: 1px solid #e4e7ec;
-  padding: 8px 13px;
-  border-radius: 999px;
-  cursor: pointer;
-  background: #fff;
-  transition: 0.2s;
-}
-
-.sort-btn:hover {
-  border-color: var(--blue);
-  color: var(--blue);
-}
-
-/* ===== MAIN LAYOUT ===== */
-.layout {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-}
-
-.sidebar {
-  width: 76px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 0;
-  position: sticky;
-  top: 14px;
-}
-
-.side-btn {
-  width: 50px;
-  height: 50px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: var(--muted);
-  transition: 0.2s;
-}
-
-.side-btn.active {
-  background: var(--blue);
-  color: #fff;
-  box-shadow: 0 8px 18px rgba(47, 111, 237, 0.35);
-}
-
-.side-btn:not(.active):hover {
-  background: var(--hair);
-}
-
-.side-gap {
-  flex: 1;
-}
-
-.side-plus {
-  width: 50px;
-  height: 50px;
-  border-radius: 16px;
-  background: var(--lime);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  cursor: pointer;
-  color: var(--lime-ink);
-  font-size: 22px;
-  font-weight: 700;
-  transition: 0.2s;
-}
-
-.side-plus:hover {
-  transform: scale(1.08);
-}
-
-.side-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  overflow: hidden;
-  border: 2px solid var(--hair);
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.side-avatar:hover {
-  border-color: var(--blue);
-}
-
-.side-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* ===== MAIN COLUMN ===== */
-.main-col {
-  flex: 1 1 0;
-  min-width: 0;
-}
-
-/* ===== SECTION HEADER ===== */
-.section-head {
-  display: flex;
-  align-items: center;
+/* =============================================
+   HEADER — سبک صفحه اصلی
+   ============================================= */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--section);
+  box-shadow: var(--section-shadow);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  display: flex; align-items: center;
   justify-content: space-between;
-  margin: 0 4px 20px;
+  padding: 0 20px; height: 60px;
+  margin-bottom: var(--gap);
 }
-
-.section-head h2 {
-  font-size: 24px;
-  font-weight: 800;
+.header-back {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--hair); border: 1.5px solid #e0e3e9;
+  border-radius: 999px; padding: 7px 14px;
+  font-size: 13px; font-weight: 700; color: var(--ink);
+  cursor: pointer; text-decoration: none; transition: .15s;
+  font-family: inherit;
 }
-
-.section-head .count {
-  font-size: 12px;
-  color: var(--muted);
-  font-weight: 500;
+.header-back:hover { background: #e4e7ec; }
+.header-brand {
+  display: flex; align-items: center; gap: 8px;
+  font-weight: 800; font-size: 15px;
 }
-
-/* ===== CARDS GRID ===== */
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  margin-bottom: 40px;
+.header-brand img {
+  width: 32px; height: 32px; border-radius: 9px; object-fit: cover;
 }
-
-.podcast-card {
-  background: var(--shell);
-  border: 1px solid #eef0f3;
-  border-radius: var(--radius-md);
-  padding: 14px;
-  box-shadow: var(--shadow-card);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
+.admin-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,149,0,0.12); border: 1.5px solid rgba(255,149,0,0.4);
+  border-radius: 999px; padding: 7px 14px; font-size: 13px;
+  font-weight: 700; color: var(--accent); cursor: pointer; font-family: inherit;
+  transition: .15s;
 }
+.admin-badge:hover { background: rgba(255,149,0,0.2); }
 
-.podcast-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 50px rgba(18, 20, 28, 0.14);
-  border-color: var(--blue);
-}
+/* =============================================
+   SHELL / LAYOUT
+   ============================================= */
+.shell { max-width: 900px; margin: 0 auto; padding: 0 14px 100px; }
 
-.podcast-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(47, 111, 237, 0.08), transparent);
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none;
-}
-
-.podcast-card:hover::before {
-  opacity: 1;
-}
-
-.card-thumb {
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  aspect-ratio: 1 / 0.85;
-  background: #eef0f3;
-  cursor: pointer;
-}
-
-.card-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-.podcast-card:hover .card-thumb img {
-  transform: scale(1.06);
-}
-
-.card-badge {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  background: rgba(18, 20, 28, 0.72);
-  color: #fff;
-  font-size: 9.5px;
-  font-weight: 700;
-  padding: 4px 9px;
-  border-radius: 999px;
-  z-index: 2;
-}
-
-.card-play-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(18, 20, 28, 0);
-  opacity: 0;
-  transition: all 0.3s;
-  z-index: 3;
-}
-
-.podcast-card:hover .card-play-overlay {
-  background: rgba(18, 20, 28, 0.45);
-  opacity: 1;
-}
-
-.play-icon-btn {
-  width: 56px;
-  height: 56px;
-  background: var(--lime);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 8px 20px rgba(216, 242, 76, 0.4);
-  transition: all 0.2s;
-}
-
-.play-icon-btn:hover {
-  transform: scale(1.12);
-  box-shadow: 0 12px 28px rgba(216, 242, 76, 0.55);
-}
-
-.play-icon-btn:active {
-  transform: scale(0.95);
-}
-
-.play-icon-btn svg {
-  width: 24px;
-  height: 24px;
-  fill: var(--lime-ink);
-  margin-left: 2px;
-}
-
-.card-title {
-  font-size: 14.5px;
-  font-weight: 800;
-  line-height: 1.3;
-  color: var(--ink);
-  margin: 0;
-}
-
-.card-subtitle {
-  font-size: 12px;
-  color: var(--muted);
-  font-weight: 500;
-}
-
-.card-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  color: var(--muted);
-}
-
-.card-meta-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-/* ===== PLAYER MODAL ===== */
-.player-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(18, 20, 28, 0.85);
-  backdrop-filter: blur(8px);
-  z-index: 900;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.player-backdrop.active {
-  display: flex;
-  opacity: 1;
-}
-
-.player-modal {
-  position: relative;
-  background: var(--shell);
+/* =============================================
+   PAGE TITLE
+   ============================================= */
+.page-title-wrap {
+  background: var(--section);
   border-radius: var(--radius-xl);
-  width: 90%;
-  max-width: 500px;
-  max-height: 90vh;
-  padding: 30px;
-  box-shadow: 0 30px 80px rgba(18, 20, 28, 0.3);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  overflow-y: auto;
-  animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: var(--section-shadow);
+  padding: 20px 22px 18px;
+  margin-bottom: var(--gap);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.page-title {
+  font-size: 18px; font-weight: 900; color: var(--ink);
+}
+.page-title span {
+  color: var(--accent);
+}
+.page-count {
+  font-size: 12px; color: var(--muted); font-weight: 600;
+  background: var(--hair); border-radius: 999px; padding: 5px 12px;
 }
 
-@keyframes slideUp {
-  from {
-    transform: translateY(60px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+/* =============================================
+   SECTION SELECTOR TABS
+   ============================================= */
+.section-tabs {
+  background: var(--section);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--section-shadow);
+  padding: 10px 14px;
+  margin-bottom: var(--gap);
+  display: flex; gap: 8px; overflow-x: auto;
+  scrollbar-width: none;
+}
+.section-tabs::-webkit-scrollbar { display: none; }
+.stab {
+  flex-shrink: 0; padding: 9px 18px; border-radius: 999px;
+  background: var(--hair); border: 1.5px solid transparent;
+  font-size: 13px; font-weight: 700; color: var(--muted);
+  cursor: pointer; transition: .18s; white-space: nowrap;
+  font-family: inherit;
+}
+.stab.active {
+  background: var(--ink); color: #fff; border-color: var(--ink);
+}
+.stab:not(.active):hover { border-color: #dde0e5; background: #eaecf0; }
+
+/* scroll indicator dots */
+.scroll-indicator {
+  display: flex; gap: 6px; align-items: center; justify-content: center;
+  margin: 0 0 var(--gap);
+}
+.scroll-line {
+  height: 3px; border-radius: 999px;
+  background: rgba(0,0,0,0.12); transition: all 0.3s ease;
+}
+.scroll-line.active {
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(255,149,0,0.4);
+}
+.scroll-line-long  { width: 44px; }
+.scroll-line-short { width: 22px; }
+
+/* =============================================
+   CONTENT PANELS
+   ============================================= */
+.content-panel { display: none; }
+.content-panel.active { display: block; }
+
+.panel-header {
+  background: var(--section);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--section-shadow);
+  padding: 16px 20px;
+  margin-bottom: var(--gap);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.panel-header h2 { font-size: 15px; font-weight: 800; }
+.panel-header .sort {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  border: 1.5px solid #e0e3e9; padding: 7px 12px;
+  border-radius: 999px; cursor: pointer; background: var(--hair);
 }
 
-.player-close {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--hair);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  color: var(--ink);
-  transition: 0.2s;
-  z-index: 10;
-}
-
-.player-close:hover {
-  background: var(--red);
-  color: #fff;
-}
-
-.player-cover {
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: var(--radius-lg);
-  object-fit: cover;
-  box-shadow: 0 15px 40px rgba(47, 111, 237, 0.25);
-}
-
-.player-info {
-  text-align: center;
-}
-
-.player-info h3 {
-  font-size: 20px;
-  font-weight: 800;
-  margin-bottom: 6px;
-  color: var(--ink);
-}
-
-.player-info p {
-  font-size: 13px;
-  color: var(--muted);
-  font-weight: 500;
-}
-
-/* ===== AUDIO CONTROLS ===== */
-.audio-controls {
-  display: flex;
-  flex-direction: column;
+/* =============================================
+   GRIDS
+   ============================================= */
+.grid-2col {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 14px;
+  padding-bottom: 20px;
 }
 
-.progress-bar-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+/* =============================================
+   PODCAST CARD — تم روشن صفحه اصلی
+   ============================================= */
+.podcast-card {
+  background: var(--section);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--section-shadow);
+  padding: 10px 10px 14px;
+  text-align: center; cursor: pointer;
+  transition: .22s cubic-bezier(.25,.8,.25,1);
+  -webkit-tap-highlight-color: transparent;
+  border: 1.5px solid transparent;
+}
+.podcast-card:hover {
+  box-shadow: 0 10px 28px rgba(0,0,0,.13), 0 0 0 1.5px rgba(255,149,0,.3);
+  transform: translateY(-3px);
+}
+.podcast-card:active { transform: scale(0.97); }
+
+.podcast-card-img-wrap { position: relative; }
+.podcast-card-img-wrap img {
+  width: 100%; aspect-ratio: 1/1;
+  border-radius: var(--radius-md);
+  object-fit: cover; display: block;
 }
 
-.progress-container {
-  width: 100%;
-  height: 5px;
-  background: var(--hair);
-  border-radius: 999px;
-  cursor: pointer;
+/* نشان تعداد نظر */
+.podcast-badge-wrap {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 999px; padding: 4px 9px;
+  display: flex; align-items: center; gap: 5px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+.podcast-badge-wrap svg { width: 12px; height: 12px; fill: var(--accent); }
+.podcast-badge-wrap span { font-size: 11.5px; font-weight: 700; color: var(--ink); }
+
+/* نشان جدید */
+.new-badge {
+  position: absolute; top: 8px; left: 8px;
+  background: var(--accent); color: #fff;
+  font-size: 10.5px; font-weight: 900;
+  padding: 3px 9px; border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(255,149,0,0.4);
+  white-space: nowrap; pointer-events: none;
+}
+
+/* آمار پخش ادمین */
+.admin-play-badge {
+  position: absolute; bottom: 8px; left: 8px;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(6px);
+  border-radius: 999px; padding: 4px 9px;
+  display: flex; align-items: center; gap: 5px;
+  border: 1px solid rgba(61,220,132,0.4);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.admin-play-badge svg { width: 12px; height: 12px; fill: #22c55e; }
+.admin-play-badge span { font-size: 11px; font-weight: 800; color: #16a34a; }
+
+.podcast-card-title {
+  font-size: 13.5px; font-weight: 700;
+  color: var(--ink); margin: 10px 0 4px;
+  line-height: 1.4;
+}
+.podcast-card-cat {
+  font-size: 11.5px; color: var(--muted); font-weight: 500;
+  margin-bottom: 10px;
+}
+
+/* دکمه پخش — سبک صفحه اصلی */
+.podcast-play-circle {
+  width: 44px; height: 44px;
+  background: var(--accent);
+  border-radius: 50%; margin: 4px auto 0;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 16px rgba(255,149,0,0.35);
+  transition: .15s;
+}
+.podcast-card:hover .podcast-play-circle {
+  box-shadow: 0 8px 22px rgba(255,149,0,0.5);
+  transform: scale(1.07);
+}
+.podcast-play-circle svg { width: 20px; height: 20px; fill: #fff; margin-left: -2px; }
+
+/* =============================================
+   QA CARD — تم روشن
+   ============================================= */
+.qa-card {
+  background: var(--section);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--section-shadow);
+  padding: 10px 10px 12px;
+  text-align: center; cursor: pointer;
+  display: flex; flex-direction: column;
   position: relative;
-  overflow: hidden;
+  transition: .22s cubic-bezier(.25,.8,.25,1);
+  -webkit-tap-highlight-color: transparent;
+  border: 1.5px solid transparent;
+}
+.qa-card:hover {
+  box-shadow: 0 10px 28px rgba(0,0,0,.13), 0 0 0 1.5px rgba(255,149,0,.3);
+  transform: translateY(-3px);
+}
+.qa-card:active { transform: scale(0.97); }
+
+/* تکست‌باکس سوال */
+.card-question-box {
+  width: 100%;
+  background: var(--hair);
+  border: 1.5px solid #e0e3e9;
+  border-radius: var(--radius-md);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  position: relative; height: 110px; overflow: hidden; margin-bottom: 10px;
+}
+.card-question-box-bg {
+  position: absolute; inset: 0; border-radius: var(--radius-md);
+  pointer-events: none; z-index: 0;
+}
+.card-question-text-scroll {
+  position: absolute; inset: 0; z-index: 1;
+  overflow-y: scroll; -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain; touch-action: pan-y;
+  padding: 10px; text-align: center;
+  display: flex; align-items: center; justify-content: center;
+}
+.card-question-text-scroll::-webkit-scrollbar { width: 3px; }
+.card-question-text-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255,149,0,0.25); border-radius: 10px;
+}
+.card-question-text {
+  font-size: 12.5px; font-weight: 600; line-height: 1.65;
+  color: var(--ink); word-break: break-word; width: 100%;
 }
 
-.progress-bar {
+.card-cat-label {
+  font-size: 11px; color: var(--muted); font-weight: 500;
+  margin: 2px 0 8px; line-height: 1.4;
+}
+.card-bottom-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2px; margin-top: 6px;
+}
+.card-comment-chip {
+  display: flex; align-items: center; gap: 4px;
+  background: var(--hair); border: 1px solid #e0e3e9;
+  border-radius: 999px; padding: 5px 10px;
+  font-size: 11.5px; font-weight: 700; color: var(--muted);
+}
+.card-comment-chip svg { width: 12px; height: 12px; fill: var(--accent); flex-shrink: 0; }
+.card-play-btn {
+  width: 40px; height: 40px;
+  background: var(--accent);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 14px rgba(255,149,0,0.35); flex-shrink: 0;
+  transition: .15s;
+}
+.qa-card:hover .card-play-btn {
+  box-shadow: 0 6px 18px rgba(255,149,0,0.5);
+  transform: scale(1.07);
+}
+.card-play-btn svg { width: 18px; height: 18px; fill: #fff; margin-right: -2px; }
+.card-empty-chip { width: 40px; display:flex; align-items:center; justify-content:center; }
+.card-empty-chip .admin-inline-plays {
+  display:flex; align-items:center; gap:4px;
+  font-size:11px; font-weight:800; color:#16a34a;
+}
+.card-empty-chip .admin-inline-plays svg { width: 12px; height: 12px; fill: #22c55e; }
+
+/* =============================================
+   MINI PLAYER — تم روشن با اکسنت نارنجی
+   ============================================= */
+.mini-player {
+  position: fixed; bottom: 15px; left: 15px; right: 15px; height: 72px;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1.5px solid rgba(0,0,0,0.1);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.9);
+  z-index: 290; display: none; align-items: center;
+  padding: 0 16px; gap: 12px;
+  cursor: pointer; overflow: hidden;
+}
+.mini-player.active { display: flex; }
+.mini-cover {
+  width: 48px; height: 48px; border-radius: var(--radius-sm);
+  object-fit: cover; flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.mini-info { flex: 1; overflow: hidden; }
+.mini-title {
+  font-size: 13.5px; font-weight: 700; color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mini-ep {
+  font-size: 11.5px; color: var(--muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mini-progress {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px; background: rgba(0,0,0,0.07);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl); overflow: hidden;
+}
+.mini-progress-bar {
   height: 100%;
-  background: linear-gradient(to right, var(--blue), var(--lime));
-  border-radius: 999px;
-  width: 0%;
-  box-shadow: 0 0 10px rgba(47, 111, 237, 0.5);
-  transition: width 0.1s linear;
+  background: linear-gradient(to right, var(--accent), var(--accent-dk));
+  border-radius: 999px; transition: width 0.5s linear;
+}
+.mini-play-btn {
+  width: 42px; height: 42px; background: var(--accent); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; box-shadow: 0 4px 14px rgba(255,149,0,0.35);
+}
+.mini-play-btn svg { width: 22px; height: 22px; fill: #fff; }
+.mini-close {
+  width: 32px; height: 32px; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0; font-size: 18px;
+  color: var(--muted); cursor: pointer;
+}
+
+/* =============================================
+   NOW PLAYING SCREEN — تم روشن
+   ============================================= */
+.now-playing {
+  position: fixed; top: 10px; left: 10px; right: 10px;
+  height: calc(100% - 10px); height: calc(100dvh - 10px);
+  background: rgba(248,249,252,0.98);
+  z-index: 300; display: none; flex-direction: column;
+  align-items: center; padding: 20px 20px 40px;
+  overflow-y: auto; overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+  transform: translateY(110%); border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  will-change: transform, border-radius; touch-action: pan-y;
+  color: var(--ink);
+}
+.now-playing.active {
+  display: flex; transform: translateY(0%);
+  transition: transform 0.52s cubic-bezier(0.32,0.72,0,1),
+              border-radius 0.52s cubic-bezier(0.32,0.72,0,1);
+}
+.drag-handle-wrap {
+  width: 100%; display: flex; justify-content: center;
+  padding: 6px 0 2px; flex-shrink: 0; cursor: grab;
+}
+.drag-handle {
+  width: 44px; height: 5px;
+  background: rgba(0,0,0,0.15); border-radius: 999px;
+}
+.player-topbar {
+  width: 100%; max-width: 380px; display: flex;
+  justify-content: space-between; align-items: center;
+  padding: 8px 0 16px; flex-shrink: 0;
+}
+.player-status { font-size: 14px; font-weight: 600; color: var(--muted); }
+
+/* کاور بزرگ */
+.big-cover { width: 100%; max-width: 200px; margin: 6px 0 10px; position: relative; flex-shrink: 0; }
+.big-cover img {
+  width: 100%; aspect-ratio: 1/1; object-fit: cover;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 15px 45px rgba(0,0,0,0.18);
+}
+.cover-comment-badge {
+  position: absolute; bottom: -13px; left: 50%; transform: translateX(-50%);
+  background: rgba(255,255,255,0.95); border: 1.5px solid rgba(0,0,0,0.1);
+  backdrop-filter: blur(10px); border-radius: 999px; padding: 5px 14px;
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 700; white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12); color: var(--ink);
+}
+.cover-comment-badge svg { width: 14px; height: 14px; fill: var(--accent); flex-shrink: 0; }
+
+/* باکس سوال QA */
+.question-box {
+  width: 100%; max-width: 320px; margin: 6px 0 10px;
+  background: var(--hair);
+  border: 1.5px solid #e0e3e9; border-radius: var(--radius-lg);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9);
+  position: relative; flex-shrink: 0; height: 260px; max-height: 260px; overflow: hidden;
+}
+.question-box-bg {
+  position: absolute; inset: 0; border-radius: var(--radius-lg);
+  pointer-events: none; z-index: 0;
+}
+.question-text-scroll {
+  position: absolute; inset: 0; z-index: 1;
+  overflow-y: scroll; -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain; touch-action: pan-y;
+  padding: 22px 20px; text-align: center;
+  display: flex; align-items: center; justify-content: center;
+}
+.question-text {
+  font-size: 15px; font-weight: 600; line-height: 1.7;
+  color: var(--ink); word-break: break-word; width: 100%;
+}
+
+/* اطلاعات تراک */
+.track-info {
+  text-align: center; width: 100%; max-width: 360px;
+  margin: 20px 0 10px; flex-shrink: 0;
+}
+.np-title { font-size: 19px; font-weight: 900; color: var(--ink); margin-bottom: 4px; }
+.np-subtitle { font-size: 14px; color: var(--muted); }
+
+/* پروگرس بار پادکست */
+.progress-section { width: 100%; max-width: 360px; margin-bottom: 28px; flex-shrink: 0; }
+.progress-container-podcast {
+  width: 100%; height: 5px; background: rgba(0,0,0,0.1);
+  border-radius: 999px; cursor: pointer; margin-bottom: 8px; position: relative;
+}
+.progress-bar-podcast {
+  height: 100%;
+  background: linear-gradient(to right, var(--accent), var(--accent-dk));
+  border-radius: 999px; box-shadow: 0 0 8px rgba(255,149,0,0.4);
+  position: relative; width: 0%; transition: width 0.1s linear;
+}
+
+/* پروگرس بار QA */
+.progress-container-qa {
+  width: 100%; height: 8px;
+  background: rgba(0,0,0,0.07);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 999px; cursor: pointer; margin-bottom: 8px; position: relative;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.08);
+}
+.progress-bar-qa {
+  height: 100%;
+  background: linear-gradient(to right, var(--accent), var(--accent-dk));
+  border-radius: 999px; box-shadow: 0 0 8px rgba(255,149,0,0.35);
+  width: 0%; transition: width 0.1s linear;
 }
 
 .time-display {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: var(--muted);
-  font-weight: 600;
+  display: flex; justify-content: space-between;
+  font-size: 13px; color: var(--muted);
 }
 
-.controls-buttons {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
+/* کنترل‌های اصلی */
+.main-controls {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; max-width: 360px; padding: 0 10px;
+  margin-bottom: 30px; flex-shrink: 0;
 }
-
 .control-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
+  width: 46px; height: 46px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.control-btn svg { width: 30px; height: 30px; fill: var(--muted); transition: all 0.2s; }
+.control-btn:active svg { fill: var(--accent); transform: scale(0.9); }
+.play-main {
+  width: 80px; height: 80px; background: var(--accent); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 10px 30px rgba(255,149,0,0.4); cursor: pointer;
+  transition: .15s;
+}
+.play-main:hover { box-shadow: 0 12px 36px rgba(255,149,0,0.55); transform: scale(1.04); }
+.play-main svg { width: 34px; height: 34px; fill: #fff; }
+
+/* =============================================
+   COMMENTS — تم روشن
+   ============================================= */
+.comments-section {
+  width: 100%; max-width: 360px; margin-top: 10px; padding-bottom: 30px;
+}
+.comments-list {
+  max-height: 240px; overflow-y: auto; padding-right: 4px; margin-bottom: 14px;
+}
+.comments-list::-webkit-scrollbar { width: 5px; }
+.comments-list::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 10px; }
+.loading-comments { text-align: center; padding: 20px; color: var(--muted); font-size: 14px; }
+.delete-btn {
+  background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
+  color: #dc2626; border-radius: 8px; padding: 4px 10px;
+  font-size: 12px; cursor: pointer; font-family: inherit; transition: .15s;
+}
+.delete-btn:hover { background: rgba(239,68,68,0.2); }
+
+/* فرم ارسال نظر */
+.comment-form-wrap {
   background: var(--hair);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--ink);
-  transition: all 0.2s;
-  font-size: 20px;
+  border: 1.5px solid #e0e3e9;
+  border-radius: var(--radius-lg);
+  padding: 16px 16px 18px;
+}
+.comment-field {
+  width: 100%; background: var(--section);
+  border: 1.5px solid #e0e3e9; border-radius: var(--radius-md);
+  padding: 12px 14px; color: var(--ink); font-size: 14px;
+  margin-bottom: 10px; outline: none; font-family: inherit;
+  transition: border .18s; -webkit-appearance: none;
+}
+.comment-field:focus { border-color: var(--accent); }
+.comment-textarea {
+  width: 100%; background: var(--section);
+  border: 1.5px solid #e0e3e9; border-radius: var(--radius-md);
+  padding: 12px 14px; color: var(--ink); font-size: 14px;
+  resize: none; height: 80px; outline: none; font-family: inherit;
+  line-height: 1.5; display: block; -webkit-appearance: none; transition: border .18s;
+}
+.comment-textarea:focus { border-color: var(--accent); }
+.comment-submit-btn {
+  margin-top: 12px; width: 100%; background: var(--accent); color: #fff;
+  border: none; border-radius: 999px; padding: 13px 0;
+  font-weight: 800; font-size: 15px; cursor: pointer; font-family: inherit;
+  box-shadow: 0 6px 18px rgba(255,149,0,0.3); transition: .15s;
+}
+.comment-submit-btn:hover {
+  box-shadow: 0 8px 24px rgba(255,149,0,0.45); transform: translateY(-1px);
+}
+.comment-submit-btn:active { transform: scale(0.98); }
+
+/* =============================================
+   LOGIN OVERLAY — تم روشن
+   ============================================= */
+.login-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4); backdrop-filter: blur(8px);
+  z-index: 999; display: none; align-items: center; justify-content: center;
+}
+.login-overlay.active { display: flex; }
+.login-box {
+  background: var(--section);
+  border: 1.5px solid rgba(0,0,0,0.1);
+  border-radius: var(--radius-xl); padding: 36px 30px;
+  width: 90%; max-width: 340px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2); position: relative;
+}
+.login-box h3 { font-size: 20px; font-weight: 800; text-align: center; margin-bottom: 6px; }
+.login-box p { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 24px; }
+.login-field {
+  width: 100%; background: var(--hair);
+  border: 1.5px solid #e0e3e9; border-radius: var(--radius-md);
+  padding: 13px 16px; color: var(--ink); font-size: 15px;
+  outline: none; font-family: inherit; margin-bottom: 12px; transition: border .18s;
+}
+.login-field:focus { border-color: var(--accent); }
+.login-btn {
+  width: 100%; background: var(--accent); color: #fff; border: none;
+  border-radius: 999px; padding: 14px 0; font-weight: 800; font-size: 16px;
+  cursor: pointer; margin-top: 4px; font-family: inherit;
+  box-shadow: 0 6px 18px rgba(255,149,0,0.3); transition: .15s;
+}
+.login-btn:hover { box-shadow: 0 8px 24px rgba(255,149,0,0.45); }
+.login-btn:active { opacity: 0.85; }
+.login-error {
+  color: #dc2626; font-size: 13px; text-align: center; margin-top: 10px; display: none;
+}
+.login-close {
+  position: absolute; top: 14px; left: 16px; font-size: 20px; cursor: pointer;
+  color: var(--muted); background: none; border: none;
 }
 
-.control-btn:hover {
-  background: var(--blue);
-  color: #fff;
-  transform: scale(1.1);
-}
-
-.control-btn:active {
-  transform: scale(0.92);
-}
-
-.play-btn {
-  width: 70px;
-  height: 70px;
-  background: linear-gradient(135deg, var(--blue), var(--lime));
-  color: #fff;
-  font-size: 28px;
-  box-shadow: 0 10px 30px rgba(47, 111, 237, 0.35);
-}
-
-.play-btn:hover {
-  background: linear-gradient(135deg, var(--blue-ink), #b8d608);
-  box-shadow: 0 15px 40px rgba(47, 111, 237, 0.5);
-}
-
-/* ===== BOTTOM NAV (MOBILE) ===== */
-.bottom-nav {
-  display: none;
-  position: fixed;
-  bottom: 12px;
-  left: 12px;
-  right: 12px;
-  height: 60px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(16px);
-  border-radius: 22px;
-  box-shadow: 0 12px 30px rgba(18, 20, 28, 0.18);
-  padding: 8px 10px;
-  z-index: 200;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.bn-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  color: var(--muted);
-  font-size: 9.5px;
-  font-weight: 700;
-  flex: 1;
-  padding: 6px 0;
-  border-radius: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-decoration: none;
-}
-
-.bn-item.active {
-  color: var(--blue);
-  background: rgba(47, 111, 237, 0.08);
-}
-
-.bn-item svg {
-  width: 20px;
-  height: 20px;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  fill: none;
-}
-
-.bn-item.active svg {
-  fill: currentColor;
-}
-
-/* ===== AUDIO ELEMENT ===== */
-audio {
-  width: 100%;
-  margin: 10px 0;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 1080px) {
-  .cards-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 960px) {
-  body {
-    padding: 0;
-  }
-
-  .shell {
-    border-radius: 0;
-    min-height: 100vh;
-    padding: 14px 14px 90px;
-  }
-
-  .layout {
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .sidebar {
-    display: none;
-  }
-
-  .topbar {
-    margin-bottom: 14px;
-  }
-
-  .back-btn {
-    display: block;
-  }
-
-  .topbar-title {
-    font-size: 16px;
-  }
-
-  .sort-btn {
-    font-size: 11px;
-    padding: 7px 11px;
-  }
-
-  .cards-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-
-  .podcast-card {
-    padding: 10px;
-    gap: 8px;
-  }
-
-  .card-title {
-    font-size: 13px;
-  }
-
-  .card-subtitle {
-    font-size: 11px;
-  }
-
-  .bottom-nav {
-    display: flex;
-  }
-
-  .player-modal {
-    width: 95%;
-    max-width: 100%;
-    max-height: 95vh;
-    border-radius: 22px 22px 0 0;
-    padding: 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .cards-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .topbar {
-    margin-bottom: 10px;
-  }
-
-  .section-head h2 {
-    font-size: 20px;
-  }
-
-  .player-modal {
-    padding: 16px;
-  }
-
-  .player-cover {
-    border-radius: var(--radius-md);
-  }
-
-  .player-info h3 {
-    font-size: 18px;
-  }
-
-  .play-btn {
-    width: 60px;
-    height: 60px;
-    font-size: 24px;
-  }
-
-  .control-btn {
-    width: 38px;
-    height: 38px;
-    font-size: 18px;
-  }
-
-  .bn-item {
-    font-size: 8px;
-  }
-
-  .bn-item svg {
-    width: 18px;
-    height: 18px;
-  }
-}
-
-/* ===== SMOOTH SCROLL ===== */
-html {
-  scroll-behavior: smooth;
-}
-
-/* ===== LOADING SKELETON ===== */
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--hair) 25%,
-    rgba(233, 236, 239, 0.5) 50%,
-    var(--hair) 75%
-  );
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-}
-
-@keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 500px) {
+  .grid-2col { gap: 10px; }
+  .podcast-card { border-radius: var(--radius-md); }
+  .qa-card { border-radius: var(--radius-md); }
 }
 </style>
 </head>
 <body>
 
+<!-- ========== HEADER ========== -->
+<header class="header">
+  <a href="https://planlife.ir" class="header-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+      <path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    بازگشت
+  </a>
+  <div class="header-brand">
+    <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
+    PlanLife
+  </div>
+  <div id="headerAuthArea">
+    <button onclick="openLogin()" class="admin-badge">🔐 ادمین</button>
+  </div>
+</header>
+
+<!-- ========== LOGIN OVERLAY ========== -->
+<div id="loginOverlay" class="login-overlay">
+  <div class="login-box">
+    <button class="login-close" onclick="closeLogin()">✕</button>
+    <h3>🔐 ورود ادمین</h3>
+    <p>برای مدیریت نظرات وارد شوید</p>
+    <input id="loginPassword" class="login-field" type="password" placeholder="کد ادمین">
+    <button class="login-btn" onclick="doLogin()">ورود</button>
+    <div id="loginError" class="login-error">کد ادمین اشتباه است</div>
+  </div>
+</div>
+
+<!-- ========== MAIN SHELL ========== -->
 <div class="shell">
 
-  <!-- TOPBAR -->
-  <div class="topbar">
-    <button class="back-btn" onclick="goBack()">←</button>
-    <div class="brand">
-      <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
-      <span>PlanLife</span>
+  <!-- عنوان صفحه -->
+  <div class="page-title-wrap">
+    <div class="page-title">
+      <span>Plan</span>Life Podcasts
     </div>
-    <div class="topbar-title">پادکست های رایگان</div>
-    <button class="sort-btn" onclick="toggleSort()">
-      <span>امروز ▾</span>
-    </button>
+    <div class="page-count">محتوای رایگان</div>
   </div>
 
-  <!-- MAIN LAYOUT -->
-  <div class="layout">
-
-    <!-- SIDEBAR (Desktop) -->
-    <aside class="sidebar">
-      <button class="side-btn active" title="پادکست‌ها" onclick="goToHome()">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none">
-          <path d="M4 13.5C4 8.25 7.58 4 12 4C16.42 4 20 8.25 20 13.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><rect x="3" y="13" width="3.4" height="6" rx="1.6" fill="currentColor"/><rect x="17.6" y="13" width="3.4" height="6" rx="1.6" fill="currentColor"/>
-        </svg>
-      </button>
-      <button class="side-btn" title="دوره‌ها" onclick="navigate('courses')">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none">
-          <path d="M12 3L22 8L12 13L2 8L12 3Z" fill="currentColor"/><path d="M2 16L12 21L22 16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      <button class="side-btn" title="کتابخانه" onclick="navigate('library')">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none">
-          <path d="M4 5.5C4 4.7 4.7 4 5.5 4H11V19H5.5C4.7 19 4 18.3 4 17.5V5.5Z" fill="currentColor" fill-opacity=".95"/><path d="M13 4H18.5C19.3 4 20 4.7 20 5.5V17.5C20 18.3 19.3 19 18.5 19H13V4Z" fill="currentColor" fill-opacity=".55"/>
-        </svg>
-      </button>
-      <div class="side-gap"></div>
-      <button class="side-plus" title="پیشنهاد امروز" onclick="navigate('today')">+</button>
-      <div class="side-avatar" onclick="navigate('profile')">
-        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="پروفایل">
-      </div>
-    </aside>
-
-    <!-- MAIN COLUMN -->
-    <main class="main-col">
-
-      <!-- SECTION HEADER -->
-      <div class="section-head">
-        <div>
-          <h2>پادکست های رایگان</h2>
-          <span class="count" id="podcast-count">(بارگذاری...)</span>
-        </div>
-      </div>
-
-      <!-- CARDS GRID -->
-      <div class="cards-grid" id="podcastGrid">
-        <!-- کارت‌ها به صورت دینامیکی اضافه می‌شوند -->
-      </div>
-
-    </main>
-
+  <!-- تب‌های دسته‌بندی -->
+  <div class="section-tabs">
+    <button id="stab-podcast" class="stab active" onclick="showSection('podcast')">🎙 پادکست‌های رایگان</button>
+    <button id="stab-qa" class="stab" onclick="showSection('qa')">🧠 پاسخ به سوالات</button>
   </div>
 
-</div>
+  <!-- اندیکاتور اسکرول -->
+  <div class="scroll-indicator" id="scrollIndicator">
+    <div class="scroll-line scroll-line-long active" id="line-podcast"></div>
+    <div class="scroll-line scroll-line-short"       id="line-qa"></div>
+  </div>
 
-<!-- PLAYER MODAL -->
-<div class="player-backdrop" id="playerBackdrop" onclick="closePlayer(event)">
-  <div class="player-modal" id="playerModal" onclick="event.stopPropagation()">
-    <button class="player-close" onclick="closePlayer()">✕</button>
-    
-    <img class="player-cover" id="playerCover" src="" alt="کاور پادکست">
-    
-    <div class="player-info">
-      <h3 id="playerTitle">عنوان پادکست</h3>
-      <p id="playerSubtitle">PlanLife</p>
+  <!-- ===== پنل پادکست ===== -->
+  <div id="panel-podcast" class="content-panel active">
+    <div class="panel-header">
+      <h2>پادکست‌های رایگان</h2>
+      <div class="sort">جدیدترین ▾</div>
     </div>
+    <div id="podcastGrid" class="grid-2col"></div>
+  </div>
 
-    <div class="audio-controls">
-      <div class="progress-bar-wrap">
-        <div class="progress-container" id="progressContainer">
-          <div class="progress-bar" id="progressBar"></div>
-        </div>
-        <div class="time-display">
-          <span id="currentTime">0:00</span>
-          <span id="totalTime">0:00</span>
-        </div>
-      </div>
-
-      <div class="controls-buttons">
-        <button class="control-btn" onclick="previousTrack()">⏮</button>
-        <button class="control-btn" onclick="seek(-10)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" fill="currentColor"/>
-          </svg>
-        </button>
-        <button class="control-btn play-btn" id="playBtn" onclick="togglePlay()">
-          <svg id="playIcon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M8 5v14l11-7z"/>
-          </svg>
-        </button>
-        <button class="control-btn" onclick="seek(10)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z" fill="currentColor"/>
-          </svg>
-        </button>
-        <button class="control-btn" onclick="nextTrack()">⏭</button>
-      </div>
+  <!-- ===== پنل سوال/جواب ===== -->
+  <div id="panel-qa" class="content-panel">
+    <div class="panel-header">
+      <h2>پاسخ به سوالات ذهنی شما</h2>
+      <div class="sort">جدیدترین ▾</div>
     </div>
+    <div id="qaGrid" class="grid-2col"></div>
+  </div>
 
-    <audio id="audioPlayer" preload="metadata"></audio>
+</div><!-- /shell -->
 
+<!-- ========== MINI PLAYER ========== -->
+<div id="miniPlayer" class="mini-player" onclick="expandPlayer()">
+  <img id="miniCover" class="mini-cover" src="" alt="" style="display:none;">
+  <div id="miniPlayIcon2Wrap" style="display:none;">
+    <div style="width:42px;height:42px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 14px rgba(255,149,0,0.35);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+    </div>
+  </div>
+  <div class="mini-info">
+    <div id="miniTitle" class="mini-title">در حال پخش</div>
+    <div id="miniEp" class="mini-ep">PlanLife</div>
+  </div>
+  <div class="mini-play-btn" id="miniPlayBtn" onclick="event.stopPropagation(); miniTogglePlay()">
+    <svg id="miniPlayIcon" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+  </div>
+  <div class="mini-close" onclick="event.stopPropagation(); killPlayer()">✕</div>
+  <div class="mini-progress">
+    <div class="mini-progress-bar" id="miniProgressBar" style="width:0%"></div>
   </div>
 </div>
 
-<!-- BOTTOM NAV (Mobile) -->
-<nav class="bottom-nav">
-  <a class="bn-item active" href="#" onclick="event.preventDefault(); scrollToTop();">
-    <svg viewBox="0 0 24 24"><path d="M4 13.5C4 8.25 7.58 4 12 4C16.42 4 20 8.25 20 13.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><rect x="3" y="13" width="3.4" height="6" rx="1.6" fill="currentColor"/><rect x="17.6" y="13" width="3.4" height="6" rx="1.6" fill="currentColor"/></svg>
-    پادکست
-  </a>
-  <a class="bn-item" href="https://planlife.ir/Pages/Doreha/index.html">
-    <svg viewBox="0 0 24 24"><path d="M12 3L22 8L12 13L2 8L12 3Z" fill="currentColor"/></svg>
-    دوره‌ها
-  </a>
-  <a class="bn-item" href="https://planlife.ir/Pages/Book/index.html">
-    <svg viewBox="0 0 24 24"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11V19H5.5C4.7 19 4 18.3 4 17.5V5.5Z" fill="currentColor"/><path d="M13 4H18.5C19.3 4 20 4.7 20 5.5V17.5C20 18.3 19.3 19 18.5 19H13V4Z" fill="currentColor" opacity="0.55"/></svg>
-    کتابخانه
-  </a>
-  <a class="bn-item" href="https://planlife.ir">
-    <svg viewBox="0 0 24 24"><path d="M3.5 11L12 4L20.5 11V19.5C20.5 20.05 20.05 20.5 19.5 20.5H14.5V14H9.5V20.5H4.5C3.95 20.5 3.5 20.05 3.5 19.5V11Z" fill="currentColor"/></svg>
-    خانه
-  </a>
-</nav>
+<!-- ========== NOW PLAYING SCREEN ========== -->
+<div id="nowPlayingScreen" class="now-playing">
+  <div class="drag-handle-wrap"><div class="drag-handle"></div></div>
+  <div class="player-topbar">
+    <button onclick="closeNowPlaying()" style="font-size:24px;background:none;border:none;color:var(--muted);cursor:pointer;">←</button>
+    <span id="playerStatus" class="player-status">در حال پخش</span>
+    <div style="width:40px;"></div>
+  </div>
 
+  <!-- کاور پادکست -->
+  <div class="big-cover" id="bigCoverWrap">
+    <img id="npCover" src="" alt="">
+    <div class="cover-comment-badge">
+      <svg viewBox="0 0 24 24"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
+      <span id="coverCommentCount">۰</span>
+      <span style="color:var(--muted);font-weight:500;">نظر</span>
+    </div>
+  </div>
+
+  <!-- باکس سوال QA -->
+  <div class="question-box" id="questionBoxWrap" style="display:none;">
+    <div class="question-box-bg"></div>
+    <div class="question-text-scroll">
+      <div class="question-text" id="questionText">سوال اینجا نمایش داده می‌شود</div>
+    </div>
+  </div>
+
+  <div class="track-info">
+    <h2 id="npTitle" class="np-title">عنوان</h2>
+    <p id="npSubtitle" class="np-subtitle">PlanLife</p>
+  </div>
+
+  <!-- پیشرفت پادکست -->
+  <div class="progress-section" id="progressSectionPodcast">
+    <div class="progress-container-podcast" id="progressContainerPodcast">
+      <div class="progress-bar-podcast" id="progressBarPodcast"></div>
+    </div>
+    <div class="time-display">
+      <span id="currentTimePodcast">0:00</span>
+      <span id="totalTimePodcast">0:00</span>
+    </div>
+  </div>
+
+  <!-- پیشرفت QA -->
+  <div class="progress-section" id="progressSectionQA" style="display:none;">
+    <div class="progress-container-qa" id="progressContainerQA">
+      <div class="progress-bar-qa" id="progressBarQA"></div>
+    </div>
+    <div class="time-display">
+      <span id="currentTimeQA">0:00</span>
+      <span id="totalTimeQA">0:00</span>
+    </div>
+  </div>
+
+  <audio id="mainAudio"></audio>
+
+  <div class="main-controls">
+    <div class="control-btn" onclick="prevTrack()">
+      <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z"/></svg>
+    </div>
+    <div class="control-btn" onclick="seek(-10)">
+      <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+    </div>
+    <div onclick="togglePlay()" class="play-main">
+      <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </div>
+    <div class="control-btn" onclick="seek(10)">
+      <svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg>
+    </div>
+    <div class="control-btn" onclick="nextTrack()">
+      <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+    </div>
+  </div>
+
+  <!-- بخش نظرات -->
+  <div class="comments-section">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:0 4px;">
+      <span style="font-size:18px;font-weight:800;">💬 نظرات</span>
+      <span id="commentCount" style="background:var(--accent);color:#fff;font-size:12px;font-weight:800;padding:3px 11px;border-radius:999px;">0</span>
+    </div>
+    <div id="commentsList" class="comments-list"></div>
+    <div class="comment-form-wrap" id="commentForm">
+      <input id="commentName" type="text" placeholder="نام شما (اختیاری)" onfocus="scrollToForm()" class="comment-field">
+      <textarea id="commentText" placeholder="نظر خود را اینجا بنویسید..." onfocus="scrollToForm()" class="comment-textarea"></textarea>
+      <button id="submitCommentBtn" onclick="addComment()" class="comment-submit-btn">ارسال نظر</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SCRIPTS ========== -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+/* ================================================
+   CONFIG
+   ================================================ */
+const SUPABASE_URL       = 'https://hjzzvzxhrqovvducnxha.supabase.co';
+const SUPABASE_ANON_KEY  = 'sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
+const ADMIN_CODE         = 'admin2933';
+const ADMIN_API_PASSWORD = 'So@21072933@';
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 /* ================================================
    DATA — پادکست‌ها
    ================================================ */
-const podcastsData = [
+const podcastData = [
   {
-    id: 102,
-    isNew: true,
-    title: "موضوعات متفاوت",
-    episode: "فرکانس خواسته",
-    category: "قانون جذب",
+    id: 102, isNew: true,
+    title: "موضوعات متفاوت", episode: "فرکانس خواسته",
     src: "http://fs3.centraldnserver.com/~planlife/podcast_free/Mozoatdigar/Frequency_free.m4a",
-    cover: "http://fs3.centraldnserver.com/~planlife/pics/podcast_free/4AD48B99-0DD5-45E6-879F-B1D7E21EF676.png",
-    duration: "18:30"
+    cover: "http://fs3.centraldnserver.com/~planlife/pics/podcast_free/4AD48B99-0DD5-45E6-879F-B1D7E21EF676.png"
   },
   {
-    id: 101,
-    isNew: true,
-    title: "موضوعات متفاوت",
-    episode: "رسیدن به خواسته ها",
-    category: "رشد فردی",
+    id: 101, isNew: true,
+    title: "موضوعات متفاوت", episode: "رسیدن به خواسته ها",
     src: "http://fs3.centraldnserver.com/~planlife/podcast_free/Mozoatdigar/hadaf_az_residan_be_khaste.m4a",
-    cover: "http://fs3.centraldnserver.com/~planlife/pics/podcast_free/IMG_2789.jpeg",
-    duration: "22:45"
+    cover: "http://fs3.centraldnserver.com/~planlife/pics/podcast_free/IMG_2789.jpeg"
   },
   {
-    id: 0,
-    isNew: true,
-    title: "موضوعات متفاوت",
-    episode: "کد نویسی ذهن",
-    category: "باورها",
+    id: 0, isNew: true,
+    title: "موضوعات متفاوت", episode: "کد نویسی ذهن",
     src: "http://fs3.centraldnserver.com/~planlife/podcast_free/codenevisi/Codenevisizehn_free.m4a",
-    cover: "http://fs3.centraldnserver.com/~planlife/pics/podcast_free/IMG_2409.jpeg",
-    duration: "25:12"
+    cover: "http://fs3.centraldnserver.com/~planlife/pics/podcast_free/IMG_2409.jpeg"
   },
   {
-    id: 24,
-    isNew: true,
-    title: "موضوعات متفاوت",
-    episode: "به خودت حق بده",
-    category: "خودقبولی",
+    id: 24, isNew: true,
+    title: "موضوعات متفاوت", episode: "به خودت حق بده",
     src: "http://fs3.centraldnserver.com/~planlife/podcast_free/Mozoatdigar/PlanLife.ir-Hagh nadadan be khod.m4a",
-    cover: "http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2254.jpeg",
-    duration: "19:15"
+    cover: "http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2254.jpeg"
   },
   {
-    id: 1,
-    isNew: false,
-    title: "باورهای ثروت",
-    episode: "کار کردن روی باورها",
-    category: "ثروت",
+    id: 1, isNew: false,
+    title: "باورهای ثروت", episode: "کار کردن روی باورها",
     src: "https://res.cloudinary.com/dfthbclzi/video/upload/v1780854988/Bavar_free_w9yucc.m4a",
-    cover: "http://fs3.centraldnserver.com/~planlife/pics/Servat/IMG_1053.JPG",
-    duration: "28:00"
+    cover: "http://fs3.centraldnserver.com/~planlife/pics/Servat/IMG_1053.JPG"
   },
   {
-    id: 25,
-    isNew: true,
-    title: "عشق و روابط",
-    episode: "از نظر همه باید جذاب باشم",
-    category: "روابط",
+    id: 25, isNew: true,
+    title: "عشق و روابط", episode: "از نظر همه باید جذاب باشم",
     src: "http://fs3.centraldnserver.com/~planlife/podcast_free/ravabet/PlanLife.ir-jazab bodan az nazare hame.m4a",
-    cover: "http://fs3.centraldnserver.com/~planlife/pics/ravabet/IMG_2269.jpeg",
-    duration: "21:30"
+    cover: "http://fs3.centraldnserver.com/~planlife/pics/ravabet/IMG_2269.jpeg"
   },
   {
-    id: 4,
-    isNew: false,
-    title: "باورهای ثروت",
-    episode: "فقط با سختی کشیدن میشود؟",
-    category: "ثروت",
+    id: 4, isNew: false,
+    title: "باورهای ثروت", episode: "فقط با سختی کشیدن میشود؟",
     src: "http://fs3.centraldnserver.com/~planlife/podcast_free/servat/SakhTi keshidan - planlife Free.m4a",
-    cover: "http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2318.JPG",
-    duration: "20:45"
+    cover: "http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2318.JPG"
   },
   {
-    id: 5,
-    isNew: false,
-    title: "باورهای ثروت",
-    episode: "خسیس بودن در زندگی",
-    category: "ثروت",
+    id: 5, isNew: false,
+    title: "باورهای ثروت", episode: "خسیس بودن در زندگی",
     src: "https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779530272/Khasis_bodan_-_planLife.ir_Free_sv3vbr.m4a",
-    cover: "http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2223.jpeg",
-    duration: "26:15"
-  }
+    cover: "http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2223.jpeg"
+  },
+];
+
+/* ================================================
+   DATA — سوالات
+   ================================================ */
+const qaData = [
+  {
+    id: 100, category: "سوالات در حوزه مالی",
+    question: "چطور می‌تونم معنا و رسالت واقعی زندگی خودم رو پیدا کنم؟ از کجا بفهمم که رسالت من چی هست و به سمتی باید برم؟",
+    audio: "http://fs3.centraldnserver.com/~planlife/soaljavab/planlife.ir-resalate-vagheiy-man.m4a"
+  },
+  {
+    id: 101, category: "سوالات در حوزه مالی",
+    question: "چرا پول از من فرار می‌کنه؟",
+    audio: ""
+  },
+  {
+    id: 102, category: "سوالات در حوزه روابط",
+    question: "چرا دختر جذب پسرای بد میشن؟ پسرهای بد چه جذابیتی دارند که پسرهای خوب ندارند؟",
+    audio: "http://fs3.centraldnserver.com/~planlife/soaljavab/Planlife.ir-che-psarayebad-jazaban.m4a"
+  },
+  {
+    id: 103, category: "سوالات در حوزه روابط",
+    question: "چطور با ترس از تنهایی یا طرد شدن کنار بیام و کیفیت روابطم رو فدای این ترس‌ها نکنم؟",
+    audio: "http://fs3.centraldnserver.com/~planlife/soaljavab/Project-chtor-kenarbiyam-ba-tanhaei.m4a"
+  },
+  {
+    id: 104, category: "سوالات در حوزه اعتماد به نفس",
+    question: "چطور اعتماد به نفسم رو بالا ببرم؟",
+    audio: ""
+  },
 ];
 
 /* ================================================
    STATE
    ================================================ */
-let currentTrackIndex = -1;
-let isPlaying = false;
-const audio = document.getElementById('audioPlayer');
+let isAdmin     = false;
+let allComments = {};
+let currentId   = null;
+let currentMode = null;
+let currentIndex = 0;
+let playCounts  = { pCounts: {}, qCounts: {} };
+
+const audio    = document.getElementById('mainAudio');
 const playIcon = document.getElementById('playIcon');
-const progressBar = document.getElementById('progressBar');
-const progressContainer = document.getElementById('progressContainer');
-const currentTimeEl = document.getElementById('currentTime');
-const totalTimeEl = document.getElementById('totalTime');
+const statusEl = document.getElementById('playerStatus');
+
+/* ================================================
+   SUPABASE — پادکست
+   ================================================ */
+async function fetchPodcastComments(id) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('comments').select('*').eq('podcast_id', id).order('created_at', { ascending: false });
+    if (error) throw error;
+    allComments[`p_${id}`] = data || [];
+  } catch(e) { console.warn(e); }
+}
+async function insertPodcastComment(id, name, text) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('comments').insert([{ podcast_id: id, name, text }]).select();
+    if (error) throw error;
+    return data && data[0];
+  } catch(e) { console.warn(e); return null; }
+}
+async function deletePodcastCommentRemote(commentId) {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/delete-comment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'apikey': SUPABASE_ANON_KEY },
+      body: JSON.stringify({ commentId, adminPassword: ADMIN_API_PASSWORD })
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'HTTP ' + res.status);
+    return true;
+  } catch(e) { alert('خطا در حذف: ' + e.message); return false; }
+}
+
+/* ================================================
+   SUPABASE — QA
+   ================================================ */
+async function fetchQAComments(id) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('qa_comments').select('*').eq('qa_id', id).order('created_at', { ascending: false });
+    if (error) throw error;
+    allComments[`q_${id}`] = data || [];
+  } catch(e) { console.warn(e); }
+}
+async function insertQAComment(id, name, text) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('qa_comments').insert([{ qa_id: id, name, text }]).select();
+    if (error) throw error;
+    return data && data[0];
+  } catch(e) { console.warn(e); return null; }
+}
+async function deleteQACommentRemote(commentId) {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/delete-comment-qa`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'apikey': SUPABASE_ANON_KEY },
+      body: JSON.stringify({ commentId, adminPassword: ADMIN_API_PASSWORD })
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'HTTP ' + res.status);
+    return true;
+  } catch(e) { alert('خطا در حذف: ' + e.message); return false; }
+}
+
+/* ================================================
+   COUNT FETCHES
+   ================================================ */
+async function fetchAllPodcastCounts() {
+  try {
+    const { data, error } = await supabaseClient.from('comments').select('podcast_id');
+    if (error) throw error;
+    const counts = {};
+    (data || []).forEach(r => { counts[r.podcast_id] = (counts[r.podcast_id] || 0) + 1; });
+    return counts;
+  } catch(e) { return {}; }
+}
+async function fetchAllQACounts() {
+  try {
+    const { data, error } = await supabaseClient.from('qa_comments').select('qa_id');
+    if (error) throw error;
+    const counts = {};
+    (data || []).forEach(r => { counts[r.qa_id] = (counts[r.qa_id] || 0) + 1; });
+    return counts;
+  } catch(e) { return {}; }
+}
+
+async function recordVisit() {
+  try {
+    if (sessionStorage.getItem('pl_visited')) return;
+    sessionStorage.setItem('pl_visited', '1');
+    await supabaseClient.from('site_visits').insert([{}]);
+  } catch(e) {}
+}
+async function fetchVisitCount() {
+  try {
+    const { count, error } = await supabaseClient
+      .from('site_visits').select('*', { count: 'exact', head: true });
+    if (error) throw error;
+    return count || 0;
+  } catch(e) { return 0; }
+}
+async function recordPlay(mode, id) {
+  try {
+    const row = mode === 'podcast' ? { podcast_id: id } : { qa_id: id };
+    await supabaseClient.from('play_events').insert([row]);
+  } catch(e) {}
+}
+async function fetchPlayCounts() {
+  try {
+    const [pRes, qRes] = await Promise.all([
+      supabaseClient.from('play_events').select('podcast_id').not('podcast_id', 'is', null),
+      supabaseClient.from('play_events').select('qa_id').not('qa_id', 'is', null)
+    ]);
+    const pCounts = {}, qCounts = {};
+    (pRes.data || []).forEach(r => { pCounts[r.podcast_id] = (pCounts[r.podcast_id] || 0) + 1; });
+    (qRes.data || []).forEach(r => { qCounts[r.qa_id] = (qCounts[r.qa_id] || 0) + 1; });
+    return { pCounts, qCounts };
+  } catch(e) { return { pCounts: {}, qCounts: {} }; }
+}
+async function refreshGridsWithCounts() {
+  const [pCounts, qCounts, pc] = await Promise.all([
+    fetchAllPodcastCounts(), fetchAllQACounts(), fetchPlayCounts()
+  ]);
+  playCounts = pc;
+  renderPodcastGrid(pCounts);
+  renderQAGrid(qCounts);
+}
+
+/* ================================================
+   LOGIN
+   ================================================ */
+function openLogin() {
+  document.getElementById('loginOverlay').classList.add('active');
+  document.getElementById('loginError').style.display = 'none';
+  document.getElementById('loginPassword').value = '';
+  setTimeout(() => document.getElementById('loginPassword').focus(), 100);
+}
+function closeLogin() { document.getElementById('loginOverlay').classList.remove('active'); }
+async function doLogin() {
+  const p = document.getElementById('loginPassword').value;
+  if (p === ADMIN_CODE) {
+    isAdmin = true; closeLogin();
+    await updateAdminHeader();
+    await refreshGridsWithCounts();
+    if (currentId !== null) renderComments();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+async function doLogout() {
+  isAdmin = false;
+  await updateAdminHeader();
+  await refreshGridsWithCounts();
+  if (currentId !== null) renderComments();
+}
+async function updateAdminHeader() {
+  const area = document.getElementById('headerAuthArea');
+  if (isAdmin) {
+    const visits = await fetchVisitCount();
+    area.innerHTML = `<div style="display:flex;align-items:center;gap:8px;">
+      <span style="display:flex;align-items:center;gap:5px;font-size:12px;background:rgba(34,197,94,0.12);border:1.5px solid rgba(34,197,94,0.3);padding:6px 12px;border-radius:999px;color:#16a34a;font-weight:800;">
+        <svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:#22c55e;"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+        ${toPersianNum(visits)} بازدید
+      </span>
+      <button onclick="doLogout()" style="background:var(--hair);border:1.5px solid #e0e3e9;border-radius:999px;color:var(--muted);padding:6px 12px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:700;">خروج</button>
+    </div>`;
+  } else {
+    area.innerHTML = `<button onclick="openLogin()" class="admin-badge">🔐 ادمین</button>`;
+  }
+}
 
 /* ================================================
    UTILS
    ================================================ */
-function toPersianNum(n) {
-  return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
-}
-
-function formatTime(seconds) {
-  if (!seconds || !isFinite(seconds)) return '0:00';
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
+function toPersianNum(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
+function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function formatTime(s) { if (!s || !isFinite(s) || s < 0) return "0:00"; return `${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,'0')}`; }
+function formatCommentTime(iso) {
+  const d = new Date(iso);
+  return `${d.toLocaleDateString('fa-IR',{year:'numeric',month:'short',day:'numeric'})} • ${d.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`;
 }
 
 /* ================================================
-   RENDER GRID
+   SECTION TOGGLE
    ================================================ */
-function renderGrid() {
-  const grid = document.getElementById('podcastGrid');
-  grid.innerHTML = podcastsData.map((podcast, index) => `
-    <div class="podcast-card">
-      <div class="card-thumb">
-        <img src="${podcast.cover}" alt="${podcast.episode}" loading="lazy">
-        <div class="card-play-overlay">
-          <button class="play-icon-btn" onclick="playTrack(${index})">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5v14l11-7z"/>
-            </svg>
-          </button>
-        </div>
-        ${podcast.isNew ? `<div class="card-badge">🔥 جدید</div>` : ''}
-      </div>
-      <div>
-        <h3 class="card-title">${podcast.episode}</h3>
-        <p class="card-subtitle">${podcast.title}</p>
-        <div class="card-meta">
-          <span class="card-meta-item">📂 ${podcast.category}</span>
-          <span class="card-meta-item">⏱️ ${podcast.duration}</span>
-        </div>
-      </div>
-    </div>
-  `).join('');
+function showSection(section) {
+  document.getElementById('stab-podcast').classList.toggle('active', section === 'podcast');
+  document.getElementById('stab-qa').classList.toggle('active', section === 'qa');
+  document.getElementById('panel-podcast').classList.toggle('active', section === 'podcast');
+  document.getElementById('panel-qa').classList.toggle('active', section === 'qa');
 
-  document.getElementById('podcast-count').textContent = `(${toPersianNum(podcastsData.length)} پادکست)`;
-}
-
-/* ================================================
-   PLAYER FUNCTIONS
-   ================================================ */
-function playTrack(index) {
-  currentTrackIndex = index;
-  const track = podcastsData[index];
-  
-  // Update UI
-  document.getElementById('playerTitle').textContent = track.episode;
-  document.getElementById('playerSubtitle').textContent = track.title;
-  document.getElementById('playerCover').src = track.cover;
-  
-  // Load and play audio
-  audio.src = track.src;
-  audio.play().catch(err => console.warn('Play failed:', err));
-  
-  // Show player
-  document.getElementById('playerBackdrop').classList.add('active');
-  isPlaying = true;
-  updatePlayIcon();
-}
-
-function closePlayer(event) {
-  if (event && event.target !== document.getElementById('playerBackdrop')) return;
-  document.getElementById('playerBackdrop').classList.remove('active');
-}
-
-function togglePlay() {
-  if (!audio.src) return;
-  if (audio.paused) {
-    audio.play().catch(err => console.warn('Play failed:', err));
+  const linePodcast = document.getElementById('line-podcast');
+  const lineQA      = document.getElementById('line-qa');
+  if (section === 'podcast') {
+    linePodcast.classList.add('active');    linePodcast.classList.remove('scroll-line-short'); linePodcast.classList.add('scroll-line-long');
+    lineQA.classList.remove('active');      lineQA.classList.remove('scroll-line-long');        lineQA.classList.add('scroll-line-short');
   } else {
-    audio.pause();
-  }
-  updatePlayIcon();
-}
-
-function updatePlayIcon() {
-  const icon = audio.paused 
-    ? '<path d="M8 5v14l11-7z"/>' 
-    : '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-  playIcon.innerHTML = icon;
-}
-
-function seek(seconds) {
-  if (audio.duration) {
-    audio.currentTime = Math.max(0, Math.min(audio.duration, audio.currentTime + seconds));
+    lineQA.classList.add('active');         lineQA.classList.remove('scroll-line-short');       lineQA.classList.add('scroll-line-long');
+    linePodcast.classList.remove('active'); linePodcast.classList.remove('scroll-line-long');   linePodcast.classList.add('scroll-line-short');
   }
 }
 
-function previousTrack() {
-  if (currentTrackIndex > 0) {
-    playTrack(currentTrackIndex - 1);
-  }
+/* ================================================
+   RENDER GRIDS
+   ================================================ */
+function renderPodcastGrid(counts) {
+  document.getElementById('podcastGrid').innerHTML = podcastData.map(item => {
+    const cnt   = toPersianNum(counts[item.id] || 0);
+    const plays = toPersianNum((playCounts.pCounts && playCounts.pCounts[item.id]) || 0);
+    return `<div class="podcast-card" onclick="playPodcast(${item.id})">
+      <div class="podcast-card-img-wrap">
+        <img src="${item.cover}" alt="${item.episode}">
+        <div class="podcast-badge-wrap">
+          <svg viewBox="0 0 24 24"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
+          <span id="card-badge-p${item.id}">${cnt}</span>
+        </div>
+        ${item.isNew ? '<div class="new-badge">جدید</div>' : ''}
+        ${isAdmin ? `<div class="admin-play-badge">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <span>${plays} پخش</span>
+        </div>` : ''}
+      </div>
+      <div class="podcast-card-title">${item.episode}</div>
+      <div class="podcast-card-cat">${item.title}</div>
+      <div class="podcast-play-circle">
+        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-function nextTrack() {
-  if (currentTrackIndex < podcastsData.length - 1) {
-    playTrack(currentTrackIndex + 1);
+function renderQAGrid(counts) {
+  document.getElementById('qaGrid').innerHTML = qaData.map(item => {
+    const cnt   = toPersianNum(counts[item.id] || 0);
+    const plays = toPersianNum((playCounts.qCounts && playCounts.qCounts[item.id]) || 0);
+    return `<div class="qa-card" onclick="playQA(${item.id})">
+      <div class="card-question-box">
+        <div class="card-question-box-bg"></div>
+        <div class="card-question-text-scroll">
+          <span class="card-question-text">${item.question}</span>
+        </div>
+      </div>
+      <div class="card-cat-label">${item.category}</div>
+      <div class="card-bottom-row">
+        <div class="card-comment-chip">
+          <svg viewBox="0 0 24 24"><path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v8C3 15.88 4.12 17 5.5 17H7l3 3 3-3h5.5c1.38 0 2.5-1.12 2.5-2.5v-8z"/></svg>
+          <span id="card-badge-q${item.id}">${cnt}</span>
+        </div>
+        <div class="card-play-btn">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <span class="card-empty-chip">${isAdmin ? `<span class="admin-inline-plays">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>${plays}
+        </span>` : ''}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ================================================
+   PLAY — پادکست
+   ================================================ */
+function playPodcast(id) {
+  const item = podcastData.find(p => p.id === id);
+  if (!item) return;
+  currentMode  = 'podcast';
+  currentId    = id;
+  currentIndex = podcastData.findIndex(p => p.id === id);
+
+  document.getElementById('bigCoverWrap').style.display    = '';
+  document.getElementById('questionBoxWrap').style.display  = 'none';
+  document.getElementById('progressSectionPodcast').style.display = '';
+  document.getElementById('progressSectionQA').style.display      = 'none';
+  document.getElementById('miniCover').style.display        = '';
+  document.getElementById('miniPlayIcon2Wrap').style.display = 'none';
+
+  document.getElementById('npTitle').textContent    = item.episode;
+  document.getElementById('npSubtitle').textContent = item.title;
+  document.getElementById('miniTitle').textContent  = item.episode;
+  document.getElementById('miniEp').textContent     = item.title;
+  document.getElementById('npCover').src            = item.cover;
+  document.getElementById('miniCover').src          = item.cover;
+
+  resetProgress();
+  audio.src = item.src;
+  audio.play().then(() => setPlayIcons(true)).catch(() => setPlayIcons(false));
+  recordPlay('podcast', id);
+  if (isAdmin) playCounts.pCounts[id] = (playCounts.pCounts[id] || 0) + 1;
+  loadComments();
+  expandPlayer();
+}
+
+/* ================================================
+   PLAY — QA
+   ================================================ */
+function playQA(id) {
+  const item = qaData.find(q => q.id === id);
+  if (!item) return;
+  currentMode  = 'qa';
+  currentId    = id;
+  currentIndex = qaData.findIndex(q => q.id === id);
+
+  document.getElementById('bigCoverWrap').style.display    = 'none';
+  document.getElementById('questionBoxWrap').style.display  = '';
+  document.getElementById('progressSectionPodcast').style.display = 'none';
+  document.getElementById('progressSectionQA').style.display      = '';
+  document.getElementById('miniCover').style.display        = 'none';
+  document.getElementById('miniPlayIcon2Wrap').style.display = '';
+
+  document.getElementById('questionText').textContent   = item.question;
+  document.getElementById('npTitle').textContent        = item.category;
+  document.getElementById('npSubtitle').textContent     = 'PlanLife';
+  document.getElementById('miniTitle').textContent      = item.question.substring(0, 45) + '…';
+  document.getElementById('miniEp').textContent         = item.category;
+
+  resetProgress();
+  if (item.audio) {
+    audio.src = item.audio;
+    audio.play().then(() => setPlayIcons(true)).catch(() => setPlayIcons(false));
+    recordPlay('qa', id);
+    if (isAdmin) playCounts.qCounts[id] = (playCounts.qCounts[id] || 0) + 1;
+  } else {
+    audio.removeAttribute('src'); audio.load(); setPlayIcons(false);
   }
+  loadComments();
+  expandPlayer();
 }
 
 /* ================================================
    AUDIO EVENTS
    ================================================ */
 audio.addEventListener('timeupdate', () => {
-  if (audio.duration) {
-    const percent = (audio.currentTime / audio.duration) * 100;
-    progressBar.style.width = percent + '%';
-    currentTimeEl.textContent = formatTime(audio.currentTime);
-    totalTimeEl.textContent = formatTime(audio.duration);
-  }
-});
-
-audio.addEventListener('loadedmetadata', () => {
-  totalTimeEl.textContent = formatTime(audio.duration);
-});
-
-audio.addEventListener('play', () => {
-  isPlaying = true;
-  updatePlayIcon();
-});
-
-audio.addEventListener('pause', () => {
-  isPlaying = false;
-  updatePlayIcon();
-});
-
-audio.addEventListener('ended', () => {
-  nextTrack();
-});
-
-progressContainer.addEventListener('click', (e) => {
   if (!audio.duration) return;
-  const rect = progressContainer.getBoundingClientRect();
-  const percent = (e.clientX - rect.left) / rect.width;
-  audio.currentTime = percent * audio.duration;
+  const pct = (audio.currentTime / audio.duration) * 100;
+  document.getElementById('progressBarPodcast').style.width = pct + '%';
+  document.getElementById('progressBarQA').style.width      = pct + '%';
+  document.getElementById('miniProgressBar').style.width    = pct + '%';
+  document.getElementById('currentTimePodcast').textContent = formatTime(audio.currentTime);
+  document.getElementById('currentTimeQA').textContent      = formatTime(audio.currentTime);
 });
+audio.addEventListener('loadedmetadata', () => {
+  document.getElementById('totalTimePodcast').textContent = formatTime(audio.duration);
+  document.getElementById('totalTimeQA').textContent      = formatTime(audio.duration);
+});
+audio.addEventListener('play',  () => setPlayIcons(true));
+audio.addEventListener('pause', () => setPlayIcons(false));
+audio.addEventListener('ended', () => { setPlayIcons(false); resetProgress(); });
+
+document.getElementById('progressContainerPodcast').addEventListener('click', e => {
+  if (!audio.duration) return;
+  const r = e.currentTarget.getBoundingClientRect();
+  audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
+});
+document.getElementById('progressContainerQA').addEventListener('click', e => {
+  if (!audio.duration) return;
+  const r = e.currentTarget.getBoundingClientRect();
+  const ratio = 1 - ((e.clientX - r.left) / r.width);
+  audio.currentTime = Math.max(0, Math.min(1, ratio)) * audio.duration;
+});
+
+function resetProgress() {
+  ['progressBarPodcast','progressBarQA','miniProgressBar'].forEach(id => {
+    document.getElementById(id).style.width = '0%';
+  });
+  ['currentTimePodcast','currentTimeQA'].forEach(id => {
+    document.getElementById(id).textContent = '0:00';
+  });
+  ['totalTimePodcast','totalTimeQA'].forEach(id => {
+    document.getElementById(id).textContent = '0:00';
+  });
+}
 
 /* ================================================
-   NAVIGATION
+   CONTROLS
    ================================================ */
-function goBack() {
-  window.history.back();
+function setPlayIcons(playing) {
+  const icon = playing
+    ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'
+    : '<path d="M8 5v14l11-7z"/>';
+  playIcon.innerHTML = icon;
+  document.getElementById('miniPlayIcon').innerHTML = icon;
+  statusEl.textContent = playing ? 'در حال پخش' : 'متوقف شده';
+}
+function togglePlay() {
+  if (!audio.src) return;
+  if (audio.paused) { audio.play().catch(()=>{}); } else { audio.pause(); }
+}
+function miniTogglePlay() { togglePlay(); }
+function seek(sec) {
+  if (!audio.duration) return;
+  audio.currentTime = Math.max(0, Math.min(audio.duration, audio.currentTime + sec));
+}
+function prevTrack() {
+  if (currentMode === 'podcast' && currentIndex > 0) playPodcast(podcastData[currentIndex-1].id);
+  else if (currentMode === 'qa' && currentIndex > 0) playQA(qaData[currentIndex-1].id);
+}
+function nextTrack() {
+  if (currentMode === 'podcast' && currentIndex < podcastData.length-1) playPodcast(podcastData[currentIndex+1].id);
+  else if (currentMode === 'qa' && currentIndex < qaData.length-1) playQA(qaData[currentIndex+1].id);
 }
 
-function goToHome() {
-  window.location.href = 'https://planlife.ir';
+/* ================================================
+   COMMENTS
+   ================================================ */
+function commentKey() {
+  return currentMode === 'podcast' ? `p_${currentId}` : `q_${currentId}`;
+}
+async function loadComments() {
+  document.getElementById('commentsList').innerHTML = '<div class="loading-comments">⏳ در حال بارگذاری نظرات...</div>';
+  document.getElementById('commentCount').textContent = '...';
+  if (currentMode === 'podcast') await fetchPodcastComments(currentId);
+  else await fetchQAComments(currentId);
+  renderComments();
+  refreshBadges();
+}
+function renderComments() {
+  const key      = commentKey();
+  const comments = allComments[key] || [];
+  const list     = document.getElementById('commentsList');
+  document.getElementById('commentCount').textContent       = comments.length;
+  document.getElementById('coverCommentCount').textContent  = toPersianNum(comments.length);
+  list.innerHTML = '';
+  if (comments.length === 0) {
+    list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:22px 10px;font-size:14px;line-height:1.7;">هنوز نظری ثبت نشده.<br>اولین نفر باشید!</p>';
+    return;
+  }
+  comments.forEach(c => {
+    const div = document.createElement('div');
+    div.style.cssText = 'background:var(--hair);border-radius:14px;padding:13px 15px;margin-bottom:9px;border:1.5px solid #e0e3e9;';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+        <strong style="color:var(--accent);font-size:14px;">${escapeHtml(c.name)}</strong>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--muted);white-space:nowrap;">${formatCommentTime(c.created_at)}</span>
+          ${isAdmin ? `<button class="delete-btn" onclick="deleteComment(${c.id})">🗑 حذف</button>` : ''}
+        </div>
+      </div>
+      <p style="font-size:14px;line-height:1.6;margin:0;color:var(--ink);">${escapeHtml(c.text)}</p>`;
+    list.appendChild(div);
+  });
+}
+async function addComment() {
+  if (currentId === null) return;
+  const name = document.getElementById('commentName').value.trim() || 'ناشناس';
+  const text = document.getElementById('commentText').value.trim();
+  if (!text) { alert('لطفاً متن نظر را وارد کنید.'); return; }
+  const btn = document.getElementById('submitCommentBtn');
+  btn.textContent = '⏳ در حال ارسال...'; btn.disabled = true;
+
+  let inserted = null;
+  if (currentMode === 'podcast') inserted = await insertPodcastComment(currentId, name, text);
+  else inserted = await insertQAComment(currentId, name, text);
+
+  if (inserted) {
+    const key = commentKey();
+    if (!allComments[key]) allComments[key] = [];
+    allComments[key].unshift(inserted);
+    renderComments(); refreshBadges();
+    document.getElementById('commentText').value = '';
+    document.getElementById('commentName').value = '';
+  } else {
+    alert('ارسال نظر با خطا مواجه شد.');
+  }
+  btn.textContent = 'ارسال نظر'; btn.disabled = false;
+}
+async function deleteComment(commentId) {
+  if (!isAdmin || !confirm('این نظر حذف شود؟')) return;
+  let ok = false;
+  if (currentMode === 'podcast') ok = await deletePodcastCommentRemote(commentId);
+  else ok = await deleteQACommentRemote(commentId);
+  if (!ok) return;
+  const key = commentKey();
+  allComments[key] = (allComments[key] || []).filter(c => c.id !== commentId);
+  renderComments(); refreshBadges();
+}
+async function refreshBadges() {
+  const [pCounts, qCounts] = await Promise.all([fetchAllPodcastCounts(), fetchAllQACounts()]);
+  podcastData.forEach(item => {
+    const el = document.getElementById(`card-badge-p${item.id}`);
+    if (el) el.textContent = toPersianNum(pCounts[item.id] || 0);
+  });
+  qaData.forEach(item => {
+    const el = document.getElementById(`card-badge-q${item.id}`);
+    if (el) el.textContent = toPersianNum(qCounts[item.id] || 0);
+  });
 }
 
-function navigate(section) {
-  const routes = {
-    'courses': 'https://planlife.ir/Pages/Doreha/index.html',
-    'library': 'https://planlife.ir/Pages/Book/index.html',
-    'today': 'https://planlife.ir/Pages/paksazi/index.html',
-    'profile': 'https://planlife.ir'
-  };
-  if (routes[section]) window.location.href = routes[section];
+/* ================================================
+   PLAYER UI
+   ================================================ */
+function expandPlayer() {
+  const screen = document.getElementById('nowPlayingScreen');
+  document.getElementById('miniPlayer').classList.remove('active');
+  screen.style.transition   = 'none';
+  screen.style.transform    = 'translateY(110%)';
+  screen.style.borderRadius = `${getComputedStyle(document.documentElement).getPropertyValue('--radius-xl')} ${getComputedStyle(document.documentElement).getPropertyValue('--radius-xl')} 0 0`;
+  screen.scrollTop = 0;
+  screen.classList.add('active');
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    screen.style.transition   = 'transform 0.52s cubic-bezier(0.32,0.72,0,1), border-radius 0.52s cubic-bezier(0.32,0.72,0,1)';
+    screen.style.transform    = 'translateY(0%)';
+  }));
+}
+function minimizePlayer() {
+  const screen = document.getElementById('nowPlayingScreen');
+  screen.style.transition = 'transform 0.48s cubic-bezier(0.32,0.72,0,1), border-radius 0.48s cubic-bezier(0.32,0.72,0,1)';
+  screen.style.transform  = 'translateY(110%)';
+  setTimeout(() => {
+    screen.classList.remove('active');
+    screen.style.transform = screen.style.borderRadius = screen.style.transition = '';
+    if (currentId !== null) document.getElementById('miniPlayer').classList.add('active');
+  }, 480);
+}
+function killPlayer() {
+  const screen = document.getElementById('nowPlayingScreen');
+  screen.style.transition = 'transform 0.38s cubic-bezier(0.32,0.72,0,1)';
+  screen.style.transform  = 'translateY(100%)';
+  setTimeout(() => {
+    screen.classList.remove('active'); screen.style.cssText = '';
+    document.getElementById('miniPlayer').classList.remove('active');
+  }, 380);
+  audio.pause(); audio.removeAttribute('src'); audio.load();
+  currentId = null; setPlayIcons(false);
+}
+function closeNowPlaying() { minimizePlayer(); }
+function scrollToForm() {
+  setTimeout(() => {
+    const f = document.getElementById('commentForm');
+    if (f) f.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 320);
 }
 
-function toggleSort() {
-  alert('این ویژگی به زودی اضافه می‌شود');
-}
-
-function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+/* ================================================
+   SWIPE TO MINIMIZE
+   ================================================ */
+(function() {
+  const screen = document.getElementById('nowPlayingScreen');
+  let startY = 0, startX = 0, lastY = 0, velocity = 0, lastTime = 0;
+  let intentDecided = false, isMinimizing = false;
+  function onStart(e) {
+    const t = e.touches[0];
+    startY = t.clientY; startX = t.clientX;
+    lastY = startY; lastTime = Date.now();
+    velocity = 0; intentDecided = false; isMinimizing = false;
+    screen.style.transition = 'none';
+  }
+  function onMove(e) {
+    const t = e.touches[0];
+    const dy  = t.clientY - startY;
+    const adx = Math.abs(t.clientX - startX);
+    const now = Date.now(), dt = now - lastTime;
+    if (dt > 0) velocity = (t.clientY - lastY) / dt;
+    lastY = t.clientY; lastTime = now;
+    if (!intentDecided && (Math.abs(dy) > 8 || adx > 8)) {
+      intentDecided = true;
+      if (adx > Math.abs(dy) * 1.2) return;
+      if (dy < 0) return;
+      if (dy > 0 && screen.scrollTop <= 1) { isMinimizing = true; screen.style.willChange = 'transform, border-radius'; }
+    }
+    if (!isMinimizing || dy <= 0) return;
+    e.preventDefault();
+    const progress   = Math.min(dy / 380, 1);
+    const resistance = dy * (1 - progress * 0.3);
+    screen.style.transform    = `translateY(${resistance}px) scale(${1 - progress * 0.08})`;
+    screen.style.borderRadius = `${progress * 28}px ${progress * 28}px 0 0`;
+    screen.style.opacity      = 1 - progress * 0.15;
+  }
+  function onEnd() {
+    if (!isMinimizing) return;
+    isMinimizing = false; screen.style.willChange = '';
+    const dy = lastY - startY;
+    const shouldMin = velocity > 0.4 || dy > 130;
+    screen.style.transition = 'transform 0.46s cubic-bezier(0.32,0.72,0,1), border-radius 0.46s cubic-bezier(0.32,0.72,0,1), opacity 0.46s ease';
+    if (shouldMin) {
+      screen.style.transform    = 'translateY(100%) scale(0.92)';
+      screen.style.borderRadius = '28px 28px 0 0';
+      screen.style.opacity      = '0.6';
+      setTimeout(() => {
+        screen.classList.remove('active'); screen.style.cssText = '';
+        if (currentId !== null) document.getElementById('miniPlayer').classList.add('active');
+      }, 460);
+    } else {
+      screen.style.transform    = 'translateY(0) scale(1)';
+      screen.style.borderRadius = '0px';
+      screen.style.opacity      = '1';
+      setTimeout(() => { screen.style.transition = screen.style.transform = screen.style.borderRadius = screen.style.opacity = ''; }, 460);
+    }
+  }
+  screen.addEventListener('touchstart', onStart, { passive: true });
+  screen.addEventListener('touchmove',  onMove,  { passive: false });
+  document.addEventListener('touchend',    onEnd);
+  document.addEventListener('touchcancel', onEnd);
+})();
 
 /* ================================================
    INIT
    ================================================ */
-document.addEventListener('DOMContentLoaded', () => {
-  renderGrid();
-  
-  // Preload first image for faster rendering
-  const firstImg = new Image();
-  firstImg.src = podcastsData[0].cover;
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('loginOverlay').classList.contains('active')) doLogin();
 });
 
-// Handle keyboard shortcuts
-document.addEventListener('keydown', (e) => {
-  if (!document.getElementById('playerBackdrop').classList.contains('active')) return;
-  
-  switch(e.key) {
-    case ' ':
-      e.preventDefault();
-      togglePlay();
-      break;
-    case 'ArrowRight':
-      e.preventDefault();
-      seek(10);
-      break;
-    case 'ArrowLeft':
-      e.preventDefault();
-      seek(-10);
-      break;
-    case 'ArrowUp':
-      e.preventDefault();
-      previousTrack();
-      break;
-    case 'ArrowDown':
-      e.preventDefault();
-      nextTrack();
-      break;
-  }
-});
+window.onload = async function() {
+  renderPodcastGrid({});
+  renderQAGrid({});
+  showSection('podcast');
+  recordVisit();
+
+  const [pCounts, qCounts, pc] = await Promise.all([
+    fetchAllPodcastCounts(), fetchAllQACounts(), fetchPlayCounts()
+  ]);
+  playCounts = pc;
+  renderPodcastGrid(pCounts);
+  renderQAGrid(qCounts);
+};
 </script>
-
 </body>
 </html>
