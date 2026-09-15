@@ -3,1612 +3,1400 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#1a0033">
-<title>تمرینات مجازی - PlanLife</title>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#d8dde4">
+<title>تمرینات مجازی — PlanLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-        height: 100%;
-        font-family: 'Vazirmatn', sans-serif;
-        overflow-x: hidden;
-        color: white;
-        background: #030303;
-    }
-
-    /* ========================================
-       پس‌زمینه کهکشانی ثابت — بدون حرکت، ستاره‌های نامنظم + ماه
-       ======================================== */
-    .stars {
-        position: fixed; inset: 0; z-index: 1; pointer-events: none;
-        background: radial-gradient(ellipse at 20% 15%, rgba(90,40,140,0.35), transparent 55%),
-                    radial-gradient(ellipse at 80% 75%, rgba(30,60,140,0.30), transparent 55%),
-                    radial-gradient(ellipse at 60% 25%, rgba(120,30,100,0.18), transparent 50%),
-                    #030303;
-    }
-    .stars-layer {
-        position: absolute; inset: 0;
-        background-repeat: no-repeat;
-        background-image:
-            radial-gradient(1.6px 1.6px at 7% 12%, #fff, transparent),
-            radial-gradient(1.2px 1.2px at 14% 38%, #fff, transparent),
-            radial-gradient(2px 2px at 22% 8%, #fff, transparent),
-            radial-gradient(1px 1px at 28% 55%, #fff, transparent),
-            radial-gradient(1.4px 1.4px at 33% 22%, #fff, transparent),
-            radial-gradient(1px 1px at 39% 68%, #fff, transparent),
-            radial-gradient(1.8px 1.8px at 45% 14%, #fff, transparent),
-            radial-gradient(1.1px 1.1px at 51% 44%, #fff, transparent),
-            radial-gradient(1.3px 1.3px at 58% 5%, #fff, transparent),
-            radial-gradient(1px 1px at 63% 30%, #fff, transparent),
-            radial-gradient(2px 2px at 69% 60%, #fff, transparent),
-            radial-gradient(1.2px 1.2px at 75% 18%, #fff, transparent),
-            radial-gradient(1px 1px at 81% 48%, #fff, transparent),
-            radial-gradient(1.6px 1.6px at 87% 9%, #fff, transparent),
-            radial-gradient(1.1px 1.1px at 93% 35%, #fff, transparent),
-            radial-gradient(1px 1px at 4% 72%, #fff, transparent),
-            radial-gradient(1.5px 1.5px at 11% 88%, #fff, transparent),
-            radial-gradient(1px 1px at 18% 78%, #fff, transparent),
-            radial-gradient(1.3px 1.3px at 25% 92%, #fff, transparent),
-            radial-gradient(1px 1px at 31% 80%, #fff, transparent),
-            radial-gradient(1.8px 1.8px at 37% 95%, #fff, transparent),
-            radial-gradient(1px 1px at 43% 84%, #fff, transparent),
-            radial-gradient(1.2px 1.2px at 49% 70%, #fff, transparent),
-            radial-gradient(1px 1px at 55% 90%, #fff, transparent),
-            radial-gradient(1.5px 1.5px at 61% 78%, #fff, transparent),
-            radial-gradient(1px 1px at 67% 94%, #fff, transparent),
-            radial-gradient(1.3px 1.3px at 73% 82%, #fff, transparent),
-            radial-gradient(1.1px 1.1px at 79% 68%, #fff, transparent),
-            radial-gradient(1.7px 1.7px at 85% 86%, #fff, transparent),
-            radial-gradient(1px 1px at 91% 76%, #fff, transparent),
-            radial-gradient(1.2px 1.2px at 96% 92%, #fff, transparent),
-            radial-gradient(1.4px 1.4px at 2% 28%, #fff, transparent),
-            radial-gradient(1px 1px at 9% 50%, #fff, transparent),
-            radial-gradient(1.6px 1.6px at 16% 5%, #fff, transparent),
-            radial-gradient(1px 1px at 95% 15%, #fff, transparent),
-            radial-gradient(1.2px 1.2px at 88% 58%, #fff, transparent),
-            radial-gradient(1px 1px at 97% 45%, #fff, transparent);
-        opacity: 0.85;
-    }
-    .stars-layer.dim {
-        opacity: 0.45;
-        background-position: 3% 4%;
-        background-size: 100% 100%;
-        transform: scale(1.15) translate(2%, -3%);
-    }
-    .moon {
-        position: absolute;
-        top: 6%;
-        left: 12%;
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        background: radial-gradient(circle at 35% 32%, #fffdf2 0%, #f4eccb 45%, #d8cda0 75%, #b9ad81 100%);
-        box-shadow: 0 0 35px 10px rgba(255, 248, 210, 0.35), 0 0 80px 25px rgba(255, 248, 210, 0.12);
-    }
-    .moon::before {
-        content: '';
-        position: absolute; top: 22%; left: 58%;
-        width: 14px; height: 14px; border-radius: 50%;
-        background: rgba(0,0,0,0.08);
-        box-shadow: -22px 14px 0 -2px rgba(0,0,0,0.06),
-                    8px 26px 0 -3px rgba(0,0,0,0.07),
-                    -8px -10px 0 -4px rgba(0,0,0,0.05);
-    }
-
-    header {
-        position: fixed; top: 0; left: 0; right: 0; height: 65px;
-        display: flex; align-items: center; padding: 0 20px; z-index: 100;
-        background: rgba(0,0,0,0.25); backdrop-filter: blur(10px);
-    }
-    .hamburger {
-        font-size: 28px; cursor: pointer; width: 50px; height: 50px;
-        border-radius: 50%; background: rgba(255,255,255,0.1);
-        display: flex; align-items: center; justify-content: center;
-        transition: all 0.2s ease;
-    }
-    .hamburger:hover { background: rgba(212,175,55,0.2); }
-
-    .main-center {
-        position: relative; z-index: 5; min-height: 100vh;
-        padding: 85px 20px 80px;
-        display: flex; flex-direction: column; align-items: center;
-    }
-
-    .title {
-        font-size: 38px;
-        font-weight: 900;
-        text-shadow: 0 0 30px rgba(160, 240, 255, 0.9);
-        margin-bottom: 40px;
-        color: white;
-    }
-
-    .intro-section {
-        width: 100%;
-        max-width: 720px;
-        margin-bottom: 36px;
-        display: flex;
-        flex-direction: column;
-    }
-    .intro-player-card {
-        width: 100%;
-        background: rgba(18, 18, 40, 0.72);
-        backdrop-filter: blur(28px) saturate(180%);
-        -webkit-backdrop-filter: blur(28px) saturate(180%);
-        border: 1px solid rgba(255, 255, 255, 0.14);
-        border-radius: 26px;
-        padding: 26px 24px 22px;
-        margin-bottom: 14px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
-    }
-    .intro-player-info { text-align: center; margin-bottom: 20px; }
-    .intro-player-title { font-size: 19px; font-weight: 800; color: white; margin-bottom: 4px; }
-    .intro-player-subtitle { font-size: 13.5px; opacity: 0.65; }
-    .intro-progress-container { width: 100%; height: 5px; background: rgba(255,255,255,0.18); border-radius: 999px; cursor: pointer; margin-bottom: 8px; }
-    .intro-progress-bar { height: 100%; width: 0%; background: linear-gradient(to right, #ff9500, #ff6b00); border-radius: 999px; box-shadow: 0 0 12px #ff9500; transition: width 0.1s linear; }
-    .intro-time-display { display: flex; justify-content: space-between; font-size: 12.5px; opacity: 0.75; margin-bottom: 20px; }
-    .intro-main-controls { display: flex; align-items: center; justify-content: center; gap: 28px; }
-    .intro-control-btn { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .intro-control-btn svg { width: 26px; height: 26px; fill: #ddd; transition: all 0.2s; }
-    .intro-control-btn:active svg { fill: #ff9500; transform: scale(0.9); }
-    .intro-play-main { width: 64px; height: 64px; background: #ff9500; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(255,149,0,0.55); cursor: pointer; flex-shrink: 0; }
-    .intro-play-main svg { width: 28px; height: 28px; fill: #1a0033; }
-
-    .desc-toggle {
-        width: 100%;
-        background: rgba(255,255,255,0.11);
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(212, 175, 55, 0.55);
-        border-radius: 22px;
-        padding: 16px 22px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        cursor: pointer;
-        box-shadow: 0 6px 24px rgba(0,0,0,0.5), 0 0 18px rgba(212, 175, 55, 0.18);
-        transition: border-color 0.3s ease;
-    }
-    .desc-toggle:hover { border-color: #d4af37; }
-    .desc-toggle .label { font-size: 16.5px; font-weight: 800; color: #d4af37; text-shadow: 0 0 12px rgba(212,175,55,0.5); }
-    .desc-chevron { font-size: 18px; color: #d4af37; display: inline-block; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
-
-    .desc-panel {
-        width: 100%;
-        overflow: hidden;
-        max-height: 0;
-        opacity: 0;
-        margin-top: 0;
-        transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.4s ease, margin-top 0.5s cubic-bezier(0.4,0,0.2,1);
-    }
-    .desc-panel.open { opacity: 1; margin-top: 14px; }
-    .desc-panel-inner {
-        background: rgba(255,255,255,0.07);
-        border: 1px solid rgba(212, 175, 55, 0.3);
-        border-radius: 18px;
-        padding: 18px 20px;
-        font-size: 15px;
-        line-height: 2;
-        color: rgba(255,255,255,0.85);
-        text-align: right;
-    }
-
-    .exercise-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-        width: 100%;
-        max-width: 720px;
-    }
-
-    .exercise-card {
-        background: rgba(255,255,255,0.11);
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(212, 175, 55, 0.55);
-        border-radius: 28px;
-        padding: 32px 24px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-        box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 25px rgba(212, 175, 55, 0.25);
-        height: 320px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-    }
-    .exercise-card:hover {
-        transform: translateY(-12px) scale(1.03);
-        box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 35px rgba(212, 175, 55, 0.4);
-    }
-    .exercise-card.morning { background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,255,255,0.05)); }
-    .exercise-card.night   { background: linear-gradient(135deg, rgba(100,100,255,0.08), rgba(255,255,255,0.05)); }
-    .exercise-card h2 { font-size: 24px; font-weight: 900; color: #d4af37; text-shadow: 0 0 15px rgba(212, 175, 55, 0.6); }
-
-    .back-btn {
-        position: absolute;
-        top: 90px;
-        left: 20px;
-        font-size: 32px;
-        cursor: pointer;
-        z-index: 10;
-    }
-
-    .form-container {
-        display: none;
-        width: 100%;
-        max-width: 720px;
-        background: rgba(255,255,255,0.09);
-        backdrop-filter: blur(18px);
-        border: 1px solid rgba(212, 175, 55, 0.5);
-        border-radius: 28px;
-        padding: 30px;
-        margin-top: 20px;
-    }
-
-    .question {
-        margin-bottom: 26px;
-        padding-bottom: 18px;
-        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-    }
-    .question:last-child { border-bottom: none; margin-bottom: 0; }
-
-    .question-label {
-        font-size: 17px;
-        font-weight: 700;
-        margin-bottom: 10px;
-        display: block;
-        color: #d4af37;
-    }
-
-    textarea {
-        width: 100%;
-        min-height: 110px;
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(212, 175, 55, 0.4);
-        border-radius: 16px;
-        padding: 14px 18px;
-        color: white;
-        font-size: 16px;
-        resize: vertical;
-        font-family: inherit;
-    }
-
-    .small-input {
-        width: 100%;
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(212, 175, 55, 0.4);
-        border-radius: 12px;
-        padding: 12px 16px;
-        color: white;
-        font-size: 16px;
-        font-family: inherit;
-    }
-
-    .btn {
-        background: rgba(212,175,55,0.9);
-        color: #111;
-        border: none;
-        padding: 14px 32px;
-        font-size: 17px;
-        font-weight: 800;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: all 0.3s;
-        margin: 8px;
-        flex-shrink: 0;
-    }
-    .btn:hover { background: #d4af37; transform: scale(1.05); }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-    .delete-btn {
-        background: rgba(255, 60, 60, 0.8);
-        color: white;
-        border: none;
-        padding: 6px 14px;
-        font-size: 14px;
-        border-radius: 50px;
-        cursor: pointer;
-        float: left;
-    }
-
-    .history {
-        margin-top: 40px;
-        width: 100%;
-        max-width: 720px;
-    }
-    .history h3 { color: #d4af37; margin-bottom: 15px; text-align: center; }
-
-    .history-entry {
-        background: rgba(255,255,255,0.08);
-        border-radius: 20px;
-        padding: 18px;
-        margin-bottom: 18px;
-        border: 1px solid rgba(212,175,55,0.3);
-        position: relative;
-    }
-
-    .tab-buttons {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        scroll-behavior: smooth;
-        padding: 8px 0;
-        flex-wrap: nowrap;
-    }
-    .tab-buttons::-webkit-scrollbar { height: 4px; }
-    .tab-buttons::-webkit-scrollbar-track { background: rgba(212,175,55,0.1); border-radius: 10px; }
-    .tab-buttons::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.4); border-radius: 10px; }
-    .tab-buttons::-webkit-scrollbar-thumb:hover { background: rgba(212,175,55,0.6); }
-
-    #menu-overlay {
-        position: fixed; inset: 0;
-        background: rgba(0,0,0,0.55);
-        z-index: 150; opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.5s ease;
-    }
-    #menu-overlay.active { opacity: 1; pointer-events: auto; }
-
-    .side-menu {
-        position: fixed; top: 0; right: 0;
-        width: 255px; height: 100vh;
-        background: rgba(255,255,255,0.085);
-        backdrop-filter: blur(26px);
-        border-left: 1px solid rgba(212,175,55,0.3);
-        box-shadow: -12px 0 40px rgba(0,0,0,0.7);
-        z-index: 200;
-        transform: translateX(100%);
-        transition: transform 0.55s cubic-bezier(0.25,0.1,0.25,1);
-        padding: 22px 16px 28px;
-        display: flex; flex-direction: column; overflow-y: auto;
-    }
-    .side-menu.open { transform: translateX(0); }
-
-    .menu-header {
-        display: flex; align-items: center; justify-content: space-between;
-        margin-bottom: 24px; padding-bottom: 15px;
-        border-bottom: 1px solid rgba(212,175,55,0.22);
-    }
-    .menu-header h2 { font-size: 22px; font-weight: 900; color: #d4af37; text-shadow: 0 0 12px rgba(212,175,55,0.5); }
-    .close-btn {
-        width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
-        font-size: 24px; color: #d4af37; cursor: pointer; border-radius: 50%;
-        transition: all 0.2s ease;
-    }
-    .close-btn:hover { background: rgba(212,175,55,0.15); transform: rotate(90deg); }
-    .menu-items { display: flex; flex-direction: column; gap: 9px; }
-    .menu-item {
-        background: rgba(255,255,255,0.06);
-        border: 1px solid rgba(212,175,55,0.18);
-        border-radius: 15px; padding: 14px 18px;
-        display: flex; align-items: center;
-        text-decoration: none; color: white;
-        font-size: 15.8px; font-weight: 700;
-        transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
-        box-shadow: 0 3px 12px rgba(0,0,0,0.25);
-        cursor: pointer;
-    }
-    .menu-item:hover { background: rgba(212,175,55,0.11); border-color: #d4af37; transform: translateX(-8px); box-shadow: 0 6px 20px rgba(212,175,55,0.22); }
-    .menu-item .text { flex: 1; line-height: 1.35; }
-
-    .dual-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-        width: 100%;
-        max-width: 720px;
-        margin-top: 20px;
-    }
-
-    .events-card {
-        background: linear-gradient(135deg, rgba(34,197,94,0.07), rgba(255,255,255,0.04));
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(34,197,94,0.4);
-        border-radius: 26px;
-        padding: 26px 16px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.4s cubic-bezier(0.25,0.1,0.25,1);
-        box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 25px rgba(34,197,94,0.15);
-        display: flex; flex-direction: column;
-        align-items: center; justify-content: center;
-        gap: 14px;
-        min-height: 200px;
-    }
-    .events-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 35px rgba(34,197,94,0.3); }
-    .events-card h2 { font-size: 18px; font-weight: 900; color: #4ade80; text-shadow: 0 0 15px rgba(74,222,128,0.5); }
-
-    .gratitude-card {
-        background: linear-gradient(135deg, rgba(244,63,94,0.08), rgba(255,255,255,0.04));
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(244,63,94,0.4);
-        border-radius: 26px;
-        padding: 26px 16px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.4s cubic-bezier(0.25,0.1,0.25,1);
-        box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 25px rgba(244,63,94,0.15);
-        display: flex; flex-direction: column;
-        align-items: center; justify-content: center;
-        gap: 14px;
-        min-height: 200px;
-    }
-    .gratitude-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 35px rgba(244,63,94,0.3); }
-    .gratitude-card h2 { font-size: 18px; font-weight: 900; color: #fb7185; text-shadow: 0 0 15px rgba(251,113,133,0.5); }
-
-    #events-form {
-        display: none;
-        width: 100%; max-width: 720px;
-        background: rgba(255,255,255,0.09);
-        backdrop-filter: blur(18px);
-        border: 1px solid rgba(34,197,94,0.4);
-        border-radius: 28px;
-        padding: 30px; margin-top: 20px;
-    }
-    #events-form h2 { color: #4ade80; text-align: center; margin-bottom: 20px; font-size: 24px; font-weight: 900; text-shadow: 0 0 20px rgba(74,222,128,0.4); }
-    .events-question-label { font-size: 18px; font-weight: 700; color: #4ade80; display: block; margin-bottom: 14px; line-height: 1.7; }
-    #events-text { width: 100%; min-height: 260px; background: rgba(255,255,255,0.08); border: 1px solid rgba(34,197,94,0.4); border-radius: 16px; padding: 16px 20px; color: white; font-size: 16px; resize: vertical; font-family: inherit; }
-    .events-save-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 14px 36px; font-size: 17px; font-weight: 900; border-radius: 50px; cursor: pointer; transition: all 0.3s; margin: 8px; font-family: inherit; box-shadow: 0 4px 20px rgba(34,197,94,0.35); }
-    .events-save-btn:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(34,197,94,0.5); }
-    .events-save-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-    #gratitude-form {
-        display: none;
-        width: 100%; max-width: 720px;
-        background: rgba(255,255,255,0.09);
-        backdrop-filter: blur(18px);
-        border: 1px solid rgba(244,63,94,0.4);
-        border-radius: 28px;
-        padding: 30px; margin-top: 20px;
-    }
-    .gratitude-heading { text-align: center; margin-bottom: 26px; }
-    .gratitude-heading h2 { color: #fb7185; font-size: 24px; font-weight: 900; text-shadow: 0 0 20px rgba(251,113,133,0.4); margin-bottom: 14px; }
-    .gratitude-subtitle { font-size: 21px; font-weight: 800; line-height: 1.9; background: linear-gradient(90deg, #fbbf24, #fb7185, #c084fc); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; padding: 0 6px; }
-    .gratitude-list { width: 100%; margin: 28px 0 6px; display: flex; flex-direction: column; gap: 0; }
-    .gratitude-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; animation: gratRowIn 0.35s ease; }
-    @keyframes gratRowIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
-    .gratitude-num { min-width: 34px; height: 34px; border-radius: 50%; background: rgba(244,63,94,0.16); border: 1px solid rgba(244,63,94,0.4); display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 800; color: #fb7185; flex-shrink: 0; margin-top: 12px; }
-    .gratitude-input { flex: 1; background: rgba(255,255,255,0.08); border: 1px solid rgba(244,63,94,0.25); border-radius: 12px; padding: 12px 16px; color: white; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; min-height: 48px; max-height: 100px; overflow-y: auto; resize: none; white-space: pre-wrap; word-wrap: break-word; line-height: 1.6; }
-    .gratitude-input:focus { border-color: #fb7185; }
-    .add-gratitude-btn { width: 100%; text-align: center; padding: 14px; margin: 12px 0 20px; border: 1.5px dashed rgba(244,63,94,0.5); border-radius: 14px; color: #fb7185; font-weight: 700; font-size: 15px; cursor: pointer; background: rgba(244,63,94,0.06); transition: all 0.25s ease; font-family: inherit; }
-    .add-gratitude-btn:hover { background: rgba(244,63,94,0.13); border-color: #fb7185; }
-    .gratitude-save-btn { background: linear-gradient(135deg, #fb7185, #e11d48); color: white; border: none; padding: 14px 36px; font-size: 17px; font-weight: 900; border-radius: 50px; cursor: pointer; transition: all 0.3s; margin: 8px; font-family: inherit; box-shadow: 0 4px 20px rgba(244,63,94,0.35); }
-    .gratitude-save-btn:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(244,63,94,0.5); }
-    .gratitude-save-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-    .tab-btn-events { background: rgba(34,197,94,0.2) !important; border: 1px solid rgba(34,197,94,0.5) !important; color: #4ade80 !important; }
-    .tab-btn-gratitude { background: rgba(244,63,94,0.2) !important; border: 1px solid rgba(244,63,94,0.5) !important; color: #fb7185 !important; }
-
-    .modal-overlay {
-        position: fixed; inset: 0;
-        background: rgba(0,0,0,0.7);
-        z-index: 500;
-        display: flex; align-items: center; justify-content: center;
-        opacity: 0; pointer-events: none;
-        transition: opacity 0.4s ease;
-        padding: 20px;
-    }
-    .modal-overlay.active { opacity: 1; pointer-events: auto; }
-    .modal-box {
-        background: rgba(10, 5, 30, 0.92);
-        backdrop-filter: blur(30px);
-        border: 1px solid rgba(212,175,55,0.6);
-        border-radius: 28px;
-        padding: 36px 30px;
-        max-width: 480px;
-        width: 100%;
-        text-align: center;
-        box-shadow: 0 0 60px rgba(212,175,55,0.25), 0 20px 60px rgba(0,0,0,0.8);
-        transform: scale(0.92);
-        transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
-    }
-    .modal-overlay.active .modal-box { transform: scale(1); }
-    .modal-icon { font-size: 56px; margin-bottom: 18px; animation: pulse-icon 2s infinite; }
-    @keyframes pulse-icon { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-    .modal-title { font-size: 22px; font-weight: 900; color: #d4af37; text-shadow: 0 0 20px rgba(212,175,55,0.5); margin-bottom: 16px; }
-    .modal-text { font-size: 15px; line-height: 2; color: rgba(255,255,255,0.85); margin-bottom: 24px; }
-    .modal-highlight { background: rgba(212,175,55,0.12); border: 1px solid rgba(212,175,55,0.35); border-radius: 16px; padding: 14px 18px; margin-bottom: 22px; font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.9; text-align: right; }
-    .modal-btn { background: linear-gradient(135deg, #d4af37, #f0c84a); color: #111; border: none; padding: 14px 36px; font-size: 16px; font-weight: 900; border-radius: 50px; cursor: pointer; transition: all 0.3s; font-family: inherit; box-shadow: 0 4px 20px rgba(212,175,55,0.4); }
-    .modal-btn:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(212,175,55,0.6); }
-
-    /* ==========================================
-       Alarm Settings Styles
-       ========================================== */
-    #alarm-settings-panel {
-        display: none;
-        width: 100%;
-        max-width: 720px;
-        background: rgba(255,255,255,0.09);
-        backdrop-filter: blur(18px);
-        border: 1px solid rgba(212, 175, 55, 0.5);
-        border-radius: 28px;
-        padding: 30px;
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-
-    .alarm-group {
-        margin-bottom: 28px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-    }
-    .alarm-group:last-child { border-bottom: none; margin-bottom: 0; }
-
-    .alarm-title {
-        font-size: 18px;
-        font-weight: 900;
-        color: #d4af37;
-        margin-bottom: 16px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .alarm-controls {
-        display: flex;
-        gap: 12px;
-        margin-bottom: 14px;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
-    .alarm-time-input {
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(212, 175, 55, 0.4);
-        border-radius: 12px;
-        padding: 10px 12px;
-        color: white;
-        font-size: 16px;
-        font-family: inherit;
-        width: 70px;
-        text-align: center;
-    }
-
-    .alarm-time-input:focus {
-        outline: none;
-        border-color: #d4af37;
-    }
-
-    .time-separator {
-        color: #d4af37;
-        font-weight: bold;
-        font-size: 18px;
-    }
-
-    .alarm-toggle {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .toggle-switch {
-        position: relative;
-        width: 50px;
-        height: 28px;
-        background: rgba(255,255,255,0.15);
-        border-radius: 14px;
-        cursor: pointer;
-        transition: background 0.3s;
-        border: 1px solid rgba(212,175,55,0.3);
-    }
-
-    .toggle-switch.enabled {
-        background: rgba(74,222,128,0.3);
-        border-color: #4ade80;
-    }
-
-    .toggle-slider {
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        width: 24px;
-        height: 24px;
-        background: rgba(255,255,255,0.7);
-        border-radius: 12px;
-        transition: left 0.3s;
-    }
-
-    .toggle-switch.enabled .toggle-slider {
-        left: 24px;
-        background: #4ade80;
-    }
-
-    .alarm-buttons {
-        display: flex;
-        gap: 10px;
-        margin-top: 14px;
-        flex-wrap: wrap;
-    }
-
-    .alarm-test-btn {
-        background: rgba(100,150,255,0.3);
-        color: #88aaff;
-        border: 1px solid rgba(100,150,255,0.5);
-        padding: 8px 16px;
-        font-size: 14px;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: all 0.2s;
-        font-weight: 700;
-        font-family: inherit;
-    }
-
-    .alarm-test-btn:hover {
-        background: rgba(100,150,255,0.5);
-        border-color: #88aaff;
-    }
-
-    .alarm-settings-buttons {
-        display: flex;
-        gap: 10px;
-        margin-top: 20px;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-
-    .spinner { display: inline-block; width: 22px; height: 22px; border: 3px solid rgba(212,175,55,0.3); border-top-color: #d4af37; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-left: 8px; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .sync-status { text-align: center; padding: 12px 20px; font-size: 15px; color: rgba(212,175,55,0.9); min-height: 44px; font-family: 'Vazirmatn', sans-serif; font-weight: 700; letter-spacing: 0.01em; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .sync-tick { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; min-width: 26px; border-radius: 50%; background: linear-gradient(135deg, #22c55e, #16a34a); box-shadow: 0 0 12px rgba(34,197,94,0.5), 0 2px 8px rgba(0,0,0,0.3); font-size: 13px; color: white; font-weight: 900; animation: tick-pop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
-    @keyframes tick-pop { 0% { transform: scale(0); opacity:0; } 100% { transform: scale(1); opacity:1; } }
-    .sync-error-dot { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; min-width: 26px; border-radius: 50%; background: linear-gradient(135deg, #ef4444, #b91c1c); box-shadow: 0 0 12px rgba(239,68,68,0.5); font-size: 13px; color: white; font-weight: 900; }
-
-    .expiry-badge { display: inline-block; background: rgba(212,175,55,0.15); border: 1px solid rgba(212,175,55,0.4); border-radius: 20px; padding: 4px 14px; font-size: 13px; color: #d4af37; margin-bottom: 8px; }
-
-    .print-header { display: none; }
-
-    /* ========================================
-       @media print — فیکس کامل PDF / پرینت
-       ======================================== */
-    @media print {
-        header,
-        .stars,
-        .hamburger,
-        #menu-overlay,
-        .side-menu,
-        .back-btn,
-        .tab-buttons,
-        .btn,
-        .delete-btn,
-        .events-save-btn,
-        .gratitude-save-btn,
-        .modal-btn,
-        .modal-overlay,
-        .sync-status,
-        .intro-section,
-        .exercise-grid,
-        .dual-grid,
-        #events-form,
-        #gratitude-form,
-        #alarm-settings-panel,
-        #morning-form,
-        #night-form,
-        .add-gratitude-btn,
-        .intro-player-card,
-        .desc-toggle,
-        .desc-panel {
-            display: none !important;
-        }
-
-        * {
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-        }
-
-        html, body {
-            background: #000 !important;
-            color: #fff !important;
-            font-family: 'Vazirmatn', Tahoma, Arial, sans-serif !important;
-            overflow: visible !important;
-            height: auto !important;
-            width: 100% !important;
-        }
-
-        .main-center {
-            padding: 20px !important;
-            min-height: auto !important;
-            position: static !important;
-            display: block !important;
-        }
-
-        .print-header {
-            display: block !important;
-            text-align: center;
-            font-size: 13px;
-            color: rgba(255,255,255,0.5) !important;
-            margin-bottom: 8px;
-            font-family: 'Vazirmatn', Tahoma, sans-serif;
-        }
-
-        .title {
-            font-size: 26px !important;
-            margin-bottom: 16px !important;
-            text-align: center;
-            text-shadow: none !important;
-            border-bottom: 1px solid #d4af37;
-            padding-bottom: 12px;
-            color: #fff !important;
-        }
-
-        .history {
-            margin-top: 8px !important;
-            width: 100% !important;
-            max-width: 100% !important;
-        }
-
-        .history h3 {
-            font-size: 18px;
-            margin-bottom: 12px;
-            text-align: center;
-            color: #d4af37 !important;
-        }
-
-        .history-entry {
-            background: rgba(30,20,60,0.9) !important;
-            border: 1px solid rgba(212,175,55,0.6) !important;
-            border-radius: 10px !important;
-            padding: 14px !important;
-            margin-bottom: 14px !important;
-            page-break-inside: avoid !important;
-            position: static !important;
-            overflow: visible !important;
-        }
-
-        .history-entry h4 {
-            color: #d4af37 !important;
-            font-size: 15px;
-            margin-bottom: 8px;
-            border-bottom: 1px solid rgba(212,175,55,0.3);
-            padding-bottom: 6px;
-        }
-
-        .history-entry p {
-            font-size: 13px !important;
-            line-height: 1.9 !important;
-            color: rgba(255,255,255,0.9) !important;
-            margin-bottom: 3px;
-        }
-
-        .history-entry strong {
-            color: #d4af37 !important;
-        }
-
-        .expiry-badge { display: none !important; }
-
-        @page {
-            margin: 12mm 15mm;
-            size: A4;
-        }
-    }
+:root {
+  --bg-page: #d8dde4;
+  --shell: #f4f5f7;
+  --section: #ffffff;
+  --section-border: rgba(0,0,0,0.09);
+  --section-shadow: 0 2px 12px rgba(0,0,0,0.07), 0 0 0 1.5px rgba(0,0,0,0.06);
+  --ink: #12141c;
+  --muted: #6b7280;
+  --hair: #eef0f3;
+  --blue: #2f6fed;
+  --blue-ink: #1e4fc9;
+  --lime: #d8f24c;
+  --lime-ink: #4b5a10;
+  --panel: #12141c;
+  --panel2: #1b1f2a;
+  --green: #3ddc84;
+  --red: #ff5470;
+  --gold: #d4af37;
+  --radius-xl: 22px;
+  --radius-lg: 18px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --gap: 14px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  height: 100%;
+  font-family: 'Vazirmatn', sans-serif;
+  color: var(--ink);
+  background: var(--bg-page);
+  min-height: 100vh;
+}
+button { font-family: inherit; }
+a { color: inherit; text-decoration: none; }
+
+.shell { max-width: 1100px; margin: 0 auto; padding: 16px; }
+
+/* ===== TOPBAR ===== */
+.topbar {
+  background: var(--section);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--section-shadow);
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 18px;
+  margin-bottom: var(--gap);
+}
+.brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; cursor: pointer; }
+.brand img { width: 36px; height: 36px; border-radius: 10px; object-fit: cover; }
+.brand span { font-weight: 800; font-size: 16px; }
+.topbar-title { flex: 1; font-size: 15px; font-weight: 700; color: var(--muted); }
+.back-topbar {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--hair); border: 1.5px solid #e0e3e9;
+  color: var(--ink); font-size: 12px; font-weight: 700;
+  padding: 7px 14px; border-radius: 999px; cursor: pointer;
+  transition: .15s; border: none;
+}
+.back-topbar:hover { background: #e4e7ec; }
+
+/* ===== LAYOUT ===== */
+.layout { display: flex; gap: var(--gap); align-items: flex-start; }
+.main-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--gap); }
+.right-col { width: 285px; flex-shrink: 0; display: flex; flex-direction: column; gap: var(--gap); }
+
+/* ===== AUDIO PLAYER ===== */
+.player-card {
+  background: var(--panel);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--section-shadow);
+  padding: 22px 22px 18px;
+  color: #fff;
+}
+.player-header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.player-thumb {
+  width: 56px; height: 56px; border-radius: 14px; overflow: hidden;
+  background: var(--panel2); flex-shrink: 0;
+}
+.player-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.player-info .lbl { font-size: 11px; color: rgba(255,255,255,.45); margin-bottom: 3px; }
+.player-info .title { font-size: 15px; font-weight: 800; color: #fff; }
+.player-info .sub { font-size: 12px; color: rgba(255,255,255,.5); }
+.player-progress-wrap {
+  width: 100%; height: 4px;
+  background: rgba(255,255,255,.15); border-radius: 999px;
+  cursor: pointer; margin-bottom: 8px; position: relative;
+}
+.player-progress-bar {
+  height: 100%; width: 0%;
+  background: var(--lime); border-radius: 999px;
+  transition: width .1s linear;
+}
+.player-times { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,.4); margin-bottom: 16px; }
+.player-controls { display: flex; align-items: center; justify-content: center; gap: 24px; }
+.p-ctrl {
+  width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.08); border-radius: 50%; cursor: pointer; border: none; color: #ccc;
+  transition: .2s;
+}
+.p-ctrl:hover { background: rgba(255,255,255,.15); color: #fff; }
+.p-ctrl svg { width: 18px; height: 18px; fill: currentColor; }
+.p-play {
+  width: 54px; height: 54px; border-radius: 50%;
+  background: var(--lime); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 20px rgba(216,242,76,.35);
+  transition: .2s;
+}
+.p-play:hover { transform: scale(1.06); }
+.p-play svg { width: 22px; height: 22px; fill: var(--lime-ink); }
+
+/* ===== DESC TOGGLE ===== */
+.desc-toggle {
+  background: var(--section);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--section-shadow);
+  padding: 14px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; transition: .2s;
+}
+.desc-toggle:hover { box-shadow: 0 4px 20px rgba(0,0,0,.1); }
+.desc-toggle .lbl { font-size: 14px; font-weight: 700; color: var(--ink); }
+.desc-chevron { font-size: 16px; color: var(--muted); transition: transform .35s; }
+.desc-panel {
+  overflow: hidden; max-height: 0; opacity: 0;
+  transition: max-height .45s cubic-bezier(.4,0,.2,1), opacity .35s ease, margin-top .35s;
+}
+.desc-panel.open { opacity: 1; margin-top: 10px; }
+.desc-panel-inner {
+  background: var(--section); border-radius: var(--radius-lg);
+  box-shadow: var(--section-shadow);
+  padding: 16px 18px; font-size: 14px; line-height: 2;
+  color: var(--muted);
+}
+
+/* ===== EXERCISE CARDS GRID ===== */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.ex-card {
+  background: var(--section);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--section-shadow);
+  padding: 0;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  transition: .25s cubic-bezier(.25,.8,.25,1);
+  cursor: pointer;
+}
+.ex-card:hover {
+  box-shadow: 0 10px 28px rgba(0,0,0,.13), 0 0 0 1.5px rgba(47,111,237,.22);
+  transform: translateY(-3px);
+}
+
+.ex-card-thumb {
+  width: 100%; aspect-ratio: 16/10; overflow: hidden;
+  position: relative; background: #eef0f3;
+  flex-shrink: 0;
+}
+.ex-card-thumb img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .4s ease;
+}
+.ex-card:hover .ex-card-thumb img { transform: scale(1.04); }
+
+.ex-card-thumb .badge {
+  position: absolute; top: 10px; right: 10px;
+  background: rgba(18,20,28,.7); color: #fff;
+  font-size: 10px; font-weight: 700;
+  padding: 4px 10px; border-radius: 999px;
+}
+.ex-card-thumb .emoji-badge {
+  position: absolute; bottom: 10px; left: 10px;
+  font-size: 28px; line-height: 1;
+}
+
+.ex-card-body { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.ex-card-body h3 { font-size: 14px; font-weight: 800; color: var(--ink); }
+.ex-card-body p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+.ex-card-btn-row { display: flex; gap: 7px; margin-top: 4px; }
+.ex-card-btn {
+  flex: 1; text-align: center; font-size: 12px; font-weight: 700;
+  padding: 9px 0; border-radius: 9px; border: 1.5px solid #e0e3e9;
+  background: var(--hair); cursor: pointer; color: var(--ink);
+  transition: .15s;
+}
+.ex-card-btn:hover { background: #e4e7ec; }
+.ex-card-btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+.ex-card-btn.primary:hover { background: var(--blue-ink); }
+
+/* ===== FORM OVERLAY ===== */
+.form-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(18,20,28,.5);
+  backdrop-filter: blur(4px);
+  align-items: flex-start; justify-content: center;
+  overflow-y: auto; padding: 20px 16px 40px;
+}
+.form-overlay.active { display: flex; }
+
+.form-modal {
+  background: #fff;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  width: 100%; max-width: 640px;
+  overflow: hidden;
+  margin: auto;
+}
+.form-modal-header {
+  background: var(--panel);
+  padding: 20px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.form-modal-header h2 { font-size: 17px; font-weight: 900; color: #fff; }
+.form-close {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(255,255,255,.1); border: none; color: #fff;
+  font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: .2s;
+}
+.form-close:hover { background: rgba(255,255,255,.2); }
+.form-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.form-question { display: flex; flex-direction: column; gap: 8px; }
+.form-question label {
+  font-size: 13px; font-weight: 700; color: var(--ink);
+  display: flex; align-items: center; gap: 8px;
+}
+.form-question label .q-num {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--blue); color: #fff;
+  font-size: 10px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+textarea, .form-input, select {
+  width: 100%; background: var(--hair); border: 1.5px solid #e0e3e9;
+  border-radius: var(--radius-sm); padding: 11px 14px;
+  color: var(--ink); font-size: 14px; resize: vertical;
+  font-family: inherit; transition: .15s; outline: none;
+  min-height: 80px;
+}
+textarea:focus, .form-input:focus, select:focus { border-color: var(--blue); background: #fff; }
+.form-input { min-height: unset; resize: none; }
+select { min-height: unset; cursor: pointer; }
+.form-footer {
+  padding: 16px 24px 24px;
+  display: flex; gap: 10px; justify-content: center;
+  border-top: 1px solid var(--hair);
+}
+.form-save-btn {
+  background: var(--blue); color: #fff; border: none;
+  padding: 13px 32px; font-size: 14px; font-weight: 800;
+  border-radius: 50px; cursor: pointer; transition: .2s;
+  box-shadow: 0 6px 16px rgba(47,111,237,.3);
+}
+.form-save-btn:hover { background: var(--blue-ink); transform: translateY(-1px); }
+.form-save-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.form-cancel-btn {
+  background: var(--hair); color: var(--muted); border: none;
+  padding: 13px 24px; font-size: 14px; font-weight: 700;
+  border-radius: 50px; cursor: pointer; transition: .2s;
+}
+.form-cancel-btn:hover { background: #e4e7ec; }
+
+/* ===== SUCCESS TOAST ===== */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
+  background: var(--panel); color: #fff;
+  padding: 13px 22px; border-radius: 999px;
+  font-size: 13px; font-weight: 700;
+  box-shadow: 0 8px 24px rgba(0,0,0,.3);
+  z-index: 999; transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+  display: flex; align-items: center; gap: 10px;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast-icon { font-size: 16px; }
+
+/* ===== RIGHT PANEL ===== */
+.panel {
+  background: var(--section);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--section-shadow);
+  padding: 16px;
+}
+.panel-dark { background: var(--panel); color: #fff; }
+.panel-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.panel-title h3 { font-size: 14px; font-weight: 800; }
+.panel-title h3 b { color: var(--blue); }
+.panel-dark .panel-title h3 b { color: var(--lime); }
+.panel-title .more { font-size: 11px; color: var(--muted); cursor: pointer; }
+
+.chip-row { display: flex; gap: 7px; margin-bottom: 14px; flex-wrap: wrap; }
+.chip {
+  font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 999px;
+  background: var(--panel2); color: #cfd3dc; cursor: pointer; transition: .15s;
+}
+.chip.active { background: var(--lime); color: var(--lime-ink); }
+
+.balance-lbl { font-size: 11px; color: rgba(255,255,255,.5); margin-bottom: 4px; }
+.balance-num { font-size: 30px; font-weight: 900; margin-bottom: 2px; }
+.balance-num span { font-size: 14px; font-weight: 700; color: var(--green); }
+.spark { width: 100%; height: 52px; margin: 10px 0 14px; }
+
+.panel-cta {
+  width: 100%; background: var(--blue); color: #fff; border: none; border-radius: 13px;
+  padding: 13px; font-size: 13px; font-weight: 800; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  box-shadow: 0 6px 16px rgba(47,111,237,.3); transition: .15s;
+}
+.panel-cta:hover { box-shadow: 0 8px 22px rgba(47,111,237,.4); transform: translateY(-1px); }
+
+/* ===== HISTORY PANEL ===== */
+.hist-tabs {
+  display: flex; gap: 6px; margin-bottom: 14px;
+  overflow-x: auto; scrollbar-width: none; padding: 2px 0;
+}
+.hist-tabs::-webkit-scrollbar { display: none; }
+.hist-tab {
+  flex-shrink: 0; padding: 6px 13px; border-radius: 999px;
+  background: var(--hair); border: none; font-size: 12px; font-weight: 600;
+  color: var(--muted); cursor: pointer; transition: .15s; white-space: nowrap;
+}
+.hist-tab.active { background: var(--ink); color: #fff; }
+
+.hist-list { display: flex; flex-direction: column; gap: 10px; }
+.hist-entry {
+  background: var(--hair); border-radius: var(--radius-md);
+  padding: 12px 14px; position: relative;
+  border: 1px solid #e8eaed;
+}
+.hist-entry-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.hist-entry-head h4 { font-size: 12.5px; font-weight: 700; color: var(--ink); }
+.hist-entry-head .date { font-size: 11px; color: var(--muted); }
+.hist-entry p { font-size: 12px; color: var(--muted); line-height: 1.7; }
+.hist-entry p + p { margin-top: 4px; }
+.hist-entry p strong { color: var(--ink); font-weight: 700; }
+.hist-del {
+  position: absolute; top: 10px; left: 12px;
+  background: rgba(255,84,112,.12); color: var(--red);
+  border: none; padding: 4px 10px; font-size: 11px; font-weight: 700;
+  border-radius: 999px; cursor: pointer; transition: .15s;
+}
+.hist-del:hover { background: rgba(255,84,112,.25); }
+
+.expiry-badge {
+  display: inline-block; background: rgba(47,111,237,.1);
+  color: var(--blue); border-radius: 999px;
+  padding: 3px 10px; font-size: 10px; font-weight: 700; margin-top: 6px;
+}
+
+.no-history { text-align: center; color: var(--muted); font-size: 13px; padding: 24px 0; }
+
+/* ===== SPINNER ===== */
+.spinner {
+  display: inline-block; width: 18px; height: 18px;
+  border: 2.5px solid rgba(47,111,237,.2); border-top-color: var(--blue);
+  border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.sync-bar {
+  text-align: center; padding: 8px 16px;
+  font-size: 12.5px; color: var(--muted); font-weight: 600;
+  min-height: 36px; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.sync-tick {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #3ddc84; color: #fff; font-size: 11px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  animation: tick-pop .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes tick-pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+
+/* ===== GRATITUDE FORM ===== */
+.grat-list { display: flex; flex-direction: column; gap: 10px; margin: 4px 0 16px; }
+.grat-row { display: flex; align-items: flex-start; gap: 10px; }
+.grat-num {
+  min-width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(244,63,94,.12); border: 1.5px solid rgba(244,63,94,.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: #e11d48; flex-shrink: 0; margin-top: 6px;
+}
+.grat-input {
+  flex: 1; background: var(--hair); border: 1.5px solid #e0e3e9;
+  border-radius: var(--radius-sm); padding: 10px 13px;
+  color: var(--ink); font-size: 13px; font-family: inherit;
+  resize: none; min-height: 44px; outline: none; transition: .15s;
+}
+.grat-input:focus { border-color: #e11d48; background: #fff; }
+.add-grat-btn {
+  width: 100%; padding: 12px; border: 1.5px dashed rgba(244,63,94,.4);
+  border-radius: var(--radius-md); color: #e11d48; font-size: 13px;
+  font-weight: 700; cursor: pointer; background: rgba(244,63,94,.05);
+  transition: .2s; font-family: inherit;
+}
+.add-grat-btn:hover { background: rgba(244,63,94,.1); }
+.save-grat-btn {
+  background: linear-gradient(135deg, #fb7185, #e11d48);
+  color: #fff; border: none; padding: 13px 32px;
+  font-size: 14px; font-weight: 800; border-radius: 50px; cursor: pointer;
+  box-shadow: 0 6px 16px rgba(244,63,94,.3); transition: .2s;
+}
+.save-grat-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(244,63,94,.4); }
+
+.save-events-btn {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff; border: none; padding: 13px 32px;
+  font-size: 14px; font-weight: 800; border-radius: 50px; cursor: pointer;
+  box-shadow: 0 6px 16px rgba(34,197,94,.3); transition: .2s;
+}
+.save-events-btn:hover { transform: translateY(-1px); }
+.save-events-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+/* ===== ALARM PANEL ===== */
+.alarm-section {
+  background: var(--section); border-radius: var(--radius-xl);
+  box-shadow: var(--section-shadow); padding: 20px;
+  display: none;
+}
+.alarm-section.visible { display: block; }
+.alarm-group { margin-bottom: 20px; padding-bottom: 18px; border-bottom: 1px solid var(--hair); }
+.alarm-group:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.alarm-title { font-size: 14px; font-weight: 800; color: var(--ink); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.alarm-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.alarm-input {
+  width: 60px; background: var(--hair); border: 1.5px solid #e0e3e9;
+  border-radius: var(--radius-sm); padding: 8px 10px;
+  color: var(--ink); font-size: 15px; text-align: center;
+  font-family: inherit; outline: none; transition: .15s;
+}
+.alarm-input:focus { border-color: var(--blue); background: #fff; }
+.alarm-sep { font-weight: 800; color: var(--muted); font-size: 18px; }
+.toggle-sw {
+  width: 44px; height: 24px; border-radius: 12px;
+  background: #e0e3e9; cursor: pointer; position: relative;
+  transition: background .25s; border: none; flex-shrink: 0;
+}
+.toggle-sw.on { background: #3ddc84; }
+.toggle-sw::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 20px; height: 20px; border-radius: 50%; background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: left .25s;
+}
+.toggle-sw.on::after { left: 22px; }
+.alarm-test {
+  font-size: 12px; font-weight: 700; color: var(--blue);
+  background: rgba(47,111,237,.08); border: 1px solid rgba(47,111,237,.2);
+  padding: 7px 14px; border-radius: 999px; cursor: pointer; transition: .15s;
+}
+.alarm-test:hover { background: rgba(47,111,237,.15); }
+.alarm-save-btn {
+  background: var(--blue); color: #fff; border: none;
+  padding: 11px 24px; font-size: 13px; font-weight: 800;
+  border-radius: 50px; cursor: pointer; transition: .2s;
+  box-shadow: 0 4px 14px rgba(47,111,237,.3);
+}
+.alarm-save-btn:hover { background: var(--blue-ink); }
+
+/* ===== DOWNLOAD / PRINT ===== */
+.action-row {
+  display: flex; gap: 10px; flex-wrap: wrap;
+}
+.action-btn {
+  flex: 1; min-width: 140px; padding: 11px 16px;
+  background: var(--hair); border: 1.5px solid #e0e3e9;
+  border-radius: var(--radius-md); font-size: 12.5px; font-weight: 700;
+  color: var(--ink); cursor: pointer; transition: .15s; text-align: center;
+}
+.action-btn:hover { background: #e4e7ec; }
+
+/* ===== SIDEBAR MENU ===== */
+#menu-overlay {
+  position: fixed; inset: 0; background: rgba(18,20,28,.5);
+  z-index: 150; opacity: 0; pointer-events: none; transition: opacity .4s;
+}
+#menu-overlay.active { opacity: 1; pointer-events: auto; }
+.side-menu {
+  position: fixed; top: 0; right: 0; width: 255px; height: 100vh;
+  background: #fff; box-shadow: -8px 0 30px rgba(0,0,0,.15);
+  z-index: 200; transform: translateX(100%);
+  transition: transform .45s cubic-bezier(.25,.1,.25,1);
+  padding: 20px 16px 28px; display: flex; flex-direction: column; overflow-y: auto;
+}
+.side-menu.open { transform: translateX(0); }
+.menu-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--hair);
+}
+.menu-header h2 { font-size: 18px; font-weight: 900; color: var(--ink); }
+.menu-close {
+  width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: var(--muted); cursor: pointer; border-radius: 50%;
+  transition: .2s; background: none; border: none;
+}
+.menu-close:hover { background: var(--hair); }
+.menu-items { display: flex; flex-direction: column; gap: 6px; }
+.menu-item {
+  background: var(--hair); border-radius: var(--radius-md);
+  padding: 12px 16px; display: flex; align-items: center;
+  font-size: 14px; font-weight: 700; color: var(--ink);
+  cursor: pointer; transition: .2s; border: none; text-align: right; width: 100%;
+}
+.menu-item:hover { background: #e4e7ec; }
+.menu-item.accent { background: rgba(47,111,237,.08); color: var(--blue); }
+
+/* ===== PRINT ===== */
+@media print {
+  .topbar, #menu-overlay, .side-menu, .player-card, .desc-toggle, .desc-panel,
+  .cards-grid, .alarm-section, .action-row, .right-col, .form-overlay, .toast,
+  .hist-tabs, .hist-del, .expiry-badge, .panel-cta, .sync-bar { display: none !important; }
+  html, body { background: #fff !important; color: #000 !important; }
+  .shell { padding: 0 !important; }
+  .layout { display: block !important; }
+  .panel, .hist-list .hist-entry { box-shadow: none !important; border: 1px solid #ddd !important; }
+  @page { margin: 12mm 15mm; size: A4; }
+}
+
+@media (max-width: 900px) {
+  .layout { flex-direction: column; }
+  .right-col { width: 100%; }
+}
+@media (max-width: 600px) {
+  .cards-grid { grid-template-columns: 1fr 1fr; }
+  .shell { padding: 10px 10px 80px; }
+}
 </style>
 </head>
 <body>
 
-<div class="stars">
-    <div class="stars-layer"></div>
-    <div class="stars-layer dim"></div>
-    <div class="moon"></div>
-</div>
-
-<header>
-    <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
-</header>
-
-<!-- مودال اطلاعیه ذخیره ابری -->
-<div class="modal-overlay" id="cloud-modal">
-    <div class="modal-box">
-        <div class="modal-icon">&#x2601;&#xFE0F;</div>
-        <div class="modal-title">ذخیره‌سازی ابری فعال شد</div>
-        <div class="modal-text">تمرین شما با موفقیت در فضای ابری ذخیره شد</div>
-        <div class="modal-highlight">
-            <div>🔒 این تمرینات <strong>فقط روی همین گوشی/مرورگر</strong> برای شما قابل مشاهده است</div>
-            <div>📱 اگر با <strong>گوشی یا مرورگر دیگری</strong> وارد شوید، این تاریخچه را نخواهید دید</div>
-            <div>⏳ اطلاعات شما به مدت <strong>۱ هفته</strong> ذخیره می‌ماند</div>
-            <div>💾 می‌توانید آن‌ها را دانلود یا چاپ کنید</div>
-        </div>
-        <button class="modal-btn" onclick="closeCloudModal()">متوجه شدم ✓</button>
-    </div>
-</div>
-
-<div class="main-center">
-    <div onclick="window.location.href='https://planlife.ir'" class="back-btn">&#8592;</div>
-
-    <!-- فقط موقع پرینت نمایش داده می‌شه -->
-    <div class="print-header">PlanLife — تمرینات مجازی</div>
-
-    <div class="title">تمرینات مجازی 🧠</div>
-
-    <!-- باکس معرفی صوتی -->
-    <div class="intro-section">
-        <div class="intro-player-card">
-            <div class="intro-player-info">
-                <div class="intro-player-title">معرفی صوتی</div>
-                <div class="intro-player-subtitle">PlanLife</div>
-            </div>
-            <div class="intro-progress-container" id="introProgressContainer">
-                <div class="intro-progress-bar" id="introProgressBar"></div>
-            </div>
-            <div class="intro-time-display">
-                <span id="introCurrentTime">0:00</span>
-                <span id="introTotalTime">0:00</span>
-            </div>
-            <div class="intro-main-controls">
-                <div class="intro-control-btn" onclick="introSeek(-10)">
-                    <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
-                </div>
-                <div class="intro-play-main" id="introPlayBtn" onclick="introTogglePlay()">
-                    <svg id="introPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                </div>
-                <div class="intro-control-btn" onclick="introSeek(10)">
-                    <svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg>
-                </div>
-            </div>
-            <audio id="introAudio" style="display:none;">
-                <source src="" type="audio/mpeg">
-            </audio>
-        </div>
-
-        <div class="desc-toggle" onclick="toggleDescription()">
-            <span class="label">توضیحات</span>
-            <span class="desc-chevron" id="descChevron">&#8964;</span>
-        </div>
-        <div class="desc-panel" id="descPanel">
-            <div class="desc-panel-inner">
-                شما میتوانید هر روز این تمرینات را انجام دهید و معجزاتشو توی زندگیتون ببینید.
-            </div>
-        </div>
-    </div>
-
-    <!-- دو کارت اصلی -->
-    <div class="exercise-grid" id="main-grid">
-        <div class="exercise-card morning" onclick="openForm('morning')">
-            <div style="font-size:58px;">🌅</div>
-            <h2>تمرین صبح بیداری</h2>
-            <p>شروع روز قدرتمند</p>
-        </div>
-        <div class="exercise-card night" onclick="openForm('night')">
-            <div style="font-size:58px;">🌙</div>
-            <h2>تمرین شب خواب</h2>
-            <p>مرور روز و برنامه‌ریزی معنوی</p>
-        </div>
-    </div>
-
-    <!-- فرم صبح -->
-    <div id="morning-form" class="form-container">
-        <h2 style="text-align:center; margin-bottom:30px; color:#d4af37;">تمرین صبح بیداری</h2>
-        <div class="question"><label class="question-label">۱. بابت چه چیزی در این لحظه حالم خوب است؟</label><textarea id="mq1" placeholder="اینجا بنویس..."></textarea></div>
-        <div class="question"><label class="question-label">۲. بابت چه کسی در این لحظه حالم خوب است؟</label><textarea id="mq2" placeholder="اینجا بنویس..."></textarea></div>
-        <div class="question"><label class="question-label">۳. کدام باورهای قدرتمندکننده رو امروز باید مرور کنم؟</label><textarea id="mq3" placeholder="اینجا بنویس..."></textarea></div>
-        <div class="question"><label class="question-label">۴. مهم‌ترین کاری که امروز باید تمامش کنم چیست؟</label><textarea id="mq4" placeholder="اینجا بنویس..."></textarea></div>
-        <div class="question"><label class="question-label">۵. هدف امسال من چیست؟ و چه کارهایی برای رسیدن به آن می‌توانم انجام دهم؟</label><textarea id="mq5" placeholder="اینجا بنویس..."></textarea></div>
-        <div class="question"><label class="question-label">۶. امروز می‌خوام خداوند چه اتفاقاتی برای من رقم بزنه؟</label><textarea id="mq6" placeholder="اینجا بنویس..."></textarea></div>
-        <div class="question"><label class="question-label">۷. امروز چه تقسیم کاری با خداوند انجام می‌دم؟</label><textarea id="mq7" placeholder="اینجا بنویس..."></textarea></div>
-        <div class="question"><label class="question-label">۸. امروز تصمیم دارم چقدر بی‌فکر باشم (نسبت به افکار منفی)؟</label><textarea id="mq8" placeholder="اینجا بنویس..."></textarea></div>
-        <div style="text-align:center; margin:30px 0 10px;">
-            <button class="btn" id="save-morning-btn" onclick="saveAnswers('morning')">ذخیره تمرین صبح ☁️</button>
-            <button class="btn" onclick="closeForm()" style="background:rgba(255,255,255,0.2);">بازگشت</button>
-        </div>
-    </div>
-
-    <!-- فرم شب -->
-    <div id="night-form" class="form-container">
-        <h2 style="text-align:center; margin-bottom:30px; color:#d4af37;">تمرین شب موقع خواب</h2>
-        <div class="question"><label class="question-label">۱. بابت چه چیزی در این لحظه حالم خوب است؟</label><textarea id="nq1"></textarea></div>
-        <div class="question"><label class="question-label">۲. بابت چه کسانی در این لحظه حالم خوب است؟</label><textarea id="nq2"></textarea></div>
-        <div class="question"><label class="question-label">۳. میزان درصد تکرار باورهای قدرتمند امروزم چقدر بود؟</label><input type="number" id="nq3" class="small-input" placeholder="درصد (0-100)" min="0" max="100"></div>
-        <div class="question"><label class="question-label">۴. کار مهمی که قرار بود امروز تمامش کنم تمام شد؟</label>
-            <select id="nq4" class="small-input"><option value="">انتخاب کنید</option><option value="بله">بله</option><option value="خیر">خیر</option></select>
-            <textarea id="nq4note" placeholder="توضیح کوتاه..." style="margin-top:8px; min-height:70px;"></textarea>
-        </div>
-        <div class="question"><label class="question-label">۵. چه کارهایی برای رسیدن به اهدافم انجام دادم امروز؟</label><textarea id="nq5"></textarea></div>
-        <div class="question"><label class="question-label">۶. اتفاقاتی که از خداوند می‌خواستم چنتاش محقق شد؟</label><textarea id="nq6"></textarea></div>
-        <div class="question"><label class="question-label">۷. امروز از ۱ تا ۱۰ چه نمره‌ای به بی‌فکر بودنم می‌دهم؟</label><input type="number" id="nq7" class="small-input" placeholder="۱ تا ۱۰" min="1" max="10"></div>
-        <div class="question"><label class="question-label">۸. چه اتفاقات جالبی امروز برای من رخ داد؟</label><textarea id="nq8" style="min-height:140px;"></textarea></div>
-        <div class="question"><label class="question-label">۹. الان می‌خوام در مورد چه موضوعی تجسم انجام بدم؟</label><textarea id="nq9"></textarea></div>
-        <div class="question"><label class="question-label">۱۰. امشب چقدر می‌خوام مدیتیشن کنم؟ (چند دقیقه)</label><input type="number" id="nq10" class="small-input" placeholder="دقیقه"></div>
-        <div style="text-align:center; margin:30px 0 10px;">
-            <button class="btn" id="save-night-btn" onclick="saveAnswers('night')">ذخیره تمرین شب ☁️</button>
-            <button class="btn" onclick="closeForm()" style="background:rgba(255,255,255,0.2);">بازگشت</button>
-        </div>
-    </div>
-
-    <!-- Panel تنظیمات Alarm -->
-    <div id="alarm-settings-panel" style="display:none;">
-        <h2 style="text-align:center; margin-bottom:30px; color:#d4af37; font-size:24px;">⏰ تنظیمات Alarm</h2>
-        
-        <!-- صبح -->
-        <div class="alarm-group">
-            <div class="alarm-title">🌅 تمرین صبح</div>
-            <div class="alarm-controls">
-                <input type="number" id="morning-alarm-hour" class="alarm-time-input" min="0" max="23" placeholder="ساعت">
-                <span class="time-separator">:</span>
-                <input type="number" id="morning-alarm-minute" class="alarm-time-input" min="0" max="59" placeholder="دقیقه">
-                <div class="alarm-toggle">
-                    <span style="color:#ccc; font-size:14px;">فعال:</span>
-                    <div class="toggle-switch" id="morning-toggle">
-                        <div class="toggle-slider"></div>
-                    </div>
-                    <input type="checkbox" id="morning-alarm-enabled" style="display:none;">
-                </div>
-            </div>
-            <div class="alarm-buttons">
-                <button class="alarm-test-btn" onclick="testAlarm('morning')">🔔 تست صدا</button>
-            </div>
-            <p style="font-size:13px; color:rgba(255,255,255,0.6); margin-top:10px;">ساعت و دقیقه تمرین صبح را مشخص کن</p>
-        </div>
-
-        <!-- شب -->
-        <div class="alarm-group">
-            <div class="alarm-title">🌙 تمرین شب</div>
-            <div class="alarm-controls">
-                <input type="number" id="night-alarm-hour" class="alarm-time-input" min="0" max="23" placeholder="ساعت">
-                <span class="time-separator">:</span>
-                <input type="number" id="night-alarm-minute" class="alarm-time-input" min="0" max="59" placeholder="دقیقه">
-                <div class="alarm-toggle">
-                    <span style="color:#ccc; font-size:14px;">فعال:</span>
-                    <div class="toggle-switch" id="night-toggle">
-                        <div class="toggle-slider"></div>
-                    </div>
-                    <input type="checkbox" id="night-alarm-enabled" style="display:none;">
-                </div>
-            </div>
-            <div class="alarm-buttons">
-                <button class="alarm-test-btn" onclick="testAlarm('night')">🔔 تست صدا</button>
-            </div>
-            <p style="font-size:13px; color:rgba(255,255,255,0.6); margin-top:10px;">ساعت و دقیقه تمرین شب را مشخص کن</p>
-        </div>
-
-        <div class="alarm-settings-buttons">
-            <button class="btn" onclick="saveAlarmSettingsFromUI()">💾 ذخیره تنظیمات</button>
-            <button class="btn" onclick="toggleAlarmSettings()" style="background:rgba(255,255,255,0.2);">بستن</button>
-        </div>
-        <p style="text-align:center; font-size:13px; color:rgba(255,255,255,0.6); margin-top:14px;">💡 توجه: برای دریافت اطلاع‌رسانی‌ها، نوتیفیکیشن‌ها را برای این سایت فعال کن</p>
-    </div>
-
-    <!-- دوگانه: اتفاقات + شکرگذاری -->
-    <div class="dual-grid" id="dual-grid">
-        <div class="events-card" id="events-card" onclick="openEventsForm()">
-            <div style="font-size:40px;">✨</div>
-            <h2>اتفاقات جالب امروزم</h2>
-            <p style="color:rgba(255,255,255,0.6);font-size:13px;">لحظه‌های خوبی که امروز تجربه کردی</p>
-        </div>
-        <div class="gratitude-card" id="gratitude-card" onclick="openGratitudeForm()">
-            <div style="font-size:40px;">🙏</div>
-            <h2>شکرگذاری روزانه</h2>
-            <p style="color:rgba(255,255,255,0.6);font-size:13px;">از چیزای کوچیک زندگیت شکرگذار باش</p>
-        </div>
-    </div>
-
-    <!-- فرم اتفاقات جالب -->
-    <div id="events-form">
-        <h2>✨ اتفاقات جالب امروزم</h2>
-        <label class="events-question-label">امروز چه اتفاقات خوبی تجربه کردی که حس خوبی بهت داد؟</label>
-        <textarea id="events-text" placeholder="هر اتفاق خوبی که امروز داشتی رو اینجا بنویس... هرچقدر هم کوچیک باشه مهمه 💚"></textarea>
-        <div style="text-align:center; margin-top:24px;">
-            <button class="events-save-btn" id="save-events-btn" onclick="saveEvents()">ذخیره اتفاقات ☁️</button>
-            <button class="btn" onclick="closeEventsForm()" style="background:rgba(255,255,255,0.2);">بازگشت</button>
-        </div>
-    </div>
-
-    <!-- فرم شکرگذاری روزانه -->
-    <div id="gratitude-form">
-        <div class="gratitude-heading">
-            <h2>🙏 شکرگذاری روزانه</h2>
-            <p class="gratitude-subtitle">شروع کن و از چیزای خیلی کوچیک زندگیت شکرگذاری کن</p>
-        </div>
-        <div class="gratitude-list" id="gratitude-list"></div>
-        <div style="text-align:center; margin-top:10px;">
-            <button class="gratitude-save-btn" id="save-gratitude-btn" onclick="saveGratitude()">ثبت شکرگذاری امروز من ☁️</button>
-            <button class="btn" onclick="closeGratitudeForm()" style="background:rgba(255,255,255,0.2);">بازگشت</button>
-        </div>
-    </div>
-
-    <!-- وضعیت همگام‌سازی -->
-    <div class="sync-status" id="sync-status"></div>
-
-    <!-- تاریخچه -->
-    <div class="history" id="history-section">
-        <div class="tab-buttons">
-            <button class="btn" onclick="showHistory('all')" style="padding:10px 16px;font-size:14px;white-space:nowrap;">همه</button>
-            <button class="btn" onclick="showHistory('morning')" style="padding:10px 16px;font-size:14px;white-space:nowrap;">🌅 صبح</button>
-            <button class="btn" onclick="showHistory('night')" style="padding:10px 16px;font-size:14px;white-space:nowrap;">🌙 شب</button>
-            <button class="btn tab-btn-events" onclick="showHistory('events')" style="padding:10px 16px;font-size:14px;white-space:nowrap;">✨ اتفاقات</button>
-            <button class="btn tab-btn-gratitude" onclick="showHistory('gratitude')" style="padding:10px 16px;font-size:14px;white-space:nowrap;">🙏 شکرگذاری</button>
-        </div>
-        <h3>تاریخچه تمرینات</h3>
-        <div id="history-list"><p style="text-align:center;opacity:0.6;padding:20px;">در حال بارگذاری... <span class="spinner"></span></p></div>
-
-        <div style="text-align:center; margin-top:25px; display:flex; flex-direction:column; gap:10px; align-items:center;">
-            <button class="btn" onclick="printHistory()" style="width:220px;">📄 چاپ / ذخیره PDF</button>
-            <button class="btn" onclick="downloadAllHistory()" style="background:rgba(255,255,255,0.2); width:220px;">💾 دانلود به صورت متن</button>
-        </div>
-    </div>
-</div>
-
-<!-- منوی شیشه‌ای -->
+<!-- Side menu overlay -->
 <div id="menu-overlay" onclick="closeMenu()"></div>
 <div id="side-menu" class="side-menu">
-    <div class="menu-header">
-        <h2>PlanLife</h2>
-        <div class="close-btn" onclick="closeMenu()">✕</div>
-    </div>
-    <div class="menu-items">
-        <a href="https://planlife.ir" class="menu-item" onclick="closeMenu()"><span class="text">خانه</span></a>
-        <a href="https://planlife.ir/Pages/podcasts_free/index.html" class="menu-item" onclick="closeMenu()"><span class="text">پادکست‌های رایگان</span></a>
-        <a href="https://planlife.ir/Pages/Music/index.html" class="menu-item" onclick="closeMenu()"><span class="text">موزیک‌ها</span></a>
-        <a href="https://planlife.ir/Pages/Doreha/index.html" class="menu-item" onclick="closeMenu()"><span class="text">دوره‌ها</span></a>
-        <a href="https://planlife.ir/Pages/Magazine/index.html" class="menu-item" onclick="closeMenu()"><span class="text">مجله ماورایی</span></a>
-        <a href="library.html" class="menu-item" onclick="closeMenu()"><span class="text">کتابخانه</span></a>
-        <a href="https://planlife.ir/Pages/Video/index.html" class="menu-item" onclick="closeMenu()"><span class="text">ویدیوها</span></a>
-        <button class="menu-item" onclick="toggleAlarmSettings(); closeMenu();" style="width:100%;text-align:right;background:rgba(212,175,55,0.15);"><span class="text">⏰ تنظیمات alarm</span></button>
-    </div>
+  <div class="menu-header">
+    <h2>PlanLife</h2>
+    <button class="menu-close" onclick="closeMenu()">✕</button>
+  </div>
+  <div class="menu-items">
+    <a href="https://planlife.ir" class="menu-item">خانه</a>
+    <a href="https://planlife.ir/Pages/podcasts_free/index.html" class="menu-item">پادکست‌های رایگان</a>
+    <a href="https://planlife.ir/Pages/Music/index.html" class="menu-item">موزیک‌ها</a>
+    <a href="https://planlife.ir/Pages/Doreha/index.html" class="menu-item">دوره‌ها</a>
+    <a href="https://planlife.ir/Pages/Magazine/index.html" class="menu-item">مجله ماورایی</a>
+    <a href="https://planlife.ir/Pages/Video/index.html" class="menu-item">ویدیوها</a>
+    <button class="menu-item accent" onclick="toggleAlarm(); closeMenu();">⏰ تنظیمات آلارم</button>
+  </div>
 </div>
 
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span class="toast-icon">✅</span>
+  <span id="toast-msg">تمرین با موفقیت ذخیره شد</span>
+</div>
+
+<!-- Form Overlays -->
+<div class="form-overlay" id="morning-overlay">
+  <div class="form-modal">
+    <div class="form-modal-header">
+      <h2>🌅 تمرین صبح بیداری</h2>
+      <button class="form-close" onclick="closeOverlay('morning-overlay')">✕</button>
+    </div>
+    <div class="form-body">
+      <div class="form-question">
+        <label><span class="q-num">۱</span>بابت چه چیزی در این لحظه حالم خوب است؟</label>
+        <textarea id="mq1" placeholder="بنویس..."></textarea>
+      </div>
+      <div class="form-question">
+        <label><span class="q-num">۲</span>بابت چه کسی در این لحظه حالم خوب است؟</label>
+        <textarea id="mq2" placeholder="بنویس..."></textarea>
+      </div>
+      <div class="form-question">
+        <label><span class="q-num">۳</span>کدام باورهای قدرتمندکننده را امروز باید مرور کنم؟</label>
+        <textarea id="mq3" placeholder="بنویس..."></textarea>
+      </div>
+      <div class="form-question">
+        <label><span class="q-num">۴</span>مهم‌ترین کاری که امروز باید تمامش کنم چیست؟</label>
+        <textarea id="mq4" placeholder="بنویس..."></textarea>
+      </div>
+      <div class="form-question">
+        <label><span class="q-num">۵</span>هدف امسال من چیست و چه کارهایی برای رسیدن به آن می‌توانم انجام دهم؟</label>
+        <textarea id="mq5" placeholder="بنویس..."></textarea>
+      </div>
+      <div class="form-question">
+        <label><span class="q-num">۶</span>امروز می‌خوام خداوند چه اتفاقاتی برای من رقم بزنه؟</label>
+        <textarea id="mq6" placeholder="بنویس..."></textarea>
+      </div>
+      <div class="form-question">
+        <label><span class="q-num">۷</span>امروز چه تقسیم کاری با خداوند انجام می‌دم؟</label>
+        <textarea id="mq7" placeholder="بنویس..."></textarea>
+      </div>
+      <div class="form-question">
+        <label><span class="q-num">۸</span>امروز تصمیم دارم چقدر بی‌فکر باشم؟</label>
+        <textarea id="mq8" placeholder="بنویس..."></textarea>
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="form-save-btn" id="save-morning-btn" onclick="saveAnswers('morning')">ذخیره تمرین صبح ☁️</button>
+      <button class="form-cancel-btn" onclick="closeOverlay('morning-overlay')">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<div class="form-overlay" id="night-overlay">
+  <div class="form-modal">
+    <div class="form-modal-header" style="background:#1b1f2a;">
+      <h2>🌙 تمرین شب خواب</h2>
+      <button class="form-close" onclick="closeOverlay('night-overlay')">✕</button>
+    </div>
+    <div class="form-body">
+      <div class="form-question">
+        <label><span class="q-num" style="background:#4b5563;">۱</span>بابت چه چیزی در این لحظه حالم خوب است؟</label>
+        <textarea id="nq1" placeholder="بنویس..."></textarea>
+      </div>
+      <div class="form-question">
+        <label><span class="q-num" style="background:#4b5563;">۲</span>بابت چه کسانی در این لحظه حالم خوب است؟</label>
+        <textarea id="nq2" placeholder="بنویس..."></textarea>
+      </div>
+      <div class="form-question">
+        <label><span class="q-num" style="background:#4b5563;">۳</span>میزان درصد تکرار باورهای قدرتمند امروزم چقدر بود؟</label>
+        <input type="number" id="nq3" class="form-input" placeholder="درصد (۰ تا ۱۰۰)" min="0" max="100" style="min-height:44px;">
+      </div>
+      <div class="form-question">
+        <label><span class="q-num" style="background:#4b5563;">۴</span>کار مهمی که قرار بود امروز تمامش کنم تمام شد؟</label>
+        <select id="nq4" class="form-input" style="min-height:44px;">
+          <option value="">انتخاب کنید</option>
+          <option value="بله">بله</option>
+          <option value="خیر">خیر</option>
+        </select>
+        <textarea id="nq4note" placeholder="توضیح کوتاه..." style="min-height:60px;margin-top:8px;"></textarea>
+      </div>
+      <div class="form-question">
+        <label><span class="q-num" style="background:#4b5563;">۵</span>چه کارهایی برای رسیدن به اهدافم انجام دادم؟</label>
+        <textarea id="nq5" placeholder="بنویس..."></textarea>
+      </div>
+      <div class="form-question">
+        <label><span class="q-num" style="background:#4b5563;">۶</span>اتفاقاتی که از خداوند می‌خواستم چندتاش محقق شد؟</label>
+        <textarea id="nq6" placeholder="بنویس..."></textarea>
+      </div>
+      <div class="form-question">
+        <label><span class="q-num" style="background:#4b5563;">۷</span>امروز از ۱ تا ۱۰ چه نمره‌ای به بی‌فکر بودنم می‌دهم؟</label>
+        <input type="number" id="nq7" class="form-input" placeholder="۱ تا ۱۰" min="1" max="10" style="min-height:44px;">
+      </div>
+      <div class="form-question">
+        <label><span class="q-num" style="background:#4b5563;">۸</span>چه اتفاقات جالبی امروز برای من رخ داد؟</label>
+        <textarea id="nq8" style="min-height:100px;" placeholder="بنویس..."></textarea>
+      </div>
+      <div class="form-question">
+        <label><span class="q-num" style="background:#4b5563;">۹</span>الان می‌خوام در مورد چه موضوعی تجسم انجام بدم؟</label>
+        <textarea id="nq9" placeholder="بنویس..."></textarea>
+      </div>
+      <div class="form-question">
+        <label><span class="q-num" style="background:#4b5563;">۱۰</span>امشب چقدر می‌خوام مدیتیشن کنم؟ (دقیقه)</label>
+        <input type="number" id="nq10" class="form-input" placeholder="دقیقه" style="min-height:44px;">
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="form-save-btn" id="save-night-btn" onclick="saveAnswers('night')" style="background:#374151;">ذخیره تمرین شب ☁️</button>
+      <button class="form-cancel-btn" onclick="closeOverlay('night-overlay')">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<div class="form-overlay" id="events-overlay">
+  <div class="form-modal">
+    <div class="form-modal-header" style="background:#14532d;">
+      <h2>✨ اتفاقات جالب امروزم</h2>
+      <button class="form-close" onclick="closeOverlay('events-overlay')">✕</button>
+    </div>
+    <div class="form-body">
+      <div class="form-question">
+        <label>امروز چه اتفاقات خوبی تجربه کردی که حس خوبی بهت داد؟</label>
+        <textarea id="events-text" style="min-height:160px;" placeholder="هر اتفاق خوبی که امروز داشتی بنویس... هرچقدر هم کوچیک باشه مهمه 💚"></textarea>
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="save-events-btn" id="save-events-btn" onclick="saveEvents()">ذخیره اتفاقات ☁️</button>
+      <button class="form-cancel-btn" onclick="closeOverlay('events-overlay')">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<div class="form-overlay" id="gratitude-overlay">
+  <div class="form-modal">
+    <div class="form-modal-header" style="background:#881337;">
+      <h2>🙏 شکرگذاری روزانه</h2>
+      <button class="form-close" onclick="closeOverlay('gratitude-overlay')">✕</button>
+    </div>
+    <div class="form-body">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:4px;">از چیزای کوچیک زندگیت شکرگذار باش</p>
+      <div class="grat-list" id="grat-list"></div>
+      <button class="add-grat-btn" onclick="addGratRow()">اضافه کردن مورد جدید +</button>
+    </div>
+    <div class="form-footer">
+      <button class="save-grat-btn" id="save-grat-btn" onclick="saveGratitude()">ثبت شکرگذاری ☁️</button>
+      <button class="form-cancel-btn" onclick="closeOverlay('gratitude-overlay')">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MAIN PAGE ===== -->
+<div class="shell">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <button class="back-topbar" onclick="window.location.href='https://planlife.ir'">← بازگشت</button>
+    <div class="brand" onclick="window.location.href='https://planlife.ir'">
+      <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
+      <span>PlanLife</span>
+    </div>
+    <div class="topbar-title">تمرینات مجازی 🧠</div>
+    <button onclick="toggleMenu()" style="width:38px;height:38px;border-radius:10px;background:var(--hair);border:none;font-size:18px;cursor:pointer;">☰</button>
+  </div>
+
+  <div class="layout">
+    <!-- MAIN COLUMN -->
+    <div class="main-col">
+
+      <!-- Audio Player -->
+      <div class="player-card">
+        <div class="player-header">
+          <div class="player-thumb">
+            <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
+          </div>
+          <div class="player-info">
+            <div class="lbl">معرفی صوتی</div>
+            <div class="title">تمرینات مجازی</div>
+            <div class="sub">PlanLife — رشد فردی روزانه</div>
+          </div>
+        </div>
+        <div class="player-progress-wrap" id="progWrap">
+          <div class="player-progress-bar" id="progBar"></div>
+        </div>
+        <div class="player-times">
+          <span id="curTime">۰:۰۰</span>
+          <span id="totTime">۰:۰۰</span>
+        </div>
+        <div class="player-controls">
+          <button class="p-ctrl" onclick="seek(-10)">
+            <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+          </button>
+          <button class="p-play" id="playBtn" onclick="togglePlay()">
+            <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <button class="p-ctrl" onclick="seek(10)">
+            <svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg>
+          </button>
+        </div>
+        <audio id="audio" style="display:none;"><source src="" type="audio/mpeg"></audio>
+      </div>
+
+      <!-- Description toggle -->
+      <div class="desc-toggle" onclick="toggleDesc()">
+        <span class="lbl">درباره تمرینات مجازی</span>
+        <span class="desc-chevron" id="chevron">▾</span>
+      </div>
+      <div class="desc-panel" id="descPanel">
+        <div class="desc-panel-inner">
+          شما می‌توانید هر روز این تمرینات را انجام دهید و معجزاتشان را در زندگیتان ببینید. تمرین صبح برای شروع روز قدرتمند و تمرین شب برای مرور روز و برنامه‌ریزی معنوی طراحی شده‌اند.
+        </div>
+      </div>
+
+      <!-- Cards Grid -->
+      <div class="cards-grid" id="cards-grid">
+
+        <!-- Morning -->
+        <div class="ex-card" onclick="openOverlay('morning-overlay')">
+          <div class="ex-card-thumb">
+            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="تمرین صبح" id="img-morning">
+            <span class="badge">هر روز صبح</span>
+            <span class="emoji-badge">🌅</span>
+          </div>
+          <div class="ex-card-body">
+            <h3>تمرین صبح بیداری</h3>
+            <p>شروع روز با قدرت، شکرگذاری و برنامه‌ریزی هدفمند</p>
+            <div class="ex-card-btn-row">
+              <span class="ex-card-btn" onclick="event.stopPropagation();openOverlay('morning-overlay')">درباره</span>
+              <span class="ex-card-btn primary" onclick="event.stopPropagation();openOverlay('morning-overlay')">شروع</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Night -->
+        <div class="ex-card" onclick="openOverlay('night-overlay')">
+          <div class="ex-card-thumb">
+            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرین شب" id="img-night">
+            <span class="badge">هر شب</span>
+            <span class="emoji-badge">🌙</span>
+          </div>
+          <div class="ex-card-body">
+            <h3>تمرین شب خواب</h3>
+            <p>مرور روز، تجسم و برنامه‌ریزی معنوی پیش از خواب</p>
+            <div class="ex-card-btn-row">
+              <span class="ex-card-btn" onclick="event.stopPropagation();openOverlay('night-overlay')">درباره</span>
+              <span class="ex-card-btn primary" onclick="event.stopPropagation();openOverlay('night-overlay')" style="background:#374151;border-color:#374151;">شروع</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Events -->
+        <div class="ex-card" onclick="openOverlay('events-overlay')">
+          <div class="ex-card-thumb">
+            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="اتفاقات" id="img-events">
+            <span class="badge" style="background:rgba(34,197,94,.8);">روزانه</span>
+            <span class="emoji-badge">✨</span>
+          </div>
+          <div class="ex-card-body">
+            <h3>اتفاقات جالب امروزم</h3>
+            <p>لحظه‌های خوبی که امروز تجربه کردی را ثبت کن</p>
+            <div class="ex-card-btn-row">
+              <span class="ex-card-btn" onclick="event.stopPropagation();openOverlay('events-overlay')">درباره</span>
+              <span class="ex-card-btn primary" onclick="event.stopPropagation();openOverlay('events-overlay')" style="background:#16a34a;border-color:#16a34a;">ثبت</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gratitude -->
+        <div class="ex-card" onclick="openOverlay('gratitude-overlay')">
+          <div class="ex-card-thumb">
+            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="شکرگذاری" id="img-gratitude">
+            <span class="badge" style="background:rgba(244,63,94,.8);">روزانه</span>
+            <span class="emoji-badge">🙏</span>
+          </div>
+          <div class="ex-card-body">
+            <h3>شکرگذاری روزانه</h3>
+            <p>از چیزای کوچیک و بزرگ زندگیت سپاسگزار باش</p>
+            <div class="ex-card-btn-row">
+              <span class="ex-card-btn" onclick="event.stopPropagation();openOverlay('gratitude-overlay')">درباره</span>
+              <span class="ex-card-btn primary" onclick="event.stopPropagation();openOverlay('gratitude-overlay')" style="background:#e11d48;border-color:#e11d48;">ثبت</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /cards-grid -->
+
+      <!-- Alarm Settings -->
+      <div class="alarm-section" id="alarm-panel">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+          <h3 style="font-size:15px;font-weight:800;">⏰ تنظیمات آلارم</h3>
+          <button onclick="toggleAlarm()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;font-weight:700;">بستن ✕</button>
+        </div>
+        <div class="alarm-group">
+          <div class="alarm-title">🌅 تمرین صبح</div>
+          <div class="alarm-controls">
+            <input type="number" class="alarm-input" id="m-hour" min="0" max="23" placeholder="ساعت">
+            <span class="alarm-sep">:</span>
+            <input type="number" class="alarm-input" id="m-min" min="0" max="59" placeholder="دقیقه">
+            <button class="toggle-sw" id="m-toggle" onclick="toggleSw('m-toggle','m-enabled')"></button>
+            <input type="checkbox" id="m-enabled" style="display:none;">
+            <button class="alarm-test" onclick="testAlarm('morning')">تست 🔔</button>
+          </div>
+        </div>
+        <div class="alarm-group">
+          <div class="alarm-title">🌙 تمرین شب</div>
+          <div class="alarm-controls">
+            <input type="number" class="alarm-input" id="n-hour" min="0" max="23" placeholder="ساعت">
+            <span class="alarm-sep">:</span>
+            <input type="number" class="alarm-input" id="n-min" min="0" max="59" placeholder="دقیقه">
+            <button class="toggle-sw" id="n-toggle" onclick="toggleSw('n-toggle','n-enabled')"></button>
+            <input type="checkbox" id="n-enabled" style="display:none;">
+            <button class="alarm-test" onclick="testAlarm('night')">تست 🔔</button>
+          </div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+          <button class="alarm-save-btn" onclick="saveAlarmFromUI()">💾 ذخیره تنظیمات</button>
+        </div>
+        <p style="text-align:center;font-size:11.5px;color:var(--muted);margin-top:12px;">برای دریافت اطلاع‌رسانی، نوتیفیکیشن‌ها را برای این سایت فعال کن</p>
+      </div>
+
+      <!-- Sync Status -->
+      <div class="sync-bar" id="sync-bar"></div>
+
+      <!-- History -->
+      <div class="panel">
+        <div class="panel-title"><h3>تاریخچه <b>تمرینات</b></h3></div>
+        <div class="hist-tabs">
+          <button class="hist-tab active" onclick="showHist('all',this)">همه</button>
+          <button class="hist-tab" onclick="showHist('morning',this)">🌅 صبح</button>
+          <button class="hist-tab" onclick="showHist('night',this)">🌙 شب</button>
+          <button class="hist-tab" onclick="showHist('events',this)">✨ اتفاقات</button>
+          <button class="hist-tab" onclick="showHist('gratitude',this)">🙏 شکرگذاری</button>
+        </div>
+        <div class="hist-list" id="hist-list">
+          <p class="no-history"><span class="spinner"></span>در حال بارگذاری...</p>
+        </div>
+        <div class="action-row" style="margin-top:16px;">
+          <button class="action-btn" onclick="window.print()">📄 چاپ / PDF</button>
+          <button class="action-btn" onclick="downloadHistory()">💾 دانلود متن</button>
+        </div>
+      </div>
+
+    </div><!-- /main-col -->
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-col">
+
+      <!-- Progress Panel -->
+      <div class="panel panel-dark">
+        <div class="panel-title">
+          <h3>پیشرفت <b>من</b></h3>
+          <span style="font-size:16px;opacity:.4;">⋯</span>
+        </div>
+        <div class="chip-row">
+          <div class="chip active" onclick="switchChip(this,'morning')">صبح</div>
+          <div class="chip" onclick="switchChip(this,'night')">شب</div>
+          <div class="chip" onclick="switchChip(this,'all')">همه</div>
+        </div>
+        <div class="balance-lbl">تمرینات این هفته</div>
+        <div class="balance-num" id="progress-num">۰<span id="progress-change">+۰</span></div>
+        <svg class="spark" id="spark-chart" viewBox="0 0 260 52" preserveAspectRatio="none">
+          <polyline id="spark-line" points="0,46 40,42 80,44 120,38 160,30 200,24 240,18 260,14"
+            fill="none" stroke="#3ddc84" stroke-width="2.2" stroke-linejoin="round"/>
+          <circle id="spark-dot" cx="260" cy="14" r="3.5" fill="#3ddc84"/>
+        </svg>
+        <button class="panel-cta" onclick="openOverlay('morning-overlay')">ادامه تمرین امروز</button>
+      </div>
+
+      <!-- Stats mini -->
+      <div class="panel">
+        <div class="panel-title"><h3>آمار <b>کلی</b></h3></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div style="background:var(--hair);border-radius:12px;padding:12px;text-align:center;">
+            <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">صبح</div>
+            <div style="font-size:22px;font-weight:900;color:var(--ink);" id="stat-morning">۰</div>
+          </div>
+          <div style="background:var(--hair);border-radius:12px;padding:12px;text-align:center;">
+            <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">شب</div>
+            <div style="font-size:22px;font-weight:900;color:var(--ink);" id="stat-night">۰</div>
+          </div>
+          <div style="background:var(--hair);border-radius:12px;padding:12px;text-align:center;">
+            <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">اتفاقات</div>
+            <div style="font-size:22px;font-weight:900;color:var(--ink);" id="stat-events">۰</div>
+          </div>
+          <div style="background:var(--hair);border-radius:12px;padding:12px;text-align:center;">
+            <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">شکرگذاری</div>
+            <div style="font-size:22px;font-weight:900;color:var(--ink);" id="stat-gratitude">۰</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div class="panel">
+        <div class="panel-title"><h3>دسترسی <b>سریع</b></h3></div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="https://planlife.ir/Pages/Doreha/index.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--hair);border-radius:var(--radius-md);font-size:13px;font-weight:700;transition:.15s;" onmouseover="this.style.background='#e4e7ec'" onmouseout="this.style.background='var(--hair)'">
+            📚 دوره‌ها
+          </a>
+          <a href="https://planlife.ir/Pages/paksazi/index.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--hair);border-radius:var(--radius-md);font-size:13px;font-weight:700;transition:.15s;" onmouseover="this.style.background='#e4e7ec'" onmouseout="this.style.background='var(--hair)'">
+            💭 پاکسازی ذهنی
+          </a>
+          <a href="https://planlife.ir/Pages/visionboard/index.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--hair);border-radius:var(--radius-md);font-size:13px;font-weight:700;transition:.15s;" onmouseover="this.style.background='#e4e7ec'" onmouseout="this.style.background='var(--hair)'">
+            🔖 تابلو آرزوها
+          </a>
+          <a href="https://planlife.ir/Pages/Music/index.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--hair);border-radius:var(--radius-md);font-size:13px;font-weight:700;transition:.15s;" onmouseover="this.style.background='#e4e7ec'" onmouseout="this.style.background='var(--hair)'">
+            🎵 موزیک‌ها
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /right-col -->
+  </div>
+
+</div><!-- /shell -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-
-<!-- ============================================================
-     Alarm & Notification System (قبلاً فایل جدا exercise_alarm.js بود
-     الان مستقیم داخل همین صفحه است تا مشکل ۴۰۴/کش فایل خارجی پیش نیاد)
-     ============================================================ -->
 <script>
-const ALARM_SETTINGS_KEY = 'planlife_alarm_settings';
+/* ===== SUPABASE ===== */
+const SUPABASE_URL = 'https://hjzzvzxhrqovvducnxha.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// تنظیمات پیش‌فرض (ساعت شب به ۲۲ اصلاح شد؛ ۲۴ مقدار نامعتبری برای ساعت بود)
-const DEFAULT_ALARMS = {
-    morning: { hour: 6, minute: 0, enabled: true, sound: 'ding' },
-    night: { hour: 22, minute: 0, enabled: true, sound: 'ding' }
-};
-
-function getAlarmSettings() {
-    const stored = localStorage.getItem(ALARM_SETTINGS_KEY);
-    return stored ? JSON.parse(stored) : DEFAULT_ALARMS;
+function getUID() {
+  let uid = localStorage.getItem('planlife_uid');
+  if (!uid) { uid = 'user_' + Math.random().toString(36).substr(2,12) + '_' + Date.now(); localStorage.setItem('planlife_uid', uid); }
+  return uid;
 }
-
-function saveAlarmSettings(settings) {
-    localStorage.setItem(ALARM_SETTINGS_KEY, JSON.stringify(settings));
-    console.log('✓ تنظیمات alarm ذخیره شد:', settings);
-}
-
-async function requestNotificationPermission() {
-    if (!('Notification' in window)) {
-        console.log('مرورگر از Notification پشتیبانی نمی‌کند');
-        return false;
-    }
-    if (Notification.permission === 'granted') return true;
-    if (Notification.permission !== 'denied') {
-        const permission = await Notification.requestPermission();
-        return permission === 'granted';
-    }
-    return false;
-}
-
-async function showAlarmNotification(type) {
-    const isGranted = await requestNotificationPermission();
-    if (!isGranted) {
-        console.log('دسترسی notification داده نشد');
-        return;
-    }
-
-    const title = type === 'morning'
-        ? '🌅 صبح‌کاری - وقت تمرین صبح!'
-        : '🌙 شب - وقت تمرین شب!';
-
-    const message = type === 'morning'
-        ? 'صبحت بخیر! 👋\nوقتشه شروع روز قدرتمند کنی.\nتمرینات صبح رو انجام بده.'
-        : 'شب بخیر! 🌙\nوقتشه روزت رو مرور کنی و برنامه‌ریزی معنوی کنی.\nتمرینات شب رو انجام بده.';
-
-    try {
-        new Notification(title, {
-            body: message,
-            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect fill="%231a0033" width="192" height="192"/><text x="96" y="110" font-size="80" text-anchor="middle" dominant-baseline="middle">' + (type === 'morning' ? '🌅' : '🌙') + '</text></svg>',
-            badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><text x="96" y="110" font-size="80" text-anchor="middle" dominant-baseline="middle">' + (type === 'morning' ? '🌅' : '🌙') + '</text></svg>',
-            tag: 'planlife-alarm-' + type,
-            requireInteraction: false,
-            vibrate: [200, 100, 200]
-        });
-
-        playAlarmSound(type);
-    } catch(e) {
-        console.error('خطا در نمایش notification:', e);
-    }
-}
-
-function playAlarmSound(type) {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const now = audioContext.currentTime;
-    createDingSound(audioContext, now, 0.8, 880);
-    createDingSound(audioContext, now + 0.4, 0.6, 660);
-}
-
-function createDingSound(audioContext, startTime, gain, frequency) {
-    const osc = audioContext.createOscillator();
-    const envelope = audioContext.createGain();
-
-    osc.frequency.value = frequency;
-    osc.type = 'sine';
-
-    envelope.gain.setValueAtTime(0, startTime);
-    envelope.gain.linearRampToValueAtTime(gain, startTime + 0.05);
-    envelope.gain.exponentialRampToValueAtTime(0.01, startTime + 0.8);
-
-    osc.connect(envelope);
-    envelope.connect(audioContext.destination);
-
-    osc.start(startTime);
-    osc.stop(startTime + 0.8);
-}
-
-function checkAndTriggerAlarms() {
-    const now = new Date();
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-
-    const settings = getAlarmSettings();
-
-    if (settings.morning.enabled &&
-        currentHour === settings.morning.hour &&
-        currentMinute === settings.morning.minute) {
-
-        const lastAlarmTime = sessionStorage.getItem('planlife_last_morning_alarm');
-        const currentTime = new Date().getTime();
-
-        if (!lastAlarmTime || (currentTime - parseInt(lastAlarmTime) > 60000)) {
-            showAlarmNotification('morning');
-            sessionStorage.setItem('planlife_last_morning_alarm', currentTime);
-        }
-    }
-
-    if (settings.night.enabled &&
-        currentHour === settings.night.hour &&
-        currentMinute === settings.night.minute) {
-
-        const lastAlarmTime = sessionStorage.getItem('planlife_last_night_alarm');
-        const currentTime = new Date().getTime();
-
-        if (!lastAlarmTime || (currentTime - parseInt(lastAlarmTime) > 60000)) {
-            showAlarmNotification('night');
-            sessionStorage.setItem('planlife_last_night_alarm', currentTime);
-        }
-    }
-}
-
-function startAlarmChecker() {
-    setInterval(checkAndTriggerAlarms, 60000);
-    checkAndTriggerAlarms();
-    console.log('✓ Alarm checker شروع شد');
-}
-
-function toggleAlarmSettings() {
-    const settingsPanel = document.getElementById('alarm-settings-panel');
-    const isHidden = window.getComputedStyle(settingsPanel).display === 'none';
-    if (isHidden) {
-        settingsPanel.style.display = 'block';
-        loadAlarmSettingsUI();
-        settingsPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-        settingsPanel.style.display = 'none';
-    }
-}
-
-function loadAlarmSettingsUI() {
-    const settings = getAlarmSettings();
-
-    document.getElementById('morning-alarm-hour').value = settings.morning.hour;
-    document.getElementById('morning-alarm-minute').value = String(settings.morning.minute).padStart(2, '0');
-    document.getElementById('morning-alarm-enabled').checked = settings.morning.enabled;
-    document.getElementById('morning-toggle').classList.toggle('enabled', settings.morning.enabled);
-
-    document.getElementById('night-alarm-hour').value = settings.night.hour;
-    document.getElementById('night-alarm-minute').value = String(settings.night.minute).padStart(2, '0');
-    document.getElementById('night-alarm-enabled').checked = settings.night.enabled;
-    document.getElementById('night-toggle').classList.toggle('enabled', settings.night.enabled);
-}
-
-function saveAlarmSettingsFromUI() {
-    const settings = {
-        morning: {
-            hour: parseInt(document.getElementById('morning-alarm-hour').value),
-            minute: parseInt(document.getElementById('morning-alarm-minute').value),
-            enabled: document.getElementById('morning-alarm-enabled').checked,
-            sound: 'ding'
-        },
-        night: {
-            hour: parseInt(document.getElementById('night-alarm-hour').value),
-            minute: parseInt(document.getElementById('night-alarm-minute').value),
-            enabled: document.getElementById('night-alarm-enabled').checked,
-            sound: 'ding'
-        }
-    };
-
-    saveAlarmSettings(settings);
-    alert('✓ تنظیمات alarm با موفقیت ذخیره شد!');
-}
-
-function testAlarm(type) {
-    showAlarmNotification(type);
-}
-
-window.addEventListener('load', function() {
-    requestNotificationPermission();
-    startAlarmChecker();
-    console.log('🔔 سیستم alarm فعال شد');
-});
-</script>
-
-<!-- باقی Supabase و Exercise Scripts -->
-<script>
-// ============================================================
-// Supabase — persistent exercise storage (replaces JSONBin)
-// ============================================================
-const SUPABASE_URL      = 'https://hjzzvzxhrqovvducnxha.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
-const ONE_WEEK_MS        = 7 * 24 * 60 * 60 * 1000;
-
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-function getUserId() {
-    let uid = localStorage.getItem('planlife_uid');
-    if (!uid) { uid = 'user_' + Math.random().toString(36).substr(2, 12) + '_' + Date.now(); localStorage.setItem('planlife_uid', uid); }
-    return uid;
-}
-const USER_ID = getUserId();
-
-function setSyncStatus(msg, loading, success, error) {
-    const el = document.getElementById('sync-status');
-    let icon = '';
-    if (success) icon = '<span class="sync-tick">✓</span>';
-    else if (error) icon = '<span class="sync-error-dot">✕</span>';
-    el.innerHTML = icon + (msg ? '<span>' + msg + '</span>' : '') + (loading ? '<span class="spinner"></span>' : '');
-}
+const UID = getUID();
 
 function rowToEntry(row) {
-    const entry = Object.assign({}, row.payload, {
-        id: row.id,
-        type: row.entry_type,
-        userId: row.user_id,
-        date: row.entry_date,
-        timestamp: new Date(row.created_at).getTime(),
-        expiresAt: new Date(row.expires_at).getTime()
-    });
-    return entry;
+  return Object.assign({}, row.payload, {
+    id: row.id, type: row.entry_type, date: row.entry_date,
+    timestamp: new Date(row.created_at).getTime(),
+    expiresAt: new Date(row.expires_at).getTime()
+  });
 }
 
-async function insertEntry(entryType, date, payload) {
-    const { data, error } = await supabaseClient
-        .from('exercise_entries')
-        .insert([{ user_id: USER_ID, entry_type: entryType, entry_date: date, payload: payload }])
-        .select();
-    if (error) throw new Error(error.message);
-    return data && data[0] ? rowToEntry(data[0]) : null;
+async function insertEntry(type, date, payload) {
+  const { data, error } = await sb.from('exercise_entries')
+    .insert([{ user_id: UID, entry_type: type, entry_date: date, payload }]).select();
+  if (error) throw new Error(error.message);
+  return data && data[0] ? rowToEntry(data[0]) : null;
 }
 
 async function getUserHistory() {
-    const { data, error } = await supabaseClient
-        .from('exercise_entries')
-        .select('*')
-        .eq('user_id', USER_ID)
-        .gt('expires_at', new Date().toISOString())
-        .order('created_at', { ascending: false });
-    if (error) throw new Error(error.message);
-    const entries = (data || []).map(rowToEntry);
-    return { entries };
+  const { data, error } = await sb.from('exercise_entries').select('*')
+    .eq('user_id', UID).gt('expires_at', new Date().toISOString())
+    .order('created_at', { ascending: false });
+  if (error) throw new Error(error.message);
+  return (data || []).map(rowToEntry);
 }
 
-async function deleteEntryRemote(rowId) {
-    const { error } = await supabaseClient
-        .from('exercise_entries')
-        .delete()
-        .eq('id', rowId)
-        .eq('user_id', USER_ID);
-    if (error) throw new Error(error.message);
-    return true;
+async function deleteEntryRemote(id) {
+  const { error } = await sb.from('exercise_entries').delete().eq('id', id).eq('user_id', UID);
+  if (error) throw new Error(error.message);
 }
 
-function showMainView() {
-    document.getElementById('main-grid').style.display = 'grid';
-    document.getElementById('dual-grid').style.display = 'grid';
-    document.getElementById('history-section').style.display = 'block';
-    document.getElementById('sync-status').style.display = 'flex';
+/* ===== SYNC STATUS ===== */
+function setSyncStatus(msg, loading, ok, err) {
+  const el = document.getElementById('sync-bar');
+  let icon = '';
+  if (ok) icon = '<span class="sync-tick">✓</span>';
+  else if (err) icon = '<span style="width:22px;height:22px;border-radius:50%;background:#ff5470;color:#fff;font-size:11px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;">✕</span>';
+  el.innerHTML = icon + (msg ? '<span style="margin-right:4px;">' + msg + '</span>' : '') + (loading ? '<span class="spinner"></span>' : '');
+}
+
+/* ===== TOAST ===== */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+/* ===== OVERLAY OPEN/CLOSE ===== */
+function openOverlay(id) {
+  document.getElementById(id).classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeOverlay(id) {
+  document.getElementById(id).classList.remove('active');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.form-overlay.active').forEach(el => { el.classList.remove('active'); document.body.style.overflow = ''; }); });
+
+/* click outside form closes */
+document.querySelectorAll('.form-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) { if (e.target === this) { this.classList.remove('active'); document.body.style.overflow = ''; } });
+});
+
+/* ===== AUDIO PLAYER ===== */
+const audio = document.getElementById('audio');
+const progBar = document.getElementById('progBar');
+const progWrap = document.getElementById('progWrap');
+const playIcon = document.getElementById('playIcon');
+
+function fmtTime(s) {
+  if (!s || isNaN(s)) return '۰:۰۰';
+  return Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0');
+}
+function togglePlay() {
+  if (!audio.src || audio.src.endsWith('/')) return;
+  if (audio.paused) { audio.play(); playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; }
+  else { audio.pause(); playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; }
+}
+function seek(s) { if (audio.src) audio.currentTime += s; }
+audio.addEventListener('timeupdate', () => {
+  if (!audio.duration) return;
+  progBar.style.width = (audio.currentTime/audio.duration*100)+'%';
+  document.getElementById('curTime').textContent = fmtTime(audio.currentTime);
+});
+audio.addEventListener('loadedmetadata', () => { document.getElementById('totTime').textContent = fmtTime(audio.duration); });
+audio.addEventListener('ended', () => { playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; });
+progWrap.addEventListener('click', e => {
+  if (!audio.duration) return;
+  const r = progWrap.getBoundingClientRect();
+  audio.currentTime = ((e.clientX - r.left)/r.width)*audio.duration;
+});
+
+/* ===== DESCRIPTION ===== */
+function toggleDesc() {
+  const panel = document.getElementById('descPanel');
+  const chev = document.getElementById('chevron');
+  if (panel.classList.contains('open')) {
+    panel.style.maxHeight = '0'; panel.classList.remove('open'); chev.style.transform = '';
+  } else {
+    panel.classList.add('open'); panel.style.maxHeight = panel.scrollHeight + 'px'; chev.style.transform = 'rotate(180deg)';
+  }
+}
+
+/* ===== MENU ===== */
+function toggleMenu() {
+  const m = document.getElementById('side-menu'), o = document.getElementById('menu-overlay');
+  m.classList.contains('open') ? closeMenu() : (m.classList.add('open'), o.classList.add('active'));
+}
+function closeMenu() { document.getElementById('side-menu').classList.remove('open'); document.getElementById('menu-overlay').classList.remove('active'); }
+
+/* ===== ALARM ===== */
+const ALARM_KEY = 'planlife_alarm_settings';
+const DEF_ALARM = { morning: { hour:6, minute:0, enabled:true }, night: { hour:22, minute:0, enabled:true } };
+function getAlarm() { const s = localStorage.getItem(ALARM_KEY); return s ? JSON.parse(s) : DEF_ALARM; }
+function saveAlarmData(s) { localStorage.setItem(ALARM_KEY, JSON.stringify(s)); }
+
+function toggleAlarm() {
+  const p = document.getElementById('alarm-panel');
+  if (!p.classList.contains('visible')) { p.classList.add('visible'); loadAlarmUI(); p.scrollIntoView({behavior:'smooth',block:'start'}); }
+  else p.classList.remove('visible');
+}
+function loadAlarmUI() {
+  const s = getAlarm();
+  document.getElementById('m-hour').value = s.morning.hour;
+  document.getElementById('m-min').value = String(s.morning.minute).padStart(2,'0');
+  document.getElementById('n-hour').value = s.night.hour;
+  document.getElementById('n-min').value = String(s.night.minute).padStart(2,'0');
+  document.getElementById('m-enabled').checked = s.morning.enabled;
+  document.getElementById('n-enabled').checked = s.night.enabled;
+  document.getElementById('m-toggle').classList.toggle('on', s.morning.enabled);
+  document.getElementById('n-toggle').classList.toggle('on', s.night.enabled);
+}
+function toggleSw(btnId, cbId) {
+  const cb = document.getElementById(cbId);
+  cb.checked = !cb.checked;
+  document.getElementById(btnId).classList.toggle('on', cb.checked);
+}
+function saveAlarmFromUI() {
+  const s = {
+    morning: { hour: parseInt(document.getElementById('m-hour').value)||6, minute: parseInt(document.getElementById('m-min').value)||0, enabled: document.getElementById('m-enabled').checked },
+    night: { hour: parseInt(document.getElementById('n-hour').value)||22, minute: parseInt(document.getElementById('n-min').value)||0, enabled: document.getElementById('n-enabled').checked }
+  };
+  saveAlarmData(s); showToast('تنظیمات آلارم ذخیره شد ✅');
+}
+async function requestNotifPerm() {
+  if (!('Notification' in window)) return false;
+  if (Notification.permission === 'granted') return true;
+  if (Notification.permission !== 'denied') { const p = await Notification.requestPermission(); return p === 'granted'; }
+  return false;
+}
+function playBell() {
+  const ac = new (window.AudioContext || window.webkitAudioContext)();
+  [[880,0,0.8],[660,0.4,0.6]].forEach(([freq,delay,gain]) => {
+    const osc = ac.createOscillator(), env = ac.createGain();
+    osc.frequency.value = freq; osc.type = 'sine';
+    const t = ac.currentTime + delay;
+    env.gain.setValueAtTime(0,t); env.gain.linearRampToValueAtTime(gain,t+0.05); env.gain.exponentialRampToValueAtTime(0.01,t+0.9);
+    osc.connect(env); env.connect(ac.destination); osc.start(t); osc.stop(t+0.9);
+  });
+}
+async function testAlarm(type) {
+  await requestNotifPerm();
+  playBell();
+  showToast('🔔 تست آلارم ' + (type==='morning'?'صبح':'شب'));
+}
+function checkAlarms() {
+  const now = new Date(); const h = now.getHours(); const m = now.getMinutes();
+  const s = getAlarm();
+  ['morning','night'].forEach(type => {
+    const cfg = s[type];
+    if (!cfg.enabled || cfg.hour !== h || cfg.minute !== m) return;
+    const key = 'planlife_last_alarm_' + type;
+    const last = sessionStorage.getItem(key);
+    if (!last || Date.now() - parseInt(last) > 60000) {
+      sessionStorage.setItem(key, Date.now());
+      requestNotifPerm().then(ok => {
+        if (ok) new Notification(type==='morning'?'🌅 وقت تمرین صبح!':'🌙 وقت تمرین شب!', { body: type==='morning'?'شروع روز قدرتمند':'مرور روز و برنامه‌ریزی معنوی', tag:'planlife-'+type });
+        playBell();
+      });
+    }
+  });
+}
+setInterval(checkAlarms, 60000);
+requestNotifPerm();
+
+/* ===== SAVE ANSWERS ===== */
+async function saveAnswers(type) {
+  const pre = type==='morning'?'m':'n';
+  const btn = document.getElementById('save-'+type+'-btn');
+  btn.disabled = true; btn.textContent = 'در حال ذخیره...';
+  const p = {
+    q1: (document.getElementById(pre+'q1')||{}).value?.trim()||'',
+    q2: (document.getElementById(pre+'q2')||{}).value?.trim()||'',
+    q3: (document.getElementById(pre+'q3')||{}).value?.trim()||'',
+    q4: (document.getElementById(pre+'q4')||{}).value?.trim()||'',
+    q5: (document.getElementById(pre+'q5')||{}).value?.trim()||'',
+    q6: (document.getElementById(pre+'q6')||{}).value?.trim()||'',
+    q7: (document.getElementById(pre+'q7')||{}).value?.trim()||'',
+    q8: (document.getElementById(pre+'q8')||{}).value?.trim()||'',
+  };
+  if (type==='night') {
+    p.q4note = (document.getElementById('nq4note')||{}).value?.trim()||'';
+    p.q9 = (document.getElementById('nq9')||{}).value?.trim()||'';
+    p.q10 = (document.getElementById('nq10')||{}).value?.trim()||'';
+  }
+  try {
+    await insertEntry(type, new Date().toLocaleDateString('fa-IR'), p);
+    btn.disabled = false; btn.textContent = type==='morning'?'ذخیره تمرین صبح ☁️':'ذخیره تمرین شب ☁️';
+    closeOverlay(type+'-overlay');
+    showToast('تمرین ' + (type==='morning'?'صبح':'شب') + ' با موفقیت ذخیره شد');
     loadHistory();
-}
-function hideMainView() {
-    document.getElementById('main-grid').style.display = 'none';
-    document.getElementById('dual-grid').style.display = 'none';
-    document.getElementById('history-section').style.display = 'none';
-    document.getElementById('sync-status').style.display = 'none';
+  } catch(e) { btn.disabled = false; btn.textContent = type==='morning'?'ذخیره تمرین صبح ☁️':'ذخیره تمرین شب ☁️'; alert('خطا: ' + e.message); }
 }
 
-function openForm(type) {
-    hideMainView();
-    document.getElementById(type === 'morning' ? 'morning-form' : 'night-form').style.display = 'block';
-}
-function closeForm() {
-    document.getElementById('morning-form').style.display = 'none';
-    document.getElementById('night-form').style.display = 'none';
-    showMainView();
-}
-
-function openEventsForm() { hideMainView(); document.getElementById('events-form').style.display = 'block'; }
-function closeEventsForm() { document.getElementById('events-form').style.display = 'none'; showMainView(); }
-
+/* ===== EVENTS ===== */
 async function saveEvents() {
-    const btn = document.getElementById('save-events-btn');
-    const text = document.getElementById('events-text').value.trim();
-    if (!text) { alert('لطفاً اتفاقات خود را بنویسید'); return; }
-    btn.disabled = true; btn.innerHTML = 'در حال ذخیره... <span class="spinner"></span>';
-    try {
-        await insertEntry('events', new Date().toLocaleDateString('fa-IR'), { text });
-        btn.disabled = false; btn.innerHTML = 'ذخیره اتفاقات ☁️'; showCloudModal();
-    } catch(e) { btn.disabled = false; btn.innerHTML = 'ذخیره اتفاقات ☁️'; alert('❌ خطا در اتصال به سرور: ' + e.message); }
+  const btn = document.getElementById('save-events-btn');
+  const text = document.getElementById('events-text').value.trim();
+  if (!text) { alert('لطفاً اتفاقات خود را بنویسید'); return; }
+  btn.disabled = true; btn.textContent = 'در حال ذخیره...';
+  try {
+    await insertEntry('events', new Date().toLocaleDateString('fa-IR'), { text });
+    btn.disabled = false; btn.textContent = 'ذخیره اتفاقات ☁️';
+    document.getElementById('events-text').value = '';
+    closeOverlay('events-overlay');
+    showToast('اتفاقات با موفقیت ذخیره شد ✨');
+    loadHistory();
+  } catch(e) { btn.disabled = false; btn.textContent = 'ذخیره اتفاقات ☁️'; alert('خطا: ' + e.message); }
 }
 
+/* ===== GRATITUDE ===== */
+let gratCount = 5;
 function toFa(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
-let gratitudeMaxVisible = 5;
-
-function renderGratitudeRows() {
-    const savedValues = {};
-    for (let i = 1; i <= gratitudeMaxVisible; i++) { const t = document.getElementById('grat-' + i); if (t) savedValues[i] = t.value; }
-    const list = document.getElementById('gratitude-list');
-    let html = '';
-    for (let i = 1; i <= gratitudeMaxVisible; i++) {
-        html += '<div class="gratitude-row"><span class="gratitude-num">' + toFa(i) + '</span><textarea class="gratitude-input" id="grat-' + i + '" placeholder="بنویس..." data-index="' + i + '"></textarea></div>';
-    }
-    list.innerHTML = html;
-    for (let i = 1; i <= gratitudeMaxVisible; i++) { const t = document.getElementById('grat-' + i); if (t && savedValues[i]) t.value = savedValues[i]; }
-    for (let i = 1; i <= gratitudeMaxVisible; i++) {
-        const textarea = document.getElementById('grat-' + i);
-        if (textarea) {
-            textarea.addEventListener('keydown', (function(idx) { return function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    const nextIndex = idx + 1;
-                    if (nextIndex > gratitudeMaxVisible && nextIndex <= 200) { gratitudeMaxVisible = Math.min(nextIndex + 9, 200); renderGratitudeRows(); }
-                    setTimeout(function() { const nt = document.getElementById('grat-' + nextIndex); if (nt) nt.focus(); }, 50);
-                }
-            }; })(i));
-        }
-    }
-    if (gratitudeMaxVisible < 200) {
-        const addBtn = document.createElement('button');
-        addBtn.className = 'add-gratitude-btn';
-        addBtn.textContent = 'اضافه کردن ۱۰ باکس دیگه ➕';
-        addBtn.type = 'button';
-        addBtn.onclick = function(e) { e.preventDefault(); gratitudeMaxVisible = Math.min(gratitudeMaxVisible + 10, 200); renderGratitudeRows(); };
-        list.appendChild(addBtn);
-    }
+function renderGratRows() {
+  const list = document.getElementById('grat-list');
+  const vals = {};
+  for (let i=1;i<=gratCount;i++) { const el = document.getElementById('grat-'+i); if(el) vals[i]=el.value; }
+  list.innerHTML = '';
+  for (let i=1;i<=gratCount;i++) {
+    const row = document.createElement('div'); row.className='grat-row';
+    row.innerHTML = '<span class="grat-num">' + toFa(i) + '</span><textarea class="grat-input" id="grat-'+i+'" placeholder="بنویس..."></textarea>';
+    list.appendChild(row);
+    if (vals[i]) document.getElementById('grat-'+i).value = vals[i];
+  }
 }
-
-function openGratitudeForm() { gratitudeMaxVisible = 5; hideMainView(); renderGratitudeRows(); document.getElementById('gratitude-form').style.display = 'block'; }
-function closeGratitudeForm() { document.getElementById('gratitude-form').style.display = 'none'; showMainView(); }
+function addGratRow() { gratCount++; renderGratRows(); setTimeout(()=>{const el=document.getElementById('grat-'+gratCount);if(el)el.focus();},50); }
 
 async function saveGratitude() {
-    const btn = document.getElementById('save-gratitude-btn');
-    const items = [];
-    for (let i = 1; i <= gratitudeMaxVisible; i++) { const val = document.getElementById('grat-' + i).value.trim(); if (val) items.push({ n: i, text: val }); }
-    if (items.length === 0) { alert('لطفاً حداقل یک مورد را بنویسید'); return; }
-    btn.disabled = true; btn.innerHTML = 'در حال ذخیره... <span class="spinner"></span>';
-    try {
-        await insertEntry('gratitude', new Date().toLocaleDateString('fa-IR'), { items });
-        btn.disabled = false; btn.innerHTML = 'ثبت شکرگذاری امروز من ☁️'; showCloudModal();
-    } catch(e) { btn.disabled = false; btn.innerHTML = 'ثبت شکرگذاری امروز من ☁️'; alert('❌ خطا در اتصال به سرور: ' + e.message); }
+  const btn = document.getElementById('save-grat-btn');
+  const items = [];
+  for (let i=1;i<=gratCount;i++) {
+    const el = document.getElementById('grat-'+i);
+    const val = el ? el.value.trim() : '';
+    if (val) items.push({ n:i, text:val });
+  }
+  if (!items.length) { alert('لطفاً حداقل یک مورد بنویسید'); return; }
+  btn.disabled = true; btn.textContent = 'در حال ذخیره...';
+  try {
+    await insertEntry('gratitude', new Date().toLocaleDateString('fa-IR'), { items });
+    btn.disabled = false; btn.textContent = 'ثبت شکرگذاری ☁️';
+    closeOverlay('gratitude-overlay');
+    showToast('شکرگذاری با موفقیت ثبت شد 🙏');
+    loadHistory();
+  } catch(e) { btn.disabled = false; btn.textContent = 'ثبت شکرگذاری ☁️'; alert('خطا: '+e.message); }
 }
 
-async function saveAnswers(type) {
-    const prefix = type === 'morning' ? 'm' : 'n';
-    const btnId = type === 'morning' ? 'save-morning-btn' : 'save-night-btn';
-    const btn = document.getElementById(btnId);
-    btn.disabled = true; btn.innerHTML = 'در حال ذخیره... <span class="spinner"></span>';
-    const payload = {
-        q1: document.getElementById(prefix + 'q1').value.trim(),
-        q2: document.getElementById(prefix + 'q2').value.trim(),
-        q3: document.getElementById(prefix + 'q3').value.trim(),
-        q4: document.getElementById(prefix + 'q4').value.trim(),
-        q5: document.getElementById(prefix + 'q5') ? document.getElementById(prefix + 'q5').value.trim() : '',
-        q6: document.getElementById(prefix + 'q6') ? document.getElementById(prefix + 'q6').value.trim() : '',
-        q7: document.getElementById(prefix + 'q7') ? document.getElementById(prefix + 'q7').value.trim() : '',
-        q8: document.getElementById(prefix + 'q8').value.trim(),
-    };
-    if (type === 'night') { payload.q4note = document.getElementById('nq4note').value.trim(); payload.q9 = document.getElementById('nq9').value.trim(); payload.q10 = document.getElementById('nq10').value.trim(); }
-    try {
-        await insertEntry(type, new Date().toLocaleDateString('fa-IR'), payload);
-        btn.disabled = false; btn.innerHTML = type === 'morning' ? 'ذخیره تمرین صبح ☁️' : 'ذخیره تمرین شب ☁️';
-        showCloudModal();
-    } catch(e) {
-        btn.disabled = false; btn.innerHTML = type === 'morning' ? 'ذخیره تمرین صبح ☁️' : 'ذخیره تمرین شب ☁️';
-        alert('❌ خطا در اتصال به سرور: ' + e.message);
-    }
-}
-
-function showCloudModal() { document.getElementById('cloud-modal').classList.add('active'); }
-function closeCloudModal() {
-    document.getElementById('cloud-modal').classList.remove('active');
-    document.getElementById('morning-form').style.display = 'none';
-    document.getElementById('night-form').style.display = 'none';
-    document.getElementById('events-form').style.display = 'none';
-    document.getElementById('gratitude-form').style.display = 'none';
-    showMainView();
-}
-
-async function deleteEntry(rowId) {
-    if (!confirm('آیا مطمئن هستید که می‌خواهید این تمرین را حذف کنید؟')) return;
-    setSyncStatus('در حال حذف...', true);
-    try {
-        await deleteEntryRemote(rowId);
-        setSyncStatus('تمرین با موفقیت حذف شد', false, true);
-        loadHistory();
-    } catch(e) { setSyncStatus('خطا در حذف: ' + e.message, false, false, true); }
-}
-
+/* ===== HISTORY ===== */
 let currentFilter = 'all';
-
 async function loadHistory(filter) {
-    if (filter === undefined) filter = currentFilter;
-    currentFilter = filter;
-    const list = document.getElementById('history-list');
-    list.innerHTML = '<p style="text-align:center;opacity:0.6;padding:20px;">در حال بارگذاری... <span class="spinner"></span></p>';
-    setSyncStatus('در حال دریافت از سرور...', true);
-    try {
-        const { entries } = await getUserHistory();
-        let filtered = filter === 'all' ? entries : entries.filter(e => e.type === filter);
-        setSyncStatus('اطلاعات از سرور دریافت شد', false, true);
-        if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;opacity:0.7;padding:20px;">هنوز تمرینی ثبت نشده است.</p>'; return; }
-        const now = Date.now();
-        let html = '';
-        filtered.forEach(function(entry) {
-            const remaining = entry.expiresAt ? Math.ceil((entry.expiresAt - now) / (1000*60*60*24)) : '?';
-            const expBadge = '<span class="expiry-badge">⏳ ' + (remaining > 0 ? remaining + ' روز باقی‌مانده' : 'منقضی شده') + '</span>';
-            if (entry.type === 'events') {
-                html += '<div class="history-entry" style="border-color:rgba(34,197,94,0.35);"><button class="delete-btn" onclick="deleteEntry(' + entry.id + ')">حذف</button><h4>' + entry.date + ' — ✨ اتفاقات جالب</h4>' + expBadge + '<p style="margin-top:8px;line-height:1.9;">' + (entry.text || '—') + '</p></div>';
-                return;
-            }
-            if (entry.type === 'gratitude') {
-                const itemsHtml = (entry.items || []).map(function(it) { return '<p style="margin:4px 0;">' + toFa(it.n) + '. ' + it.text + '</p>'; }).join('');
-                html += '<div class="history-entry" style="border-color:rgba(244,63,94,0.35);"><button class="delete-btn" onclick="deleteEntry(' + entry.id + ')">حذف</button><h4>' + entry.date + ' — 🙏 شکرگذاری روزانه</h4>' + expBadge + '<div style="margin-top:8px;line-height:1.7;">' + (itemsHtml || '—') + '</div></div>';
-                return;
-            }
-            const isMorning = entry.type === 'morning';
-            html += '<div class="history-entry"><button class="delete-btn" onclick="deleteEntry(' + entry.id + ')">حذف</button><h4>' + entry.date + ' — ' + (isMorning ? '🌅 صبح' : '🌙 شب') + '</h4>' + expBadge;
-            html += '<p><strong>۱. حال خوب:</strong> ' + (entry.q1 || '—') + '</p>';
-            html += '<p><strong>۲. اشخاص:</strong> ' + (entry.q2 || '—') + '</p>';
-            if (isMorning) {
-                html += '<p><strong>۳. باورها:</strong> ' + (entry.q3 || '—') + '</p>';
-                html += '<p><strong>۴. کار مهم:</strong> ' + (entry.q4 || '—') + '</p>';
-                html += '<p><strong>۵. هدف سال:</strong> ' + (entry.q5 || '—') + '</p>';
-                html += '<p><strong>۶. درخواست از خدا:</strong> ' + (entry.q6 || '—') + '</p>';
-                html += '<p><strong>۷. تقسیم کار:</strong> ' + (entry.q7 || '—') + '</p>';
-                html += '<p><strong>۸. بی‌فکری:</strong> ' + (entry.q8 || '—') + '</p>';
-            } else {
-                html += '<p><strong>۳. درصد باورها:</strong> ' + (entry.q3 || '—') + '%</p>';
-                html += '<p><strong>۴. کار مهم:</strong> ' + (entry.q4 || '—') + (entry.q4note ? ' — ' + entry.q4note : '') + '</p>';
-                html += '<p><strong>۵. اقدامات:</strong> ' + (entry.q5 || '—') + '</p>';
-                html += '<p><strong>۶. محقق شده:</strong> ' + (entry.q6 || '—') + '</p>';
-                html += '<p><strong>۷. نمره بی‌فکری:</strong> ' + (entry.q7 || '—') + '/۱۰</p>';
-                html += '<p><strong>۸. اتفاقات جالب:</strong> ' + (entry.q8 || '—') + '</p>';
-                html += '<p><strong>۹. تجسم:</strong> ' + (entry.q9 || '—') + '</p>';
-                html += '<p><strong>۱۰. مدیتیشن:</strong> ' + (entry.q10 || '—') + ' دقیقه</p>';
-            }
-            html += '</div>';
-        });
-        list.innerHTML = html;
-    } catch(e) {
-        list.innerHTML = '<p style="text-align:center;color:#ff6060;padding:20px;">❌ خطا در اتصال به سرور</p>';
-        setSyncStatus('خطا در اتصال به سرور', false, false, true);
-    }
-}
+  if (filter === undefined) filter = currentFilter;
+  currentFilter = filter;
+  const list = document.getElementById('hist-list');
+  list.innerHTML = '<p class="no-history"><span class="spinner"></span>در حال بارگذاری...</p>';
+  setSyncStatus('دریافت از سرور...', true);
+  try {
+    const entries = await getUserHistory();
+    // Update stats & chart
+    updateStats(entries);
+    updateSparkChart(entries);
 
-function showHistory(filter) { loadHistory(filter); }
+    const filtered = filter === 'all' ? entries : entries.filter(e => e.type === filter);
+    setSyncStatus('همگام‌سازی موفق', false, true);
+    if (!filtered.length) { list.innerHTML = '<p class="no-history">هنوز تمرینی ثبت نشده است.</p>'; return; }
 
-function printHistory() {
-    closeMenu();
-    setTimeout(function() { window.print(); }, 300);
-}
-
-async function downloadAllHistory() {
-    setSyncStatus('در حال دریافت...', true);
-    const { entries } = await getUserHistory();
-    setSyncStatus('');
-    if (entries.length === 0) { alert('هنوز هیچ تمرینی ذخیره نشده!'); return; }
-    let text = '📖 تاریخچه کامل تمرینات مجازی PlanLife\n\n';
-    entries.forEach(function(entry) {
-        if (entry.type === 'events') { text += '=== ' + entry.date + ' — ✨ اتفاقات جالب ===\n\n' + (entry.text || '—') + '\n\n────────────────────────────\n\n'; return; }
-        if (entry.type === 'gratitude') {
-            text += '=== ' + entry.date + ' — 🙏 شکرگذاری روزانه ===\n\n';
-            (entry.items || []).forEach(function(it) { text += toFa(it.n) + '. ' + it.text + '\n'; });
-            text += '\n────────────────────────────\n\n'; return;
-        }
-        const type = entry.type === 'morning' ? '🌅 تمرین صبح' : '🌙 تمرین شب';
-        text += '=== ' + entry.date + ' — ' + type + ' ===\n\n';
-        text += '۱. حال خوب: ' + (entry.q1 || '—') + '\n';
-        text += '۲. اشخاص: ' + (entry.q2 || '—') + '\n';
-        if (entry.type === 'morning') {
-            text += '۳. باورها: ' + (entry.q3 || '—') + '\n';
-            text += '۴. کار مهم: ' + (entry.q4 || '—') + '\n';
-            text += '۵. هدف سال: ' + (entry.q5 || '—') + '\n';
-            text += '۶. درخواست از خدا: ' + (entry.q6 || '—') + '\n';
-            text += '۷. تقسیم کار: ' + (entry.q7 || '—') + '\n';
-            text += '۸. بی‌فکری: ' + (entry.q8 || '—') + '\n';
+    const now = Date.now();
+    list.innerHTML = '';
+    filtered.forEach(e => {
+      const rem = e.expiresAt ? Math.ceil((e.expiresAt - now)/(1000*60*60*24)) : '?';
+      const div = document.createElement('div'); div.className = 'hist-entry';
+      let content = '';
+      if (e.type === 'events') {
+        content = '<div class="hist-entry-head"><h4>✨ اتفاقات جالب</h4><span class="date">' + e.date + '</span></div>' +
+          '<p>' + (e.text||'—') + '</p>';
+      } else if (e.type === 'gratitude') {
+        content = '<div class="hist-entry-head"><h4>🙏 شکرگذاری</h4><span class="date">' + e.date + '</span></div>' +
+          (e.items||[]).map(it => '<p>' + toFa(it.n) + '. ' + it.text + '</p>').join('');
+      } else {
+        const isMorning = e.type === 'morning';
+        content = '<div class="hist-entry-head"><h4>' + (isMorning?'🌅 تمرین صبح':'🌙 تمرین شب') + '</h4><span class="date">' + e.date + '</span></div>';
+        content += '<p><strong>۱. حال خوب:</strong> ' + (e.q1||'—') + '</p>';
+        content += '<p><strong>۲. اشخاص:</strong> ' + (e.q2||'—') + '</p>';
+        if (isMorning) {
+          content += '<p><strong>۳. باورها:</strong> ' + (e.q3||'—') + '</p>';
+          content += '<p><strong>۴. کار مهم:</strong> ' + (e.q4||'—') + '</p>';
         } else {
-            text += '۳. درصد باورها: ' + (entry.q3 || '—') + '%\n';
-            text += '۴. کار مهم: ' + (entry.q4 || '—') + '\n';
-            text += '۵. اقدامات: ' + (entry.q5 || '—') + '\n';
-            text += '۶. محقق شده: ' + (entry.q6 || '—') + '\n';
-            text += '۷. نمره بی‌فکری: ' + (entry.q7 || '—') + '/۱۰\n';
-            text += '۸. اتفاقات جالب: ' + (entry.q8 || '—') + '\n';
-            text += '۹. تجسم: ' + (entry.q9 || '—') + '\n';
-            text += '۱۰. مدیتیشن: ' + (entry.q10 || '—') + ' دقیقه\n';
+          content += '<p><strong>۷. نمره بی‌فکری:</strong> ' + (e.q7||'—') + '/۱۰</p>';
+          content += '<p><strong>۱۰. مدیتیشن:</strong> ' + (e.q10||'—') + ' دقیقه</p>';
         }
-        text += '\n────────────────────────────\n\n';
+      }
+      content += '<span class="expiry-badge">⏳ ' + (rem>0?rem+' روز باقی':'منقضی') + '</span>';
+      div.innerHTML = '<button class="hist-del" onclick="delEntry('+e.id+')">حذف</button>' + content;
+      list.appendChild(div);
     });
-    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  } catch(err) {
+    list.innerHTML = '<p class="no-history" style="color:#ff5470;">❌ خطا در اتصال به سرور</p>';
+    setSyncStatus('خطا در اتصال', false, false, true);
+  }
+}
+
+function showHist(filter, btn) {
+  document.querySelectorAll('.hist-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  loadHistory(filter);
+}
+
+async function delEntry(id) {
+  if (!confirm('این تمرین حذف شود؟')) return;
+  setSyncStatus('در حال حذف...', true);
+  try {
+    await deleteEntryRemote(id);
+    setSyncStatus('حذف شد', false, true);
+    loadHistory();
+  } catch(e) { setSyncStatus('خطا در حذف', false, false, true); }
+}
+
+/* ===== STATS & CHART ===== */
+function updateStats(entries) {
+  const counts = { morning:0, night:0, events:0, gratitude:0 };
+  entries.forEach(e => { if (counts[e.type] !== undefined) counts[e.type]++; });
+  document.getElementById('stat-morning').textContent = toFa(counts.morning);
+  document.getElementById('stat-night').textContent = toFa(counts.night);
+  document.getElementById('stat-events').textContent = toFa(counts.events);
+  document.getElementById('stat-gratitude').textContent = toFa(counts.gratitude);
+
+  const total = entries.length;
+  const weekAgo = Date.now() - 7*24*60*60*1000;
+  const thisWeek = entries.filter(e => e.timestamp >= weekAgo).length;
+  const lastWeek = entries.filter(e => e.timestamp < weekAgo && e.timestamp >= weekAgo - 7*24*60*60*1000).length;
+  const diff = thisWeek - lastWeek;
+  document.getElementById('progress-num').innerHTML = toFa(thisWeek) + '<span id="progress-change" style="font-size:14px;font-weight:700;color:' + (diff>=0?'#3ddc84':'#ff5470') + ';">' + (diff>=0?'+':'-') + toFa(Math.abs(diff)) + '</span>';
+}
+
+function updateSparkChart(entries) {
+  /* Build last 8 days counts */
+  const days = 8;
+  const counts = new Array(days).fill(0);
+  const now = Date.now();
+  entries.forEach(e => {
+    const daysAgo = Math.floor((now - e.timestamp)/(24*60*60*1000));
+    if (daysAgo >= 0 && daysAgo < days) counts[days-1-daysAgo]++;
+  });
+
+  const maxC = Math.max(...counts, 1);
+  const W = 260; const H = 52; const pad = 4;
+  const points = counts.map((c, i) => {
+    const x = i * (W/(days-1));
+    const y = H - pad - (c/maxC)*(H-pad*2);
+    return x.toFixed(1) + ',' + y.toFixed(1);
+  }).join(' ');
+
+  const lastX = ((days-1)*(W/(days-1))).toFixed(1);
+  const lastY = (H - pad - (counts[days-1]/maxC)*(H-pad*2)).toFixed(1);
+
+  document.getElementById('spark-line').setAttribute('points', points);
+  document.getElementById('spark-dot').setAttribute('cx', lastX);
+  document.getElementById('spark-dot').setAttribute('cy', lastY);
+}
+
+/* Chip filter */
+function switchChip(el, filter) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+/* ===== DOWNLOAD ===== */
+async function downloadHistory() {
+  setSyncStatus('در حال دریافت...', true);
+  try {
+    const entries = await getUserHistory();
+    setSyncStatus('');
+    if (!entries.length) { alert('هنوز هیچ تمرینی ذخیره نشده!'); return; }
+    let txt = 'تاریخچه تمرینات مجازی PlanLife\n' + '═'.repeat(40) + '\n\n';
+    entries.forEach(e => {
+      txt += '=== ' + e.date + ' — ' + ({morning:'🌅 صبح',night:'🌙 شب',events:'✨ اتفاقات',gratitude:'🙏 شکرگذاری'}[e.type]||e.type) + ' ===\n';
+      if (e.type==='events') txt += (e.text||'—') + '\n';
+      else if (e.type==='gratitude') (e.items||[]).forEach(it => { txt += it.n+'. '+it.text+'\n'; });
+      else { for(let q=1;q<=10;q++) { const v = e['q'+q]; if(v) txt += q+'. '+v+'\n'; } }
+      txt += '\n' + '─'.repeat(30) + '\n\n';
+    });
+    const blob = new Blob([txt], {type:'text/plain;charset=utf-8'});
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url;
-    a.download = 'PlanLife_تمرینات_مجازی_' + new Date().toLocaleDateString('fa-IR') + '.txt';
+    const a = document.createElement('a'); a.href=url;
+    a.download='PlanLife_تمرینات_' + new Date().toLocaleDateString('fa-IR') + '.txt';
     a.click(); URL.revokeObjectURL(url);
+  } catch(e) { setSyncStatus('خطا', false, false, true); }
 }
 
-function toggleMenu() {
-    const menu = document.getElementById('side-menu');
-    const overlay = document.getElementById('menu-overlay');
-    menu.classList.contains('open') ? closeMenu() : (menu.classList.add('open'), overlay.classList.add('active'));
-}
-function closeMenu() {
-    document.getElementById('side-menu').classList.remove('open');
-    document.getElementById('menu-overlay').classList.remove('active');
-}
-document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMenu(); });
-
-const introAudio = document.getElementById('introAudio');
-const introPlayIcon = document.getElementById('introPlayIcon');
-const introProgressBar = document.getElementById('introProgressBar');
-const introProgressContainer = document.getElementById('introProgressContainer');
-const introCurrentTimeEl = document.getElementById('introCurrentTime');
-const introTotalTimeEl = document.getElementById('introTotalTime');
-
-function formatIntroTime(s) { if (!s || isNaN(s)) return '0:00'; return Math.floor(s / 60) + ':' + Math.floor(s % 60).toString().padStart(2, '0'); }
-function introTogglePlay() {
-    if (!introAudio.src) return;
-    if (introAudio.paused) { introAudio.play(); introPlayIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; }
-    else { introAudio.pause(); introPlayIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; }
-}
-function introSeek(sec) { if (introAudio.src) introAudio.currentTime += sec; }
-introAudio.addEventListener('timeupdate', function() { if (!introAudio.duration) return; introProgressBar.style.width = (introAudio.currentTime / introAudio.duration * 100) + '%'; introCurrentTimeEl.textContent = formatIntroTime(introAudio.currentTime); });
-introAudio.addEventListener('loadedmetadata', function() { introTotalTimeEl.textContent = formatIntroTime(introAudio.duration); });
-introAudio.addEventListener('ended', function() { introPlayIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; });
-introProgressContainer.addEventListener('click', function(e) { if (!introAudio.duration) return; const r = introProgressContainer.getBoundingClientRect(); introAudio.currentTime = ((e.clientX - r.left) / r.width) * introAudio.duration; });
-
-function toggleDescription() {
-    const panel = document.getElementById('descPanel');
-    const chevron = document.getElementById('descChevron');
-    const isOpen = panel.classList.contains('open');
-    if (isOpen) { panel.style.maxHeight = '0px'; panel.classList.remove('open'); chevron.style.transform = 'rotate(0deg)'; }
-    else { panel.classList.add('open'); panel.style.maxHeight = panel.scrollHeight + 'px'; chevron.style.transform = 'rotate(180deg)'; }
-}
-
-// Setup toggle switches
-function setupToggleSwitches() {
-    const morningToggle = document.getElementById('morning-toggle');
-    const nightToggle = document.getElementById('night-toggle');
-    const morningCheckbox = document.getElementById('morning-alarm-enabled');
-    const nightCheckbox = document.getElementById('night-alarm-enabled');
-
-    morningToggle.addEventListener('click', function() {
-        morningCheckbox.checked = !morningCheckbox.checked;
-        morningToggle.classList.toggle('enabled');
-    });
-
-    nightToggle.addEventListener('click', function() {
-        nightCheckbox.checked = !nightCheckbox.checked;
-        nightToggle.classList.toggle('enabled');
-    });
-}
-
-window.addEventListener('load', function() { 
-    loadHistory('all');
-    setupToggleSwitches();
+/* ===== INIT ===== */
+window.addEventListener('load', () => {
+  loadHistory('all');
+  gratCount = 5;
+  renderGratRows();
+  loadAlarmUI();
 });
 </script>
 </body>
