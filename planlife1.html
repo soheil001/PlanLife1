@@ -19,6 +19,7 @@
   --radius-xl:22px; --radius-lg:18px; --radius-md:14px; --radius-sm:10px;
   --gap:14px;
   --bottom-nav-h:70px;
+  --topbar-h:58px;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{height:100%;font-family:'Vazirmatn',sans-serif;color:var(--ink);}
@@ -64,10 +65,10 @@ button{font-family:inherit;} a{color:inherit;text-decoration:none;} img{display:
 .main-col{flex:1 1 0;min-width:0;max-width:100%;display:flex;flex-direction:column;gap:var(--gap);}
 .right-col{width:280px;flex-shrink:0;display:flex;flex-direction:column;gap:var(--gap);}
 
-/* HOME / IFRAME VIEWS */
+/* HOME VIEW */
 #home-view{display:flex;flex-direction:column;gap:var(--gap);}
 
-/* ---- IFRAME VIEW (KEY FIX) ---- */
+/* ========== IFRAME VIEW — FULLSCREEN FIX ========== */
 #iframe-view{
   display:none;
   flex-direction:column;
@@ -75,26 +76,65 @@ button{font-family:inherit;} a{color:inherit;text-decoration:none;} img{display:
   overflow:hidden;
   box-shadow:var(--section-shadow);
   background:var(--section);
-  /* موبایل: کل ارتفاع viewport منهای نوار بالا */
   height:calc(100vh - 120px);
   min-height:0;
 }
 #iframe-view.active{display:flex;}
-.iframe-topbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--hair);border-bottom:1.5px solid #e4e7ec;flex-shrink:0;}
+
+/* روی موبایل: iframe کاملاً تمام صفحه */
+body.iframe-open{overflow:hidden;}
+body.iframe-open .topbar{display:none;}
+body.iframe-open .shell{padding:0;}
+body.iframe-open .layout{padding:0;gap:0;}
+body.iframe-open .main-col{gap:0;}
+
+body.iframe-open #iframe-view{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  width:100%;
+  height:100%;
+  border-radius:0;
+  z-index:500;
+  box-shadow:none;
+}
+body.iframe-open #main-iframe{
+  width:100%;
+  height:100%;
+  flex:1;
+  min-height:0;
+  border:none;
+  display:block;
+}
+
+.iframe-topbar{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  background:var(--hair);
+  border-bottom:1.5px solid #e4e7ec;
+  flex-shrink:0;
+  /* safe area برای notch */
+  padding-top:calc(8px + env(safe-area-inset-top));
+}
 .iframe-back{display:flex;align-items:center;gap:5px;background:var(--section);border:1.5px solid #e4e7ec;color:var(--ink);font-size:12px;font-weight:700;padding:6px 12px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:.15s;}
 .iframe-back:hover{background:var(--hair);}
 .iframe-title-bar{flex:1;display:flex;align-items:center;gap:6px;background:var(--section);border:1.5px solid #e4e7ec;border-radius:999px;padding:6px 12px;min-width:0;}
 .iframe-title-bar .favicon{font-size:13px;flex-shrink:0;}
 .iframe-title-bar .page-title{font-size:12px;font-weight:600;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .iframe-reload{width:28px;height:28px;border-radius:50%;background:var(--section);border:1.5px solid #e4e7ec;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;}
+
 #main-iframe{
   width:100%;
   flex:1;
   border:none;
-  /* پر کردن فضای باقی‌مانده */
   min-height:0;
   display:block;
 }
+
 .iframe-loading{display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:40px 20px;color:var(--muted);font-size:13px;font-weight:600;flex-shrink:0;}
 .iframe-loading.active{display:flex;}
 .spinner{width:32px;height:32px;border-radius:50%;border:3px solid #eef0f3;border-top-color:var(--blue);animation:spin .8s linear infinite;}
@@ -150,7 +190,6 @@ button{font-family:inherit;} a{color:inherit;text-decoration:none;} img{display:
 .card .tag{position:absolute;top:7px;right:7px;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;font-size:13px;}
 .card h3{font-size:12px;font-weight:800;padding:0 2px;}
 .card .price{font-size:10.5px;color:var(--muted);padding:0 2px;}
-.card .price b{color:var(--ink);font-weight:700;}
 .card .btn-row{display:flex;gap:6px;margin-top:2px;}
 .card .btn-row a,.card .btn-row button,.card .btn-row span{flex:1;text-align:center;font-size:11px;font-weight:700;padding:8px 0;border-radius:9px;border:1.5px solid #e0e3e9;background:var(--hair);cursor:pointer;color:var(--ink);display:block;}
 .card .btn-row .primary{background:var(--blue);border-color:var(--blue);color:#fff;}
@@ -302,7 +341,7 @@ button{font-family:inherit;} a{color:inherit;text-decoration:none;} img{display:
 .bottom-nav{display:none;}
 
 /* ============================================
-   RESPONSIVE — MOBILE FIXES
+   RESPONSIVE — MOBILE
    ============================================ */
 @media (max-width:1100px){
   .right-col{width:255px;}
@@ -313,22 +352,17 @@ button{font-family:inherit;} a{color:inherit;text-decoration:none;} img{display:
   body{padding:0;}
   .shell{padding:0 0 calc(var(--bottom-nav-h) + 8px);overflow-x:hidden;}
 
-  /* topbar - full width on mobile */
   .topbar{border-radius:0;margin-bottom:10px;padding:10px 12px;position:sticky;top:0;z-index:200;}
   .tabs{display:none;}
   .search-box{max-width:none;flex:1;}
   .burger{display:flex;}
   .brand span{font-size:13px;}
   
-  /* main layout padding */
   .layout{padding:0 10px;overflow:hidden;}
-
-  /* layout stack */
   .layout{flex-direction:column;}
   .sidebar{display:none;}
   .right-col{width:100%;order:3;}
 
-  /* hero — ستونی */
   .hero{flex-direction:column;gap:12px;}
   .hero-media{width:100%;aspect-ratio:16/7;max-height:200px;}
   .hero-title{font-size:16px;}
@@ -336,26 +370,9 @@ button{font-family:inherit;} a{color:inherit;text-decoration:none;} img{display:
   .hero-desc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
   .hero-cta-row{margin-top:8px;}
 
-  /* cards — 2 ستون */
   .cards-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
-  /* section cards on mobile */
   .section-card{border-radius:16px;overflow:hidden;}
-  /* grid wrapper */
   .cards-grid{border-radius:0;overflow:visible;}
-
-  /* iframe view — تمام عرض و ارتفاع صحیح */
-  #iframe-view{
-    border-radius:0;
-    /* از زیر topbar تا بالای bottom-nav */
-    height:calc(100vh - var(--bottom-nav-h) - 58px);
-    min-height:0;
-    margin:0;
-  }
-  #main-iframe{
-    width:100%;
-    height:100%;
-    min-height:0;
-  }
 
   /* bottom nav */
   .bottom-nav{
@@ -381,10 +398,17 @@ button{font-family:inherit;} a{color:inherit;text-decoration:none;} img{display:
   .bn-item.active{color:var(--blue);}
   .bn-item svg{width:20px;height:20px;}
 
-  /* وقتی iframe باز است bottom-nav رو مخفی نکن */
-  #iframe-view.active ~ * .bottom-nav,
-  body:has(#iframe-view.active) .bottom-nav{
+  /* وقتی iframe بازه — bottom-nav هم نشون بده */
+  body.iframe-open .bottom-nav{
     display:flex;
+    z-index:600;
+  }
+  /* وقتی iframe بازه topbar مخفی بشه */
+  body.iframe-open .topbar{
+    display:none !important;
+  }
+  body.iframe-open .shell{
+    padding:0;
   }
 }
 
@@ -396,7 +420,6 @@ button{font-family:inherit;} a{color:inherit;text-decoration:none;} img{display:
   .hero-desc{font-size:11.5px;}
   .card h3{font-size:11.5px;}
   .card .btn-row a,.card .btn-row button,.card .btn-row span{font-size:10.5px;padding:7px 0;}
-  /* hero on very small screens */
   .hero-media{max-height:170px;aspect-ratio:16/6;}
   .hero-tabs{gap:12px;}
   .hero-tab{font-size:12px;}
@@ -840,6 +863,8 @@ function navigateSide(url,btnId,title){document.querySelectorAll('.side-btn').fo
 function loadInIframe(url,title){
   document.getElementById('home-view').style.display='none';
   const iv=document.getElementById('iframe-view');iv.classList.add('active');
+  // اضافه کردن کلاس به body برای fullscreen
+  document.body.classList.add('iframe-open');
   const loading=document.getElementById('iframe-loading');loading.classList.add('active');
   const iframe=document.getElementById('main-iframe');iframe.style.display='none';
   document.getElementById('iframe-page-title').textContent=title||'در حال بارگذاری...';
@@ -858,6 +883,8 @@ function goHome(){
   document.getElementById('iframe-view').classList.remove('active');
   document.getElementById('home-view').style.display='flex';
   document.getElementById('main-iframe').src='';
+  // حذف کلاس fullscreen از body
+  document.body.classList.remove('iframe-open');
   document.querySelectorAll('.side-btn').forEach(b=>b.classList.remove('active'));
   const hb=document.getElementById('sb-home');if(hb)hb.classList.add('active');
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
