@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#d8dde4">
 <title>تمرینات مجازی — PlanLife</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root {
   --bg-page: #d8dde4;
@@ -24,7 +25,6 @@
   --panel2: #1b1f2a;
   --green: #3ddc84;
   --red: #ff5470;
-  --gold: #d4af37;
   --radius-xl: 22px;
   --radius-lg: 18px;
   --radius-md: 14px;
@@ -32,26 +32,18 @@
   --gap: 14px;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html, body {
-  height: 100%;
-  font-family: 'Vazirmatn', sans-serif;
-  color: var(--ink);
-  background: var(--bg-page);
-  min-height: 100vh;
-}
+html, body { height: 100%; font-family: 'Vazirmatn', sans-serif; color: var(--ink); background: var(--bg-page); min-height: 100vh; }
 button { font-family: inherit; }
 a { color: inherit; text-decoration: none; }
 
 .shell { max-width: 1100px; margin: 0 auto; padding: 16px; }
 
-/* ===== TOPBAR ===== */
+/* TOPBAR */
 .topbar {
-  background: var(--section);
-  border-radius: var(--radius-xl);
+  background: var(--section); border-radius: var(--radius-xl);
   box-shadow: var(--section-shadow);
   display: flex; align-items: center; gap: 14px;
-  padding: 12px 18px;
-  margin-bottom: var(--gap);
+  padding: 12px 18px; margin-bottom: var(--gap);
 }
 .brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; cursor: pointer; }
 .brand img { width: 36px; height: 36px; border-radius: 10px; object-fit: cover; }
@@ -59,487 +51,208 @@ a { color: inherit; text-decoration: none; }
 .topbar-title { flex: 1; font-size: 15px; font-weight: 700; color: var(--muted); }
 .back-topbar {
   display: flex; align-items: center; gap: 6px;
-  background: var(--hair); border: 1.5px solid #e0e3e9;
-  color: var(--ink); font-size: 12px; font-weight: 700;
-  padding: 7px 14px; border-radius: 999px; cursor: pointer;
-  transition: .15s; border: none;
+  background: var(--hair); color: var(--ink); font-size: 12px; font-weight: 700;
+  padding: 7px 14px; border-radius: 999px; cursor: pointer; transition: .15s; border: none;
 }
 .back-topbar:hover { background: #e4e7ec; }
 
-/* ===== LAYOUT ===== */
+/* LAYOUT */
 .layout { display: flex; gap: var(--gap); align-items: flex-start; }
 .main-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--gap); }
 .right-col { width: 285px; flex-shrink: 0; display: flex; flex-direction: column; gap: var(--gap); }
 
-/* ===== AUDIO PLAYER ===== */
+/* AUDIO PLAYER */
 .player-card {
-  background: var(--panel);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--section-shadow);
-  padding: 22px 22px 18px;
-  color: #fff;
+  background: var(--panel); border-radius: var(--radius-xl);
+  box-shadow: var(--section-shadow); padding: 22px 22px 18px; color: #fff;
 }
 .player-header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
-.player-thumb {
-  width: 56px; height: 56px; border-radius: 14px; overflow: hidden;
-  background: var(--panel2); flex-shrink: 0;
-}
+.player-thumb { width: 56px; height: 56px; border-radius: 14px; overflow: hidden; background: var(--panel2); flex-shrink: 0; }
 .player-thumb img { width: 100%; height: 100%; object-fit: cover; }
 .player-info .lbl { font-size: 11px; color: rgba(255,255,255,.45); margin-bottom: 3px; }
 .player-info .title { font-size: 15px; font-weight: 800; color: #fff; }
 .player-info .sub { font-size: 12px; color: rgba(255,255,255,.5); }
-.player-progress-wrap {
-  width: 100%; height: 4px;
-  background: rgba(255,255,255,.15); border-radius: 999px;
-  cursor: pointer; margin-bottom: 8px; position: relative;
-}
-.player-progress-bar {
-  height: 100%; width: 0%;
-  background: var(--lime); border-radius: 999px;
-  transition: width .1s linear;
-}
+.player-progress-wrap { width: 100%; height: 4px; background: rgba(255,255,255,.15); border-radius: 999px; cursor: pointer; margin-bottom: 8px; position: relative; }
+.player-progress-bar { height: 100%; width: 0%; background: var(--lime); border-radius: 999px; transition: width .1s linear; }
 .player-times { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,.4); margin-bottom: 16px; }
 .player-controls { display: flex; align-items: center; justify-content: center; gap: 24px; }
-.p-ctrl {
-  width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,.08); border-radius: 50%; cursor: pointer; border: none; color: #ccc;
-  transition: .2s;
-}
+.p-ctrl { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.08); border-radius: 50%; cursor: pointer; border: none; color: #ccc; transition: .2s; }
 .p-ctrl:hover { background: rgba(255,255,255,.15); color: #fff; }
 .p-ctrl svg { width: 18px; height: 18px; fill: currentColor; }
-.p-play {
-  width: 54px; height: 54px; border-radius: 50%;
-  background: var(--lime); border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 6px 20px rgba(216,242,76,.35);
-  transition: .2s;
-}
+.p-play { width: 54px; height: 54px; border-radius: 50%; background: var(--lime); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(216,242,76,.35); transition: .2s; }
 .p-play:hover { transform: scale(1.06); }
 .p-play svg { width: 22px; height: 22px; fill: var(--lime-ink); }
 
-/* ===== DESC TOGGLE ===== */
-.desc-toggle {
-  background: var(--section);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--section-shadow);
-  padding: 14px 18px;
-  display: flex; align-items: center; justify-content: space-between;
-  cursor: pointer; transition: .2s;
-}
-.desc-toggle:hover { box-shadow: 0 4px 20px rgba(0,0,0,.1); }
-.desc-toggle .lbl { font-size: 14px; font-weight: 700; color: var(--ink); }
+/* DESC TOGGLE */
+.desc-toggle { background: var(--section); border-radius: var(--radius-lg); box-shadow: var(--section-shadow); padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: .2s; }
+.desc-toggle .lbl { font-size: 14px; font-weight: 700; }
 .desc-chevron { font-size: 16px; color: var(--muted); transition: transform .35s; }
-.desc-panel {
-  overflow: hidden; max-height: 0; opacity: 0;
-  transition: max-height .45s cubic-bezier(.4,0,.2,1), opacity .35s ease, margin-top .35s;
-}
+.desc-panel { overflow: hidden; max-height: 0; opacity: 0; transition: max-height .45s cubic-bezier(.4,0,.2,1), opacity .35s ease, margin-top .35s; }
 .desc-panel.open { opacity: 1; margin-top: 10px; }
-.desc-panel-inner {
-  background: var(--section); border-radius: var(--radius-lg);
-  box-shadow: var(--section-shadow);
-  padding: 16px 18px; font-size: 14px; line-height: 2;
-  color: var(--muted);
-}
+.desc-panel-inner { background: var(--section); border-radius: var(--radius-lg); box-shadow: var(--section-shadow); padding: 16px 18px; font-size: 14px; line-height: 2; color: var(--muted); }
 
-/* ===== EXERCISE CARDS GRID ===== */
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-}
-
-.ex-card {
-  background: var(--section);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--section-shadow);
-  padding: 0;
-  display: flex; flex-direction: column;
-  overflow: hidden;
-  transition: .25s cubic-bezier(.25,.8,.25,1);
-  cursor: pointer;
-}
-.ex-card:hover {
-  box-shadow: 0 10px 28px rgba(0,0,0,.13), 0 0 0 1.5px rgba(47,111,237,.22);
-  transform: translateY(-3px);
-}
-
-.ex-card-thumb {
-  width: 100%; aspect-ratio: 16/10; overflow: hidden;
-  position: relative; background: #eef0f3;
-  flex-shrink: 0;
-}
-.ex-card-thumb img {
-  width: 100%; height: 100%; object-fit: cover;
-  transition: transform .4s ease;
-}
+/* CARDS GRID */
+.cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.ex-card { background: var(--section); border-radius: var(--radius-lg); box-shadow: var(--section-shadow); display: flex; flex-direction: column; overflow: hidden; transition: .25s cubic-bezier(.25,.8,.25,1); cursor: pointer; }
+.ex-card:hover { box-shadow: 0 10px 28px rgba(0,0,0,.13), 0 0 0 1.5px rgba(47,111,237,.22); transform: translateY(-3px); }
+.ex-card-thumb { width: 100%; aspect-ratio: 16/10; overflow: hidden; position: relative; background: #eef0f3; flex-shrink: 0; }
+.ex-card-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
 .ex-card:hover .ex-card-thumb img { transform: scale(1.04); }
-
-.ex-card-thumb .badge {
-  position: absolute; top: 10px; right: 10px;
-  background: rgba(18,20,28,.7); color: #fff;
-  font-size: 10px; font-weight: 700;
-  padding: 4px 10px; border-radius: 999px;
-}
-.ex-card-thumb .emoji-badge {
-  position: absolute; bottom: 10px; left: 10px;
-  font-size: 28px; line-height: 1;
-}
-
+.ex-card-thumb .badge { position: absolute; top: 10px; right: 10px; background: rgba(18,20,28,.7); color: #fff; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+.ex-card-thumb .emoji-badge { position: absolute; bottom: 10px; left: 10px; font-size: 28px; line-height: 1; }
 .ex-card-body { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
-.ex-card-body h3 { font-size: 14px; font-weight: 800; color: var(--ink); }
+.ex-card-body h3 { font-size: 14px; font-weight: 800; }
 .ex-card-body p { font-size: 12px; color: var(--muted); line-height: 1.6; }
 .ex-card-btn-row { display: flex; gap: 7px; margin-top: 4px; }
-.ex-card-btn {
-  flex: 1; text-align: center; font-size: 12px; font-weight: 700;
-  padding: 9px 0; border-radius: 9px; border: 1.5px solid #e0e3e9;
-  background: var(--hair); cursor: pointer; color: var(--ink);
-  transition: .15s;
-}
+.ex-card-btn { flex: 1; text-align: center; font-size: 12px; font-weight: 700; padding: 9px 0; border-radius: 9px; border: 1.5px solid #e0e3e9; background: var(--hair); cursor: pointer; color: var(--ink); transition: .15s; }
 .ex-card-btn:hover { background: #e4e7ec; }
 .ex-card-btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
 .ex-card-btn.primary:hover { background: var(--blue-ink); }
 
-/* ===== FORM OVERLAY ===== */
-.form-overlay {
-  display: none;
-  position: fixed; inset: 0; z-index: 300;
-  background: rgba(18,20,28,.5);
-  backdrop-filter: blur(4px);
-  align-items: flex-start; justify-content: center;
-  overflow-y: auto; padding: 20px 16px 40px;
-}
+/* FORM OVERLAY */
+.form-overlay { display: none; position: fixed; inset: 0; z-index: 300; background: rgba(18,20,28,.5); backdrop-filter: blur(4px); align-items: flex-start; justify-content: center; overflow-y: auto; padding: 20px 16px 40px; }
 .form-overlay.active { display: flex; }
-
-.form-modal {
-  background: #fff;
-  border-radius: var(--radius-xl);
-  box-shadow: 0 20px 60px rgba(0,0,0,.25);
-  width: 100%; max-width: 640px;
-  overflow: hidden;
-  margin: auto;
-}
-.form-modal-header {
-  background: var(--panel);
-  padding: 20px 24px;
-  display: flex; align-items: center; justify-content: space-between;
-}
+.form-modal { background: #fff; border-radius: var(--radius-xl); box-shadow: 0 20px 60px rgba(0,0,0,.25); width: 100%; max-width: 640px; overflow: hidden; margin: auto; }
+.form-modal-header { background: var(--panel); padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; }
 .form-modal-header h2 { font-size: 17px; font-weight: 900; color: #fff; }
-.form-close {
-  width: 34px; height: 34px; border-radius: 50%;
-  background: rgba(255,255,255,.1); border: none; color: #fff;
-  font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: .2s;
-}
+.form-close { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.1); border: none; color: #fff; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: .2s; }
 .form-close:hover { background: rgba(255,255,255,.2); }
 .form-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
 .form-question { display: flex; flex-direction: column; gap: 8px; }
-.form-question label {
-  font-size: 13px; font-weight: 700; color: var(--ink);
-  display: flex; align-items: center; gap: 8px;
-}
-.form-question label .q-num {
-  width: 24px; height: 24px; border-radius: 50%;
-  background: var(--blue); color: #fff;
-  font-size: 10px; font-weight: 800;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-textarea, .form-input, select {
-  width: 100%; background: var(--hair); border: 1.5px solid #e0e3e9;
-  border-radius: var(--radius-sm); padding: 11px 14px;
-  color: var(--ink); font-size: 14px; resize: vertical;
-  font-family: inherit; transition: .15s; outline: none;
-  min-height: 80px;
-}
+.form-question label { font-size: 13px; font-weight: 700; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+.form-question label .q-num { width: 24px; height: 24px; border-radius: 50%; background: var(--blue); color: #fff; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+textarea, .form-input, select { width: 100%; background: var(--hair); border: 1.5px solid #e0e3e9; border-radius: var(--radius-sm); padding: 11px 14px; color: var(--ink); font-size: 14px; resize: vertical; font-family: inherit; transition: .15s; outline: none; min-height: 80px; }
 textarea:focus, .form-input:focus, select:focus { border-color: var(--blue); background: #fff; }
 .form-input { min-height: unset; resize: none; }
 select { min-height: unset; cursor: pointer; }
-.form-footer {
-  padding: 16px 24px 24px;
-  display: flex; gap: 10px; justify-content: center;
-  border-top: 1px solid var(--hair);
-}
-.form-save-btn {
-  background: var(--blue); color: #fff; border: none;
-  padding: 13px 32px; font-size: 14px; font-weight: 800;
-  border-radius: 50px; cursor: pointer; transition: .2s;
-  box-shadow: 0 6px 16px rgba(47,111,237,.3);
-}
+.form-footer { padding: 16px 24px 24px; display: flex; gap: 10px; justify-content: center; border-top: 1px solid var(--hair); }
+.form-save-btn { background: var(--blue); color: #fff; border: none; padding: 13px 32px; font-size: 14px; font-weight: 800; border-radius: 50px; cursor: pointer; transition: .2s; box-shadow: 0 6px 16px rgba(47,111,237,.3); }
 .form-save-btn:hover { background: var(--blue-ink); transform: translateY(-1px); }
-.form-save-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-.form-cancel-btn {
-  background: var(--hair); color: var(--muted); border: none;
-  padding: 13px 24px; font-size: 14px; font-weight: 700;
-  border-radius: 50px; cursor: pointer; transition: .2s;
-}
+.form-cancel-btn { background: var(--hair); color: var(--muted); border: none; padding: 13px 24px; font-size: 14px; font-weight: 700; border-radius: 50px; cursor: pointer; transition: .2s; }
 .form-cancel-btn:hover { background: #e4e7ec; }
 
-/* ===== SUCCESS TOAST ===== */
-.toast {
-  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
-  background: var(--panel); color: #fff;
-  padding: 13px 22px; border-radius: 999px;
-  font-size: 13px; font-weight: 700;
-  box-shadow: 0 8px 24px rgba(0,0,0,.3);
-  z-index: 999; transition: transform .35s cubic-bezier(.34,1.56,.64,1);
-  display: flex; align-items: center; gap: 10px;
+/* PDF CONFIRM MODAL */
+.pdf-overlay {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(18,20,28,.65); backdrop-filter: blur(6px);
+  align-items: center; justify-content: center;
 }
-.toast.show { transform: translateX(-50%) translateY(0); }
-.toast-icon { font-size: 16px; }
+.pdf-overlay.active { display: flex; }
+.pdf-modal {
+  background: #fff; border-radius: 24px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.3);
+  width: calc(100% - 40px); max-width: 400px;
+  padding: 32px 28px; text-align: center;
+  animation: popIn .35s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn { from { transform: scale(.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.pdf-modal .pdf-icon { font-size: 52px; margin-bottom: 12px; display: block; }
+.pdf-modal h3 { font-size: 18px; font-weight: 900; color: var(--ink); margin-bottom: 10px; }
+.pdf-modal p { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 8px; }
+.pdf-warning {
+  background: rgba(255,84,112,.07); border: 1px solid rgba(255,84,112,.2);
+  border-radius: 12px; padding: 10px 14px; margin: 12px 0 20px;
+  font-size: 12px; color: #d0324c; font-weight: 600; line-height: 1.7;
+}
+.pdf-btn-row { display: flex; gap: 10px; }
+.pdf-yes {
+  flex: 1; background: var(--blue); color: #fff; border: none;
+  padding: 13px 0; border-radius: 14px; font-size: 14px; font-weight: 800;
+  cursor: pointer; transition: .2s; box-shadow: 0 6px 16px rgba(47,111,237,.3);
+}
+.pdf-yes:hover { background: var(--blue-ink); transform: translateY(-1px); }
+.pdf-no {
+  flex: 1; background: var(--hair); color: var(--muted); border: none;
+  padding: 13px 0; border-radius: 14px; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: .2s;
+}
+.pdf-no:hover { background: #e4e7ec; color: var(--ink); }
 
-/* ===== RIGHT PANEL ===== */
-.panel {
-  background: var(--section);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--section-shadow);
-  padding: 16px;
-}
+/* TOAST */
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--panel); color: #fff; padding: 13px 22px; border-radius: 999px; font-size: 13px; font-weight: 700; box-shadow: 0 8px 24px rgba(0,0,0,.3); z-index: 999; transition: transform .35s cubic-bezier(.34,1.56,.64,1); display: flex; align-items: center; gap: 10px; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* STATS PANEL */
+.panel { background: var(--section); border-radius: var(--radius-xl); box-shadow: var(--section-shadow); padding: 16px; }
 .panel-dark { background: var(--panel); color: #fff; }
 .panel-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
 .panel-title h3 { font-size: 14px; font-weight: 800; }
 .panel-title h3 b { color: var(--blue); }
 .panel-dark .panel-title h3 b { color: var(--lime); }
-.panel-title .more { font-size: 11px; color: var(--muted); cursor: pointer; }
 
-.chip-row { display: flex; gap: 7px; margin-bottom: 14px; flex-wrap: wrap; }
-.chip {
-  font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 999px;
-  background: var(--panel2); color: #cfd3dc; cursor: pointer; transition: .15s;
-}
-.chip.active { background: var(--lime); color: var(--lime-ink); }
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.stat-box { background: var(--panel2); border-radius: 14px; padding: 14px 12px; text-align: center; }
+.stat-box .st-lbl { font-size: 10px; color: rgba(255,255,255,.4); margin-bottom: 6px; }
+.stat-box .st-val { font-size: 26px; font-weight: 900; }
+.stat-box.s-morning .st-val { color: #3ddc84; }
+.stat-box.s-night .st-val { color: #60a5fa; }
+.stat-box.s-events .st-val { color: #fbbf24; }
+.stat-box.s-grat .st-val { color: #f472b6; }
 
-.balance-lbl { font-size: 11px; color: rgba(255,255,255,.5); margin-bottom: 4px; }
-.balance-num { font-size: 30px; font-weight: 900; margin-bottom: 2px; }
-.balance-num span { font-size: 14px; font-weight: 700; color: var(--green); }
+.streak-bar { margin-top: 14px; }
+.streak-row { display: flex; gap: 5px; justify-content: center; margin-top: 8px; }
+.streak-dot { width: 28px; height: 28px; border-radius: 8px; background: rgba(255,255,255,.06); display: flex; align-items: center; justify-content: center; font-size: 10px; color: rgba(255,255,255,.3); transition: .3s; }
+.streak-dot.done { background: var(--green); color: #fff; font-size: 13px; }
+.streak-lbl { text-align: center; font-size: 11px; color: rgba(255,255,255,.4); }
+
+/* SPARKLINE */
 .spark { width: 100%; height: 52px; margin: 10px 0 14px; }
-
-.panel-cta {
-  width: 100%; background: var(--blue); color: #fff; border: none; border-radius: 13px;
-  padding: 13px; font-size: 13px; font-weight: 800; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  box-shadow: 0 6px 16px rgba(47,111,237,.3); transition: .15s;
-}
+.panel-cta { width: 100%; background: var(--blue); color: #fff; border: none; border-radius: 13px; padding: 13px; font-size: 13px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 16px rgba(47,111,237,.3); transition: .15s; }
 .panel-cta:hover { box-shadow: 0 8px 22px rgba(47,111,237,.4); transform: translateY(-1px); }
 
-/* ===== HISTORY PANEL ===== */
-.hist-tabs {
-  display: flex; gap: 6px; margin-bottom: 14px;
-  overflow-x: auto; scrollbar-width: none; padding: 2px 0;
-}
-.hist-tabs::-webkit-scrollbar { display: none; }
-.hist-tab {
-  flex-shrink: 0; padding: 6px 13px; border-radius: 999px;
-  background: var(--hair); border: none; font-size: 12px; font-weight: 600;
-  color: var(--muted); cursor: pointer; transition: .15s; white-space: nowrap;
-}
-.hist-tab.active { background: var(--ink); color: #fff; }
-
-.hist-list { display: flex; flex-direction: column; gap: 10px; }
-.hist-entry {
-  background: var(--hair); border-radius: var(--radius-md);
-  padding: 12px 14px; position: relative;
-  border: 1px solid #e8eaed;
-}
-.hist-entry-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-.hist-entry-head h4 { font-size: 12.5px; font-weight: 700; color: var(--ink); }
-.hist-entry-head .date { font-size: 11px; color: var(--muted); }
-.hist-entry p { font-size: 12px; color: var(--muted); line-height: 1.7; }
-.hist-entry p + p { margin-top: 4px; }
-.hist-entry p strong { color: var(--ink); font-weight: 700; }
-.hist-del {
-  position: absolute; top: 10px; left: 12px;
-  background: rgba(255,84,112,.12); color: var(--red);
-  border: none; padding: 4px 10px; font-size: 11px; font-weight: 700;
-  border-radius: 999px; cursor: pointer; transition: .15s;
-}
-.hist-del:hover { background: rgba(255,84,112,.25); }
-
-.expiry-badge {
-  display: inline-block; background: rgba(47,111,237,.1);
-  color: var(--blue); border-radius: 999px;
-  padding: 3px 10px; font-size: 10px; font-weight: 700; margin-top: 6px;
-}
-
-.no-history { text-align: center; color: var(--muted); font-size: 13px; padding: 24px 0; }
-
-/* ===== SPINNER ===== */
-.spinner {
-  display: inline-block; width: 18px; height: 18px;
-  border: 2.5px solid rgba(47,111,237,.2); border-top-color: var(--blue);
-  border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: 6px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.sync-bar {
-  text-align: center; padding: 8px 16px;
-  font-size: 12.5px; color: var(--muted); font-weight: 600;
-  min-height: 36px; display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.sync-tick {
-  width: 22px; height: 22px; border-radius: 50%;
-  background: #3ddc84; color: #fff; font-size: 11px; font-weight: 900;
-  display: flex; align-items: center; justify-content: center;
-  animation: tick-pop .4s cubic-bezier(.34,1.56,.64,1);
-}
-@keyframes tick-pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
-
-/* ===== GRATITUDE FORM ===== */
+/* GRATITUDE */
 .grat-list { display: flex; flex-direction: column; gap: 10px; margin: 4px 0 16px; }
 .grat-row { display: flex; align-items: flex-start; gap: 10px; }
-.grat-num {
-  min-width: 28px; height: 28px; border-radius: 50%;
-  background: rgba(244,63,94,.12); border: 1.5px solid rgba(244,63,94,.3);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 800; color: #e11d48; flex-shrink: 0; margin-top: 6px;
-}
-.grat-input {
-  flex: 1; background: var(--hair); border: 1.5px solid #e0e3e9;
-  border-radius: var(--radius-sm); padding: 10px 13px;
-  color: var(--ink); font-size: 13px; font-family: inherit;
-  resize: none; min-height: 44px; outline: none; transition: .15s;
-}
+.grat-num { min-width: 28px; height: 28px; border-radius: 50%; background: rgba(244,63,94,.12); border: 1.5px solid rgba(244,63,94,.3); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #e11d48; flex-shrink: 0; margin-top: 6px; }
+.grat-input { flex: 1; background: var(--hair); border: 1.5px solid #e0e3e9; border-radius: var(--radius-sm); padding: 10px 13px; color: var(--ink); font-size: 13px; font-family: inherit; resize: none; min-height: 44px; outline: none; transition: .15s; }
 .grat-input:focus { border-color: #e11d48; background: #fff; }
-.add-grat-btn {
-  width: 100%; padding: 12px; border: 1.5px dashed rgba(244,63,94,.4);
-  border-radius: var(--radius-md); color: #e11d48; font-size: 13px;
-  font-weight: 700; cursor: pointer; background: rgba(244,63,94,.05);
-  transition: .2s; font-family: inherit;
-}
+.add-grat-btn { width: 100%; padding: 12px; border: 1.5px dashed rgba(244,63,94,.4); border-radius: var(--radius-md); color: #e11d48; font-size: 13px; font-weight: 700; cursor: pointer; background: rgba(244,63,94,.05); transition: .2s; font-family: inherit; }
 .add-grat-btn:hover { background: rgba(244,63,94,.1); }
-.save-grat-btn {
-  background: linear-gradient(135deg, #fb7185, #e11d48);
-  color: #fff; border: none; padding: 13px 32px;
-  font-size: 14px; font-weight: 800; border-radius: 50px; cursor: pointer;
-  box-shadow: 0 6px 16px rgba(244,63,94,.3); transition: .2s;
-}
-.save-grat-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(244,63,94,.4); }
 
-.save-events-btn {
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-  color: #fff; border: none; padding: 13px 32px;
-  font-size: 14px; font-weight: 800; border-radius: 50px; cursor: pointer;
-  box-shadow: 0 6px 16px rgba(34,197,94,.3); transition: .2s;
-}
+/* SAVE BUTTONS */
+.save-grat-btn { background: linear-gradient(135deg, #fb7185, #e11d48); color: #fff; border: none; padding: 13px 32px; font-size: 14px; font-weight: 800; border-radius: 50px; cursor: pointer; box-shadow: 0 6px 16px rgba(244,63,94,.3); transition: .2s; }
+.save-grat-btn:hover { transform: translateY(-1px); }
+.save-events-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; border: none; padding: 13px 32px; font-size: 14px; font-weight: 800; border-radius: 50px; cursor: pointer; box-shadow: 0 6px 16px rgba(34,197,94,.3); transition: .2s; }
 .save-events-btn:hover { transform: translateY(-1px); }
-.save-events-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
-/* ===== ALARM PANEL ===== */
-.alarm-section {
-  background: var(--section); border-radius: var(--radius-xl);
-  box-shadow: var(--section-shadow); padding: 20px;
-  display: none;
-}
-.alarm-section.visible { display: block; }
-.alarm-group { margin-bottom: 20px; padding-bottom: 18px; border-bottom: 1px solid var(--hair); }
-.alarm-group:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-.alarm-title { font-size: 14px; font-weight: 800; color: var(--ink); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-.alarm-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.alarm-input {
-  width: 60px; background: var(--hair); border: 1.5px solid #e0e3e9;
-  border-radius: var(--radius-sm); padding: 8px 10px;
-  color: var(--ink); font-size: 15px; text-align: center;
-  font-family: inherit; outline: none; transition: .15s;
-}
-.alarm-input:focus { border-color: var(--blue); background: #fff; }
-.alarm-sep { font-weight: 800; color: var(--muted); font-size: 18px; }
-.toggle-sw {
-  width: 44px; height: 24px; border-radius: 12px;
-  background: #e0e3e9; cursor: pointer; position: relative;
-  transition: background .25s; border: none; flex-shrink: 0;
-}
-.toggle-sw.on { background: #3ddc84; }
-.toggle-sw::after {
-  content: ''; position: absolute; top: 2px; left: 2px;
-  width: 20px; height: 20px; border-radius: 50%; background: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: left .25s;
-}
-.toggle-sw.on::after { left: 22px; }
-.alarm-test {
-  font-size: 12px; font-weight: 700; color: var(--blue);
-  background: rgba(47,111,237,.08); border: 1px solid rgba(47,111,237,.2);
-  padding: 7px 14px; border-radius: 999px; cursor: pointer; transition: .15s;
-}
-.alarm-test:hover { background: rgba(47,111,237,.15); }
-.alarm-save-btn {
-  background: var(--blue); color: #fff; border: none;
-  padding: 11px 24px; font-size: 13px; font-weight: 800;
-  border-radius: 50px; cursor: pointer; transition: .2s;
-  box-shadow: 0 4px 14px rgba(47,111,237,.3);
-}
-.alarm-save-btn:hover { background: var(--blue-ink); }
-
-/* ===== DOWNLOAD / PRINT ===== */
-.action-row {
-  display: flex; gap: 10px; flex-wrap: wrap;
-}
-.action-btn {
-  flex: 1; min-width: 140px; padding: 11px 16px;
-  background: var(--hair); border: 1.5px solid #e0e3e9;
-  border-radius: var(--radius-md); font-size: 12.5px; font-weight: 700;
-  color: var(--ink); cursor: pointer; transition: .15s; text-align: center;
-}
-.action-btn:hover { background: #e4e7ec; }
-
-/* ===== SIDEBAR MENU ===== */
-#menu-overlay {
-  position: fixed; inset: 0; background: rgba(18,20,28,.5);
-  z-index: 150; opacity: 0; pointer-events: none; transition: opacity .4s;
-}
+/* MENU */
+#menu-overlay { position: fixed; inset: 0; background: rgba(18,20,28,.5); z-index: 150; opacity: 0; pointer-events: none; transition: opacity .4s; }
 #menu-overlay.active { opacity: 1; pointer-events: auto; }
-.side-menu {
-  position: fixed; top: 0; right: 0; width: 255px; height: 100vh;
-  background: #fff; box-shadow: -8px 0 30px rgba(0,0,0,.15);
-  z-index: 200; transform: translateX(100%);
-  transition: transform .45s cubic-bezier(.25,.1,.25,1);
-  padding: 20px 16px 28px; display: flex; flex-direction: column; overflow-y: auto;
-}
+.side-menu { position: fixed; top: 0; right: 0; width: 255px; height: 100vh; background: #fff; box-shadow: -8px 0 30px rgba(0,0,0,.15); z-index: 200; transform: translateX(100%); transition: transform .45s cubic-bezier(.25,.1,.25,1); padding: 20px 16px 28px; display: flex; flex-direction: column; overflow-y: auto; }
 .side-menu.open { transform: translateX(0); }
-.menu-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--hair);
-}
-.menu-header h2 { font-size: 18px; font-weight: 900; color: var(--ink); }
-.menu-close {
-  width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
-  font-size: 20px; color: var(--muted); cursor: pointer; border-radius: 50%;
-  transition: .2s; background: none; border: none;
-}
+.menu-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--hair); }
+.menu-header h2 { font-size: 18px; font-weight: 900; }
+.menu-close { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--muted); cursor: pointer; border-radius: 50%; transition: .2s; background: none; border: none; }
 .menu-close:hover { background: var(--hair); }
 .menu-items { display: flex; flex-direction: column; gap: 6px; }
-.menu-item {
-  background: var(--hair); border-radius: var(--radius-md);
-  padding: 12px 16px; display: flex; align-items: center;
-  font-size: 14px; font-weight: 700; color: var(--ink);
-  cursor: pointer; transition: .2s; border: none; text-align: right; width: 100%;
-}
+.menu-item { background: var(--hair); border-radius: var(--radius-md); padding: 12px 16px; display: flex; align-items: center; font-size: 14px; font-weight: 700; color: var(--ink); cursor: pointer; transition: .2s; border: none; text-align: right; width: 100%; }
 .menu-item:hover { background: #e4e7ec; }
-.menu-item.accent { background: rgba(47,111,237,.08); color: var(--blue); }
 
-/* ===== PRINT ===== */
+/* QUICK LINKS */
+.quick-link { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--hair); border-radius: var(--radius-md); font-size: 13px; font-weight: 700; transition: .15s; }
+.quick-link:hover { background: #e4e7ec; }
+
+/* SPINNER */
+.spinner { display: inline-block; width: 18px; height: 18px; border: 2.5px solid rgba(47,111,237,.2); border-top-color: var(--blue); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* SYNC BAR */
+.sync-bar { text-align: center; padding: 8px 16px; font-size: 12.5px; color: var(--muted); font-weight: 600; min-height: 36px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.sync-tick { width: 22px; height: 22px; border-radius: 50%; background: #3ddc84; color: #fff; font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center; animation: tick-pop .4s cubic-bezier(.34,1.56,.64,1); }
+@keyframes tick-pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+
+@media (max-width: 900px) { .layout { flex-direction: column; } .right-col { width: 100%; } }
+@media (max-width: 600px) { .cards-grid { grid-template-columns: 1fr 1fr; } .shell { padding: 10px 10px 80px; } }
 @media print {
-  .topbar, #menu-overlay, .side-menu, .player-card, .desc-toggle, .desc-panel,
-  .cards-grid, .alarm-section, .action-row, .right-col, .form-overlay, .toast,
-  .hist-tabs, .hist-del, .expiry-badge, .panel-cta, .sync-bar { display: none !important; }
-  html, body { background: #fff !important; color: #000 !important; }
-  .shell { padding: 0 !important; }
-  .layout { display: block !important; }
-  .panel, .hist-list .hist-entry { box-shadow: none !important; border: 1px solid #ddd !important; }
+  .topbar, #menu-overlay, .side-menu, .player-card, .desc-toggle, .desc-panel, .cards-grid, .right-col, .form-overlay, .toast, .pdf-overlay { display: none !important; }
+  html, body { background: #fff !important; }
   @page { margin: 12mm 15mm; size: A4; }
-}
-
-@media (max-width: 900px) {
-  .layout { flex-direction: column; }
-  .right-col { width: 100%; }
-}
-@media (max-width: 600px) {
-  .cards-grid { grid-template-columns: 1fr 1fr; }
-  .shell { padding: 10px 10px 80px; }
 }
 </style>
 </head>
 <body>
 
-<!-- Side menu overlay -->
+<!-- Side menu -->
 <div id="menu-overlay" onclick="closeMenu()"></div>
 <div id="side-menu" class="side-menu">
   <div class="menu-header">
@@ -553,17 +266,33 @@ select { min-height: unset; cursor: pointer; }
     <a href="https://planlife.ir/Pages/Doreha/index.html" class="menu-item">دوره‌ها</a>
     <a href="https://planlife.ir/Pages/Magazine/index.html" class="menu-item">مجله ماورایی</a>
     <a href="https://planlife.ir/Pages/Video/index.html" class="menu-item">ویدیوها</a>
-    <button class="menu-item accent" onclick="toggleAlarm(); closeMenu();">⏰ تنظیمات آلارم</button>
   </div>
 </div>
 
 <!-- Toast -->
 <div class="toast" id="toast">
-  <span class="toast-icon">✅</span>
-  <span id="toast-msg">تمرین با موفقیت ذخیره شد</span>
+  <span>✅</span>
+  <span id="toast-msg">تمرین ثبت شد</span>
 </div>
 
-<!-- Form Overlays -->
+<!-- PDF CONFIRM MODAL -->
+<div class="pdf-overlay" id="pdf-overlay">
+  <div class="pdf-modal">
+    <span class="pdf-icon">📄</span>
+    <h3>ذخیره به صورت PDF؟</h3>
+    <p>می‌خوای این تمرین رو دانلود کنی؟</p>
+    <div class="pdf-warning">
+      ⚠️ توجه: اگه PDF رو ذخیره نکنی، این نوشته‌ها پاک می‌شن.<br>
+      در صورت نیاز حتماً آن را ذخیره کنید.
+    </div>
+    <div class="pdf-btn-row">
+      <button class="pdf-yes" id="pdf-yes-btn" onclick="confirmPDF(true)">📥 بله، دانلود کن</button>
+      <button class="pdf-no" onclick="confirmPDF(false)">نه، پاک بشه</button>
+    </div>
+  </div>
+</div>
+
+<!-- MORNING FORM -->
 <div class="form-overlay" id="morning-overlay">
   <div class="form-modal">
     <div class="form-modal-header">
@@ -571,46 +300,23 @@ select { min-height: unset; cursor: pointer; }
       <button class="form-close" onclick="closeOverlay('morning-overlay')">✕</button>
     </div>
     <div class="form-body">
-      <div class="form-question">
-        <label><span class="q-num">۱</span>بابت چه چیزی در این لحظه حالم خوب است؟</label>
-        <textarea id="mq1" placeholder="بنویس..."></textarea>
-      </div>
-      <div class="form-question">
-        <label><span class="q-num">۲</span>بابت چه کسی در این لحظه حالم خوب است؟</label>
-        <textarea id="mq2" placeholder="بنویس..."></textarea>
-      </div>
-      <div class="form-question">
-        <label><span class="q-num">۳</span>کدام باورهای قدرتمندکننده را امروز باید مرور کنم؟</label>
-        <textarea id="mq3" placeholder="بنویس..."></textarea>
-      </div>
-      <div class="form-question">
-        <label><span class="q-num">۴</span>مهم‌ترین کاری که امروز باید تمامش کنم چیست؟</label>
-        <textarea id="mq4" placeholder="بنویس..."></textarea>
-      </div>
-      <div class="form-question">
-        <label><span class="q-num">۵</span>هدف امسال من چیست و چه کارهایی برای رسیدن به آن می‌توانم انجام دهم؟</label>
-        <textarea id="mq5" placeholder="بنویس..."></textarea>
-      </div>
-      <div class="form-question">
-        <label><span class="q-num">۶</span>امروز می‌خوام خداوند چه اتفاقاتی برای من رقم بزنه؟</label>
-        <textarea id="mq6" placeholder="بنویس..."></textarea>
-      </div>
-      <div class="form-question">
-        <label><span class="q-num">۷</span>امروز چه تقسیم کاری با خداوند انجام می‌دم؟</label>
-        <textarea id="mq7" placeholder="بنویس..."></textarea>
-      </div>
-      <div class="form-question">
-        <label><span class="q-num">۸</span>امروز تصمیم دارم چقدر بی‌فکر باشم؟</label>
-        <textarea id="mq8" placeholder="بنویس..."></textarea>
-      </div>
+      <div class="form-question"><label><span class="q-num">۱</span>بابت چه چیزی در این لحظه حالم خوب است؟</label><textarea id="mq1" placeholder="بنویس..."></textarea></div>
+      <div class="form-question"><label><span class="q-num">۲</span>بابت چه کسی در این لحظه حالم خوب است؟</label><textarea id="mq2" placeholder="بنویس..."></textarea></div>
+      <div class="form-question"><label><span class="q-num">۳</span>کدام باورهای قدرتمندکننده را امروز باید مرور کنم؟</label><textarea id="mq3" placeholder="بنویس..."></textarea></div>
+      <div class="form-question"><label><span class="q-num">۴</span>مهم‌ترین کاری که امروز باید تمامش کنم چیست؟</label><textarea id="mq4" placeholder="بنویس..."></textarea></div>
+      <div class="form-question"><label><span class="q-num">۵</span>هدف امسال من چیست و چه کارهایی برای رسیدن به آن می‌توانم انجام دهم؟</label><textarea id="mq5" placeholder="بنویس..."></textarea></div>
+      <div class="form-question"><label><span class="q-num">۶</span>امروز می‌خوام خداوند چه اتفاقاتی برای من رقم بزنه؟</label><textarea id="mq6" placeholder="بنویس..."></textarea></div>
+      <div class="form-question"><label><span class="q-num">۷</span>امروز چه تقسیم کاری با خداوند انجام می‌دم؟</label><textarea id="mq7" placeholder="بنویس..."></textarea></div>
+      <div class="form-question"><label><span class="q-num">۸</span>امروز تصمیم دارم چقدر بی‌فکر باشم؟</label><textarea id="mq8" placeholder="بنویس..."></textarea></div>
     </div>
     <div class="form-footer">
-      <button class="form-save-btn" id="save-morning-btn" onclick="saveAnswers('morning')">ذخیره تمرین صبح ☁️</button>
+      <button class="form-save-btn" onclick="handleFormSubmit('morning')">ثبت تمرین صبح ✓</button>
       <button class="form-cancel-btn" onclick="closeOverlay('morning-overlay')">انصراف</button>
     </div>
   </div>
 </div>
 
+<!-- NIGHT FORM -->
 <div class="form-overlay" id="night-overlay">
   <div class="form-modal">
     <div class="form-modal-header" style="background:#1b1f2a;">
@@ -618,59 +324,25 @@ select { min-height: unset; cursor: pointer; }
       <button class="form-close" onclick="closeOverlay('night-overlay')">✕</button>
     </div>
     <div class="form-body">
-      <div class="form-question">
-        <label><span class="q-num" style="background:#4b5563;">۱</span>بابت چه چیزی در این لحظه حالم خوب است؟</label>
-        <textarea id="nq1" placeholder="بنویس..."></textarea>
-      </div>
-      <div class="form-question">
-        <label><span class="q-num" style="background:#4b5563;">۲</span>بابت چه کسانی در این لحظه حالم خوب است؟</label>
-        <textarea id="nq2" placeholder="بنویس..."></textarea>
-      </div>
-      <div class="form-question">
-        <label><span class="q-num" style="background:#4b5563;">۳</span>میزان درصد تکرار باورهای قدرتمند امروزم چقدر بود؟</label>
-        <input type="number" id="nq3" class="form-input" placeholder="درصد (۰ تا ۱۰۰)" min="0" max="100" style="min-height:44px;">
-      </div>
-      <div class="form-question">
-        <label><span class="q-num" style="background:#4b5563;">۴</span>کار مهمی که قرار بود امروز تمامش کنم تمام شد؟</label>
-        <select id="nq4" class="form-input" style="min-height:44px;">
-          <option value="">انتخاب کنید</option>
-          <option value="بله">بله</option>
-          <option value="خیر">خیر</option>
-        </select>
-        <textarea id="nq4note" placeholder="توضیح کوتاه..." style="min-height:60px;margin-top:8px;"></textarea>
-      </div>
-      <div class="form-question">
-        <label><span class="q-num" style="background:#4b5563;">۵</span>چه کارهایی برای رسیدن به اهدافم انجام دادم؟</label>
-        <textarea id="nq5" placeholder="بنویس..."></textarea>
-      </div>
-      <div class="form-question">
-        <label><span class="q-num" style="background:#4b5563;">۶</span>اتفاقاتی که از خداوند می‌خواستم چندتاش محقق شد؟</label>
-        <textarea id="nq6" placeholder="بنویس..."></textarea>
-      </div>
-      <div class="form-question">
-        <label><span class="q-num" style="background:#4b5563;">۷</span>امروز از ۱ تا ۱۰ چه نمره‌ای به بی‌فکر بودنم می‌دهم؟</label>
-        <input type="number" id="nq7" class="form-input" placeholder="۱ تا ۱۰" min="1" max="10" style="min-height:44px;">
-      </div>
-      <div class="form-question">
-        <label><span class="q-num" style="background:#4b5563;">۸</span>چه اتفاقات جالبی امروز برای من رخ داد؟</label>
-        <textarea id="nq8" style="min-height:100px;" placeholder="بنویس..."></textarea>
-      </div>
-      <div class="form-question">
-        <label><span class="q-num" style="background:#4b5563;">۹</span>الان می‌خوام در مورد چه موضوعی تجسم انجام بدم؟</label>
-        <textarea id="nq9" placeholder="بنویس..."></textarea>
-      </div>
-      <div class="form-question">
-        <label><span class="q-num" style="background:#4b5563;">۱۰</span>امشب چقدر می‌خوام مدیتیشن کنم؟ (دقیقه)</label>
-        <input type="number" id="nq10" class="form-input" placeholder="دقیقه" style="min-height:44px;">
-      </div>
+      <div class="form-question"><label><span class="q-num" style="background:#4b5563;">۱</span>بابت چه چیزی در این لحظه حالم خوب است؟</label><textarea id="nq1" placeholder="بنویس..."></textarea></div>
+      <div class="form-question"><label><span class="q-num" style="background:#4b5563;">۲</span>بابت چه کسانی در این لحظه حالم خوب است؟</label><textarea id="nq2" placeholder="بنویس..."></textarea></div>
+      <div class="form-question"><label><span class="q-num" style="background:#4b5563;">۳</span>میزان درصد تکرار باورهای قدرتمند امروزم چقدر بود؟</label><input type="number" id="nq3" class="form-input" placeholder="درصد (۰ تا ۱۰۰)" min="0" max="100" style="min-height:44px;"></div>
+      <div class="form-question"><label><span class="q-num" style="background:#4b5563;">۴</span>کار مهمی که قرار بود امروز تمامش کنم تمام شد؟</label><select id="nq4" class="form-input" style="min-height:44px;"><option value="">انتخاب کنید</option><option value="بله">بله</option><option value="خیر">خیر</option></select><textarea id="nq4note" placeholder="توضیح کوتاه..." style="min-height:60px;margin-top:8px;"></textarea></div>
+      <div class="form-question"><label><span class="q-num" style="background:#4b5563;">۵</span>چه کارهایی برای رسیدن به اهدافم انجام دادم؟</label><textarea id="nq5" placeholder="بنویس..."></textarea></div>
+      <div class="form-question"><label><span class="q-num" style="background:#4b5563;">۶</span>اتفاقاتی که از خداوند می‌خواستم چندتاش محقق شد؟</label><textarea id="nq6" placeholder="بنویس..."></textarea></div>
+      <div class="form-question"><label><span class="q-num" style="background:#4b5563;">۷</span>امروز از ۱ تا ۱۰ چه نمره‌ای به بی‌فکر بودنم می‌دهم؟</label><input type="number" id="nq7" class="form-input" placeholder="۱ تا ۱۰" min="1" max="10" style="min-height:44px;"></div>
+      <div class="form-question"><label><span class="q-num" style="background:#4b5563;">۸</span>چه اتفاقات جالبی امروز برای من رخ داد؟</label><textarea id="nq8" style="min-height:100px;" placeholder="بنویس..."></textarea></div>
+      <div class="form-question"><label><span class="q-num" style="background:#4b5563;">۹</span>الان می‌خوام در مورد چه موضوعی تجسم انجام بدم؟</label><textarea id="nq9" placeholder="بنویس..."></textarea></div>
+      <div class="form-question"><label><span class="q-num" style="background:#4b5563;">۱۰</span>امشب چقدر می‌خوام مدیتیشن کنم؟ (دقیقه)</label><input type="number" id="nq10" class="form-input" placeholder="دقیقه" style="min-height:44px;"></div>
     </div>
     <div class="form-footer">
-      <button class="form-save-btn" id="save-night-btn" onclick="saveAnswers('night')" style="background:#374151;">ذخیره تمرین شب ☁️</button>
+      <button class="form-save-btn" style="background:#374151;" onclick="handleFormSubmit('night')">ثبت تمرین شب ✓</button>
       <button class="form-cancel-btn" onclick="closeOverlay('night-overlay')">انصراف</button>
     </div>
   </div>
 </div>
 
+<!-- EVENTS FORM -->
 <div class="form-overlay" id="events-overlay">
   <div class="form-modal">
     <div class="form-modal-header" style="background:#14532d;">
@@ -684,12 +356,13 @@ select { min-height: unset; cursor: pointer; }
       </div>
     </div>
     <div class="form-footer">
-      <button class="save-events-btn" id="save-events-btn" onclick="saveEvents()">ذخیره اتفاقات ☁️</button>
+      <button class="save-events-btn" onclick="handleFormSubmit('events')">ثبت اتفاقات ✓</button>
       <button class="form-cancel-btn" onclick="closeOverlay('events-overlay')">انصراف</button>
     </div>
   </div>
 </div>
 
+<!-- GRATITUDE FORM -->
 <div class="form-overlay" id="gratitude-overlay">
   <div class="form-modal">
     <div class="form-modal-header" style="background:#881337;">
@@ -702,16 +375,15 @@ select { min-height: unset; cursor: pointer; }
       <button class="add-grat-btn" onclick="addGratRow()">اضافه کردن مورد جدید +</button>
     </div>
     <div class="form-footer">
-      <button class="save-grat-btn" id="save-grat-btn" onclick="saveGratitude()">ثبت شکرگذاری ☁️</button>
+      <button class="save-grat-btn" onclick="handleFormSubmit('gratitude')">ثبت شکرگذاری ✓</button>
       <button class="form-cancel-btn" onclick="closeOverlay('gratitude-overlay')">انصراف</button>
     </div>
   </div>
 </div>
 
-<!-- ===== MAIN PAGE ===== -->
+<!-- ====== MAIN PAGE ====== -->
 <div class="shell">
 
-  <!-- Topbar -->
   <div class="topbar">
     <button class="back-topbar" onclick="window.location.href='https://planlife.ir'">← بازگشت</button>
     <div class="brand" onclick="window.location.href='https://planlife.ir'">
@@ -723,62 +395,44 @@ select { min-height: unset; cursor: pointer; }
   </div>
 
   <div class="layout">
-    <!-- MAIN COLUMN -->
     <div class="main-col">
 
       <!-- Audio Player -->
       <div class="player-card">
         <div class="player-header">
-          <div class="player-thumb">
-            <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
-          </div>
+          <div class="player-thumb"><img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife"></div>
           <div class="player-info">
             <div class="lbl">معرفی صوتی</div>
             <div class="title">تمرینات مجازی</div>
             <div class="sub">PlanLife — رشد فردی روزانه</div>
           </div>
         </div>
-        <div class="player-progress-wrap" id="progWrap">
-          <div class="player-progress-bar" id="progBar"></div>
-        </div>
-        <div class="player-times">
-          <span id="curTime">۰:۰۰</span>
-          <span id="totTime">۰:۰۰</span>
-        </div>
+        <div class="player-progress-wrap" id="progWrap"><div class="player-progress-bar" id="progBar"></div></div>
+        <div class="player-times"><span id="curTime">۰:۰۰</span><span id="totTime">۰:۰۰</span></div>
         <div class="player-controls">
-          <button class="p-ctrl" onclick="seek(-10)">
-            <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
-          </button>
-          <button class="p-play" id="playBtn" onclick="togglePlay()">
-            <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-          </button>
-          <button class="p-ctrl" onclick="seek(10)">
-            <svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg>
-          </button>
+          <button class="p-ctrl" onclick="seek(-10)"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg></button>
+          <button class="p-play" id="playBtn" onclick="togglePlay()"><svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <button class="p-ctrl" onclick="seek(10)"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></button>
         </div>
-        <audio id="audio" style="display:none;"><source src="" type="audio/mpeg"></audio>
+        <audio id="audio" style="display:none;"></audio>
       </div>
 
-      <!-- Description toggle -->
+      <!-- Description -->
       <div class="desc-toggle" onclick="toggleDesc()">
         <span class="lbl">درباره تمرینات مجازی</span>
         <span class="desc-chevron" id="chevron">▾</span>
       </div>
       <div class="desc-panel" id="descPanel">
-        <div class="desc-panel-inner">
-          شما می‌توانید هر روز این تمرینات را انجام دهید و معجزاتشان را در زندگیتان ببینید. تمرین صبح برای شروع روز قدرتمند و تمرین شب برای مرور روز و برنامه‌ریزی معنوی طراحی شده‌اند.
-        </div>
+        <div class="desc-panel-inner">شما می‌توانید هر روز این تمرینات را انجام دهید و معجزاتشان را در زندگیتان ببینید. تمرین صبح برای شروع روز قدرتمند و تمرین شب برای مرور روز و برنامه‌ریزی معنوی طراحی شده‌اند.</div>
       </div>
 
       <!-- Cards Grid -->
-      <div class="cards-grid" id="cards-grid">
+      <div class="cards-grid">
 
-        <!-- Morning -->
         <div class="ex-card" onclick="openOverlay('morning-overlay')">
           <div class="ex-card-thumb">
-            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="تمرین صبح" id="img-morning">
-            <span class="badge">هر روز صبح</span>
-            <span class="emoji-badge">🌅</span>
+            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="تمرین صبح">
+            <span class="badge">هر روز صبح</span><span class="emoji-badge">🌅</span>
           </div>
           <div class="ex-card-body">
             <h3>تمرین صبح بیداری</h3>
@@ -790,12 +444,10 @@ select { min-height: unset; cursor: pointer; }
           </div>
         </div>
 
-        <!-- Night -->
         <div class="ex-card" onclick="openOverlay('night-overlay')">
           <div class="ex-card-thumb">
-            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرین شب" id="img-night">
-            <span class="badge">هر شب</span>
-            <span class="emoji-badge">🌙</span>
+            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرین شب">
+            <span class="badge">هر شب</span><span class="emoji-badge">🌙</span>
           </div>
           <div class="ex-card-body">
             <h3>تمرین شب خواب</h3>
@@ -807,12 +459,10 @@ select { min-height: unset; cursor: pointer; }
           </div>
         </div>
 
-        <!-- Events -->
         <div class="ex-card" onclick="openOverlay('events-overlay')">
           <div class="ex-card-thumb">
-            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="اتفاقات" id="img-events">
-            <span class="badge" style="background:rgba(34,197,94,.8);">روزانه</span>
-            <span class="emoji-badge">✨</span>
+            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="اتفاقات">
+            <span class="badge" style="background:rgba(34,197,94,.8);">روزانه</span><span class="emoji-badge">✨</span>
           </div>
           <div class="ex-card-body">
             <h3>اتفاقات جالب امروزم</h3>
@@ -824,12 +474,10 @@ select { min-height: unset; cursor: pointer; }
           </div>
         </div>
 
-        <!-- Gratitude -->
         <div class="ex-card" onclick="openOverlay('gratitude-overlay')">
           <div class="ex-card-thumb">
-            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="شکرگذاری" id="img-gratitude">
-            <span class="badge" style="background:rgba(244,63,94,.8);">روزانه</span>
-            <span class="emoji-badge">🙏</span>
+            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="شکرگذاری">
+            <span class="badge" style="background:rgba(244,63,94,.8);">روزانه</span><span class="emoji-badge">🙏</span>
           </div>
           <div class="ex-card-body">
             <h3>شکرگذاری روزانه</h3>
@@ -841,136 +489,52 @@ select { min-height: unset; cursor: pointer; }
           </div>
         </div>
 
-      </div><!-- /cards-grid -->
-
-      <!-- Alarm Settings -->
-      <div class="alarm-section" id="alarm-panel">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-          <h3 style="font-size:15px;font-weight:800;">⏰ تنظیمات آلارم</h3>
-          <button onclick="toggleAlarm()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;font-weight:700;">بستن ✕</button>
-        </div>
-        <div class="alarm-group">
-          <div class="alarm-title">🌅 تمرین صبح</div>
-          <div class="alarm-controls">
-            <input type="number" class="alarm-input" id="m-hour" min="0" max="23" placeholder="ساعت">
-            <span class="alarm-sep">:</span>
-            <input type="number" class="alarm-input" id="m-min" min="0" max="59" placeholder="دقیقه">
-            <button class="toggle-sw" id="m-toggle" onclick="toggleSw('m-toggle','m-enabled')"></button>
-            <input type="checkbox" id="m-enabled" style="display:none;">
-            <button class="alarm-test" onclick="testAlarm('morning')">تست 🔔</button>
-          </div>
-        </div>
-        <div class="alarm-group">
-          <div class="alarm-title">🌙 تمرین شب</div>
-          <div class="alarm-controls">
-            <input type="number" class="alarm-input" id="n-hour" min="0" max="23" placeholder="ساعت">
-            <span class="alarm-sep">:</span>
-            <input type="number" class="alarm-input" id="n-min" min="0" max="59" placeholder="دقیقه">
-            <button class="toggle-sw" id="n-toggle" onclick="toggleSw('n-toggle','n-enabled')"></button>
-            <input type="checkbox" id="n-enabled" style="display:none;">
-            <button class="alarm-test" onclick="testAlarm('night')">تست 🔔</button>
-          </div>
-        </div>
-        <div style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-          <button class="alarm-save-btn" onclick="saveAlarmFromUI()">💾 ذخیره تنظیمات</button>
-        </div>
-        <p style="text-align:center;font-size:11.5px;color:var(--muted);margin-top:12px;">برای دریافت اطلاع‌رسانی، نوتیفیکیشن‌ها را برای این سایت فعال کن</p>
       </div>
 
-      <!-- Sync Status -->
       <div class="sync-bar" id="sync-bar"></div>
 
-      <!-- History -->
-      <div class="panel">
-        <div class="panel-title"><h3>تاریخچه <b>تمرینات</b></h3></div>
-        <div class="hist-tabs">
-          <button class="hist-tab active" onclick="showHist('all',this)">همه</button>
-          <button class="hist-tab" onclick="showHist('morning',this)">🌅 صبح</button>
-          <button class="hist-tab" onclick="showHist('night',this)">🌙 شب</button>
-          <button class="hist-tab" onclick="showHist('events',this)">✨ اتفاقات</button>
-          <button class="hist-tab" onclick="showHist('gratitude',this)">🙏 شکرگذاری</button>
-        </div>
-        <div class="hist-list" id="hist-list">
-          <p class="no-history"><span class="spinner"></span>در حال بارگذاری...</p>
-        </div>
-        <div class="action-row" style="margin-top:16px;">
-          <button class="action-btn" onclick="window.print()">📄 چاپ / PDF</button>
-          <button class="action-btn" onclick="downloadHistory()">💾 دانلود متن</button>
-        </div>
-      </div>
-
-    </div><!-- /main-col -->
+    </div>
 
     <!-- RIGHT COLUMN -->
     <div class="right-col">
 
-      <!-- Progress Panel -->
+      <!-- Stats Panel -->
       <div class="panel panel-dark">
         <div class="panel-title">
-          <h3>پیشرفت <b>من</b></h3>
-          <span style="font-size:16px;opacity:.4;">⋯</span>
+          <h3>آمار <b>من</b></h3>
+          <span style="font-size:11px;color:rgba(255,255,255,.3);" id="stats-period">این هفته</span>
         </div>
-        <div class="chip-row">
-          <div class="chip active" onclick="switchChip(this,'morning')">صبح</div>
-          <div class="chip" onclick="switchChip(this,'night')">شب</div>
-          <div class="chip" onclick="switchChip(this,'all')">همه</div>
+        <div class="stat-grid">
+          <div class="stat-box s-morning"><div class="st-lbl">🌅 صبح</div><div class="st-val" id="s-morning">۰</div></div>
+          <div class="stat-box s-night"><div class="st-lbl">🌙 شب</div><div class="st-val" id="s-night">۰</div></div>
+          <div class="stat-box s-events"><div class="st-lbl">✨ اتفاقات</div><div class="st-val" id="s-events">۰</div></div>
+          <div class="stat-box s-grat"><div class="st-lbl">🙏 شکرگذاری</div><div class="st-val" id="s-grat">۰</div></div>
         </div>
-        <div class="balance-lbl">تمرینات این هفته</div>
-        <div class="balance-num" id="progress-num">۰<span id="progress-change">+۰</span></div>
-        <svg class="spark" id="spark-chart" viewBox="0 0 260 52" preserveAspectRatio="none">
-          <polyline id="spark-line" points="0,46 40,42 80,44 120,38 160,30 200,24 240,18 260,14"
-            fill="none" stroke="#3ddc84" stroke-width="2.2" stroke-linejoin="round"/>
+        <div class="streak-bar">
+          <div class="streak-lbl">۷ روز گذشته</div>
+          <div class="streak-row" id="streak-row"></div>
+        </div>
+        <svg class="spark" id="spark-svg" viewBox="0 0 260 52" preserveAspectRatio="none">
+          <polyline id="spark-line" points="0,46 40,42 80,44 120,38 160,30 200,24 240,18 260,14" fill="none" stroke="#3ddc84" stroke-width="2.2" stroke-linejoin="round"/>
           <circle id="spark-dot" cx="260" cy="14" r="3.5" fill="#3ddc84"/>
         </svg>
         <button class="panel-cta" onclick="openOverlay('morning-overlay')">ادامه تمرین امروز</button>
-      </div>
-
-      <!-- Stats mini -->
-      <div class="panel">
-        <div class="panel-title"><h3>آمار <b>کلی</b></h3></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div style="background:var(--hair);border-radius:12px;padding:12px;text-align:center;">
-            <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">صبح</div>
-            <div style="font-size:22px;font-weight:900;color:var(--ink);" id="stat-morning">۰</div>
-          </div>
-          <div style="background:var(--hair);border-radius:12px;padding:12px;text-align:center;">
-            <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">شب</div>
-            <div style="font-size:22px;font-weight:900;color:var(--ink);" id="stat-night">۰</div>
-          </div>
-          <div style="background:var(--hair);border-radius:12px;padding:12px;text-align:center;">
-            <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">اتفاقات</div>
-            <div style="font-size:22px;font-weight:900;color:var(--ink);" id="stat-events">۰</div>
-          </div>
-          <div style="background:var(--hair);border-radius:12px;padding:12px;text-align:center;">
-            <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">شکرگذاری</div>
-            <div style="font-size:22px;font-weight:900;color:var(--ink);" id="stat-gratitude">۰</div>
-          </div>
-        </div>
       </div>
 
       <!-- Quick links -->
       <div class="panel">
         <div class="panel-title"><h3>دسترسی <b>سریع</b></h3></div>
         <div style="display:flex;flex-direction:column;gap:8px;">
-          <a href="https://planlife.ir/Pages/Doreha/index.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--hair);border-radius:var(--radius-md);font-size:13px;font-weight:700;transition:.15s;" onmouseover="this.style.background='#e4e7ec'" onmouseout="this.style.background='var(--hair)'">
-            📚 دوره‌ها
-          </a>
-          <a href="https://planlife.ir/Pages/paksazi/index.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--hair);border-radius:var(--radius-md);font-size:13px;font-weight:700;transition:.15s;" onmouseover="this.style.background='#e4e7ec'" onmouseout="this.style.background='var(--hair)'">
-            💭 پاکسازی ذهنی
-          </a>
-          <a href="https://planlife.ir/Pages/visionboard/index.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--hair);border-radius:var(--radius-md);font-size:13px;font-weight:700;transition:.15s;" onmouseover="this.style.background='#e4e7ec'" onmouseout="this.style.background='var(--hair)'">
-            🔖 تابلو آرزوها
-          </a>
-          <a href="https://planlife.ir/Pages/Music/index.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--hair);border-radius:var(--radius-md);font-size:13px;font-weight:700;transition:.15s;" onmouseover="this.style.background='#e4e7ec'" onmouseout="this.style.background='var(--hair)'">
-            🎵 موزیک‌ها
-          </a>
+          <a href="https://planlife.ir/Pages/Doreha/index.html" class="quick-link">📚 دوره‌ها</a>
+          <a href="https://planlife.ir/Pages/paksazi/index.html" class="quick-link">💭 پاکسازی ذهنی</a>
+          <a href="https://planlife.ir/Pages/visionboard/index.html" class="quick-link">🔖 تابلو آرزوها</a>
+          <a href="https://planlife.ir/Pages/Music/index.html" class="quick-link">🎵 موزیک‌ها</a>
         </div>
       </div>
 
-    </div><!-- /right-col -->
+    </div>
   </div>
-
-</div><!-- /shell -->
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
@@ -986,417 +550,363 @@ function getUID() {
 }
 const UID = getUID();
 
-function rowToEntry(row) {
-  return Object.assign({}, row.payload, {
-    id: row.id, type: row.entry_type, date: row.entry_date,
-    timestamp: new Date(row.created_at).getTime(),
-    expiresAt: new Date(row.expires_at).getTime()
-  });
+/* ===== SUPABASE: increment stat counter only ===== */
+async function incrementStat(type) {
+  // We store only count stats, not the content
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    // Upsert a stat record: user_id, entry_type, entry_date, count
+    const { data: existing } = await sb
+      .from('exercise_entries')
+      .select('id, payload')
+      .eq('user_id', UID)
+      .eq('entry_type', type)
+      .eq('entry_date', today)
+      .limit(1);
+
+    if (existing && existing.length > 0) {
+      // Update existing record count
+      const rec = existing[0];
+      const newCount = ((rec.payload && rec.payload.count) || 0) + 1;
+      await sb.from('exercise_entries')
+        .update({ payload: { count: newCount, stat_only: true } })
+        .eq('id', rec.id);
+    } else {
+      // Insert new stat record
+      await sb.from('exercise_entries').insert([{
+        user_id: UID,
+        entry_type: type,
+        entry_date: today,
+        payload: { count: 1, stat_only: true }
+      }]);
+    }
+    await loadStats();
+  } catch(e) { console.warn('Stat update failed', e); }
 }
 
-async function insertEntry(type, date, payload) {
-  const { data, error } = await sb.from('exercise_entries')
-    .insert([{ user_id: UID, entry_type: type, entry_date: date, payload }]).select();
-  if (error) throw new Error(error.message);
-  return data && data[0] ? rowToEntry(data[0]) : null;
+/* ===== LOAD STATS ===== */
+async function loadStats() {
+  try {
+    const now = new Date();
+    const weekAgo = new Date(now - 7*24*60*60*1000).toISOString();
+    const { data } = await sb.from('exercise_entries')
+      .select('entry_type, entry_date, created_at, payload')
+      .eq('user_id', UID)
+      .gte('created_at', weekAgo);
+
+    const counts = { morning: 0, night: 0, events: 0, gratitude: 0 };
+    const dayMap = {}; // date → count
+
+    (data || []).forEach(r => {
+      if (counts[r.entry_type] !== undefined) {
+        const add = (r.payload && r.payload.count) ? r.payload.count : 1;
+        counts[r.entry_type] += add;
+        const d = r.entry_date || r.created_at.split('T')[0];
+        dayMap[d] = (dayMap[d] || 0) + add;
+      }
+    });
+
+    document.getElementById('s-morning').textContent = toFa(counts.morning);
+    document.getElementById('s-night').textContent = toFa(counts.night);
+    document.getElementById('s-events').textContent = toFa(counts.events);
+    document.getElementById('s-grat').textContent = toFa(counts.gratitude);
+
+    updateStreak(dayMap);
+    updateSparkline(dayMap);
+  } catch(e) { console.warn('Stats load failed', e); }
 }
 
-async function getUserHistory() {
-  const { data, error } = await sb.from('exercise_entries').select('*')
-    .eq('user_id', UID).gt('expires_at', new Date().toISOString())
-    .order('created_at', { ascending: false });
-  if (error) throw new Error(error.message);
-  return (data || []).map(rowToEntry);
+function toFa(n) { return String(n).replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
+
+function updateStreak(dayMap) {
+  const row = document.getElementById('streak-row');
+  row.innerHTML = '';
+  const today = new Date();
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today - i*24*60*60*1000);
+    const key = d.toISOString().split('T')[0];
+    const done = dayMap[key] > 0;
+    const dot = document.createElement('div');
+    dot.className = 'streak-dot' + (done ? ' done' : '');
+    dot.textContent = done ? '✓' : ['ش','ی','د','س','چ','پ','ج'][d.getDay()];
+    row.appendChild(dot);
+  }
 }
 
-async function deleteEntryRemote(id) {
-  const { error } = await sb.from('exercise_entries').delete().eq('id', id).eq('user_id', UID);
-  if (error) throw new Error(error.message);
+function updateSparkline(dayMap) {
+  const today = new Date();
+  const counts = [];
+  for (let i = 7; i >= 0; i--) {
+    const d = new Date(today - i*24*60*60*1000);
+    const key = d.toISOString().split('T')[0];
+    counts.push(dayMap[key] || 0);
+  }
+  const max = Math.max(...counts, 1);
+  const W = 260, H = 52, pad = 4;
+  const pts = counts.map((c, i) => {
+    const x = i * (W / (counts.length - 1));
+    const y = H - pad - (c / max) * (H - pad * 2);
+    return x.toFixed(1) + ',' + y.toFixed(1);
+  }).join(' ');
+  document.getElementById('spark-line').setAttribute('points', pts);
+  const last = counts[counts.length - 1];
+  const lx = W;
+  const ly = (H - pad - (last / max) * (H - pad * 2)).toFixed(1);
+  document.getElementById('spark-dot').setAttribute('cx', lx);
+  document.getElementById('spark-dot').setAttribute('cy', ly);
 }
 
-/* ===== SYNC STATUS ===== */
-function setSyncStatus(msg, loading, ok, err) {
-  const el = document.getElementById('sync-bar');
-  let icon = '';
-  if (ok) icon = '<span class="sync-tick">✓</span>';
-  else if (err) icon = '<span style="width:22px;height:22px;border-radius:50%;background:#ff5470;color:#fff;font-size:11px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;">✕</span>';
-  el.innerHTML = icon + (msg ? '<span style="margin-right:4px;">' + msg + '</span>' : '') + (loading ? '<span class="spinner"></span>' : '');
+/* ===== PDF STATE ===== */
+let _pendingType = null;
+let _pendingData = null;
+
+/* ===== FORM SUBMIT HANDLER ===== */
+function handleFormSubmit(type) {
+  const data = collectFormData(type);
+  if (!data) return;
+  _pendingType = type;
+  _pendingData = data;
+  // Close form, show PDF prompt
+  closeOverlay(type + '-overlay');
+  document.getElementById('pdf-overlay').classList.add('active');
 }
+
+function collectFormData(type) {
+  if (type === 'morning') {
+    return {
+      type: 'morning', label: '🌅 تمرین صبح بیداری',
+      date: new Date().toLocaleDateString('fa-IR'),
+      fields: [
+        { q: 'بابت چه چیزی در این لحظه حالم خوب است؟', a: document.getElementById('mq1').value.trim() },
+        { q: 'بابت چه کسی در این لحظه حالم خوب است؟', a: document.getElementById('mq2').value.trim() },
+        { q: 'کدام باورهای قدرتمندکننده را امروز باید مرور کنم؟', a: document.getElementById('mq3').value.trim() },
+        { q: 'مهم‌ترین کاری که امروز باید تمامش کنم چیست؟', a: document.getElementById('mq4').value.trim() },
+        { q: 'هدف امسال من چیست؟', a: document.getElementById('mq5').value.trim() },
+        { q: 'امروز می‌خوام خداوند چه اتفاقاتی برای من رقم بزنه؟', a: document.getElementById('mq6').value.trim() },
+        { q: 'امروز چه تقسیم کاری با خداوند انجام می‌دم؟', a: document.getElementById('mq7').value.trim() },
+        { q: 'امروز تصمیم دارم چقدر بی‌فکر باشم؟', a: document.getElementById('mq8').value.trim() },
+      ]
+    };
+  }
+  if (type === 'night') {
+    return {
+      type: 'night', label: '🌙 تمرین شب خواب',
+      date: new Date().toLocaleDateString('fa-IR'),
+      fields: [
+        { q: 'بابت چه چیزی در این لحظه حالم خوب است؟', a: document.getElementById('nq1').value.trim() },
+        { q: 'بابت چه کسانی در این لحظه حالم خوب است؟', a: document.getElementById('nq2').value.trim() },
+        { q: 'درصد تکرار باورهای قدرتمند امروز', a: document.getElementById('nq3').value + '%' },
+        { q: 'کار مهم امروز تمام شد؟', a: document.getElementById('nq4').value + ' — ' + document.getElementById('nq4note').value.trim() },
+        { q: 'چه کارهایی برای رسیدن به اهدافم انجام دادم؟', a: document.getElementById('nq5').value.trim() },
+        { q: 'اتفاقاتی که از خداوند می‌خواستم', a: document.getElementById('nq6').value.trim() },
+        { q: 'نمره بی‌فکر بودنم امروز', a: document.getElementById('nq7').value + '/۱۰' },
+        { q: 'اتفاقات جالب امروز', a: document.getElementById('nq8').value.trim() },
+        { q: 'موضوع تجسم امشب', a: document.getElementById('nq9').value.trim() },
+        { q: 'مدت مدیتیشن امشب', a: document.getElementById('nq10').value + ' دقیقه' },
+      ]
+    };
+  }
+  if (type === 'events') {
+    const text = document.getElementById('events-text').value.trim();
+    if (!text) { alert('لطفاً اتفاقات خود را بنویسید'); return null; }
+    return {
+      type: 'events', label: '✨ اتفاقات جالب امروزم',
+      date: new Date().toLocaleDateString('fa-IR'),
+      fields: [{ q: 'اتفاقات امروز', a: text }]
+    };
+  }
+  if (type === 'gratitude') {
+    const items = [];
+    for (let i = 1; i <= gratCount; i++) {
+      const el = document.getElementById('grat-' + i);
+      if (el && el.value.trim()) items.push({ q: 'مورد ' + i, a: el.value.trim() });
+    }
+    if (!items.length) { alert('لطفاً حداقل یک مورد بنویسید'); return null; }
+    return {
+      type: 'gratitude', label: '🙏 شکرگذاری روزانه',
+      date: new Date().toLocaleDateString('fa-IR'),
+      fields: items
+    };
+  }
+  return null;
+}
+
+/* ===== PDF CONFIRM ===== */
+async function confirmPDF(wantPDF) {
+  document.getElementById('pdf-overlay').classList.remove('active');
+
+  if (wantPDF && _pendingData) {
+    generatePDF(_pendingData);
+  }
+
+  // Either way: increment stat in Supabase and clear form
+  if (_pendingType) {
+    await incrementStat(_pendingType);
+    clearForm(_pendingType);
+    showToast('تمرین ' + getLabelShort(_pendingType) + ' با موفقیت ثبت شد ✅');
+  }
+
+  _pendingType = null;
+  _pendingData = null;
+}
+
+function getLabelShort(type) {
+  return { morning: 'صبح', night: 'شب', events: 'اتفاقات', gratitude: 'شکرگذاری' }[type] || '';
+}
+
+/* ===== CLEAR FORM ===== */
+function clearForm(type) {
+  if (type === 'morning') {
+    ['mq1','mq2','mq3','mq4','mq5','mq6','mq7','mq8'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  } else if (type === 'night') {
+    ['nq1','nq2','nq3','nq4','nq4note','nq5','nq6','nq7','nq8','nq9','nq10'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  } else if (type === 'events') {
+    document.getElementById('events-text').value = '';
+  } else if (type === 'gratitude') {
+    gratCount = 5;
+    renderGratRows();
+  }
+}
+
+/* ===== PDF GENERATION ===== */
+function generatePDF(data) {
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+    // Colors
+    const colors = {
+      morning: [47, 111, 237],
+      night: [55, 65, 81],
+      events: [22, 163, 74],
+      gratitude: [225, 29, 72]
+    };
+    const col = colors[data.type] || [47, 111, 237];
+
+    // Header background
+    doc.setFillColor(...col);
+    doc.roundedRect(0, 0, 210, 40, 0, 0, 'F');
+
+    // Title (use basic latin characters since RTL fonts need embedding)
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('PlanLife - Virtual Exercise', 105, 15, { align: 'center' });
+
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    // Show type in Latin-friendly way
+    const typeLabels = { morning: 'Morning Practice', night: 'Night Practice', events: 'Today Events', gratitude: 'Daily Gratitude' };
+    doc.text(typeLabels[data.type] || data.type, 105, 24, { align: 'center' });
+    doc.text('Date: ' + data.date, 105, 32, { align: 'center' });
+
+    // Divider
+    doc.setDrawColor(...col);
+    doc.setLineWidth(0.5);
+    doc.line(15, 44, 195, 44);
+
+    // Note about RTL
+    doc.setTextColor(100, 100, 100);
+    doc.setFontSize(9);
+    doc.text('* Content is in Persian (Farsi) - please open with a Unicode-compatible PDF viewer', 15, 51);
+
+    // Content
+    let y = 58;
+    doc.setTextColor(30, 30, 30);
+
+    data.fields.forEach((field, idx) => {
+      if (!field.a) return;
+      if (y > 270) { doc.addPage(); y = 20; }
+
+      // Question number badge
+      doc.setFillColor(...col);
+      doc.circle(20, y + 2, 4, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(8);
+      doc.text(String(idx + 1), 20, y + 4.5, { align: 'center' });
+
+      // Question (show in raw unicode - viewer handles it)
+      doc.setTextColor(60, 60, 60);
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      const qLines = doc.splitTextToSize(field.q, 160);
+      doc.text(qLines, 170, y + 4, { align: 'right' });
+      y += qLines.length * 5 + 3;
+
+      // Answer box
+      const aLines = doc.splitTextToSize(field.a || '—', 170);
+      const boxH = aLines.length * 5 + 8;
+      doc.setFillColor(248, 249, 251);
+      doc.setDrawColor(220, 225, 230);
+      doc.roundedRect(15, y, 180, boxH, 3, 3, 'FD');
+      doc.setTextColor(30, 30, 30);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text(aLines, 187, y + 6, { align: 'right' });
+      y += boxH + 8;
+    });
+
+    // Footer
+    doc.setFillColor(...col);
+    doc.rect(0, 287, 210, 10, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(8);
+    doc.text('planlife.ir | Virtual Exercises', 105, 293.5, { align: 'center' });
+
+    doc.save('PlanLife_' + (typeLabels[data.type] || data.type) + '_' + new Date().toISOString().split('T')[0] + '.pdf');
+    showToast('PDF با موفقیت دانلود شد 📄');
+  } catch(e) {
+    console.error('PDF generation failed:', e);
+    showToast('خطا در ساخت PDF — لطفاً دوباره امتحان کنید');
+  }
+}
+
+/* ===== OVERLAYS ===== */
+function openOverlay(id) { document.getElementById(id).classList.add('active'); document.body.style.overflow = 'hidden'; }
+function closeOverlay(id) { document.getElementById(id).classList.remove('active'); document.body.style.overflow = ''; }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.querySelectorAll('.form-overlay.active').forEach(el => { el.classList.remove('active'); }); document.getElementById('pdf-overlay').classList.remove('active'); document.body.style.overflow = ''; } });
+document.querySelectorAll('.form-overlay').forEach(ov => { ov.addEventListener('click', function(e) { if (e.target === this) { this.classList.remove('active'); document.body.style.overflow = ''; } }); });
 
 /* ===== TOAST ===== */
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  document.getElementById('toast-msg').textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3200);
-}
+function showToast(msg) { const t = document.getElementById('toast'); document.getElementById('toast-msg').textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3200); }
 
-/* ===== OVERLAY OPEN/CLOSE ===== */
-function openOverlay(id) {
-  document.getElementById(id).classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-function closeOverlay(id) {
-  document.getElementById(id).classList.remove('active');
-  document.body.style.overflow = '';
-}
-document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.form-overlay.active').forEach(el => { el.classList.remove('active'); document.body.style.overflow = ''; }); });
-
-/* click outside form closes */
-document.querySelectorAll('.form-overlay').forEach(overlay => {
-  overlay.addEventListener('click', function(e) { if (e.target === this) { this.classList.remove('active'); document.body.style.overflow = ''; } });
-});
-
-/* ===== AUDIO PLAYER ===== */
+/* ===== AUDIO ===== */
 const audio = document.getElementById('audio');
-const progBar = document.getElementById('progBar');
-const progWrap = document.getElementById('progWrap');
-const playIcon = document.getElementById('playIcon');
+function fmtTime(s) { if (!s || isNaN(s)) return '۰:۰۰'; return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0'); }
+function togglePlay() { if (audio.paused) { audio.play(); document.getElementById('playIcon').innerHTML='<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; } else { audio.pause(); document.getElementById('playIcon').innerHTML='<path d="M8 5v14l11-7z"/>'; } }
+function seek(s) { audio.currentTime += s; }
+audio.addEventListener('timeupdate', () => { if (!audio.duration) return; document.getElementById('progBar').style.width=(audio.currentTime/audio.duration*100)+'%'; document.getElementById('curTime').textContent=fmtTime(audio.currentTime); });
+audio.addEventListener('loadedmetadata', () => { document.getElementById('totTime').textContent=fmtTime(audio.duration); });
+document.getElementById('progWrap').addEventListener('click', e => { if (!audio.duration) return; const r=document.getElementById('progWrap').getBoundingClientRect(); audio.currentTime=((e.clientX-r.left)/r.width)*audio.duration; });
 
-function fmtTime(s) {
-  if (!s || isNaN(s)) return '۰:۰۰';
-  return Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0');
-}
-function togglePlay() {
-  if (!audio.src || audio.src.endsWith('/')) return;
-  if (audio.paused) { audio.play(); playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; }
-  else { audio.pause(); playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; }
-}
-function seek(s) { if (audio.src) audio.currentTime += s; }
-audio.addEventListener('timeupdate', () => {
-  if (!audio.duration) return;
-  progBar.style.width = (audio.currentTime/audio.duration*100)+'%';
-  document.getElementById('curTime').textContent = fmtTime(audio.currentTime);
-});
-audio.addEventListener('loadedmetadata', () => { document.getElementById('totTime').textContent = fmtTime(audio.duration); });
-audio.addEventListener('ended', () => { playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; });
-progWrap.addEventListener('click', e => {
-  if (!audio.duration) return;
-  const r = progWrap.getBoundingClientRect();
-  audio.currentTime = ((e.clientX - r.left)/r.width)*audio.duration;
-});
-
-/* ===== DESCRIPTION ===== */
-function toggleDesc() {
-  const panel = document.getElementById('descPanel');
-  const chev = document.getElementById('chevron');
-  if (panel.classList.contains('open')) {
-    panel.style.maxHeight = '0'; panel.classList.remove('open'); chev.style.transform = '';
-  } else {
-    panel.classList.add('open'); panel.style.maxHeight = panel.scrollHeight + 'px'; chev.style.transform = 'rotate(180deg)';
-  }
-}
+/* ===== DESC ===== */
+function toggleDesc() { const p=document.getElementById('descPanel'),c=document.getElementById('chevron'); if(p.classList.contains('open')){p.style.maxHeight='0';p.classList.remove('open');c.style.transform='';}else{p.classList.add('open');p.style.maxHeight=p.scrollHeight+'px';c.style.transform='rotate(180deg)';} }
 
 /* ===== MENU ===== */
-function toggleMenu() {
-  const m = document.getElementById('side-menu'), o = document.getElementById('menu-overlay');
-  m.classList.contains('open') ? closeMenu() : (m.classList.add('open'), o.classList.add('active'));
-}
+function toggleMenu() { const m=document.getElementById('side-menu'),o=document.getElementById('menu-overlay'); m.classList.contains('open')?(m.classList.remove('open'),o.classList.remove('active')):(m.classList.add('open'),o.classList.add('active')); }
 function closeMenu() { document.getElementById('side-menu').classList.remove('open'); document.getElementById('menu-overlay').classList.remove('active'); }
-
-/* ===== ALARM ===== */
-const ALARM_KEY = 'planlife_alarm_settings';
-const DEF_ALARM = { morning: { hour:6, minute:0, enabled:true }, night: { hour:22, minute:0, enabled:true } };
-function getAlarm() { const s = localStorage.getItem(ALARM_KEY); return s ? JSON.parse(s) : DEF_ALARM; }
-function saveAlarmData(s) { localStorage.setItem(ALARM_KEY, JSON.stringify(s)); }
-
-function toggleAlarm() {
-  const p = document.getElementById('alarm-panel');
-  if (!p.classList.contains('visible')) { p.classList.add('visible'); loadAlarmUI(); p.scrollIntoView({behavior:'smooth',block:'start'}); }
-  else p.classList.remove('visible');
-}
-function loadAlarmUI() {
-  const s = getAlarm();
-  document.getElementById('m-hour').value = s.morning.hour;
-  document.getElementById('m-min').value = String(s.morning.minute).padStart(2,'0');
-  document.getElementById('n-hour').value = s.night.hour;
-  document.getElementById('n-min').value = String(s.night.minute).padStart(2,'0');
-  document.getElementById('m-enabled').checked = s.morning.enabled;
-  document.getElementById('n-enabled').checked = s.night.enabled;
-  document.getElementById('m-toggle').classList.toggle('on', s.morning.enabled);
-  document.getElementById('n-toggle').classList.toggle('on', s.night.enabled);
-}
-function toggleSw(btnId, cbId) {
-  const cb = document.getElementById(cbId);
-  cb.checked = !cb.checked;
-  document.getElementById(btnId).classList.toggle('on', cb.checked);
-}
-function saveAlarmFromUI() {
-  const s = {
-    morning: { hour: parseInt(document.getElementById('m-hour').value)||6, minute: parseInt(document.getElementById('m-min').value)||0, enabled: document.getElementById('m-enabled').checked },
-    night: { hour: parseInt(document.getElementById('n-hour').value)||22, minute: parseInt(document.getElementById('n-min').value)||0, enabled: document.getElementById('n-enabled').checked }
-  };
-  saveAlarmData(s); showToast('تنظیمات آلارم ذخیره شد ✅');
-}
-async function requestNotifPerm() {
-  if (!('Notification' in window)) return false;
-  if (Notification.permission === 'granted') return true;
-  if (Notification.permission !== 'denied') { const p = await Notification.requestPermission(); return p === 'granted'; }
-  return false;
-}
-function playBell() {
-  const ac = new (window.AudioContext || window.webkitAudioContext)();
-  [[880,0,0.8],[660,0.4,0.6]].forEach(([freq,delay,gain]) => {
-    const osc = ac.createOscillator(), env = ac.createGain();
-    osc.frequency.value = freq; osc.type = 'sine';
-    const t = ac.currentTime + delay;
-    env.gain.setValueAtTime(0,t); env.gain.linearRampToValueAtTime(gain,t+0.05); env.gain.exponentialRampToValueAtTime(0.01,t+0.9);
-    osc.connect(env); env.connect(ac.destination); osc.start(t); osc.stop(t+0.9);
-  });
-}
-async function testAlarm(type) {
-  await requestNotifPerm();
-  playBell();
-  showToast('🔔 تست آلارم ' + (type==='morning'?'صبح':'شب'));
-}
-function checkAlarms() {
-  const now = new Date(); const h = now.getHours(); const m = now.getMinutes();
-  const s = getAlarm();
-  ['morning','night'].forEach(type => {
-    const cfg = s[type];
-    if (!cfg.enabled || cfg.hour !== h || cfg.minute !== m) return;
-    const key = 'planlife_last_alarm_' + type;
-    const last = sessionStorage.getItem(key);
-    if (!last || Date.now() - parseInt(last) > 60000) {
-      sessionStorage.setItem(key, Date.now());
-      requestNotifPerm().then(ok => {
-        if (ok) new Notification(type==='morning'?'🌅 وقت تمرین صبح!':'🌙 وقت تمرین شب!', { body: type==='morning'?'شروع روز قدرتمند':'مرور روز و برنامه‌ریزی معنوی', tag:'planlife-'+type });
-        playBell();
-      });
-    }
-  });
-}
-setInterval(checkAlarms, 60000);
-requestNotifPerm();
-
-/* ===== SAVE ANSWERS ===== */
-async function saveAnswers(type) {
-  const pre = type==='morning'?'m':'n';
-  const btn = document.getElementById('save-'+type+'-btn');
-  btn.disabled = true; btn.textContent = 'در حال ذخیره...';
-  const p = {
-    q1: (document.getElementById(pre+'q1')||{}).value?.trim()||'',
-    q2: (document.getElementById(pre+'q2')||{}).value?.trim()||'',
-    q3: (document.getElementById(pre+'q3')||{}).value?.trim()||'',
-    q4: (document.getElementById(pre+'q4')||{}).value?.trim()||'',
-    q5: (document.getElementById(pre+'q5')||{}).value?.trim()||'',
-    q6: (document.getElementById(pre+'q6')||{}).value?.trim()||'',
-    q7: (document.getElementById(pre+'q7')||{}).value?.trim()||'',
-    q8: (document.getElementById(pre+'q8')||{}).value?.trim()||'',
-  };
-  if (type==='night') {
-    p.q4note = (document.getElementById('nq4note')||{}).value?.trim()||'';
-    p.q9 = (document.getElementById('nq9')||{}).value?.trim()||'';
-    p.q10 = (document.getElementById('nq10')||{}).value?.trim()||'';
-  }
-  try {
-    await insertEntry(type, new Date().toLocaleDateString('fa-IR'), p);
-    btn.disabled = false; btn.textContent = type==='morning'?'ذخیره تمرین صبح ☁️':'ذخیره تمرین شب ☁️';
-    closeOverlay(type+'-overlay');
-    showToast('تمرین ' + (type==='morning'?'صبح':'شب') + ' با موفقیت ذخیره شد');
-    loadHistory();
-  } catch(e) { btn.disabled = false; btn.textContent = type==='morning'?'ذخیره تمرین صبح ☁️':'ذخیره تمرین شب ☁️'; alert('خطا: ' + e.message); }
-}
-
-/* ===== EVENTS ===== */
-async function saveEvents() {
-  const btn = document.getElementById('save-events-btn');
-  const text = document.getElementById('events-text').value.trim();
-  if (!text) { alert('لطفاً اتفاقات خود را بنویسید'); return; }
-  btn.disabled = true; btn.textContent = 'در حال ذخیره...';
-  try {
-    await insertEntry('events', new Date().toLocaleDateString('fa-IR'), { text });
-    btn.disabled = false; btn.textContent = 'ذخیره اتفاقات ☁️';
-    document.getElementById('events-text').value = '';
-    closeOverlay('events-overlay');
-    showToast('اتفاقات با موفقیت ذخیره شد ✨');
-    loadHistory();
-  } catch(e) { btn.disabled = false; btn.textContent = 'ذخیره اتفاقات ☁️'; alert('خطا: ' + e.message); }
-}
 
 /* ===== GRATITUDE ===== */
 let gratCount = 5;
-function toFa(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
 function renderGratRows() {
   const list = document.getElementById('grat-list');
   const vals = {};
-  for (let i=1;i<=gratCount;i++) { const el = document.getElementById('grat-'+i); if(el) vals[i]=el.value; }
-  list.innerHTML = '';
-  for (let i=1;i<=gratCount;i++) {
-    const row = document.createElement('div'); row.className='grat-row';
-    row.innerHTML = '<span class="grat-num">' + toFa(i) + '</span><textarea class="grat-input" id="grat-'+i+'" placeholder="بنویس..."></textarea>';
+  for(let i=1;i<=gratCount;i++){const el=document.getElementById('grat-'+i);if(el)vals[i]=el.value;}
+  list.innerHTML='';
+  for(let i=1;i<=gratCount;i++){
+    const row=document.createElement('div');row.className='grat-row';
+    row.innerHTML='<span class="grat-num">'+toFa(i)+'</span><textarea class="grat-input" id="grat-'+i+'" placeholder="بنویس..."></textarea>';
     list.appendChild(row);
-    if (vals[i]) document.getElementById('grat-'+i).value = vals[i];
+    if(vals[i])document.getElementById('grat-'+i).value=vals[i];
   }
 }
-function addGratRow() { gratCount++; renderGratRows(); setTimeout(()=>{const el=document.getElementById('grat-'+gratCount);if(el)el.focus();},50); }
-
-async function saveGratitude() {
-  const btn = document.getElementById('save-grat-btn');
-  const items = [];
-  for (let i=1;i<=gratCount;i++) {
-    const el = document.getElementById('grat-'+i);
-    const val = el ? el.value.trim() : '';
-    if (val) items.push({ n:i, text:val });
-  }
-  if (!items.length) { alert('لطفاً حداقل یک مورد بنویسید'); return; }
-  btn.disabled = true; btn.textContent = 'در حال ذخیره...';
-  try {
-    await insertEntry('gratitude', new Date().toLocaleDateString('fa-IR'), { items });
-    btn.disabled = false; btn.textContent = 'ثبت شکرگذاری ☁️';
-    closeOverlay('gratitude-overlay');
-    showToast('شکرگذاری با موفقیت ثبت شد 🙏');
-    loadHistory();
-  } catch(e) { btn.disabled = false; btn.textContent = 'ثبت شکرگذاری ☁️'; alert('خطا: '+e.message); }
-}
-
-/* ===== HISTORY ===== */
-let currentFilter = 'all';
-async function loadHistory(filter) {
-  if (filter === undefined) filter = currentFilter;
-  currentFilter = filter;
-  const list = document.getElementById('hist-list');
-  list.innerHTML = '<p class="no-history"><span class="spinner"></span>در حال بارگذاری...</p>';
-  setSyncStatus('دریافت از سرور...', true);
-  try {
-    const entries = await getUserHistory();
-    // Update stats & chart
-    updateStats(entries);
-    updateSparkChart(entries);
-
-    const filtered = filter === 'all' ? entries : entries.filter(e => e.type === filter);
-    setSyncStatus('همگام‌سازی موفق', false, true);
-    if (!filtered.length) { list.innerHTML = '<p class="no-history">هنوز تمرینی ثبت نشده است.</p>'; return; }
-
-    const now = Date.now();
-    list.innerHTML = '';
-    filtered.forEach(e => {
-      const rem = e.expiresAt ? Math.ceil((e.expiresAt - now)/(1000*60*60*24)) : '?';
-      const div = document.createElement('div'); div.className = 'hist-entry';
-      let content = '';
-      if (e.type === 'events') {
-        content = '<div class="hist-entry-head"><h4>✨ اتفاقات جالب</h4><span class="date">' + e.date + '</span></div>' +
-          '<p>' + (e.text||'—') + '</p>';
-      } else if (e.type === 'gratitude') {
-        content = '<div class="hist-entry-head"><h4>🙏 شکرگذاری</h4><span class="date">' + e.date + '</span></div>' +
-          (e.items||[]).map(it => '<p>' + toFa(it.n) + '. ' + it.text + '</p>').join('');
-      } else {
-        const isMorning = e.type === 'morning';
-        content = '<div class="hist-entry-head"><h4>' + (isMorning?'🌅 تمرین صبح':'🌙 تمرین شب') + '</h4><span class="date">' + e.date + '</span></div>';
-        content += '<p><strong>۱. حال خوب:</strong> ' + (e.q1||'—') + '</p>';
-        content += '<p><strong>۲. اشخاص:</strong> ' + (e.q2||'—') + '</p>';
-        if (isMorning) {
-          content += '<p><strong>۳. باورها:</strong> ' + (e.q3||'—') + '</p>';
-          content += '<p><strong>۴. کار مهم:</strong> ' + (e.q4||'—') + '</p>';
-        } else {
-          content += '<p><strong>۷. نمره بی‌فکری:</strong> ' + (e.q7||'—') + '/۱۰</p>';
-          content += '<p><strong>۱۰. مدیتیشن:</strong> ' + (e.q10||'—') + ' دقیقه</p>';
-        }
-      }
-      content += '<span class="expiry-badge">⏳ ' + (rem>0?rem+' روز باقی':'منقضی') + '</span>';
-      div.innerHTML = '<button class="hist-del" onclick="delEntry('+e.id+')">حذف</button>' + content;
-      list.appendChild(div);
-    });
-  } catch(err) {
-    list.innerHTML = '<p class="no-history" style="color:#ff5470;">❌ خطا در اتصال به سرور</p>';
-    setSyncStatus('خطا در اتصال', false, false, true);
-  }
-}
-
-function showHist(filter, btn) {
-  document.querySelectorAll('.hist-tab').forEach(t => t.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  loadHistory(filter);
-}
-
-async function delEntry(id) {
-  if (!confirm('این تمرین حذف شود؟')) return;
-  setSyncStatus('در حال حذف...', true);
-  try {
-    await deleteEntryRemote(id);
-    setSyncStatus('حذف شد', false, true);
-    loadHistory();
-  } catch(e) { setSyncStatus('خطا در حذف', false, false, true); }
-}
-
-/* ===== STATS & CHART ===== */
-function updateStats(entries) {
-  const counts = { morning:0, night:0, events:0, gratitude:0 };
-  entries.forEach(e => { if (counts[e.type] !== undefined) counts[e.type]++; });
-  document.getElementById('stat-morning').textContent = toFa(counts.morning);
-  document.getElementById('stat-night').textContent = toFa(counts.night);
-  document.getElementById('stat-events').textContent = toFa(counts.events);
-  document.getElementById('stat-gratitude').textContent = toFa(counts.gratitude);
-
-  const total = entries.length;
-  const weekAgo = Date.now() - 7*24*60*60*1000;
-  const thisWeek = entries.filter(e => e.timestamp >= weekAgo).length;
-  const lastWeek = entries.filter(e => e.timestamp < weekAgo && e.timestamp >= weekAgo - 7*24*60*60*1000).length;
-  const diff = thisWeek - lastWeek;
-  document.getElementById('progress-num').innerHTML = toFa(thisWeek) + '<span id="progress-change" style="font-size:14px;font-weight:700;color:' + (diff>=0?'#3ddc84':'#ff5470') + ';">' + (diff>=0?'+':'-') + toFa(Math.abs(diff)) + '</span>';
-}
-
-function updateSparkChart(entries) {
-  /* Build last 8 days counts */
-  const days = 8;
-  const counts = new Array(days).fill(0);
-  const now = Date.now();
-  entries.forEach(e => {
-    const daysAgo = Math.floor((now - e.timestamp)/(24*60*60*1000));
-    if (daysAgo >= 0 && daysAgo < days) counts[days-1-daysAgo]++;
-  });
-
-  const maxC = Math.max(...counts, 1);
-  const W = 260; const H = 52; const pad = 4;
-  const points = counts.map((c, i) => {
-    const x = i * (W/(days-1));
-    const y = H - pad - (c/maxC)*(H-pad*2);
-    return x.toFixed(1) + ',' + y.toFixed(1);
-  }).join(' ');
-
-  const lastX = ((days-1)*(W/(days-1))).toFixed(1);
-  const lastY = (H - pad - (counts[days-1]/maxC)*(H-pad*2)).toFixed(1);
-
-  document.getElementById('spark-line').setAttribute('points', points);
-  document.getElementById('spark-dot').setAttribute('cx', lastX);
-  document.getElementById('spark-dot').setAttribute('cy', lastY);
-}
-
-/* Chip filter */
-function switchChip(el, filter) {
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-}
-
-/* ===== DOWNLOAD ===== */
-async function downloadHistory() {
-  setSyncStatus('در حال دریافت...', true);
-  try {
-    const entries = await getUserHistory();
-    setSyncStatus('');
-    if (!entries.length) { alert('هنوز هیچ تمرینی ذخیره نشده!'); return; }
-    let txt = 'تاریخچه تمرینات مجازی PlanLife\n' + '═'.repeat(40) + '\n\n';
-    entries.forEach(e => {
-      txt += '=== ' + e.date + ' — ' + ({morning:'🌅 صبح',night:'🌙 شب',events:'✨ اتفاقات',gratitude:'🙏 شکرگذاری'}[e.type]||e.type) + ' ===\n';
-      if (e.type==='events') txt += (e.text||'—') + '\n';
-      else if (e.type==='gratitude') (e.items||[]).forEach(it => { txt += it.n+'. '+it.text+'\n'; });
-      else { for(let q=1;q<=10;q++) { const v = e['q'+q]; if(v) txt += q+'. '+v+'\n'; } }
-      txt += '\n' + '─'.repeat(30) + '\n\n';
-    });
-    const blob = new Blob([txt], {type:'text/plain;charset=utf-8'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href=url;
-    a.download='PlanLife_تمرینات_' + new Date().toLocaleDateString('fa-IR') + '.txt';
-    a.click(); URL.revokeObjectURL(url);
-  } catch(e) { setSyncStatus('خطا', false, false, true); }
-}
+function addGratRow(){gratCount++;renderGratRows();setTimeout(()=>{const el=document.getElementById('grat-'+gratCount);if(el)el.focus();},50);}
 
 /* ===== INIT ===== */
 window.addEventListener('load', () => {
-  loadHistory('all');
+  loadStats();
   gratCount = 5;
   renderGratRows();
-  loadAlarmUI();
 });
 </script>
 </body>
