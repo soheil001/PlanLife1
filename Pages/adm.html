@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>PlanLife | پنل مدیریت</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0f16; --panel:#151824; --panel2:#1c2030; --border:rgba(255,255,255,.08);
+  --ink:#f2f3f7; --muted:#8991a8; --mint:#3ddc84; --lime:#c8f04a; --blue:#4f7dfb; --red:#ff5470;
+  --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{background:var(--bg);color:var(--ink);font-family:'Vazirmatn',sans-serif;min-height:100vh;}
+
+/* LOGIN GATE */
+#gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+.gate-card{width:100%;max-width:340px;background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:28px 24px;}
+.gate-card h1{font-size:17px;font-weight:800;margin-bottom:4px;}
+.gate-card p{font-size:12.5px;color:var(--muted);margin-bottom:20px;line-height:1.8;}
+.gate-card label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;}
+.gate-card input{width:100%;padding:11px 13px;border-radius:11px;border:1px solid var(--border);background:var(--panel2);color:var(--ink);font-family:inherit;font-size:13px;margin-bottom:14px;outline:none;direction:ltr;text-align:left;}
+.gate-card input:focus{border-color:var(--blue);}
+.gate-card button{width:100%;padding:12px;border-radius:11px;border:none;background:var(--blue);color:#fff;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;}
+.gate-card button:disabled{opacity:.6;cursor:default;}
+.gate-msg{font-size:12px;margin-top:12px;text-align:center;line-height:1.7;display:none;}
+.gate-msg.err{color:var(--red);display:block;}
+.gate-msg.info{color:var(--muted);display:block;}
+
+/* DASHBOARD */
+#dash{display:none;max-width:1080px;margin:0 auto;padding:20px 16px 60px;}
+.dtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:10px;flex-wrap:wrap;}
+.dtop h1{font-size:18px;font-weight:800;}
+.dtop .who{font-size:12px;color:var(--muted);}
+.logout-btn{background:var(--panel2);border:1px solid var(--border);color:var(--muted);font-size:12px;font-weight:700;padding:8px 14px;border-radius:10px;cursor:pointer;font-family:inherit;}
+.logout-btn:hover{color:var(--ink);}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
+.kpi{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px 16px;}
+.kpi .kl{font-size:11px;color:var(--muted);margin-bottom:6px;}
+.kpi .kv{font-size:22px;font-weight:900;}
+.kpi.k-total .kv{color:var(--ink);}
+.kpi.k-premium .kv{color:var(--lime);}
+.kpi.k-free .kv{color:var(--blue);}
+.kpi.k-today .kv{color:var(--mint);}
+
+.toolbar{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center;}
+.search-box{flex:1;min-width:180px;background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:9px 14px;display:flex;align-items:center;gap:8px;}
+.search-box input{flex:1;background:none;border:none;outline:none;color:var(--ink);font-family:inherit;font-size:13px;}
+.filter-chip{background:var(--panel);border:1px solid var(--border);color:var(--muted);font-size:12px;font-weight:700;padding:9px 14px;border-radius:11px;cursor:pointer;font-family:inherit;white-space:nowrap;}
+.filter-chip.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+.refresh-btn{background:var(--panel);border:1px solid var(--border);color:var(--muted);width:38px;height:38px;border-radius:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.refresh-btn:hover{color:var(--ink);}
+
+.table-wrap{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+thead th{text-align:right;font-size:11px;color:var(--muted);font-weight:700;padding:12px 16px;border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody td{padding:12px 16px;font-size:13px;border-bottom:1px solid var(--border);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:rgba(255,255,255,.02);}
+.email-cell{font-weight:700;direction:ltr;text-align:right;}
+.date-cell{color:var(--muted);font-size:12px;}
+.status-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;}
+.status-pill.premium{background:rgba(200,240,74,.12);color:var(--lime);}
+.status-pill.free{background:rgba(255,255,255,.06);color:var(--muted);}
+.toggle-btn{font-size:11.5px;font-weight:700;padding:7px 12px;border-radius:9px;border:1px solid var(--border);background:var(--panel2);color:var(--ink);cursor:pointer;font-family:inherit;white-space:nowrap;}
+.toggle-btn:hover{border-color:var(--blue);}
+.toggle-btn:disabled{opacity:.5;cursor:default;}
+.empty-row td{text-align:center;padding:36px 16px;color:var(--muted);font-size:13px;}
+
+.access-denied{max-width:400px;margin:60px auto;text-align:center;background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:30px 24px;}
+.access-denied .ic{font-size:30px;margin-bottom:10px;}
+.access-denied h2{font-size:15px;font-weight:800;margin-bottom:8px;}
+.access-denied p{font-size:12.5px;color:var(--muted);line-height:1.8;}
+
+@media(max-width:640px){
+  .kpis{grid-template-columns:repeat(2,1fr);}
+  thead{display:none;}
+  table,tbody,tr,td{display:block;width:100%;}
+  tbody tr{border-bottom:1px solid var(--border);padding:12px 16px;}
+  tbody td{border:none;padding:3px 0;display:flex;justify-content:space-between;gap:10px;}
+  tbody td::before{content:attr(data-label);color:var(--muted);font-size:11px;font-weight:700;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN GATE -->
+<div id="gate">
+  <div class="gate-card">
+    <h1>پنل مدیریت PlanLife</h1>
+    <p>با حسابی که دسترسی ادمین دارد وارد شوید.</p>
+    <label>ایمیل</label>
+    <input type="email" id="login-email" placeholder="admin@example.com">
+    <label>رمز عبور</label>
+    <input type="password" id="login-password" placeholder="••••••••">
+    <button id="login-btn" onclick="doLogin()">ورود</button>
+    <div class="gate-msg" id="gate-msg"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dash">
+  <div class="dtop">
+    <div>
+      <h1>مدیریت کاربران</h1>
+      <div class="who" id="who-label"></div>
+    </div>
+    <button class="logout-btn" onclick="doLogout()">خروج</button>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi k-total"><div class="kl">کل کاربران</div><div class="kv" id="kpi-total">—</div></div>
+    <div class="kpi k-premium"><div class="kl">اشتراک ویژه</div><div class="kv" id="kpi-premium">—</div></div>
+    <div class="kpi k-free"><div class="kl">رایگان</div><div class="kv" id="kpi-free">—</div></div>
+    <div class="kpi k-today"><div class="kl">ثبت‌نام امروز</div><div class="kv" id="kpi-today">—</div></div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#8991a8" stroke-width="2"/><path d="M21 21L16.65 16.65" stroke="#8991a8" stroke-width="2" stroke-linecap="round"/></svg>
+      <input id="search-input" placeholder="جستجوی ایمیل..." oninput="renderTable()">
+    </div>
+    <button class="filter-chip active" id="f-all" onclick="setFilter('all')">همه</button>
+    <button class="filter-chip" id="f-premium" onclick="setFilter('premium')">ویژه</button>
+    <button class="filter-chip" id="f-free" onclick="setFilter('free')">رایگان</button>
+    <button class="refresh-btn" onclick="loadUsers()" title="بروزرسانی">↺</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>ایمیل</th><th>تاریخ ثبت‌نام</th><th>وضعیت اشتراک</th><th>عملیات</th></tr>
+      </thead>
+      <tbody id="users-tbody">
+        <tr class="empty-row"><td colspan="4">در حال بارگذاری...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+// همون اطلاعات پروژه‌ی PlanLife در Supabase
+const SUPABASE_URL='https://hjzzvzxhrqovvducnxha.supabase.co';
+const SUPABASE_KEY='sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+let allUsers=[],currentFilter='all',currentUserEmail='';
+
+function toFa(n){return String(n).replace(/[0-9]/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);}
+function faDate(iso){
+  const d=new Date(iso);
+  return toFa(d.toLocaleDateString('fa-IR'));
+}
+
+async function doLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const password=document.getElementById('login-password').value;
+  const msg=document.getElementById('gate-msg');
+  const btn=document.getElementById('login-btn');
+  msg.className='gate-msg';msg.textContent='';
+  if(!email||!password){msg.className='gate-msg err';msg.textContent='ایمیل و رمز عبور را وارد کنید.';return;}
+  btn.disabled=true;btn.textContent='در حال ورود...';
+  const{data,error}=await sb.auth.signInWithPassword({email,password});
+  btn.disabled=false;btn.textContent='ورود';
+  if(error){msg.className='gate-msg err';msg.textContent='ورود ناموفق: ایمیل یا رمز عبور اشتباه است.';return;}
+  currentUserEmail=data.user.email;
+  await enterDashboard();
+}
+
+async function doLogout(){
+  await sb.auth.signOut();
+  document.getElementById('dash').style.display='none';
+  document.getElementById('gate').style.display='flex';
+  document.getElementById('login-password').value='';
+}
+
+async function enterDashboard(){
+  document.getElementById('gate').style.display='none';
+  document.getElementById('dash').style.display='block';
+  document.getElementById('who-label').textContent=currentUserEmail;
+  await loadUsers();
+}
+
+async function loadUsers(){
+  const tbody=document.getElementById('users-tbody');
+  tbody.innerHTML='<tr class="empty-row"><td colspan="4">در حال بارگذاری...</td></tr>';
+  const{data,error}=await sb.rpc('admin_list_users');
+  if(error){
+    document.getElementById('dash').innerHTML='<div class="access-denied"><div class="ic">🔒</div><h2>دسترسی مجاز نیست</h2><p>این حساب دسترسی ادمین ندارد. مطمئن شوید اسکریپت setup-admin.sql را اجرا کرده‌اید و ایمیل همین حساب را is_admin=true کرده‌اید.</p></div>';
+    return;
+  }
+  allUsers=data||[];
+  renderKpis();
+  renderTable();
+}
+
+function renderKpis(){
+  const total=allUsers.length;
+  const premium=allUsers.filter(u=>u.subscription_status==='premium').length;
+  const free=total-premium;
+  const today=new Date().toDateString();
+  const todayCount=allUsers.filter(u=>new Date(u.created_at).toDateString()===today).length;
+  document.getElementById('kpi-total').textContent=toFa(total);
+  document.getElementById('kpi-premium').textContent=toFa(premium);
+  document.getElementById('kpi-free').textContent=toFa(free);
+  document.getElementById('kpi-today').textContent=toFa(todayCount);
+}
+
+function setFilter(f){
+  currentFilter=f;
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  document.getElementById('f-'+f).classList.add('active');
+  renderTable();
+}
+
+function renderTable(){
+  const q=document.getElementById('search-input').value.trim().toLowerCase();
+  let rows=allUsers.filter(u=>{
+    if(currentFilter!=='all'&&u.subscription_status!==currentFilter)return false;
+    if(q&&!u.email.toLowerCase().includes(q))return false;
+    return true;
+  });
+  const tbody=document.getElementById('users-tbody');
+  if(!rows.length){tbody.innerHTML='<tr class="empty-row"><td colspan="4">کاربری پیدا نشد</td></tr>';return;}
+  tbody.innerHTML=rows.map(u=>{
+    const isPremium=u.subscription_status==='premium';
+    return `<tr>
+      <td data-label="ایمیل" class="email-cell">${u.email}</td>
+      <td data-label="تاریخ ثبت‌نام" class="date-cell">${faDate(u.created_at)}</td>
+      <td data-label="وضعیت"><span class="status-pill ${isPremium?'premium':'free'}">${isPremium?'✦ ویژه':'رایگان'}</span></td>
+      <td data-label="عملیات"><button class="toggle-btn" onclick="toggleSub('${u.id}',${isPremium},this)">${isPremium?'تبدیل به رایگان':'ارتقا به ویژه'}</button></td>
+    </tr>`;
+  }).join('');
+}
+
+async function toggleSub(userId,isPremium,btn){
+  btn.disabled=true;btn.textContent='در حال ثبت...';
+  const newStatus=isPremium?'free':'premium';
+  const{error}=await sb.rpc('admin_set_subscription',{target_user_id:userId,new_status:newStatus});
+  if(error){alert('خطا در بروزرسانی: '+error.message);btn.disabled=false;return;}
+  const u=allUsers.find(x=>x.id===userId);
+  if(u)u.subscription_status=newStatus;
+  renderKpis();renderTable();
+}
+
+document.getElementById('login-password').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+// اگر کاربر از قبل لاگین است، مستقیم وارد شود
+(async function(){
+  const{data}=await sb.auth.getSession();
+  if(data.session){currentUserEmail=data.session.user.email;await enterDashboard();}
+})();
+</script>
+</body>
+</html>
