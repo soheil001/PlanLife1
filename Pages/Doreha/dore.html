@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#eef2f6">
+<title>دوره‌های آنلاین | PlanLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#e6efe9; --bg2:#dde9f6;
+  --shell:#ffffff;
+  --ink:#12141c; --muted:#6b7280; --hair:#eef0f3;
+  --blue:#2f6fed; --blue-ink:#1e4fc9;
+  --lime:#d8f24c; --lime-ink:#4b5a10;
+  --panel:#12141c; --panel2:#1b1f2a;
+  --green:#3ddc84; --red:#ff5470;
+  --radius-xl:30px; --radius-lg:22px; --radius-md:16px; --radius-sm:12px;
+  --shadow-card:0 10px 30px rgba(18,20,28,.07);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;font-family:'Vazirmatn',sans-serif;color:var(--ink);}
+body{
+  background:linear-gradient(160deg,var(--bg1),var(--bg2));
+  min-height:100vh;
+  padding:22px;
+}
+button,input,textarea{font-family:inherit;}
+a{color:inherit;text-decoration:none;}
+img{display:block;max-width:100%;}
+
+/* ===== SHELL ===== */
+.shell{
+  max-width:1280px;margin:0 auto;
+  background:var(--shell);
+  border-radius:var(--radius-xl);
+  box-shadow:0 30px 80px rgba(18,20,28,.12);
+  padding:18px 22px 32px;
+  min-height:calc(100vh - 44px);
+}
+
+/* ===== TOPBAR ===== */
+.topbar{
+  display:flex;align-items:center;gap:18px;
+  padding:6px 4px 18px;
+}
+.brand{display:flex;align-items:center;gap:10px;flex-shrink:0;cursor:pointer;}
+.brand img{width:38px;height:38px;border-radius:11px;object-fit:cover;}
+.brand span{font-weight:800;font-size:17px;}
+.tabs{display:flex;gap:8px;flex:1;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{
+  flex-shrink:0;padding:9px 16px;border-radius:999px;
+  background:var(--hair);border:1px solid transparent;
+  font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;
+  white-space:nowrap;transition:.2s;
+}
+.tab.active{background:var(--ink);color:#fff;}
+.tab:not(.active):hover{border-color:#dfe3e8;}
+.back-btn{
+  display:flex;align-items:center;gap:7px;
+  background:var(--hair);color:var(--ink);font-weight:700;font-size:13px;
+  padding:10px 16px;border-radius:14px;border:none;cursor:pointer;flex-shrink:0;
+}
+.burger{display:none;width:40px;height:40px;border-radius:12px;background:var(--hair);border:none;flex-shrink:0;cursor:pointer;font-size:18px;}
+
+/* ===== HERO BANNER ===== */
+.hero-banner{
+  background:var(--panel);
+  border-radius:var(--radius-lg);
+  padding:28px 28px;
+  margin-bottom:28px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  position:relative;overflow:hidden;
+}
+.hero-banner::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 80% 50%, rgba(216,242,76,.12) 0%, transparent 60%),
+             radial-gradient(ellipse at 20% 80%, rgba(47,111,237,.14) 0%, transparent 55%);
+}
+.hero-banner-text{position:relative;z-index:1;}
+.hero-banner-eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(216,242,76,.15);border:1px solid rgba(216,242,76,.3);
+  border-radius:999px;padding:5px 12px;
+  font-size:12px;font-weight:700;color:var(--lime);
+  margin-bottom:14px;
+}
+.hero-banner h1{font-size:26px;font-weight:900;color:#fff;line-height:1.35;margin-bottom:10px;}
+.hero-banner h1 span{color:var(--lime);}
+.hero-banner p{font-size:13.5px;color:rgba(255,255,255,.6);line-height:1.8;max-width:480px;}
+.hero-banner-cta{
+  position:relative;z-index:1;flex-shrink:0;
+  display:flex;flex-direction:column;align-items:flex-end;gap:12px;
+}
+.banner-stat{text-align:center;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px 22px;}
+.banner-stat .num{font-size:28px;font-weight:900;color:#fff;}
+.banner-stat .lbl{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;}
+
+/* ===== FILTER ROW ===== */
+.filter-row{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:22px;overflow-x:auto;scrollbar-width:none;
+}
+.filter-row::-webkit-scrollbar{display:none;}
+.filter-chip{
+  flex-shrink:0;display:flex;align-items:center;gap:6px;
+  padding:9px 16px;border-radius:999px;
+  background:var(--hair);border:1.5px solid transparent;
+  font-size:12.5px;font-weight:700;color:var(--muted);cursor:pointer;
+  white-space:nowrap;transition:.2s;
+}
+.filter-chip.active{
+  background:#fff;border-color:var(--blue);color:var(--blue);
+  box-shadow:0 4px 14px rgba(47,111,237,.12);
+}
+.filter-chip .dot{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.6;}
+
+/* ===== COURSES GRID ===== */
+.section-title{
+  display:flex;align-items:baseline;gap:10px;margin-bottom:18px;
+}
+.section-title h2{font-size:17px;font-weight:800;}
+.section-title .cnt{font-size:12.5px;color:var(--muted);}
+
+.courses-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-bottom:32px;
+}
+
+/* ===== COURSE CARD ===== */
+.course-card{
+  background:var(--shell);
+  border:1.5px solid #eef0f3;
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  box-shadow:var(--shadow-card);
+  display:flex;flex-direction:column;
+  transition:transform .2s, box-shadow .2s, border-color .2s;
+  cursor:pointer;
+}
+.course-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 18px 40px rgba(18,20,28,.11);
+  border-color:#d8e4f5;
+}
+
+/* Thumb */
+.course-thumb{
+  position:relative;
+  aspect-ratio:16/10;
+  overflow:hidden;
+  background:#f0f2f5;
+  flex-shrink:0;
+}
+.course-thumb img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .35s;
+}
+.course-card:hover .course-thumb img{transform:scale(1.04);}
+
+.thumb-badge{
+  position:absolute;top:10px;right:10px;
+  background:rgba(18,20,28,.78);backdrop-filter:blur(6px);
+  color:#fff;font-size:10px;font-weight:700;
+  padding:5px 10px;border-radius:999px;
+}
+.thumb-badge.free{background:rgba(61,220,132,.88);color:#0b2b1b;}
+.thumb-badge.locked{background:rgba(255,84,112,.82);}
+.thumb-badge.hot{background:rgba(255,149,0,.9);color:#3a2000;}
+.thumb-badge.soon{background:rgba(107,114,128,.75);}
+
+.thumb-ep-count{
+  position:absolute;bottom:10px;left:10px;
+  display:flex;align-items:center;gap:5px;
+  background:rgba(18,20,28,.72);backdrop-filter:blur(6px);
+  color:#fff;font-size:10.5px;font-weight:700;
+  padding:5px 10px;border-radius:999px;
+}
+.thumb-ep-count svg{width:11px;height:11px;fill:#fff;opacity:.8;}
+
+/* Body */
+.course-body{
+  padding:14px 14px 0;
+  flex:1;display:flex;flex-direction:column;gap:6px;
+}
+.course-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.course-tag{
+  font-size:10px;font-weight:700;padding:3px 9px;border-radius:999px;
+  background:var(--hair);color:var(--muted);
+}
+.course-tag.featured{background:rgba(47,111,237,.1);color:var(--blue);}
+.course-name{font-size:15px;font-weight:800;line-height:1.45;margin-top:2px;}
+.course-desc{font-size:12px;color:var(--muted);line-height:1.75;}
+
+/* Progress bar (for unlocked) */
+.progress-wrap{margin-top:6px;}
+.progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px;}
+.progress-bar-track{height:4px;background:var(--hair);border-radius:999px;overflow:hidden;}
+.progress-bar-fill{height:100%;border-radius:999px;background:linear-gradient(to left,var(--blue),#5b8ff9);}
+
+/* Instructor row */
+.instructor-row{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 14px;border-top:1px solid var(--hair);
+  margin-top:10px;
+}
+.instructor-av{width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;}
+.instructor-name{font-size:11.5px;font-weight:700;flex:1;}
+.rating{
+  display:flex;align-items:center;gap:3px;
+  font-size:11px;font-weight:700;color:#f59e0b;
+}
+
+/* Footer */
+.course-footer{
+  display:flex;gap:8px;padding:10px 14px 14px;
+}
+.btn-detail{
+  flex:1;padding:9px 0;border-radius:10px;
+  background:var(--hair);border:none;
+  font-size:12px;font-weight:700;color:var(--ink);cursor:pointer;
+  transition:.15s;
+}
+.btn-detail:hover{background:#e4e7ec;}
+.btn-enroll{
+  flex:2;padding:9px 0;border-radius:10px;
+  background:var(--blue);border:none;
+  font-size:12px;font-weight:800;color:#fff;cursor:pointer;
+  transition:.15s;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.btn-enroll:hover{background:var(--blue-ink);}
+.btn-enroll.locked-btn{
+  background:linear-gradient(to left,#ff5470,#ff2d55);
+}
+.btn-enroll.soon-btn{
+  background:var(--hair);color:var(--muted);cursor:default;
+}
+
+/* ===== FEATURED CARD (wide) ===== */
+.course-card.wide{grid-column:span 3;}
+.course-card.wide .course-thumb{aspect-ratio:unset;height:220px;}
+
+/* ===== SUBSCRIPTION PROMO ===== */
+.promo-bar{
+  background:var(--panel);
+  border-radius:var(--radius-lg);
+  padding:22px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  margin-bottom:28px;
+  position:relative;overflow:hidden;
+}
+.promo-bar::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 50%, rgba(47,111,237,.2) 0%, transparent 60%);
+}
+.promo-bar-text{position:relative;z-index:1;}
+.promo-bar-text h3{font-size:17px;font-weight:800;color:#fff;margin-bottom:5px;}
+.promo-bar-text p{font-size:12.5px;color:rgba(255,255,255,.55);line-height:1.7;}
+.promo-bar-btn{
+  position:relative;z-index:1;flex-shrink:0;
+  background:var(--lime);color:var(--lime-ink);
+  font-weight:800;font-size:13px;
+  padding:12px 22px;border-radius:12px;border:none;cursor:pointer;
+}
+
+/* ===== MODAL ===== */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(18,20,28,.55);
+  backdrop-filter:blur(8px);
+  z-index:999;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:.3s;
+}
+.modal-overlay.open{opacity:1;pointer-events:auto;}
+.modal-box{
+  width:calc(100% - 40px);max-width:370px;
+  background:#fff;border-radius:var(--radius-lg);
+  padding:26px 22px;
+  box-shadow:0 30px 80px rgba(18,20,28,.3);
+  transform:translateY(16px);transition:transform .3s;
+}
+.modal-overlay.open .modal-box{transform:translateY(0);}
+.modal-box h3{font-size:17px;font-weight:800;margin-bottom:8px;}
+.modal-box p{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:18px;}
+.modal-input{
+  width:100%;padding:12px 14px;
+  border:1.5px solid #e4e7ec;border-radius:12px;
+  font-size:14px;outline:none;
+  margin-bottom:12px;text-align:right;direction:rtl;
+}
+.modal-input:focus{border-color:var(--blue);}
+.modal-actions{display:flex;flex-direction:column;gap:8px;}
+.modal-btn{
+  width:100%;padding:12px;border-radius:12px;
+  border:none;font-size:13.5px;font-weight:800;cursor:pointer;
+}
+.modal-btn.primary{background:var(--blue);color:#fff;}
+.modal-btn.secondary{background:var(--hair);color:var(--ink);}
+.modal-btn.ghost{background:none;color:var(--muted);}
+
+/* ===== DRAWER ===== */
+#drawer-overlay{position:fixed;inset:0;background:rgba(18,20,28,.5);z-index:400;opacity:0;pointer-events:none;transition:.3s;}
+#drawer-overlay.open{opacity:1;pointer-events:auto;}
+.drawer{
+  position:fixed;top:0;right:0;height:100vh;width:78%;max-width:300px;
+  background:#fff;z-index:401;
+  transform:translateX(100%);transition:.35s;
+  padding:20px;overflow-y:auto;
+}
+.drawer.open{transform:translateX(0);}
+.drawer h2{font-size:16px;font-weight:800;margin-bottom:16px;}
+.drawer-item{
+  display:block;padding:12px 14px;border-radius:12px;
+  font-size:13.5px;font-weight:700;margin-bottom:6px;
+  background:var(--hair);
+}
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav{display:none;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1080px){
+  .courses-grid{grid-template-columns:repeat(2,1fr);}
+  .course-card.wide{grid-column:span 2;}
+}
+@media(max-width:900px){
+  body{padding:0;}
+  .shell{border-radius:0;min-height:100vh;padding:14px 14px 90px;}
+  .tabs{display:none;}
+  .burger{display:flex;align-items:center;justify-content:center;}
+  .hero-banner{flex-direction:column;align-items:flex-start;}
+  .hero-banner-cta{flex-direction:row;width:100%;}
+  .banner-stat{flex:1;}
+  .courses-grid{grid-template-columns:1fr 1fr;gap:12px;}
+  .course-card.wide{grid-column:span 2;}
+  .promo-bar{flex-direction:column;gap:14px;text-align:center;}
+  .bottom-nav{
+    display:flex;position:fixed;bottom:12px;left:12px;right:12px;z-index:300;
+    background:rgba(255,255,255,.92);backdrop-filter:blur(16px);
+    border-radius:22px;box-shadow:0 12px 30px rgba(18,20,28,.18);
+    padding:8px 10px;justify-content:space-around;
+  }
+  .bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:9.5px;font-weight:700;flex:1;padding:6px 0;border-radius:14px;}
+  .bn-item.active{color:var(--blue);}
+  .bn-item svg{width:20px;height:20px;}
+}
+@media(max-width:540px){
+  .courses-grid{grid-template-columns:1fr;gap:12px;}
+  .course-card.wide{grid-column:span 1;}
+  .hero-banner h1{font-size:21px;}
+  .hero-banner-cta{flex-direction:row;}
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <button class="burger" onclick="openDrawer()">☰</button>
+    <div class="brand" onclick="location.href='https://planlife.ir'">
+      <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
+      <span>PlanLife</span>
+    </div>
+    <div class="tabs">
+      <div class="tab" onclick="location.href='https://planlife.ir'">همه سرویس‌ها</div>
+      <div class="tab active">دوره‌ها</div>
+      <div class="tab" onclick="location.href='https://planlife.ir/Pages/podcasts_free/index.html'">پادکست</div>
+      <div class="tab" onclick="location.href='https://planlife.ir/Pages/Book/index.html'">کتابخانه</div>
+      <div class="tab" onclick="location.href='https://planlife.ir/Pages/Magazine/index.html'">مجله</div>
+    </div>
+    <button class="back-btn" onclick="location.href='https://planlife.ir'">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      بازگشت
+    </button>
+  </div>
+
+  <!-- HERO BANNER -->
+  <div class="hero-banner">
+    <div class="hero-banner-text">
+      <div class="hero-banner-eyebrow">📚 آموزش تخصصی رشد فردی</div>
+      <h1>دوره‌هایی که<br><span>زندگیت رو تغییر</span> میدن</h1>
+      <p>از قانون جذب تا تقویت باور، هماهنگی با خلقت تا احساس لیاقت — مسیر تغییر واقعی اینجاست.</p>
+    </div>
+    <div class="hero-banner-cta">
+      <div class="banner-stat">
+        <div class="num">۶</div>
+        <div class="lbl">دوره تخصصی</div>
+      </div>
+      <div class="banner-stat">
+        <div class="num">+۲k</div>
+        <div class="lbl">دانش‌آموز</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTER ROW -->
+  <div class="filter-row">
+    <div class="filter-chip active" onclick="filterCourses('all',this)"><span class="dot"></span>همه دوره‌ها</div>
+    <div class="filter-chip" onclick="filterCourses('open',this)">در حال پخش</div>
+    <div class="filter-chip" onclick="filterCourses('free',this)">معرفی رایگان</div>
+    <div class="filter-chip" onclick="filterCourses('soon',this)">به‌زودی</div>
+  </div>
+
+  <!-- COURSES GRID -->
+  <div class="section-title">
+    <h2>دوره‌های آنلاین</h2>
+    <span class="cnt" id="course-count">(۶ دوره)</span>
+  </div>
+
+  <div class="courses-grid" id="coursesGrid">
+
+    <!-- ===== کارت ۱: کدهای پشت‌پرده پول ===== -->
+    <div class="course-card" data-status="open" data-idx="0">
+      <div class="course-thumb">
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/Servat/moneyplanlife.JPG" alt="کدهای پشت‌پرده پول" loading="lazy">
+        <span class="thumb-badge hot">پرطرفدار</span>
+        <div class="thumb-ep-count">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+          ۷ قسمت
+        </div>
+      </div>
+      <div class="course-body">
+        <div class="course-tags">
+          <span class="course-tag featured">ثروت‌سازی</span>
+          <span class="course-tag">قانون جذب</span>
+        </div>
+        <div class="course-name">دوره کدهای پشت‌پرده پول</div>
+        <div class="course-desc">اسرار ثروت‌سازی از نگاه کوانتوم — بازنویسی برنامه‌ریزی ذهنی درباره پول</div>
+        <div class="progress-wrap">
+          <div class="progress-label"><span>پیشرفت</span><span>۴ از ۷</span></div>
+          <div class="progress-bar-track"><div class="progress-bar-fill" style="width:57%"></div></div>
+        </div>
+      </div>
+      <div class="instructor-row">
+        <img class="instructor-av" src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="">
+        <span class="instructor-name">تیم PlanLife</span>
+        <div class="rating">⭐ ۴.۹</div>
+      </div>
+      <div class="course-footer">
+        <button class="btn-detail" onclick="openResultsModal('دوره کدهای پشت‌پرده پول')">نتایج ✨</button>
+        <button class="btn-enroll" onclick="openCourseModal('کدهای پشت‌پرده پول','https://planlife.ir/Pages/Doreha/servat.html')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7z" fill="white"/></svg>
+          پخش دوره
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== کارت ۲: چطور حالم خوب باشه ===== -->
+    <div class="course-card" data-status="open" data-idx="1">
+      <div class="course-thumb">
+        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="چطور حالم خوب باشه" loading="lazy">
+        <span class="thumb-badge">احساسی</span>
+        <div class="thumb-ep-count">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+          ۵ قسمت
+        </div>
+      </div>
+      <div class="course-body">
+        <div class="course-tags">
+          <span class="course-tag featured">مدیریت احساسات</span>
+          <span class="course-tag">رشد فردی</span>
+        </div>
+        <div class="course-name">دوره چطور حالم خوب باشه؟</div>
+        <div class="course-desc">تحول حال و احساس — تکنیک‌های عمیق برای تغییر وضعیت درونی در کمتر از ۲۴ ساعت</div>
+      </div>
+      <div class="instructor-row">
+        <img class="instructor-av" src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="">
+        <span class="instructor-name">تیم PlanLife</span>
+        <div class="rating">⭐ ۴.۸</div>
+      </div>
+      <div class="course-footer">
+        <button class="btn-detail" onclick="openResultsModal('دوره چطور حالم خوب باشه')">نتایج ✨</button>
+        <button class="btn-enroll" onclick="openCourseModal('چطور حالم خوب باشه','https://planlife.ir/Pages/Doreha/ehsas.html')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7z" fill="white"/></svg>
+          پخش دوره
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== کارت ۳: هماهنگی با جریان خلقت ===== -->
+    <div class="course-card" data-status="open" data-idx="2">
+      <div class="course-thumb">
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2461.jpeg" alt="هماهنگی با جریان خلقت" loading="lazy">
+        <span class="thumb-badge hot">تخفیف ویژه</span>
+        <div class="thumb-ep-count">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+          ۱۰ قسمت
+        </div>
+      </div>
+      <div class="course-body">
+        <div class="course-tags">
+          <span class="course-tag featured">روح‌بازی</span>
+          <span class="course-tag">کوانتوم</span>
+        </div>
+        <div class="course-name">دوره هماهنگی با جریان خلقت</div>
+        <div class="course-desc">همسوسازی با انرژی کیهانی — درک قوانین جذب در بالاترین سطح ممکن</div>
+      </div>
+      <div class="instructor-row">
+        <img class="instructor-av" src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="">
+        <span class="instructor-name">تیم PlanLife</span>
+        <div class="rating">⭐ ۴.۹</div>
+      </div>
+      <div class="course-footer">
+        <button class="btn-detail" onclick="openResultsModal('دوره هماهنگی با جریان خلقت')">نتایج ✨</button>
+        <button class="btn-enroll" onclick="openCourseModal('هماهنگی با جریان خلقت','https://planlife.ir/Pages/Doreha/jaryan.html')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7z" fill="white"/></svg>
+          پخش دوره
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== کارت ۴: خودباوری ===== -->
+    <div class="course-card" data-status="soon" data-idx="3">
+      <div class="course-thumb">
+        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="خودباوری" loading="lazy">
+        <span class="thumb-badge soon">به‌زودی</span>
+        <div class="thumb-ep-count">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+          ۶ قسمت
+        </div>
+      </div>
+      <div class="course-body">
+        <div class="course-tags">
+          <span class="course-tag">اعتماد به نفس</span>
+          <span class="course-tag">خودشناسی</span>
+        </div>
+        <div class="course-name">دوره خودباوری (اعتماد به نفس)</div>
+        <div class="course-desc">ریشه‌ای‌ترین تغییر ممکن — بازسازی هویت و باور عمیق به خود از صفر</div>
+      </div>
+      <div class="instructor-row">
+        <img class="instructor-av" src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="">
+        <span class="instructor-name">تیم PlanLife</span>
+        <div class="rating">⭐ ۵.۰</div>
+      </div>
+      <div class="course-footer">
+        <button class="btn-detail" onclick="openBuyModal('خودباوری','https://planlife.ir/Pages/Doreha/etemad.html')">اطلاعات بیشتر</button>
+        <button class="btn-enroll soon-btn">🔜 به‌زودی</button>
+      </div>
+    </div>
+
+    <!-- ===== کارت ۵: احساس لیاقت ===== -->
+    <div class="course-card" data-status="soon" data-idx="4">
+      <div class="course-thumb">
+        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1780955091/IMG_1737_ei1f5w.png" alt="احساس لیاقت" loading="lazy">
+        <span class="thumb-badge soon">به‌زودی</span>
+        <div class="thumb-ep-count">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+          ۱۳ قسمت
+        </div>
+      </div>
+      <div class="course-body">
+        <div class="course-tags">
+          <span class="course-tag">لیاقت</span>
+          <span class="course-tag">پذیرش</span>
+        </div>
+        <div class="course-name">دوره پذیرش احساس لیاقت</div>
+        <div class="course-desc">کامل‌ترین دوره برای حل ریشه‌ای سندروم ایمپوستر و پذیرش واقعی لیاقت‌ها</div>
+      </div>
+      <div class="instructor-row">
+        <img class="instructor-av" src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="">
+        <span class="instructor-name">تیم PlanLife</span>
+        <div class="rating">⭐ ۵.۰</div>
+      </div>
+      <div class="course-footer">
+        <button class="btn-detail" onclick="openBuyModal('احساس لیاقت','https://planlife.ir/Pages/Doreha/liyaghat.html')">اطلاعات بیشتر</button>
+        <button class="btn-enroll soon-btn">🔜 به‌زودی</button>
+      </div>
+    </div>
+
+    <!-- ===== کارت ۶: نفوذ به لایه‌های پنهان ===== -->
+    <div class="course-card" data-status="soon" data-idx="5">
+      <div class="course-thumb">
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" alt="نفوذ به لایه‌های پنهان" loading="lazy">
+        <span class="thumb-badge soon">به‌زودی</span>
+        <div class="thumb-ep-count">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+          ۶ قسمت
+        </div>
+      </div>
+      <div class="course-body">
+        <div class="course-tags">
+          <span class="course-tag">ناخودآگاه</span>
+          <span class="course-tag">برنامه‌ریزی عصبی</span>
+        </div>
+        <div class="course-name">دوره نفوذ به لایه‌های پنهان ذهن</div>
+        <div class="course-desc">سفر به اعماق ناخودآگاه — دسترسی به باورهای پنهانی که زندگی‌ات را می‌سازند</div>
+      </div>
+      <div class="instructor-row">
+        <img class="instructor-av" src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="">
+        <span class="instructor-name">تیم PlanLife</span>
+        <div class="rating">⭐ ۵.۰</div>
+      </div>
+      <div class="course-footer">
+        <button class="btn-detail" onclick="openBuyModal('نفوذ به لایه‌های پنهان ذهن','https://planlife.ir/Pages/Doreha/nofoz.html')">اطلاعات بیشتر</button>
+        <button class="btn-enroll soon-btn">🔜 به‌زودی</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PROMO BAR -->
+  <div class="promo-bar">
+    <div class="promo-bar-text">
+      <h3>🎁 معرفی دوره‌ها رایگانه!</h3>
+      <p>جلسه اول هر دوره کاملاً رایگان — بدون نیاز به ثبت‌نام گوش بده و بعد تصمیم بگیر.</p>
+    </div>
+    <button class="promo-bar-btn" onclick="location.href='https://planlife.ir/Pages/Doreha/index.html'">شنیدن معرفی‌ها ›</button>
+  </div>
+
+</div><!-- /shell -->
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bn-item" onclick="location.href='https://planlife.ir'">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M3.5 11L12 4L20.5 11V19.5C20.5 20.05 20.05 20.5 19.5 20.5H14.5V14H9.5V20.5H4.5C3.95 20.5 3.5 20.05 3.5 19.5V11Z" fill="currentColor"/></svg>
+    خانه
+  </div>
+  <div class="bn-item" onclick="location.href='https://planlife.ir/Pages/podcasts_free/index.html'">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M4 13.5C4 8.25 7.58 4 12 4C16.42 4 20 8.25 20 13.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><rect x="3" y="13" width="3.4" height="6" rx="1.6" fill="currentColor"/><rect x="17.6" y="13" width="3.4" height="6" rx="1.6" fill="currentColor"/></svg>
+    پادکست
+  </div>
+  <div class="bn-item active">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M12 3L22 8L12 13L2 8L12 3Z" fill="currentColor"/></svg>
+    دوره‌ها
+  </div>
+  <div class="bn-item" onclick="location.href='https://planlife.ir/Pages/Tamrin/index.html'">
+    <svg viewBox="0 0 24 24" fill="none"><rect x="4.5" y="3.5" width="15" height="17" rx="4" stroke="currentColor" stroke-width="1.7"/><path d="M8 11.3L10 13.3L14.5 8.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    تمرینات
+  </div>
+  <div class="bn-item" onclick="openDrawer()">
+    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="6" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="18" r="1.6" fill="currentColor"/></svg>
+    بیشتر
+  </div>
+</nav>
+
+<!-- DRAWER -->
+<div id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <h2>PlanLife</h2>
+  <a class="drawer-item" href="https://planlife.ir">خانه</a>
+  <a class="drawer-item" href="https://planlife.ir/Pages/podcasts_free/index.html">پادکست‌های رایگان</a>
+  <a class="drawer-item" href="#">دوره‌ها</a>
+  <a class="drawer-item" href="https://planlife.ir/Pages/Magazine/index.html">مجله ماورایی 📰</a>
+  <a class="drawer-item" href="https://planlife.ir/Pages/Mindcoding/index.html">کد نویسی ذهنی</a>
+  <a class="drawer-item" href="https://planlife.ir/Pages/visionboard/index.html">تابلو آرزوها 🔖</a>
+  <a class="drawer-item" href="https://planlife.ir/Pages/Book/index.html">کتابخانه 📚</a>
+  <a class="drawer-item" href="https://planlife.ir/Pages/komakavaliye/index.html">جعبه کمک‌های اولیه</a>
+  <a class="drawer-item" href="https://planlife.ir/Pages/Music/index.html">موزیک‌ها</a>
+</div>
+
+<!-- MODAL (entry code / buy) -->
+<div class="modal-overlay" id="mainModal" onclick="handleModalOverlay(event)">
+  <div class="modal-box" id="modalBox"></div>
+</div>
+
+<script>
+/* ===== DRAWER ===== */
+function openDrawer(){
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('open');
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+}
+
+/* ===== MODAL ===== */
+function openModal(html){
+  document.getElementById('modalBox').innerHTML = html;
+  document.getElementById('mainModal').classList.add('open');
+}
+function closeModal(){
+  document.getElementById('mainModal').classList.remove('open');
+}
+function handleModalOverlay(e){
+  if(e.target===document.getElementById('mainModal')) closeModal();
+}
+
+var VALID_CODE = 'admin2933';
+
+/* باز کردن پلیر دوره با کد اشتراک */
+function openCourseModal(name, link){
+  openModal(`
+    <span style="font-size:30px;display:block;margin-bottom:8px;">🔐</span>
+    <h3>ورود به دوره</h3>
+    <p>کد اشتراک خودت رو وارد کن تا وارد «<b>${name}</b>» بشی.</p>
+    <input class="modal-input" id="codeInput" type="password" placeholder="کد اشتراک را وارد کن">
+    <div class="modal-actions">
+      <button class="modal-btn primary" onclick="verifyCode('${link}')">ورود به دوره</button>
+      <button class="modal-btn secondary" onclick="location.href='${link.replace('index','buy') || link}'">خرید دوره 💳</button>
+      <button class="modal-btn ghost" onclick="closeModal()">بستن</button>
+    </div>
+  `);
+  setTimeout(function(){ var el=document.getElementById('codeInput'); if(el) el.focus(); },150);
+}
+
+function verifyCode(link){
+  var code = (document.getElementById('codeInput')||{}).value || '';
+  if(code.trim() === VALID_CODE){
+    window.location.href = link;
+  } else {
+    var inp = document.getElementById('codeInput');
+    if(inp){ inp.style.borderColor='#ff5470'; inp.value=''; inp.placeholder='❌ کد اشتباه است'; }
+    setTimeout(function(){
+      var i = document.getElementById('codeInput');
+      if(i){ i.style.borderColor=''; i.placeholder='کد اشتراک را وارد کن'; }
+    },1800);
+  }
+}
+
+/* خرید دوره */
+function openBuyModal(name, buyLink){
+  openModal(`
+    <span style="font-size:30px;display:block;margin-bottom:8px;">📚</span>
+    <h3>${name}</h3>
+    <p>این دوره به‌زودی فعال میشه. همین الان پیش‌ثبت‌نام کن تا با تخفیف ویژه دسترسی داشته باشی.</p>
+    <div class="modal-actions">
+      <button class="modal-btn primary" onclick="location.href='${buyLink}'">پیش‌ثبت‌نام 💳</button>
+      <button class="modal-btn ghost" onclick="closeModal()">بعداً</button>
+    </div>
+  `);
+}
+
+/* نتایج دانش‌آموزان */
+function openResultsModal(name){
+  openModal(`
+    <span style="font-size:30px;display:block;margin-bottom:8px;">🏆</span>
+    <h3>نتایج دانش‌آموزان</h3>
+    <p>نتایج شگفت‌انگیز بچه‌هایی که «<b>${name}</b>» رو گذروندن رو ببین.</p>
+    <div class="modal-actions">
+      <button class="modal-btn primary" onclick="location.href='https://planlife.ir/Pages/Doreha/natije/etemad/'">مشاهده نتایج</button>
+      <button class="modal-btn ghost" onclick="closeModal()">بستن</button>
+    </div>
+  `);
+}
+
+/* ===== FILTER ===== */
+function filterCourses(type, el){
+  document.querySelectorAll('.filter-chip').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+  var cards = document.querySelectorAll('.course-card');
+  var visible = 0;
+  cards.forEach(function(card){
+    var status = card.getAttribute('data-status');
+    var show = (type==='all') || (type==='open' && status==='open') || (type==='soon' && status==='soon') || (type==='free');
+    card.style.display = show ? 'flex' : 'none';
+    if(show) visible++;
+  });
+  document.getElementById('course-count').textContent = '('+visible+' دوره)';
+}
+
+/* ===== KEYBOARD ===== */
+document.addEventListener('keydown',function(e){ if(e.key==='Enter'){ var ci=document.getElementById('codeInput'); if(ci && document.activeElement===ci) verifyCode(window._currentLink||'#'); } if(e.key==='Escape') closeModal(); });
+</script>
+</body>
+</html>
