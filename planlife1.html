@@ -27,7 +27,7 @@ button{font-family:inherit;} a{color:inherit;text-decoration:none;} img{display:
 .shell{max-width:1300px;margin:0 auto;}
 
 /* TOPBAR */
-.topbar{background:var(--section);border-radius:var(--radius-xl);box-shadow:var(--section-shadow);display:flex;align-items:center;gap:10px;padding:10px 14px;margin-bottom:var(--gap);}
+.topbar{background:var(--section);border-radius:var(--radius-xl);box-shadow:var(--section-shadow);display:flex;align-items:center;gap:10px;padding:10px 14px;margin-bottom:var(--gap);position:sticky;top:10px;z-index:200;}
 .brand{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .brand img{width:32px;height:32px;border-radius:10px;object-fit:cover;}
 .brand span{font-weight:800;font-size:15px;}
@@ -311,12 +311,17 @@ button{font-family:inherit;} a{color:inherit;text-decoration:none;} img{display:
 
 @media (max-width:960px){
   body{padding:0;}
-  .shell{padding:10px 10px calc(var(--bottom-nav-h) + 16px);}
+  .shell{padding:0 0 calc(var(--bottom-nav-h) + 8px);}
 
-  /* topbar */
+  /* topbar - full width on mobile */
+  .topbar{border-radius:0;margin-bottom:10px;padding:10px 14px;position:sticky;top:0;z-index:200;}
   .tabs{display:none;}
   .search-box{max-width:none;flex:1;}
   .burger{display:flex;}
+  
+  /* main layout padding */
+  .layout{padding:0 10px;}
+  .cards-grid-wrap{padding:0 10px;}
 
   /* layout stack */
   .layout{flex-direction:column;}
@@ -324,19 +329,25 @@ button{font-family:inherit;} a{color:inherit;text-decoration:none;} img{display:
   .right-col{width:100%;order:3;}
 
   /* hero — ستونی */
-  .hero{flex-direction:column;}
-  .hero-media{width:100%;aspect-ratio:16/10;}
-  .hero-title{font-size:17px;}
+  .hero{flex-direction:column;gap:12px;}
+  .hero-media{width:100%;aspect-ratio:16/7;max-height:200px;}
+  .hero-title{font-size:16px;}
+  .hero-body{padding:0 2px;}
+  .hero-desc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .hero-cta-row{margin-top:8px;}
 
   /* cards — 2 ستون */
   .cards-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+  /* section cards on mobile */
+  .section-card{border-radius:16px;}
 
   /* iframe view — تمام عرض و ارتفاع صحیح */
   #iframe-view{
     border-radius:0;
-    /* از بالای صفحه تا بالای bottom-nav */
-    height:calc(100vh - var(--bottom-nav-h) - 0px);
+    /* از زیر topbar تا بالای bottom-nav */
+    height:calc(100vh - var(--bottom-nav-h) - 58px);
     min-height:0;
+    margin:0;
   }
   #main-iframe{
     width:100%;
@@ -383,6 +394,11 @@ button{font-family:inherit;} a{color:inherit;text-decoration:none;} img{display:
   .hero-desc{font-size:11.5px;}
   .card h3{font-size:11.5px;}
   .card .btn-row a,.card .btn-row button,.card .btn-row span{font-size:10.5px;padding:7px 0;}
+  /* hero on very small screens */
+  .hero-media{max-height:170px;aspect-ratio:16/6;}
+  .hero-tabs{gap:12px;}
+  .hero-tab{font-size:12px;}
+  .hero-creator{display:none;}
 }
 </style>
 </head>
@@ -484,7 +500,7 @@ button{font-family:inherit;} a{color:inherit;text-decoration:none;} img{display:
           </div>
         </div>
 
-        <div class="cards-grid">
+        <div class="cards-grid" style="padding:0;">
           <div class="card"><div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست رایگان"><span class="badge">رایگان</span></div><h3>پادکست رایگان</h3><div class="price">قانون جذب — <b>هفتگی</b></div><div class="btn-row"><span onclick="navigateSide('https://planlife.ir/podcastfree.html','sb-podcast','پادکست رایگان')">درباره</span><span class="primary" onclick="navigateSide('https://planlife.ir/podcastfree.html','sb-podcast','پادکست رایگان')">شنیدن</span></div></div>
           <div class="card"><div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌ها"><span class="badge">پرطرفدار</span></div><h3>دوره‌ها</h3><div class="price">مسیرهای آموزشی — <b>۶ دوره</b></div><div class="btn-row"><span onclick="navigateSide('https://planlife.ir/Pages/Doreha/dore.html','sb-courses','دوره‌ها')">درباره</span><span class="primary" onclick="navigateSide('https://planlife.ir/Pages/Doreha/dore.html','sb-courses','دوره‌ها')">ورود</span></div></div>
           <div class="card"><div class="thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="مجله ماورایی"></div><h3>مجله ماورایی 📰</h3><div class="price">مقالات — <b>هفتگی</b></div><div class="btn-row"><span onclick="navigateSide('https://planlife.ir/Pages/Magazine/index.html',null,'مجله ماورایی')">درباره</span><span class="primary" onclick="navigateSide('https://planlife.ir/Pages/Magazine/index.html',null,'مجله ماورایی')">ورود</span></div></div>
