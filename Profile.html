@@ -25,28 +25,29 @@
 }
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 html, body { height:100%; font-family:'Vazirmatn', sans-serif; color:var(--ink); }
-body { background:var(--bg); min-height:100vh; padding-bottom:90px; }
-button { font-family:inherit; }
+body { background:var(--bg); min-height:100vh; padding-bottom:100px; }
+button { font-family:inherit; cursor:pointer; }
 a { color:inherit; text-decoration:none; }
 
 /* ===== TOP HEADER ===== */
 .page-header {
   position:sticky; top:0; z-index:100;
-  background:rgba(212,218,226,0.88);
+  background:rgba(212,218,226,0.92);
   backdrop-filter:blur(14px);
   -webkit-backdrop-filter:blur(14px);
-  padding:14px 18px 10px;
+  padding:14px 16px 10px;
   display:flex; align-items:center; justify-content:space-between;
 }
-.header-logo { display:flex; align-items:center; gap:9px; }
-.header-logo img { width:32px; height:32px; border-radius:9px; object-fit:cover; }
-.header-logo span { font-size:15px; font-weight:800; }
+.header-right { display:flex; align-items:center; gap:9px; }
+.header-logo-img { width:36px; height:36px; border-radius:10px; object-fit:cover; }
+.header-brand { font-size:15px; font-weight:800; }
 .header-back {
   display:flex; align-items:center; gap:6px;
   background:var(--card); border:1.5px solid #e0e3e9;
-  border-radius:999px; padding:7px 14px;
-  font-size:12px; font-weight:700; cursor:pointer;
-  color:var(--ink); transition:.15s;
+  border-radius:999px; padding:8px 14px;
+  font-size:12px; font-weight:700;
+  color:var(--ink); transition:.15s; border:none;
+  background:var(--card); box-shadow:0 1px 6px rgba(0,0,0,.08);
 }
 .header-back:hover { background:var(--hair); }
 .header-back svg { width:14px; height:14px; }
@@ -56,58 +57,84 @@ a { color:inherit; text-decoration:none; }
   background:var(--card);
   border-radius:var(--radius);
   box-shadow:var(--shadow);
-  margin:14px 14px 0;
+  margin:12px 14px 0;
   overflow:hidden;
 }
 .hero-cover {
-  position:relative; height:130px;
-  background:linear-gradient(135deg, #1a1e2e 0%, #0d1117 100%);
+  position:relative; height:120px;
+  background:linear-gradient(135deg, #0d1117 0%, #1a2340 50%, #0a1a0a 100%);
   overflow:hidden;
 }
 .cover-pattern {
   position:absolute; inset:0;
   background-image:
-    radial-gradient(circle at 20% 50%, rgba(47,111,237,.25) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(216,242,76,.15) 0%, transparent 45%),
-    radial-gradient(circle at 60% 80%, rgba(61,220,132,.12) 0%, transparent 40%);
+    radial-gradient(circle at 15% 50%, rgba(47,111,237,.3) 0%, transparent 50%),
+    radial-gradient(circle at 85% 20%, rgba(216,242,76,.18) 0%, transparent 45%),
+    radial-gradient(circle at 55% 85%, rgba(61,220,132,.14) 0%, transparent 40%);
 }
 .cover-badge {
-  position:absolute; top:14px; left:14px;
-  background:rgba(216,242,76,.18); border:1px solid rgba(216,242,76,.35);
-  color:var(--lime); font-size:10.5px; font-weight:700;
+  position:absolute; top:12px; left:12px;
+  background:rgba(216,242,76,.18); border:1px solid rgba(216,242,76,.38);
+  color:var(--lime); font-size:10px; font-weight:700;
   padding:5px 11px; border-radius:999px;
   display:flex; align-items:center; gap:5px;
 }
-.cover-badge .dot { width:6px; height:6px; border-radius:50%; background:var(--lime); }
+.cover-badge .dot { width:6px; height:6px; border-radius:50%; background:var(--lime); animation:pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+
+/* Avatar: مربعی گوشه‌گرد بزرگ */
 .avatar-wrap {
-  position:absolute; bottom:-28px; right:20px;
-  width:72px; height:72px; border-radius:20px;
-  border:3px solid var(--card);
+  position:absolute; bottom:-32px; right:18px;
+  width:80px; height:80px; border-radius:20px;
+  border:3.5px solid var(--card);
   overflow:hidden; background:#ccc;
-  box-shadow:0 4px 16px rgba(0,0,0,.2);
+  box-shadow:0 6px 20px rgba(0,0,0,.25);
 }
 .avatar-wrap img { width:100%; height:100%; object-fit:cover; }
-.hero-body { padding:38px 20px 20px; }
-.brand-name { font-size:20px; font-weight:900; line-height:1.2; margin-bottom:3px; }
-.brand-sub { font-size:12.5px; color:var(--muted); margin-bottom:12px; }
-.stat-row { display:flex; gap:14px; margin-bottom:16px; }
-.stat-item { text-align:center; }
-.stat-num { font-size:16px; font-weight:800; color:var(--ink); }
-.stat-lbl { font-size:10px; color:var(--muted); }
-.stat-divider { width:1px; background:var(--hair); flex-shrink:0; }
+
+.hero-body { padding:42px 18px 18px; }
+.brand-name { font-size:21px; font-weight:900; line-height:1.2; margin-bottom:3px; }
+.brand-sub { font-size:12px; color:var(--muted); margin-bottom:14px; }
+.stat-row { display:flex; align-items:center; gap:0; margin-bottom:14px; }
+.stat-item { flex:1; text-align:center; }
+.stat-num { font-size:15px; font-weight:800; color:var(--ink); }
+.stat-lbl { font-size:9.5px; color:var(--muted); margin-top:1px; }
+.stat-divider { width:1px; height:28px; background:var(--hair); flex-shrink:0; }
 .hero-desc {
   font-size:12.5px; color:var(--muted);
   line-height:1.85; margin-bottom:14px;
   padding-bottom:14px; border-bottom:1.5px solid var(--hair);
 }
-.tag-row { display:flex; gap:7px; flex-wrap:wrap; }
+.tag-row { display:flex; gap:7px; flex-wrap:wrap; margin-bottom:14px; }
 .tag {
-  font-size:11px; font-weight:600;
+  font-size:10.5px; font-weight:600;
   padding:5px 12px; border-radius:999px;
   background:var(--hair); color:var(--ink);
   border:1.5px solid #e0e3e9;
 }
 .tag.accent { background:rgba(47,111,237,.09); color:var(--blue); border-color:rgba(47,111,237,.2); }
+
+/* ===== QUICK NAV ICONS under hero ===== */
+.quick-nav {
+  display:flex; justify-content:space-around;
+  padding:4px 0 2px;
+  border-top:1.5px solid var(--hair);
+}
+.qn-item {
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  padding:8px 10px; border:none; background:none; color:var(--ink);
+  font-size:10px; font-weight:700; cursor:pointer; transition:.15s;
+  text-decoration:none;
+}
+.qn-item:hover .qn-icon { background:var(--blue); }
+.qn-item:hover .qn-icon svg { stroke:#fff; }
+.qn-icon {
+  width:48px; height:48px; border-radius:14px;
+  background:var(--hair); border:1.5px solid #e4e7ec;
+  display:flex; align-items:center; justify-content:center;
+  transition:.2s;
+}
+.qn-icon svg { width:22px; height:22px; stroke:var(--ink); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; transition:.15s; }
 
 /* ===== PROGRESS STRIP ===== */
 .progress-strip {
@@ -118,7 +145,24 @@ a { color:inherit; text-decoration:none; }
   padding:16px 18px;
   color:#fff;
 }
-.ps-title { font-size:12px; color:rgba(255,255,255,.45); margin-bottom:10px; font-weight:600; letter-spacing:.2px; }
+.ps-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.ps-title { font-size:12px; color:rgba(255,255,255,.45); font-weight:600; letter-spacing:.2px; }
+/* social icons row */
+.ps-socials { display:flex; gap:10px; }
+.social-icon {
+  width:36px; height:36px; border-radius:11px;
+  display:flex; align-items:center; justify-content:center;
+  transition:.15s; text-decoration:none; overflow:hidden;
+  border:1.5px solid rgba(255,255,255,.1);
+}
+.social-icon:hover { transform:scale(1.08); }
+.social-icon img { width:22px; height:22px; object-fit:contain; }
+/* instagram gradient bg */
+.si-insta { background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); }
+.si-telegram { background:#26a5e4; }
+.si-whatsapp { background:#25d366; }
+.si-bale { background:#1e88e5; }
+
 .ps-metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
 .ps-m { text-align:center; }
 .ps-m .val { font-size:18px; font-weight:900; }
@@ -127,7 +171,6 @@ a { color:inherit; text-decoration:none; }
 .ps-m .val.blue { color:#60a5fa; }
 .ps-m .val.amber { color:#fbbf24; }
 .ps-m .lbl { font-size:9.5px; color:rgba(255,255,255,.38); margin-top:2px; }
-.ps-divider { width:1px; background:rgba(255,255,255,.08); }
 
 /* ===== SECTION LABEL ===== */
 .section-label {
@@ -144,7 +187,7 @@ a { color:inherit; text-decoration:none; }
 }
 .scroll-wrap::-webkit-scrollbar { display:none; }
 .service-card {
-  flex-shrink:0; width:150px;
+  flex-shrink:0; width:148px;
   background:var(--card); border-radius:var(--radius-sm);
   box-shadow:var(--shadow); overflow:hidden;
   cursor:pointer; transition:.2s;
@@ -152,7 +195,7 @@ a { color:inherit; text-decoration:none; }
 }
 .service-card:hover { border-color:rgba(47,111,237,.25); transform:translateY(-2px); }
 .sc-thumb {
-  position:relative; height:108px; overflow:hidden;
+  position:relative; height:100px; overflow:hidden;
   background:#eef0f3;
 }
 .sc-thumb img { width:100%; height:100%; object-fit:cover; }
@@ -164,8 +207,8 @@ a { color:inherit; text-decoration:none; }
 }
 .sc-badge.free { background:rgba(61,220,132,.88); color:#04120a; }
 .sc-body { padding:9px 10px 10px; }
-.sc-title { font-size:12px; font-weight:800; margin-bottom:3px; }
-.sc-sub { font-size:10.5px; color:var(--muted); }
+.sc-title { font-size:11.5px; font-weight:800; margin-bottom:3px; }
+.sc-sub { font-size:10px; color:var(--muted); }
 .sc-cta {
   width:100%; margin-top:8px;
   background:var(--blue); color:#fff;
@@ -174,11 +217,35 @@ a { color:inherit; text-decoration:none; }
   cursor:pointer; transition:.15s;
 }
 .sc-cta:hover { background:var(--blue-dark); }
-.sc-cta.outline {
-  background:var(--hair); color:var(--ink);
-  border:1.5px solid #e0e3e9;
+
+/* ===== RESULTS BANNER ===== */
+.results-banner {
+  margin:0 14px;
+  background:#1a1e2e;
+  border-radius:var(--radius); overflow:hidden; position:relative;
+  box-shadow:var(--shadow);
 }
-.sc-cta.outline:hover { background:#e4e7ec; }
+.rb-glow {
+  position:absolute; top:-30px; left:-30px;
+  width:130px; height:130px; border-radius:50%;
+  background:radial-gradient(circle, rgba(216,242,76,.13) 0%, transparent 70%);
+  pointer-events:none;
+}
+.rb-inner { padding:18px; position:relative; z-index:1; }
+.rb-label { font-size:11px; color:rgba(255,255,255,.38); font-weight:600; margin-bottom:6px; }
+.rb-title { font-size:17px; font-weight:900; color:#fff; margin-bottom:6px; }
+.rb-sub { font-size:12px; color:rgba(255,255,255,.55); line-height:1.7; margin-bottom:14px; }
+.rb-nums { display:flex; gap:16px; margin-bottom:14px; }
+.rb-num .n { font-size:22px; font-weight:900; color:var(--lime); }
+.rb-num .l { font-size:10px; color:rgba(255,255,255,.38); }
+.rb-cta {
+  width:100%; background:var(--lime);
+  color:var(--lime-ink); border:none;
+  border-radius:12px; padding:13px 0;
+  font-size:13px; font-weight:800; cursor:pointer;
+  transition:.15s;
+}
+.rb-cta:hover { filter:brightness(1.06); }
 
 /* ===== REVIEWS ===== */
 .reviews-section {
@@ -198,6 +265,20 @@ a { color:inherit; text-decoration:none; }
   border-radius:999px; padding:5px 11px;
   font-size:12px; font-weight:800; color:#92400e;
 }
+
+/* Add Review Button */
+.add-review-btn {
+  width:calc(100% - 32px); margin:12px 16px;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  background:linear-gradient(135deg, var(--blue) 0%, #1e4fc9 100%);
+  color:#fff; border:none; border-radius:12px;
+  padding:13px 0; font-size:13px; font-weight:800;
+  cursor:pointer; transition:.15s;
+  box-shadow:0 4px 14px rgba(47,111,237,.3);
+}
+.add-review-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(47,111,237,.4); }
+.add-review-btn svg { width:18px; height:18px; stroke:#fff; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
 .review-card {
   padding:14px 16px;
   border-bottom:1.5px solid var(--hair);
@@ -220,47 +301,113 @@ a { color:inherit; text-decoration:none; }
 .rev-text { font-size:12.5px; color:var(--muted); line-height:1.8; }
 .rev-date { font-size:10px; color:var(--muted); margin-top:6px; }
 
-/* ===== RESULTS BANNER ===== */
-.results-banner {
-  margin:0 14px;
-  background:linear-gradient(135deg, #1a1e2e 0%, #0d1117 100%);
-  border-radius:var(--radius); overflow:hidden; position:relative;
-  box-shadow:var(--shadow);
+/* ===== MODAL OVERLAY ===== */
+.modal-overlay {
+  position:fixed; inset:0; z-index:500;
+  background:rgba(10,12,20,.7);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  display:none; align-items:flex-end; justify-content:center;
 }
-.rb-glow {
-  position:absolute; top:-30px; left:-30px;
-  width:120px; height:120px; border-radius:50%;
-  background:radial-gradient(circle, rgba(216,242,76,.15) 0%, transparent 70%);
-  pointer-events:none;
+.modal-overlay.open { display:flex; }
+.modal-sheet {
+  background:#fff;
+  border-radius:24px 24px 0 0;
+  width:100%; max-width:560px;
+  padding:20px 20px 40px;
+  max-height:90vh; overflow-y:auto;
+  animation:sheetUp .35s cubic-bezier(.34,1.2,.64,1);
 }
-.rb-inner { padding:18px; position:relative; z-index:1; }
-.rb-label { font-size:11px; color:rgba(255,255,255,.38); font-weight:600; margin-bottom:6px; }
-.rb-title { font-size:17px; font-weight:900; color:#fff; margin-bottom:6px; }
-.rb-sub { font-size:12px; color:rgba(255,255,255,.55); line-height:1.7; margin-bottom:14px; }
-.rb-nums { display:flex; gap:16px; margin-bottom:14px; }
-.rb-num { }
-.rb-num .n { font-size:22px; font-weight:900; color:var(--lime); }
-.rb-num .l { font-size:10px; color:rgba(255,255,255,.38); }
-.rb-cta {
-  width:100%; background:var(--lime);
-  color:var(--lime-ink); border:none;
-  border-radius:12px; padding:13px 0;
-  font-size:13px; font-weight:800; cursor:pointer;
-  box-shadow:0 4px 16px rgba(180,200,50,.25);
+@keyframes sheetUp { from{transform:translateY(100%);opacity:.5;} to{transform:translateY(0);opacity:1;} }
+.sheet-handle {
+  width:40px; height:4px; background:#e4e7ec; border-radius:99px;
+  margin:0 auto 18px;
+}
+.sheet-title {
+  font-size:17px; font-weight:900; margin-bottom:18px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.sheet-close {
+  width:30px; height:30px; border-radius:50%;
+  background:var(--hair); border:none; font-size:16px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:var(--muted);
+}
+.form-field { margin-bottom:14px; }
+.form-label { font-size:11.5px; font-weight:700; color:var(--muted); margin-bottom:6px; display:block; }
+.form-input {
+  width:100%; padding:12px 14px; border-radius:12px;
+  border:1.5px solid #e4e7ec; font-family:inherit;
+  font-size:13px; outline:none; color:var(--ink);
+  transition:.15s; background:#fff;
+}
+.form-input:focus { border-color:var(--blue); }
+/* multi-select checkboxes */
+.course-list { display:flex; flex-direction:column; gap:8px; }
+.course-option {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 14px; border-radius:12px;
+  border:1.5px solid #e4e7ec; cursor:pointer;
+  transition:.15s; user-select:none;
+}
+.course-option.selected { border-color:var(--blue); background:rgba(47,111,237,.06); }
+.course-option input[type=checkbox] { display:none; }
+.co-check {
+  width:20px; height:20px; border-radius:6px;
+  border:1.5px solid #d1d5db; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
   transition:.15s;
 }
-.rb-cta:hover { filter:brightness(1.06); }
+.course-option.selected .co-check { background:var(--blue); border-color:var(--blue); }
+.co-check svg { width:12px; height:12px; stroke:#fff; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; opacity:0; transition:.1s; }
+.course-option.selected .co-check svg { opacity:1; }
+.co-label { font-size:12.5px; font-weight:600; line-height:1.4; }
+/* star rating */
+.star-rating { display:flex; gap:8px; direction:ltr; justify-content:flex-end; }
+.star-btn {
+  font-size:28px; color:#d1d5db; cursor:pointer;
+  background:none; border:none; transition:.15s; line-height:1;
+  padding:2px;
+}
+.star-btn.lit { color:#f59e0b; }
+.star-btn:hover { transform:scale(1.15); }
+.form-textarea {
+  width:100%; padding:12px 14px; border-radius:12px;
+  border:1.5px solid #e4e7ec; font-family:inherit;
+  font-size:13px; outline:none; color:var(--ink);
+  resize:none; min-height:90px; line-height:1.75;
+  transition:.15s;
+}
+.form-textarea:focus { border-color:var(--blue); }
+.phone-note { font-size:10.5px; color:var(--muted); margin-bottom:5px; }
+.submit-btn {
+  width:100%; padding:14px; border-radius:13px;
+  background:var(--blue); color:#fff;
+  border:none; font-size:14px; font-weight:800;
+  cursor:pointer; margin-top:6px; transition:.15s;
+  box-shadow:0 4px 14px rgba(47,111,237,.3);
+}
+.submit-btn:hover { background:var(--blue-dark); transform:translateY(-1px); }
 
-/* ===== BOTTOM STICKY NAV ===== */
+/* success message */
+.success-msg {
+  text-align:center; padding:24px 16px;
+  display:none; flex-direction:column; align-items:center; gap:12px;
+}
+.success-msg.show { display:flex; }
+.success-icon { font-size:48px; }
+.success-title { font-size:17px; font-weight:900; }
+.success-sub { font-size:13px; color:var(--muted); line-height:1.7; }
+
+/* ===== BOTTOM NAV ===== */
 .bottom-nav {
   position:fixed; bottom:12px; left:12px; right:12px; z-index:200;
-  background:rgba(255,255,255,.92);
+  background:rgba(255,255,255,.93);
   backdrop-filter:blur(16px);
   -webkit-backdrop-filter:blur(16px);
   border-radius:20px;
   box-shadow:0 10px 28px rgba(18,20,28,.15);
-  display:flex; padding:6px 8px;
-  gap:4px;
+  display:flex; padding:6px 8px; gap:4px;
 }
 .bn-item {
   flex:1; display:flex; flex-direction:column; align-items:center;
@@ -282,14 +429,14 @@ a { color:inherit; text-decoration:none; }
 
 <!-- HEADER -->
 <header class="page-header">
-  <div class="header-logo">
-    <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
-    <span>PlanLife</span>
-  </div>
   <button class="header-back" onclick="history.back()">
-    <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     بازگشت
   </button>
+  <div class="header-right">
+    <span class="header-brand">PlanLife</span>
+    <img class="header-logo-img" src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
+  </div>
 </header>
 
 <!-- HERO PROFILE CARD -->
@@ -306,7 +453,7 @@ a { color:inherit; text-decoration:none; }
     <div class="brand-sub">پادکست · دوره‌های رشد فردی · تمرینات ذهنی</div>
     <div class="stat-row">
       <div class="stat-item">
-        <div class="stat-num">۵۰۰۰+</div>
+        <div class="stat-num">+۵۰۰۰</div>
         <div class="stat-lbl">دانشجوی فعال</div>
       </div>
       <div class="stat-divider"></div>
@@ -316,7 +463,7 @@ a { color:inherit; text-decoration:none; }
       </div>
       <div class="stat-divider"></div>
       <div class="stat-item">
-        <div class="stat-num">۱۰۰+</div>
+        <div class="stat-num">+۱۰۰</div>
         <div class="stat-lbl">قسمت پادکست</div>
       </div>
       <div class="stat-divider"></div>
@@ -334,15 +481,63 @@ a { color:inherit; text-decoration:none; }
       <span class="tag">مدیتیشن</span>
       <span class="tag">انگیزه</span>
     </div>
+
+    <!-- QUICK NAV ICONS -->
+    <div class="quick-nav">
+      <a class="qn-item" href="https://planlife.ir/Pages/Doreha/dore.html">
+        <div class="qn-icon">
+          <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 9h8M8 13h5"/></svg>
+        </div>
+        دوره‌ها
+      </a>
+      <a class="qn-item" href="https://planlife.ir/podcastfree.html">
+        <div class="qn-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 13.5C4 8.25 7.58 4 12 4c4.42 0 8 4.25 8 9.5"/><rect x="3" y="13" width="3.4" height="6" rx="1.6" fill="currentColor" stroke="none"/><rect x="17.6" y="13" width="3.4" height="6" rx="1.6" fill="currentColor" stroke="none"/></svg>
+        </div>
+        پادکست
+      </a>
+      <a class="qn-item" href="#results-section">
+        <div class="qn-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 3v18h18M7 16l4-4 4 4 5-5"/></svg>
+        </div>
+        نتایج
+      </a>
+      <a class="qn-item" href="#reviews-section">
+        <div class="qn-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        نظرات
+      </a>
+    </div>
   </div>
 </div>
 
-<!-- PROGRESS STRIP -->
+<!-- PROGRESS STRIP با شبکه های اجتماعی -->
 <div class="progress-strip">
-  <div class="ps-title">آنچه در PlanLife پیدا می‌کنی</div>
+  <div class="ps-top">
+    <div class="ps-title">آنچه در PlanLife پیدا می‌کنی</div>
+    <div class="ps-socials">
+      <!-- Instagram -->
+      <a class="social-icon si-insta" href="https://instagram.com/planlife.ir" target="_blank" title="اینستاگرام">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+      </a>
+      <!-- Telegram -->
+      <a class="social-icon si-telegram" href="https://t.me/planlife_ir" target="_blank" title="تلگرام">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
+      </a>
+      <!-- WhatsApp -->
+      <a class="social-icon si-whatsapp" href="https://wa.me/989000000000" target="_blank" title="واتساپ">
+        <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
+      </a>
+      <!-- Bale -->
+      <a class="social-icon si-bale" href="https://ble.ir/planlife" target="_blank" title="بله">
+        <img src="https://bale.ai/images/bale-icon.png" alt="Bale" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22white%22><text y=%2218%22 font-size=%2216%22>ب</text></svg>'">
+      </a>
+    </div>
+  </div>
   <div class="ps-metrics">
-    <div class="ps-m"><div class="val green">۵k+</div><div class="lbl">دانشجو</div></div>
-    <div class="ps-m"><div class="val lime">۱۰۰+</div><div class="lbl">پادکست</div></div>
+    <div class="ps-m"><div class="val green">+۵k</div><div class="lbl">دانشجو</div></div>
+    <div class="ps-m"><div class="val lime">+۱۰۰</div><div class="lbl">پادکست</div></div>
     <div class="ps-m"><div class="val blue">۶</div><div class="lbl">دوره</div></div>
     <div class="ps-m"><div class="val amber">۱۴</div><div class="lbl">سرویس</div></div>
   </div>
@@ -352,8 +547,6 @@ a { color:inherit; text-decoration:none; }
 <div class="section-label">سرویس‌ها</div>
 <div class="scroll-section">
   <div class="scroll-wrap">
-
-    <!-- دوره‌ها -->
     <div class="service-card" onclick="window.location='https://planlife.ir/Pages/Doreha/dore.html'">
       <div class="sc-thumb">
         <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌ها">
@@ -365,8 +558,6 @@ a { color:inherit; text-decoration:none; }
         <button class="sc-cta">ورود به دوره‌ها</button>
       </div>
     </div>
-
-    <!-- پادکست رایگان -->
     <div class="service-card" onclick="window.location='https://planlife.ir/podcastfree.html'">
       <div class="sc-thumb">
         <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست">
@@ -378,8 +569,6 @@ a { color:inherit; text-decoration:none; }
         <button class="sc-cta">شنیدن</button>
       </div>
     </div>
-
-    <!-- تمرینات -->
     <div class="service-card" onclick="window.location='https://planlife.ir/Pages/Tamrin/index.html'">
       <div class="sc-thumb">
         <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرینات">
@@ -391,13 +580,9 @@ a { color:inherit; text-decoration:none; }
         <button class="sc-cta">شروع تمرین</button>
       </div>
     </div>
-
-    <!-- کد نویسی ذهنی -->
     <div class="service-card" onclick="window.location='https://planlife.ir/Pages/Mindcoding/index.html'">
-      <div class="sc-thumb" style="background:#04120a; display:flex; align-items:center; justify-content:center;">
-        <div style="font-family:monospace; font-size:9px; color:#2dffa0; line-height:1.6; text-align:left; direction:ltr; padding:10px;">
-          if(belief){<br>&nbsp;&nbsp;rewrite();<br>}<br>grow(life);
-        </div>
+      <div class="sc-thumb" style="background:#04120a;display:flex;align-items:center;justify-content:center;">
+        <div style="font-family:monospace;font-size:9px;color:#2dffa0;line-height:1.6;text-align:left;direction:ltr;padding:10px;">if(belief){<br>&nbsp;&nbsp;rewrite();<br>}<br>grow(life);</div>
       </div>
       <div class="sc-body">
         <div class="sc-title">کد ذهنی 💻</div>
@@ -405,12 +590,11 @@ a { color:inherit; text-decoration:none; }
         <button class="sc-cta">ورود</button>
       </div>
     </div>
-
   </div>
 </div>
 
 <!-- RESULTS BANNER -->
-<div class="section-label">نتایج دانشجویان</div>
+<div class="section-label" id="results-section">نتایج دانشجویان</div>
 <div class="results-banner">
   <div class="rb-glow"></div>
   <div class="rb-inner">
@@ -427,93 +611,228 @@ a { color:inherit; text-decoration:none; }
 </div>
 
 <!-- REVIEWS -->
-<div class="section-label">نظرات دانشجویان</div>
+<div class="section-label" id="reviews-section">نظرات دانشجویان</div>
 <div class="reviews-section">
   <div class="reviews-head">
     <h3>دیدگاه‌ها</h3>
-    <div class="rating-badge">
-      ⭐ ۴.۹ <span style="font-size:10px; color:#b45309; font-weight:500;">(۱۵۰+ نظر)</span>
-    </div>
+    <div class="rating-badge">⭐ ۴.۹ <span style="font-size:10px;color:#b45309;font-weight:500;">(+۱۵۰ نظر)</span></div>
   </div>
+
+  <!-- ADD REVIEW BUTTON -->
+  <button class="add-review-btn" onclick="openReviewModal()">
+    <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+    ثبت نظر شما
+  </button>
 
   <div class="review-card">
     <div class="rev-header">
       <div class="rev-av">فپ</div>
-      <div class="rev-who">
-        <div class="rev-name">فاطمه پوری</div>
-        <div class="rev-meta">کاربر PlanLife</div>
-      </div>
-      <div class="rev-stars">
-        <span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span>
-      </div>
+      <div class="rev-who"><div class="rev-name">فاطمه پوری</div><div class="rev-meta">کاربر PlanLife</div></div>
+      <div class="rev-stars"><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span></div>
     </div>
     <div class="rev-text">سرویس‌دهی عالی و خدمات با کیفیت هم عالی بود. دوره‌های PlanLife واقعاً تأثیرگذارن.</div>
     <div class="rev-date">۲ شهریور ۱۴۰۵</div>
   </div>
-
   <div class="review-card">
     <div class="rev-header">
       <div class="rev-av">عو</div>
-      <div class="rev-who">
-        <div class="rev-name">علی‌صادق وندبابادی</div>
-        <div class="rev-meta">دانشجوی سطح ۲</div>
-      </div>
-      <div class="rev-stars">
-        <span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span>
-      </div>
+      <div class="rev-who"><div class="rev-name">علی‌صادق وندبابادی</div><div class="rev-meta">دانشجوی سطح ۲</div></div>
+      <div class="rev-stars"><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span></div>
     </div>
     <div class="rev-text">باسلام و احترام، دوره‌های اینجا عالی بودند. محتوا خیلی خوب و کاربردیه.</div>
     <div class="rev-date">۱۹ تیر ۱۴۰۵</div>
   </div>
-
   <div class="review-card">
     <div class="rev-header">
       <div class="rev-av">شگ</div>
-      <div class="rev-who">
-        <div class="rev-name">شادی گودرزی</div>
-        <div class="rev-meta">دانشجوی سطح ۳</div>
-      </div>
-      <div class="rev-stars">
-        <span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span>
-      </div>
+      <div class="rev-who"><div class="rev-name">شادی گودرزی</div><div class="rev-meta">دانشجوی سطح ۳</div></div>
+      <div class="rev-stars"><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span></div>
     </div>
-    <div class="rev-text">پادکست‌های صبحگاهی خوشمزززززه و با کیفیته — یه محتوای خوب دارن، حتماً امتحان کنید عالیه!</div>
+    <div class="rev-text">پادکست‌های صبحگاهی خوشمزززززه و با کیفیته، حتماً امتحان کنید عالیه!</div>
     <div class="rev-date">۳۰ بهمن ۱۴۰۴</div>
   </div>
-
   <div class="review-card">
     <div class="rev-header">
-      <div class="rev-av">🧑</div>
-      <div class="rev-who">
-        <div class="rev-name">کاربر بهترینو</div>
-        <div class="rev-meta">کاربر PlanLife</div>
-      </div>
-      <div class="rev-stars">
-        <span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span>
-      </div>
+      <div class="rev-av" style="font-size:18px;">🧑</div>
+      <div class="rev-who"><div class="rev-name">کاربر PlanLife</div><div class="rev-meta">دانشجو</div></div>
+      <div class="rev-stars"><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span></div>
     </div>
     <div class="rev-text">ما رفتیم برای پادکست ولی تصمیم گرفتیم دوره بگیریم، محتوا واقعاً خوب بود.</div>
     <div class="rev-date">۳۰ بهمن ۱۴۰۴</div>
   </div>
 </div>
 
-<div style="height:12px;"></div>
+<div style="height:14px;"></div>
 
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <button class="bn-item" onclick="window.location='https://planlife.ir/Pages/Doreha/dore.html'">
-    <svg viewBox="0 0 24 24" fill="none"><rect x="4.5" y="3.5" width="15" height="17" rx="4" stroke="currentColor" stroke-width="1.7"/><path d="M8 11.3L10 13.3L14.5 8.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="3.5" width="15" height="17" rx="4"/><path d="M8 11.3L10 13.3L14.5 8.8"/></svg>
     دوره‌ها
   </button>
-  <button class="bn-item primary" onclick="window.location='https://planlife.ir/Pages/Doreha/dore.html'">
-    <svg viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18M7 16l4-4 4 4 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <button class="bn-item primary" onclick="document.getElementById('results-section').scrollIntoView({behavior:'smooth'})">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M7 16l4-4 4 4 5-5"/></svg>
     دیدن نتایج دوره
   </button>
   <button class="bn-item" onclick="window.location='https://planlife.ir/'">
-    <svg viewBox="0 0 24 24" fill="none"><path d="M3.5 11L12 4L20.5 11V19.5C20.5 20.05 20.05 20.5 19.5 20.5H14.5V14H9.5V20.5H4.5C3.95 20.5 3.5 20.05 3.5 19.5V11Z" fill="currentColor"/></svg>
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.5 11L12 4L20.5 11V19.5C20.5 20.05 20.05 20.5 19.5 20.5H14.5V14H9.5V20.5H4.5C3.95 20.5 3.5 20.05 3.5 19.5V11Z"/></svg>
     خانه
   </button>
 </nav>
 
+<!-- REVIEW MODAL -->
+<div class="modal-overlay" id="reviewModal" onclick="handleModalClick(event)">
+  <div class="modal-sheet" id="modalSheet">
+    <div class="sheet-handle"></div>
+    
+    <!-- FORM -->
+    <div id="reviewForm">
+      <div class="sheet-title">
+        ثبت نظر شما
+        <button class="sheet-close" onclick="closeReviewModal()">✕</button>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">نام و نام خانوادگی</label>
+        <input class="form-input" type="text" id="r-name" placeholder="مثلاً: علی احمدی">
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">دانشجوی چه دوره‌ای بودید؟ (چند تا هم می‌تونی انتخاب کنی)</label>
+        <div class="course-list" id="courseList">
+          <div class="course-option" onclick="toggleCourse(this)">
+            <input type="checkbox">
+            <div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div>
+            <div class="co-label">دوره کدهای پشت‌پرده پول</div>
+          </div>
+          <div class="course-option" onclick="toggleCourse(this)">
+            <input type="checkbox">
+            <div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div>
+            <div class="co-label">دوره چطور حالم خوب باشه؟</div>
+          </div>
+          <div class="course-option" onclick="toggleCourse(this)">
+            <input type="checkbox">
+            <div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div>
+            <div class="co-label">دوره هماهنگی با جریان خلقت</div>
+          </div>
+          <div class="course-option" onclick="toggleCourse(this)">
+            <input type="checkbox">
+            <div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div>
+            <div class="co-label">دوره خودباوری (اعتماد به نفس)</div>
+          </div>
+          <div class="course-option" onclick="toggleCourse(this)">
+            <input type="checkbox">
+            <div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div>
+            <div class="co-label">دوره پذیرش احساس لیاقت</div>
+          </div>
+          <div class="course-option" onclick="toggleCourse(this)">
+            <input type="checkbox">
+            <div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div>
+            <div class="co-label">دوره نفوذ به لایه‌های پنهان ذهن</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">امتیاز شما</label>
+        <div class="star-rating" id="starRating">
+          <button class="star-btn" data-star="5" onclick="setRating(5)">★</button>
+          <button class="star-btn" data-star="4" onclick="setRating(4)">★</button>
+          <button class="star-btn" data-star="3" onclick="setRating(3)">★</button>
+          <button class="star-btn" data-star="2" onclick="setRating(2)">★</button>
+          <button class="star-btn" data-star="1" onclick="setRating(1)">★</button>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">نظر شما</label>
+        <textarea class="form-textarea" id="r-text" placeholder="تجربه‌ات از دوره یا محتوای PlanLife رو بنویس..."></textarea>
+      </div>
+
+      <div class="form-field">
+        <div class="phone-note">در قسمت نظرات، شماره شما نمایش داده نخواهد شد.</div>
+        <label class="form-label">شماره همراه</label>
+        <input class="form-input" type="tel" id="r-phone" placeholder="۰۹۱۲XXXXXXX" style="direction:ltr;text-align:right;">
+      </div>
+
+      <div id="form-error" style="font-size:11.5px;color:#ff5470;margin-bottom:10px;display:none;"></div>
+      <button class="submit-btn" onclick="submitReview()">ثبت نظر</button>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-msg" id="successMsg">
+      <div class="success-icon">🎉</div>
+      <div class="success-title">ممنون از ثبت نظرتون!</div>
+      <div class="success-sub">نظر شما پس از تأیید منتشر خواهد شد.<br>مشارکت شما برای ما ارزشمنده 🙏</div>
+      <button class="submit-btn" style="max-width:200px;margin-top:8px;" onclick="closeReviewModal()">بستن</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var selectedRating = 0;
+
+function openReviewModal() {
+  document.getElementById('reviewModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('reviewForm').style.display = 'block';
+  document.getElementById('successMsg').classList.remove('show');
+  resetForm();
+}
+
+function closeReviewModal() {
+  document.getElementById('reviewModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleModalClick(e) {
+  if (e.target === document.getElementById('reviewModal')) closeReviewModal();
+}
+
+function resetForm() {
+  document.getElementById('r-name').value = '';
+  document.getElementById('r-text').value = '';
+  document.getElementById('r-phone').value = '';
+  selectedRating = 0;
+  document.querySelectorAll('.star-btn').forEach(function(b){ b.classList.remove('lit'); });
+  document.querySelectorAll('.course-option').forEach(function(o){ o.classList.remove('selected'); });
+  document.getElementById('form-error').style.display = 'none';
+}
+
+function toggleCourse(el) {
+  el.classList.toggle('selected');
+}
+
+function setRating(n) {
+  selectedRating = n;
+  var stars = document.querySelectorAll('.star-btn');
+  stars.forEach(function(b) {
+    var s = parseInt(b.getAttribute('data-star'));
+    b.classList.toggle('lit', s <= n);
+  });
+}
+
+function submitReview() {
+  var name = document.getElementById('r-name').value.trim();
+  var text = document.getElementById('r-text').value.trim();
+  var phone = document.getElementById('r-phone').value.trim();
+  var errEl = document.getElementById('form-error');
+  
+  if (!name) { showErr('نام و نام خانوادگی را وارد کنید.'); return; }
+  if (selectedRating === 0) { showErr('لطفاً امتیاز خود را انتخاب کنید.'); return; }
+  if (!text) { showErr('متن نظر خود را بنویسید.'); return; }
+  if (!phone) { showErr('شماره همراه را وارد کنید.'); return; }
+
+  errEl.style.display = 'none';
+  document.getElementById('reviewForm').style.display = 'none';
+  document.getElementById('successMsg').classList.add('show');
+}
+
+function showErr(msg) {
+  var el = document.getElementById('form-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+</script>
 </body>
 </html>
