@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>PlanLife | پروفایل</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#d8dde4;
+  --card:#ffffff;
+  --ink:#12141c;
+  --muted:#6b7280;
+  --hair:#eef0f3;
+  --blue:#2f6fed;
+  --blue-dark:#1e4fc9;
+  --lime:#d8f24c;
+  --lime-ink:#4b5a10;
+  --panel:#12141c;
+  --green:#3ddc84;
+  --red:#ff5470;
+  --radius:18px;
+  --radius-sm:12px;
+  --shadow:0 2px 12px rgba(0,0,0,0.07), 0 0 0 1.5px rgba(0,0,0,0.06);
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; font-family:'Vazirmatn', sans-serif; color:var(--ink); }
+body { background:var(--bg); min-height:100vh; padding-bottom:90px; }
+button { font-family:inherit; }
+a { color:inherit; text-decoration:none; }
+
+/* ===== TOP HEADER ===== */
+.page-header {
+  position:sticky; top:0; z-index:100;
+  background:rgba(212,218,226,0.88);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  padding:14px 18px 10px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.header-logo { display:flex; align-items:center; gap:9px; }
+.header-logo img { width:32px; height:32px; border-radius:9px; object-fit:cover; }
+.header-logo span { font-size:15px; font-weight:800; }
+.header-back {
+  display:flex; align-items:center; gap:6px;
+  background:var(--card); border:1.5px solid #e0e3e9;
+  border-radius:999px; padding:7px 14px;
+  font-size:12px; font-weight:700; cursor:pointer;
+  color:var(--ink); transition:.15s;
+}
+.header-back:hover { background:var(--hair); }
+.header-back svg { width:14px; height:14px; }
+
+/* ===== HERO PROFILE ===== */
+.hero-section {
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  margin:14px 14px 0;
+  overflow:hidden;
+}
+.hero-cover {
+  position:relative; height:130px;
+  background:linear-gradient(135deg, #1a1e2e 0%, #0d1117 100%);
+  overflow:hidden;
+}
+.cover-pattern {
+  position:absolute; inset:0;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(47,111,237,.25) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(216,242,76,.15) 0%, transparent 45%),
+    radial-gradient(circle at 60% 80%, rgba(61,220,132,.12) 0%, transparent 40%);
+}
+.cover-badge {
+  position:absolute; top:14px; left:14px;
+  background:rgba(216,242,76,.18); border:1px solid rgba(216,242,76,.35);
+  color:var(--lime); font-size:10.5px; font-weight:700;
+  padding:5px 11px; border-radius:999px;
+  display:flex; align-items:center; gap:5px;
+}
+.cover-badge .dot { width:6px; height:6px; border-radius:50%; background:var(--lime); }
+.avatar-wrap {
+  position:absolute; bottom:-28px; right:20px;
+  width:72px; height:72px; border-radius:20px;
+  border:3px solid var(--card);
+  overflow:hidden; background:#ccc;
+  box-shadow:0 4px 16px rgba(0,0,0,.2);
+}
+.avatar-wrap img { width:100%; height:100%; object-fit:cover; }
+.hero-body { padding:38px 20px 20px; }
+.brand-name { font-size:20px; font-weight:900; line-height:1.2; margin-bottom:3px; }
+.brand-sub { font-size:12.5px; color:var(--muted); margin-bottom:12px; }
+.stat-row { display:flex; gap:14px; margin-bottom:16px; }
+.stat-item { text-align:center; }
+.stat-num { font-size:16px; font-weight:800; color:var(--ink); }
+.stat-lbl { font-size:10px; color:var(--muted); }
+.stat-divider { width:1px; background:var(--hair); flex-shrink:0; }
+.hero-desc {
+  font-size:12.5px; color:var(--muted);
+  line-height:1.85; margin-bottom:14px;
+  padding-bottom:14px; border-bottom:1.5px solid var(--hair);
+}
+.tag-row { display:flex; gap:7px; flex-wrap:wrap; }
+.tag {
+  font-size:11px; font-weight:600;
+  padding:5px 12px; border-radius:999px;
+  background:var(--hair); color:var(--ink);
+  border:1.5px solid #e0e3e9;
+}
+.tag.accent { background:rgba(47,111,237,.09); color:var(--blue); border-color:rgba(47,111,237,.2); }
+
+/* ===== PROGRESS STRIP ===== */
+.progress-strip {
+  background:var(--panel);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  margin:12px 14px 0;
+  padding:16px 18px;
+  color:#fff;
+}
+.ps-title { font-size:12px; color:rgba(255,255,255,.45); margin-bottom:10px; font-weight:600; letter-spacing:.2px; }
+.ps-metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.ps-m { text-align:center; }
+.ps-m .val { font-size:18px; font-weight:900; }
+.ps-m .val.green { color:var(--green); }
+.ps-m .val.lime { color:var(--lime); }
+.ps-m .val.blue { color:#60a5fa; }
+.ps-m .val.amber { color:#fbbf24; }
+.ps-m .lbl { font-size:9.5px; color:rgba(255,255,255,.38); margin-top:2px; }
+.ps-divider { width:1px; background:rgba(255,255,255,.08); }
+
+/* ===== SECTION LABEL ===== */
+.section-label {
+  font-size:11px; font-weight:700; color:var(--muted);
+  letter-spacing:.4px; margin:16px 18px 8px;
+}
+
+/* ===== HORIZONTAL SCROLL CARDS ===== */
+.scroll-section { margin:0 14px; }
+.scroll-wrap {
+  display:flex; gap:10px;
+  overflow-x:auto; padding-bottom:6px;
+  scrollbar-width:none; -webkit-overflow-scrolling:touch;
+}
+.scroll-wrap::-webkit-scrollbar { display:none; }
+.service-card {
+  flex-shrink:0; width:150px;
+  background:var(--card); border-radius:var(--radius-sm);
+  box-shadow:var(--shadow); overflow:hidden;
+  cursor:pointer; transition:.2s;
+  border:1.5px solid transparent;
+}
+.service-card:hover { border-color:rgba(47,111,237,.25); transform:translateY(-2px); }
+.sc-thumb {
+  position:relative; height:108px; overflow:hidden;
+  background:#eef0f3;
+}
+.sc-thumb img { width:100%; height:100%; object-fit:cover; }
+.sc-badge {
+  position:absolute; top:7px; left:7px;
+  background:rgba(18,20,28,.72); color:#fff;
+  font-size:9px; font-weight:700;
+  padding:3px 8px; border-radius:999px;
+}
+.sc-badge.free { background:rgba(61,220,132,.88); color:#04120a; }
+.sc-body { padding:9px 10px 10px; }
+.sc-title { font-size:12px; font-weight:800; margin-bottom:3px; }
+.sc-sub { font-size:10.5px; color:var(--muted); }
+.sc-cta {
+  width:100%; margin-top:8px;
+  background:var(--blue); color:#fff;
+  border:none; border-radius:8px;
+  padding:7px 0; font-size:11px; font-weight:700;
+  cursor:pointer; transition:.15s;
+}
+.sc-cta:hover { background:var(--blue-dark); }
+.sc-cta.outline {
+  background:var(--hair); color:var(--ink);
+  border:1.5px solid #e0e3e9;
+}
+.sc-cta.outline:hover { background:#e4e7ec; }
+
+/* ===== REVIEWS ===== */
+.reviews-section {
+  margin:0 14px;
+  background:var(--card); border-radius:var(--radius);
+  box-shadow:var(--shadow); overflow:hidden;
+}
+.reviews-head {
+  padding:14px 16px 12px;
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1.5px solid var(--hair);
+}
+.reviews-head h3 { font-size:14px; font-weight:800; }
+.rating-badge {
+  display:flex; align-items:center; gap:5px;
+  background:#fffbeb; border:1px solid #fde68a;
+  border-radius:999px; padding:5px 11px;
+  font-size:12px; font-weight:800; color:#92400e;
+}
+.review-card {
+  padding:14px 16px;
+  border-bottom:1.5px solid var(--hair);
+}
+.review-card:last-child { border-bottom:none; }
+.rev-header { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.rev-av {
+  width:36px; height:36px; border-radius:50%;
+  overflow:hidden; flex-shrink:0; background:var(--hair);
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:700; color:var(--muted);
+}
+.rev-av img { width:100%; height:100%; object-fit:cover; }
+.rev-who { flex:1; min-width:0; }
+.rev-name { font-size:13px; font-weight:700; }
+.rev-meta { font-size:10.5px; color:var(--muted); }
+.rev-stars { display:flex; gap:2px; }
+.rev-star { font-size:13px; color:#f59e0b; }
+.rev-star.empty { color:#d1d5db; }
+.rev-text { font-size:12.5px; color:var(--muted); line-height:1.8; }
+.rev-date { font-size:10px; color:var(--muted); margin-top:6px; }
+
+/* ===== RESULTS BANNER ===== */
+.results-banner {
+  margin:0 14px;
+  background:linear-gradient(135deg, #1a1e2e 0%, #0d1117 100%);
+  border-radius:var(--radius); overflow:hidden; position:relative;
+  box-shadow:var(--shadow);
+}
+.rb-glow {
+  position:absolute; top:-30px; left:-30px;
+  width:120px; height:120px; border-radius:50%;
+  background:radial-gradient(circle, rgba(216,242,76,.15) 0%, transparent 70%);
+  pointer-events:none;
+}
+.rb-inner { padding:18px; position:relative; z-index:1; }
+.rb-label { font-size:11px; color:rgba(255,255,255,.38); font-weight:600; margin-bottom:6px; }
+.rb-title { font-size:17px; font-weight:900; color:#fff; margin-bottom:6px; }
+.rb-sub { font-size:12px; color:rgba(255,255,255,.55); line-height:1.7; margin-bottom:14px; }
+.rb-nums { display:flex; gap:16px; margin-bottom:14px; }
+.rb-num { }
+.rb-num .n { font-size:22px; font-weight:900; color:var(--lime); }
+.rb-num .l { font-size:10px; color:rgba(255,255,255,.38); }
+.rb-cta {
+  width:100%; background:var(--lime);
+  color:var(--lime-ink); border:none;
+  border-radius:12px; padding:13px 0;
+  font-size:13px; font-weight:800; cursor:pointer;
+  box-shadow:0 4px 16px rgba(180,200,50,.25);
+  transition:.15s;
+}
+.rb-cta:hover { filter:brightness(1.06); }
+
+/* ===== BOTTOM STICKY NAV ===== */
+.bottom-nav {
+  position:fixed; bottom:12px; left:12px; right:12px; z-index:200;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-radius:20px;
+  box-shadow:0 10px 28px rgba(18,20,28,.15);
+  display:flex; padding:6px 8px;
+  gap:4px;
+}
+.bn-item {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  gap:3px; padding:8px 6px; border-radius:14px;
+  color:var(--muted); font-size:9.5px; font-weight:700;
+  cursor:pointer; transition:.15s; border:none; background:none;
+}
+.bn-item.primary {
+  flex:1.6;
+  background:var(--blue); color:#fff;
+  box-shadow:0 4px 14px rgba(47,111,237,.35);
+}
+.bn-item.primary:hover { background:var(--blue-dark); }
+.bn-item svg { width:20px; height:20px; }
+.bn-item.primary svg { width:18px; height:18px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="page-header">
+  <div class="header-logo">
+    <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
+    <span>PlanLife</span>
+  </div>
+  <button class="header-back" onclick="history.back()">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    بازگشت
+  </button>
+</header>
+
+<!-- HERO PROFILE CARD -->
+<div class="hero-section">
+  <div class="hero-cover">
+    <div class="cover-pattern"></div>
+    <div class="cover-badge"><span class="dot"></span>پلتفرم رشد فردی</div>
+    <div class="avatar-wrap">
+      <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
+    </div>
+  </div>
+  <div class="hero-body">
+    <div class="brand-name">PlanLife</div>
+    <div class="brand-sub">پادکست · دوره‌های رشد فردی · تمرینات ذهنی</div>
+    <div class="stat-row">
+      <div class="stat-item">
+        <div class="stat-num">۵۰۰۰+</div>
+        <div class="stat-lbl">دانشجوی فعال</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num">۶</div>
+        <div class="stat-lbl">دوره تخصصی</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num">۱۰۰+</div>
+        <div class="stat-lbl">قسمت پادکست</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num">۴.۹</div>
+        <div class="stat-lbl">امتیاز</div>
+      </div>
+    </div>
+    <div class="hero-desc">
+      پلتفرم تخصصی رشد فردی، قانون جذب و تقویت ذهن. دوره‌ها، پادکست‌های هفتگی و تمرینات هدایت‌شده برای تغییر واقعی در زندگی‌ات.
+    </div>
+    <div class="tag-row">
+      <span class="tag accent">قانون جذب</span>
+      <span class="tag">رشد فردی</span>
+      <span class="tag">مدیتیشن</span>
+      <span class="tag">انگیزه</span>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS STRIP -->
+<div class="progress-strip">
+  <div class="ps-title">آنچه در PlanLife پیدا می‌کنی</div>
+  <div class="ps-metrics">
+    <div class="ps-m"><div class="val green">۵k+</div><div class="lbl">دانشجو</div></div>
+    <div class="ps-m"><div class="val lime">۱۰۰+</div><div class="lbl">پادکست</div></div>
+    <div class="ps-m"><div class="val blue">۶</div><div class="lbl">دوره</div></div>
+    <div class="ps-m"><div class="val amber">۱۴</div><div class="lbl">سرویس</div></div>
+  </div>
+</div>
+
+<!-- SERVICES SCROLL -->
+<div class="section-label">سرویس‌ها</div>
+<div class="scroll-section">
+  <div class="scroll-wrap">
+
+    <!-- دوره‌ها -->
+    <div class="service-card" onclick="window.location='https://planlife.ir/Pages/Doreha/dore.html'">
+      <div class="sc-thumb">
+        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌ها">
+        <span class="sc-badge">پرطرفدار</span>
+      </div>
+      <div class="sc-body">
+        <div class="sc-title">دوره‌ها 📚</div>
+        <div class="sc-sub">۶ مسیر آموزشی</div>
+        <button class="sc-cta">ورود به دوره‌ها</button>
+      </div>
+    </div>
+
+    <!-- پادکست رایگان -->
+    <div class="service-card" onclick="window.location='https://planlife.ir/podcastfree.html'">
+      <div class="sc-thumb">
+        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست">
+        <span class="sc-badge free">رایگان</span>
+      </div>
+      <div class="sc-body">
+        <div class="sc-title">پادکست 🎙️</div>
+        <div class="sc-sub">هفتگی منتشر می‌شه</div>
+        <button class="sc-cta">شنیدن</button>
+      </div>
+    </div>
+
+    <!-- تمرینات -->
+    <div class="service-card" onclick="window.location='https://planlife.ir/Pages/Tamrin/index.html'">
+      <div class="sc-thumb">
+        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرینات">
+        <span class="sc-badge free">رایگان</span>
+      </div>
+      <div class="sc-body">
+        <div class="sc-title">تمرینات 🧘</div>
+        <div class="sc-sub">۱۰ دقیقه روزانه</div>
+        <button class="sc-cta">شروع تمرین</button>
+      </div>
+    </div>
+
+    <!-- کد نویسی ذهنی -->
+    <div class="service-card" onclick="window.location='https://planlife.ir/Pages/Mindcoding/index.html'">
+      <div class="sc-thumb" style="background:#04120a; display:flex; align-items:center; justify-content:center;">
+        <div style="font-family:monospace; font-size:9px; color:#2dffa0; line-height:1.6; text-align:left; direction:ltr; padding:10px;">
+          if(belief){<br>&nbsp;&nbsp;rewrite();<br>}<br>grow(life);
+        </div>
+      </div>
+      <div class="sc-body">
+        <div class="sc-title">کد ذهنی 💻</div>
+        <div class="sc-sub">تغییر باورها</div>
+        <button class="sc-cta">ورود</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RESULTS BANNER -->
+<div class="section-label">نتایج دانشجویان</div>
+<div class="results-banner">
+  <div class="rb-glow"></div>
+  <div class="rb-inner">
+    <div class="rb-label">چرا PlanLife؟</div>
+    <div class="rb-title">تغییر واقعی، نه فقط انگیزه</div>
+    <div class="rb-sub">دانشجویان ما پس از ۳۰ روز تمرین تفاوت ملموس در ذهنیت و زندگی‌شان می‌بینند.</div>
+    <div class="rb-nums">
+      <div class="rb-num"><div class="n">۸۷٪</div><div class="l">افزایش تمرکز</div></div>
+      <div class="rb-num"><div class="n">۴.۹</div><div class="l">رضایت کاربران</div></div>
+      <div class="rb-num"><div class="n">۳۰</div><div class="l">روز تحول</div></div>
+    </div>
+    <button class="rb-cta" onclick="window.location='https://planlife.ir/Pages/Doreha/dore.html'">دیدن نتایج و شروع دوره ›</button>
+  </div>
+</div>
+
+<!-- REVIEWS -->
+<div class="section-label">نظرات دانشجویان</div>
+<div class="reviews-section">
+  <div class="reviews-head">
+    <h3>دیدگاه‌ها</h3>
+    <div class="rating-badge">
+      ⭐ ۴.۹ <span style="font-size:10px; color:#b45309; font-weight:500;">(۱۵۰+ نظر)</span>
+    </div>
+  </div>
+
+  <div class="review-card">
+    <div class="rev-header">
+      <div class="rev-av">فپ</div>
+      <div class="rev-who">
+        <div class="rev-name">فاطمه پوری</div>
+        <div class="rev-meta">کاربر PlanLife</div>
+      </div>
+      <div class="rev-stars">
+        <span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span>
+      </div>
+    </div>
+    <div class="rev-text">سرویس‌دهی عالی و خدمات با کیفیت هم عالی بود. دوره‌های PlanLife واقعاً تأثیرگذارن.</div>
+    <div class="rev-date">۲ شهریور ۱۴۰۵</div>
+  </div>
+
+  <div class="review-card">
+    <div class="rev-header">
+      <div class="rev-av">عو</div>
+      <div class="rev-who">
+        <div class="rev-name">علی‌صادق وندبابادی</div>
+        <div class="rev-meta">دانشجوی سطح ۲</div>
+      </div>
+      <div class="rev-stars">
+        <span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span>
+      </div>
+    </div>
+    <div class="rev-text">باسلام و احترام، دوره‌های اینجا عالی بودند. محتوا خیلی خوب و کاربردیه.</div>
+    <div class="rev-date">۱۹ تیر ۱۴۰۵</div>
+  </div>
+
+  <div class="review-card">
+    <div class="rev-header">
+      <div class="rev-av">شگ</div>
+      <div class="rev-who">
+        <div class="rev-name">شادی گودرزی</div>
+        <div class="rev-meta">دانشجوی سطح ۳</div>
+      </div>
+      <div class="rev-stars">
+        <span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span>
+      </div>
+    </div>
+    <div class="rev-text">پادکست‌های صبحگاهی خوشمزززززه و با کیفیته — یه محتوای خوب دارن، حتماً امتحان کنید عالیه!</div>
+    <div class="rev-date">۳۰ بهمن ۱۴۰۴</div>
+  </div>
+
+  <div class="review-card">
+    <div class="rev-header">
+      <div class="rev-av">🧑</div>
+      <div class="rev-who">
+        <div class="rev-name">کاربر بهترینو</div>
+        <div class="rev-meta">کاربر PlanLife</div>
+      </div>
+      <div class="rev-stars">
+        <span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span>
+      </div>
+    </div>
+    <div class="rev-text">ما رفتیم برای پادکست ولی تصمیم گرفتیم دوره بگیریم، محتوا واقعاً خوب بود.</div>
+    <div class="rev-date">۳۰ بهمن ۱۴۰۴</div>
+  </div>
+</div>
+
+<div style="height:12px;"></div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="bn-item" onclick="window.location='https://planlife.ir/Pages/Doreha/dore.html'">
+    <svg viewBox="0 0 24 24" fill="none"><rect x="4.5" y="3.5" width="15" height="17" rx="4" stroke="currentColor" stroke-width="1.7"/><path d="M8 11.3L10 13.3L14.5 8.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    دوره‌ها
+  </button>
+  <button class="bn-item primary" onclick="window.location='https://planlife.ir/Pages/Doreha/dore.html'">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18M7 16l4-4 4 4 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    دیدن نتایج دوره
+  </button>
+  <button class="bn-item" onclick="window.location='https://planlife.ir/'">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M3.5 11L12 4L20.5 11V19.5C20.5 20.05 20.05 20.5 19.5 20.5H14.5V14H9.5V20.5H4.5C3.95 20.5 3.5 20.05 3.5 19.5V11Z" fill="currentColor"/></svg>
+    خانه
+  </button>
+</nav>
+
+</body>
+</html>
