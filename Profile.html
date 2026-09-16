@@ -43,7 +43,6 @@ a { color:inherit; text-decoration:none; }
 .header-brand { font-size:15px; font-weight:800; }
 .header-back {
   display:flex; align-items:center; gap:6px;
-  background:var(--card); border:1.5px solid #e0e3e9;
   border-radius:999px; padding:8px 14px;
   font-size:12px; font-weight:700;
   color:var(--ink); transition:.15s; border:none;
@@ -82,7 +81,6 @@ a { color:inherit; text-decoration:none; }
 .cover-badge .dot { width:6px; height:6px; border-radius:50%; background:var(--lime); animation:pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
 
-/* Avatar: مربعی گوشه‌گرد بزرگ */
 .avatar-wrap {
   position:absolute; bottom:-32px; right:18px;
   width:80px; height:80px; border-radius:20px;
@@ -114,7 +112,7 @@ a { color:inherit; text-decoration:none; }
 }
 .tag.accent { background:rgba(47,111,237,.09); color:var(--blue); border-color:rgba(47,111,237,.2); }
 
-/* ===== QUICK NAV ICONS under hero ===== */
+/* ===== QUICK NAV ICONS ===== */
 .quick-nav {
   display:flex; justify-content:space-around;
   padding:4px 0 2px;
@@ -136,56 +134,132 @@ a { color:inherit; text-decoration:none; }
 }
 .qn-icon svg { width:22px; height:22px; stroke:var(--ink); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; transition:.15s; }
 
-/* ===== PROGRESS STRIP ===== */
-.progress-strip {
-  background:var(--panel);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  margin:12px 14px 0;
-  padding:16px 18px;
-  color:#fff;
-}
-.ps-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
-.ps-title { font-size:12px; color:rgba(255,255,255,.45); font-weight:600; letter-spacing:.2px; }
-/* social icons row */
-.ps-socials { display:flex; gap:10px; }
-.social-icon {
-  width:36px; height:36px; border-radius:11px;
-  display:flex; align-items:center; justify-content:center;
-  transition:.15s; text-decoration:none; overflow:hidden;
-  border:1.5px solid rgba(255,255,255,.1);
-}
-.social-icon:hover { transform:scale(1.08); }
-.social-icon img { width:22px; height:22px; object-fit:contain; }
-/* instagram gradient bg */
-.si-insta { background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); }
-.si-telegram { background:#26a5e4; }
-.si-whatsapp { background:#25d366; }
-.si-bale { background:#1e88e5; }
-
-.ps-metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
-.ps-m { text-align:center; }
-.ps-m .val { font-size:18px; font-weight:900; }
-.ps-m .val.green { color:var(--green); }
-.ps-m .val.lime { color:var(--lime); }
-.ps-m .val.blue { color:#60a5fa; }
-.ps-m .val.amber { color:#fbbf24; }
-.ps-m .lbl { font-size:9.5px; color:rgba(255,255,255,.38); margin-top:2px; }
-
-/* ===== SECTION LABEL ===== */
+/* ===== PODCAST PLAYER SECTION ===== */
 .section-label {
   font-size:11px; font-weight:700; color:var(--muted);
   letter-spacing:.4px; margin:16px 18px 8px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.section-label a {
+  font-size:11px; font-weight:700; color:var(--blue); text-decoration:none;
 }
 
-/* ===== HORIZONTAL SCROLL CARDS ===== */
-.scroll-section { margin:0 14px; }
+/* ===== SCROLL CONTAINER ===== */
 .scroll-wrap {
-  display:flex; gap:10px;
-  overflow-x:auto; padding-bottom:6px;
-  scrollbar-width:none; -webkit-overflow-scrolling:touch;
+  display:flex; gap:12px;
+  overflow-x:auto;
+  padding:8px 18px 16px;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  scroll-snap-type:x mandatory;
 }
 .scroll-wrap::-webkit-scrollbar { display:none; }
+
+/* ===== PLAYER CARD ===== */
+.player-card {
+  flex-shrink:0; width:280px;
+  border-radius:22px; overflow:hidden;
+  position:relative; cursor:pointer;
+  scroll-snap-align:start;
+  background:rgba(18,20,28,0.72);
+  backdrop-filter:blur(24px) saturate(1.6);
+  -webkit-backdrop-filter:blur(24px) saturate(1.6);
+  border:1.5px solid rgba(255,255,255,0.12);
+  box-shadow:0 8px 32px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.08);
+  transition:transform 0.22s cubic-bezier(0.25,0.8,0.25,1);
+  user-select:none;
+}
+.player-card:active { transform:scale(0.97); }
+
+.card-bg { position:absolute; inset:0; z-index:0; overflow:hidden; }
+.card-bg img {
+  width:100%; height:100%; object-fit:cover;
+  filter:blur(28px) brightness(0.3) saturate(1.4);
+  transform:scale(1.15);
+}
+.card-tint {
+  position:absolute; inset:0; z-index:1;
+  background:linear-gradient(160deg, rgba(18,20,28,0.55) 0%, rgba(10,12,22,0.82) 100%);
+}
+.card-inner {
+  position:relative; z-index:2;
+  padding:16px; display:flex; align-items:center; gap:13px;
+}
+.card-art {
+  width:68px; height:68px; border-radius:14px;
+  overflow:hidden; flex-shrink:0;
+  box-shadow:0 6px 20px rgba(0,0,0,0.5), 0 0 0 1.5px rgba(255,255,255,0.1);
+}
+.card-art img { width:100%; height:100%; object-fit:cover; }
+.card-info { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+.card-category { font-size:10px; font-weight:600; color:rgba(255,255,255,0.45); letter-spacing:0.3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.card-title { font-size:13.5px; font-weight:800; color:#fff; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.card-controls { display:flex; align-items:center; gap:8px; margin-top:8px; }
+.verify-badge {
+  width:22px; height:22px; border-radius:50%;
+  background:var(--blue);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; align-self:flex-start; margin-top:2px;
+}
+.verify-badge svg { width:13px; height:13px; }
+.ctrl-btn {
+  width:34px; height:34px; border-radius:50%;
+  border:none; background:rgba(255,255,255,0.1);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:background 0.15s; flex-shrink:0;
+}
+.ctrl-btn:hover { background:rgba(255,255,255,0.18); }
+.ctrl-btn svg { width:16px; height:16px; fill:rgba(255,255,255,0.8); }
+.ctrl-btn.play-btn {
+  width:38px; height:38px;
+  background:rgba(255,255,255,0.2);
+  border:1.5px solid rgba(255,255,255,0.25);
+}
+.ctrl-btn.play-btn:hover { background:rgba(255,255,255,0.28); }
+.ctrl-btn.play-btn.playing { background:var(--blue); border-color:var(--blue); }
+.ctrl-btn.play-btn svg { width:18px; height:18px; fill:#fff; }
+.card-progress-wrap { position:relative; z-index:2; padding:0 16px 14px; }
+.card-progress-track {
+  width:100%; height:3px;
+  background:rgba(255,255,255,0.12);
+  border-radius:999px; overflow:hidden; cursor:pointer;
+}
+.card-progress-bar {
+  height:100%; width:0%;
+  background:linear-gradient(to right, #60a5fa, #2f6fed);
+  border-radius:999px; transition:width 0.3s linear;
+}
+.card-time {
+  display:flex; justify-content:space-between;
+  margin-top:6px; font-size:10px;
+  color:rgba(255,255,255,0.35); font-weight:600;
+}
+
+/* ===== SEE ALL CARD ===== */
+.see-all-card {
+  flex-shrink:0; width:130px; min-height:120px;
+  border-radius:22px;
+  background:rgba(47,111,237,0.12);
+  border:1.5px solid rgba(47,111,237,0.25);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:10px; cursor:pointer;
+  scroll-snap-align:start; text-decoration:none;
+  transition:background 0.2s; padding:20px 12px;
+}
+.see-all-card:hover { background:rgba(47,111,237,0.2); }
+.see-all-icon {
+  width:44px; height:44px;
+  background:var(--blue); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+}
+.see-all-icon svg { width:22px; height:22px; fill:#fff; }
+.see-all-text { font-size:11px; font-weight:800; color:var(--blue); text-align:center; line-height:1.5; }
+
+audio { display:none; }
+
+/* ===== SERVICES SCROLL ===== */
+.scroll-section { margin:0 14px; }
 .service-card {
   flex-shrink:0; width:148px;
   background:var(--card); border-radius:var(--radius-sm);
@@ -194,10 +268,7 @@ a { color:inherit; text-decoration:none; }
   border:1.5px solid transparent;
 }
 .service-card:hover { border-color:rgba(47,111,237,.25); transform:translateY(-2px); }
-.sc-thumb {
-  position:relative; height:100px; overflow:hidden;
-  background:#eef0f3;
-}
+.sc-thumb { position:relative; height:100px; overflow:hidden; background:#eef0f3; }
 .sc-thumb img { width:100%; height:100%; object-fit:cover; }
 .sc-badge {
   position:absolute; top:7px; left:7px;
@@ -217,6 +288,39 @@ a { color:inherit; text-decoration:none; }
   cursor:pointer; transition:.15s;
 }
 .sc-cta:hover { background:var(--blue-dark); }
+
+/* ===== PROGRESS STRIP (آنچه در PlanLife پیدا میکنی) ===== */
+.progress-strip {
+  background:var(--panel);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  margin:0 14px;
+  padding:16px 18px;
+  color:#fff;
+}
+.ps-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.ps-title { font-size:12px; color:rgba(255,255,255,.45); font-weight:600; letter-spacing:.2px; }
+.ps-socials { display:flex; gap:10px; }
+.social-icon {
+  width:36px; height:36px; border-radius:11px;
+  display:flex; align-items:center; justify-content:center;
+  transition:.15s; text-decoration:none; overflow:hidden;
+  border:1.5px solid rgba(255,255,255,.1);
+}
+.social-icon:hover { transform:scale(1.08); }
+.social-icon img { width:22px; height:22px; object-fit:contain; }
+.si-insta { background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); }
+.si-telegram { background:#26a5e4; }
+.si-whatsapp { background:#25d366; }
+.si-bale { background:#1e88e5; }
+.ps-metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.ps-m { text-align:center; }
+.ps-m .val { font-size:18px; font-weight:900; }
+.ps-m .val.green { color:var(--green); }
+.ps-m .val.lime { color:var(--lime); }
+.ps-m .val.blue { color:#60a5fa; }
+.ps-m .val.amber { color:#fbbf24; }
+.ps-m .lbl { font-size:9.5px; color:rgba(255,255,255,.38); margin-top:2px; }
 
 /* ===== RESULTS BANNER ===== */
 .results-banner {
@@ -242,8 +346,7 @@ a { color:inherit; text-decoration:none; }
   width:100%; background:var(--lime);
   color:var(--lime-ink); border:none;
   border-radius:12px; padding:13px 0;
-  font-size:13px; font-weight:800; cursor:pointer;
-  transition:.15s;
+  font-size:13px; font-weight:800; cursor:pointer; transition:.15s;
 }
 .rb-cta:hover { filter:brightness(1.06); }
 
@@ -265,8 +368,6 @@ a { color:inherit; text-decoration:none; }
   border-radius:999px; padding:5px 11px;
   font-size:12px; font-weight:800; color:#92400e;
 }
-
-/* Add Review Button */
 .add-review-btn {
   width:calc(100% - 32px); margin:12px 16px;
   display:flex; align-items:center; justify-content:center; gap:8px;
@@ -278,11 +379,7 @@ a { color:inherit; text-decoration:none; }
 }
 .add-review-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(47,111,237,.4); }
 .add-review-btn svg { width:18px; height:18px; stroke:#fff; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
-
-.review-card {
-  padding:14px 16px;
-  border-bottom:1.5px solid var(--hair);
-}
+.review-card { padding:14px 16px; border-bottom:1.5px solid var(--hair); }
 .review-card:last-child { border-bottom:none; }
 .rev-header { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
 .rev-av {
@@ -297,103 +394,51 @@ a { color:inherit; text-decoration:none; }
 .rev-meta { font-size:10.5px; color:var(--muted); }
 .rev-stars { display:flex; gap:2px; }
 .rev-star { font-size:13px; color:#f59e0b; }
-.rev-star.empty { color:#d1d5db; }
 .rev-text { font-size:12.5px; color:var(--muted); line-height:1.8; }
 .rev-date { font-size:10px; color:var(--muted); margin-top:6px; }
 
-/* ===== MODAL OVERLAY ===== */
+/* ===== MODAL ===== */
 .modal-overlay {
   position:fixed; inset:0; z-index:500;
   background:rgba(10,12,20,.7);
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
   display:none; align-items:flex-end; justify-content:center;
 }
 .modal-overlay.open { display:flex; }
 .modal-sheet {
-  background:#fff;
-  border-radius:24px 24px 0 0;
+  background:#fff; border-radius:24px 24px 0 0;
   width:100%; max-width:560px;
   padding:20px 20px 40px;
   max-height:90vh; overflow-y:auto;
   animation:sheetUp .35s cubic-bezier(.34,1.2,.64,1);
 }
 @keyframes sheetUp { from{transform:translateY(100%);opacity:.5;} to{transform:translateY(0);opacity:1;} }
-.sheet-handle {
-  width:40px; height:4px; background:#e4e7ec; border-radius:99px;
-  margin:0 auto 18px;
-}
-.sheet-title {
-  font-size:17px; font-weight:900; margin-bottom:18px;
-  display:flex; align-items:center; justify-content:space-between;
-}
-.sheet-close {
-  width:30px; height:30px; border-radius:50%;
-  background:var(--hair); border:none; font-size:16px;
-  display:flex; align-items:center; justify-content:center;
-  cursor:pointer; color:var(--muted);
-}
+.sheet-handle { width:40px; height:4px; background:#e4e7ec; border-radius:99px; margin:0 auto 18px; }
+.sheet-title { font-size:17px; font-weight:900; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between; }
+.sheet-close { width:30px; height:30px; border-radius:50%; background:var(--hair); border:none; font-size:16px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--muted); }
 .form-field { margin-bottom:14px; }
 .form-label { font-size:11.5px; font-weight:700; color:var(--muted); margin-bottom:6px; display:block; }
-.form-input {
-  width:100%; padding:12px 14px; border-radius:12px;
-  border:1.5px solid #e4e7ec; font-family:inherit;
-  font-size:13px; outline:none; color:var(--ink);
-  transition:.15s; background:#fff;
-}
+.form-input { width:100%; padding:12px 14px; border-radius:12px; border:1.5px solid #e4e7ec; font-family:inherit; font-size:13px; outline:none; color:var(--ink); transition:.15s; background:#fff; }
 .form-input:focus { border-color:var(--blue); }
-/* multi-select checkboxes */
 .course-list { display:flex; flex-direction:column; gap:8px; }
-.course-option {
-  display:flex; align-items:center; gap:10px;
-  padding:10px 14px; border-radius:12px;
-  border:1.5px solid #e4e7ec; cursor:pointer;
-  transition:.15s; user-select:none;
-}
+.course-option { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:12px; border:1.5px solid #e4e7ec; cursor:pointer; transition:.15s; user-select:none; }
 .course-option.selected { border-color:var(--blue); background:rgba(47,111,237,.06); }
 .course-option input[type=checkbox] { display:none; }
-.co-check {
-  width:20px; height:20px; border-radius:6px;
-  border:1.5px solid #d1d5db; flex-shrink:0;
-  display:flex; align-items:center; justify-content:center;
-  transition:.15s;
-}
+.co-check { width:20px; height:20px; border-radius:6px; border:1.5px solid #d1d5db; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:.15s; }
 .course-option.selected .co-check { background:var(--blue); border-color:var(--blue); }
 .co-check svg { width:12px; height:12px; stroke:#fff; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; opacity:0; transition:.1s; }
 .course-option.selected .co-check svg { opacity:1; }
 .co-label { font-size:12.5px; font-weight:600; line-height:1.4; }
-/* star rating */
 .star-rating { display:flex; gap:8px; direction:ltr; justify-content:flex-end; }
-.star-btn {
-  font-size:28px; color:#d1d5db; cursor:pointer;
-  background:none; border:none; transition:.15s; line-height:1;
-  padding:2px;
-}
+.star-btn { font-size:28px; color:#d1d5db; cursor:pointer; background:none; border:none; transition:.15s; line-height:1; padding:2px; }
 .star-btn.lit { color:#f59e0b; }
 .star-btn:hover { transform:scale(1.15); }
-.form-textarea {
-  width:100%; padding:12px 14px; border-radius:12px;
-  border:1.5px solid #e4e7ec; font-family:inherit;
-  font-size:13px; outline:none; color:var(--ink);
-  resize:none; min-height:90px; line-height:1.75;
-  transition:.15s;
-}
+.form-textarea { width:100%; padding:12px 14px; border-radius:12px; border:1.5px solid #e4e7ec; font-family:inherit; font-size:13px; outline:none; color:var(--ink); resize:none; min-height:90px; line-height:1.75; transition:.15s; }
 .form-textarea:focus { border-color:var(--blue); }
 .phone-note { font-size:10.5px; color:var(--muted); margin-bottom:5px; }
-.submit-btn {
-  width:100%; padding:14px; border-radius:13px;
-  background:var(--blue); color:#fff;
-  border:none; font-size:14px; font-weight:800;
-  cursor:pointer; margin-top:6px; transition:.15s;
-  box-shadow:0 4px 14px rgba(47,111,237,.3);
-}
+.submit-btn { width:100%; padding:14px; border-radius:13px; background:var(--blue); color:#fff; border:none; font-size:14px; font-weight:800; cursor:pointer; margin-top:6px; transition:.15s; box-shadow:0 4px 14px rgba(47,111,237,.3); }
 .submit-btn:hover { background:var(--blue-dark); transform:translateY(-1px); }
-
-/* success message */
-.success-msg {
-  text-align:center; padding:24px 16px;
-  display:none; flex-direction:column; align-items:center; gap:12px;
-}
+.success-msg { text-align:center; padding:24px 16px; display:none; flex-direction:column; align-items:center; gap:12px; }
 .success-msg.show { display:flex; }
 .success-icon { font-size:48px; }
 .success-title { font-size:17px; font-weight:900; }
@@ -403,8 +448,7 @@ a { color:inherit; text-decoration:none; }
 .bottom-nav {
   position:fixed; bottom:12px; left:12px; right:12px; z-index:200;
   background:rgba(255,255,255,.93);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
   border-radius:20px;
   box-shadow:0 10px 28px rgba(18,20,28,.15);
   display:flex; padding:6px 8px; gap:4px;
@@ -415,11 +459,7 @@ a { color:inherit; text-decoration:none; }
   color:var(--muted); font-size:9.5px; font-weight:700;
   cursor:pointer; transition:.15s; border:none; background:none;
 }
-.bn-item.primary {
-  flex:1.6;
-  background:var(--blue); color:#fff;
-  box-shadow:0 4px 14px rgba(47,111,237,.35);
-}
+.bn-item.primary { flex:1.6; background:var(--blue); color:#fff; box-shadow:0 4px 14px rgba(47,111,237,.35); }
 .bn-item.primary:hover { background:var(--blue-dark); }
 .bn-item svg { width:20px; height:20px; }
 .bn-item.primary svg { width:18px; height:18px; }
@@ -452,25 +492,13 @@ a { color:inherit; text-decoration:none; }
     <div class="brand-name">PlanLife</div>
     <div class="brand-sub">پادکست · دوره‌های رشد فردی · تمرینات ذهنی</div>
     <div class="stat-row">
-      <div class="stat-item">
-        <div class="stat-num">+۵۰۰۰</div>
-        <div class="stat-lbl">دانشجوی فعال</div>
-      </div>
+      <div class="stat-item"><div class="stat-num">+۵۰۰۰</div><div class="stat-lbl">دانشجوی فعال</div></div>
       <div class="stat-divider"></div>
-      <div class="stat-item">
-        <div class="stat-num">۶</div>
-        <div class="stat-lbl">دوره تخصصی</div>
-      </div>
+      <div class="stat-item"><div class="stat-num">۶</div><div class="stat-lbl">دوره تخصصی</div></div>
       <div class="stat-divider"></div>
-      <div class="stat-item">
-        <div class="stat-num">+۱۰۰</div>
-        <div class="stat-lbl">قسمت پادکست</div>
-      </div>
+      <div class="stat-item"><div class="stat-num">+۱۰۰</div><div class="stat-lbl">قسمت پادکست</div></div>
       <div class="stat-divider"></div>
-      <div class="stat-item">
-        <div class="stat-num">۴.۹</div>
-        <div class="stat-lbl">امتیاز</div>
-      </div>
+      <div class="stat-item"><div class="stat-num">۴.۹</div><div class="stat-lbl">امتیاز</div></div>
     </div>
     <div class="hero-desc">
       پلتفرم تخصصی رشد فردی، قانون جذب و تقویت ذهن. دوره‌ها، پادکست‌های هفتگی و تمرینات هدایت‌شده برای تغییر واقعی در زندگی‌ات.
@@ -481,114 +509,184 @@ a { color:inherit; text-decoration:none; }
       <span class="tag">مدیتیشن</span>
       <span class="tag">انگیزه</span>
     </div>
-
-    <!-- QUICK NAV ICONS -->
     <div class="quick-nav">
       <a class="qn-item" href="https://planlife.ir/Pages/Doreha/dore.html">
-        <div class="qn-icon">
-          <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 9h8M8 13h5"/></svg>
-        </div>
+        <div class="qn-icon"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 9h8M8 13h5"/></svg></div>
         دوره‌ها
       </a>
       <a class="qn-item" href="https://planlife.ir/podcastfree.html">
-        <div class="qn-icon">
-          <svg viewBox="0 0 24 24"><path d="M4 13.5C4 8.25 7.58 4 12 4c4.42 0 8 4.25 8 9.5"/><rect x="3" y="13" width="3.4" height="6" rx="1.6" fill="currentColor" stroke="none"/><rect x="17.6" y="13" width="3.4" height="6" rx="1.6" fill="currentColor" stroke="none"/></svg>
-        </div>
+        <div class="qn-icon"><svg viewBox="0 0 24 24"><path d="M4 13.5C4 8.25 7.58 4 12 4c4.42 0 8 4.25 8 9.5"/><rect x="3" y="13" width="3.4" height="6" rx="1.6" fill="currentColor" stroke="none"/><rect x="17.6" y="13" width="3.4" height="6" rx="1.6" fill="currentColor" stroke="none"/></svg></div>
         پادکست
       </a>
       <a class="qn-item" href="#results-section">
-        <div class="qn-icon">
-          <svg viewBox="0 0 24 24"><path d="M3 3v18h18M7 16l4-4 4 4 5-5"/></svg>
-        </div>
+        <div class="qn-icon"><svg viewBox="0 0 24 24"><path d="M3 3v18h18M7 16l4-4 4 4 5-5"/></svg></div>
         نتایج
       </a>
       <a class="qn-item" href="#reviews-section">
-        <div class="qn-icon">
-          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </div>
+        <div class="qn-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
         نظرات
       </a>
     </div>
   </div>
 </div>
 
-<!-- PROGRESS STRIP با شبکه های اجتماعی -->
-<div class="progress-strip">
-  <div class="ps-top">
-    <div class="ps-title">آنچه در PlanLife پیدا می‌کنی</div>
-    <div class="ps-socials">
-      <!-- Instagram -->
-      <a class="social-icon si-insta" href="https://instagram.com/planlife.ir" target="_blank" title="اینستاگرام">
-        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
-      </a>
-      <!-- Telegram -->
-      <a class="social-icon si-telegram" href="https://t.me/planlife_ir" target="_blank" title="تلگرام">
-        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
-      </a>
-      <!-- WhatsApp -->
-      <a class="social-icon si-whatsapp" href="https://wa.me/989000000000" target="_blank" title="واتساپ">
-        <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
-      </a>
-      <!-- Bale -->
-      <a class="social-icon si-bale" href="https://ble.ir/planlife" target="_blank" title="بله">
-        <img src="https://bale.ai/images/bale-icon.png" alt="Bale" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22white%22><text y=%2218%22 font-size=%2216%22>ب</text></svg>'">
-      </a>
-    </div>
-  </div>
-  <div class="ps-metrics">
-    <div class="ps-m"><div class="val green">+۵k</div><div class="lbl">دانشجو</div></div>
-    <div class="ps-m"><div class="val lime">+۱۰۰</div><div class="lbl">پادکست</div></div>
-    <div class="ps-m"><div class="val blue">۶</div><div class="lbl">دوره</div></div>
-    <div class="ps-m"><div class="val amber">۱۴</div><div class="lbl">سرویس</div></div>
-  </div>
+<!-- ===== PODCAST PLAYER (جایگزین progress strip) ===== -->
+<div class="section-label">
+  <span>پادکست‌های رایگان</span>
+  <a href="https://planlife.ir/podcastfree.html">دیدن همه</a>
 </div>
 
-<!-- SERVICES SCROLL -->
+<div class="scroll-wrap" id="scrollWrap">
+  <!-- CARD 1 -->
+  <div class="player-card" data-id="0">
+    <div class="card-bg"><img src="http://fs3.centraldnserver.com/~planlife/pics/podcast_free/IMG_2409.jpeg" alt=""></div>
+    <div class="card-tint"></div>
+    <div class="card-inner">
+      <div class="card-art"><img src="http://fs3.centraldnserver.com/~planlife/pics/podcast_free/IMG_2409.jpeg" alt="کد نویسی ذهن"></div>
+      <div class="card-info">
+        <div class="card-category">موضوعات متفاوت</div>
+        <div class="card-title">کد نویسی ذهن</div>
+        <div class="card-controls">
+          <button class="ctrl-btn" onclick="prevTrack(event,0)" title="قبلی"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
+          <button class="ctrl-btn play-btn" id="play-0" onclick="togglePlay(event,0)" title="پخش"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <button class="ctrl-btn" onclick="nextTrack(event,0)" title="بعدی"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+          <button class="ctrl-btn" onclick="seekBack(event,0)" title="۱۰ ثانیه عقب"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg></button>
+        </div>
+      </div>
+      <div class="verify-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+    <div class="card-progress-wrap">
+      <div class="card-progress-track" onclick="seekTo(event,0)"><div class="card-progress-bar" id="progress-0"></div></div>
+      <div class="card-time"><span id="cur-0">0:00</span><span id="dur-0">0:00</span></div>
+    </div>
+  </div>
+
+  <!-- CARD 2 -->
+  <div class="player-card" data-id="1">
+    <div class="card-bg"><img src="http://fs3.centraldnserver.com/~planlife/pics/podcast_free/4AD48B99-0DD5-45E6-879F-B1D7E21EF676.png" alt=""></div>
+    <div class="card-tint"></div>
+    <div class="card-inner">
+      <div class="card-art"><img src="http://fs3.centraldnserver.com/~planlife/pics/podcast_free/4AD48B99-0DD5-45E6-879F-B1D7E21EF676.png" alt="فرکانس خواسته"></div>
+      <div class="card-info">
+        <div class="card-category">موضوعات متفاوت</div>
+        <div class="card-title">فرکانس خواسته</div>
+        <div class="card-controls">
+          <button class="ctrl-btn" onclick="prevTrack(event,1)" title="قبلی"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
+          <button class="ctrl-btn play-btn" id="play-1" onclick="togglePlay(event,1)" title="پخش"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <button class="ctrl-btn" onclick="nextTrack(event,1)" title="بعدی"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+          <button class="ctrl-btn" onclick="seekBack(event,1)" title="۱۰ ثانیه عقب"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg></button>
+        </div>
+      </div>
+      <div class="verify-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+    <div class="card-progress-wrap">
+      <div class="card-progress-track" onclick="seekTo(event,1)"><div class="card-progress-bar" id="progress-1"></div></div>
+      <div class="card-time"><span id="cur-1">0:00</span><span id="dur-1">0:00</span></div>
+    </div>
+  </div>
+
+  <!-- CARD 3 -->
+  <div class="player-card" data-id="2">
+    <div class="card-bg"><img src="http://fs3.centraldnserver.com/~planlife/pics/podcast_free/IMG_2789.jpeg" alt=""></div>
+    <div class="card-tint"></div>
+    <div class="card-inner">
+      <div class="card-art"><img src="http://fs3.centraldnserver.com/~planlife/pics/podcast_free/IMG_2789.jpeg" alt="رسیدن به خواسته‌ها"></div>
+      <div class="card-info">
+        <div class="card-category">موضوعات متفاوت</div>
+        <div class="card-title">رسیدن به خواسته‌ها</div>
+        <div class="card-controls">
+          <button class="ctrl-btn" onclick="prevTrack(event,2)" title="قبلی"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
+          <button class="ctrl-btn play-btn" id="play-2" onclick="togglePlay(event,2)" title="پخش"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <button class="ctrl-btn" onclick="nextTrack(event,2)" title="بعدی"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+          <button class="ctrl-btn" onclick="seekBack(event,2)" title="۱۰ ثانیه عقب"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg></button>
+        </div>
+      </div>
+      <div class="verify-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+    <div class="card-progress-wrap">
+      <div class="card-progress-track" onclick="seekTo(event,2)"><div class="card-progress-bar" id="progress-2"></div></div>
+      <div class="card-time"><span id="cur-2">0:00</span><span id="dur-2">0:00</span></div>
+    </div>
+  </div>
+
+  <!-- CARD 4 -->
+  <div class="player-card" data-id="3">
+    <div class="card-bg"><img src="http://fs3.centraldnserver.com/~planlife/pics/Servat/IMG_1053.JPG" alt=""></div>
+    <div class="card-tint"></div>
+    <div class="card-inner">
+      <div class="card-art"><img src="http://fs3.centraldnserver.com/~planlife/pics/Servat/IMG_1053.JPG" alt="کار کردن روی باورها"></div>
+      <div class="card-info">
+        <div class="card-category">باورهای ثروت</div>
+        <div class="card-title">کار کردن روی باورها</div>
+        <div class="card-controls">
+          <button class="ctrl-btn" onclick="prevTrack(event,3)" title="قبلی"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
+          <button class="ctrl-btn play-btn" id="play-3" onclick="togglePlay(event,3)" title="پخش"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <button class="ctrl-btn" onclick="nextTrack(event,3)" title="بعدی"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+          <button class="ctrl-btn" onclick="seekBack(event,3)" title="۱۰ ثانیه عقب"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg></button>
+        </div>
+      </div>
+      <div class="verify-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+    <div class="card-progress-wrap">
+      <div class="card-progress-track" onclick="seekTo(event,3)"><div class="card-progress-bar" id="progress-3"></div></div>
+      <div class="card-time"><span id="cur-3">0:00</span><span id="dur-3">0:00</span></div>
+    </div>
+  </div>
+
+  <!-- CARD 5 -->
+  <div class="player-card" data-id="4">
+    <div class="card-bg"><img src="http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2223.jpeg" alt=""></div>
+    <div class="card-tint"></div>
+    <div class="card-inner">
+      <div class="card-art"><img src="http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2223.jpeg" alt="خسیس بودن در زندگی"></div>
+      <div class="card-info">
+        <div class="card-category">باورهای ثروت</div>
+        <div class="card-title">خسیس بودن در زندگی</div>
+        <div class="card-controls">
+          <button class="ctrl-btn" onclick="prevTrack(event,4)" title="قبلی"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
+          <button class="ctrl-btn play-btn" id="play-4" onclick="togglePlay(event,4)" title="پخش"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <button class="ctrl-btn" onclick="nextTrack(event,4)" title="بعدی"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+          <button class="ctrl-btn" onclick="seekBack(event,4)" title="۱۰ ثانیه عقب"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg></button>
+        </div>
+      </div>
+      <div class="verify-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+    <div class="card-progress-wrap">
+      <div class="card-progress-track" onclick="seekTo(event,4)"><div class="card-progress-bar" id="progress-4"></div></div>
+      <div class="card-time"><span id="cur-4">0:00</span><span id="dur-4">0:00</span></div>
+    </div>
+  </div>
+
+  <!-- SEE ALL -->
+  <a class="see-all-card" href="https://planlife.ir/podcastfree.html">
+    <div class="see-all-icon">
+      <svg viewBox="0 0 24 24"><path d="M4 13.5C4 8.25 7.58 4 12 4c4.42 0 8 4.25 8 9.5"/><rect x="3" y="13" width="3.4" height="6" rx="1.6"/><rect x="17.6" y="13" width="3.4" height="6" rx="1.6"/></svg>
+    </div>
+    <div class="see-all-text">دیدن همه پادکست‌های رایگان</div>
+  </a>
+</div>
+
+<audio id="mainAudio"></audio>
+
+<!-- SERVICES -->
 <div class="section-label">سرویس‌ها</div>
 <div class="scroll-section">
   <div class="scroll-wrap">
     <div class="service-card" onclick="window.location='https://planlife.ir/Pages/Doreha/dore.html'">
-      <div class="sc-thumb">
-        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌ها">
-        <span class="sc-badge">پرطرفدار</span>
-      </div>
-      <div class="sc-body">
-        <div class="sc-title">دوره‌ها 📚</div>
-        <div class="sc-sub">۶ مسیر آموزشی</div>
-        <button class="sc-cta">ورود به دوره‌ها</button>
-      </div>
+      <div class="sc-thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌ها"><span class="sc-badge">پرطرفدار</span></div>
+      <div class="sc-body"><div class="sc-title">دوره‌ها 📚</div><div class="sc-sub">۶ مسیر آموزشی</div><button class="sc-cta">ورود به دوره‌ها</button></div>
     </div>
     <div class="service-card" onclick="window.location='https://planlife.ir/podcastfree.html'">
-      <div class="sc-thumb">
-        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست">
-        <span class="sc-badge free">رایگان</span>
-      </div>
-      <div class="sc-body">
-        <div class="sc-title">پادکست 🎙️</div>
-        <div class="sc-sub">هفتگی منتشر می‌شه</div>
-        <button class="sc-cta">شنیدن</button>
-      </div>
+      <div class="sc-thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست"><span class="sc-badge free">رایگان</span></div>
+      <div class="sc-body"><div class="sc-title">پادکست 🎙️</div><div class="sc-sub">هفتگی منتشر می‌شه</div><button class="sc-cta">شنیدن</button></div>
     </div>
     <div class="service-card" onclick="window.location='https://planlife.ir/Pages/Tamrin/index.html'">
-      <div class="sc-thumb">
-        <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرینات">
-        <span class="sc-badge free">رایگان</span>
-      </div>
-      <div class="sc-body">
-        <div class="sc-title">تمرینات 🧘</div>
-        <div class="sc-sub">۱۰ دقیقه روزانه</div>
-        <button class="sc-cta">شروع تمرین</button>
-      </div>
+      <div class="sc-thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرینات"><span class="sc-badge free">رایگان</span></div>
+      <div class="sc-body"><div class="sc-title">تمرینات 🧘</div><div class="sc-sub">۱۰ دقیقه روزانه</div><button class="sc-cta">شروع تمرین</button></div>
     </div>
     <div class="service-card" onclick="window.location='https://planlife.ir/Pages/Mindcoding/index.html'">
-      <div class="sc-thumb" style="background:#04120a;display:flex;align-items:center;justify-content:center;">
-        <div style="font-family:monospace;font-size:9px;color:#2dffa0;line-height:1.6;text-align:left;direction:ltr;padding:10px;">if(belief){<br>&nbsp;&nbsp;rewrite();<br>}<br>grow(life);</div>
-      </div>
-      <div class="sc-body">
-        <div class="sc-title">کد ذهنی 💻</div>
-        <div class="sc-sub">تغییر باورها</div>
-        <button class="sc-cta">ورود</button>
-      </div>
+      <div class="sc-thumb" style="background:#04120a;display:flex;align-items:center;justify-content:center;"><div style="font-family:monospace;font-size:9px;color:#2dffa0;line-height:1.6;text-align:left;direction:ltr;padding:10px;">if(belief){<br>&nbsp;&nbsp;rewrite();<br>}<br>grow(life);</div></div>
+      <div class="sc-body"><div class="sc-title">کد ذهنی 💻</div><div class="sc-sub">تغییر باورها</div><button class="sc-cta">ورود</button></div>
     </div>
   </div>
 </div>
@@ -610,6 +708,34 @@ a { color:inherit; text-decoration:none; }
   </div>
 </div>
 
+<!-- آنچه در PlanLife پیدا میکنی (moved here — above reviews) -->
+<div class="section-label">آنچه در PlanLife پیدا می‌کنی</div>
+<div class="progress-strip">
+  <div class="ps-top">
+    <div class="ps-title">ما رو دنبال کن</div>
+    <div class="ps-socials">
+      <a class="social-icon si-insta" href="https://instagram.com/planlife.ir" target="_blank" title="اینستاگرام">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+      </a>
+      <a class="social-icon si-telegram" href="https://t.me/planlife_ir" target="_blank" title="تلگرام">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
+      </a>
+      <a class="social-icon si-whatsapp" href="https://wa.me/989000000000" target="_blank" title="واتساپ">
+        <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
+      </a>
+      <a class="social-icon si-bale" href="https://ble.ir/planlife" target="_blank" title="بله">
+        <img src="https://bale.ai/images/bale-icon.png" alt="Bale" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22white%22><text y=%2218%22 font-size=%2216%22>ب</text></svg>'">
+      </a>
+    </div>
+  </div>
+  <div class="ps-metrics">
+    <div class="ps-m"><div class="val green">+۵k</div><div class="lbl">دانشجو</div></div>
+    <div class="ps-m"><div class="val lime">+۱۰۰</div><div class="lbl">پادکست</div></div>
+    <div class="ps-m"><div class="val blue">۶</div><div class="lbl">دوره</div></div>
+    <div class="ps-m"><div class="val amber">۱۴</div><div class="lbl">سرویس</div></div>
+  </div>
+</div>
+
 <!-- REVIEWS -->
 <div class="section-label" id="reviews-section">نظرات دانشجویان</div>
 <div class="reviews-section">
@@ -617,13 +743,10 @@ a { color:inherit; text-decoration:none; }
     <h3>دیدگاه‌ها</h3>
     <div class="rating-badge">⭐ ۴.۹ <span style="font-size:10px;color:#b45309;font-weight:500;">(+۱۵۰ نظر)</span></div>
   </div>
-
-  <!-- ADD REVIEW BUTTON -->
   <button class="add-review-btn" onclick="openReviewModal()">
     <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
     ثبت نظر شما
   </button>
-
   <div class="review-card">
     <div class="rev-header">
       <div class="rev-av">فپ</div>
@@ -684,55 +807,23 @@ a { color:inherit; text-decoration:none; }
 <div class="modal-overlay" id="reviewModal" onclick="handleModalClick(event)">
   <div class="modal-sheet" id="modalSheet">
     <div class="sheet-handle"></div>
-    
-    <!-- FORM -->
     <div id="reviewForm">
-      <div class="sheet-title">
-        ثبت نظر شما
-        <button class="sheet-close" onclick="closeReviewModal()">✕</button>
-      </div>
-
+      <div class="sheet-title">ثبت نظر شما<button class="sheet-close" onclick="closeReviewModal()">✕</button></div>
       <div class="form-field">
         <label class="form-label">نام و نام خانوادگی</label>
         <input class="form-input" type="text" id="r-name" placeholder="مثلاً: علی احمدی">
       </div>
-
       <div class="form-field">
-        <label class="form-label">دانشجوی چه دوره‌ای بودید؟ (چند تا هم می‌تونی انتخاب کنی)</label>
+        <label class="form-label">دانشجوی چه دوره‌ای بودید؟</label>
         <div class="course-list" id="courseList">
-          <div class="course-option" onclick="toggleCourse(this)">
-            <input type="checkbox">
-            <div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div>
-            <div class="co-label">دوره کدهای پشت‌پرده پول</div>
-          </div>
-          <div class="course-option" onclick="toggleCourse(this)">
-            <input type="checkbox">
-            <div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div>
-            <div class="co-label">دوره چطور حالم خوب باشه؟</div>
-          </div>
-          <div class="course-option" onclick="toggleCourse(this)">
-            <input type="checkbox">
-            <div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div>
-            <div class="co-label">دوره هماهنگی با جریان خلقت</div>
-          </div>
-          <div class="course-option" onclick="toggleCourse(this)">
-            <input type="checkbox">
-            <div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div>
-            <div class="co-label">دوره خودباوری (اعتماد به نفس)</div>
-          </div>
-          <div class="course-option" onclick="toggleCourse(this)">
-            <input type="checkbox">
-            <div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div>
-            <div class="co-label">دوره پذیرش احساس لیاقت</div>
-          </div>
-          <div class="course-option" onclick="toggleCourse(this)">
-            <input type="checkbox">
-            <div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div>
-            <div class="co-label">دوره نفوذ به لایه‌های پنهان ذهن</div>
-          </div>
+          <div class="course-option" onclick="toggleCourse(this)"><input type="checkbox"><div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div><div class="co-label">دوره کدهای پشت‌پرده پول</div></div>
+          <div class="course-option" onclick="toggleCourse(this)"><input type="checkbox"><div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div><div class="co-label">دوره چطور حالم خوب باشه؟</div></div>
+          <div class="course-option" onclick="toggleCourse(this)"><input type="checkbox"><div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div><div class="co-label">دوره هماهنگی با جریان خلقت</div></div>
+          <div class="course-option" onclick="toggleCourse(this)"><input type="checkbox"><div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div><div class="co-label">دوره خودباوری (اعتماد به نفس)</div></div>
+          <div class="course-option" onclick="toggleCourse(this)"><input type="checkbox"><div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div><div class="co-label">دوره پذیرش احساس لیاقت</div></div>
+          <div class="course-option" onclick="toggleCourse(this)"><input type="checkbox"><div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div><div class="co-label">دوره نفوذ به لایه‌های پنهان ذهن</div></div>
         </div>
       </div>
-
       <div class="form-field">
         <label class="form-label">امتیاز شما</label>
         <div class="star-rating" id="starRating">
@@ -743,23 +834,18 @@ a { color:inherit; text-decoration:none; }
           <button class="star-btn" data-star="1" onclick="setRating(1)">★</button>
         </div>
       </div>
-
       <div class="form-field">
         <label class="form-label">نظر شما</label>
         <textarea class="form-textarea" id="r-text" placeholder="تجربه‌ات از دوره یا محتوای PlanLife رو بنویس..."></textarea>
       </div>
-
       <div class="form-field">
         <div class="phone-note">در قسمت نظرات، شماره شما نمایش داده نخواهد شد.</div>
         <label class="form-label">شماره همراه</label>
         <input class="form-input" type="tel" id="r-phone" placeholder="۰۹۱۲XXXXXXX" style="direction:ltr;text-align:right;">
       </div>
-
       <div id="form-error" style="font-size:11.5px;color:#ff5470;margin-bottom:10px;display:none;"></div>
       <button class="submit-btn" onclick="submitReview()">ثبت نظر</button>
     </div>
-
-    <!-- SUCCESS -->
     <div class="success-msg" id="successMsg">
       <div class="success-icon">🎉</div>
       <div class="success-title">ممنون از ثبت نظرتون!</div>
@@ -770,8 +856,88 @@ a { color:inherit; text-decoration:none; }
 </div>
 
 <script>
-var selectedRating = 0;
+const tracks = [
+  { src:"http://fs3.centraldnserver.com/~planlife/podcast_free/codenevisi/Codenevisizehn_free.m4a", title:"کد نویسی ذهن", cat:"موضوعات متفاوت" },
+  { src:"http://fs3.centraldnserver.com/~planlife/podcast_free/Mozoatdigar/Frequency_free.m4a", title:"فرکانس خواسته", cat:"موضوعات متفاوت" },
+  { src:"http://fs3.centraldnserver.com/~planlife/podcast_free/Mozoatdigar/hadaf_az_residan_be_khaste.m4a", title:"رسیدن به خواسته‌ها", cat:"موضوعات متفاوت" },
+  { src:"https://res.cloudinary.com/dfthbclzi/video/upload/v1780854988/Bavar_free_w9yucc.m4a", title:"کار کردن روی باورها", cat:"باورهای ثروت" },
+  { src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779530272/Khasis_bodan_-_planLife.ir_Free_sv3vbr.m4a", title:"خسیس بودن در زندگی", cat:"باورهای ثروت" }
+];
+const audio = document.getElementById('mainAudio');
+let currentTrack = -1;
 
+function fmt(s) {
+  if (!s || !isFinite(s) || s < 0) return '0:00';
+  return Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0');
+}
+function setPlayIcon(idx, playing) {
+  const btn = document.getElementById('play-'+idx);
+  if (!btn) return;
+  btn.innerHTML = playing
+    ? '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="white"/></svg>'
+    : '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="white"/></svg>';
+  btn.classList.toggle('playing', playing);
+}
+function resetCard(idx) {
+  setPlayIcon(idx, false);
+  const pb = document.getElementById('progress-'+idx);
+  if (pb) pb.style.width = '0%';
+  const cur = document.getElementById('cur-'+idx);
+  if (cur) cur.textContent = '0:00';
+}
+function togglePlay(evt, idx) {
+  evt.stopPropagation();
+  if (currentTrack === idx) { audio.paused ? audio.play().catch(()=>{}) : audio.pause(); return; }
+  if (currentTrack !== -1) resetCard(currentTrack);
+  currentTrack = idx;
+  audio.src = tracks[idx].src;
+  audio.play().catch(()=>{});
+}
+function prevTrack(evt, idx) {
+  evt.stopPropagation();
+  const prev = currentTrack > 0 ? currentTrack - 1 : 0;
+  if (currentTrack !== -1) resetCard(currentTrack);
+  currentTrack = prev;
+  audio.src = tracks[prev].src;
+  audio.play().catch(()=>{});
+}
+function nextTrack(evt, idx) {
+  evt.stopPropagation();
+  const next = currentTrack < tracks.length-1 ? currentTrack+1 : tracks.length-1;
+  if (currentTrack !== -1) resetCard(currentTrack);
+  currentTrack = next;
+  audio.src = tracks[next].src;
+  audio.play().catch(()=>{});
+}
+function seekBack(evt, idx) {
+  evt.stopPropagation();
+  if (currentTrack !== idx) return;
+  audio.currentTime = Math.max(0, audio.currentTime-10);
+}
+function seekTo(evt, idx) {
+  if (currentTrack !== idx || !audio.duration) return;
+  const rect = evt.currentTarget.getBoundingClientRect();
+  const ratio = (evt.clientX - rect.left) / rect.width;
+  audio.currentTime = Math.max(0, Math.min(1, ratio)) * audio.duration;
+}
+audio.addEventListener('play', () => { if (currentTrack !== -1) setPlayIcon(currentTrack, true); });
+audio.addEventListener('pause', () => { if (currentTrack !== -1) setPlayIcon(currentTrack, false); });
+audio.addEventListener('ended', () => { if (currentTrack !== -1) resetCard(currentTrack); });
+audio.addEventListener('timeupdate', () => {
+  if (currentTrack === -1 || !audio.duration) return;
+  const pct = (audio.currentTime / audio.duration) * 100;
+  const pb = document.getElementById('progress-'+currentTrack);
+  if (pb) pb.style.width = pct+'%';
+  const cur = document.getElementById('cur-'+currentTrack);
+  if (cur) cur.textContent = fmt(audio.currentTime);
+});
+audio.addEventListener('loadedmetadata', () => {
+  if (currentTrack === -1) return;
+  const dur = document.getElementById('dur-'+currentTrack);
+  if (dur) dur.textContent = fmt(audio.duration);
+});
+
+var selectedRating = 0;
 function openReviewModal() {
   document.getElementById('reviewModal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -779,57 +945,41 @@ function openReviewModal() {
   document.getElementById('successMsg').classList.remove('show');
   resetForm();
 }
-
 function closeReviewModal() {
   document.getElementById('reviewModal').classList.remove('open');
   document.body.style.overflow = '';
 }
-
-function handleModalClick(e) {
-  if (e.target === document.getElementById('reviewModal')) closeReviewModal();
-}
-
+function handleModalClick(e) { if (e.target === document.getElementById('reviewModal')) closeReviewModal(); }
 function resetForm() {
   document.getElementById('r-name').value = '';
   document.getElementById('r-text').value = '';
   document.getElementById('r-phone').value = '';
   selectedRating = 0;
-  document.querySelectorAll('.star-btn').forEach(function(b){ b.classList.remove('lit'); });
-  document.querySelectorAll('.course-option').forEach(function(o){ o.classList.remove('selected'); });
+  document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('lit'));
+  document.querySelectorAll('.course-option').forEach(o => o.classList.remove('selected'));
   document.getElementById('form-error').style.display = 'none';
 }
-
-function toggleCourse(el) {
-  el.classList.toggle('selected');
-}
-
+function toggleCourse(el) { el.classList.toggle('selected'); }
 function setRating(n) {
   selectedRating = n;
-  var stars = document.querySelectorAll('.star-btn');
-  stars.forEach(function(b) {
-    var s = parseInt(b.getAttribute('data-star'));
-    b.classList.toggle('lit', s <= n);
+  document.querySelectorAll('.star-btn').forEach(b => {
+    b.classList.toggle('lit', parseInt(b.getAttribute('data-star')) <= n);
   });
 }
-
 function submitReview() {
-  var name = document.getElementById('r-name').value.trim();
-  var text = document.getElementById('r-text').value.trim();
-  var phone = document.getElementById('r-phone').value.trim();
-  var errEl = document.getElementById('form-error');
-  
+  const name = document.getElementById('r-name').value.trim();
+  const text = document.getElementById('r-text').value.trim();
+  const phone = document.getElementById('r-phone').value.trim();
   if (!name) { showErr('نام و نام خانوادگی را وارد کنید.'); return; }
   if (selectedRating === 0) { showErr('لطفاً امتیاز خود را انتخاب کنید.'); return; }
   if (!text) { showErr('متن نظر خود را بنویسید.'); return; }
   if (!phone) { showErr('شماره همراه را وارد کنید.'); return; }
-
-  errEl.style.display = 'none';
+  document.getElementById('form-error').style.display = 'none';
   document.getElementById('reviewForm').style.display = 'none';
   document.getElementById('successMsg').classList.add('show');
 }
-
 function showErr(msg) {
-  var el = document.getElementById('form-error');
+  const el = document.getElementById('form-error');
   el.textContent = msg;
   el.style.display = 'block';
 }
