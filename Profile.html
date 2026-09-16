@@ -52,19 +52,22 @@ a { color:inherit; text-decoration:none; }
 .header-back svg { width:14px; height:14px; }
 
 /* ===== HERO PROFILE ===== */
+/* FIX: hero-section is now position:relative with overflow:visible so avatar can peek out bottom */
 .hero-section {
   background:var(--card);
   border-radius:var(--radius);
   box-shadow:var(--shadow);
   margin:12px 14px 0;
-  overflow:visible;
   position:relative;
+  /* overflow must be visible so avatar (position:absolute, bottom:-50px) is not clipped */
+  overflow:visible;
 }
 
 .hero-cover {
   position:relative; height:130px;
   background:linear-gradient(135deg, #0d1117 0%, #1a2340 50%, #0a1a0a 100%);
   overflow:hidden;
+  /* only round the top corners */
   border-radius:var(--radius) var(--radius) 0 0;
 }
 .hero-cover img.cover-img {
@@ -88,26 +91,31 @@ a { color:inherit; text-decoration:none; }
 .cover-badge .dot { width:6px; height:6px; border-radius:50%; background:var(--lime); animation:pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
 
-/* ===== AVATAR - centered, half on cover half on white ===== */
+/* ===== AVATAR — sits in hero-cover, overflows below it onto the white hero-body ===== */
+/* We place it INSIDE .hero-cover so it is clipped by hero-cover on top half but overflows
+   the hero-cover bottom edge; hero-section has overflow:visible so it shows on white area */
 .avatar-wrap {
   position:absolute;
-  /* half the avatar height from the bottom of hero-cover => -50px since avatar is 100px */
-  bottom:-50px;
+  bottom:-50px;   /* half the avatar height — straddles the cover/body boundary */
   left:50%;
   transform:translateX(-50%);
   width:100px; height:100px;
   border-radius:24px;
-  border:4px solid var(--card);
+  /* border matches the white card background */
+  border:4px solid #ffffff;
   overflow:hidden; background:#ccc;
   box-shadow:0 8px 24px rgba(0,0,0,.28);
-  z-index:10;
+  z-index:20;   /* above .hero-cover children but still inside stacking context */
 }
 .avatar-wrap img { width:100%; height:100%; object-fit:cover; }
 
+/* White body below the cover — extra top padding makes room for the protruding avatar */
 .hero-body {
-  /* extra top padding to make room for avatar that sticks out 50px */
+  background:#ffffff;
+  border-radius:0 0 var(--radius) var(--radius);
   padding:60px 18px 18px;
   text-align:center;
+  position:relative; /* new stacking context so avatar z-index works */
 }
 .brand-name { font-size:21px; font-weight:900; line-height:1.2; margin-bottom:3px; }
 .brand-sub { font-size:12px; color:var(--muted); margin-bottom:14px; }
@@ -154,21 +162,17 @@ a { color:inherit; text-decoration:none; }
 .qn-icon svg { width:22px; height:22px; stroke:var(--ink); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; transition:.15s; }
 
 /* ===================================================
-   STORIES (from main page)
+   STORIES — no background, no title label
    =================================================== */
 .stories-outer {
   margin:16px 14px 0;
-  background:var(--card);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:14px 0 6px;
+  /* removed background, box-shadow, border-radius — bare strip */
+  padding:4px 0 0;
   overflow:hidden;
 }
-.stories-section-title {
-  font-size:11px; font-weight:700; color:var(--muted);
-  letter-spacing:.4px; padding:0 18px 10px;
-  display:flex; align-items:center; justify-content:space-between;
-}
+/* .stories-section-title hidden */
+.stories-section-title { display:none; }
+
 .stories-wrapper {
   width:100%;
   position:relative;
@@ -179,7 +183,7 @@ a { color:inherit; text-decoration:none; }
   direction:ltr;
   gap:14px;
   overflow-x:auto; overflow-y:hidden;
-  padding:4px 18px 12px;
+  padding:4px 14px 12px;
   scroll-behavior:smooth;
   -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
@@ -195,11 +199,11 @@ a { color:inherit; text-decoration:none; }
 }
 .stories-wrapper::before {
   right:0;
-  background:linear-gradient(to left, rgba(255,255,255,0.9), transparent);
+  background:linear-gradient(to left, rgba(216,221,228,0.9), transparent);
 }
 .stories-wrapper::after {
   left:0;
-  background:linear-gradient(to right, rgba(255,255,255,0.9), transparent);
+  background:linear-gradient(to right, rgba(216,221,228,0.9), transparent);
 }
 
 .story-item {
@@ -416,38 +420,36 @@ audio { display:none; }
 
 /* ===== SERVICES SCROLL ===== */
 .scroll-section { margin:0 14px; }
-.service-card { flex-shrink:0; width:148px; background:var(--card); border-radius:var(--radius-sm); box-shadow:var(--shadow); overflow:hidden; cursor:pointer; transition:.2s; border:1.5px solid transparent; }
+/* BIGGER service cards — ~3-4 size steps up */
+.service-card {
+  flex-shrink:0; width:162px;
+  background:var(--card); border-radius:var(--radius-sm);
+  box-shadow:var(--shadow); overflow:hidden; cursor:pointer;
+  transition:.2s; border:1.5px solid transparent;
+}
 .service-card:hover { border-color:rgba(47,111,237,.25); transform:translateY(-2px); }
-.sc-thumb { position:relative; height:100px; overflow:hidden; background:#eef0f3; }
+.sc-thumb { position:relative; height:112px; overflow:hidden; background:#eef0f3; }
 .sc-thumb img { width:100%; height:100%; object-fit:cover; }
 .sc-badge { position:absolute; top:7px; left:7px; background:rgba(18,20,28,.72); color:#fff; font-size:9px; font-weight:700; padding:3px 8px; border-radius:999px; }
 .sc-badge.free { background:rgba(61,220,132,.88); color:#04120a; }
-.sc-body { padding:9px 10px 10px; }
-.sc-title { font-size:11.5px; font-weight:800; margin-bottom:3px; }
-.sc-sub { font-size:10px; color:var(--muted); }
-.sc-cta { width:100%; margin-top:8px; background:var(--blue); color:#fff; border:none; border-radius:8px; padding:7px 0; font-size:11px; font-weight:700; cursor:pointer; transition:.15s; }
+.sc-body { padding:10px 11px 11px; }
+.sc-title { font-size:12.5px; font-weight:800; margin-bottom:3px; }
+.sc-sub { font-size:10.5px; color:var(--muted); }
+.sc-cta { width:100%; margin-top:9px; background:var(--blue); color:#fff; border:none; border-radius:8px; padding:8px 0; font-size:11.5px; font-weight:700; cursor:pointer; transition:.15s; }
 .sc-cta:hover { background:var(--blue-dark); }
 
-/* ===== PROGRESS STRIP ===== */
+/* ===== PROGRESS STRIP (social icons only) ===== */
 .progress-strip { background:var(--panel); border-radius:var(--radius); box-shadow:var(--shadow); margin:0 14px; padding:16px 18px; color:#fff; }
-.ps-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.ps-top { display:flex; align-items:center; justify-content:center; }
 .ps-title { font-size:12px; color:rgba(255,255,255,.45); font-weight:600; letter-spacing:.2px; }
-.ps-socials { display:flex; gap:10px; }
-.social-icon { width:36px; height:36px; border-radius:11px; display:flex; align-items:center; justify-content:center; transition:.15s; text-decoration:none; overflow:hidden; border:1.5px solid rgba(255,255,255,.1); }
-.social-icon:hover { transform:scale(1.08); }
-.social-icon img { width:22px; height:22px; object-fit:contain; }
+.ps-socials { display:flex; gap:12px; justify-content:center; }
+.social-icon { width:42px; height:42px; border-radius:13px; display:flex; align-items:center; justify-content:center; transition:.15s; text-decoration:none; overflow:hidden; border:1.5px solid rgba(255,255,255,.1); }
+.social-icon:hover { transform:scale(1.1); }
+.social-icon img { width:24px; height:24px; object-fit:contain; }
 .si-insta { background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); }
 .si-telegram { background:#26a5e4; }
 .si-whatsapp { background:#25d366; }
 .si-bale { background:#1e88e5; }
-.ps-metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
-.ps-m { text-align:center; }
-.ps-m .val { font-size:18px; font-weight:900; }
-.ps-m .val.green { color:var(--green); }
-.ps-m .val.lime { color:var(--lime); }
-.ps-m .val.blue { color:#60a5fa; }
-.ps-m .val.amber { color:#fbbf24; }
-.ps-m .lbl { font-size:9.5px; color:rgba(255,255,255,.38); margin-top:2px; }
 
 /* ===== RESULTS BANNER ===== */
 .results-banner { margin:0 14px; background:#1a1e2e; border-radius:var(--radius); overflow:hidden; position:relative; box-shadow:var(--shadow); }
@@ -545,11 +547,10 @@ audio { display:none; }
 <!-- HERO PROFILE CARD -->
 <div class="hero-section">
   <div class="hero-cover">
-    <!-- Cover image — using a real landscape/nature cover that fits the brand -->
     <img class="cover-img" src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="کاور PlanLife">
     <div class="cover-pattern"></div>
     <div class="cover-badge"><span class="dot"></span>پلتفرم رشد فردی</div>
-    <!-- Avatar: centered, half on cover / half on white body -->
+    <!-- Avatar inside hero-cover, positioned to hang below cover bottom -->
     <div class="avatar-wrap">
       <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
     </div>
@@ -597,12 +598,11 @@ audio { display:none; }
 </div>
 
 <!-- ===================================================
-     STORIES SECTION — above podcasts
+     STORIES — no card background, no title
      =================================================== -->
 <div class="stories-outer">
-  <div class="stories-section-title">
-    <span>استوری‌ها</span>
-  </div>
+  <!-- title hidden via CSS display:none -->
+  <div class="stories-section-title"><span>استوری‌ها</span></div>
   <div class="stories-wrapper">
     <div class="stories-scroll" id="stories-scroll">
 
@@ -943,11 +943,10 @@ audio { display:none; }
   </div>
 </div>
 
-<!-- آنچه در PlanLife پیدا میکنی -->
-<div class="section-label">آنچه در PlanLife پیدا می‌کنی</div>
+<!-- ارتباط با ما — social icons only -->
+<div class="section-label">ارتباط با ما</div>
 <div class="progress-strip">
   <div class="ps-top">
-    <div class="ps-title">ما رو دنبال کن</div>
     <div class="ps-socials">
       <a class="social-icon si-insta" href="https://instagram.com/planlife.ir" target="_blank" title="اینستاگرام">
         <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
@@ -962,12 +961,6 @@ audio { display:none; }
         <img src="https://bale.ai/images/bale-icon.png" alt="Bale" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22white%22><text y=%2218%22 font-size=%2216%22>ب</text></svg>'">
       </a>
     </div>
-  </div>
-  <div class="ps-metrics">
-    <div class="ps-m"><div class="val green">+۵k</div><div class="lbl">دانشجو</div></div>
-    <div class="ps-m"><div class="val lime">+۱۰۰</div><div class="lbl">پادکست</div></div>
-    <div class="ps-m"><div class="val blue">۶</div><div class="lbl">دوره</div></div>
-    <div class="ps-m"><div class="val amber">۱۴</div><div class="lbl">سرویس</div></div>
   </div>
 </div>
 
@@ -1263,7 +1256,6 @@ function initStories() {
     item.addEventListener('click', function() { openStoryModal(parseInt(item.dataset.index, 10)); });
   });
 
-  // drag scroll
   var el = document.getElementById('stories-scroll');
   var isDown = false, startX, scrollLeft;
   el.addEventListener('mousedown', function(e) { isDown = true; startX = e.pageX - el.offsetLeft; scrollLeft = el.scrollLeft; el.style.cursor = 'grabbing'; });
@@ -1392,7 +1384,6 @@ function storyNavigate(dir) {
 
 document.getElementById('story-modal').addEventListener('click', function(e) { if (e.target === this) closeStoryModal(); });
 
-/* ===== INIT ===== */
 window.addEventListener('load', function() { initStories(); });
 </script>
 </body>
