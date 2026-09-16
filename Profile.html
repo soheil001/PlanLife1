@@ -152,10 +152,8 @@ a { color:inherit; text-decoration:none; }
   scrollbar-width:none;
   -webkit-overflow-scrolling:touch;
   scroll-snap-type:x mandatory;
-  direction:ltr;
 }
 .scroll-wrap::-webkit-scrollbar { display:none; }
-.scroll-wrap > * { direction:rtl; }
 
 /* ===== PLAYER CARD ===== */
 .player-card {
@@ -220,21 +218,24 @@ a { color:inherit; text-decoration:none; }
 .ctrl-btn.play-btn:hover { background:rgba(255,255,255,0.28); }
 .ctrl-btn.play-btn.playing { background:var(--blue); border-color:var(--blue); }
 .ctrl-btn.play-btn svg { width:18px; height:18px; fill:#fff; }
-.card-progress-wrap { position:relative; z-index:2; padding:0 16px 14px; }
+.card-progress-wrap { position:relative; z-index:2; padding:0 16px 14px; direction:ltr; }
 .card-progress-track {
-  width:100%; height:3px;
+  width:100%; height:6px;
   background:rgba(255,255,255,0.12);
   border-radius:999px; overflow:hidden; cursor:pointer;
+  direction:ltr; position:relative;
 }
 .card-progress-bar {
   height:100%; width:0%;
   background:linear-gradient(to right, #60a5fa, #2f6fed);
-  border-radius:999px; transition:width 0.3s linear;
+  border-radius:999px; transition:width 0.2s linear;
+  direction:ltr; position:absolute; left:0; top:0;
 }
 .card-time {
   display:flex; justify-content:space-between;
   margin-top:6px; font-size:10px;
   color:rgba(255,255,255,0.35); font-weight:600;
+  direction:ltr;
 }
 
 /* ===== SEE ALL CARD ===== */
@@ -621,16 +622,16 @@ audio { display:none; }
         <div class="card-category">باورهای ثروت</div>
         <div class="card-title">کار کردن روی باورها</div>
         <div class="card-controls">
-          <button class="ctrl-btn" onclick="prevTrack(event,3)" title="قبلی"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
+          <button class="ctrl-btn" onclick="nextTrack(event,3)" title="بعدی"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
           <button class="ctrl-btn play-btn" id="play-3" onclick="togglePlay(event,3)" title="پخش"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-          <button class="ctrl-btn" onclick="nextTrack(event,3)" title="بعدی"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
-          <button class="ctrl-btn" onclick="seekBack(event,3)" title="۱۰ ثانیه عقب"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg></button>
+          <button class="ctrl-btn" onclick="prevTrack(event,3)" title="قبلی"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+          <button class="ctrl-btn" onclick="seekFwd(event,3)" title="۱۰ ثانیه جلو"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></button>
         </div>
       </div>
       <div class="verify-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     </div>
     <div class="card-progress-wrap">
-      <div class="card-progress-track" onclick="seekTo(event,3)"><div class="card-progress-bar" id="progress-3"></div></div>
+      <div class="card-progress-track" id="track-3" onclick="seekTo(event,3)"><div class="card-progress-bar" id="progress-3"></div></div>
       <div class="card-time"><span id="cur-3">0:00</span><span id="dur-3">0:00</span></div>
     </div>
   </div>
@@ -645,16 +646,16 @@ audio { display:none; }
         <div class="card-category">باورهای ثروت</div>
         <div class="card-title">خسیس بودن در زندگی</div>
         <div class="card-controls">
-          <button class="ctrl-btn" onclick="prevTrack(event,4)" title="قبلی"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
+          <button class="ctrl-btn" onclick="nextTrack(event,4)" title="بعدی"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
           <button class="ctrl-btn play-btn" id="play-4" onclick="togglePlay(event,4)" title="پخش"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-          <button class="ctrl-btn" onclick="nextTrack(event,4)" title="بعدی"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
-          <button class="ctrl-btn" onclick="seekBack(event,4)" title="۱۰ ثانیه عقب"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg></button>
+          <button class="ctrl-btn" onclick="prevTrack(event,4)" title="قبلی"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+          <button class="ctrl-btn" onclick="seekFwd(event,4)" title="۱۰ ثانیه جلو"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></button>
         </div>
       </div>
       <div class="verify-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     </div>
     <div class="card-progress-wrap">
-      <div class="card-progress-track" onclick="seekTo(event,4)"><div class="card-progress-bar" id="progress-4"></div></div>
+      <div class="card-progress-track" id="track-4" onclick="seekTo(event,4)"><div class="card-progress-bar" id="progress-4"></div></div>
       <div class="card-time"><span id="cur-4">0:00</span><span id="dur-4">0:00</span></div>
     </div>
   </div>
@@ -911,14 +912,16 @@ function nextTrack(evt, idx) {
   audio.src = tracks[next].src;
   audio.play().catch(()=>{});
 }
-function seekBack(evt, idx) {
+function seekFwd(evt, idx) {
   evt.stopPropagation();
   if (currentTrack !== idx) return;
-  audio.currentTime = Math.max(0, audio.currentTime-10);
+  audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 10);
 }
 function seekTo(evt, idx) {
   if (currentTrack !== idx || !audio.duration) return;
-  const rect = evt.currentTarget.getBoundingClientRect();
+  const track = document.getElementById('track-' + idx);
+  const rect = track.getBoundingClientRect();
+  // progress bar is direction:ltr, so left=0% right=100%
   const ratio = (evt.clientX - rect.left) / rect.width;
   audio.currentTime = Math.max(0, Math.min(1, ratio)) * audio.duration;
 }
