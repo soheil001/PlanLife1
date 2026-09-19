@@ -29,7 +29,6 @@ body { background:var(--bg); min-height:100vh; padding-bottom:100px; }
 button { font-family:inherit; cursor:pointer; }
 a { color:inherit; text-decoration:none; }
 
-/* ===== TOP HEADER ===== */
 .page-header {
   position:sticky; top:0; z-index:100;
   background:rgba(212,218,226,0.92);
@@ -49,25 +48,19 @@ a { color:inherit; text-decoration:none; }
   background:var(--card); box-shadow:0 1px 6px rgba(0,0,0,.08);
 }
 .header-back:hover { background:var(--hair); }
-.header-back svg { width:14px; height:14px; }
 
-/* ===== HERO PROFILE ===== */
-/* FIX: hero-section is now position:relative with overflow:visible so avatar can peek out bottom */
 .hero-section {
   background:var(--card);
   border-radius:var(--radius);
   box-shadow:var(--shadow);
   margin:12px 14px 0;
   position:relative;
-  /* overflow must be visible so avatar (position:absolute, bottom:-50px) is not clipped */
   overflow:visible;
 }
-
 .hero-cover {
   position:relative; height:130px;
   background:linear-gradient(135deg, #0d1117 0%, #1a2340 50%, #0a1a0a 100%);
   overflow:hidden;
-  /* only round the top corners */
   border-radius:var(--radius) var(--radius) 0 0;
 }
 .hero-cover img.cover-img {
@@ -91,31 +84,26 @@ a { color:inherit; text-decoration:none; }
 .cover-badge .dot { width:6px; height:6px; border-radius:50%; background:var(--lime); animation:pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
 
-/* ===== AVATAR — sits in hero-cover, overflows below it onto the white hero-body ===== */
-/* We place it INSIDE .hero-cover so it is clipped by hero-cover on top half but overflows
-   the hero-cover bottom edge; hero-section has overflow:visible so it shows on white area */
 .avatar-wrap {
   position:absolute;
-  bottom:-50px;   /* half the avatar height — straddles the cover/body boundary */
+  bottom:-50px;
   left:50%;
   transform:translateX(-50%);
   width:100px; height:100px;
   border-radius:24px;
-  /* border matches the white card background */
   border:4px solid #ffffff;
   overflow:hidden; background:#ccc;
   box-shadow:0 8px 24px rgba(0,0,0,.28);
-  z-index:20;   /* above .hero-cover children but still inside stacking context */
+  z-index:20;
 }
 .avatar-wrap img { width:100%; height:100%; object-fit:cover; }
 
-/* White body below the cover — extra top padding makes room for the protruding avatar */
 .hero-body {
   background:#ffffff;
   border-radius:0 0 var(--radius) var(--radius);
   padding:60px 18px 18px;
   text-align:center;
-  position:relative; /* new stacking context so avatar z-index works */
+  position:relative;
 }
 .brand-name { font-size:21px; font-weight:900; line-height:1.2; margin-bottom:3px; }
 .brand-sub { font-size:12px; color:var(--muted); margin-bottom:14px; }
@@ -139,7 +127,6 @@ a { color:inherit; text-decoration:none; }
 }
 .tag.accent { background:rgba(47,111,237,.09); color:var(--blue); border-color:rgba(47,111,237,.2); }
 
-/* ===== QUICK NAV ICONS ===== */
 .quick-nav {
   display:flex; justify-content:space-around;
   padding:4px 0 2px;
@@ -161,222 +148,110 @@ a { color:inherit; text-decoration:none; }
 }
 .qn-icon svg { width:22px; height:22px; stroke:var(--ink); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; transition:.15s; }
 
-/* ===================================================
-   STORIES — no background, no title label
-   =================================================== */
+/* ===== STORIES ===== */
 .stories-outer {
   margin:16px 14px 0;
-  /* removed background, box-shadow, border-radius — bare strip */
   padding:4px 0 0;
   overflow:hidden;
 }
-/* .stories-section-title hidden */
 .stories-section-title { display:none; }
-
-.stories-wrapper {
-  width:100%;
-  position:relative;
-}
+.stories-wrapper { width:100%; position:relative; }
 .stories-scroll {
-  display:flex;
-  flex-direction:row;
-  direction:ltr;
-  gap:14px;
-  overflow-x:auto; overflow-y:hidden;
+  display:flex; flex-direction:row; direction:ltr;
+  gap:14px; overflow-x:auto; overflow-y:hidden;
   padding:4px 14px 12px;
   scroll-behavior:smooth;
   -webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
-  cursor:grab;
+  scrollbar-width:none; cursor:grab;
 }
 .stories-scroll:active { cursor:grabbing; }
 .stories-scroll::-webkit-scrollbar { display:none; }
-
-.stories-wrapper::before,
-.stories-wrapper::after {
+.stories-wrapper::before,.stories-wrapper::after {
   content:''; position:absolute; top:0; bottom:0;
   width:24px; z-index:10; pointer-events:none;
 }
-.stories-wrapper::before {
-  right:0;
-  background:linear-gradient(to left, rgba(216,221,228,0.9), transparent);
-}
-.stories-wrapper::after {
-  left:0;
-  background:linear-gradient(to right, rgba(216,221,228,0.9), transparent);
-}
-
-.story-item {
-  display:flex; flex-direction:column;
-  align-items:center; gap:6px;
-  flex-shrink:0; cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
+.stories-wrapper::before { right:0; background:linear-gradient(to left, rgba(216,221,228,0.9), transparent); }
+.stories-wrapper::after { left:0; background:linear-gradient(to right, rgba(216,221,228,0.9), transparent); }
+.story-item { display:flex; flex-direction:column; align-items:center; gap:6px; flex-shrink:0; cursor:pointer; -webkit-tap-highlight-color:transparent; }
 .story-ring {
-  width:70px; height:70px; border-radius:50%;
-  padding:2.5px;
+  width:70px; height:70px; border-radius:50%; padding:2.5px;
   background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888,#833ab4,#405de6,#5851db);
-  transition:background .4s ease;
-  flex-shrink:0;
+  transition:background .4s ease; flex-shrink:0;
 }
-.story-item.seen .story-ring {
-  background:rgba(0,0,0,0.15);
-}
-.story-avatar {
-  width:100%; height:100%; border-radius:50%;
-  background:rgba(0,0,0,.08);
-  border:2.5px solid #fff;
-  overflow:hidden;
-  display:flex; align-items:center; justify-content:center;
-}
-.story-avatar img {
-  width:100%; height:100%;
-  object-fit:cover; border-radius:50%;
-}
-.story-label {
-  font-size:10px; font-weight:700;
-  color:var(--ink); text-align:center;
-  max-width:68px; overflow:hidden;
-  text-overflow:ellipsis; white-space:nowrap; line-height:1.3;
-}
+.story-item.seen .story-ring { background:rgba(0,0,0,0.15); }
+.story-avatar { width:100%; height:100%; border-radius:50%; background:rgba(0,0,0,.08); border:2.5px solid #fff; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.story-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+.story-label { font-size:10px; font-weight:700; color:var(--ink); text-align:center; max-width:68px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:1.3; }
 
-/* ===================================================
-   STORY MODAL
-   =================================================== */
+/* ===== STORY MODAL ===== */
 #story-modal {
-  position:fixed; top:0; left:0; right:0; bottom:0;
-  z-index:9000;
-  background:rgba(0,0,0,0.92);
-  backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+  position:fixed; top:0; left:0; right:0; bottom:0; z-index:9000;
+  background:rgba(0,0,0,0.92); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  opacity:0; pointer-events:none;
-  transition:opacity .3s ease;
+  opacity:0; pointer-events:none; transition:opacity .3s ease;
 }
 #story-modal.open { opacity:1; pointer-events:auto; }
-.story-container {
-  width:100%; max-width:375px;
-  aspect-ratio:9/16;
-  background:#000;
-  border-radius:12px; overflow:hidden; position:relative;
-  box-shadow:0 20px 60px rgba(0,0,0,.9);
-}
-.story-modal-content {
-  position:absolute; inset:0; z-index:1;
-  background:#000;
-  display:flex; align-items:center; justify-content:center; overflow:hidden;
-}
-.story-modal-content img,
-.story-modal-content video {
-  width:100%; height:100%; object-fit:cover; display:block;
-}
-.story-progress-bar {
-  position:absolute; top:0; left:0; right:0; z-index:10;
-  display:flex; gap:3px; direction:ltr;
-  padding:10px 12px 6px;
-  background:linear-gradient(to bottom,rgba(0,0,0,.55),transparent);
-}
-.progress-seg {
-  flex:1; height:2.5px; background:rgba(255,255,255,.28);
-  border-radius:3px; overflow:hidden;
-}
+.story-container { width:100%; max-width:375px; aspect-ratio:9/16; background:#000; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 20px 60px rgba(0,0,0,.9); }
+.story-modal-content { position:absolute; inset:0; z-index:1; background:#000; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.story-modal-content img,.story-modal-content video { width:100%; height:100%; object-fit:cover; display:block; }
+.story-progress-bar { position:absolute; top:0; left:0; right:0; z-index:10; display:flex; gap:3px; direction:ltr; padding:10px 12px 6px; background:linear-gradient(to bottom,rgba(0,0,0,.55),transparent); }
+.progress-seg { flex:1; height:2.5px; background:rgba(255,255,255,.28); border-radius:3px; overflow:hidden; }
 .progress-seg-fill { height:100%; background:white; width:0%; border-radius:3px; }
 .progress-seg.done .progress-seg-fill { width:100%; }
 .progress-seg.active .progress-seg-fill { animation:progress-run 5s linear forwards; }
 @keyframes progress-run { from{width:0%;} to{width:100%;} }
-
-.story-modal-header {
-  position:absolute; top:26px; left:0; right:0; z-index:10;
-  display:flex; align-items:center; gap:8px;
-  padding:8px 12px;
-  direction:rtl; justify-content:space-between; flex-direction:row-reverse;
-  background:linear-gradient(to bottom,rgba(0,0,0,.35),transparent);
-}
+.story-modal-header { position:absolute; top:26px; left:0; right:0; z-index:10; display:flex; align-items:center; gap:8px; padding:8px 12px; direction:rtl; justify-content:space-between; flex-direction:row-reverse; background:linear-gradient(to bottom,rgba(0,0,0,.35),transparent); }
 .story-logo-section { display:flex; align-items:center; gap:4px; flex:0 0 auto; }
-.story-logo-img {
-  width:36px; height:36px; border-radius:50%;
-  border:1.5px solid rgba(255,255,255,.2);
-  overflow:hidden;
-}
+.story-logo-img { width:36px; height:36px; border-radius:50%; border:1.5px solid rgba(255,255,255,.2); overflow:hidden; }
 .story-logo-img img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
 .story-branding { display:flex; align-items:center; gap:4px; }
 .story-branding-text { font-size:15px; font-weight:700; color:white; text-shadow:0 1px 6px rgba(0,0,0,.7); }
 .story-checkmark { width:16px; height:16px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-right:2px; }
 .story-checkmark img { width:100%; height:100%; object-fit:contain; }
 .story-modal-close { font-size:22px; color:white; cursor:pointer; padding:4px 6px; }
-
-.story-nav-left,.story-nav-right {
-  position:absolute; top:0; bottom:0; width:40%; cursor:pointer; z-index:9;
-  -webkit-tap-highlight-color:transparent;
-}
+.story-nav-left,.story-nav-right { position:absolute; top:0; bottom:0; width:40%; cursor:pointer; z-index:9; -webkit-tap-highlight-color:transparent; }
 .story-nav-right { right:0; }
-.story-nav-left  { left:0; }
-
-.story-footer {
-  position:absolute; bottom:0; left:0; right:0; z-index:10;
-  display:flex; flex-direction:column; gap:10px;
-  padding:40px 14px 18px;
-  background:linear-gradient(to top,rgba(0,0,0,.72) 60%,transparent);
-}
-.story-caption {
-  font-size:13px; font-weight:500; color:rgba(255,255,255,.95);
-  text-align:center; line-height:1.6; min-height:20px;
-  display:flex; align-items:center; justify-content:center;
-  text-shadow:0 1px 8px rgba(0,0,0,.9);
-}
+.story-nav-left { left:0; }
+.story-footer { position:absolute; bottom:0; left:0; right:0; z-index:10; display:flex; flex-direction:column; gap:10px; padding:40px 14px 18px; background:linear-gradient(to top,rgba(0,0,0,.72) 60%,transparent); }
+.story-caption { font-size:13px; font-weight:500; color:rgba(255,255,255,.95); text-align:center; line-height:1.6; min-height:20px; display:flex; align-items:center; justify-content:center; text-shadow:0 1px 8px rgba(0,0,0,.9); }
 .story-action-btn {
   display:none; align-items:center; justify-content:center; width:100%;
-  padding:12px 16px;
-  background:rgba(255,255,255,.13);
-  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  padding:12px 16px; background:rgba(255,255,255,.13); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
   border:1.2px solid rgba(212,175,55,.6); border-radius:20px;
-  color:#ffd060; font-family:'Vazirmatn',sans-serif;
-  font-size:15px; font-weight:800; text-decoration:none; text-align:center;
-  cursor:pointer; transition:all .2s ease; position:relative; overflow:hidden;
-  box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.25);
+  color:#ffd060; font-family:'Vazirmatn',sans-serif; font-size:15px; font-weight:800;
+  text-decoration:none; text-align:center; cursor:pointer; transition:all .2s ease;
+  position:relative; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.25);
 }
-.story-action-btn::before {
-  content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
-  animation:glass-shine 2.5s ease-in-out infinite;
-}
+.story-action-btn::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent); animation:glass-shine 2.5s ease-in-out infinite; }
 @keyframes glass-shine { 0%{left:-100%;} 50%{left:100%;} 100%{left:100%;} }
 .story-action-btn:active { transform:scale(.97); }
 .story-action-btn.show { display:flex; }
 
-/* ===== PODCAST PLAYER SECTION ===== */
+/* ===== SECTION LABEL ===== */
 .section-label {
   font-size:11px; font-weight:700; color:var(--muted);
   letter-spacing:.4px; margin:16px 18px 8px;
   display:flex; align-items:center; justify-content:space-between;
 }
-.section-label a {
-  font-size:11px; font-weight:700; color:var(--blue); text-decoration:none;
-}
+.section-label a { font-size:11px; font-weight:700; color:var(--blue); text-decoration:none; }
 
-/* ===== SCROLL CONTAINER ===== */
+/* ===== PODCAST SCROLL ===== */
 .scroll-wrap {
-  display:flex; gap:12px;
-  overflow-x:auto;
-  padding:8px 18px 16px;
-  scrollbar-width:none;
-  -webkit-overflow-scrolling:touch;
-  scroll-snap-type:x mandatory;
+  display:flex; gap:12px; overflow-x:auto;
+  padding:8px 18px 16px; scrollbar-width:none;
+  -webkit-overflow-scrolling:touch; scroll-snap-type:x mandatory;
 }
 .scroll-wrap::-webkit-scrollbar { display:none; }
 
-/* ===== PLAYER CARD ===== */
+/* ===== PODCAST PLAYER CARD ===== */
 .player-card {
-  flex-shrink:0; width:280px;
-  border-radius:22px; overflow:hidden;
-  position:relative; cursor:pointer;
-  scroll-snap-align:start;
-  background:rgba(18,20,28,0.72);
-  backdrop-filter:blur(24px) saturate(1.6);
+  flex-shrink:0; width:280px; border-radius:22px; overflow:hidden;
+  position:relative; cursor:pointer; scroll-snap-align:start;
+  background:rgba(18,20,28,0.72); backdrop-filter:blur(24px) saturate(1.6);
   -webkit-backdrop-filter:blur(24px) saturate(1.6);
   border:1.5px solid rgba(255,255,255,0.12);
   box-shadow:0 8px 32px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.08);
-  transition:transform 0.22s cubic-bezier(0.25,0.8,0.25,1);
-  user-select:none;
+  transition:transform 0.22s cubic-bezier(0.25,0.8,0.25,1); user-select:none;
 }
 .player-card:active { transform:scale(0.97); }
 .card-bg { position:absolute; inset:0; z-index:0; overflow:hidden; }
@@ -403,7 +278,6 @@ a { color:inherit; text-decoration:none; }
 .card-progress-bar { height:100%; width:0%; background:linear-gradient(to right,#60a5fa,#2f6fed); border-radius:999px; transition:width .2s linear; direction:ltr; position:absolute; left:0; top:0; }
 .card-time { display:flex; justify-content:space-between; margin-top:6px; font-size:10px; color:rgba(255,255,255,.35); font-weight:600; direction:ltr; }
 
-/* ===== SEE ALL CARD ===== */
 .see-all-card {
   flex-shrink:0; width:130px; min-height:120px; border-radius:22px;
   background:rgba(47,111,237,.12); border:1.5px solid rgba(47,111,237,.25);
@@ -418,9 +292,150 @@ a { color:inherit; text-decoration:none; }
 
 audio { display:none; }
 
-/* ===== SERVICES SCROLL ===== */
+/* ===================================================
+   COURSE CARDS — horizontal scroll (dark style)
+   =================================================== */
+.courses-scroll-outer {
+  margin:0 0;
+}
+.courses-scroll {
+  display:flex; gap:14px; overflow-x:auto;
+  padding:6px 18px 18px;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  scroll-snap-type:x mandatory;
+  cursor:grab;
+}
+.courses-scroll:active { cursor:grabbing; }
+.courses-scroll::-webkit-scrollbar { display:none; }
+
+.course-card {
+  flex-shrink:0; width:195px;
+  border-radius:22px; overflow:hidden;
+  position:relative; scroll-snap-align:start;
+  background:rgba(14,16,26,0.90);
+  border:1px solid rgba(255,255,255,0.09);
+  box-shadow:0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.07);
+  transition:transform .22s cubic-bezier(0.25,0.8,0.25,1);
+}
+.course-card:active { transform:scale(0.97); }
+
+.course-card-cover {
+  position:relative;
+  width:100%;
+  aspect-ratio:1 / 1;
+  overflow:hidden;
+}
+.course-card-cover img {
+  width:100%; height:100%;
+  object-fit:cover; display:block;
+  transition:transform .4s ease;
+}
+.course-card:hover .course-card-cover img { transform:scale(1.04); }
+.course-card-cover-overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(to bottom, rgba(8,10,20,0) 40%, rgba(8,10,20,1) 100%);
+}
+.course-card-cover-overlay-top {
+  position:absolute; inset:0;
+  background:linear-gradient(to bottom, rgba(0,0,0,0.28) 0%, transparent 35%);
+}
+
+.soon-pill {
+  position:absolute; top:10px; right:10px;
+  background:rgba(20,22,32,0.78);
+  border:1px solid rgba(255,255,255,0.18);
+  backdrop-filter:blur(8px);
+  color:rgba(255,255,255,0.85);
+  font-size:9.5px; font-weight:800;
+  padding:4px 10px; border-radius:999px; z-index:2;
+  white-space:nowrap;
+}
+.ep-count-pill {
+  position:absolute; bottom:10px; left:10px;
+  background:rgba(20,22,32,0.65);
+  border:1px solid rgba(255,255,255,0.1);
+  backdrop-filter:blur(6px);
+  color:rgba(255,255,255,0.7);
+  font-size:9.5px; font-weight:700;
+  padding:3px 9px; border-radius:999px; z-index:2;
+}
+
+/* dark overlay tint for soon cards */
+.course-card.is-soon .course-card-cover img {
+  filter:brightness(0.55) saturate(0.5);
+}
+
+.course-card-body {
+  padding:11px 11px 13px;
+  background:rgba(14,16,26,0.90);
+}
+.course-card-title {
+  font-size:12px; font-weight:800; color:#fff;
+  line-height:1.45; margin-bottom:10px;
+  min-height:3.2em;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+
+/* ---- Action buttons ---- */
+.course-card-actions { display:flex; flex-direction:column; gap:6px; }
+
+.cc-btn {
+  width:100%; border-radius:10px;
+  padding:8px 7px; font-size:10.5px; font-weight:800;
+  font-family:inherit; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:5px;
+  transition:transform .15s ease, background .18s ease;
+  border:none; line-height:1;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.cc-btn:active { transform:scale(0.95); }
+
+.cc-btn-results {
+  background:rgba(61,220,132,0.12);
+  border:1.5px solid rgba(61,220,132,0.3);
+  color:#3ddc84;
+}
+.cc-btn-results:hover { background:rgba(61,220,132,0.2); }
+
+.cc-btn-buy {
+  background:rgba(47,111,237,0.12);
+  border:1.5px solid rgba(47,111,237,0.32);
+  color:#5b9bff;
+}
+.cc-btn-buy:hover { background:rgba(47,111,237,0.22); }
+
+.cc-btn-play {
+  background:rgba(255,255,255,0.07);
+  border:1.5px solid rgba(255,255,255,0.12);
+  color:rgba(255,255,255,0.82);
+}
+.cc-btn-play:hover { background:rgba(255,255,255,0.12); }
+
+.cc-btn-play.disabled {
+  opacity:0.38; cursor:not-allowed; pointer-events:none;
+}
+
+/* courses see-all */
+.courses-see-all {
+  flex-shrink:0; width:110px;
+  border-radius:22px;
+  background:rgba(47,111,237,0.1);
+  border:1.5px solid rgba(47,111,237,0.22);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:10px; cursor:pointer; scroll-snap-align:start; text-decoration:none;
+  transition:background .2s; padding:18px 10px;
+}
+.courses-see-all:hover { background:rgba(47,111,237,0.18); }
+.courses-see-all-icon {
+  width:42px; height:42px; background:#2f6fed;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:20px;
+}
+.courses-see-all-text { font-size:10px; font-weight:800; color:#5b9bff; text-align:center; line-height:1.5; }
+
+/* ===== SERVICES ===== */
 .scroll-section { margin:0 14px; }
-/* BIGGER service cards — ~3-4 size steps up */
 .service-card {
   flex-shrink:0; width:162px;
   background:var(--card); border-radius:var(--radius-sm);
@@ -438,19 +453,6 @@ audio { display:none; }
 .sc-cta { width:100%; margin-top:9px; background:var(--blue); color:#fff; border:none; border-radius:8px; padding:8px 0; font-size:11.5px; font-weight:700; cursor:pointer; transition:.15s; }
 .sc-cta:hover { background:var(--blue-dark); }
 
-/* ===== PROGRESS STRIP (social icons only) ===== */
-.progress-strip { background:var(--panel); border-radius:var(--radius); box-shadow:var(--shadow); margin:0 14px; padding:16px 18px; color:#fff; }
-.ps-top { display:flex; align-items:center; justify-content:center; }
-.ps-title { font-size:12px; color:rgba(255,255,255,.45); font-weight:600; letter-spacing:.2px; }
-.ps-socials { display:flex; gap:12px; justify-content:center; }
-.social-icon { width:42px; height:42px; border-radius:13px; display:flex; align-items:center; justify-content:center; transition:.15s; text-decoration:none; overflow:hidden; border:1.5px solid rgba(255,255,255,.1); }
-.social-icon:hover { transform:scale(1.1); }
-.social-icon img { width:24px; height:24px; object-fit:contain; }
-.si-insta { background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); }
-.si-telegram { background:#26a5e4; }
-.si-whatsapp { background:#25d366; }
-.si-bale { background:#1e88e5; }
-
 /* ===== RESULTS BANNER ===== */
 .results-banner { margin:0 14px; background:#1a1e2e; border-radius:var(--radius); overflow:hidden; position:relative; box-shadow:var(--shadow); }
 .rb-glow { position:absolute; top:-30px; left:-30px; width:130px; height:130px; border-radius:50%; background:radial-gradient(circle,rgba(216,242,76,.13) 0%,transparent 70%); pointer-events:none; }
@@ -463,6 +465,19 @@ audio { display:none; }
 .rb-num .l { font-size:10px; color:rgba(255,255,255,.38); }
 .rb-cta { width:100%; background:var(--lime); color:var(--lime-ink); border:none; border-radius:12px; padding:13px 0; font-size:13px; font-weight:800; cursor:pointer; transition:.15s; }
 .rb-cta:hover { filter:brightness(1.06); }
+
+/* ===== PROGRESS STRIP ===== */
+.progress-strip { background:var(--panel); border-radius:var(--radius); box-shadow:var(--shadow); margin:0 14px; padding:16px 18px; color:#fff; }
+.ps-top { display:flex; align-items:center; justify-content:center; }
+.ps-title { font-size:12px; color:rgba(255,255,255,.45); font-weight:600; letter-spacing:.2px; }
+.ps-socials { display:flex; gap:12px; justify-content:center; }
+.social-icon { width:42px; height:42px; border-radius:13px; display:flex; align-items:center; justify-content:center; transition:.15s; text-decoration:none; overflow:hidden; border:1.5px solid rgba(255,255,255,.1); }
+.social-icon:hover { transform:scale(1.1); }
+.social-icon img { width:24px; height:24px; object-fit:contain; }
+.si-insta { background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); }
+.si-telegram { background:#26a5e4; }
+.si-whatsapp { background:#25d366; }
+.si-bale { background:#1e88e5; }
 
 /* ===== REVIEWS ===== */
 .reviews-section { margin:0 14px; background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; }
@@ -510,7 +525,7 @@ audio { display:none; }
 .star-btn { font-size:28px; color:#d1d5db; cursor:pointer; background:none; border:none; transition:.15s; line-height:1; padding:2px; }
 .star-btn.lit { color:#f59e0b; }
 .star-btn:hover { transform:scale(1.15); }
-.form-textarea { width:100%; padding:12px 14px; border-radius:12px; border:1.5px solid #e4e7ec; font-family:inherit; font-size:13px; outline:none; color:var(--ink); resize:none; min-height:90px; line-height:1.75; transition:.15s; }
+.form-textarea { width:100%; padding:12px 14px; border-radius:12px; border:1.5px solid #e4e7ec; font-family:inherit; font-size:13px; outline:none; color:var(--ink); resize:none; min-height:90px; line-height:1.75; transition:.15s; display:block; }
 .form-textarea:focus { border-color:var(--blue); }
 .phone-note { font-size:10.5px; color:var(--muted); margin-bottom:5px; }
 .submit-btn { width:100%; padding:14px; border-radius:13px; background:var(--blue); color:#fff; border:none; font-size:14px; font-weight:800; cursor:pointer; margin-top:6px; transition:.15s; box-shadow:0 4px 14px rgba(47,111,237,.3); }
@@ -544,13 +559,12 @@ audio { display:none; }
   </div>
 </header>
 
-<!-- HERO PROFILE CARD -->
+<!-- HERO -->
 <div class="hero-section">
   <div class="hero-cover">
     <img class="cover-img" src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="کاور PlanLife">
     <div class="cover-pattern"></div>
     <div class="cover-badge"><span class="dot"></span>پلتفرم رشد فردی</div>
-    <!-- Avatar inside hero-cover, positioned to hang below cover bottom -->
     <div class="avatar-wrap">
       <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
     </div>
@@ -567,9 +581,7 @@ audio { display:none; }
       <div class="stat-divider"></div>
       <div class="stat-item"><div class="stat-num">۴.۹</div><div class="stat-lbl">امتیاز</div></div>
     </div>
-    <div class="hero-desc">
-      پلتفرم تخصصی رشد فردی، قانون جذب و تقویت ذهن. دوره‌ها، پادکست‌های هفتگی و تمرینات هدایت‌شده برای تغییر واقعی در زندگی‌ات.
-    </div>
+    <div class="hero-desc">پلتفرم تخصصی رشد فردی، قانون جذب و تقویت ذهن. دوره‌ها، پادکست‌های هفتگی و تمرینات هدایت‌شده برای تغییر واقعی در زندگی‌ات.</div>
     <div class="tag-row">
       <span class="tag accent">قانون جذب</span>
       <span class="tag">رشد فردی</span>
@@ -597,141 +609,47 @@ audio { display:none; }
   </div>
 </div>
 
-<!-- ===================================================
-     STORIES — no card background, no title
-     =================================================== -->
+<!-- STORIES -->
 <div class="stories-outer">
-  <!-- title hidden via CSS display:none -->
   <div class="stories-section-title"><span>استوری‌ها</span></div>
   <div class="stories-wrapper">
     <div class="stories-scroll" id="stories-scroll">
-
-      <div class="story-item" data-index="0"
-           data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png"
-           data-caption="پادکست‌های رایگان PlanLife درباره قانون جذب و تغییر افکار 🎙️"
-           data-btn-show="true"
-           data-btn-text="شنیدن پادکست‌ها"
-           data-btn-link="https://planlife.ir/Pages/podcasts_free/index.html">
-        <div class="story-ring">
-          <div class="story-avatar">
-            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست">
-          </div>
-        </div>
+      <div class="story-item" data-index="0" data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" data-caption="پادکست‌های رایگان PlanLife درباره قانون جذب و تغییر افکار 🎙️" data-btn-show="true" data-btn-text="شنیدن پادکست‌ها" data-btn-link="https://planlife.ir/Pages/podcasts_free/index.html">
+        <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست"></div></div>
         <div class="story-label">پادکست</div>
       </div>
-
-      <div class="story-item" data-index="1"
-           data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"
-           data-caption="دوره‌های تخصصی آموزش قانون جذب، باور و تغییر رفتار 🚀"
-           data-btn-show="true"
-           data-btn-text="مشاهده دوره‌ها"
-           data-btn-link="https://planlife.ir/Pages/Doreha/index.html">
-        <div class="story-ring">
-          <div class="story-avatar">
-            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌ها">
-          </div>
-        </div>
+      <div class="story-item" data-index="1" data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" data-caption="دوره‌های تخصصی آموزش قانون جذب، باور و تغییر رفتار 🚀" data-btn-show="true" data-btn-text="مشاهده دوره‌ها" data-btn-link="https://planlife.ir/Pages/Doreha/index.html">
+        <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌ها"></div></div>
         <div class="story-label">دوره‌ها</div>
       </div>
-
-      <div class="story-item" data-index="2"
-           data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg"
-           data-caption="کتابخانه — بهترین کتاب‌های رشد فردی و تقویت باور 📚"
-           data-btn-show="true"
-           data-btn-text="ورود به کتابخانه"
-           data-btn-link="https://planlife.ir/Pages/Book/index.html">
-        <div class="story-ring">
-          <div class="story-avatar">
-            <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه">
-          </div>
-        </div>
+      <div class="story-item" data-index="2" data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" data-caption="کتابخانه — بهترین کتاب‌های رشد فردی و تقویت باور 📚" data-btn-show="true" data-btn-text="ورود به کتابخانه" data-btn-link="https://planlife.ir/Pages/Book/index.html">
+        <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه"></div></div>
         <div class="story-label">کتابخانه</div>
       </div>
-
-      <div class="story-item" data-index="3"
-           data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png"
-           data-caption="مجله ماورایی — مقالات انگیزشی درباره تغییر افکار 📰"
-           data-btn-show="true"
-           data-btn-text="ورود به مجله"
-           data-btn-link="https://planlife.ir/Pages/Magazine/index.html">
-        <div class="story-ring">
-          <div class="story-avatar">
-            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="مجله">
-          </div>
-        </div>
+      <div class="story-item" data-index="3" data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" data-caption="مجله ماورایی — مقالات انگیزشی درباره تغییر افکار 📰" data-btn-show="true" data-btn-text="ورود به مجله" data-btn-link="https://planlife.ir/Pages/Magazine/index.html">
+        <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="مجله"></div></div>
         <div class="story-label">مجله</div>
       </div>
-
-      <div class="story-item" data-index="4"
-           data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg"
-           data-caption="تمرینات مجازی روزانه و آرامش ذهن برای موفقیت 🧘"
-           data-btn-show="true"
-           data-btn-text="شروع تمرین ذهنی"
-           data-btn-link="https://planlife.ir/Pages/Tamrin/index.html">
-        <div class="story-ring">
-          <div class="story-avatar">
-            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرینات">
-          </div>
-        </div>
+      <div class="story-item" data-index="4" data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" data-caption="تمرینات مجازی روزانه و آرامش ذهن برای موفقیت 🧘" data-btn-show="true" data-btn-text="شروع تمرین ذهنی" data-btn-link="https://planlife.ir/Pages/Tamrin/index.html">
+        <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرینات"></div></div>
         <div class="story-label">تمرینات</div>
       </div>
-
-      <div class="story-item" data-index="5"
-           data-img="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png"
-           data-caption="پاکسازی ذهن و رهایی از افکار منفی 🔥"
-           data-btn-show="true"
-           data-btn-text="شروع پاکسازی ذهن"
-           data-btn-link="https://planlife.ir/Pages/paksazi/index.html">
-        <div class="story-ring">
-          <div class="story-avatar">
-            <img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" alt="پاکسازی ذهن">
-          </div>
-        </div>
+      <div class="story-item" data-index="5" data-img="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" data-caption="پاکسازی ذهن و رهایی از افکار منفی 🔥" data-btn-show="true" data-btn-text="شروع پاکسازی ذهن" data-btn-link="https://planlife.ir/Pages/paksazi/index.html">
+        <div class="story-ring"><div class="story-avatar"><img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" alt="پاکسازی ذهن"></div></div>
         <div class="story-label">پاکسازی ذهن</div>
       </div>
-
-      <div class="story-item" data-index="6"
-           data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg"
-           data-caption="تابلو آرزوها و ویژوالایزیشن برای تحقق رویاهای قانون جذب 🔖"
-           data-btn-show="true"
-           data-btn-text="ساخت تابلو آرزو"
-           data-btn-link="https://planlife.ir/Pages/visionboard/index.html">
-        <div class="story-ring">
-          <div class="story-avatar">
-            <img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg" alt="تابلو آرزو">
-          </div>
-        </div>
+      <div class="story-item" data-index="6" data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg" data-caption="تابلو آرزوها و ویژوالایزیشن برای تحقق رویاهای قانون جذب 🔖" data-btn-show="true" data-btn-text="ساخت تابلو آرزو" data-btn-link="https://planlife.ir/Pages/visionboard/index.html">
+        <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg" alt="تابلو آرزو"></div></div>
         <div class="story-label">تابلو آرزو</div>
       </div>
-
-      <div class="story-item" data-index="7"
-           data-img="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg"
-           data-caption="جعبه کمک‌های اولیه روانی برای تندرستی ذهنی 🩺"
-           data-btn-show="true"
-           data-btn-text="مشاهده جعبه کمک‌های اولیه"
-           data-btn-link="https://planlife.ir/Pages/komakavaliye/index.html">
-        <div class="story-ring">
-          <div class="story-avatar">
-            <img src="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg" alt="کمک اولیه">
-          </div>
-        </div>
+      <div class="story-item" data-index="7" data-img="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg" data-caption="جعبه کمک‌های اولیه روانی برای تندرستی ذهنی 🩺" data-btn-show="true" data-btn-text="مشاهده جعبه کمک‌های اولیه" data-btn-link="https://planlife.ir/Pages/komakavaliye/index.html">
+        <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dshielkdt/image/upload/v1780923578/IMG_1715_qcjjeh.jpg" alt="کمک اولیه"></div></div>
         <div class="story-label">کمک اولیه</div>
       </div>
-
-      <div class="story-item" data-index="8"
-           data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png"
-           data-caption="موزیک‌های انگیزشی و مدیتیشن برای آرامش ذهن 🎵"
-           data-btn-show="true"
-           data-btn-text="گوش دادن به موزیک‌ها"
-           data-btn-link="https://planlife.ir/Pages/Music/index.html">
-        <div class="story-ring">
-          <div class="story-avatar">
-            <img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="موزیک">
-          </div>
-        </div>
+      <div class="story-item" data-index="8" data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" data-caption="موزیک‌های انگیزشی و مدیتیشن برای آرامش ذهن 🎵" data-btn-show="true" data-btn-text="گوش دادن به موزیک‌ها" data-btn-link="https://planlife.ir/Pages/Music/index.html">
+        <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="موزیک"></div></div>
         <div class="story-label">موزیک</div>
       </div>
-
     </div>
   </div>
 </div>
@@ -742,20 +660,14 @@ audio { display:none; }
     <div class="story-progress-bar" id="story-progress-bar"></div>
     <div class="story-modal-header">
       <div class="story-logo-section">
-        <div class="story-checkmark">
-          <img src="http://fs3.centraldnserver.com/~planlife/pics/MagicEraser_260629_074549.png" alt="تیک تائید">
-        </div>
-        <div class="story-branding">
-          <div class="story-branding-text">planlife.ir</div>
-        </div>
-        <div class="story-logo-img">
-          <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="لوگوی PlanLife">
-        </div>
+        <div class="story-checkmark"><img src="http://fs3.centraldnserver.com/~planlife/pics/MagicEraser_260629_074549.png" alt="تیک تائید"></div>
+        <div class="story-branding"><div class="story-branding-text">planlife.ir</div></div>
+        <div class="story-logo-img"><img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="لوگوی PlanLife"></div>
       </div>
       <div class="story-modal-close" onclick="closeStoryModal()">✕</div>
     </div>
     <div class="story-modal-content" id="story-modal-content">
-      <div class="story-nav-left"  onclick="storyNavigate(-1)"></div>
+      <div class="story-nav-left" onclick="storyNavigate(-1)"></div>
       <div class="story-nav-right" onclick="storyNavigate(1)"></div>
     </div>
     <div class="story-footer">
@@ -772,7 +684,6 @@ audio { display:none; }
 </div>
 
 <div class="scroll-wrap" id="scrollWrap">
-  <!-- CARD 1 -->
   <div class="player-card" data-id="0">
     <div class="card-bg"><img src="http://fs3.centraldnserver.com/~planlife/pics/podcast_free/IMG_2409.jpeg" alt=""></div>
     <div class="card-tint"></div>
@@ -782,10 +693,10 @@ audio { display:none; }
         <div class="card-category">موضوعات متفاوت</div>
         <div class="card-title">کد نویسی ذهن</div>
         <div class="card-controls">
-          <button class="ctrl-btn" onclick="nextTrack(event,0)" title="بعدی"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
-          <button class="ctrl-btn play-btn" id="play-0" onclick="togglePlay(event,0)" title="پخش"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-          <button class="ctrl-btn" onclick="prevTrack(event,0)" title="قبلی"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
-          <button class="ctrl-btn" onclick="seekFwd(event,0)" title="۱۰ ثانیه جلو"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></button>
+          <button class="ctrl-btn" onclick="nextTrack(event,0)"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
+          <button class="ctrl-btn play-btn" id="play-0" onclick="togglePlay(event,0)"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <button class="ctrl-btn" onclick="prevTrack(event,0)"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+          <button class="ctrl-btn" onclick="seekFwd(event,0)"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></button>
         </div>
       </div>
       <div class="verify-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -796,7 +707,6 @@ audio { display:none; }
     </div>
   </div>
 
-  <!-- CARD 2 -->
   <div class="player-card" data-id="1">
     <div class="card-bg"><img src="http://fs3.centraldnserver.com/~planlife/pics/podcast_free/4AD48B99-0DD5-45E6-879F-B1D7E21EF676.png" alt=""></div>
     <div class="card-tint"></div>
@@ -806,10 +716,10 @@ audio { display:none; }
         <div class="card-category">موضوعات متفاوت</div>
         <div class="card-title">فرکانس خواسته</div>
         <div class="card-controls">
-          <button class="ctrl-btn" onclick="nextTrack(event,1)" title="بعدی"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
-          <button class="ctrl-btn play-btn" id="play-1" onclick="togglePlay(event,1)" title="پخش"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-          <button class="ctrl-btn" onclick="prevTrack(event,1)" title="قبلی"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
-          <button class="ctrl-btn" onclick="seekFwd(event,1)" title="۱۰ ثانیه جلو"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></button>
+          <button class="ctrl-btn" onclick="nextTrack(event,1)"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
+          <button class="ctrl-btn play-btn" id="play-1" onclick="togglePlay(event,1)"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <button class="ctrl-btn" onclick="prevTrack(event,1)"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+          <button class="ctrl-btn" onclick="seekFwd(event,1)"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></button>
         </div>
       </div>
       <div class="verify-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -820,7 +730,6 @@ audio { display:none; }
     </div>
   </div>
 
-  <!-- CARD 3 -->
   <div class="player-card" data-id="2">
     <div class="card-bg"><img src="http://fs3.centraldnserver.com/~planlife/pics/podcast_free/IMG_2789.jpeg" alt=""></div>
     <div class="card-tint"></div>
@@ -830,10 +739,10 @@ audio { display:none; }
         <div class="card-category">موضوعات متفاوت</div>
         <div class="card-title">رسیدن به خواسته‌ها</div>
         <div class="card-controls">
-          <button class="ctrl-btn" onclick="nextTrack(event,2)" title="بعدی"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
-          <button class="ctrl-btn play-btn" id="play-2" onclick="togglePlay(event,2)" title="پخش"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-          <button class="ctrl-btn" onclick="prevTrack(event,2)" title="قبلی"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
-          <button class="ctrl-btn" onclick="seekFwd(event,2)" title="۱۰ ثانیه جلو"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></button>
+          <button class="ctrl-btn" onclick="nextTrack(event,2)"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
+          <button class="ctrl-btn play-btn" id="play-2" onclick="togglePlay(event,2)"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <button class="ctrl-btn" onclick="prevTrack(event,2)"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+          <button class="ctrl-btn" onclick="seekFwd(event,2)"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></button>
         </div>
       </div>
       <div class="verify-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -844,7 +753,6 @@ audio { display:none; }
     </div>
   </div>
 
-  <!-- CARD 4 -->
   <div class="player-card" data-id="3">
     <div class="card-bg"><img src="http://fs3.centraldnserver.com/~planlife/pics/Servat/IMG_1053.JPG" alt=""></div>
     <div class="card-tint"></div>
@@ -854,10 +762,10 @@ audio { display:none; }
         <div class="card-category">باورهای ثروت</div>
         <div class="card-title">کار کردن روی باورها</div>
         <div class="card-controls">
-          <button class="ctrl-btn" onclick="nextTrack(event,3)" title="بعدی"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
-          <button class="ctrl-btn play-btn" id="play-3" onclick="togglePlay(event,3)" title="پخش"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-          <button class="ctrl-btn" onclick="prevTrack(event,3)" title="قبلی"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
-          <button class="ctrl-btn" onclick="seekFwd(event,3)" title="۱۰ ثانیه جلو"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></button>
+          <button class="ctrl-btn" onclick="nextTrack(event,3)"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
+          <button class="ctrl-btn play-btn" id="play-3" onclick="togglePlay(event,3)"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <button class="ctrl-btn" onclick="prevTrack(event,3)"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+          <button class="ctrl-btn" onclick="seekFwd(event,3)"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></button>
         </div>
       </div>
       <div class="verify-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -868,7 +776,6 @@ audio { display:none; }
     </div>
   </div>
 
-  <!-- CARD 5 -->
   <div class="player-card" data-id="4">
     <div class="card-bg"><img src="http://fs3.centraldnserver.com/~planlife/pics/motafareqe/IMG_2223.jpeg" alt=""></div>
     <div class="card-tint"></div>
@@ -878,10 +785,10 @@ audio { display:none; }
         <div class="card-category">باورهای ثروت</div>
         <div class="card-title">خسیس بودن در زندگی</div>
         <div class="card-controls">
-          <button class="ctrl-btn" onclick="nextTrack(event,4)" title="بعدی"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
-          <button class="ctrl-btn play-btn" id="play-4" onclick="togglePlay(event,4)" title="پخش"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-          <button class="ctrl-btn" onclick="prevTrack(event,4)" title="قبلی"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
-          <button class="ctrl-btn" onclick="seekFwd(event,4)" title="۱۰ ثانیه جلو"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></button>
+          <button class="ctrl-btn" onclick="nextTrack(event,4)"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg></button>
+          <button class="ctrl-btn play-btn" id="play-4" onclick="togglePlay(event,4)"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <button class="ctrl-btn" onclick="prevTrack(event,4)"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+          <button class="ctrl-btn" onclick="seekFwd(event,4)"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg></button>
         </div>
       </div>
       <div class="verify-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -892,16 +799,144 @@ audio { display:none; }
     </div>
   </div>
 
-  <!-- SEE ALL -->
   <a class="see-all-card" href="https://planlife.ir/podcastfree.html">
-    <div class="see-all-icon">
-      <svg viewBox="0 0 24 24"><path d="M4 13.5C4 8.25 7.58 4 12 4c4.42 0 8 4.25 8 9.5"/><rect x="3" y="13" width="3.4" height="6" rx="1.6"/><rect x="17.6" y="13" width="3.4" height="6" rx="1.6"/></svg>
-    </div>
+    <div class="see-all-icon"><svg viewBox="0 0 24 24"><path d="M4 13.5C4 8.25 7.58 4 12 4c4.42 0 8 4.25 8 9.5"/><rect x="3" y="13" width="3.4" height="6" rx="1.6"/><rect x="17.6" y="13" width="3.4" height="6" rx="1.6"/></svg></div>
     <div class="see-all-text">دیدن همه پادکست‌های رایگان</div>
   </a>
 </div>
 
 <audio id="mainAudio"></audio>
+
+<!-- =====================================================
+     COURSE CARDS — horizontal scroll
+     ===================================================== -->
+<div class="section-label">
+  <span>دوره‌های آنلاین</span>
+  <a href="https://planlife.ir/Pages/Doreha/dore.html">دیدن همه</a>
+</div>
+
+<div class="courses-scroll-outer">
+  <div class="courses-scroll" id="coursesScroll">
+
+    <!-- ── دوره ۱ ── -->
+    <div class="course-card">
+      <div class="course-card-cover">
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/Servat/moneyplanlife.JPG" alt="دوره کدهای پشت‌پرده پول">
+        <div class="course-card-cover-overlay-top"></div>
+        <div class="course-card-cover-overlay"></div>
+        <div class="ep-count-pill">۶ قسمت</div>
+      </div>
+      <div class="course-card-body">
+        <div class="course-card-title">دوره کدهای پشت‌پرده پول</div>
+        <div class="course-card-actions">
+          <button class="cc-btn cc-btn-results" onclick="window.location.href='https://planlife.ir/Pages/Doreha/natije/etemad/'">🏆 نتایج دانشجویان</button>
+          <button class="cc-btn cc-btn-buy"     onclick="window.location.href='https://planlife.ir/Pages/Doreha/servat.html'">💳 خرید دوره</button>
+          <button class="cc-btn cc-btn-play"    onclick="window.location.href='https://planlife.ir/Pages/Doreha/dore.html'">▶ پخش دوره</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── دوره ۲ ── -->
+    <div class="course-card">
+      <div class="course-card-cover">
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="دوره چطور حالم خوب باشه">
+        <div class="course-card-cover-overlay-top"></div>
+        <div class="course-card-cover-overlay"></div>
+        <div class="ep-count-pill">۵ قسمت</div>
+      </div>
+      <div class="course-card-body">
+        <div class="course-card-title">دوره چطور حالم خوب باشه؟</div>
+        <div class="course-card-actions">
+          <button class="cc-btn cc-btn-results" onclick="window.location.href='https://planlife.ir/Pages/Doreha/natije/Cm/Soon'">🏆 نتایج دانشجویان</button>
+          <button class="cc-btn cc-btn-buy"     onclick="window.location.href='https://planlife.ir/Pages/Doreha/ehsas.html'">💳 خرید دوره</button>
+          <button class="cc-btn cc-btn-play"    onclick="window.location.href='https://planlife.ir/Pages/Doreha/dore.html'">▶ پخش دوره</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── دوره ۳ ── -->
+    <div class="course-card">
+      <div class="course-card-cover">
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2461.jpeg" alt="دوره هماهنگی با جریان خلقت">
+        <div class="course-card-cover-overlay-top"></div>
+        <div class="course-card-cover-overlay"></div>
+        <div class="ep-count-pill">۹ قسمت</div>
+      </div>
+      <div class="course-card-body">
+        <div class="course-card-title">دوره هماهنگی با جریان خلقت</div>
+        <div class="course-card-actions">
+          <button class="cc-btn cc-btn-results" onclick="window.location.href='https://planlife.ir/Pages/Doreha/results-jaryan.html'">🏆 نتایج دانشجویان</button>
+          <button class="cc-btn cc-btn-buy"     onclick="window.location.href='https://planlife.ir/Pages/Doreha/jaryan.html'">💳 خرید دوره</button>
+          <button class="cc-btn cc-btn-play"    onclick="window.location.href='https://planlife.ir/Pages/Doreha/dore.html'">▶ پخش دوره</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── دوره ۴ (به‌زودی) ── -->
+    <div class="course-card is-soon">
+      <div class="course-card-cover">
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="دوره خودباوری">
+        <div class="course-card-cover-overlay-top"></div>
+        <div class="course-card-cover-overlay"></div>
+        <div class="soon-pill">به‌زودی</div>
+        <div class="ep-count-pill">۵ قسمت</div>
+      </div>
+      <div class="course-card-body">
+        <div class="course-card-title">دوره خودباوری (اعتماد به نفس)</div>
+        <div class="course-card-actions">
+          <button class="cc-btn cc-btn-results" onclick="window.location.href='https://planlife.ir/Pages/Doreha/results-etemad.html'">🏆 نتایج دانشجویان</button>
+          <button class="cc-btn cc-btn-buy"     onclick="window.location.href='https://planlife.ir/Pages/Doreha/etemad.html'">💳 خرید دوره</button>
+          <button class="cc-btn cc-btn-play disabled">⏳ به‌زودی</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── دوره ۵ (به‌زودی) ── -->
+    <div class="course-card is-soon">
+      <div class="course-card-cover">
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="دوره پذیرش احساس لیاقت">
+        <div class="course-card-cover-overlay-top"></div>
+        <div class="course-card-cover-overlay"></div>
+        <div class="soon-pill">به‌زودی</div>
+        <div class="ep-count-pill">۱۲ قسمت</div>
+      </div>
+      <div class="course-card-body">
+        <div class="course-card-title">دوره پذیرش احساس لیاقت</div>
+        <div class="course-card-actions">
+          <button class="cc-btn cc-btn-results" onclick="window.location.href='https://planlife.ir/Pages/Doreha/results-liyaghat.html'">🏆 نتایج دانشجویان</button>
+          <button class="cc-btn cc-btn-buy"     onclick="window.location.href='https://planlife.ir/Pages/Doreha/liyaghat.html'">💳 خرید دوره</button>
+          <button class="cc-btn cc-btn-play disabled">⏳ به‌زودی</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── دوره ۶ (به‌زودی) ── -->
+    <div class="course-card is-soon">
+      <div class="course-card-cover">
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="دوره نفوذ به لایه‌های پنهان ذهن">
+        <div class="course-card-cover-overlay-top"></div>
+        <div class="course-card-cover-overlay"></div>
+        <div class="soon-pill">به‌زودی</div>
+        <div class="ep-count-pill">۵ قسمت</div>
+      </div>
+      <div class="course-card-body">
+        <div class="course-card-title">دوره نفوذ به لایه‌های پنهان ذهن</div>
+        <div class="course-card-actions">
+          <button class="cc-btn cc-btn-results" onclick="window.location.href='https://planlife.ir/Pages/Doreha/results-nofoz.html'">🏆 نتایج دانشجویان</button>
+          <button class="cc-btn cc-btn-buy"     onclick="window.location.href='https://planlife.ir/Pages/Doreha/nofoz.html'">💳 خرید دوره</button>
+          <button class="cc-btn cc-btn-play disabled">⏳ به‌زودی</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- see all -->
+    <a class="courses-see-all" href="https://planlife.ir/Pages/Doreha/dore.html">
+      <div class="courses-see-all-icon">📚</div>
+      <div class="courses-see-all-text">همه دوره‌ها</div>
+    </a>
+
+  </div>
+</div>
 
 <!-- SERVICES -->
 <div class="section-label">سرویس‌ها</div>
@@ -943,23 +978,15 @@ audio { display:none; }
   </div>
 </div>
 
-<!-- ارتباط با ما — social icons only -->
+<!-- ارتباط با ما -->
 <div class="section-label">ارتباط با ما</div>
 <div class="progress-strip">
   <div class="ps-top">
     <div class="ps-socials">
-      <a class="social-icon si-insta" href="https://instagram.com/planlife.ir" target="_blank" title="اینستاگرام">
-        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
-      </a>
-      <a class="social-icon si-telegram" href="https://t.me/planlife_ir" target="_blank" title="تلگرام">
-        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
-      </a>
-      <a class="social-icon si-whatsapp" href="https://wa.me/989000000000" target="_blank" title="واتساپ">
-        <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
-      </a>
-      <a class="social-icon si-bale" href="https://ble.ir/planlife" target="_blank" title="بله">
-        <img src="https://bale.ai/images/bale-icon.png" alt="Bale" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22white%22><text y=%2218%22 font-size=%2216%22>ب</text></svg>'">
-      </a>
+      <a class="social-icon si-insta" href="https://instagram.com/planlife.ir" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram"></a>
+      <a class="social-icon si-telegram" href="https://t.me/planlife_ir" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram"></a>
+      <a class="social-icon si-whatsapp" href="https://wa.me/989000000000" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
+      <a class="social-icon si-bale" href="https://ble.ir/planlife" target="_blank"><img src="https://bale.ai/images/bale-icon.png" alt="Bale" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22white%22><text y=%2218%22 font-size=%2216%22>ب</text></svg>'"></a>
     </div>
   </div>
 </div>
@@ -1067,7 +1094,7 @@ audio { display:none; }
         <textarea class="form-textarea" id="r-text" placeholder="تجربه‌ات از دوره یا محتوای PlanLife رو بنویس..."></textarea>
       </div>
       <div class="form-field">
-        <div class="phone-note">در قسمت نظرات، شماره شما نمایش داده نخواهد شد.</div>
+        <div class="phone-note">شماره شما نمایش داده نخواهد شد.</div>
         <label class="form-label">شماره همراه</label>
         <input class="form-input" type="tel" id="r-phone" placeholder="۰۹۱۲XXXXXXX" style="direction:ltr;text-align:right;">
       </div>
@@ -1085,306 +1112,184 @@ audio { display:none; }
 
 <script>
 /* ===== PODCAST PLAYER ===== */
-const tracks = [
-  { src:"http://fs3.centraldnserver.com/~planlife/podcast_free/codenevisi/Codenevisizehn_free.m4a", title:"کد نویسی ذهن" },
-  { src:"http://fs3.centraldnserver.com/~planlife/podcast_free/Mozoatdigar/Frequency_free.m4a", title:"فرکانس خواسته" },
-  { src:"http://fs3.centraldnserver.com/~planlife/podcast_free/Mozoatdigar/hadaf_az_residan_be_khaste.m4a", title:"رسیدن به خواسته‌ها" },
-  { src:"https://res.cloudinary.com/dfthbclzi/video/upload/v1780854988/Bavar_free_w9yucc.m4a", title:"کار کردن روی باورها" },
-  { src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779530272/Khasis_bodan_-_planLife.ir_Free_sv3vbr.m4a", title:"خسیس بودن در زندگی" }
+var tracks = [
+  { src:"http://fs3.centraldnserver.com/~planlife/podcast_free/codenevisi/Codenevisizehn_free.m4a" },
+  { src:"http://fs3.centraldnserver.com/~planlife/podcast_free/Mozoatdigar/Frequency_free.m4a" },
+  { src:"http://fs3.centraldnserver.com/~planlife/podcast_free/Mozoatdigar/hadaf_az_residan_be_khaste.m4a" },
+  { src:"https://res.cloudinary.com/dfthbclzi/video/upload/v1780854988/Bavar_free_w9yucc.m4a" },
+  { src:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779530272/Khasis_bodan_-_planLife.ir_Free_sv3vbr.m4a" }
 ];
-const audio = document.getElementById('mainAudio');
-let currentTrack = -1;
+var audio = document.getElementById('mainAudio');
+var currentTrack = -1;
 
-function fmt(s) {
-  if (!s || !isFinite(s) || s < 0) return '0:00';
-  return Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0');
-}
-function setPlayIcon(idx, playing) {
-  const btn = document.getElementById('play-'+idx);
-  if (!btn) return;
-  btn.innerHTML = playing
-    ? '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="white"/></svg>'
-    : '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="white"/></svg>';
-  btn.classList.toggle('playing', playing);
+function fmt(s) { if (!s||!isFinite(s)||s<0) return '0:00'; return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0'); }
+function setPlayIcon(idx,playing) {
+  var btn = document.getElementById('play-'+idx); if(!btn) return;
+  btn.innerHTML = playing ? '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="white"/></svg>' : '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="white"/></svg>';
+  btn.classList.toggle('playing',playing);
 }
 function resetCard(idx) {
-  setPlayIcon(idx, false);
-  const pb = document.getElementById('progress-'+idx);
-  if (pb) pb.style.width = '0%';
-  const cur = document.getElementById('cur-'+idx);
-  if (cur) cur.textContent = '0:00';
+  setPlayIcon(idx,false);
+  var pb=document.getElementById('progress-'+idx); if(pb) pb.style.width='0%';
+  var cur=document.getElementById('cur-'+idx); if(cur) cur.textContent='0:00';
 }
-function togglePlay(evt, idx) {
+function togglePlay(evt,idx) {
   evt.stopPropagation();
-  if (currentTrack === idx) { audio.paused ? audio.play().catch(()=>{}) : audio.pause(); return; }
-  if (currentTrack !== -1) resetCard(currentTrack);
-  currentTrack = idx;
-  audio.src = tracks[idx].src;
-  audio.play().catch(()=>{});
+  if(currentTrack===idx){ audio.paused ? audio.play().catch(()=>{}) : audio.pause(); return; }
+  if(currentTrack!==-1) resetCard(currentTrack);
+  currentTrack=idx; audio.src=tracks[idx].src; audio.play().catch(()=>{});
 }
-function prevTrack(evt, idx) {
-  evt.stopPropagation();
-  const prev = currentTrack > 0 ? currentTrack - 1 : 0;
-  if (currentTrack !== -1) resetCard(currentTrack);
-  currentTrack = prev;
-  audio.src = tracks[prev].src;
-  audio.play().catch(()=>{});
-}
-function nextTrack(evt, idx) {
-  evt.stopPropagation();
-  const next = currentTrack < tracks.length-1 ? currentTrack+1 : tracks.length-1;
-  if (currentTrack !== -1) resetCard(currentTrack);
-  currentTrack = next;
-  audio.src = tracks[next].src;
-  audio.play().catch(()=>{});
-}
-function seekFwd(evt, idx) {
-  evt.stopPropagation();
-  if (currentTrack !== idx) return;
-  audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 10);
-}
-function seekTo(evt, idx) {
-  if (currentTrack !== idx || !audio.duration) return;
-  const track = document.getElementById('track-' + idx);
-  const rect = track.getBoundingClientRect();
-  const ratio = (evt.clientX - rect.left) / rect.width;
-  audio.currentTime = Math.max(0, Math.min(1, ratio)) * audio.duration;
-}
-audio.addEventListener('play', () => { if (currentTrack !== -1) setPlayIcon(currentTrack, true); });
-audio.addEventListener('pause', () => { if (currentTrack !== -1) setPlayIcon(currentTrack, false); });
-audio.addEventListener('ended', () => { if (currentTrack !== -1) resetCard(currentTrack); });
-audio.addEventListener('timeupdate', () => {
-  if (currentTrack === -1 || !audio.duration) return;
-  const pct = (audio.currentTime / audio.duration) * 100;
-  const pb = document.getElementById('progress-'+currentTrack);
-  if (pb) pb.style.width = pct+'%';
-  const cur = document.getElementById('cur-'+currentTrack);
-  if (cur) cur.textContent = fmt(audio.currentTime);
+function prevTrack(evt,idx) { evt.stopPropagation(); var p=currentTrack>0?currentTrack-1:0; if(currentTrack!==-1)resetCard(currentTrack); currentTrack=p; audio.src=tracks[p].src; audio.play().catch(()=>{}); }
+function nextTrack(evt,idx) { evt.stopPropagation(); var n=currentTrack<tracks.length-1?currentTrack+1:tracks.length-1; if(currentTrack!==-1)resetCard(currentTrack); currentTrack=n; audio.src=tracks[n].src; audio.play().catch(()=>{}); }
+function seekFwd(evt,idx) { evt.stopPropagation(); if(currentTrack!==idx)return; audio.currentTime=Math.min(audio.duration||0,audio.currentTime+10); }
+function seekTo(evt,idx) { if(currentTrack!==idx||!audio.duration)return; var t=document.getElementById('track-'+idx); var r=t.getBoundingClientRect(); audio.currentTime=Math.max(0,Math.min(1,(evt.clientX-r.left)/r.width))*audio.duration; }
+audio.addEventListener('play',function(){ if(currentTrack!==-1)setPlayIcon(currentTrack,true); });
+audio.addEventListener('pause',function(){ if(currentTrack!==-1)setPlayIcon(currentTrack,false); });
+audio.addEventListener('ended',function(){ if(currentTrack!==-1)resetCard(currentTrack); });
+audio.addEventListener('timeupdate',function(){
+  if(currentTrack===-1||!audio.duration)return;
+  var pct=(audio.currentTime/audio.duration)*100;
+  var pb=document.getElementById('progress-'+currentTrack); if(pb) pb.style.width=pct+'%';
+  var cur=document.getElementById('cur-'+currentTrack); if(cur) cur.textContent=fmt(audio.currentTime);
 });
-audio.addEventListener('loadedmetadata', () => {
-  if (currentTrack === -1) return;
-  const dur = document.getElementById('dur-'+currentTrack);
-  if (dur) dur.textContent = fmt(audio.duration);
+audio.addEventListener('loadedmetadata',function(){
+  if(currentTrack===-1)return;
+  var dur=document.getElementById('dur-'+currentTrack); if(dur) dur.textContent=fmt(audio.duration);
 });
+
+/* ===== COURSES DRAG SCROLL ===== */
+(function(){
+  var sc=document.getElementById('coursesScroll');
+  if(!sc) return;
+  var isDown=false,startX,scrollLeft;
+  sc.addEventListener('mousedown',function(e){isDown=true;startX=e.pageX-sc.offsetLeft;scrollLeft=sc.scrollLeft;sc.style.cursor='grabbing';});
+  sc.addEventListener('mouseleave',function(){isDown=false;sc.style.cursor='grab';});
+  sc.addEventListener('mouseup',function(){isDown=false;sc.style.cursor='grab';});
+  sc.addEventListener('mousemove',function(e){if(!isDown)return;e.preventDefault();sc.scrollLeft=scrollLeft-(e.pageX-sc.offsetLeft-startX)*1.3;});
+})();
 
 /* ===== REVIEW MODAL ===== */
-var selectedRating = 0;
-function openReviewModal() {
-  document.getElementById('reviewModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  document.getElementById('reviewForm').style.display = 'block';
-  document.getElementById('successMsg').classList.remove('show');
-  resetForm();
-}
-function closeReviewModal() {
-  document.getElementById('reviewModal').classList.remove('open');
-  document.body.style.overflow = '';
-}
-function handleModalClick(e) { if (e.target === document.getElementById('reviewModal')) closeReviewModal(); }
-function resetForm() {
-  document.getElementById('r-name').value = '';
-  document.getElementById('r-text').value = '';
-  document.getElementById('r-phone').value = '';
-  selectedRating = 0;
-  document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('lit'));
-  document.querySelectorAll('.course-option').forEach(o => o.classList.remove('selected'));
-  document.getElementById('form-error').style.display = 'none';
-}
-function toggleCourse(el) { el.classList.toggle('selected'); }
-function setRating(n) {
-  selectedRating = n;
-  document.querySelectorAll('.star-btn').forEach(b => {
-    b.classList.toggle('lit', parseInt(b.getAttribute('data-star')) <= n);
-  });
-}
-function submitReview() {
-  const name = document.getElementById('r-name').value.trim();
-  const text = document.getElementById('r-text').value.trim();
-  const phone = document.getElementById('r-phone').value.trim();
-  if (!name) { showErr('نام و نام خانوادگی را وارد کنید.'); return; }
-  if (selectedRating === 0) { showErr('لطفاً امتیاز خود را انتخاب کنید.'); return; }
-  if (!text) { showErr('متن نظر خود را بنویسید.'); return; }
-  if (!phone) { showErr('شماره همراه را وارد کنید.'); return; }
-  document.getElementById('form-error').style.display = 'none';
-  document.getElementById('reviewForm').style.display = 'none';
+var selectedRating=0;
+function openReviewModal(){ document.getElementById('reviewModal').classList.add('open'); document.body.style.overflow='hidden'; document.getElementById('reviewForm').style.display='block'; document.getElementById('successMsg').classList.remove('show'); resetForm(); }
+function closeReviewModal(){ document.getElementById('reviewModal').classList.remove('open'); document.body.style.overflow=''; }
+function handleModalClick(e){ if(e.target===document.getElementById('reviewModal'))closeReviewModal(); }
+function resetForm(){ document.getElementById('r-name').value=''; document.getElementById('r-text').value=''; document.getElementById('r-phone').value=''; selectedRating=0; document.querySelectorAll('.star-btn').forEach(function(b){b.classList.remove('lit');}); document.querySelectorAll('.course-option').forEach(function(o){o.classList.remove('selected');}); document.getElementById('form-error').style.display='none'; }
+function toggleCourse(el){ el.classList.toggle('selected'); }
+function setRating(n){ selectedRating=n; document.querySelectorAll('.star-btn').forEach(function(b){ b.classList.toggle('lit',parseInt(b.getAttribute('data-star'))<=n); }); }
+function submitReview(){
+  var name=document.getElementById('r-name').value.trim();
+  var text=document.getElementById('r-text').value.trim();
+  var phone=document.getElementById('r-phone').value.trim();
+  if(!name){showErr('نام و نام خانوادگی را وارد کنید.');return;}
+  if(selectedRating===0){showErr('لطفاً امتیاز خود را انتخاب کنید.');return;}
+  if(!text){showErr('متن نظر خود را بنویسید.');return;}
+  if(!phone){showErr('شماره همراه را وارد کنید.');return;}
+  document.getElementById('form-error').style.display='none';
+  document.getElementById('reviewForm').style.display='none';
   document.getElementById('successMsg').classList.add('show');
 }
-function showErr(msg) {
-  const el = document.getElementById('form-error');
-  el.textContent = msg;
-  el.style.display = 'block';
-}
+function showErr(msg){ var el=document.getElementById('form-error'); el.textContent=msg; el.style.display='block'; }
 
-/* ===================================================
-   STORIES
-   =================================================== */
-var stories = [];
-var storyIndex = 0;
-var storyTimer = null;
-var STORY_SEEN_KEY = 'planlife_stories_seen_profile';
-var DAY_MS = 24 * 60 * 60 * 1000;
+/* ===== STORIES ===== */
+var stories=[];
+var storyIndex=0;
+var storyTimer=null;
+var STORY_SEEN_KEY='planlife_stories_seen_profile';
+var DAY_MS=24*60*60*1000;
 
-function getSeenMap() {
-  try {
-    var raw = localStorage.getItem(STORY_SEEN_KEY);
-    if (!raw) return {};
-    var map = JSON.parse(raw);
-    var now = Date.now(), cleaned = {};
-    Object.keys(map).forEach(function(idx) { if (now - map[idx] < DAY_MS) cleaned[idx] = map[idx]; });
-    return cleaned;
-  } catch(e) { return {}; }
-}
-function markSeenPersisted(idx) {
-  try { var map = getSeenMap(); map[idx] = Date.now(); localStorage.setItem(STORY_SEEN_KEY, JSON.stringify(map)); } catch(e) {}
-}
-function isSeenPersisted(idx) { var map = getSeenMap(); return Object.prototype.hasOwnProperty.call(map, idx); }
+function getSeenMap(){ try{ var raw=localStorage.getItem(STORY_SEEN_KEY); if(!raw)return{}; var map=JSON.parse(raw); var now=Date.now(),cleaned={}; Object.keys(map).forEach(function(idx){if(now-map[idx]<DAY_MS)cleaned[idx]=map[idx];}); return cleaned; }catch(e){return{};} }
+function markSeenPersisted(idx){ try{ var map=getSeenMap(); map[idx]=Date.now(); localStorage.setItem(STORY_SEEN_KEY,JSON.stringify(map)); }catch(e){} }
+function isSeenPersisted(idx){ var map=getSeenMap(); return Object.prototype.hasOwnProperty.call(map,idx); }
 
-function initStories() {
-  var items = document.querySelectorAll('.story-item');
-  items.forEach(function(item) {
-    var idx = parseInt(item.dataset.index, 10);
-    var alreadySeen = isSeenPersisted(idx);
-    stories.push({
-      el: item, img: item.dataset.img || '',
-      caption: item.dataset.caption || '',
-      btnShow: (item.dataset.btnShow || '').toLowerCase() === 'true',
-      btnText: item.dataset.btnText || '',
-      btnLink: item.dataset.btnLink || '',
-      seen: alreadySeen
-    });
-    if (alreadySeen) item.classList.add('seen');
-    item.addEventListener('click', function() { openStoryModal(parseInt(item.dataset.index, 10)); });
+function initStories(){
+  var items=document.querySelectorAll('.story-item');
+  items.forEach(function(item){
+    var idx=parseInt(item.dataset.index,10);
+    var alreadySeen=isSeenPersisted(idx);
+    stories.push({ el:item, img:item.dataset.img||'', caption:item.dataset.caption||'', btnShow:(item.dataset.btnShow||'').toLowerCase()==='true', btnText:item.dataset.btnText||'', btnLink:item.dataset.btnLink||'', seen:alreadySeen });
+    if(alreadySeen) item.classList.add('seen');
+    item.addEventListener('click',function(){ openStoryModal(parseInt(item.dataset.index,10)); });
   });
-
-  var el = document.getElementById('stories-scroll');
-  var isDown = false, startX, scrollLeft;
-  el.addEventListener('mousedown', function(e) { isDown = true; startX = e.pageX - el.offsetLeft; scrollLeft = el.scrollLeft; el.style.cursor = 'grabbing'; });
-  el.addEventListener('mouseleave', function() { isDown = false; el.style.cursor = 'grab'; });
-  el.addEventListener('mouseup', function() { isDown = false; el.style.cursor = 'grab'; });
-  el.addEventListener('mousemove', function(e) {
-    if (!isDown) return; e.preventDefault();
-    el.scrollLeft = scrollLeft - (e.pageX - el.offsetLeft - startX) * 1.4;
-  });
+  var el=document.getElementById('stories-scroll');
+  var isDown=false,startX,scrollLeft;
+  el.addEventListener('mousedown',function(e){isDown=true;startX=e.pageX-el.offsetLeft;scrollLeft=el.scrollLeft;el.style.cursor='grabbing';});
+  el.addEventListener('mouseleave',function(){isDown=false;el.style.cursor='grab';});
+  el.addEventListener('mouseup',function(){isDown=false;el.style.cursor='grab';});
+  el.addEventListener('mousemove',function(e){if(!isDown)return;e.preventDefault();el.scrollLeft=scrollLeft-(e.pageX-el.offsetLeft-startX)*1.4;});
 }
 
-var savedScrollY = 0;
-function openStoryModal(idx) {
-  storyIndex = idx;
-  savedScrollY = window.scrollY || 0;
-  document.body.style.position = 'fixed';
-  document.body.style.top = (-savedScrollY) + 'px';
-  document.body.style.left = '0'; document.body.style.right = '0'; document.body.style.width = '100%';
+var savedScrollY=0;
+function openStoryModal(idx){
+  storyIndex=idx; savedScrollY=window.scrollY||0;
+  document.body.style.position='fixed'; document.body.style.top=(-savedScrollY)+'px';
+  document.body.style.left='0'; document.body.style.right='0'; document.body.style.width='100%';
   document.getElementById('story-modal').classList.add('open');
   renderStoryModal(); buildProgressBar(); startStoryTimer();
 }
-function closeStoryModal() {
-  document.getElementById('story-modal').classList.remove('open');
-  clearStoryTimer();
-  var contentDiv = document.getElementById('story-modal-content');
-  var vid = contentDiv.querySelector('video');
-  if (vid) { vid.pause(); vid.removeAttribute('src'); vid.load(); vid.remove(); }
-  document.body.style.position = ''; document.body.style.top = '';
-  document.body.style.left = ''; document.body.style.right = ''; document.body.style.width = '';
-  window.scrollTo(0, savedScrollY);
+function closeStoryModal(){
+  document.getElementById('story-modal').classList.remove('open'); clearStoryTimer();
+  var contentDiv=document.getElementById('story-modal-content');
+  var vid=contentDiv.querySelector('video');
+  if(vid){vid.pause();vid.removeAttribute('src');vid.load();vid.remove();}
+  document.body.style.position=''; document.body.style.top='';
+  document.body.style.left=''; document.body.style.right=''; document.body.style.width='';
+  window.scrollTo(0,savedScrollY);
 }
-
-function getMediaType(url) {
-  if (!url) return 'image';
-  var clean = url.toLowerCase().split('?')[0];
-  var ext = clean.split('.').pop();
-  if (['mp4','webm','ogg','mov','avi','mkv','m4v'].includes(ext)) return 'video';
-  if (clean.indexOf('/video/upload/') >= 0) return 'video';
-  return 'image';
-}
-
-function renderStoryModal() {
-  var s = stories[storyIndex];
-  if (!s) { closeStoryModal(); return; }
-  s.seen = true; s.el.classList.add('seen'); markSeenPersisted(storyIndex);
-
-  var mediaType = getMediaType(s.img);
-  var contentDiv = document.getElementById('story-modal-content');
-  var oldVideo = contentDiv.querySelector('video');
-  if (oldVideo) { oldVideo.pause(); oldVideo.src = ''; oldVideo.remove(); }
-  var oldImg = contentDiv.querySelector('img');
-  if (oldImg) oldImg.remove();
-
-  if (mediaType === 'video') {
-    var video = document.createElement('video');
+function getMediaType(url){ if(!url)return'image'; var clean=url.toLowerCase().split('?')[0]; var ext=clean.split('.').pop(); if(['mp4','webm','ogg','mov','avi','mkv','m4v'].includes(ext))return'video'; if(clean.indexOf('/video/upload/')>=0)return'video'; return'image'; }
+function renderStoryModal(){
+  var s=stories[storyIndex]; if(!s){closeStoryModal();return;}
+  s.seen=true; s.el.classList.add('seen'); markSeenPersisted(storyIndex);
+  var mediaType=getMediaType(s.img);
+  var contentDiv=document.getElementById('story-modal-content');
+  var oldVideo=contentDiv.querySelector('video'); if(oldVideo){oldVideo.pause();oldVideo.src='';oldVideo.remove();}
+  var oldImg=contentDiv.querySelector('img'); if(oldImg)oldImg.remove();
+  if(mediaType==='video'){
+    var video=document.createElement('video');
     video.setAttribute('playsinline',''); video.setAttribute('webkit-playsinline','');
-    video.muted = false; video.autoplay = true; video.controls = false; video.preload = 'auto';
-    video.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
-    video.addEventListener('ended', function() { storyNavigate(1); });
-    video.addEventListener('error', function() { startStoryTimer(); });
-    video.addEventListener('loadedmetadata', function() { clearStoryTimer(); updateProgressForVideo(video); });
-    var source = document.createElement('source');
-    source.src = s.img;
-    var ext = s.img.toLowerCase().split('?')[0].split('.').pop();
-    source.type = ['webm','ogg'].includes(ext) ? 'video/'+ext : 'video/mp4';
+    video.muted=false; video.autoplay=true; video.controls=false; video.preload='auto';
+    video.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
+    video.addEventListener('ended',function(){storyNavigate(1);});
+    video.addEventListener('error',function(){startStoryTimer();});
+    video.addEventListener('loadedmetadata',function(){clearStoryTimer();updateProgressForVideo(video);});
+    var source=document.createElement('source'); source.src=s.img;
+    var ext=s.img.toLowerCase().split('?')[0].split('.').pop();
+    source.type=['webm','ogg'].includes(ext)?'video/'+ext:'video/mp4';
     video.appendChild(source); contentDiv.appendChild(video);
-    var playPromise = video.play();
-    if (playPromise !== undefined) playPromise.catch(function() { showPlayOverlay(video, contentDiv); });
+    var pp=video.play(); if(pp!==undefined)pp.catch(function(){showPlayOverlay(video,contentDiv);});
   } else {
-    var img = document.createElement('img');
-    img.src = s.img; img.alt = '';
-    img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
+    var img=document.createElement('img'); img.src=s.img; img.alt='';
+    img.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
     contentDiv.appendChild(img);
   }
-
-  document.getElementById('story-caption').textContent = s.caption;
-  var btn = document.getElementById('story-action-btn');
-  if (s.btnShow && s.btnLink) {
-    btn.textContent = s.btnText || 'مشاهده بیشتر';
-    btn.href = s.btnLink; btn.classList.add('show');
-  } else { btn.classList.remove('show'); btn.removeAttribute('href'); }
+  document.getElementById('story-caption').textContent=s.caption;
+  var btn=document.getElementById('story-action-btn');
+  if(s.btnShow&&s.btnLink){ btn.textContent=s.btnText||'مشاهده بیشتر'; btn.href=s.btnLink; btn.classList.add('show'); }
+  else { btn.classList.remove('show'); btn.removeAttribute('href'); }
 }
-
-function updateProgressForVideo(video) {
-  var bar = document.getElementById('story-progress-bar');
-  var segs = bar.querySelectorAll('.progress-seg');
-  var activeSeg = segs[storyIndex]; if (!activeSeg) return;
-  var fill = activeSeg.querySelector('.progress-seg-fill');
-  activeSeg.classList.remove('active'); fill.style.transition = 'none'; fill.style.width = '0%';
-  video.addEventListener('timeupdate', function() {
-    if (!video.duration) return;
-    fill.style.width = ((video.currentTime / video.duration) * 100) + '%';
-  });
+function updateProgressForVideo(video){
+  var bar=document.getElementById('story-progress-bar'); var segs=bar.querySelectorAll('.progress-seg');
+  var activeSeg=segs[storyIndex]; if(!activeSeg)return;
+  var fill=activeSeg.querySelector('.progress-seg-fill');
+  activeSeg.classList.remove('active'); fill.style.transition='none'; fill.style.width='0%';
+  video.addEventListener('timeupdate',function(){ if(!video.duration)return; fill.style.width=((video.currentTime/video.duration)*100)+'%'; });
 }
-
-function showPlayOverlay(video, container) {
-  var overlay = document.createElement('div');
-  overlay.style.cssText = 'position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.3);cursor:pointer;';
-  var btn = document.createElement('div');
-  btn.style.cssText = 'width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.2);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:32px;';
-  btn.textContent = '▶'; overlay.appendChild(btn);
-  overlay.addEventListener('click', function() { video.play(); overlay.remove(); });
-  container.appendChild(overlay);
+function showPlayOverlay(video,container){
+  var overlay=document.createElement('div');
+  overlay.style.cssText='position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.3);cursor:pointer;';
+  var btn=document.createElement('div');
+  btn.style.cssText='width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.2);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:32px;';
+  btn.textContent='▶'; overlay.appendChild(btn); overlay.addEventListener('click',function(){video.play();overlay.remove();}); container.appendChild(overlay);
 }
-
-function buildProgressBar() {
-  var bar = document.getElementById('story-progress-bar'); bar.innerHTML = '';
-  stories.forEach(function(s, i) {
-    var seg = document.createElement('div'); seg.className = 'progress-seg';
-    if (i < storyIndex) seg.classList.add('done');
-    if (i === storyIndex) seg.classList.add('active');
-    var fill = document.createElement('div'); fill.className = 'progress-seg-fill';
-    seg.appendChild(fill); bar.appendChild(seg);
-  });
+function buildProgressBar(){
+  var bar=document.getElementById('story-progress-bar'); bar.innerHTML='';
+  stories.forEach(function(s,i){ var seg=document.createElement('div'); seg.className='progress-seg'; if(i<storyIndex)seg.classList.add('done'); if(i===storyIndex)seg.classList.add('active'); var fill=document.createElement('div'); fill.className='progress-seg-fill'; seg.appendChild(fill); bar.appendChild(seg); });
 }
+function startStoryTimer(){ clearStoryTimer(); storyTimer=setTimeout(function(){storyNavigate(1);},5000); }
+function clearStoryTimer(){ if(storyTimer){clearTimeout(storyTimer);storyTimer=null;} }
+function storyNavigate(dir){ clearStoryTimer(); storyIndex+=dir; if(storyIndex<0)storyIndex=0; if(storyIndex>=stories.length){closeStoryModal();return;} renderStoryModal(); buildProgressBar(); startStoryTimer(); }
+document.getElementById('story-modal').addEventListener('click',function(e){if(e.target===this)closeStoryModal();});
 
-function startStoryTimer() { clearStoryTimer(); storyTimer = setTimeout(function() { storyNavigate(1); }, 5000); }
-function clearStoryTimer() { if (storyTimer) { clearTimeout(storyTimer); storyTimer = null; } }
-
-function storyNavigate(dir) {
-  clearStoryTimer(); storyIndex += dir;
-  if (storyIndex < 0) storyIndex = 0;
-  if (storyIndex >= stories.length) { closeStoryModal(); return; }
-  renderStoryModal(); buildProgressBar(); startStoryTimer();
-}
-
-document.getElementById('story-modal').addEventListener('click', function(e) { if (e.target === this) closeStoryModal(); });
-
-window.addEventListener('load', function() { initStories(); });
+window.addEventListener('load',function(){initStories();});
 </script>
 </body>
 </html>
