@@ -25,7 +25,7 @@
 }
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 html, body { height:100%; font-family:'Vazirmatn', sans-serif; color:var(--ink); }
-body { background:var(--bg); min-height:100vh; padding-bottom:100px; }
+body { background:var(--bg); min-height:100vh; padding-bottom:70px; }
 button { font-family:inherit; cursor:pointer; }
 a { color:inherit; text-decoration:none; }
 
@@ -49,23 +49,15 @@ a { color:inherit; text-decoration:none; }
 }
 .header-back:hover { background:var(--hair); }
 
-/* ── COVER (full-width, standalone) ── */
-.hero-section {
-  position:relative;
-  overflow:visible;
-  margin:0;
-}
+/* ── COVER ── */
+.hero-section { position:relative; overflow:visible; margin:0; padding-bottom:0; }
 .hero-cover {
-  position:relative;
-  height:180px;
+  position:relative; height:180px;
   background:linear-gradient(135deg, #0d1117 0%, #1a2340 50%, #0a1a0a 100%);
-  overflow:hidden;
-  border-radius:0;          /* تمام عرض، بدون گوشه */
+  overflow:visible;
+  z-index:2;
 }
-.hero-cover img.cover-img {
-  width:100%; height:100%; object-fit:cover; display:block;
-  opacity:0.85;
-}
+.hero-cover img.cover-img { width:100%; height:100%; object-fit:cover; display:block; opacity:0.85; }
 .cover-pattern {
   position:absolute; inset:0;
   background-image:
@@ -83,29 +75,42 @@ a { color:inherit; text-decoration:none; }
 .cover-badge .dot { width:6px; height:6px; border-radius:50%; background:var(--lime); animation:pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
 
-/* آواتار — روی کاور معلق، مستقل */
+/* ── آواتار وسط‌چین، تصویر کامل ── */
 .avatar-wrap {
   position:absolute;
-  bottom:-44px;
-  right:18px;              /* چپ‌چین (RTL = right در CSS) */
-  width:88px; height:88px;
-  border-radius:20px;
-  border:3.5px solid #ffffff;
-  overflow:hidden; background:#ccc;
-  box-shadow:0 6px 20px rgba(0,0,0,.32);
-  z-index:20;
+  bottom:-52px;
+  left:50%;
+  transform:translateX(-50%);
+  width:96px; height:96px;
+  border-radius:22px;
+  background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888,#833ab4,#405de6);
+  padding:3.5px;
+  box-shadow:0 8px 24px rgba(0,0,0,.38);
+  z-index:50;
 }
-.avatar-wrap img { width:100%; height:100%; object-fit:cover; }
+.avatar-inner {
+  width:100%; height:100%;
+  border-radius:18px;
+  overflow:hidden;
+  background:#fff;
+}
+.avatar-inner img {
+  width:100%; height:100%;
+  object-fit:contain;
+  object-position:center;
+  display:block;
+}
 
-/* ── INFO CARD (جداگانه، پایین کاور) ── */
+/* ── INFO CARD ── */
 .hero-body {
   background:#ffffff;
   border-radius:var(--radius);
   box-shadow:var(--shadow);
-  margin:54px 14px 0;      /* فضا برای آواتار معلق */
-  padding:14px 18px 18px;
+  margin:62px 14px 0;
+  padding:42px 18px 18px;   /* فضای بالا برای آواتار */
   text-align:center;
   position:relative;
+  overflow:visible;
 }
 .brand-name { font-size:21px; font-weight:900; line-height:1.2; margin-bottom:3px; }
 .brand-sub { font-size:12px; color:var(--muted); margin-bottom:14px; }
@@ -151,12 +156,7 @@ a { color:inherit; text-decoration:none; }
 .qn-icon svg { width:22px; height:22px; stroke:var(--ink); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; transition:.15s; }
 
 /* ===== STORIES ===== */
-.stories-outer {
-  margin:16px 14px 0;
-  padding:4px 0 0;
-  overflow:hidden;
-}
-.stories-section-title { display:none; }
+.stories-outer { margin:16px 14px 0; padding:4px 0 0; overflow:hidden; }
 .stories-wrapper { width:100%; position:relative; }
 .stories-scroll {
   display:flex; flex-direction:row; direction:ltr;
@@ -306,7 +306,6 @@ audio { display:none; }
 }
 .courses-scroll:active { cursor:grabbing; }
 .courses-scroll::-webkit-scrollbar { display:none; }
-
 .course-card {
   flex-shrink:0; width:195px;
   border-radius:22px; overflow:hidden;
@@ -439,30 +438,33 @@ audio { display:none; }
 .success-title { font-size:17px; font-weight:900; }
 .success-sub { font-size:13px; color:var(--muted); line-height:1.7; }
 
-/* BOTTOM NAV — همه آیتم‌ها کنار هم، چسبیده به پایین گوشی */
+/* ===== BOTTOM NAV — همه آیتم‌ها کنار هم ===== */
 .bottom-nav {
   position:fixed; bottom:0; left:0; right:0; z-index:200;
   background:rgba(255,255,255,.96);
   backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
   border-top:1px solid rgba(0,0,0,.07);
   box-shadow:0 -4px 20px rgba(18,20,28,.1);
-  display:flex; padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px)) 4px;
-  gap:2px;
+  display:flex;
+  padding:6px 2px calc(6px + env(safe-area-inset-bottom,0px)) 2px;
+  gap:1px;
 }
 .bn-item {
-  flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
-  padding:7px 4px; border-radius:12px; color:var(--muted);
-  font-size:9px; font-weight:700; cursor:pointer; transition:.15s;
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
+  padding:6px 2px; border-radius:10px; color:var(--muted);
+  font-size:8.5px; font-weight:700; cursor:pointer; transition:.15s;
   border:none; background:none; text-decoration:none;
+  white-space:nowrap;
 }
 .bn-item.active, .bn-item:active { color:var(--blue); }
 .bn-item.primary {
-  background:var(--blue); color:#fff; border-radius:14px;
-  box-shadow:0 4px 14px rgba(47,111,237,.35); flex:1.5;
+  background:var(--blue); color:#fff; border-radius:12px;
+  box-shadow:0 4px 14px rgba(47,111,237,.35);
+  flex:1.3;
 }
 .bn-item.primary:hover { background:var(--blue-dark); }
-.bn-item svg { width:20px; height:20px; flex-shrink:0; }
-.bn-item.primary svg { width:18px; height:18px; }
+.bn-item svg { width:18px; height:18px; flex-shrink:0; }
+.bn-item.primary svg { width:16px; height:16px; }
 </style>
 </head>
 <body>
@@ -485,8 +487,11 @@ audio { display:none; }
     <img class="cover-img" src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="کاور PlanLife">
     <div class="cover-pattern"></div>
     <div class="cover-badge"><span class="dot"></span>پلتفرم رشد فردی</div>
+    <!-- آواتار وسط‌چین -->
     <div class="avatar-wrap">
-      <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
+      <div class="avatar-inner">
+        <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
+      </div>
     </div>
   </div>
   <div class="hero-body">
@@ -509,7 +514,6 @@ audio { display:none; }
       <span class="tag">انگیزه</span>
     </div>
     <div class="quick-nav">
-      <!-- ✅ لینک دوره‌ها در quick-nav -->
       <a class="qn-item" href="https://planlife.ir/dores.html">
         <div class="qn-icon"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 9h8M8 13h5"/></svg></div>
         دوره‌ها
@@ -532,7 +536,6 @@ audio { display:none; }
 
 <!-- STORIES -->
 <div class="stories-outer">
-  <div class="stories-section-title"><span>استوری‌ها</span></div>
   <div class="stories-wrapper">
     <div class="stories-scroll" id="stories-scroll">
       <div class="story-item" data-index="0" data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" data-caption="پادکست‌های رایگان PlanLife درباره قانون جذب و تغییر افکار 🎙️" data-btn-show="true" data-btn-text="شنیدن پادکست‌ها" data-btn-link="https://planlife.ir/Pages/podcasts_free/index.html">
@@ -731,14 +734,11 @@ audio { display:none; }
 <!-- COURSE CARDS -->
 <div class="section-label">
   <span>دوره‌های آنلاین</span>
-  <!-- ✅ لینک دیدن همه دوره‌ها -->
   <a href="https://planlife.ir/dores.html">دیدن همه</a>
 </div>
 
 <div class="courses-scroll-outer">
   <div class="courses-scroll" id="coursesScroll">
-
-    <!-- دوره ۱ -->
     <div class="course-card">
       <div class="course-card-cover">
         <img src="http://fs3.centraldnserver.com/~planlife/pics/Servat/moneyplanlife.JPG" alt="دوره کدهای پشت‌پرده پول">
@@ -749,15 +749,12 @@ audio { display:none; }
       <div class="course-card-body">
         <div class="course-card-title">دوره کدهای پشت‌پرده پول</div>
         <div class="course-card-actions">
-          <!-- ✅ همه دکمه‌های دوره‌ها -->
           <button class="cc-btn cc-btn-results" onclick="window.location.href='https://planlife.ir/dores.html'">🏆 نتایج دانشجویان</button>
           <button class="cc-btn cc-btn-buy"     onclick="window.location.href='https://planlife.ir/dores.html'">💳 خرید دوره</button>
           <button class="cc-btn cc-btn-play"    onclick="window.location.href='https://planlife.ir/dores.html'">▶ پخش دوره</button>
         </div>
       </div>
     </div>
-
-    <!-- دوره ۲ -->
     <div class="course-card">
       <div class="course-card-cover">
         <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="دوره چطور حالم خوب باشه">
@@ -774,8 +771,6 @@ audio { display:none; }
         </div>
       </div>
     </div>
-
-    <!-- دوره ۳ -->
     <div class="course-card">
       <div class="course-card-cover">
         <img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2461.jpeg" alt="دوره هماهنگی با جریان خلقت">
@@ -792,8 +787,6 @@ audio { display:none; }
         </div>
       </div>
     </div>
-
-    <!-- دوره ۴ (به‌زودی) -->
     <div class="course-card is-soon">
       <div class="course-card-cover">
         <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="دوره خودباوری">
@@ -811,8 +804,6 @@ audio { display:none; }
         </div>
       </div>
     </div>
-
-    <!-- دوره ۵ (به‌زودی) -->
     <div class="course-card is-soon">
       <div class="course-card-cover">
         <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="دوره پذیرش احساس لیاقت">
@@ -830,8 +821,6 @@ audio { display:none; }
         </div>
       </div>
     </div>
-
-    <!-- دوره ۶ (به‌زودی) -->
     <div class="course-card is-soon">
       <div class="course-card-cover">
         <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="دوره نفوذ به لایه‌های پنهان ذهن">
@@ -849,14 +838,10 @@ audio { display:none; }
         </div>
       </div>
     </div>
-
-    <!-- see all -->
-    <!-- ✅ لینک همه دوره‌ها -->
     <a class="courses-see-all" href="https://planlife.ir/dores.html">
       <div class="courses-see-all-icon">📚</div>
       <div class="courses-see-all-text">همه دوره‌ها</div>
     </a>
-
   </div>
 </div>
 
@@ -864,7 +849,6 @@ audio { display:none; }
 <div class="section-label">سرویس‌ها</div>
 <div class="scroll-section">
   <div class="scroll-wrap">
-    <!-- ✅ کارت دوره‌ها در سرویس‌ها -->
     <div class="service-card" onclick="window.location='https://planlife.ir/dores.html'">
       <div class="sc-thumb"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌ها"><span class="sc-badge">پرطرفدار</span></div>
       <div class="sc-body"><div class="sc-title">دوره‌ها 📚</div><div class="sc-sub">۶ مسیر آموزشی</div><button class="sc-cta">ورود به دوره‌ها</button></div>
@@ -897,7 +881,6 @@ audio { display:none; }
       <div class="rb-num"><div class="n">۴.۹</div><div class="l">رضایت کاربران</div></div>
       <div class="rb-num"><div class="n">۳۰</div><div class="l">روز تحول</div></div>
     </div>
-    <!-- ✅ دکمه نتایج بنر -->
     <button class="rb-cta" onclick="window.location='https://planlife.ir/dores.html'">دیدن نتایج و شروع دوره ›</button>
   </div>
 </div>
@@ -966,21 +949,28 @@ audio { display:none; }
 
 <div style="height:14px;"></div>
 
-<!-- BOTTOM NAV -->
+<!-- ===== BOTTOM NAV — همه آیتم‌ها کنار هم ===== -->
 <nav class="bottom-nav">
-  <!-- ✅ دکمه دوره‌ها در bottom nav -->
-  <button class="bn-item" onclick="window.location='https://planlife.ir/dores.html'">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="3.5" width="15" height="17" rx="4"/><path d="M8 11.3L10 13.3L14.5 8.8"/></svg>
+  <a class="bn-item" href="https://planlife.ir/dores.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 9h8M8 13h5"/></svg>
     دوره‌ها
-  </button>
+  </a>
+  <a class="bn-item" href="https://planlife.ir/podcastfree.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13.5C4 8.25 7.58 4 12 4c4.42 0 8 4.25 8 9.5"/><rect x="3" y="13" width="3.4" height="6" rx="1.6" fill="currentColor" stroke="none"/><rect x="17.6" y="13" width="3.4" height="6" rx="1.6" fill="currentColor" stroke="none"/></svg>
+    پادکست
+  </a>
   <button class="bn-item primary" onclick="document.getElementById('results-section').scrollIntoView({behavior:'smooth'})">
     <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M7 16l4-4 4 4 5-5"/></svg>
-    دیدن نتایج دوره
+    نتایج دوره
   </button>
-  <button class="bn-item" onclick="window.location='https://planlife.ir/'">
+  <a class="bn-item" href="#reviews-section">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    نظرات
+  </a>
+  <a class="bn-item" href="https://planlife.ir/">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.5 11L12 4L20.5 11V19.5C20.5 20.05 20.05 20.5 19.5 20.5H14.5V14H9.5V20.5H4.5C3.95 20.5 3.5 20.05 3.5 19.5V11Z"/></svg>
     خانه
-  </button>
+  </a>
 </nav>
 
 <!-- REVIEW MODAL -->
