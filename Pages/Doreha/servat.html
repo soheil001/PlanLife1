@@ -42,6 +42,297 @@
     .page-title { font-size: 18px; font-weight: 900; margin-bottom: 4px; }
     .page-subtitle { font-size: 13px; color: #9aa3b5; margin-bottom: 22px; line-height: 1.7; }
 
+    /* ===== WALLET STYLES ===== */
+    .wallet-section {
+        margin-bottom: 26px;
+    }
+
+    .wallet-section-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #ffd700;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .wallet {
+        position: relative;
+        width: 100%;
+        max-width: 320px;
+        height: 240px;
+        cursor: pointer;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        transition: transform 0.3s ease;
+    }
+
+    .wallet.active {
+        transform: translateY(-5px);
+    }
+
+    .wallet::after {
+        content: "👆 برای دیدن جزئیات لمس کن";
+        position: absolute;
+        bottom: -45px;
+        font-style: italic;
+        color: #ffd700;
+        font-size: 12px;
+        font-weight: 600;
+        text-align: center;
+        width: 100%;
+    }
+
+    @keyframes slideIntoPocket {
+        0% {
+            transform: translateY(-100px);
+            opacity: 0;
+        }
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .wallet-back {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #2d1b4e 0%, #1a0033 100%);
+        border-radius: 22px 22px 60px 60px;
+        z-index: 5;
+        box-shadow:
+            inset 0 25px 35px rgba(0, 0, 0, 0.4),
+            inset 0 5px 15px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255,215,0,0.1);
+    }
+
+    .card {
+        position: absolute;
+        width: 100%;
+        max-width: 280px;
+        height: 140px;
+        border-radius: 16px;
+        padding: 18px;
+        color: white;
+        box-shadow:
+            inset 0 1px 1px rgba(255, 255, 255, 0.3),
+            0 -4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.4s ease;
+        animation: slideIntoPocket 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .card.active {
+        z-index: 100 !important;
+    }
+
+    .card-inner {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }
+
+    .card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .chip {
+        width: 32px;
+        height: 24px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .card-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    .card-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-label {
+        font-size: 8px;
+        opacity: 0.7;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+        display: block;
+    }
+
+    .card-value {
+        font-size: 10px;
+        font-weight: 500;
+    }
+
+    .card-number-wrapper {
+        text-align: right;
+    }
+
+    .hidden-stars {
+        font-size: 16px;
+        letter-spacing: 2px;
+        transition: 0.3s;
+    }
+
+    .card-number {
+        font-size: 14px;
+        letter-spacing: 1px;
+        font-family: monospace;
+        display: none;
+        transition: 0.3s;
+    }
+
+    .card.saman {
+        background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(160,90,255,0.12));
+        border: 1px solid rgba(255,215,0,0.3);
+        bottom: 70px;
+        z-index: 10;
+        animation-delay: 0.1s;
+    }
+
+    .pocket {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        max-width: 320px;
+        height: 160px;
+        z-index: 40;
+        filter: drop-shadow(0 15px 25px rgba(20, 40, 20, 0.4));
+    }
+
+    .pocket-svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    .pocket-content {
+        position: absolute;
+        top: 45px;
+        width: 100%;
+        text-align: center;
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .balance-wrapper {
+        position: relative;
+        height: 24px;
+        width: 100%;
+    }
+
+    .balance-stars {
+        color: #cbd5e1;
+        font-size: 24px;
+        letter-spacing: 4px;
+        transition: 0.3s;
+    }
+
+    .balance-real {
+        color: #ffd700;
+        font-size: 22px;
+        font-weight: 600;
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, 10px);
+        transition: 0.3s;
+    }
+
+    .balance-label {
+        color: #9aa3b5;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .eye-icon-wrapper {
+        margin-top: 8px;
+        height: 20px;
+        width: 20px;
+        position: relative;
+        opacity: 0.3;
+        transition: 0.3s;
+    }
+
+    .eye-icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        stroke: #ffd700;
+        transition: 0.3s;
+        width: 20px;
+        height: 20px;
+    }
+
+    .eye-slash {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .eye-open {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    .wallet.active {
+        transform: translateY(-5px);
+    }
+
+    .wallet.active .eye-icon-wrapper {
+        opacity: 1;
+    }
+
+    .wallet.active .card {
+        transform: translateY(-75px);
+    }
+
+    .wallet.active .balance-stars {
+        opacity: 0;
+    }
+
+    .wallet.active .balance-real {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+    .wallet.active .eye-slash {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    .wallet.active .eye-open {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    .card.active .hidden-stars {
+        display: none;
+    }
+
+    .card.active .card-number {
+        display: block;
+    }
+
+    /* ===== ORIGINAL STYLES ===== */
     .amount-hero {
         background: linear-gradient(135deg, rgba(255,215,0,0.14), rgba(160,90,255,0.08));
         border: 1px solid rgba(255,215,0,0.28);
@@ -130,6 +421,18 @@
         pointer-events:none; z-index:3000; white-space:nowrap;
     }
     .toast.show { opacity:1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 480px) {
+        .wallet {
+            max-width: 280px;
+        }
+        .card {
+            max-width: 260px;
+        }
+        .pocket {
+            max-width: 280px;
+        }
+    }
 </style>
 </head>
 <body>
@@ -143,12 +446,70 @@
     <div class="page-title">پرداخت هزینه دوره</div>
     <div class="page-subtitle">برای دریافت کد فعال‌سازی «دوره کدهای پشت‌ پرده پول»، مبلغ زیر رو واریز کن و رسیدش رو برای پشتیبانی بفرست.</div>
 
+    <!-- WALLET SECTION -->
+    <div class="wallet-section">
+        <div class="wallet-section-title">🏦 کیف پول دیجیتال</div>
+        <div class="wallet" id="wallet">
+            <div class="wallet-back"></div>
+
+            <!-- Bank Card -->
+            <div class="card saman" id="bankCard">
+                <div class="card-inner">
+                    <div class="card-top">
+                        <span>بانک سامان</span>
+                        <div class="chip"></div>
+                    </div>
+                    <div class="card-bottom">
+                        <div class="card-info">
+                            <span class="card-label">صاحب کارت</span>
+                            <span class="card-value">سهیل باغبانی</span>
+                        </div>
+                        <div class="card-number-wrapper">
+                            <span class="hidden-stars">**** 9910</span>
+                            <span class="card-number">6219-8618-8152-9910</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pocket -->
+            <div class="pocket">
+                <svg class="pocket-svg" viewBox="0 0 280 160" fill="none">
+                    <path d="M 0 20 C 0 10, 5 10, 10 10 C 20 10, 25 25, 40 25 L 240 25 C 255 25, 260 10, 270 10 C 275 10, 280 10, 280 20 L 280 120 C 280 155, 260 160, 240 160 L 40 160 C 20 160, 0 155, 0 120 Z" fill="#2d1b4e" />
+                    <path d="M 8 22 C 8 16, 12 16, 15 16 C 23 16, 27 29, 40 29 L 240 29 C 253 29, 257 16, 265 16 C 268 16, 272 16, 272 22 L 272 120 C 272 150, 255 152, 240 152 L 40 152 C 25 152, 8 152, 8 120 Z" stroke="#a05aff" stroke-width="1.5" stroke-dasharray="6 4" />
+                </svg>
+                <div class="pocket-content">
+                    <div class="balance-wrapper">
+                        <div class="balance-stars">۳،۹۶۰،۰۰۰</div>
+                        <div class="balance-real" id="walletAmount">۳،۹۶۰،۰۰۰</div>
+                    </div>
+                    <div class="balance-label">مبلغ پرداخت</div>
+                    <div class="eye-icon-wrapper">
+                        <svg class="eye-icon eye-slash" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                            <line x1="3" y1="3" x2="21" y2="21" />
+                        </svg>
+                        <svg class="eye-icon eye-open" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AMOUNT HERO -->
     <div class="amount-hero">
         <div class="icon">💳</div>
         <div class="course-name">📚 دوره کدهای پشت‌ پرده پول</div>
-        <div class="old-price">قیمت قبلی: ۸،۶۵۰،۰۰۰ تومان</div><div class="amount">۳،۹۶۰،۰۰۰<span>تومان</span></div><div class="discount-tag">با تخفیف</div>
+        <div class="old-price">قیمت قبلی: ۸،۶۵۰،۰۰۰ تومان</div>
+        <div class="amount">۳،۹۶۰،۰۰۰<span>تومان</span></div>
+        <div class="discount-tag">با تخفیف</div>
     </div>
 
+    <!-- CARD INFO -->
     <div class="card-info-box">
         <h3>📇 اطلاعات کارت مقصد</h3>
         <div class="info-row">
@@ -173,6 +534,7 @@
         </div>
     </div>
 
+    <!-- STEPS -->
     <div class="steps-box">
         <h3>راهنمای پرداخت</h3>
         <div class="step-item">
@@ -193,6 +555,7 @@
         </div>
     </div>
 
+    <!-- SEND BOX -->
     <div class="send-box">
         <h3>✅ ارسال رسید پرداخت</h3>
         <p>روی یکی از پلتفرم‌های زیر بزن و عکس رسید رو همراه نام دوره برای پشتیبانی ارسال کن:</p>
@@ -207,6 +570,7 @@
         </a>
     </div>
 
+    <!-- NOTE -->
     <div class="note-box">
         لطفاً هنگام ارسال رسید، حتماً نام دوره «<b>دوره کدهای پشت‌ پرده پول</b>» رو هم بنویس تا پشتیبانی سریع‌تر بررسی کنه.
     </div>
@@ -215,12 +579,15 @@
 <div class="toast" id="toast"></div>
 
 <script>
+    // Toast function
     function showToast(msg) {
         const t = document.getElementById('toast');
         t.textContent = msg;
         t.classList.add('show');
         setTimeout(() => t.classList.remove('show'), 1800);
     }
+
+    // Copy to clipboard
     document.querySelectorAll('.copy-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
             const raw = btn.dataset.copyRaw;
@@ -242,6 +609,46 @@
             showToast('کپی شد');
             setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
         });
+    });
+
+    // Wallet interactions
+    const wallet = document.getElementById('wallet');
+    const bankCard = document.getElementById('bankCard');
+    let isOpen = false;
+
+    wallet.addEventListener('click', (e) => {
+        // اگر روی کارت کلیک کردی
+        if (e.target.closest('.card')) {
+            bankCard.classList.toggle('active');
+            return;
+        }
+        
+        // اگر روی خود جیب کلیک کردی
+        isOpen = !isOpen;
+        wallet.classList.toggle('active');
+        
+        // بند کن کارت وقتی جیب بسته شو
+        if (!isOpen) {
+            bankCard.classList.remove('active');
+        }
+    });
+
+    // بستن وقتی بیرون از جیب کلیک کردی
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.wallet') && !e.target.closest('.copy-btn') && !e.target.closest('[href]')) {
+            isOpen = false;
+            wallet.classList.remove('active');
+            bankCard.classList.remove('active');
+        }
+    });
+
+    // Touch feedback
+    wallet.addEventListener('touchstart', function() {
+        this.style.opacity = '0.9';
+    });
+
+    wallet.addEventListener('touchend', function() {
+        this.style.opacity = '1';
     });
 </script>
 </body>
