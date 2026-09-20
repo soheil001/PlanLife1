@@ -14,6 +14,7 @@
   --hair:#eef0f3;
   --blue:#2f6fed;
   --blue-dark:#1e4fc9;
+  --blue-light:#eef3fd;
   --lime:#d8f24c;
   --lime-ink:#4b5a10;
   --panel:#12141c;
@@ -107,7 +108,6 @@ a { color:inherit; text-decoration:none; }
 
 /* ===== STORIES — بلافاصله زیر cover ===== */
 .stories-outer {
-  /* فضای بالا برای آواتاری که از cover بیرون زده */
   margin:60px 0 0;
   padding:4px 0 0;
   overflow:hidden;
@@ -143,7 +143,7 @@ a { color:inherit; text-decoration:none; }
 .story-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
 .story-label { font-size:10px; font-weight:700; color:var(--ink); text-align:center; max-width:68px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:1.3; }
 
-/* ── INFO CARD — زیر استوری‌ها ── */
+/* ── INFO CARD ── */
 .hero-body {
   background:#ffffff;
   border-radius:var(--radius);
@@ -372,62 +372,302 @@ audio { display:none; }
 .si-whatsapp { background:#25d366; }
 .si-bale { background:#1e88e5; }
 
-/* REVIEWS */
-.reviews-section { margin:0 14px; background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; }
-.reviews-head { padding:14px 16px 12px; display:flex; align-items:center; justify-content:space-between; border-bottom:1.5px solid var(--hair); }
-.reviews-head h3 { font-size:14px; font-weight:800; }
-.rating-badge { display:flex; align-items:center; gap:5px; background:#fffbeb; border:1px solid #fde68a; border-radius:999px; padding:5px 11px; font-size:12px; font-weight:800; color:#92400e; }
-.add-review-btn { width:calc(100% - 32px); margin:12px 16px; display:flex; align-items:center; justify-content:center; gap:8px; background:linear-gradient(135deg,var(--blue) 0%,#1e4fc9 100%); color:#fff; border:none; border-radius:12px; padding:13px 0; font-size:13px; font-weight:800; cursor:pointer; transition:.15s; box-shadow:0 4px 14px rgba(47,111,237,.3); }
-.add-review-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(47,111,237,.4); }
-.add-review-btn svg { width:18px; height:18px; stroke:#fff; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
-.review-card { padding:14px 16px; border-bottom:1.5px solid var(--hair); }
-.review-card:last-child { border-bottom:none; }
-.rev-header { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
-.rev-av { width:36px; height:36px; border-radius:50%; overflow:hidden; flex-shrink:0; background:var(--hair); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--muted); }
-.rev-av img { width:100%; height:100%; object-fit:cover; }
-.rev-who { flex:1; min-width:0; }
-.rev-name { font-size:13px; font-weight:700; }
-.rev-meta { font-size:10.5px; color:var(--muted); }
-.rev-stars { display:flex; gap:2px; }
-.rev-star { font-size:13px; color:#f59e0b; }
-.rev-text { font-size:12.5px; color:var(--muted); line-height:1.8; }
-.rev-date { font-size:10px; color:var(--muted); margin-top:6px; }
+/* ===== RESULTS STORIES GRID ===== */
+.results-section-card {
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  margin:0 14px;
+  overflow:hidden;
+  padding:18px 0 14px;
+}
+.results-section-head {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 18px 14px;
+}
+.results-section-head h2 { font-size:15px; font-weight:800; }
+.results-section-head .count { font-size:11.5px; color:var(--muted); font-weight:500; }
 
-/* MODAL */
-.modal-overlay { position:fixed; inset:0; z-index:500; background:rgba(10,12,20,.7); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); display:none; align-items:flex-end; justify-content:center; }
-.modal-overlay.open { display:flex; }
-.modal-sheet { background:#fff; border-radius:24px 24px 0 0; width:100%; max-width:560px; padding:20px 20px 40px; max-height:90vh; overflow-y:auto; animation:sheetUp .35s cubic-bezier(.34,1.2,.64,1); }
-@keyframes sheetUp { from{transform:translateY(100%);opacity:.5;} to{transform:translateY(0);opacity:1;} }
-.sheet-handle { width:40px; height:4px; background:#e4e7ec; border-radius:99px; margin:0 auto 18px; }
-.sheet-title { font-size:17px; font-weight:900; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between; }
-.sheet-close { width:30px; height:30px; border-radius:50%; background:var(--hair); border:none; font-size:16px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--muted); }
-.form-field { margin-bottom:14px; }
-.form-label { font-size:11.5px; font-weight:700; color:var(--muted); margin-bottom:6px; display:block; }
-.form-input { width:100%; padding:12px 14px; border-radius:12px; border:1.5px solid #e4e7ec; font-family:inherit; font-size:13px; outline:none; color:var(--ink); transition:.15s; background:#fff; }
-.form-input:focus { border-color:var(--blue); }
-.course-list { display:flex; flex-direction:column; gap:8px; }
-.course-option { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:12px; border:1.5px solid #e4e7ec; cursor:pointer; transition:.15s; user-select:none; }
-.course-option.selected { border-color:var(--blue); background:rgba(47,111,237,.06); }
-.course-option input[type=checkbox] { display:none; }
-.co-check { width:20px; height:20px; border-radius:6px; border:1.5px solid #d1d5db; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:.15s; }
-.course-option.selected .co-check { background:var(--blue); border-color:var(--blue); }
-.co-check svg { width:12px; height:12px; stroke:#fff; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; opacity:0; transition:.1s; }
-.course-option.selected .co-check svg { opacity:1; }
-.co-label { font-size:12.5px; font-weight:600; line-height:1.4; }
-.star-rating { display:flex; gap:8px; direction:ltr; justify-content:flex-end; }
-.star-btn { font-size:28px; color:#d1d5db; cursor:pointer; background:none; border:none; transition:.15s; line-height:1; padding:2px; }
-.star-btn.lit { color:#f59e0b; }
-.star-btn:hover { transform:scale(1.15); }
-.form-textarea { width:100%; padding:12px 14px; border-radius:12px; border:1.5px solid #e4e7ec; font-family:inherit; font-size:13px; outline:none; color:var(--ink); resize:none; min-height:90px; line-height:1.75; transition:.15s; display:block; }
-.form-textarea:focus { border-color:var(--blue); }
-.phone-note { font-size:10.5px; color:var(--muted); margin-bottom:5px; }
-.submit-btn { width:100%; padding:14px; border-radius:13px; background:var(--blue); color:#fff; border:none; font-size:14px; font-weight:800; cursor:pointer; margin-top:6px; transition:.15s; box-shadow:0 4px 14px rgba(47,111,237,.3); }
-.submit-btn:hover { background:var(--blue-dark); transform:translateY(-1px); }
-.success-msg { text-align:center; padding:24px 16px; display:none; flex-direction:column; align-items:center; gap:12px; }
-.success-msg.show { display:flex; }
-.success-icon { font-size:48px; }
-.success-title { font-size:17px; font-weight:900; }
-.success-sub { font-size:13px; color:var(--muted); line-height:1.7; }
+.results-scroll-outer {
+  overflow-x:auto; overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(47,111,237,0.25) transparent;
+  padding-bottom:6px;
+  cursor:grab;
+  user-select:none;
+}
+.results-scroll-outer:active { cursor:grabbing; }
+.results-scroll-outer::-webkit-scrollbar { height:4px; }
+.results-scroll-outer::-webkit-scrollbar-track { background:transparent; }
+.results-scroll-outer::-webkit-scrollbar-thumb { background:rgba(47,111,237,0.25); border-radius:4px; }
+
+/* 2 rows of 5, horizontal scroll, ltr direction so columns flow left to right visually */
+.results-grid {
+  display:grid;
+  grid-template-rows:repeat(2, auto);
+  grid-auto-flow:column;
+  grid-auto-columns:76px;
+  gap:14px 12px;
+  direction:ltr;
+  width:max-content;
+  padding:2px 18px 4px;
+}
+
+.result-item {
+  display:flex; flex-direction:column; align-items:center; gap:7px;
+  cursor:pointer; -webkit-tap-highlight-color:transparent;
+}
+.result-ring {
+  width:68px; height:68px; border-radius:50%; padding:2.5px;
+  background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888,#833ab4,#405de6,#5851db);
+  transition:background .4s;
+}
+.result-item.seen .result-ring { background:#dde0e6; }
+.result-avatar {
+  width:100%; height:100%; border-radius:50%;
+  border:2.5px solid #fff; overflow:hidden;
+  background:var(--hair); display:flex; align-items:center; justify-content:center;
+}
+.result-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+.result-label {
+  font-size:10px; font-weight:600; color:var(--muted);
+  text-align:center; line-height:1.35;
+  width:72px; direction:rtl;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+
+/* ===== RESULTS STORY MODAL ===== */
+#results-story-modal {
+  position:fixed; top:0; left:0; right:0; bottom:0; z-index:9100;
+  background:rgba(0,0,0,0.92); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none; transition:opacity .3s ease;
+}
+#results-story-modal.open { opacity:1; pointer-events:auto; }
+.results-story-action-btn {
+  display:flex; align-items:center; justify-content:center; width:100%;
+  padding:13px 16px; background:var(--blue); border:none; border-radius:var(--radius-sm);
+  box-shadow:0 6px 20px rgba(47,111,237,.45);
+  color:#fff; font-family:'Vazirmatn',sans-serif; font-size:14px; font-weight:800;
+  text-decoration:none; text-align:center; cursor:pointer;
+  position:relative; overflow:hidden; transition:.18s;
+}
+.results-story-action-btn::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent); animation:glass-shine 2.5s ease-in-out infinite; }
+.results-story-action-btn:active { transform:scale(.97); background:var(--blue-dark); }
+
+/* ===== COMMENTS ===== */
+.comments-section {
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  margin:0 14px;
+  padding:20px 18px;
+}
+.comments-section-title {
+  font-size:15px; font-weight:800; margin-bottom:14px;
+  display:flex; align-items:center; gap:8px;
+}
+.comments-title-dot { width:8px; height:8px; border-radius:50%; background:var(--blue); display:inline-block; }
+
+.course-tabs {
+  display:flex; gap:8px; margin-bottom:18px;
+  overflow-x:auto; padding-bottom:6px; scrollbar-width:thin;
+}
+.course-tabs::-webkit-scrollbar { height:4px; }
+.course-tabs::-webkit-scrollbar-track { background:transparent; }
+.course-tabs::-webkit-scrollbar-thumb { background:rgba(47,111,237,0.2); border-radius:4px; }
+.course-tab {
+  white-space:nowrap; padding:10px 18px; border-radius:24px;
+  border:1.5px solid rgba(47,111,237,0.15); background:rgba(255,255,255,0.6);
+  font-family:'Vazirmatn',sans-serif; font-size:12px; font-weight:700; color:var(--muted);
+  cursor:pointer; transition:.22s; flex-shrink:0;
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.course-tab:hover { border-color:rgba(47,111,237,0.3); background:rgba(255,255,255,0.8); }
+.course-tab.active { background:linear-gradient(135deg,var(--blue),#5866e8); color:#fff; border-color:var(--blue); box-shadow:0 6px 16px rgba(47,111,237,0.25); }
+.course-tab:active { transform:scale(0.96); }
+
+.comments-grid {
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:12px;
+}
+@media(min-width:600px) { .comments-grid { grid-template-columns:repeat(3,1fr); } }
+
+.comment-card {
+  background:linear-gradient(145deg,#f8f9fc 0%,#fff 100%);
+  border:1.5px solid #eef0f5; border-radius:var(--radius);
+  padding:12px 11px 11px;
+  display:flex; flex-direction:column; gap:8px;
+  position:relative; overflow:hidden;
+  transition:transform .18s, box-shadow .18s;
+  animation:cardIn .35s ease both;
+  cursor:pointer;
+}
+@keyframes cardIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+.comment-card::before {
+  content:''; position:absolute; top:0; right:0;
+  width:40px; height:3px;
+  background:linear-gradient(90deg,var(--blue),#6fa3ff);
+  border-radius:0 var(--radius) 0 var(--radius-sm);
+}
+.comment-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(47,111,237,0.1); }
+.comment-quote-icon { color:#d0d8ee; font-size:24px; line-height:1; font-family:Georgia,serif; position:absolute; top:8px; left:9px; }
+.comment-text { font-size:11.5px; line-height:1.85; color:#374151; flex:1; padding-top:4px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.comment-footer { display:flex; align-items:center; gap:7px; border-top:1px solid #f0f2f6; padding-top:8px; margin-top:2px; }
+.comment-avatar-img { width:28px; height:28px; border-radius:50%; object-fit:cover; flex-shrink:0; border:1.5px solid #e4e7ec; }
+.comment-author-name { font-size:11px; font-weight:700; color:var(--ink); flex:1; line-height:1.3; }
+.comment-stars { direction:ltr; font-size:10px; color:#f59e0b; letter-spacing:1px; }
+
+.load-more-btn {
+  display:block; width:100%; margin-top:16px;
+  background:var(--hair); border:1.5px solid #e4e7ec;
+  border-radius:var(--radius-sm);
+  font-family:'Vazirmatn',sans-serif; font-size:13px; font-weight:700; color:var(--blue);
+  padding:13px; cursor:pointer; text-align:center; transition:.18s;
+}
+.load-more-btn:hover { background:var(--blue-light); border-color:rgba(47,111,237,0.3); }
+.load-more-btn.hidden { display:none; }
+
+/* ===== COMMENT FORM ===== */
+.comment-form-section {
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  margin:0 14px;
+  padding:18px;
+}
+.comment-form-wrapper {
+  background:linear-gradient(135deg,var(--blue-light) 0%,#f0f4ff 100%);
+  border:1.5px solid rgba(47,111,237,0.2);
+  border-radius:var(--radius-sm);
+  padding:18px 16px 16px;
+}
+.comment-form-label {
+  display:flex; align-items:center; gap:8px; justify-content:center;
+  font-size:13px; font-weight:800; color:var(--blue-dark); margin-bottom:14px;
+}
+.label-badge { background:var(--blue); color:#fff; border-radius:20px; padding:3px 12px; font-size:12px; font-weight:700; }
+
+.course-select-row {
+  display:flex; gap:8px; justify-content:center; margin-bottom:14px;
+  overflow-x:auto; padding-bottom:4px; scrollbar-width:thin;
+}
+.course-select-row::-webkit-scrollbar { height:3px; }
+.course-select-row::-webkit-scrollbar-thumb { background:rgba(47,111,237,0.2); border-radius:3px; }
+.course-opt {
+  white-space:nowrap; padding:8px 14px; border-radius:20px;
+  border:1.5px solid rgba(47,111,237,0.2); background:#fff;
+  font-family:'Vazirmatn',sans-serif; font-size:11.5px; font-weight:700; color:var(--muted);
+  cursor:pointer; transition:.15s; flex-shrink:0;
+}
+.course-opt:hover { border-color:rgba(47,111,237,0.4); background:var(--blue-light); }
+.course-opt.selected { background:var(--blue); color:#fff; border-color:var(--blue); }
+.course-opt:active { transform:scale(0.95); }
+
+.gender-select-row { display:flex; gap:10px; justify-content:center; margin-bottom:14px; }
+.gender-btn {
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  cursor:pointer; padding:10px 18px; border-radius:var(--radius-sm);
+  border:2px solid #e4e7ec; background:#fff; transition:.18s; flex:1; max-width:130px;
+}
+.gender-btn img { width:52px; height:52px; border-radius:50%; object-fit:cover; border:2px solid #e4e7ec; transition:.18s; }
+.gender-btn span { font-size:11px; font-weight:700; color:var(--muted); transition:.18s; }
+.gender-btn.selected { border-color:var(--blue); background:var(--blue-light); }
+.gender-btn.selected img { border-color:var(--blue); }
+.gender-btn.selected span { color:var(--blue-dark); }
+.gender-tick { width:18px; height:18px; border-radius:50%; background:var(--blue); display:none; align-items:center; justify-content:center; flex-shrink:0; margin-top:-4px; }
+.gender-tick svg { width:10px; height:10px; color:#fff; }
+.gender-btn.selected .gender-tick { display:flex; }
+
+.star-rating-row {
+  display:flex; align-items:center; gap:6px; margin-bottom:10px;
+  direction:ltr; justify-content:center; flex-direction:row-reverse;
+}
+.star-rating-row label { font-size:26px; color:#ddd; cursor:pointer; transition:color .15s; line-height:1; }
+.star-rating-row input { display:none; }
+.star-rating-row input:checked ~ label,
+.star-rating-row label:hover,
+.star-rating-row label:hover ~ label { color:#f59e0b; }
+
+.comment-textarea {
+  width:100%; border:1.5px solid rgba(47,111,237,0.22); border-radius:var(--radius-sm);
+  background:#fff; font-family:'Vazirmatn',sans-serif; font-size:13px; line-height:1.8;
+  color:var(--ink); padding:12px 14px; resize:none; min-height:90px; outline:none; transition:border-color .2s;
+  display:block;
+}
+.comment-textarea:focus { border-color:var(--blue); }
+.comment-textarea::placeholder { color:#b0b8c8; }
+.comment-name-row { display:flex; gap:8px; margin-top:8px; }
+.comment-name-input {
+  flex:1; border:1.5px solid rgba(47,111,237,0.22); border-radius:var(--radius-sm);
+  background:#fff; font-family:'Vazirmatn',sans-serif; font-size:13px; color:var(--ink);
+  padding:10px 14px; outline:none; transition:border-color .2s;
+}
+.comment-name-input:focus { border-color:var(--blue); }
+.comment-name-input::placeholder { color:#b0b8c8; }
+.comment-submit-btn {
+  background:var(--blue); color:#fff; border:none; border-radius:var(--radius-sm);
+  font-family:'Vazirmatn',sans-serif; font-size:13px; font-weight:800;
+  padding:10px 20px; cursor:pointer; transition:.18s; white-space:nowrap; flex-shrink:0;
+}
+.comment-submit-btn:active { background:var(--blue-dark); transform:scale(0.97); }
+
+/* COMMENT POPUP */
+#comment-popup {
+  position:fixed; inset:0; z-index:9850;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(12,14,22,0.6); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  opacity:0; pointer-events:none; transition:opacity .3s;
+}
+#comment-popup.open { opacity:1; pointer-events:auto; }
+.comment-popup-box {
+  background:#fff; border-radius:var(--radius); padding:24px 22px 20px;
+  width:92%; max-width:380px;
+  box-shadow:0 24px 60px rgba(0,0,0,.2);
+  transform:scale(0.88); transition:transform .35s cubic-bezier(0.34,1.56,0.64,1);
+  max-height:80vh; overflow-y:auto;
+}
+#comment-popup.open .comment-popup-box { transform:scale(1); }
+.comment-popup-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--hair); }
+.comment-popup-avatar { width:42px; height:42px; border-radius:50%; object-fit:cover; border:2px solid #e4e7ec; }
+.comment-popup-meta { flex:1; }
+.comment-popup-name { font-size:13px; font-weight:800; color:var(--ink); }
+.comment-popup-stars { font-size:13px; color:#f59e0b; direction:ltr; }
+.comment-popup-close-btn { width:32px; height:32px; border-radius:50%; background:var(--hair); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; color:var(--muted); flex-shrink:0; transition:.15s; }
+.comment-popup-close-btn:active { background:#e4e7ec; }
+.comment-popup-quote { font-size:36px; color:#d0d8ee; font-family:Georgia,serif; line-height:.8; margin-bottom:6px; }
+.comment-popup-text { font-size:13.5px; line-height:2; color:#374151; }
+
+/* SUCCESS POPUP */
+#success-popup {
+  position:fixed; inset:0; z-index:9900;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(12,14,22,0.6); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  opacity:0; pointer-events:none; transition:opacity .3s;
+}
+#success-popup.open { opacity:1; pointer-events:auto; }
+.success-popup-box {
+  background:#fff; border-radius:var(--radius); padding:36px 28px 28px;
+  width:90%; max-width:320px; text-align:center;
+  box-shadow:0 24px 60px rgba(0,0,0,.2);
+  transform:scale(0.88); transition:transform .35s cubic-bezier(0.34,1.56,0.64,1);
+}
+#success-popup.open .success-popup-box { transform:scale(1); }
+.success-check {
+  width:68px; height:68px; border-radius:50%;
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  margin:0 auto 18px; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 8px 24px rgba(34,197,94,0.35);
+  animation:check-pop .5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes check-pop { from{transform:scale(0);opacity:0;} to{transform:scale(1);opacity:1;} }
+.success-check svg { width:34px; height:34px; color:#fff; stroke-width:2.5; }
+.success-popup-title { font-size:17px; font-weight:900; color:var(--ink); margin-bottom:10px; }
+.success-popup-text { font-size:13px; line-height:1.9; color:var(--muted); margin-bottom:22px; }
+.success-popup-close { background:var(--blue); color:#fff; border:none; border-radius:var(--radius-sm); font-family:'Vazirmatn',sans-serif; font-size:14px; font-weight:800; padding:12px 36px; cursor:pointer; transition:.18s; }
+.success-popup-close:active { background:var(--blue-dark); transform:scale(0.97); }
 
 /* ===== BOTTOM NAV ===== */
 .bottom-nav {
@@ -472,13 +712,12 @@ audio { display:none; }
   </div>
 </header>
 
-<!-- HERO COVER (بدون hero-body) -->
+<!-- HERO COVER -->
 <div class="hero-section">
   <div class="hero-cover">
     <img class="cover-img" src="http://fs3.centraldnserver.com/~planlife/pics/Slide-profile.jpeg" alt="کاور PlanLife">
     <div class="cover-pattern"></div>
     <div class="cover-badge"><span class="dot"></span>زندگیتو کد نویسی کن</div>
-    <!-- آواتار وسط‌چین — از cover بیرون میزنه -->
     <div class="avatar-wrap">
       <div class="avatar-inner">
         <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
@@ -486,7 +725,7 @@ audio { display:none; }
     </div>
   </div>
 
-  <!-- ===== STORIES — بلافاصله زیر cover ===== -->
+  <!-- STORIES -->
   <div class="stories-outer">
     <div class="stories-wrapper">
       <div class="stories-scroll" id="stories-scroll">
@@ -530,10 +769,10 @@ audio { display:none; }
     </div>
   </div>
 
-  <!-- INFO CARD — زیر استوری‌ها -->
+  <!-- INFO CARD -->
   <div class="hero-body">
     <div class="brand-name">PlanLife</div>
-    <div class="brand-sub">پادکست · دوره‌های کدنویسی ذهن · تمرینات ذهنی ·تغییر باور</div>
+    <div class="brand-sub">پادکست · دوره‌های کدنویسی ذهن · تمرینات ذهنی · تغییر باور</div>
     <div class="stat-row">
       <div class="stat-item"><div class="stat-num">+۵۰۰۰</div><div class="stat-lbl">دانشجوی فعال</div></div>
       <div class="stat-divider"></div>
@@ -543,24 +782,24 @@ audio { display:none; }
       <div class="stat-divider"></div>
       <div class="stat-item"><div class="stat-num">۴.۹</div><div class="stat-lbl">امتیاز</div></div>
     </div>
-    <div class="hero-desc">خیلی حس خوبی دارم که کنار خانواده صمیمی پلن لایف هستی و اینجا قراره کلی اتفاقات رخ بده ، اینجا قراره کلی حالمون خوب بشه و اتفاقاتی که قبلا رخ نمیداد ولی با تغییر نگاه ، کدهای ذهن ، باورها و افکارت به راحتی برات رخ میده ولی چیزی که ازت میخوام تعهد برای بودن در کنار خانواده و انجام تمریناتی که بهت گفته میشود امیدوارم یه روزی ذوقتو ببینم که میگی دیدی شد :) </div>
+    <div class="hero-desc">خیلی حس خوبی دارم که کنار خانواده صمیمی پلن لایف هستی و اینجا قراره کلی اتفاقات رخ بده ، اینجا قراره کلی حالمون خوب بشه و اتفاقاتی که قبلا رخ نمیداد ولی با تغییر نگاه ، کدهای ذهن ، باورها و افکارت به راحتی برات رخ میده ولی چیزی که ازت میخوام تعهد برای بودن در کنار خانواده و انجام تمریناتی که بهت گفته میشود امیدوارم یه روزی ذوقتو ببینم که میگی دیدی شد :)</div>
     <div class="tag-row">
       <span class="tag accent">تمرکز بر روی خواسته ها</span>
       <span class="tag">ساخت باور</span>
       <span class="tag">مدیتیشن</span>
       <span class="tag">قوانین جهان</span>
-      <span class="tag">شناخت خدت</span>
+      <span class="tag">شناخت خودت</span>
       <span class="tag">کد نویسی ذهن</span>
       <span class="tag">احساس خوب</span>
-      <span class="tag">ثروت </span>
-      <span class="tag">ایجاد روابط </span>
+      <span class="tag">ثروت</span>
+      <span class="tag">ایجاد روابط</span>
       <span class="tag">اعتماد به نفس</span>
       <span class="tag">احساس لیاقت</span>
     </div>
   </div>
 </div>
 
-<!-- STORY MODAL -->
+<!-- STORY MODAL (profile stories) -->
 <div id="story-modal">
   <div class="story-container">
     <div class="story-progress-bar" id="story-progress-bar"></div>
@@ -726,8 +965,8 @@ audio { display:none; }
         <div class="course-card-title">دوره کدهای پشت‌پرده پول</div>
         <div class="course-card-actions">
           <button class="cc-btn cc-btn-results" onclick="window.location.href='https://planlife.ir/natije.html'">🏆 نتایج دانشجویان</button>
-          <button class="cc-btn cc-btn-buy"     onclick="window.location.href='https://planlife.ir/dores.html'">💳 خرید دوره</button>
-          <button class="cc-btn cc-btn-play"    onclick="window.location.href='https://planlife.ir/dores.html'">▶ پخش دوره</button>
+          <button class="cc-btn cc-btn-buy" onclick="window.location.href='https://planlife.ir/dores.html'">💳 خرید دوره</button>
+          <button class="cc-btn cc-btn-play" onclick="window.location.href='https://planlife.ir/dores.html'">▶ پخش دوره</button>
         </div>
       </div>
     </div>
@@ -742,8 +981,8 @@ audio { display:none; }
         <div class="course-card-title">دوره چطور حالم خوب باشه؟</div>
         <div class="course-card-actions">
           <button class="cc-btn cc-btn-results" onclick="window.location.href='https://planlife.ir/dores.html'">🏆 نتایج دانشجویان</button>
-          <button class="cc-btn cc-btn-buy"     onclick="window.location.href='https://planlife.ir/dores.html'">💳 خرید دوره</button>
-          <button class="cc-btn cc-btn-play"    onclick="window.location.href='https://planlife.ir/dores.html'">▶ پخش دوره</button>
+          <button class="cc-btn cc-btn-buy" onclick="window.location.href='https://planlife.ir/dores.html'">💳 خرید دوره</button>
+          <button class="cc-btn cc-btn-play" onclick="window.location.href='https://planlife.ir/dores.html'">▶ پخش دوره</button>
         </div>
       </div>
     </div>
@@ -758,8 +997,8 @@ audio { display:none; }
         <div class="course-card-title">دوره هماهنگی با جریان خلقت</div>
         <div class="course-card-actions">
           <button class="cc-btn cc-btn-results" onclick="window.location.href='https://planlife.ir/natije.html'">🏆 نتایج دانشجویان</button>
-          <button class="cc-btn cc-btn-buy"     onclick="window.location.href='https://planlife.ir/dores.html'">💳 خرید دوره</button>
-          <button class="cc-btn cc-btn-play"    onclick="window.location.href='https://planlife.ir/dores.html'">▶ پخش دوره</button>
+          <button class="cc-btn cc-btn-buy" onclick="window.location.href='https://planlife.ir/dores.html'">💳 خرید دوره</button>
+          <button class="cc-btn cc-btn-play" onclick="window.location.href='https://planlife.ir/dores.html'">▶ پخش دوره</button>
         </div>
       </div>
     </div>
@@ -775,7 +1014,7 @@ audio { display:none; }
         <div class="course-card-title">دوره خودباوری (اعتماد به نفس)</div>
         <div class="course-card-actions">
           <button class="cc-btn cc-btn-results" onclick="window.location.href='https://planlife.ir/natije.html'">🏆 نتایج دانشجویان</button>
-          <button class="cc-btn cc-btn-buy"     onclick="window.location.href='https://planlife.ir/dores.html'">💳 خرید دوره</button>
+          <button class="cc-btn cc-btn-buy" onclick="window.location.href='https://planlife.ir/dores.html'">💳 خرید دوره</button>
           <button class="cc-btn cc-btn-play disabled">⏳ به‌زودی</button>
         </div>
       </div>
@@ -792,7 +1031,7 @@ audio { display:none; }
         <div class="course-card-title">دوره پذیرش احساس لیاقت</div>
         <div class="course-card-actions">
           <button class="cc-btn cc-btn-results" onclick="window.location.href='https://planlife.ir/natije.html'">🏆 نتایج دانشجویان</button>
-          <button class="cc-btn cc-btn-buy"     onclick="window.location.href='https://planlife.ir/dores.html'">💳 خرید دوره</button>
+          <button class="cc-btn cc-btn-buy" onclick="window.location.href='https://planlife.ir/dores.html'">💳 خرید دوره</button>
           <button class="cc-btn cc-btn-play disabled">⏳ به‌زودی</button>
         </div>
       </div>
@@ -809,7 +1048,7 @@ audio { display:none; }
         <div class="course-card-title">دوره نفوذ به لایه‌های پنهان ذهن</div>
         <div class="course-card-actions">
           <button class="cc-btn cc-btn-results" onclick="window.location.href='https://planlife.ir/natije.html'">🏆 نتایج دانشجویان</button>
-          <button class="cc-btn cc-btn-buy"     onclick="window.location.href='https://planlife.ir/dores.html'">💳 خرید دوره</button>
+          <button class="cc-btn cc-btn-buy" onclick="window.location.href='https://planlife.ir/dores.html'">💳 خرید دوره</button>
           <button class="cc-btn cc-btn-play disabled">⏳ به‌زودی</button>
         </div>
       </div>
@@ -861,6 +1100,39 @@ audio { display:none; }
   </div>
 </div>
 
+<!-- ===== RESULTS STORIES GRID (10 items, 2 rows of 5) ===== -->
+<div class="section-label">
+  <span>نتایج بچه‌های دوره</span>
+  <a href="https://planlife.ir/natije.html">دیدن همه</a>
+</div>
+<div class="results-section-card">
+  <div class="results-scroll-outer" id="resultsScrollOuter">
+    <div class="results-grid" id="resultsGrid"></div>
+  </div>
+</div>
+
+<!-- RESULTS STORY MODAL -->
+<div id="results-story-modal">
+  <div class="story-container">
+    <div class="story-progress-bar" id="rs-progress-bar"></div>
+    <div class="story-modal-header">
+      <div class="story-logo-section">
+        <div class="story-logo-img"><img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife"></div>
+        <div class="story-branding"><div class="story-branding-text">planlife.ir</div></div>
+      </div>
+      <div class="story-modal-close" onclick="closeResultsStoryModal()">✕</div>
+    </div>
+    <div class="story-modal-content" id="rs-modal-content">
+      <div class="story-nav-left" onclick="rsNavigate(-1)"></div>
+      <div class="story-nav-right" onclick="rsNavigate(1)"></div>
+    </div>
+    <div class="story-footer">
+      <div class="story-caption" id="rs-caption"></div>
+      <a class="results-story-action-btn" href="https://planlife.ir/natije.html" target="_blank" rel="noopener">وارد دوره شوید</a>
+    </div>
+  </div>
+</div>
+
 <!-- ارتباط با ما -->
 <div class="section-label">ارتباط با ما</div>
 <div class="progress-strip">
@@ -874,52 +1146,63 @@ audio { display:none; }
   </div>
 </div>
 
-<!-- REVIEWS -->
-<div class="section-label" id="reviews-section">نظرات دانشجویان</div>
-<div class="reviews-section">
-  <div class="reviews-head">
-    <h3>دیدگاه‌ها</h3>
-    <div class="rating-badge">⭐ ۴.۹ <span style="font-size:10px;color:#b45309;font-weight:500;">(+۱۵۰ نظر)</span></div>
+<!-- ===== COMMENTS SECTION ===== -->
+<div class="section-label" id="reviews-section">
+  <span>نظرات دانشجویان</span>
+</div>
+<div class="comments-section">
+  <div class="comments-section-title"><span class="comments-title-dot"></span>نظرات دوستان</div>
+  <div class="course-tabs" id="course-tabs">
+    <button class="course-tab active" onclick="switchTab(-1,this)">💬 همه نظرات</button>
+    <button class="course-tab" onclick="switchTab(0,this)">💻 کدهای پشت‌پرده پول</button>
+    <button class="course-tab" onclick="switchTab(1,this)">💛 چطور حالم خوب باشه؟</button>
+    <button class="course-tab" onclick="switchTab(2,this)">🌊 هماهنگی با جریان خلقت</button>
   </div>
-  <button class="add-review-btn" onclick="openReviewModal()">
-    <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-    ثبت نظر شما
-  </button>
-  <div class="review-card">
-    <div class="rev-header">
-      <div class="rev-av">فپ</div>
-      <div class="rev-who"><div class="rev-name">فاطمه پوری</div><div class="rev-meta">کاربر PlanLife</div></div>
-      <div class="rev-stars"><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span></div>
+  <div class="comments-grid" id="commentsGrid"></div>
+  <button class="load-more-btn" id="load-more-btn" onclick="loadMoreComments()">۱۰ نظر بیشتر ببینم ↓</button>
+</div>
+
+<!-- ===== COMMENT FORM ===== -->
+<div class="section-label">ثبت نظر شما</div>
+<div class="comment-form-section" id="comment-form-section">
+  <div class="comment-form-wrapper">
+    <div class="comment-form-label">
+      <span class="label-badge">✍️ نظر شما</span>
+      <span>اینجا تجربه‌ی خود را بنویسید</span>
     </div>
-    <div class="rev-text">سرویس‌دهی عالی و خدمات با کیفیت هم عالی بود. دوره‌های PlanLife واقعاً تأثیرگذارن.</div>
-    <div class="rev-date">۲ شهریور ۱۴۰۵</div>
-  </div>
-  <div class="review-card">
-    <div class="rev-header">
-      <div class="rev-av">عو</div>
-      <div class="rev-who"><div class="rev-name">علی‌صادق وندبابادی</div><div class="rev-meta">دانشجوی سطح ۲</div></div>
-      <div class="rev-stars"><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span></div>
+    <div style="text-align:center;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;">درباره کدوم دوره می‌خوای نظر بدی؟</div>
+    <div class="course-select-row">
+      <div class="course-opt selected" onclick="selectFormCourse(-1,this)">🌐 خود PlanLife</div>
+      <div class="course-opt" onclick="selectFormCourse(0,this)">💻 کدهای پشت‌پرده پول</div>
+      <div class="course-opt" onclick="selectFormCourse(1,this)">💛 چطور حالم خوب باشه؟</div>
+      <div class="course-opt" onclick="selectFormCourse(2,this)">🌊 هماهنگی با جریان خلقت</div>
     </div>
-    <div class="rev-text">باسلام و احترام، دوره‌های اینجا عالی بودند. محتوا خیلی خوب و کاربردیه.</div>
-    <div class="rev-date">۱۹ تیر ۱۴۰۵</div>
-  </div>
-  <div class="review-card">
-    <div class="rev-header">
-      <div class="rev-av">شگ</div>
-      <div class="rev-who"><div class="rev-name">شادی گودرزی</div><div class="rev-meta">دانشجوی سطح ۳</div></div>
-      <div class="rev-stars"><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span></div>
+    <div style="text-align:center;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px;">شما چه هستید؟</div>
+    <div class="gender-select-row">
+      <div class="gender-btn" id="gender-male" onclick="selectGender('male')">
+        <img src="https://jaavidan.ir/wp-content/uploads/2026/09/Untitled-design-2.png" alt="آقا">
+        <span>آقا هستم</span>
+        <div class="gender-tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div>
+      <div class="gender-btn" id="gender-female" onclick="selectGender('female')">
+        <img src="https://jaavidan.ir/wp-content/uploads/2026/09/Untitled-design-1.png" alt="خانم">
+        <span>خانم هستم</span>
+        <div class="gender-tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div>
     </div>
-    <div class="rev-text">پادکست‌های صبحگاهی خوشمزززززه و با کیفیته، حتماً امتحان کنید عالیه!</div>
-    <div class="rev-date">۳۰ بهمن ۱۴۰۴</div>
-  </div>
-  <div class="review-card">
-    <div class="rev-header">
-      <div class="rev-av" style="font-size:18px;">🧑</div>
-      <div class="rev-who"><div class="rev-name">کاربر PlanLife</div><div class="rev-meta">دانشجو</div></div>
-      <div class="rev-stars"><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span><span class="rev-star">★</span></div>
+    <div style="text-align:center;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;">امتیاز شما</div>
+    <div class="star-rating-row" id="star-rating">
+      <input type="radio" name="rating" id="s5" value="5"><label for="s5">★</label>
+      <input type="radio" name="rating" id="s4" value="4"><label for="s4">★</label>
+      <input type="radio" name="rating" id="s3" value="3"><label for="s3">★</label>
+      <input type="radio" name="rating" id="s2" value="2"><label for="s2">★</label>
+      <input type="radio" name="rating" id="s1" value="1"><label for="s1">★</label>
     </div>
-    <div class="rev-text">ما رفتیم برای پادکست ولی تصمیم گرفتیم دوره بگیریم، محتوا واقعاً خوب بود.</div>
-    <div class="rev-date">۳۰ بهمن ۱۴۰۴</div>
+    <textarea class="comment-textarea" id="comment-text-input" placeholder="تجربه‌ی خود را بنویسید..." rows="4"></textarea>
+    <div class="comment-name-row">
+      <input class="comment-name-input" id="comment-name-input" type="text" placeholder="نام شما (اختیاری)">
+      <button class="comment-submit-btn" onclick="submitComment()">ارسال نظر</button>
+    </div>
   </div>
 </div>
 
@@ -939,7 +1222,7 @@ audio { display:none; }
     <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M7 16l4-4 4 4 5-5"/></svg>
     نتایج دوره
   </button>
-  <a class="bn-item" href="#reviews-section">
+  <a class="bn-item" href="#reviews-section" onclick="document.getElementById('reviews-section').scrollIntoView({behavior:'smooth'});return false;">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
     نظرات
   </a>
@@ -949,60 +1232,36 @@ audio { display:none; }
   </a>
 </nav>
 
-<!-- REVIEW MODAL -->
-<div class="modal-overlay" id="reviewModal" onclick="handleModalClick(event)">
-  <div class="modal-sheet" id="modalSheet">
-    <div class="sheet-handle"></div>
-    <div id="reviewForm">
-      <div class="sheet-title">ثبت نظر شما<button class="sheet-close" onclick="closeReviewModal()">✕</button></div>
-      <div class="form-field">
-        <label class="form-label">نام و نام خانوادگی</label>
-        <input class="form-input" type="text" id="r-name" placeholder="مثلاً: علی احمدی">
+<!-- COMMENT DETAIL POPUP -->
+<div id="comment-popup">
+  <div class="comment-popup-box">
+    <div class="comment-popup-header">
+      <img class="comment-popup-avatar" id="popup-avatar" src="" alt="">
+      <div class="comment-popup-meta">
+        <div class="comment-popup-name" id="popup-name"></div>
+        <div class="comment-popup-stars" id="popup-stars"></div>
       </div>
-      <div class="form-field">
-        <label class="form-label">دانشجوی چه دوره‌ای بودید؟</label>
-        <div class="course-list" id="courseList">
-          <div class="course-option" onclick="toggleCourse(this)"><input type="checkbox"><div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div><div class="co-label">دوره کدهای پشت‌پرده پول</div></div>
-          <div class="course-option" onclick="toggleCourse(this)"><input type="checkbox"><div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div><div class="co-label">دوره چطور حالم خوب باشه؟</div></div>
-          <div class="course-option" onclick="toggleCourse(this)"><input type="checkbox"><div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div><div class="co-label">دوره هماهنگی با جریان خلقت</div></div>
-          <div class="course-option" onclick="toggleCourse(this)"><input type="checkbox"><div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div><div class="co-label">دوره خودباوری (اعتماد به نفس)</div></div>
-          <div class="course-option" onclick="toggleCourse(this)"><input type="checkbox"><div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div><div class="co-label">دوره پذیرش احساس لیاقت</div></div>
-          <div class="course-option" onclick="toggleCourse(this)"><input type="checkbox"><div class="co-check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2"/></svg></div><div class="co-label">دوره نفوذ به لایه‌های پنهان ذهن</div></div>
-        </div>
-      </div>
-      <div class="form-field">
-        <label class="form-label">امتیاز شما</label>
-        <div class="star-rating" id="starRating">
-          <button class="star-btn" data-star="5" onclick="setRating(5)">★</button>
-          <button class="star-btn" data-star="4" onclick="setRating(4)">★</button>
-          <button class="star-btn" data-star="3" onclick="setRating(3)">★</button>
-          <button class="star-btn" data-star="2" onclick="setRating(2)">★</button>
-          <button class="star-btn" data-star="1" onclick="setRating(1)">★</button>
-        </div>
-      </div>
-      <div class="form-field">
-        <label class="form-label">نظر شما</label>
-        <textarea class="form-textarea" id="r-text" placeholder="تجربه‌ات از دوره یا محتوای PlanLife رو بنویس..."></textarea>
-      </div>
-      <div class="form-field">
-        <div class="phone-note">شماره شما نمایش داده نخواهد شد.</div>
-        <label class="form-label">شماره همراه</label>
-        <input class="form-input" type="tel" id="r-phone" placeholder="۰۹۱۲XXXXXXX" style="direction:ltr;text-align:right;">
-      </div>
-      <div id="form-error" style="font-size:11.5px;color:#ff5470;margin-bottom:10px;display:none;"></div>
-      <button class="submit-btn" onclick="submitReview()">ثبت نظر</button>
+      <button class="comment-popup-close-btn" onclick="closeCommentPopup()">✕</button>
     </div>
-    <div class="success-msg" id="successMsg">
-      <div class="success-icon">🎉</div>
-      <div class="success-title">ممنون از ثبت نظرتون!</div>
-      <div class="success-sub">نظر شما پس از تأیید منتشر خواهد شد.<br>مشارکت شما برای ما ارزشمنده 🙏</div>
-      <button class="submit-btn" style="max-width:200px;margin-top:8px;" onclick="closeReviewModal()">بستن</button>
+    <div class="comment-popup-quote">"</div>
+    <div class="comment-popup-text" id="popup-text"></div>
+  </div>
+</div>
+
+<!-- SUCCESS POPUP -->
+<div id="success-popup">
+  <div class="success-popup-box">
+    <div class="success-check">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
+    <div class="success-popup-title">ممنون از محبت شما 🌟</div>
+    <div class="success-popup-text">نظر شما با موفقیت ثبت شد.<br>پس از تایید ادمین در سایت، بین نظرات منتشر خواهد شد.</div>
+    <button class="success-popup-close" onclick="closeSuccessPopup()">باشه، ممنون!</button>
   </div>
 </div>
 
 <script>
-/* PODCAST PLAYER */
+/* ===== PODCAST PLAYER ===== */
 var tracks = [
   { src:"http://fs3.centraldnserver.com/~planlife/podcast_free/codenevisi/Codenevisizehn_free.m4a" },
   { src:"http://fs3.centraldnserver.com/~planlife/podcast_free/Mozoatdigar/Frequency_free.m4a" },
@@ -1048,7 +1307,7 @@ audio.addEventListener('loadedmetadata',function(){
   var dur=document.getElementById('dur-'+currentTrack); if(dur) dur.textContent=fmt(audio.duration);
 });
 
-/* COURSES DRAG SCROLL */
+/* ===== COURSES DRAG SCROLL ===== */
 (function(){
   var sc=document.getElementById('coursesScroll');
   if(!sc) return;
@@ -1059,47 +1318,23 @@ audio.addEventListener('loadedmetadata',function(){
   sc.addEventListener('mousemove',function(e){if(!isDown)return;e.preventDefault();sc.scrollLeft=scrollLeft-(e.pageX-sc.offsetLeft-startX)*1.3;});
 })();
 
-/* REVIEW MODAL */
-var selectedRating=0;
-function openReviewModal(){ document.getElementById('reviewModal').classList.add('open'); document.body.style.overflow='hidden'; document.getElementById('reviewForm').style.display='block'; document.getElementById('successMsg').classList.remove('show'); resetForm(); }
-function closeReviewModal(){ document.getElementById('reviewModal').classList.remove('open'); document.body.style.overflow=''; }
-function handleModalClick(e){ if(e.target===document.getElementById('reviewModal'))closeReviewModal(); }
-function resetForm(){ document.getElementById('r-name').value=''; document.getElementById('r-text').value=''; document.getElementById('r-phone').value=''; selectedRating=0; document.querySelectorAll('.star-btn').forEach(function(b){b.classList.remove('lit');}); document.querySelectorAll('.course-option').forEach(function(o){o.classList.remove('selected');}); document.getElementById('form-error').style.display='none'; }
-function toggleCourse(el){ el.classList.toggle('selected'); }
-function setRating(n){ selectedRating=n; document.querySelectorAll('.star-btn').forEach(function(b){ b.classList.toggle('lit',parseInt(b.getAttribute('data-star'))<=n); }); }
-function submitReview(){
-  var name=document.getElementById('r-name').value.trim();
-  var text=document.getElementById('r-text').value.trim();
-  var phone=document.getElementById('r-phone').value.trim();
-  if(!name){showErr('نام و نام خانوادگی را وارد کنید.');return;}
-  if(selectedRating===0){showErr('لطفاً امتیاز خود را انتخاب کنید.');return;}
-  if(!text){showErr('متن نظر خود را بنویسید.');return;}
-  if(!phone){showErr('شماره همراه را وارد کنید.');return;}
-  document.getElementById('form-error').style.display='none';
-  document.getElementById('reviewForm').style.display='none';
-  document.getElementById('successMsg').classList.add('show');
-}
-function showErr(msg){ var el=document.getElementById('form-error'); el.textContent=msg; el.style.display='block'; }
-
-/* STORIES */
-var stories=[];
-var storyIndex=0;
-var storyTimer=null;
+/* ===== PROFILE STORIES ===== */
+var stories=[],storyIndex=0,storyTimer=null;
 var STORY_SEEN_KEY='planlife_stories_seen_profile';
 var DAY_MS=24*60*60*1000;
 
-function getSeenMap(){ try{ var raw=localStorage.getItem(STORY_SEEN_KEY); if(!raw)return{}; var map=JSON.parse(raw); var now=Date.now(),cleaned={}; Object.keys(map).forEach(function(idx){if(now-map[idx]<DAY_MS)cleaned[idx]=map[idx];}); return cleaned; }catch(e){return{};} }
-function markSeenPersisted(idx){ try{ var map=getSeenMap(); map[idx]=Date.now(); localStorage.setItem(STORY_SEEN_KEY,JSON.stringify(map)); }catch(e){} }
-function isSeenPersisted(idx){ var map=getSeenMap(); return Object.prototype.hasOwnProperty.call(map,idx); }
+function getSeenMap(){try{var raw=localStorage.getItem(STORY_SEEN_KEY);if(!raw)return{};var map=JSON.parse(raw);var now=Date.now(),cleaned={};Object.keys(map).forEach(function(idx){if(now-map[idx]<DAY_MS)cleaned[idx]=map[idx];});return cleaned;}catch(e){return{};}}
+function markSeenPersisted(idx){try{var map=getSeenMap();map[idx]=Date.now();localStorage.setItem(STORY_SEEN_KEY,JSON.stringify(map));}catch(e){}}
+function isSeenPersisted(idx){var map=getSeenMap();return Object.prototype.hasOwnProperty.call(map,idx);}
 
 function initStories(){
   var items=document.querySelectorAll('.story-item');
   items.forEach(function(item){
     var idx=parseInt(item.dataset.index,10);
     var alreadySeen=isSeenPersisted(idx);
-    stories.push({ el:item, img:item.dataset.img||'', caption:item.dataset.caption||'', btnShow:(item.dataset.btnShow||'').toLowerCase()==='true', btnText:item.dataset.btnText||'', btnLink:item.dataset.btnLink||'', seen:alreadySeen });
-    if(alreadySeen) item.classList.add('seen');
-    item.addEventListener('click',function(){ openStoryModal(parseInt(item.dataset.index,10)); });
+    stories.push({el:item,img:item.dataset.img||'',caption:item.dataset.caption||'',btnShow:(item.dataset.btnShow||'').toLowerCase()==='true',btnText:item.dataset.btnText||'',btnLink:item.dataset.btnLink||'',seen:alreadySeen});
+    if(alreadySeen)item.classList.add('seen');
+    item.addEventListener('click',function(){openStoryModal(parseInt(item.dataset.index,10));});
   });
   var el=document.getElementById('stories-scroll');
   var isDown=false,startX,scrollLeft;
@@ -1111,76 +1346,286 @@ function initStories(){
 
 var savedScrollY=0;
 function openStoryModal(idx){
-  storyIndex=idx; savedScrollY=window.scrollY||0;
-  document.body.style.position='fixed'; document.body.style.top=(-savedScrollY)+'px';
-  document.body.style.left='0'; document.body.style.right='0'; document.body.style.width='100%';
+  storyIndex=idx;savedScrollY=window.scrollY||0;
+  document.body.style.position='fixed';document.body.style.top=(-savedScrollY)+'px';
+  document.body.style.left='0';document.body.style.right='0';document.body.style.width='100%';
   document.getElementById('story-modal').classList.add('open');
-  renderStoryModal(); buildProgressBar(); startStoryTimer();
+  renderStoryModal();buildProgressBar();startStoryTimer();
 }
 function closeStoryModal(){
-  document.getElementById('story-modal').classList.remove('open'); clearStoryTimer();
+  document.getElementById('story-modal').classList.remove('open');clearStoryTimer();
   var contentDiv=document.getElementById('story-modal-content');
   var vid=contentDiv.querySelector('video');
   if(vid){vid.pause();vid.removeAttribute('src');vid.load();vid.remove();}
-  document.body.style.position=''; document.body.style.top='';
-  document.body.style.left=''; document.body.style.right=''; document.body.style.width='';
+  document.body.style.position='';document.body.style.top='';
+  document.body.style.left='';document.body.style.right='';document.body.style.width='';
   window.scrollTo(0,savedScrollY);
 }
-function getMediaType(url){ if(!url)return'image'; var clean=url.toLowerCase().split('?')[0]; var ext=clean.split('.').pop(); if(['mp4','webm','ogg','mov','avi','mkv','m4v'].includes(ext))return'video'; if(clean.indexOf('/video/upload/')>=0)return'video'; return'image'; }
+function getMediaType(url){if(!url)return'image';var clean=url.toLowerCase().split('?')[0];var ext=clean.split('.').pop();if(['mp4','webm','ogg','mov','avi','mkv','m4v'].includes(ext))return'video';if(clean.indexOf('/video/upload/')>=0)return'video';return'image';}
 function renderStoryModal(){
-  var s=stories[storyIndex]; if(!s){closeStoryModal();return;}
-  s.seen=true; s.el.classList.add('seen'); markSeenPersisted(storyIndex);
+  var s=stories[storyIndex];if(!s){closeStoryModal();return;}
+  s.seen=true;s.el.classList.add('seen');markSeenPersisted(storyIndex);
   var mediaType=getMediaType(s.img);
   var contentDiv=document.getElementById('story-modal-content');
-  var oldVideo=contentDiv.querySelector('video'); if(oldVideo){oldVideo.pause();oldVideo.src='';oldVideo.remove();}
-  var oldImg=contentDiv.querySelector('img'); if(oldImg)oldImg.remove();
+  var oldVideo=contentDiv.querySelector('video');if(oldVideo){oldVideo.pause();oldVideo.src='';oldVideo.remove();}
+  var oldImg=contentDiv.querySelector('img');if(oldImg)oldImg.remove();
   if(mediaType==='video'){
     var video=document.createElement('video');
-    video.setAttribute('playsinline',''); video.setAttribute('webkit-playsinline','');
-    video.muted=false; video.autoplay=true; video.controls=false; video.preload='auto';
+    video.setAttribute('playsinline','');video.setAttribute('webkit-playsinline','');
+    video.muted=false;video.autoplay=true;video.controls=false;video.preload='auto';
     video.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
     video.addEventListener('ended',function(){storyNavigate(1);});
     video.addEventListener('error',function(){startStoryTimer();});
-    video.addEventListener('loadedmetadata',function(){clearStoryTimer();updateProgressForVideo(video);});
-    var source=document.createElement('source'); source.src=s.img;
+    var source=document.createElement('source');source.src=s.img;
     var ext=s.img.toLowerCase().split('?')[0].split('.').pop();
     source.type=['webm','ogg'].includes(ext)?'video/'+ext:'video/mp4';
-    video.appendChild(source); contentDiv.appendChild(video);
-    var pp=video.play(); if(pp!==undefined)pp.catch(function(){showPlayOverlay(video,contentDiv);});
-  } else {
-    var img=document.createElement('img'); img.src=s.img; img.alt='';
+    video.appendChild(source);contentDiv.appendChild(video);
+    var pp=video.play();if(pp!==undefined)pp.catch(function(){});
+  }else{
+    var img=document.createElement('img');img.src=s.img;img.alt='';
     img.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
     contentDiv.appendChild(img);
   }
   document.getElementById('story-caption').textContent=s.caption;
   var btn=document.getElementById('story-action-btn');
-  if(s.btnShow&&s.btnLink){ btn.textContent=s.btnText||'مشاهده بیشتر'; btn.href=s.btnLink; btn.classList.add('show'); }
-  else { btn.classList.remove('show'); btn.removeAttribute('href'); }
-}
-function updateProgressForVideo(video){
-  var bar=document.getElementById('story-progress-bar'); var segs=bar.querySelectorAll('.progress-seg');
-  var activeSeg=segs[storyIndex]; if(!activeSeg)return;
-  var fill=activeSeg.querySelector('.progress-seg-fill');
-  activeSeg.classList.remove('active'); fill.style.transition='none'; fill.style.width='0%';
-  video.addEventListener('timeupdate',function(){ if(!video.duration)return; fill.style.width=((video.currentTime/video.duration)*100)+'%'; });
-}
-function showPlayOverlay(video,container){
-  var overlay=document.createElement('div');
-  overlay.style.cssText='position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.3);cursor:pointer;';
-  var btn=document.createElement('div');
-  btn.style.cssText='width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.2);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:32px;';
-  btn.textContent='▶'; overlay.appendChild(btn); overlay.addEventListener('click',function(){video.play();overlay.remove();}); container.appendChild(overlay);
+  if(s.btnShow&&s.btnLink){btn.textContent=s.btnText||'مشاهده بیشتر';btn.href=s.btnLink;btn.classList.add('show');}
+  else{btn.classList.remove('show');btn.removeAttribute('href');}
 }
 function buildProgressBar(){
-  var bar=document.getElementById('story-progress-bar'); bar.innerHTML='';
-  stories.forEach(function(s,i){ var seg=document.createElement('div'); seg.className='progress-seg'; if(i<storyIndex)seg.classList.add('done'); if(i===storyIndex)seg.classList.add('active'); var fill=document.createElement('div'); fill.className='progress-seg-fill'; seg.appendChild(fill); bar.appendChild(seg); });
+  var bar=document.getElementById('story-progress-bar');bar.innerHTML='';
+  stories.forEach(function(s,i){var seg=document.createElement('div');seg.className='progress-seg';if(i<storyIndex)seg.classList.add('done');if(i===storyIndex)seg.classList.add('active');var fill=document.createElement('div');fill.className='progress-seg-fill';seg.appendChild(fill);bar.appendChild(seg);});
 }
-function startStoryTimer(){ clearStoryTimer(); storyTimer=setTimeout(function(){storyNavigate(1);},5000); }
-function clearStoryTimer(){ if(storyTimer){clearTimeout(storyTimer);storyTimer=null;} }
-function storyNavigate(dir){ clearStoryTimer(); storyIndex+=dir; if(storyIndex<0)storyIndex=0; if(storyIndex>=stories.length){closeStoryModal();return;} renderStoryModal(); buildProgressBar(); startStoryTimer(); }
+function startStoryTimer(){clearStoryTimer();storyTimer=setTimeout(function(){storyNavigate(1);},5000);}
+function clearStoryTimer(){if(storyTimer){clearTimeout(storyTimer);storyTimer=null;}}
+function storyNavigate(dir){clearStoryTimer();storyIndex+=dir;if(storyIndex<0)storyIndex=0;if(storyIndex>=stories.length){closeStoryModal();return;}renderStoryModal();buildProgressBar();startStoryTimer();}
 document.getElementById('story-modal').addEventListener('click',function(e){if(e.target===this)closeStoryModal();});
 
-window.addEventListener('load',function(){initStories();});
+/* ===== RESULTS STORIES (10 items, 2x5 grid) ===== */
+var RESULTS_SEEN_KEY='planlife_results_seen_profile_v1';
+var rsStories=[];
+var rsIndex=0;
+var rsSavedScrollY=0;
+var rsTimer=null;
+var RESULTS_STORY_BASE='http://fs3.centraldnserver.com/~planlife/doreha/natije/codepol/';
+var RESULTS_COUNT=10;
+var MALE_AVATAR='https://jaavidan.ir/wp-content/uploads/2026/09/Untitled-design-2.png';
+var FEMALE_AVATAR='https://jaavidan.ir/wp-content/uploads/2026/09/Untitled-design-1.png';
+
+function getRsSeenMap(){try{var raw=localStorage.getItem(RESULTS_SEEN_KEY);if(!raw)return{};var map=JSON.parse(raw);var now=Date.now(),cleaned={};Object.keys(map).forEach(function(k){if(now-map[k]<DAY_MS)cleaned[k]=map[k];});return cleaned;}catch(e){return{};}}
+function markRsSeen(idx){try{var map=getRsSeenMap();map[idx]=Date.now();localStorage.setItem(RESULTS_SEEN_KEY,JSON.stringify(map));}catch(e){}}
+function isRsSeen(idx){return Object.prototype.hasOwnProperty.call(getRsSeenMap(),idx);}
+
+function initResultsGrid(){
+  var grid=document.getElementById('resultsGrid');
+  grid.innerHTML='';
+  rsStories=[];
+  for(var i=1;i<=RESULTS_COUNT;i++){
+    var seen=isRsSeen(i);
+    rsStories.push({idx:i,media:RESULTS_STORY_BASE+i+'.jpeg',seen:seen});
+    var item=document.createElement('div');
+    item.className='result-item'+(seen?' seen':'');
+    item.id='rs-item-'+i;
+    item.dataset.rsIdx=i;
+    item.innerHTML='<div class="result-ring"><div class="result-avatar"><img src="'+RESULTS_STORY_BASE+i+'.jpeg" alt="نتیجه" loading="lazy"></div></div><div class="result-label">نتیجه دوستان</div>';
+    (function(capturedI){
+      item.addEventListener('click',function(){openRsModal(capturedI-1);});
+    })(i);
+    grid.appendChild(item);
+  }
+  /* drag scroll */
+  var outer=document.getElementById('resultsScrollOuter');
+  var isDown=false,startX,scrollLeft;
+  outer.addEventListener('mousedown',function(e){isDown=true;startX=e.pageX-outer.offsetLeft;scrollLeft=outer.scrollLeft;});
+  outer.addEventListener('mouseleave',function(){isDown=false;});
+  outer.addEventListener('mouseup',function(){isDown=false;});
+  outer.addEventListener('mousemove',function(e){if(!isDown)return;e.preventDefault();outer.scrollLeft=scrollLeft-(e.pageX-outer.offsetLeft-startX);});
+}
+
+function openRsModal(idx){
+  rsIndex=idx;rsSavedScrollY=window.scrollY||0;
+  document.body.style.position='fixed';document.body.style.top=(-rsSavedScrollY)+'px';
+  document.body.style.left='0';document.body.style.right='0';document.body.style.width='100%';
+  document.getElementById('results-story-modal').classList.add('open');
+  renderRsModal();buildRsProgressBar();startRsTimer();
+}
+function closeResultsStoryModal(){
+  document.getElementById('results-story-modal').classList.remove('open');clearRsTimer();
+  var contentDiv=document.getElementById('rs-modal-content');
+  var vid=contentDiv.querySelector('video');if(vid){vid.pause();vid.removeAttribute('src');vid.load();vid.remove();}
+  var img=contentDiv.querySelector('img');if(img)img.remove();
+  document.body.style.position='';document.body.style.top='';
+  document.body.style.left='';document.body.style.right='';document.body.style.width='';
+  window.scrollTo(0,rsSavedScrollY);
+}
+function renderRsModal(){
+  var s=rsStories[rsIndex];if(!s){closeResultsStoryModal();return;}
+  s.seen=true;markRsSeen(s.idx);
+  var itemEl=document.getElementById('rs-item-'+s.idx);
+  if(itemEl)itemEl.classList.add('seen');
+  var contentDiv=document.getElementById('rs-modal-content');
+  var oldImg=contentDiv.querySelector('img');if(oldImg)oldImg.remove();
+  var img=document.createElement('img');img.src=s.media;img.alt='';
+  img.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
+  contentDiv.appendChild(img);
+  document.getElementById('rs-caption').textContent='نتیجه دوستان دوره';
+}
+function buildRsProgressBar(){
+  var bar=document.getElementById('rs-progress-bar');bar.innerHTML='';
+  rsStories.forEach(function(s,i){var seg=document.createElement('div');seg.className='progress-seg';if(i<rsIndex)seg.classList.add('done');if(i===rsIndex)seg.classList.add('active');var fill=document.createElement('div');fill.className='progress-seg-fill';seg.appendChild(fill);bar.appendChild(seg);});
+}
+function startRsTimer(){clearRsTimer();rsTimer=setTimeout(function(){rsNavigate(1);},5000);}
+function clearRsTimer(){if(rsTimer){clearTimeout(rsTimer);rsTimer=null;}}
+function rsNavigate(dir){clearRsTimer();rsIndex+=dir;if(rsIndex<0)rsIndex=0;if(rsIndex>=rsStories.length){closeResultsStoryModal();return;}renderRsModal();buildRsProgressBar();startRsTimer();}
+document.getElementById('results-story-modal').addEventListener('click',function(e){if(e.target===this)closeResultsStoryModal();});
+
+/* ===== COMMENTS DATA ===== */
+var MALE_AV='https://jaavidan.ir/wp-content/uploads/2026/09/Untitled-design-2.png';
+var FEMALE_AV='https://jaavidan.ir/wp-content/uploads/2026/09/Untitled-design-1.png';
+var allComments=[
+  [
+    {name:"سارا م.",gender:"female",text:"واقعاً این دوره زندگیم رو تغییر داد. از لحظه‌ای که شروع کردم احساس کردم مسیرم داره شفاف‌تر می‌شه و هر روز با انگیزه بیشتری بیدار می‌شم.",stars:5},
+    {name:"علی ر.",gender:"male",text:"محتوا خیلی عمیق و کاربردیه. پیشنهاد می‌کنم به همه کسایی که دنبال تغییر واقعی در رابطه‌شون با پول هستن. این دوره رو حتماً ببینن.",stars:5},
+    {name:"مریم ک.",gender:"female",text:"بعد از دوره احساس می‌کنم ابزارهای لازم برای برنامه‌ریزی مالی رو دارم. ذهنیتم نسبت به پول کاملاً عوض شد. ممنون PlanLife!",stars:5},
+    {name:"رضا ت.",gender:"male",text:"برخلاف خیلی دوره‌های دیگه، اینجا واقعاً به اجرا اهمیت داده می‌شه. تمرین‌های عملی خیلی کمک کرد.",stars:4},
+    {name:"نیلوفر ش.",gender:"female",text:"تکالیف روزانه و پیگیری استاد خیلی کمک کرد که این بار همه چیز فرق داشته باشه. احساس می‌کنم واقعاً دارم تغییر می‌کنم.",stars:5},
+    {name:"حامد ف.",gender:"male",text:"سیستم هدف‌گذاری مالی که آموزش دادن انقدر ساده و کاربردیه که هر روز ازش استفاده می‌کنم.",stars:5},
+    {name:"زهرا ب.",gender:"female",text:"دوره‌ی خوبی بود. کاش زودتر پیداش کرده بودم. الان با آرامش بیشتری برنامه‌ریزی مالی می‌کنم.",stars:4},
+    {name:"امیر ن.",gender:"male",text:"تفاوت اصلی این دوره اینه که چرا رو بهت یاد میده، نه فقط چطور رو. این تفاوت خیلی مهمه.",stars:5},
+    {name:"فاطمه ع.",gender:"female",text:"ممنون از این دوره‌ی عالی. حس می‌کنم یه نسخه‌ی بهتر از خودم هستم و رابطه‌ام با پول کاملاً سالم‌تر شده.",stars:5},
+    {name:"کیانوش م.",gender:"male",text:"اجتماع دوره خیلی انرژی‌بخشه. آدم‌های همفکر و پیشرو کنارت هستن که این خودش انگیزه‌ی زیادی میده.",stars:5},
+    {name:"شیرین ح.",gender:"female",text:"برنامه‌ریزی مالی هفتگی که یاد گرفتم الان بخش جدانشدنی روتینمه.",stars:5},
+    {name:"بهروز د.",gender:"male",text:"خیلی صادقانه بگم که انتظارم بالا نبود ولی دوره خیلی فراتر از انتظارم بود. کاملاً ارزش وقت و پولم رو داشت.",stars:5},
+    {name:"مینا ق.",gender:"female",text:"هر جلسه یه بینش جدید درباره‌ی ذهنیت مالی داشت. محتوا خیلی فشرده و ارزشمنده.",stars:4},
+    {name:"داریوش پ.",gender:"male",text:"یادم میاد اول دوره چقدر در مورد پول گم بودم. الان یه نقشه‌ی راه مشخص دارم و می‌دونم کجا دارم می‌رم.",stars:5},
+    {name:"لیلا ر.",gender:"female",text:"آموزش‌های ویدیویی خیلی واضح و قابل فهمه. مطالب رو درست منتقل می‌کنه و هیچ گنگی‌ای توش نیست.",stars:5},
+    {name:"سهراب م.",gender:"male",text:"روحیه‌ی پشتیبانی گروه و اساتید واقعاً حس می‌کنی که تنها نیستی در این مسیر.",stars:5},
+    {name:"نرگس ط.",gender:"female",text:"از همه مهم‌تر اینه که تغییرات واقعیه، نه فقط احساس خوب لحظه‌ای. الان چند ماهه که تغییرم پایداره.",stars:5},
+    {name:"وحید ج.",gender:"male",text:"پیاده‌سازی تدریجی مطالب خیلی کمک کرد که هضم بشه و عملاً ازش استفاده کنم.",stars:4},
+    {name:"آناهیتا ک.",gender:"female",text:"دوره‌ای که واقعاً در زندگی مالیم اثرگذار بود. سپاسگزارم از تیم PlanLife.",stars:5},
+    {name:"مهدی ص.",gender:"male",text:"بهترین سرمایه‌گذاری‌ای بود که تا حالا روی خودم کردم. هیچ تردیدی نداشته باشید.",stars:5}
+  ],
+  [
+    {name:"نازنین ف.",gender:"female",text:"این دوره کمک کرد بفهمم چطور در هر شرایطی حالم رو خوب نگه دارم. خیلی ارزشمند بود.",stars:5},
+    {name:"محمد ع.",gender:"male",text:"ابزارهای عملی که یاد گرفتم الان بخشی از روتین روزانه‌مه. حالم واقعاً بهتره.",stars:5},
+    {name:"پگاه ر.",gender:"female",text:"یاد گرفتم چطور با احساسات منفی کنار بیام. این مهارت ارزشش غیرقابل اندازه‌گیریه.",stars:5},
+    {name:"سامان ب.",gender:"male",text:"دوره خیلی جامع بود. هم علمی هم معنوی. ترکیب خوبیه که کمک می‌کنه همه ابعاد رو ببینی.",stars:4},
+    {name:"مهسا ک.",gender:"female",text:"بعد از دوره احساس سبکی می‌کنم که مدت‌هاست نداشتم. ممنون از این تجربه‌ی زیبا.",stars:5},
+    {name:"آرمان د.",gender:"male",text:"روش‌های مدیریت استرس که یاد گرفتم واقعاً کار می‌کنن. توی بدترین روزها هم کمکم می‌کنن.",stars:5},
+    {name:"یلدا ش.",gender:"female",text:"این دوره به من یاد داد که خوشبختی یه مهارته، نه یه اتفاق. ممنونم.",stars:5},
+    {name:"پویا م.",gender:"male",text:"محتوا خیلی عمیق بود ولی به شکلی ارائه شده که همه می‌تونن درکش کنن.",stars:4},
+    {name:"سوسن ح.",gender:"female",text:"برای اولین بار یه دوره پیدا کردم که واقعاً به سوالای من جواب می‌ده.",stars:5},
+    {name:"بابک ت.",gender:"male",text:"اگر یه چیز از این دوره ببرم اینه که یاد گرفتم مراقب خودم باشم. ارزشمنده.",stars:5},
+    {name:"ترانه ق.",gender:"female",text:"روزانه با تمرین‌هایی که یاد گرفتم حالم خوبه. این یه تغییر ماندگاریه.",stars:5},
+    {name:"فرزاد ز.",gender:"male",text:"دوره واقعاً تحول‌ساز بود. ممنون از تیم PlanLife برای این محتوای ارزشمند.",stars:5}
+  ],
+  [
+    {name:"بهاره م.",gender:"female",text:"این دوره دیدم رو نسبت به زندگی کاملاً عوض کرد. حالا هر لحظه رو با آگاهی بیشتری تجربه می‌کنم.",stars:5},
+    {name:"کاوه ر.",gender:"male",text:"مطالب خیلی عمیق و اصیل بود. درست اون چیزی بود که دنبالش بودم برای ارتباط با خودم.",stars:5},
+    {name:"نسرین ب.",gender:"female",text:"یاد گرفتم با جریان زندگی همراه بشم نه در مقابلش. این تغییر دیدگاه همه چیز رو عوض کرد.",stars:5},
+    {name:"شهرام خ.",gender:"male",text:"دوره‌ای بی‌نظیر. محتوا از منابع معتبر معنوی گرفته شده و با علم روز هم هماهنگه.",stars:4},
+    {name:"گیتی ع.",gender:"female",text:"هر جلسه یه بینش جدید داشت. حالا با آرامش بیشتری در زندگی قدم برمی‌دارم.",stars:5},
+    {name:"منوچهر ف.",gender:"male",text:"این دوره کمک کرد بفهمم جایگاهم در این کیهان کجاست. تجربه‌ای عمیق و ارزشمند.",stars:5},
+    {name:"آذر ک.",gender:"female",text:"یاد گرفتم چطور با اطمینان به جریان خلقت در مسیرم گام بردارم. ممنونم.",stars:5},
+    {name:"رامین ص.",gender:"male",text:"بهترین سرمایه‌گذاری معنوی زندگیم بود. توصیه می‌کنم به همه.",stars:5},
+    {name:"شادی ل.",gender:"female",text:"تمرین‌های این دوره کاملاً عملیه و توی زندگی روزمره می‌شه ازشون استفاده کرد.",stars:4},
+    {name:"بردیا ج.",gender:"male",text:"دوره‌ای که انتظارش رو نداشتم این‌قدر عمیق باشه. واقعاً مسیرم رو عوض کرد.",stars:5},
+    {name:"روشنک د.",gender:"female",text:"با این دوره یاد گرفتم چطور با قلبم گوش کنم. ممنون از این تجربه‌ی ارزشمند.",stars:5},
+    {name:"سیاوش پ.",gender:"male",text:"محتوا هم عمق داشت هم کاربردی بود. ترکیب نادری که کمتر می‌بینی.",stars:5}
+  ]
+];
+
+var currentTab=-1;
+var commentsShownCount=0;
+var COMMENTS_PER_PAGE=10;
+
+function renderStars(count){return'★'.repeat(count)+'☆'.repeat(5-count);}
+
+function switchTab(idx,el){
+  currentTab=idx;
+  document.querySelectorAll('.course-tab').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+  commentsShownCount=0;
+  document.getElementById('commentsGrid').innerHTML='';
+  document.getElementById('load-more-btn').classList.remove('hidden');
+  loadMoreComments();
+}
+
+function loadMoreComments(){
+  var grid=document.getElementById('commentsGrid');
+  var btn=document.getElementById('load-more-btn');
+  var commentsToShow=[];
+  if(currentTab===-1){
+    allComments.forEach(function(tab){commentsToShow=commentsToShow.concat(tab);});
+  }else{
+    commentsToShow=allComments[currentTab]||[];
+  }
+  var end=Math.min(commentsShownCount+COMMENTS_PER_PAGE,commentsToShow.length);
+  for(var i=commentsShownCount;i<end;i++){
+    var c=commentsToShow[i];
+    var delay=(i-commentsShownCount)*40;
+    var avatarSrc=c.gender==='male'?MALE_AV:FEMALE_AV;
+    var card=document.createElement('div');
+    card.className='comment-card';
+    card.style.animationDelay=delay+'ms';
+    card.innerHTML='<div class="comment-quote-icon">"</div><div class="comment-text">'+c.text+'</div><div class="comment-footer"><img class="comment-avatar-img" src="'+avatarSrc+'" alt="'+c.name+'"><div class="comment-author-name">'+c.name+'</div><div class="comment-stars">'+renderStars(c.stars)+'</div></div>';
+    (function(cc,av){card.addEventListener('click',function(){openCommentPopup(cc,av);});})(c,avatarSrc);
+    grid.appendChild(card);
+  }
+  commentsShownCount=end;
+  if(commentsShownCount>=commentsToShow.length){
+    btn.classList.add('hidden');
+  }else{
+    btn.textContent=(Math.min(COMMENTS_PER_PAGE,commentsToShow.length-commentsShownCount))+' نظر بیشتر ببینم ↓';
+  }
+}
+
+function openCommentPopup(c,avatarSrc){
+  document.getElementById('popup-avatar').src=avatarSrc;
+  document.getElementById('popup-name').textContent=c.name;
+  document.getElementById('popup-stars').textContent=renderStars(c.stars);
+  document.getElementById('popup-text').textContent=c.text;
+  document.getElementById('comment-popup').classList.add('open');
+}
+function closeCommentPopup(){document.getElementById('comment-popup').classList.remove('open');}
+document.getElementById('comment-popup').addEventListener('click',function(e){if(e.target===this)closeCommentPopup();});
+
+/* FORM */
+var selectedGender=null;
+var formSelectedCourse=-1;
+
+function selectFormCourse(idx,el){
+  formSelectedCourse=idx;
+  document.querySelectorAll('.course-opt').forEach(function(o){o.classList.remove('selected');});
+  el.classList.add('selected');
+}
+function selectGender(g){
+  selectedGender=g;
+  document.getElementById('gender-male').classList.toggle('selected',g==='male');
+  document.getElementById('gender-female').classList.toggle('selected',g==='female');
+}
+function submitComment(){
+  var textEl=document.getElementById('comment-text-input');
+  var text=textEl.value.trim();
+  if(!text){textEl.style.borderColor='#ef4444';textEl.focus();setTimeout(function(){textEl.style.borderColor='';},1500);return;}
+  textEl.value='';
+  document.getElementById('comment-name-input').value='';
+  selectedGender=null;formSelectedCourse=-1;
+  document.getElementById('gender-male').classList.remove('selected');
+  document.getElementById('gender-female').classList.remove('selected');
+  document.querySelectorAll('.course-opt').forEach(function(o){o.classList.remove('selected');});
+  document.querySelector('.course-opt').classList.add('selected');
+  document.querySelectorAll('#star-rating input').forEach(function(i){i.checked=false;});
+  document.getElementById('success-popup').classList.add('open');
+}
+function closeSuccessPopup(){document.getElementById('success-popup').classList.remove('open');}
+document.getElementById('success-popup').addEventListener('click',function(e){if(e.target===this)closeSuccessPopup();});
+
+/* INIT */
+window.addEventListener('load',function(){
+  initStories();
+  initResultsGrid();
+  loadMoreComments();
+});
 </script>
 </body>
 </html>
