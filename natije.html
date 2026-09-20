@@ -28,8 +28,14 @@ html,body{height:100%;font-family:'Vazirmatn',sans-serif;background:var(--bg-pag
 .topbar-title{flex:1;font-size:15px;font-weight:800;color:var(--ink);text-align:center;}
 .topbar-spacer{width:40px;flex-shrink:0;}
 
+/* FLOATING COMMENT BUTTON */
+.floating-comment-btn{position:fixed;bottom:30px;left:20px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#5866e8);color:#fff;border:none;box-shadow:0 8px 24px rgba(47,111,237,0.35);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;z-index:40;transition:.25s;-webkit-tap-highlight-color:transparent;}
+.floating-comment-btn:hover{transform:scale(1.1);box-shadow:0 12px 32px rgba(47,111,237,0.45);}
+.floating-comment-btn:active{transform:scale(0.95);}
+.floating-comment-btn svg{width:24px;height:24px;stroke-width:2.5;}
+
 /* PAGE */
-.page-wrapper{max-width:900px;margin:0 auto;padding:16px 14px 80px;display:flex;flex-direction:column;gap:var(--gap);}
+.page-wrapper{max-width:900px;margin:0 auto;padding:16px 14px 120px;display:flex;flex-direction:column;gap:var(--gap);}
 
 /* SHARE BANNER */
 .share-banner{background:var(--section);border-radius:var(--radius-xl);box-shadow:var(--section-shadow);padding:22px 20px 18px;border:1.5px solid rgba(47,111,237,.12);}
@@ -40,6 +46,15 @@ html,body{height:100%;font-family:'Vazirmatn',sans-serif;background:var(--bg-pag
 .comment-form-wrapper{background:linear-gradient(135deg,var(--blue-light) 0%,#f0f4ff 100%);border:1.5px solid rgba(47,111,237,0.2);border-radius:var(--radius-lg);padding:18px 16px 16px;}
 .comment-form-label{display:flex;align-items:center;gap:8px;justify-content:center;font-size:13px;font-weight:800;color:var(--blue-ink);margin-bottom:14px;}
 .comment-form-label .label-badge{background:var(--blue);color:#fff;border-radius:20px;padding:3px 12px;font-size:12px;font-weight:700;}
+
+/* Course select */
+.course-select-row{display:flex;gap:8px;justify-content:center;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin;}
+.course-select-row::-webkit-scrollbar{height:3px;}
+.course-select-row::-webkit-scrollbar-thumb{background:rgba(47,111,237,0.2);border-radius:3px;}
+.course-option{white-space:nowrap;padding:8px 14px;border-radius:20px;border:1.5px solid rgba(47,111,237,0.2);background:#fff;font-family:'Vazirmatn',sans-serif;font-size:11.5px;font-weight:700;color:var(--muted);cursor:pointer;transition:.15s;flex-shrink:0;}
+.course-option:hover{border-color:rgba(47,111,237,0.4);background:var(--blue-light);}
+.course-option.selected{background:var(--blue);color:#fff;border-color:var(--blue);}
+.course-option:active{transform:scale(0.95);}
 
 /* Gender select */
 .gender-select-row{display:flex;gap:10px;justify-content:center;margin-bottom:14px;}
@@ -115,10 +130,13 @@ html,body{height:100%;font-family:'Vazirmatn',sans-serif;background:var(--bg-pag
 .comments-section-title span.dot{width:8px;height:8px;border-radius:50%;background:var(--blue);display:inline-block;}
 
 /* TABS */
-.course-tabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
-.course-tabs::-webkit-scrollbar{display:none;}
-.course-tab{white-space:nowrap;padding:7px 14px;border-radius:20px;border:1.5px solid var(--hair2);background:#fff;font-family:'Vazirmatn',sans-serif;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:.18s;flex-shrink:0;}
-.course-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+.course-tabs{display:flex;gap:8px;margin-bottom:18px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin;}
+.course-tabs::-webkit-scrollbar{height:4px;}
+.course-tabs::-webkit-scrollbar-track{background:transparent;}
+.course-tabs::-webkit-scrollbar-thumb{background:rgba(47,111,237,0.2);border-radius:4px;}
+.course-tab{white-space:nowrap;padding:10px 18px;border-radius:24px;border:1.5px solid rgba(47,111,237,0.15);background:rgba(255,255,255,0.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-family:'Vazirmatn',sans-serif;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:.22s;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.04);}
+.course-tab:hover{border-color:rgba(47,111,237,0.3);background:rgba(255,255,255,0.8);}
+.course-tab.active{background:linear-gradient(135deg,var(--blue),#5866e8);color:#fff;border-color:var(--blue);box-shadow:0 6px 16px rgba(47,111,237,0.25);}
 .course-tab:active{transform:scale(0.96);}
 
 .comments-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
@@ -229,7 +247,7 @@ html,body{height:100%;font-family:'Vazirmatn',sans-serif;background:var(--bg-pag
   .results-grid{gap:14px 8px;}
   .result-ring{width:62px;height:62px;}
   .result-label{font-size:9.5px;width:64px;}
-  .page-wrapper{padding:12px 10px 80px;}
+  .page-wrapper{padding:12px 10px 120px;}
 }
 </style>
 </head>
@@ -247,54 +265,27 @@ html,body{height:100%;font-family:'Vazirmatn',sans-serif;background:var(--bg-pag
   <div class="topbar-spacer"></div>
 </div>
 
+<button class="floating-comment-btn" onclick="scrollToCommentForm()" title="نظر خودتون رو بنویسید" aria-label="ثبت نظر">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</button>
+
 <div class="page-wrapper">
 
-  <!-- SHARE BANNER -->
+  <!-- STORIES GRID -->
+  <div class="section-card">
+    <div class="section-head">
+      <h2>همه نتایج</h2>
+      <span class="count" id="results-count"></span>
+    </div>
+    <div class="stories-scroll-area" id="storiesScrollArea">
+      <div class="results-grid" id="resultsGrid"></div>
+    </div>
+  </div>
+
+  <!-- SHARE BANNER (moved to after stories) -->
   <div class="share-banner">
     <div class="share-banner-title">تجربه‌ی شما، امید فرداهای یک نفر دیگه‌ست ✨</div>
     <div class="share-banner-text">نتیجه‌ها، تغییرات و حال خوبی که این مسیر برای شما ساخته رو با ما و بقیه‌ی دوستان به اشتراک بذارید؛ همین یک قدم کوچیک شما می‌تونه امید، ایمان و انگیزه‌ای بشه برای کسایی که تازه می‌خوان این مسیر رو شروع کنن.</div>
-
-    <!-- COMMENT FORM -->
-    <div class="comment-form-wrapper">
-      <div class="comment-form-label">
-        <span class="label-badge">✍️ نظر شما</span>
-        <span>اینجا تجربه‌ی خود را بنویسید</span>
-      </div>
-
-      <!-- Gender select -->
-      <div class="gender-select-row">
-        <div class="gender-btn" id="gender-male" onclick="selectGender('male')">
-          <img src="https://jaavidan.ir/wp-content/uploads/2026/09/Untitled-design-2.png" alt="آقا">
-          <span>آقا هستم</span>
-          <div class="gender-tick">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-        </div>
-        <div class="gender-btn" id="gender-female" onclick="selectGender('female')">
-          <img src="https://jaavidan.ir/wp-content/uploads/2026/09/Untitled-design-1.png" alt="خانم">
-          <span>خانم هستم</span>
-          <div class="gender-tick">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- Star rating -->
-      <div style="text-align:center;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;">امتیاز شما به دوره</div>
-      <div class="star-rating-row" id="star-rating">
-        <input type="radio" name="rating" id="s5" value="5"><label for="s5">★</label>
-        <input type="radio" name="rating" id="s4" value="4"><label for="s4">★</label>
-        <input type="radio" name="rating" id="s3" value="3"><label for="s3">★</label>
-        <input type="radio" name="rating" id="s2" value="2"><label for="s2">★</label>
-        <input type="radio" name="rating" id="s1" value="1"><label for="s1">★</label>
-      </div>
-
-      <textarea class="comment-textarea" id="comment-text-input" placeholder="تجربه‌ی خود را از این دوره بنویسید..." rows="4"></textarea>
-      <div class="comment-name-row">
-        <input class="comment-name-input" id="comment-name-input" type="text" placeholder="نام شما (اختیاری)">
-        <button class="comment-submit-btn" onclick="submitComment()">ارسال نظر</button>
-      </div>
-    </div>
 
     <div class="share-banner-socials">
       <a class="share-social-item" href="https://t.me/planlifeir" target="_blank" rel="noopener">
@@ -318,27 +309,71 @@ html,body{height:100%;font-family:'Vazirmatn',sans-serif;background:var(--bg-pag
     </div>
   </div>
 
-  <!-- STORIES GRID -->
-  <div class="section-card">
-    <div class="section-head">
-      <h2>همه نتایج</h2>
-      <span class="count" id="results-count"></span>
-    </div>
-    <div class="stories-scroll-area" id="storiesScrollArea">
-      <div class="results-grid" id="resultsGrid"></div>
-    </div>
-  </div>
-
   <!-- COMMENTS -->
   <div class="comments-section">
     <div class="comments-section-title"><span class="dot"></span>نظرات دوستان</div>
     <div class="course-tabs" id="course-tabs">
-      <button class="course-tab active" onclick="switchTab(0,this)">💻 کدهای پشت‌پرده پول</button>
+      <button class="course-tab active" onclick="switchTab(-1,this)">💬 همه نظرات</button>
+      <button class="course-tab" onclick="switchTab(0,this)">💻 کدهای پشت‌پرده پول</button>
       <button class="course-tab" onclick="switchTab(1,this)">💛 چطور حالم خوب باشه؟</button>
       <button class="course-tab" onclick="switchTab(2,this)">🌊 هماهنگی با جریان خلقت</button>
     </div>
     <div class="comments-grid" id="commentsGrid"></div>
     <button class="load-more-btn" id="load-more-btn" onclick="loadMoreComments()">۱۰ نظر بیشتر ببینم ↓</button>
+  </div>
+
+  <!-- COMMENT FORM (moved to after comments) -->
+  <div class="section-card" id="comment-form-section">
+    <div class="comment-form-wrapper">
+      <div class="comment-form-label">
+        <span class="label-badge">✍️ نظر شما</span>
+        <span>اینجا تجربه‌ی خود را بنویسید</span>
+      </div>
+
+      <!-- Course select -->
+      <div style="text-align:center;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;">درباره کدوم دوره‌ی میخوای نظر بدی؟</div>
+      <div class="course-select-row">
+        <div class="course-option selected" id="course-opt-0" onclick="selectCourse(-1,this)">🌐 خود PlanLife</div>
+        <div class="course-option" id="course-opt-1" onclick="selectCourse(0,this)">💻 کدهای پشت‌پرده پول</div>
+        <div class="course-option" id="course-opt-2" onclick="selectCourse(1,this)">💛 چطور حالم خوب باشه؟</div>
+        <div class="course-option" id="course-opt-3" onclick="selectCourse(2,this)">🌊 هماهنگی با جریان خلقت</div>
+      </div>
+
+      <!-- Gender select -->
+      <div style="text-align:center;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px;">شما چه هستید؟</div>
+      <div class="gender-select-row">
+        <div class="gender-btn" id="gender-male" onclick="selectGender('male')">
+          <img src="https://jaavidan.ir/wp-content/uploads/2026/09/Untitled-design-2.png" alt="آقا">
+          <span>آقا هستم</span>
+          <div class="gender-tick">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+        </div>
+        <div class="gender-btn" id="gender-female" onclick="selectGender('female')">
+          <img src="https://jaavidan.ir/wp-content/uploads/2026/09/Untitled-design-1.png" alt="خانم">
+          <span>خانم هستم</span>
+          <div class="gender-tick">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Star rating -->
+      <div style="text-align:center;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;">امتیاز شما</div>
+      <div class="star-rating-row" id="star-rating">
+        <input type="radio" name="rating" id="s5" value="5"><label for="s5">★</label>
+        <input type="radio" name="rating" id="s4" value="4"><label for="s4">★</label>
+        <input type="radio" name="rating" id="s3" value="3"><label for="s3">★</label>
+        <input type="radio" name="rating" id="s2" value="2"><label for="s2">★</label>
+        <input type="radio" name="rating" id="s1" value="1"><label for="s1">★</label>
+      </div>
+
+      <textarea class="comment-textarea" id="comment-text-input" placeholder="تجربه‌ی خود را بنویسید..." rows="4"></textarea>
+      <div class="comment-name-row">
+        <input class="comment-name-input" id="comment-name-input" type="text" placeholder="نام شما (اختیاری)">
+        <button class="comment-submit-btn" onclick="submitComment()">ارسال نظر</button>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -447,16 +482,6 @@ const allComments = [
     { name:"وحید ج.", gender:"male", text:"پیاده‌سازی تدریجی مطالب خیلی کمک کرد که هضم بشه و عملاً ازش استفاده کنم.", stars:4 },
     { name:"آناهیتا ک.", gender:"female", text:"دوره‌ای که واقعاً در زندگی مالیم اثرگذار بود. سپاسگزارم از تیم PlanLife.", stars:5 },
     { name:"مهدی ص.", gender:"male", text:"بهترین سرمایه‌گذاری‌ای بود که تا حالا روی خودم کردم. هیچ تردیدی نداشته باشید.", stars:5 },
-    { name:"پریسا ه.", gender:"female", text:"ساختار دوره خیلی منظمه و این نظم به خود آدم هم منتقل میشه. حالا زندگیم هم منظم‌تر شده.", stars:5 },
-    { name:"ارسلان و.", gender:"male", text:"مدل ذهنی‌ام نسبت به ثروت کاملاً عوض شد. این ارزش واقعی یه دوره‌ی خوبه.", stars:5 },
-    { name:"گلنار ی.", gender:"female", text:"اساتید واقعاً دلسوزانه همراهی می‌کنند. این حس گرما خیلی مهمه و انگیزه میده ادامه بدی.", stars:5 },
-    { name:"ایمان چ.", gender:"male", text:"دوره خیلی ملموس و کاربردیه. مثال‌های واقعی کمک می‌کنه همه چیز رو بهتر بفهمی.", stars:4 },
-    { name:"سپیده ز.", gender:"female", text:"صادقانه می‌گم این دوره یکی از بهترین تصمیم‌های زندگیم بود و خوشحالم که بهش اعتماد کردم.", stars:5 },
-    { name:"نوید خ.", gender:"male", text:"محتوای اصیل و بدون حاشیه. دقیقاً همون چیزیه که دنبالش بودم.", stars:5 },
-    { name:"الناز ل.", gender:"female", text:"تمرکز دوره روی اجرا و عمله، نه فقط نظریه. این تفاوت اصلیشه که ازش ممنونم.", stars:5 },
-    { name:"شاهین ع.", gender:"male", text:"هر هفته یه بخش جدید از رابطه‌ام با پول رو کشف کردم. تجربه‌ی ارزشمندی بود.", stars:5 },
-    { name:"آرزو ب.", gender:"female", text:"گروه هم‌دوره‌ای‌ها هنوز هم فعاله و این خیلی ارزشمنده. یه جامعه‌ی واقعی ساخته شده.", stars:5 },
-    { name:"کامران ج.", gender:"male", text:"محتوا خیلی با کیفیته و مدرسین واقعاً صاحب تجربه‌اند. پیشنهاد می‌کنم بدون هیچ تردیدی.", stars:5 },
   ],
   // Tab 1 — چطور حالم خوب باشه
   [
@@ -490,12 +515,19 @@ const allComments = [
   ]
 ];
 
-let currentTab = 0;
+let currentTab = -1;
+let selectedCourse = -1;
 let commentsShownCount = 0;
 const COMMENTS_PER_PAGE = 10;
 
 function toFa(n) { return String(n).replace(/[0-9]/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]); }
 function renderStars(count) { return '★'.repeat(count)+'☆'.repeat(5-count); }
+
+function selectCourse(idx, el) {
+  selectedCourse = idx;
+  document.querySelectorAll('.course-option').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+}
 
 function switchTab(idx, el) {
   currentTab = idx;
@@ -510,10 +542,18 @@ function switchTab(idx, el) {
 function loadMoreComments() {
   const grid = document.getElementById('commentsGrid');
   const btn = document.getElementById('load-more-btn');
-  const data = allComments[currentTab];
-  const end = Math.min(commentsShownCount + COMMENTS_PER_PAGE, data.length);
+  
+  let commentsToShow = [];
+  if (currentTab === -1) {
+    // Show all comments from all tabs
+    allComments.forEach(tabComments => commentsToShow.push(...tabComments));
+  } else {
+    commentsToShow = allComments[currentTab] || [];
+  }
+  
+  const end = Math.min(commentsShownCount + COMMENTS_PER_PAGE, commentsToShow.length);
   for (let i = commentsShownCount; i < end; i++) {
-    const c = data[i];
+    const c = commentsToShow[i];
     const delay = (i - commentsShownCount) * 40;
     const card = document.createElement('div');
     card.className = 'comment-card';
@@ -531,10 +571,10 @@ function loadMoreComments() {
     grid.appendChild(card);
   }
   commentsShownCount = end;
-  if (commentsShownCount >= data.length) {
+  if (commentsShownCount >= commentsToShow.length) {
     btn.classList.add('hidden');
   } else {
-    btn.textContent = toFa(Math.min(COMMENTS_PER_PAGE, data.length - commentsShownCount)) + ' نظر بیشتر ببینم ↓';
+    btn.textContent = toFa(Math.min(COMMENTS_PER_PAGE, commentsToShow.length - commentsShownCount)) + ' نظر بیشتر ببینم ↓';
   }
 }
 
@@ -574,8 +614,11 @@ function submitComment() {
   textEl.value = '';
   document.getElementById('comment-name-input').value = '';
   selectedGender = null;
+  selectedCourse = -1;
   document.getElementById('gender-male').classList.remove('selected');
   document.getElementById('gender-female').classList.remove('selected');
+  document.querySelectorAll('.course-option').forEach(o=>o.classList.remove('selected'));
+  document.getElementById('course-opt-0').classList.add('selected');
   document.querySelectorAll('#star-rating input').forEach(i=>i.checked=false);
   document.getElementById('success-popup').classList.add('open');
 }
@@ -583,6 +626,12 @@ function closeSuccessPopup() {
   document.getElementById('success-popup').classList.remove('open');
 }
 document.getElementById('success-popup').addEventListener('click',function(e){if(e.target===this)closeSuccessPopup();});
+
+/* SCROLL TO COMMENT FORM */
+function scrollToCommentForm() {
+  const el = document.getElementById('comment-form-section');
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
 /* DRAG SCROLL */
 (function(){
@@ -731,6 +780,12 @@ function renderGrid(){
   });
   stories.slice(0,EAGER_ROWS_COUNT).forEach(s=>preloadMedia(s,true));
   setupMediaPrefetchObserver();
+  // Load comments initially
+  currentTab = -1;
+  document.querySelectorAll('.course-tab').forEach((t, i) => {
+    if (i === 0) t.classList.add('active');
+    else t.classList.remove('active');
+  });
   loadMoreComments();
 }
 
