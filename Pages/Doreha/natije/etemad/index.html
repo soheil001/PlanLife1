@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#1a0033">
+<meta name="theme-color" content="#d8dde4">
 <title>نتایج بچه‌های دوره - PlanLife</title>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
-<!-- پیش‌اتصال به سرورهای رسانه تا دانلود عکس/فیلم زودتر شروع بشه (چه با VPN چه بدون VPN) -->
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="preconnect" href="http://fs3.centraldnserver.com">
 <link rel="dns-prefetch" href="http://fs3.centraldnserver.com">
 <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
@@ -14,462 +13,500 @@
 <link rel="preconnect" href="https://tools.irbots.com" crossorigin>
 <link rel="dns-prefetch" href="https://tools.irbots.com">
 <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; font-family: 'Vazirmatn', sans-serif; overflow-x: hidden; color: white; background: #030303; }
-    .stars { position: fixed; inset: 0; background: transparent; z-index: 0; pointer-events: none; }
-    .stars::before, .stars::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(white 1px, transparent 1px); background-size: 80px 80px; opacity: 0.45; }
-    .stars::after { background-size: 140px 140px; opacity: 0.3; }
+:root {
+  --bg-page: #d8dde4;
+  --section: #ffffff;
+  --section-shadow: 0 2px 12px rgba(0,0,0,0.07), 0 0 0 1.5px rgba(0,0,0,0.06);
+  --ink: #12141c;
+  --muted: #6b7280;
+  --hair: #eef0f3;
+  --hair2: #e4e7ec;
+  --blue: #2f6fed;
+  --blue-ink: #1e4fc9;
+  --lime: #d8f24c;
+  --lime-ink: #4b5a10;
+  --radius-xl: 22px;
+  --radius-lg: 18px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --gap: 14px;
+}
 
-    header {
-        position: sticky; top: 0; z-index: 50;
-        background: rgba(0,0,0,0.6);
-        backdrop-filter: blur(15px);
-        border-bottom: 1px solid rgba(212,175,55,0.2);
-        padding: 18px 20px;
-        display: flex; align-items: center; justify-content: center;
-    }
-    .header-title {
-        font-family: 'Georgia','Times New Roman',serif;
-        font-size: 20px; font-weight: 700; letter-spacing: 1px;
-        background: linear-gradient(135deg, #f5d77a 0%, #d4af37 45%, #b8860b 70%, #f5d77a 100%);
-        -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 20px rgba(212,175,55,0.35);
-    }
-    .back-btn {
-        position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
-        width: 40px; height: 40px; border-radius: 50%;
-        background: rgba(255,255,255,0.08); border: 1px solid rgba(212,175,55,0.3);
-        backdrop-filter: blur(10px);
-        display: flex; align-items: center; justify-content: center;
-        color: #f5d77a; text-decoration: none;
-    }
-    .back-btn:active { transform: translateY(-50%) scale(0.9); background: rgba(255,255,255,0.16); }
-    .back-btn svg { width: 20px; height: 20px; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  height: 100%;
+  font-family: 'Vazirmatn', sans-serif;
+  background: var(--bg-page);
+  color: var(--ink);
+  overflow-x: hidden;
+}
 
-    /* ===== نوار دعوت به اشتراک‌گذاری ===== */
-    .share-banner {
-        position: relative; z-index: 2;
-        margin: 16px 14px 6px;
-        padding: 18px 18px 16px;
-        border-radius: 18px;
-        background: linear-gradient(155deg, rgba(255,255,255,0.09), rgba(255,255,255,0.03));
-        border: 1px solid rgba(212,175,55,0.35);
-        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08);
-        max-width: 480px;
-        margin-left: auto; margin-right: auto;
-    }
-    .share-banner-title {
-        font-size: 14.5px; font-weight: 800; line-height: 1.4;
-        text-align: center;
-        background: linear-gradient(135deg, #f5d77a 0%, #d4af37 50%, #f5d77a 100%);
-        -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-        margin-bottom: 6px;
-    }
-    .share-banner-text {
-        font-size: 12.5px; line-height: 1.9; color: rgba(255,255,255,0.82);
-        text-align: center;
-    }
-    .share-banner-socials {
-        display: flex; align-items: center; justify-content: center;
-        gap: 14px; margin-top: 14px;
-        direction: ltr;
-    }
-    .share-social-item {
-        display: flex; flex-direction: column; align-items: center; gap: 5px;
-        text-decoration: none;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .share-social-icon {
-        width: 44px; height: 44px; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        background: rgba(255,255,255,0.07);
-        border: 1px solid rgba(212,175,55,0.35);
-        transition: transform 0.15s ease, background 0.15s ease;
-    }
-    .share-social-item:active .share-social-icon { transform: scale(0.9); background: rgba(255,255,255,0.14); }
-    .share-social-icon svg { width: 21px; height: 21px; }
-    .icon-telegram svg { color: #5fb6e8; }
-    .icon-instagram svg { color: #e28a4f; }
-    .icon-bale svg { color: #f0c869; }
-    .share-social-label {
-        font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.65);
-        direction: rtl;
-    }
+/* ===== TOPBAR ===== */
+.topbar {
+  background: var(--section);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  box-shadow: var(--section-shadow);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.back-btn {
+  width: 40px; height: 40px; border-radius: 13px;
+  background: var(--hair);
+  border: 1.5px solid rgba(0,0,0,0.07);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink); text-decoration: none;
+  flex-shrink: 0;
+  transition: .15s;
+}
+.back-btn:active { background: var(--hair2); transform: scale(0.95); }
+.back-btn svg { width: 18px; height: 18px; }
+.brand { display: flex; align-items: center; gap: 9px; }
+.brand img { width: 36px; height: 36px; border-radius: 10px; object-fit: cover; }
+.brand span { font-weight: 800; font-size: 15px; }
+.topbar-title {
+  flex: 1;
+  font-size: 15px; font-weight: 800; color: var(--ink);
+  text-align: center;
+}
+.topbar-spacer { width: 40px; flex-shrink: 0; }
 
-    .page-sub {
-        position: relative; z-index: 2;
-        text-align: center;
-        font-size: 12.5px; opacity: 0.6;
-        padding: 14px 20px 4px;
-    }
+/* ===== PAGE WRAPPER ===== */
+.page-wrapper {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 16px 14px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
 
-    .results-grid {
-        position: relative; z-index: 2;
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px 6px;
-        padding: 10px 14px 60px;
-        max-width: 480px;
-        margin: 0 auto;
-        direction: ltr;
-    }
-    .result-item {
-        display: flex; flex-direction: column; align-items: center; gap: 6px;
-        cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
-        direction: rtl;
-    }
-    .result-ring {
-        width: 100%; max-width: 76px; aspect-ratio: 1/1;
-        border-radius: 50%;
-        padding: 2.5px;
-        margin: 0 auto;
-        background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888, #833ab4, #405de6, #5851db);
-        transition: background 0.4s ease;
-    }
-    .result-item.seen .result-ring {
-        background: rgba(255,255,255,0.18);
-    }
-    .result-avatar {
-        width: 100%; height: 100%; border-radius: 50%;
-        background: rgba(255,255,255,0.10);
-        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border: 2.5px solid rgba(3,3,3,0.9);
-        overflow: hidden;
-        display: flex; align-items: center; justify-content: center;
-    }
-    .result-avatar img, .result-avatar video { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-    .result-label {
-        font-size: 10.5px; font-weight: 600;
-        color: rgba(255,255,255,0.85);
-        text-align: center; line-height: 1.3;
-        max-width: 82px;
-        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
+/* ===== SHARE BANNER ===== */
+.share-banner {
+  background: var(--section);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--section-shadow);
+  padding: 18px 18px 16px;
+  border: 1.5px solid rgba(47,111,237,.12);
+}
+.share-banner-title {
+  font-size: 14px; font-weight: 800; color: var(--ink);
+  text-align: center; margin-bottom: 7px;
+}
+.share-banner-text {
+  font-size: 12.5px; line-height: 1.9; color: var(--muted);
+  text-align: center; margin-bottom: 14px;
+}
+.share-banner-socials {
+  display: flex; align-items: center; justify-content: center;
+  gap: 18px;
+  direction: ltr;
+}
+.share-social-item {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.share-social-icon {
+  width: 44px; height: 44px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--hair);
+  border: 1.5px solid rgba(0,0,0,0.07);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.share-social-item:active .share-social-icon { transform: scale(0.9); background: var(--hair2); }
+.share-social-icon svg { width: 20px; height: 20px; }
+.icon-telegram svg { color: #29a8e0; }
+.icon-instagram svg { color: #e2735a; }
+.icon-bale svg { color: #f0a500; }
+.share-social-label {
+  font-size: 10.5px; font-weight: 700; color: var(--muted);
+  direction: rtl;
+}
 
-    .empty-msg {
-        position: relative; z-index: 2;
-        text-align: center; opacity: 0.55; font-size: 13.5px;
-        padding: 60px 20px;
-    }
+/* ===== RESULTS SECTION CARD ===== */
+.section-card {
+  background: var(--section);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--section-shadow);
+  padding: 18px;
+  overflow: hidden;
+}
+.section-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.section-head h2 { font-size: 15px; font-weight: 800; }
+.section-head .count { font-size: 11.5px; color: var(--muted); font-weight: 500; }
 
-    #story-modal {
-        position: fixed; inset: 0; z-index: 9800;
-        background: rgba(0,0,0,0.92);
-        backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        opacity: 0; pointer-events: none;
-        transition: opacity 0.3s ease;
-    }
-    #story-modal.open { opacity: 1; pointer-events: auto; }
+/* ===== RESULTS GRID ===== */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px 10px;
+  direction: ltr;
+}
+.result-item {
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  direction: rtl;
+}
+.result-ring {
+  width: 100%; max-width: 70px; aspect-ratio: 1/1;
+  border-radius: 50%;
+  padding: 2.5px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888, #833ab4, #405de6, #5851db);
+  transition: background 0.4s ease;
+}
+.result-item.seen .result-ring {
+  background: #dde0e6;
+}
+.result-avatar {
+  width: 100%; height: 100%; border-radius: 50%;
+  border: 2.5px solid var(--section);
+  overflow: hidden;
+  background: var(--hair);
+  display: flex; align-items: center; justify-content: center;
+}
+.result-avatar img, .result-avatar video { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.result-label {
+  font-size: 10.5px; font-weight: 600;
+  color: var(--muted);
+  text-align: center; line-height: 1.35;
+  max-width: 78px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
-    .story-container {
-        width: 100%; max-width: 375px; aspect-ratio: 9/16;
-        background: #000; border-radius: 12px; overflow: hidden; position: relative;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.9);
-    }
+.empty-msg {
+  text-align: center; color: var(--muted); font-size: 13px;
+  padding: 40px 20px;
+}
 
-    .story-modal-content {
-        position: absolute; inset: 0; z-index: 1; background: #000;
-        display: flex; align-items: center; justify-content: center; overflow: hidden;
-    }
-    .story-modal-content img, .story-modal-content video {
-        width: 100%; height: 100%; object-fit: cover; display: block;
-    }
+/* ===== STORY MODAL ===== */
+#story-modal {
+  position: fixed; inset: 0; z-index: 9800;
+  background: rgba(12, 14, 22, 0.88);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+#story-modal.open { opacity: 1; pointer-events: auto; }
 
-    .story-progress-bar {
-        position: absolute; top: 0; left: 0; right: 0; z-index: 10;
-        display: flex; gap: 3px; direction: ltr;
-        padding: 10px 12px 6px;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent);
-    }
-    .progress-seg { flex: 1; height: 2.5px; background: rgba(255,255,255,0.28); border-radius: 3px; overflow: hidden; }
-    .progress-seg-fill { height: 100%; background: white; width: 0%; border-radius: 3px; }
-    .progress-seg.done .progress-seg-fill { width: 100%; }
+.story-container {
+  width: 100%; max-width: 375px; aspect-ratio: 9/16;
+  background: var(--ink); border-radius: var(--radius-xl); overflow: hidden; position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+.story-modal-content {
+  position: absolute; inset: 0; z-index: 1; background: var(--ink);
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.story-modal-content img, .story-modal-content video { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    .story-modal-header {
-        /* z-index بالاتر از تمام لایه‌ها (حتی پاپ‌آپ آموزشی) گذاشته شده
-           تا کاربر همیشه بتونه با ضربدر، کل استوری رو ببنده */
-        position: absolute; top: 26px; left: 0; right: 0; z-index: 20;
-        display: flex; align-items: center; gap: 8px; padding: 8px 12px;
-        direction: rtl; justify-content: space-between; flex-direction: row-reverse;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.35), transparent);
-    }
-    .story-logo-section { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; direction: ltr; }
-    .story-logo-img {
-        width: 32px; height: 32px; border-radius: 50%;
-        border: 1.5px solid rgba(255,255,255,0.2);
-        display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;
-    }
-    .story-logo-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-    .story-branding-text {
-        font-size: 14px; font-weight: 700; color: white; line-height: 1;
-        text-shadow: 0 1px 6px rgba(0,0,0,0.7);
-    }
-    .story-modal-close {
-        font-size: 22px; color: white; cursor: pointer; padding: 4px 6px; line-height: 1;
-        text-shadow: 0 1px 6px rgba(0,0,0,0.8);
-    }
+.story-progress-bar {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+  display: flex; gap: 3px; direction: ltr;
+  padding: 10px 12px 6px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent);
+}
+.progress-seg { flex: 1; height: 2.5px; background: rgba(255,255,255,0.28); border-radius: 3px; overflow: hidden; }
+.progress-seg-fill { height: 100%; background: white; width: 0%; border-radius: 3px; }
+.progress-seg.done .progress-seg-fill { width: 100%; }
 
-    .story-nav-left, .story-nav-right {
-        position: absolute; top: 0; bottom: 0; width: 40%; cursor: pointer; z-index: 9;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .story-nav-right { right: 0; }
-    .story-nav-left { left: 0; }
+.story-modal-header {
+  position: absolute; top: 26px; left: 0; right: 0; z-index: 20;
+  display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+  direction: rtl; justify-content: space-between; flex-direction: row-reverse;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.35), transparent);
+}
+.story-logo-section { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; direction: ltr; }
+.story-logo-img {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;
+}
+.story-logo-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.story-branding-text { font-size: 14px; font-weight: 700; color: white; line-height: 1; text-shadow: 0 1px 6px rgba(0,0,0,0.7); }
+.story-modal-close { font-size: 22px; color: white; cursor: pointer; padding: 4px 6px; line-height: 1; text-shadow: 0 1px 6px rgba(0,0,0,0.8); }
 
-    .story-footer {
-        position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
-        display: flex; flex-direction: column; align-items: center; gap: 10px;
-        padding: 40px 14px 18px;
-        background: linear-gradient(to top, rgba(0,0,0,0.72) 60%, transparent);
-    }
+.story-nav-left, .story-nav-right {
+  position: absolute; top: 0; bottom: 0; width: 40%; cursor: pointer; z-index: 9;
+  -webkit-tap-highlight-color: transparent;
+}
+.story-nav-right { right: 0; }
+.story-nav-left { left: 0; }
 
-    /* ===== دکمه‌ی متوقف کردن استوری ===== */
-    .story-pause-btn {
-        width: 36px; height: 36px; border-radius: 50%;
-        background: rgba(255,255,255,0.09);
-        backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
-        border: 1px solid rgba(255,255,255,0.22);
-        display: flex; align-items: center; justify-content: center;
-        color: rgba(255,255,255,0.9);
-        opacity: 0.6;
-        cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
-        transition: opacity 0.15s ease, transform 0.15s ease;
-    }
-    .story-pause-btn:active { opacity: 0.9; transform: scale(0.9); }
-    .story-pause-btn svg { display: block; width: 16px; height: 16px; }
+.story-footer {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  padding: 40px 14px 18px;
+  background: linear-gradient(to top, rgba(0,0,0,0.72) 60%, transparent);
+}
 
-    /* هایلایت پالس‌دار دور دکمه‌ی توقف در حین نمایش آموزش */
-    .story-pause-btn.tutorial-highlight {
-        opacity: 1;
-        z-index: 25;
-        animation: pause-pulse 1.15s ease-in-out infinite;
-    }
-    @keyframes pause-pulse {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(245,215,122,0.55); }
-        50% { box-shadow: 0 0 0 9px rgba(245,215,122,0); }
-    }
+/* دکمه‌ی توقف */
+.story-pause-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
+  border: 1px solid rgba(255,255,255,0.25);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.9);
+  opacity: 0.7;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.story-pause-btn:active { opacity: 1; transform: scale(0.9); }
+.story-pause-btn svg { display: block; width: 16px; height: 16px; }
+.story-pause-btn.tutorial-highlight {
+  opacity: 1;
+  z-index: 25;
+  animation: pause-pulse 1.15s ease-in-out infinite;
+}
+@keyframes pause-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(47,111,237,0.6); }
+  50% { box-shadow: 0 0 0 9px rgba(47,111,237,0); }
+}
 
-    .story-caption {
-        font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.95);
-        text-align: center; line-height: 1.6; min-height: 20px;
-        display: flex; align-items: center; justify-content: center;
-        text-shadow: 0 1px 8px rgba(0,0,0,0.9);
-        width: 100%;
-    }
+.story-caption {
+  font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.95);
+  text-align: center; line-height: 1.6; min-height: 20px;
+  display: flex; align-items: center; justify-content: center;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.9); width: 100%;
+}
 
-    .story-action-btn {
-        display: flex; align-items: center; justify-content: center;
-        width: 100%; padding: 12px 16px;
-        background: rgba(255,255,255,0.13);
-        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        border: 1.2px solid rgba(212,175,55,0.6);
-        border-radius: 20px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(212,175,55,0.15), inset 0 1px 0 rgba(255,255,255,0.25);
-        color: #ffd060;
-        font-family: 'Vazirmatn', sans-serif;
-        font-size: 15px; font-weight: 800;
-        text-decoration: none; text-align: center;
-        cursor: pointer;
-        position: relative; overflow: hidden;
-    }
-    .story-action-btn::before {
-        content: ''; position: absolute; top: 0; left: -100%;
-        width: 100%; height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        animation: glass-shine 2.5s ease-in-out infinite;
-    }
-    @keyframes glass-shine { 0% { left: -100%; } 50% { left: 100%; } 100% { left: 100%; } }
-    .story-action-btn:active { transform: scale(0.97); background: rgba(255,255,255,0.18); }
+/* دکمه «وارد دوره شوید» — آبی روشن مثل داشبورد */
+.story-action-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; padding: 13px 16px;
+  background: var(--blue);
+  border: none;
+  border-radius: var(--radius-md);
+  box-shadow: 0 6px 20px rgba(47,111,237,.45);
+  color: #fff;
+  font-family: 'Vazirmatn', sans-serif;
+  font-size: 14px; font-weight: 800;
+  text-decoration: none; text-align: center;
+  cursor: pointer;
+  position: relative; overflow: hidden;
+  transition: .18s;
+}
+.story-action-btn::before {
+  content: ''; position: absolute; top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  animation: glass-shine 2.5s ease-in-out infinite;
+}
+@keyframes glass-shine { 0% { left: -100%; } 50% { left: 100%; } 100% { left: 100%; } }
+.story-action-btn:active { transform: scale(0.97); background: var(--blue-ink); }
 
-    /* ===== پاپ‌آپ آموزشی (فقط بار اول) ===== */
-    #tutorial-overlay {
-        position: absolute; inset: 0; z-index: 15;
-        background: rgba(0,0,0,0.45);
-        opacity: 0; pointer-events: none;
-        transition: opacity 0.25s ease;
-    }
-    #tutorial-overlay.open { opacity: 1; pointer-events: auto; }
+/* ===== پاپ‌آپ آموزشی ===== */
+#tutorial-overlay {
+  position: absolute; inset: 0; z-index: 15;
+  background: rgba(0,0,0,0.45);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+#tutorial-overlay.open { opacity: 1; pointer-events: auto; }
 
-    .tutorial-box {
-        position: absolute;
-        width: 76%; max-width: 240px;
-        background: rgba(20,18,28,0.94);
-        border: 1px solid rgba(212,175,55,0.45);
-        border-radius: 14px;
-        padding: 16px 16px 14px;
-        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        text-align: center;
-    }
-    .tutorial-box.tutorial-pos-bottom { bottom: 118px; left: 50%; transform: translateX(-50%); }
-    .tutorial-box.tutorial-pos-right { top: 50%; right: 16px; transform: translateY(-50%); }
-    .tutorial-box.tutorial-pos-left { top: 50%; left: 16px; transform: translateY(-50%); }
+.tutorial-box {
+  position: absolute;
+  width: 76%; max-width: 240px;
+  background: rgba(255,255,255,0.97);
+  border: 1.5px solid rgba(47,111,237,.3);
+  border-radius: var(--radius-lg);
+  padding: 16px 16px 14px;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.2);
+  text-align: center;
+}
+.tutorial-box.tutorial-pos-bottom { bottom: 118px; left: 50%; transform: translateX(-50%); }
+.tutorial-box.tutorial-pos-right { top: 50%; right: 16px; transform: translateY(-50%); }
+.tutorial-box.tutorial-pos-left { top: 50%; left: 16px; transform: translateY(-50%); }
 
-    /* دم‌ اشاره‌گر روبه‌پایین، دقیقاً به سمت دکمه‌ی توقف */
-    .tutorial-box.tutorial-pos-bottom::after {
-        content: '';
-        position: absolute;
-        bottom: -9px; left: 50%;
-        transform: translateX(-50%) rotate(45deg);
-        width: 16px; height: 16px;
-        background: rgba(20,18,28,0.94);
-        border-right: 1px solid rgba(212,175,55,0.45);
-        border-bottom: 1px solid rgba(212,175,55,0.45);
-    }
-    .tutorial-down-arrow {
-        position: absolute;
-        left: 50%; bottom: 78px; transform: translateX(-50%);
-        font-size: 20px; color: #f5d77a;
-        text-shadow: 0 0 10px rgba(245,215,122,0.6);
-        opacity: 0; pointer-events: none;
-        animation: arrow-bounce 1.15s ease-in-out infinite;
-    }
-    .tutorial-down-arrow.show { opacity: 1; }
-    @keyframes arrow-bounce {
-        0%, 100% { transform: translateX(-50%) translateY(0); }
-        50% { transform: translateX(-50%) translateY(6px); }
-    }
+.tutorial-box.tutorial-pos-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: -9px; left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 16px; height: 16px;
+  background: rgba(255,255,255,0.97);
+  border-right: 1.5px solid rgba(47,111,237,.3);
+  border-bottom: 1.5px solid rgba(47,111,237,.3);
+}
 
-    /* فلش کوچیک‌تر برای قدم‌های «بعدی» و «قبلی» */
-    .tutorial-side-arrow {
-        position: absolute;
-        top: 50%;
-        font-size: 14px; color: #f5d77a;
-        text-shadow: 0 0 8px rgba(245,215,122,0.55);
-        opacity: 0; pointer-events: none;
-    }
-    .tutorial-side-arrow.show { opacity: 1; }
-    .tutorial-side-arrow.pos-right {
-        right: 34px;
-        transform: translateY(58px);
-        animation: side-arrow-bounce-right 1.15s ease-in-out infinite;
-    }
-    .tutorial-side-arrow.pos-left {
-        left: 34px;
-        transform: translateY(58px);
-        animation: side-arrow-bounce-left 1.15s ease-in-out infinite;
-    }
-    @keyframes side-arrow-bounce-right {
-        0%, 100% { transform: translateY(58px) translateX(0); }
-        50% { transform: translateY(58px) translateX(5px); }
-    }
-    @keyframes side-arrow-bounce-left {
-        0%, 100% { transform: translateY(58px) translateX(0); }
-        50% { transform: translateY(58px) translateX(-5px); }
-    }
+.tutorial-down-arrow {
+  position: absolute;
+  left: 50%; bottom: 78px; transform: translateX(-50%);
+  font-size: 20px; color: var(--blue);
+  opacity: 0; pointer-events: none;
+  animation: arrow-bounce 1.15s ease-in-out infinite;
+}
+.tutorial-down-arrow.show { opacity: 1; }
+@keyframes arrow-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(6px); }
+}
 
-    .tutorial-close {
-        position: absolute; top: 6px; right: 10px;
-        font-size: 15px; color: rgba(255,255,255,0.55); cursor: pointer; line-height: 1;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .tutorial-text {
-        font-size: 13px; line-height: 1.85; color: #fff;
-        margin: 8px 0 12px; padding-top: 6px;
-    }
-    .tutorial-btn {
-        background: linear-gradient(135deg,#f5d77a,#d4af37);
-        color: #1a0033; border: none; border-radius: 20px;
-        font-family: 'Vazirmatn', sans-serif; font-weight: 800; font-size: 13px;
-        padding: 8px 22px; cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .tutorial-btn:active { transform: scale(0.96); }
+.tutorial-side-arrow {
+  position: absolute;
+  top: 50%;
+  font-size: 14px; color: var(--blue);
+  opacity: 0; pointer-events: none;
+}
+.tutorial-side-arrow.show { opacity: 1; }
+.tutorial-side-arrow.pos-right {
+  right: 34px; transform: translateY(58px);
+  animation: side-arrow-bounce-right 1.15s ease-in-out infinite;
+}
+.tutorial-side-arrow.pos-left {
+  left: 34px; transform: translateY(58px);
+  animation: side-arrow-bounce-left 1.15s ease-in-out infinite;
+}
+@keyframes side-arrow-bounce-right {
+  0%, 100% { transform: translateY(58px) translateX(0); }
+  50% { transform: translateY(58px) translateX(5px); }
+}
+@keyframes side-arrow-bounce-left {
+  0%, 100% { transform: translateY(58px) translateX(0); }
+  50% { transform: translateY(58px) translateX(-5px); }
+}
 
-    @media (max-width: 380px) {
-        .results-grid { gap: 16px 4px; }
-        .result-ring { max-width: 68px; }
-    }
+.tutorial-close { position: absolute; top: 6px; right: 10px; font-size: 15px; color: var(--muted); cursor: pointer; line-height: 1; -webkit-tap-highlight-color: transparent; }
+.tutorial-text { font-size: 13px; line-height: 1.85; color: var(--ink); margin: 8px 0 12px; padding-top: 6px; }
+.tutorial-btn {
+  background: var(--blue); color: #fff; border: none; border-radius: 20px;
+  font-family: 'Vazirmatn', sans-serif; font-weight: 800; font-size: 13px;
+  padding: 8px 22px; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: .15s;
+}
+.tutorial-btn:active { transform: scale(0.96); background: var(--blue-ink); }
+
+/* ===== PREFETCH POOL ===== */
+#prefetchPool {
+  position: fixed; top: -9999px; left: -9999px;
+  width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 400px) {
+  .results-grid { gap: 14px 6px; }
+  .result-ring { max-width: 62px; }
+  .result-label { font-size: 10px; }
+  .page-wrapper { padding: 12px 10px 80px; }
+}
 </style>
 </head>
 <body>
 
-<div class="stars"></div>
-
-<header>
-    <a href="https://planlife.ir/Pages/Doreha/index.html" class="back-btn" aria-label="بازگشت به دوره‌ها">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
-    </a>
-    <div class="header-title">نتایج بچه‌های دوره</div>
-</header>
-
-<!-- ===== نوار دعوت به اشتراک‌گذاری تجربه ===== -->
-<div class="share-banner">
-    <div class="share-banner-title">تجربه‌ی شما، امید فرداهای یک نفر دیگه‌ست ✨</div>
-    <div class="share-banner-text">
-        نتیجه‌ها، تغییرات و حال خوبی که این مسیر برای شما ساخته رو با ما و بقیه‌ی دوستان به اشتراک بذارید؛
-        همین یک قدم کوچیک شما می‌تونه امید، ایمان و انگیزه‌ای بشه برای کسایی که تازه می‌خوان این مسیر رو شروع کنن.
-    </div>
-    <div class="share-banner-socials">
-        <a class="share-social-item" href="https://t.me/planlifeir" target="_blank" rel="noopener">
-            <div class="share-social-icon icon-telegram">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-            </div>
-            <div class="share-social-label">تلگرام</div>
-        </a>
-        <a class="share-social-item" href="https://instagram.com/planlife.ir" target="_blank" rel="noopener">
-            <div class="share-social-icon icon-instagram">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.9" fill="currentColor" stroke="none"/></svg>
-            </div>
-            <div class="share-social-label">اینستاگرام</div>
-        </a>
-        <a class="share-social-item" href="https://ble.ir/planlifeir" target="_blank" rel="noopener">
-            <div class="share-social-icon icon-bale">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            </div>
-            <div class="share-social-label">بله</div>
-        </a>
-    </div>
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="https://planlife.ir/Pages/Doreha/index.html" class="back-btn" aria-label="بازگشت">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 6l-6 6 6 6"/>
+    </svg>
+  </a>
+  <div class="brand">
+    <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
+    <span>PlanLife</span>
+  </div>
+  <div class="topbar-title">نتایج بچه‌های دوره</div>
+  <div class="topbar-spacer"></div>
 </div>
 
-<div class="page-sub">روی هر استوری بزن و نتیجه‌ رو ببین</div>
+<!-- PAGE CONTENT -->
+<div class="page-wrapper">
 
-<div class="results-grid" id="resultsGrid"></div>
-
-<div id="prefetchPool" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;"></div>
-
-<div id="story-modal">
-    <div class="story-container">
-        <div class="story-progress-bar" id="story-progress-bar"></div>
-        <div class="story-modal-header">
-            <div class="story-logo-section">
-                <div class="story-logo-img">
-                    <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
-                </div>
-                <div class="story-branding-text">planlife.ir</div>
-            </div>
-            <div class="story-modal-close" onclick="closeStoryModal()">✕</div>
-        </div>
-        <div class="story-modal-content" id="story-modal-content">
-            <div class="story-nav-left" onclick="storyNavigate(-1)"></div>
-            <div class="story-nav-right" onclick="storyNavigate(1)"></div>
-        </div>
-
-        <!-- پاپ‌آپ آموزشی: فقط بار اولی که کاربر وارد استوری میشه نمایش داده میشه -->
-        <div id="tutorial-overlay">
-            <div class="tutorial-box" id="tutorial-box">
-                <div class="tutorial-close" onclick="closeTutorial()">✕</div>
-                <div class="tutorial-text" id="tutorial-text"></div>
-                <button class="tutorial-btn" onclick="nextTutorialStep()">متوجه شدم</button>
-            </div>
-            <div class="tutorial-down-arrow" id="tutorial-down-arrow">↓</div>
-            <div class="tutorial-side-arrow" id="tutorial-side-arrow">›</div>
-        </div>
-
-        <div class="story-footer">
-            <div class="story-pause-btn" id="story-pause-btn" onclick="toggleStoryPause(event)" aria-label="توقف / ادامه">
-                <svg id="pause-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg>
-                <svg id="play-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="display:none;"><path d="M7 5l12 7-12 7V5z"></path></svg>
-            </div>
-            <div class="story-caption" id="story-caption"></div>
-            <a class="story-action-btn" id="story-action-btn" href="#" target="_blank" rel="noopener">وارد دوره شوید</a>
-        </div>
+  <!-- نوار دعوت به اشتراک‌گذاری -->
+  <div class="share-banner">
+    <div class="share-banner-title">تجربه‌ی شما، امید فرداهای یک نفر دیگه‌ست ✨</div>
+    <div class="share-banner-text">
+      نتیجه‌ها، تغییرات و حال خوبی که این مسیر برای شما ساخته رو با ما و بقیه‌ی دوستان به اشتراک بذارید؛
+      همین یک قدم کوچیک شما می‌تونه امید، ایمان و انگیزه‌ای بشه برای کسایی که تازه می‌خوان این مسیر رو شروع کنن.
     </div>
+    <div class="share-banner-socials">
+      <a class="share-social-item" href="https://t.me/planlifeir" target="_blank" rel="noopener">
+        <div class="share-social-icon icon-telegram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </div>
+        <div class="share-social-label">تلگرام</div>
+      </a>
+      <a class="share-social-item" href="https://instagram.com/planlife.ir" target="_blank" rel="noopener">
+        <div class="share-social-icon icon-instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.9" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <div class="share-social-label">اینستاگرام</div>
+      </a>
+      <a class="share-social-item" href="https://ble.ir/planlifeir" target="_blank" rel="noopener">
+        <div class="share-social-icon icon-bale">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        </div>
+        <div class="share-social-label">بله</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- گرید نتایج -->
+  <div class="section-card">
+    <div class="section-head">
+      <h2>همه نتایج</h2>
+      <span class="count" id="results-count"></span>
+    </div>
+    <div class="results-grid" id="resultsGrid"></div>
+  </div>
+
+</div>
+
+<!-- پیش‌بارگذاری مخفی -->
+<div id="prefetchPool"></div>
+
+<!-- ===== مودال استوری ===== -->
+<div id="story-modal">
+  <div class="story-container">
+    <div class="story-progress-bar" id="story-progress-bar"></div>
+    <div class="story-modal-header">
+      <div class="story-logo-section">
+        <div class="story-logo-img">
+          <img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife">
+        </div>
+        <div class="story-branding-text">planlife.ir</div>
+      </div>
+      <div class="story-modal-close" onclick="closeStoryModal()">✕</div>
+    </div>
+    <div class="story-modal-content" id="story-modal-content">
+      <div class="story-nav-left" onclick="storyNavigate(-1)"></div>
+      <div class="story-nav-right" onclick="storyNavigate(1)"></div>
+    </div>
+
+    <!-- پاپ‌آپ آموزشی -->
+    <div id="tutorial-overlay">
+      <div class="tutorial-box" id="tutorial-box">
+        <div class="tutorial-close" onclick="closeTutorial()">✕</div>
+        <div class="tutorial-text" id="tutorial-text"></div>
+        <button class="tutorial-btn" onclick="nextTutorialStep()">متوجه شدم</button>
+      </div>
+      <div class="tutorial-down-arrow" id="tutorial-down-arrow">↓</div>
+      <div class="tutorial-side-arrow" id="tutorial-side-arrow">›</div>
+    </div>
+
+    <div class="story-footer">
+      <div class="story-pause-btn" id="story-pause-btn" onclick="toggleStoryPause(event)" aria-label="توقف / ادامه">
+        <svg id="pause-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg>
+        <svg id="play-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="display:none;"><path d="M7 5l12 7-12 7V5z"></path></svg>
+      </div>
+      <div class="story-caption" id="story-caption"></div>
+      <a class="story-action-btn" id="story-action-btn" href="#" target="_blank" rel="noopener">وارد دوره شوید</a>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -486,13 +523,11 @@
       اگر خواستی تعداد یا مسیر رو عوض کنی، همین چند خط زیر رو ویرایش کن.
    ===================================================================== */
 
-const RESULTS_PAGE_ID = "codepol"; // شناسه‌ی یکتای همین دوره
-const ENTRY_LINK = "https://planlife.ir/Pages/Doreha/natije/Cm/Soon"; // لینک دکمه‌ی وارد دوره شوید
+const RESULTS_PAGE_ID = "codepol";
+const ENTRY_LINK = "https://planlife.ir/Pages/Doreha/natije/Cm/Soon";
 
 const STORY_BASE_URL = "http://fs3.centraldnserver.com/~planlife/doreha/natije/codepol/";
-const STORY_COUNT = 40; // تعداد کل استوری‌ها (1.jpeg تا 40.jpeg)
-
-// عنوان ثابتی که زیر هر آواتار و داخل هر استوری نمایش داده می‌شود
+const STORY_COUNT = 40;
 const RESULT_LABEL = "نتیجه دوستان";
 
 const resultsData = [];
@@ -502,13 +537,9 @@ for (let i = 1; i <= STORY_COUNT; i++) {
         media: `${STORY_BASE_URL}${i}.jpeg`
     });
 }
-// برای اضافه کردن استوری جدید، فقط STORY_COUNT رو زیاد کن (به شرطی که فایل بعدی
-// با همون الگوی عددی، مثلاً 41.jpeg، روی سرور آپلود شده باشه).
 
 /* =====================================================================
-   منطق «دیده‌شده» — دقیقاً مثل استوری صفحه‌ی اکسپلور:
-   با کلیک روی استوری، لاین رنگی‌اش خاکستری می‌شود و بعد از
-   ۲۴ ساعت دوباره رنگی برمی‌گردد.
+   منطق «دیده‌شده» — عین قبل، هیچ تغییری نکرده
    ===================================================================== */
 const SEEN_KEY = 'planlife_results_seen_' + RESULTS_PAGE_ID;
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -536,14 +567,8 @@ function isSeenPersisted(idx) {
 }
 
 /* =====================================================================
-   پاپ‌آپ آموزشی — فقط یک‌ بار به هر مرورگر/دستگاه نمایش داده می‌شود
-   (چون این صفحه استاتیک روی گیت‌هاب هاست شده و بک‌اند ندارد، ردیابی
-   واقعی بر اساس IP نیاز به سرور دارد؛ همین localStorage معادل عملی
-   و قابل‌اعتمادِ «یک‌بار به هر کاربر نشون بده» است — دقیقاً مثل باقی
-   قابلیت‌های «دیده‌شده» همین سایت).
+   پاپ‌آپ آموزشی — عین قبل، هیچ تغییری نکرده
    ===================================================================== */
-/* نمایش آموزش: فقط ۳ بار و هر بار در یک روز متفاوت (مثلاً امروز، فردا، پس‌فردا)
-   و بعد از اون دیگه هرگز نمایش داده نمی‌شه. */
 const TUTORIAL_KEY = 'planlife_results_tutorial_progress_v2';
 const TUTORIAL_MAX_SHOWS = 3;
 let tutorialActive = false;
@@ -559,7 +584,6 @@ function todayDateStr() {
     const d = new Date();
     return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
 }
-
 function getTutorialProgress() {
     try {
         const raw = localStorage.getItem(TUTORIAL_KEY);
@@ -568,23 +592,19 @@ function getTutorialProgress() {
         return { count: parsed.count || 0, lastShownDate: parsed.lastShownDate || null };
     } catch(e) { return { count: 0, lastShownDate: null }; }
 }
-
 function saveTutorialProgress(progress) {
     try { localStorage.setItem(TUTORIAL_KEY, JSON.stringify(progress)); } catch(e) {}
 }
-
 function shouldShowTutorial() {
     const p = getTutorialProgress();
-    if (p.count >= TUTORIAL_MAX_SHOWS) return false;      // سقف ۳ بار پر شده
-    if (p.lastShownDate === todayDateStr()) return false; // امروز قبلاً دیده شده
+    if (p.count >= TUTORIAL_MAX_SHOWS) return false;
+    if (p.lastShownDate === todayDateStr()) return false;
     return true;
 }
-
 function startTutorial() {
     tutorialActive = true;
     showTutorialStep(0);
 }
-
 function showTutorialStep(i) {
     tutorialStep = i;
     const overlay = document.getElementById('tutorial-overlay');
@@ -599,7 +619,6 @@ function showTutorialStep(i) {
     textEl.textContent = tutorialSteps[i].text;
     overlay.classList.add('open');
 
-    // ریست جایگاه‌های اختصاصی قبل از تنظیم دوباره
     box.style.left = '';
     box.style.right = '';
     box.style.bottom = '';
@@ -611,8 +630,6 @@ function showTutorialStep(i) {
     if (i === 0) {
         pauseBtn.classList.add('tutorial-highlight');
         downArrow.classList.add('show');
-        // موقعیت دقیق باکس و فلش رو از روی مکان واقعیِ دکمه‌ی توقف محاسبه می‌کنیم
-        // تا مستقل از طول متن یا سایز صفحه، همیشه دقیقاً روی دکمه بیفته.
         requestAnimationFrame(() => positionTutorialOverPauseButton(box, downArrow, pauseBtn));
     } else if (i === 1) {
         sideArrow.textContent = '›';
@@ -622,28 +639,22 @@ function showTutorialStep(i) {
         sideArrow.classList.add('pos-left', 'show');
     }
 }
-
 function positionTutorialOverPauseButton(box, downArrow, pauseBtn) {
     const container = document.querySelector('.story-container');
     if (!container || !pauseBtn) return;
     const containerRect = container.getBoundingClientRect();
     const btnRect = pauseBtn.getBoundingClientRect();
-
     const centerX = (btnRect.left + btnRect.width / 2) - containerRect.left;
     const distFromBottomToBtnTop = containerRect.bottom - btnRect.top;
-
-    const arrowBottom = distFromBottomToBtnTop + 6;   // نوک فلش، چسبیده به بالای دکمه
-    const boxBottom = arrowBottom + 34;               // فاصله‌ی باکس تا فلش
-
+    const arrowBottom = distFromBottomToBtnTop + 6;
+    const boxBottom = arrowBottom + 34;
     downArrow.style.left = centerX + 'px';
     downArrow.style.transform = 'translateX(-50%)';
     downArrow.style.bottom = arrowBottom + 'px';
-
     box.style.left = centerX + 'px';
     box.style.transform = 'translateX(-50%)';
     box.style.bottom = boxBottom + 'px';
 }
-
 function nextTutorialStep() {
     if (tutorialStep < tutorialSteps.length - 1) {
         showTutorialStep(tutorialStep + 1);
@@ -651,11 +662,7 @@ function nextTutorialStep() {
         finishTutorial();
     }
 }
-
-function closeTutorial() {
-    finishTutorial();
-}
-
+function closeTutorial() { finishTutorial(); }
 function finishTutorial() {
     tutorialActive = false;
     document.getElementById('tutorial-overlay').classList.remove('open');
@@ -666,11 +673,116 @@ function finishTutorial() {
     if (!isStoryPaused) resumeAutoAdvance();
 }
 
+/* =====================================================================
+   موتور پخش / توقف — عین قبل، هیچ تغییری نکرده
+   ===================================================================== */
 let stories = [];
 let storyIndex = 0;
 let savedScrollY = 0;
-
 const EAGER_ROWS_COUNT = 8;
+
+let isStoryPaused = false;
+let autoTimerId = null;
+let autoRemainingMs = 5000;
+let autoStartedAt = null;
+let currentVideoElement = null;
+const IMAGE_DURATION_MS = 5000;
+
+function resetPauseIcon() {
+    document.getElementById('pause-icon').style.display = 'block';
+    document.getElementById('play-icon').style.display = 'none';
+}
+function clearAutoTimer() {
+    if (autoTimerId) { clearTimeout(autoTimerId); autoTimerId = null; }
+}
+function startAutoAdvance() {
+    clearAutoTimer();
+    const s = stories[storyIndex];
+    if (!s) return;
+    if (getMediaType(s.media) === 'video') {
+        if (currentVideoElement) {
+            const p = currentVideoElement.play();
+            if (p !== undefined) p.catch(() => showPlayOverlay(currentVideoElement, document.getElementById('story-modal-content')));
+        }
+        return;
+    }
+    autoRemainingMs = IMAGE_DURATION_MS;
+    runImageTimer();
+}
+function runImageTimer() {
+    autoStartedAt = Date.now();
+    autoTimerId = setTimeout(() => storyNavigate(1), autoRemainingMs);
+    animateImageFill(autoRemainingMs);
+}
+function animateImageFill(durationMs) {
+    const bar = document.getElementById('story-progress-bar');
+    const seg = bar.querySelectorAll('.progress-seg')[storyIndex];
+    if (!seg) return;
+    const fill = seg.querySelector('.progress-seg-fill');
+    const startPercent = parseFloat(fill.style.width) || 0;
+    fill.style.transition = 'none';
+    fill.style.width = startPercent + '%';
+    void fill.offsetWidth;
+    fill.style.transition = `width ${durationMs}ms linear`;
+    requestAnimationFrame(() => { fill.style.width = '100%'; });
+}
+function getComputedFillPercent(fill) {
+    const parentWidth = fill.parentElement.offsetWidth;
+    if (!parentWidth) return 0;
+    const currentWidth = fill.getBoundingClientRect().width;
+    return Math.min(100, (currentWidth / parentWidth) * 100);
+}
+function pauseAutoAdvance() {
+    const s = stories[storyIndex];
+    if (!s) return;
+    if (getMediaType(s.media) === 'video') {
+        if (currentVideoElement) currentVideoElement.pause();
+        return;
+    }
+    if (autoTimerId) {
+        clearTimeout(autoTimerId);
+        autoTimerId = null;
+        const elapsed = Date.now() - autoStartedAt;
+        autoRemainingMs = Math.max(0, autoRemainingMs - elapsed);
+    }
+    const bar = document.getElementById('story-progress-bar');
+    const seg = bar.querySelectorAll('.progress-seg')[storyIndex];
+    if (seg) {
+        const fill = seg.querySelector('.progress-seg-fill');
+        const computedPercent = getComputedFillPercent(fill);
+        fill.style.transition = 'none';
+        fill.style.width = computedPercent + '%';
+    }
+}
+function resumeAutoAdvance() {
+    if (tutorialActive || isStoryPaused) return;
+    const s = stories[storyIndex];
+    if (!s) return;
+    if (getMediaType(s.media) === 'video') {
+        if (currentVideoElement) {
+            const p = currentVideoElement.play();
+            if (p !== undefined) p.catch(() => showPlayOverlay(currentVideoElement, document.getElementById('story-modal-content')));
+        }
+        return;
+    }
+    runImageTimer();
+}
+function toggleStoryPause(e) {
+    if (e) e.stopPropagation();
+    if (tutorialActive) return;
+    isStoryPaused = !isStoryPaused;
+    const pauseIcon = document.getElementById('pause-icon');
+    const playIcon = document.getElementById('play-icon');
+    if (isStoryPaused) {
+        pauseAutoAdvance();
+        pauseIcon.style.display = 'none';
+        playIcon.style.display = 'block';
+    } else {
+        pauseIcon.style.display = 'block';
+        playIcon.style.display = 'none';
+        resumeAutoAdvance();
+    }
+}
 
 function buildCoverMarkup(url, alt, isEager) {
     const type = getMediaType(url);
@@ -680,20 +792,22 @@ function buildCoverMarkup(url, alt, isEager) {
     return `<img src="${url}" alt="${alt}" loading="${isEager ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${isEager ? 'high' : 'auto'}">`;
 }
 
+function toFa(n) {
+    return String(n).replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+}
+
 function renderGrid() {
     const grid = document.getElementById('resultsGrid');
+    const countEl = document.getElementById('results-count');
     grid.innerHTML = '';
-
     if (!resultsData.length) {
-        grid.innerHTML = '';
-        document.body.insertAdjacentHTML('beforeend', '<div class="empty-msg">هنوز نتیجه‌ای اضافه نشده</div>');
+        grid.innerHTML = '<div class="empty-msg">هنوز نتیجه‌ای اضافه نشده</div>';
         return;
     }
-
+    if (countEl) countEl.textContent = '(' + toFa(resultsData.length) + ' نفر)';
     resultsData.forEach((r, idx) => {
         const alreadySeen = isSeenPersisted(idx);
         stories.push({ ...r, seen: alreadySeen, _preloaded: false });
-
         const isEager = idx < EAGER_ROWS_COUNT;
         const item = document.createElement('div');
         item.className = 'result-item' + (alreadySeen ? ' seen' : '');
@@ -707,7 +821,6 @@ function renderGrid() {
         item.addEventListener('click', () => openStoryModal(idx));
         grid.appendChild(item);
     });
-
     stories.slice(0, EAGER_ROWS_COUNT).forEach(s => preloadMedia(s, true));
     setupMediaPrefetchObserver();
 }
@@ -717,7 +830,6 @@ function preloadMedia(storyObj, priority) {
     storyObj._preloaded = true;
     const type = getMediaType(storyObj.media);
     const pool = document.getElementById('prefetchPool');
-
     if (type === 'video') {
         const v = document.createElement('video');
         v.muted = true;
@@ -747,124 +859,7 @@ function setupMediaPrefetchObserver() {
             preloadMedia(stories[idx], false);
         });
     }, { rootMargin: '1000% 0px', threshold: 0 });
-
     document.querySelectorAll('.result-item').forEach(el => mediaIO.observe(el));
-}
-
-/* =====================================================================
-   موتور «پخش خودکار / توقف» — یک منطق واحد برای عکس و ویدیو
-   که هم با دکمه‌ی توقف کاربر و هم با پاپ‌آپ آموزشی هماهنگ است.
-   ===================================================================== */
-let isStoryPaused = false;
-let autoTimerId = null;      // setTimeout برای عکس‌ها
-let autoRemainingMs = 5000;  // زمان باقی‌مانده تا رفتن به نتیجه‌ی بعدی
-let autoStartedAt = null;
-let currentVideoElement = null;
-const IMAGE_DURATION_MS = 5000;
-
-function resetPauseIcon() {
-    document.getElementById('pause-icon').style.display = 'block';
-    document.getElementById('play-icon').style.display = 'none';
-}
-
-function clearAutoTimer() {
-    if (autoTimerId) { clearTimeout(autoTimerId); autoTimerId = null; }
-}
-
-function startAutoAdvance() {
-    clearAutoTimer();
-    const s = stories[storyIndex];
-    if (!s) return;
-    if (getMediaType(s.media) === 'video') {
-        if (currentVideoElement) {
-            const p = currentVideoElement.play();
-            if (p !== undefined) p.catch(() => showPlayOverlay(currentVideoElement, document.getElementById('story-modal-content')));
-        }
-        return; // ویدیو با رویداد 'ended' خودش جلو می‌ره
-    }
-    autoRemainingMs = IMAGE_DURATION_MS;
-    runImageTimer();
-}
-
-function runImageTimer() {
-    autoStartedAt = Date.now();
-    autoTimerId = setTimeout(() => storyNavigate(1), autoRemainingMs);
-    animateImageFill(autoRemainingMs);
-}
-
-function animateImageFill(durationMs) {
-    const bar = document.getElementById('story-progress-bar');
-    const seg = bar.querySelectorAll('.progress-seg')[storyIndex];
-    if (!seg) return;
-    const fill = seg.querySelector('.progress-seg-fill');
-    const startPercent = parseFloat(fill.style.width) || 0;
-    fill.style.transition = 'none';
-    fill.style.width = startPercent + '%';
-    void fill.offsetWidth; // reflow برای اعمال شدن مقدار قبل از شروع ترنزیشن جدید
-    fill.style.transition = `width ${durationMs}ms linear`;
-    requestAnimationFrame(() => { fill.style.width = '100%'; });
-}
-
-function getComputedFillPercent(fill) {
-    const parentWidth = fill.parentElement.offsetWidth;
-    if (!parentWidth) return 0;
-    const currentWidth = fill.getBoundingClientRect().width;
-    return Math.min(100, (currentWidth / parentWidth) * 100);
-}
-
-function pauseAutoAdvance() {
-    const s = stories[storyIndex];
-    if (!s) return;
-    if (getMediaType(s.media) === 'video') {
-        if (currentVideoElement) currentVideoElement.pause();
-        return;
-    }
-    if (autoTimerId) {
-        clearTimeout(autoTimerId);
-        autoTimerId = null;
-        const elapsed = Date.now() - autoStartedAt;
-        autoRemainingMs = Math.max(0, autoRemainingMs - elapsed);
-    }
-    const bar = document.getElementById('story-progress-bar');
-    const seg = bar.querySelectorAll('.progress-seg')[storyIndex];
-    if (seg) {
-        const fill = seg.querySelector('.progress-seg-fill');
-        const computedPercent = getComputedFillPercent(fill);
-        fill.style.transition = 'none';
-        fill.style.width = computedPercent + '%';
-    }
-}
-
-function resumeAutoAdvance() {
-    if (tutorialActive || isStoryPaused) return;
-    const s = stories[storyIndex];
-    if (!s) return;
-    if (getMediaType(s.media) === 'video') {
-        if (currentVideoElement) {
-            const p = currentVideoElement.play();
-            if (p !== undefined) p.catch(() => showPlayOverlay(currentVideoElement, document.getElementById('story-modal-content')));
-        }
-        return;
-    }
-    runImageTimer(); // با همون autoRemainingMs باقی‌مونده ادامه می‌ده
-}
-
-// دکمه‌ی توقف/ادامه‌ی کاربر
-function toggleStoryPause(e) {
-    if (e) e.stopPropagation();
-    if (tutorialActive) return; // در حین آموزش، کنترل با پاپ‌آپه
-    isStoryPaused = !isStoryPaused;
-    const pauseIcon = document.getElementById('pause-icon');
-    const playIcon = document.getElementById('play-icon');
-    if (isStoryPaused) {
-        pauseAutoAdvance();
-        pauseIcon.style.display = 'none';
-        playIcon.style.display = 'block';
-    } else {
-        pauseIcon.style.display = 'block';
-        playIcon.style.display = 'none';
-        resumeAutoAdvance();
-    }
 }
 
 function openStoryModal(idx) {
@@ -920,7 +915,6 @@ function getMediaType(url) {
 function renderStoryModal() {
     const s = stories[storyIndex];
     if (!s) { closeStoryModal(); return; }
-
     s.seen = true;
     const itemEl = document.getElementById(`result-item-${storyIndex}`);
     if (itemEl) itemEl.classList.add('seen');
@@ -928,12 +922,10 @@ function renderStoryModal() {
 
     const mediaType = getMediaType(s.media);
     const contentDiv = document.getElementById('story-modal-content');
-
     const oldVideo = contentDiv.querySelector('video');
     if (oldVideo) { oldVideo.pause(); oldVideo.src = ''; oldVideo.remove(); }
     const oldImg = contentDiv.querySelector('img');
     if (oldImg) oldImg.remove();
-
     currentVideoElement = null;
 
     if (mediaType === 'video') {
@@ -947,7 +939,6 @@ function renderStoryModal() {
         video.addEventListener('ended', () => storyNavigate(1));
         video.addEventListener('error', () => storyNavigate(1));
         video.addEventListener('loadedmetadata', () => { updateProgressForVideo(video); });
-
         const source = document.createElement('source');
         source.src = s.media;
         const ext = s.media.toLowerCase().split('?')[0].split('.').pop();
@@ -955,8 +946,6 @@ function renderStoryModal() {
         video.appendChild(source);
         contentDiv.appendChild(video);
         currentVideoElement = video;
-        // پخش واقعی توسط startAutoAdvance / resumeAutoAdvance کنترل می‌شود
-        // (نه اینجا) تا با دکمه‌ی توقف و پاپ‌آپ آموزشی هماهنگ بمونه.
     } else {
         const img = document.createElement('img');
         img.src = s.media;
@@ -966,7 +955,6 @@ function renderStoryModal() {
     }
 
     document.getElementById('story-caption').textContent = s.name || '';
-
     [stories[storyIndex - 1], stories[storyIndex + 1]].forEach(neighbor => {
         if (neighbor) preloadMedia(neighbor, true);
     });
@@ -980,7 +968,6 @@ function updateProgressForVideo(video) {
     const fill = activeSeg.querySelector('.progress-seg-fill');
     fill.style.transition = 'none';
     fill.style.width = '0%';
-
     video.addEventListener('timeupdate', () => {
         if (!video.duration) return;
         fill.style.width = ((video.currentTime / video.duration) * 100) + '%';
@@ -991,7 +978,7 @@ function showPlayOverlay(video, container) {
     const overlay = document.createElement('div');
     overlay.style.cssText = 'position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);cursor:pointer;';
     const btn = document.createElement('div');
-    btn.style.cssText = 'width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-size:32px;';
+    btn.style.cssText = 'width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.18);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,0.45);display:flex;align-items:center;justify-content:center;font-size:28px;';
     btn.textContent = '▶';
     overlay.appendChild(btn);
     overlay.addEventListener('click', () => { video.play(); overlay.remove(); });
@@ -1023,9 +1010,7 @@ function storyNavigate(dir) {
     resetPauseIcon();
     renderStoryModal();
     buildProgressBar();
-    if (!tutorialActive) {
-        startAutoAdvance();
-    }
+    if (!tutorialActive) startAutoAdvance();
 }
 
 document.getElementById('story-modal').addEventListener('click', function(e) {
