@@ -280,6 +280,7 @@ video { width: 100%; display: block; border-radius: var(--radius-xl); }
 .comment-date { font-size: 11.5px; color: var(--muted); }
 .comment-stars { display: flex; gap: 2px; margin-bottom: 8px; direction: ltr; }
 .comment-star { font-size: 14px; color: var(--blue); }
+.comment-star.empty { color: var(--border2); }
 .comment-text { font-size: 14.5px; line-height: 1.65; color: var(--muted2); }
 .mini-player {
     position: fixed; bottom: 15px; left: 15px; right: 15px; height: 70px;
@@ -446,8 +447,7 @@ video { width: 100%; display: block; border-radius: var(--radius-xl); }
             <span class="ep-header-text">چطور حالم خوب باشه؟ — همه قسمت‌ها</span>
         </div>
 
-        <!-- فقط معرفی رایگان اینجاست — بقیه قفل و از Supabase لود میشن -->
-        <div class="ep-item" onclick="playFreeEp()">
+        <div class="ep-item" onclick="playFullEp('http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a', 'معرفی دوره', '🎁 معرفی')">
             <img class="ep-thumb" src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="">
             <div class="ep-info">
                 <div class="ep-num"><span class="intro-badge-sm">● رایگان</span></div>
@@ -467,7 +467,7 @@ video { width: 100%; display: block; border-radius: var(--radius-xl); }
         <div class="ep-item" onclick="showBuyModal()">
             <img class="ep-thumb" src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="">
             <div class="ep-info"><div class="ep-num">قسمت ۲</div><div class="ep-title">تحول حال و احساس</div><div class="ep-dur">۳۶:۵۶</div></div>
-            <div class="ep-play-circle" style="background:rgba(47,111,237,0.08);border-color:rgba(47,111,237,0.2);"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:var(--blue);"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
+            <div class="ep-play-circle" style="background:rgba(47,111,237,0.08);border-color:rgba(47,111,237,0.2);"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:var(--blue);"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-02-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
         </div>
         <div class="ep-item" onclick="showBuyModal()">
             <img class="ep-thumb" src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="">
@@ -544,27 +544,25 @@ video { width: 100%; display: block; border-radius: var(--radius-xl); }
     </div>
 </div>
 
-<!-- Mini Player -->
-<div class="mini-player" id="miniPlayer">
+<div class="mini-player" id="miniPlayer" onclick="expandAudio()">
     <img class="mini-cover-img" id="miniCoverImg" src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="">
     <div class="mini-info">
         <div class="mini-title" id="miniTitleEl">در حال پخش</div>
         <div class="mini-ep" id="miniEpEl">PlanLife</div>
     </div>
-    <div class="mini-play-btn" onclick="toggleAudioPlay()">
+    <div class="mini-play-btn" onclick="event.stopPropagation(); toggleAudioPlay()">
         <svg id="miniPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
     </div>
-    <div class="mini-close-btn" onclick="killAudio()">✕</div>
+    <div class="mini-close-btn" onclick="event.stopPropagation(); killAudio()">✕</div>
     <div class="mini-prog"><div class="mini-prog-bar" id="miniProgBar"></div></div>
 </div>
 
-<!-- Modal: کد اشتراک -->
 <div class="modal-overlay" id="subscriptionModal">
     <div class="modal-box">
         <h3 class="modal-title">🔐 کد اشتراک را وارد کنید</h3>
         <div style="margin-bottom:16px;">
             <input type="text" id="subscriptionCodeInput" class="subscription-input" placeholder="کد اشتراک خود را اینجا وارد کنید" maxlength="20" autocomplete="off">
-            <div id="subscriptionError" style="color:var(--red);font-size:12px;margin-top:8px;display:none;"></div>
+            <div id="subscriptionError" style="color:var(--red);font-size:12px;margin-top:8px;display:none;">❌ کد اشتراک نامعتبر است</div>
         </div>
         <div class="subscription-actions">
             <button class="subscription-btn btn-submit" onclick="verifySubscriptionCode()">🚀 ورود به دوره</button>
@@ -574,7 +572,6 @@ video { width: 100%; display: block; border-radius: var(--radius-xl); }
     </div>
 </div>
 
-<!-- Modal: لیست اپیزودها بعد از تایید کد -->
 <div class="modal-overlay" id="episodesPlayerModal">
     <div class="modal-box" style="max-width:480px;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
@@ -587,7 +584,6 @@ video { width: 100%; display: block; border-radius: var(--radius-xl); }
     </div>
 </div>
 
-<!-- Modal: پشتیبانی -->
 <div class="modal-overlay" id="supportModal">
     <div class="modal-box">
         <h3 class="modal-title">📞 ارتباط با پشتیبانی</h3>
@@ -615,56 +611,52 @@ video { width: 100%; display: block; border-radius: var(--radius-xl); }
 <audio id="mainAudio" style="display:none;"></audio>
 
 <script>
-// ─── تنظیمات Supabase ───────────────────────────────────────────────────────
 const SUPABASE_URL      = 'https://hjzzvzxhrqovvducnxha.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC';
 const CATEGORY_KEY      = 'دوره چطور حالم خوب باشه ؟';
 const VERIFY_CODE_URL   = `${SUPABASE_URL}/functions/v1/verify-subscription-code`;
+const COVER_IMG         = 'http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg';
 
-// ─── فقط لینک معرفی رایگان اینجاست — لینک‌های پولی از Supabase میان ───────
-const COVER_IMG      = 'http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg';
-const FREE_AUDIO_SRC = 'http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a';
+// فقط لینک رایگان — لینک‌های پولی حذف شدن، همه از Supabase میان
+const FREE_SRC = 'http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a';
 
-const FREE_PREVIEWS = [
-    { title: 'معرفی دوره چطور حالم خوب باشه؟', dur: '۰۴:۴۵', src: FREE_AUDIO_SRC },
-    { title: 'احساسات را بشناسیم',               dur: '۵:۲۰',  src: '' },
-    { title: 'چگونه از این دوره بیشترین بهره ببریم', dur: '۶:۱۵', src: '' },
-];
+const EPISODE_TITLES    = ['معرفی دوره','درک احساسات پنهان','تحول حال و احساس','آزادی از الگوهای احساسی قدیمی','ساختن حال خوب پایدار','یکپارچگی احساس و زندگی'];
+const EPISODE_DURATIONS = ['۰۴:۴۵','۳۲:۱۰','۳۶:۵۶','۲۷:۲۰','۲۴:۳۵','۲۱:۲۸'];
 
-// ─── Audio Player ────────────────────────────────────────────────────────────
 const audio = document.getElementById('mainAudio');
 let currentSrc = '', activePreviewBtn = null, activePreviewProg = null;
 
 function playPreview(idx, card) {
-    const item = FREE_PREVIEWS[idx];
-    if (!item.src) { showToast('⏳ این فایل هنوز آپ‌لود نشده است'); return; }
-    if (activePreviewBtn && activePreviewBtn !== card.querySelector(`#pBtn${idx}`)) {
-        activePreviewBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
-    }
+    // فقط اولی (معرفی رایگان) پخش میشه
+    const src = idx === 0 ? FREE_SRC : '';
+    if (!src) { showToast('⏳ این فایل هنوز آپ‌لود نشده است'); return; }
+    if (activePreviewBtn) activePreviewBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
     activePreviewBtn  = card.querySelector(`#pBtn${idx}`);
     activePreviewProg = document.getElementById(`pProg${idx}`);
-
-    if (currentSrc === item.src && !audio.paused) {
+    if (currentSrc === src && !audio.paused) {
         audio.pause(); setMiniIcon(false);
-        activePreviewBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
+        if (activePreviewBtn) activePreviewBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
         return;
     }
-    currentSrc = item.src;
-    audio.src  = item.src;
+    currentSrc = src; audio.src = src;
     audio.play().then(() => {
         setMiniIcon(true);
-        activePreviewBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
-        setMiniInfo(item.title, '🎁 معرفی رایگان');
-        document.getElementById('miniPlayer').classList.add('active');
+        if (activePreviewBtn) activePreviewBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
     }).catch(() => {});
+    document.getElementById('miniTitleEl').textContent = EPISODE_TITLES[idx] || 'در حال پخش';
+    document.getElementById('miniEpEl').textContent    = '🎁 معرفی رایگان';
+    document.getElementById('miniCoverImg').src        = COVER_IMG;
+    document.getElementById('miniPlayer').classList.add('active');
 }
 
-function playFreeEp() {
-    currentSrc = FREE_AUDIO_SRC;
-    audio.src  = FREE_AUDIO_SRC;
+function playFullEp(src, title, ep) {
+    if (!src) { showToast('⏳ این فایل هنوز آپ‌لود نشده است'); return; }
+    currentSrc = src; audio.src = src;
     audio.play().then(() => {
         setMiniIcon(true);
-        setMiniInfo('معرفی دوره', '🎁 رایگان');
+        document.getElementById('miniTitleEl').textContent = title;
+        document.getElementById('miniEpEl').textContent    = ep;
+        document.getElementById('miniCoverImg').src        = COVER_IMG;
         document.getElementById('miniPlayer').classList.add('active');
     }).catch(() => showToast('❌ خطا در پخش فایل'));
 }
@@ -681,11 +673,6 @@ function setMiniIcon(playing) {
         ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'
         : '<path d="M8 5v14l11-7z"/>';
 }
-function setMiniInfo(title, ep) {
-    document.getElementById('miniTitleEl').textContent = title;
-    document.getElementById('miniEpEl').textContent    = ep;
-    document.getElementById('miniCoverImg').src        = COVER_IMG;
-}
 function toggleAudioPlay() {
     if (audio.paused) audio.play().then(() => setMiniIcon(true));
     else { audio.pause(); setMiniIcon(false); }
@@ -693,22 +680,14 @@ function toggleAudioPlay() {
 function killAudio() {
     audio.pause(); audio.src = ''; currentSrc = '';
     document.getElementById('miniPlayer').classList.remove('active');
-    if (activePreviewBtn) {
-        activePreviewBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
-        activePreviewBtn = null;
-    }
-    activePreviewProg = null;
+    if (activePreviewBtn) activePreviewBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
+    activePreviewBtn = null; activePreviewProg = null;
 }
+function expandAudio() {}
 
-// ─── Episodes Panel (preview list) ──────────────────────────────────────────
-function toggleEpisodes() {
-    openSubscriptionModal();
-}
-function showBuyModal() {
-    openSubscriptionModal();
-}
+function toggleEpisodes() { openSubscriptionModal(); }
+function showBuyModal()    { openSubscriptionModal(); }
 
-// ─── Subscription / Verify ───────────────────────────────────────────────────
 async function verifySubscriptionCode() {
     const code   = document.getElementById('subscriptionCodeInput').value.trim();
     const errDiv = document.getElementById('subscriptionError');
@@ -731,9 +710,7 @@ async function verifySubscriptionCode() {
             errDiv.textContent = '❌ کد اشتراک نامعتبر است'; errDiv.style.display = 'block';
             document.getElementById('subscriptionCodeInput').select();
         }
-    } catch(e) {
-        errDiv.textContent = '⚠️ خطا در ارتباط با سرور'; errDiv.style.display = 'block';
-    }
+    } catch(e) { errDiv.textContent = '⚠️ خطا در ارتباط با سرور'; errDiv.style.display = 'block'; }
     btn.textContent = '🚀 ورود به دوره'; btn.disabled = false;
 }
 
@@ -747,16 +724,16 @@ function closeSubscriptionModal() {
     document.getElementById('subscriptionCodeInput').value = '';
 }
 
-// ─── Episodes Player (بعد از تایید کد — لینک‌ها از Supabase) ───────────────
 async function openEpisodesPlayer() {
     const modal = document.getElementById('episodesPlayerModal');
     const list  = document.getElementById('episodesPlayerList');
     list.innerHTML = '<div style="text-align:center;padding:30px 0;color:var(--muted);">⏳ در حال بارگذاری...</div>';
     modal.classList.add('active');
 
+    // همه لینک‌ها از Supabase — هیچ fallback پولی نداریم
     const episodes = await loadEpisodeLinks();
 
-    if (!episodes.length) {
+    if (!episodes || !episodes.length) {
         list.innerHTML = '<div style="text-align:center;padding:30px 0;color:var(--muted);">⚠️ خطا در بارگذاری. لطفاً دوباره تلاش کنید.</div>';
         return;
     }
@@ -764,13 +741,13 @@ async function openEpisodesPlayer() {
     list.innerHTML = episodes.map((ep, idx) => `
         <div class="episode-item-player">
             <div class="episode-info-player">
-                <div class="episode-num-player">📍 قسمت ${idx + 1}</div>
-                <div class="episode-title-player">${escHtml(ep.episode_title || '')}</div>
-                <div class="episode-duration-player">⏱️ ${escHtml(ep.duration || '')}</div>
+                <div class="episode-num-player">📍 قسمت ${idx+1}</div>
+                <div class="episode-title-player">${escHtml(ep.episode_title||'')}</div>
+                <div class="episode-duration-player">⏱️ ${escHtml(ep.duration||'')}</div>
             </div>
             <div class="episode-actions">
-                <button class="action-btn-sm btn-play-sm" onclick="playEpisodeFromPlayer('${escHtml(ep.audio_url || '')}','${escHtml(ep.episode_title || '')}')">▶️</button>
-                <button class="action-btn-sm btn-download-sm" onclick="downloadEpisode('${escHtml(ep.audio_url || '')}','${escHtml(ep.episode_title || '')}')">⬇️</button>
+                <button class="action-btn-sm btn-play-sm" onclick="playEpisodeFromPlayer('${escHtml(ep.audio_url||'')}','${escHtml(ep.episode_title||'')}')">▶️</button>
+                <button class="action-btn-sm btn-download-sm" onclick="downloadEpisode('${escHtml(ep.audio_url||'')}','${escHtml(ep.episode_title||'')}')">⬇️</button>
             </div>
         </div>`).join('');
 }
@@ -779,7 +756,7 @@ async function loadEpisodeLinks() {
     try {
         const res = await fetch(
             `${SUPABASE_URL}/rest/v1/course_episodes1?course_name=eq.${encodeURIComponent(CATEGORY_KEY)}&order=episode_order.asc`,
-            { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+            { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' } }
         );
         const data = await res.json();
         return Array.isArray(data) ? data : [];
@@ -791,7 +768,9 @@ function playEpisodeFromPlayer(url, title) {
     currentSrc = url; audio.src = url;
     audio.play().then(() => {
         setMiniIcon(true);
-        setMiniInfo(title, '📂 دوره');
+        document.getElementById('miniTitleEl').textContent = title;
+        document.getElementById('miniEpEl').textContent    = '📂 دوره';
+        document.getElementById('miniCoverImg').src        = COVER_IMG;
         document.getElementById('miniPlayer').classList.add('active');
         showToast('▶️ پخش شروع شد');
     }).catch(() => showToast('❌ خطا در پخش فایل'));
@@ -806,21 +785,15 @@ function downloadEpisode(url, title) {
 }
 
 function closeEpisodesPlayer() { document.getElementById('episodesPlayerModal').classList.remove('active'); }
+function openSupportModal()    { document.getElementById('supportModal').classList.add('active'); }
+function closeSupportModal()   { document.getElementById('supportModal').classList.remove('active'); }
 
-// ─── Support Modal ───────────────────────────────────────────────────────────
-function openSupportModal()  { document.getElementById('supportModal').classList.add('active'); }
-function closeSupportModal() { document.getElementById('supportModal').classList.remove('active'); }
-
-// ─── Close modals on backdrop click ─────────────────────────────────────────
-['supportModal', 'subscriptionModal', 'episodesPlayerModal'].forEach(id => {
-    document.getElementById(id).addEventListener('click', function(e) {
-        if (e.target === this) this.classList.remove('active');
-    });
+['supportModal','subscriptionModal','episodesPlayerModal'].forEach(id => {
+    document.getElementById(id).addEventListener('click', function(e) { if (e.target===this) this.classList.remove('active'); });
 });
 
-// ─── Comments ────────────────────────────────────────────────────────────────
 function toPersian(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
-function escHtml(s)   { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escHtml(s)   { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 async function loadComments() {
     try {
@@ -841,24 +814,21 @@ function renderComments(comments) {
         return;
     }
     list.innerHTML = comments.map(c => {
-        const d       = new Date(c.created_at);
-        const dateStr = d.toLocaleDateString('fa-IR', { year:'numeric', month:'short', day:'numeric' });
+        const d = new Date(c.created_at);
+        const dateStr = d.toLocaleDateString('fa-IR',{year:'numeric',month:'short',day:'numeric'});
         return `<div class="comment-card">
             <div class="comment-header">
-                <span class="commenter-name">${escHtml(c.name || 'ناشناس')}</span>
+                <span class="commenter-name">${escHtml(c.name||'ناشناس')}</span>
                 <span class="comment-date">${dateStr}</span>
             </div>
-            <div class="comment-stars">${[1,2,3,4,5].map(() => `<span class="comment-star">★</span>`).join('')}</div>
+            <div class="comment-stars">${[1,2,3,4,5].map(i=>`<span class="comment-star">★</span>`).join('')}</div>
             <p class="comment-text">${escHtml(c.text)}</p>
         </div>`;
     }).join('');
 }
 
-function scrollToComments() {
-    document.getElementById('commentsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
+function scrollToComments() { document.getElementById('commentsSection').scrollIntoView({behavior:'smooth',block:'start'}); }
 
-// ─── Toast ───────────────────────────────────────────────────────────────────
 let toastTimer;
 function showToast(msg) {
     const t = document.getElementById('toast');
@@ -867,10 +837,9 @@ function showToast(msg) {
     toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
 }
 
-// ─── Init ────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     const inp = document.getElementById('subscriptionCodeInput');
-    if (inp) inp.addEventListener('keypress', e => { if (e.key === 'Enter') verifySubscriptionCode(); });
+    if (inp) inp.addEventListener('keypress', e => { if (e.key==='Enter') verifySubscriptionCode(); });
 });
 
 loadComments();
