@@ -727,40 +727,107 @@ function closeSubscriptionModal() {
 async function openEpisodesPlayer() {
     const modal = document.getElementById('episodesPlayerModal');
     const list  = document.getElementById('episodesPlayerList');
-    list.innerHTML = '<div style="text-align:center;padding:30px 0;color:var(--muted);">⏳ در حال بارگذاری...</div>';
+
+    list.innerHTML = `
+        <div style="text-align:center;padding:30px 0;color:var(--muted);">
+            ⏳ در حال بارگذاری...
+        </div>
+    `;
+
     modal.classList.add('active');
 
-    // همه لینک‌ها از Supabase — هیچ fallback پولی نداریم
     const episodes = await loadEpisodeLinks();
 
     if (!episodes || !episodes.length) {
-        list.innerHTML = '<div style="text-align:center;padding:30px 0;color:var(--muted);">⚠️ خطا در بارگذاری. لطفاً دوباره تلاش کنید.</div>';
+        list.innerHTML = `
+            <div style="text-align:center;padding:30px 0;color:var(--muted);">
+                ⚠️ فایلی برای این دوره پیدا نشد.
+            </div>
+        `;
         return;
     }
 
     list.innerHTML = episodes.map((ep, idx) => `
         <div class="episode-item-player">
+
             <div class="episode-info-player">
-                <div class="episode-num-player">📍 قسمت ${idx+1}</div>
-                <div class="episode-title-player">${escHtml(ep.episode_title||'')}</div>
-                <div class="episode-duration-player">⏱️ ${escHtml(ep.duration||'')}</div>
+                <div class="episode-num-player">
+                    📍 قسمت ${idx + 1}
+                </div>
+
+                <div class="episode-title-player">
+                    ${escHtml(ep.episode_title || '')}
+                </div>
+
+                <div class="episode-duration-player">
+                    ⏱️ ${escHtml(ep.duration || '')}
+                </div>
             </div>
+
             <div class="episode-actions">
-                <button class="action-btn-sm btn-play-sm" onclick="playEpisodeFromPlayer('${escHtml(ep.audio_url||'')}','${escHtml(ep.episode_title||'')}')">▶️</button>
-                <button class="action-btn-sm btn-download-sm" onclick="downloadEpisode('${escHtml(ep.audio_url||'')}','${escHtml(ep.episode_title||'')}')">⬇️</button>
+
+                <button
+                    class="action-btn-sm btn-play-sm"
+                    onclick="playEpisodeFromPlayer(
+                        '${escHtml(ep.audio_url || '')}',
+                        '${escHtml(ep.episode_title || '')}'
+                    )">
+                    ▶️
+                </button>
+
+                <button
+                    class="action-btn-sm btn-download-sm"
+                    onclick="downloadEpisode(
+                        '${escHtml(ep.audio_url || '')}',
+                        '${escHtml(ep.episode_title || '')}'
+                    )">
+                    ⬇️
+                </button>
+
             </div>
-        </div>`).join('');
+
+        </div>
+    `).join('');
 }
+
 
 async function loadEpisodeLinks() {
     try {
-        const res = await fetch(
-            `${SUPABASE_URL}/rest/v1/course_episodes1?course_name=eq.${encodeURIComponent(CATEGORY_KEY)}&order=episode_order.asc`,
-            { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' } }
-        );
+
+        const url =
+            `${SUPABASE_URL}/rest/v1/course_episodes1` +
+            `?course_name=eq.${encodeURIComponent(CATEGORY_KEY)}` +
+            `&order=episode_order.asc`;
+
+        const res = await fetch(url, {
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!res.ok) {
+            console.error(
+                'Supabase error:',
+                res.status,
+                await res.text()
+            );
+            return [];
+        }
+
         const data = await res.json();
+
+        console.log('Episodes loaded:', data);
+
         return Array.isArray(data) ? data : [];
-    } catch(e) { return []; }
+
+    } catch (e) {
+
+        console.error('loadEpisodeLinks error:', e);
+
+        return [];
+    }
 }
 
 function playEpisodeFromPlayer(url, title) {
