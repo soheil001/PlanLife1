@@ -467,7 +467,7 @@ video { width: 100%; display: block; border-radius: var(--radius-xl); }
         <div class="ep-item" onclick="showBuyModal()">
             <img class="ep-thumb" src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="">
             <div class="ep-info"><div class="ep-num">قسمت ۲</div><div class="ep-title">تحول حال و احساس</div><div class="ep-dur">۳۶:۵۶</div></div>
-            <div class="ep-play-circle" style="background:rgba(47,111,237,0.08);border-color:rgba(47,111,237,0.2);"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:var(--blue);"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-02-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
+            <div class="ep-play-circle" style="background:rgba(47,111,237,0.08);border-color:rgba(47,111,237,0.2);"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:var(--blue);"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
         </div>
         <div class="ep-item" onclick="showBuyModal()">
             <img class="ep-thumb" src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="">
@@ -617,9 +617,14 @@ const CATEGORY_KEY      = 'دوره چطور حالم خوب باشه ؟';
 const VERIFY_CODE_URL   = `${SUPABASE_URL}/functions/v1/verify-subscription-code`;
 const COVER_IMG         = 'http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg';
 
-// فقط لینک رایگان — لینک‌های پولی حذف شدن، همه از Supabase میان
-const FREE_SRC = 'http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a';
-
+const EPISODE_SRCS = [
+    'http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a',
+    'http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 1.m4a',
+    'http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 2.m4a',
+    'http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-Tahavol halo ehsas 3.m4a',
+    'http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Dore-tahavol halo ehsas 4.m4a',
+    'http://fs3.centraldnserver.com/~planlife/doreha/haloehsas/Project-Dore-tahavol halo ehsas 5.m4a'
+];
 const EPISODE_TITLES    = ['معرفی دوره','درک احساسات پنهان','تحول حال و احساس','آزادی از الگوهای احساسی قدیمی','ساختن حال خوب پایدار','یکپارچگی احساس و زندگی'];
 const EPISODE_DURATIONS = ['۰۴:۴۵','۳۲:۱۰','۳۶:۵۶','۲۷:۲۰','۲۴:۳۵','۲۱:۲۸'];
 
@@ -627,8 +632,7 @@ const audio = document.getElementById('mainAudio');
 let currentSrc = '', activePreviewBtn = null, activePreviewProg = null;
 
 function playPreview(idx, card) {
-    // فقط اولی (معرفی رایگان) پخش میشه
-    const src = idx === 0 ? FREE_SRC : '';
+    const src = idx === 0 ? EPISODE_SRCS[0] : '';
     if (!src) { showToast('⏳ این فایل هنوز آپ‌لود نشده است'); return; }
     if (activePreviewBtn) activePreviewBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
     activePreviewBtn  = card.querySelector(`#pBtn${idx}`);
@@ -727,107 +731,37 @@ function closeSubscriptionModal() {
 async function openEpisodesPlayer() {
     const modal = document.getElementById('episodesPlayerModal');
     const list  = document.getElementById('episodesPlayerList');
-
-    list.innerHTML = `
-        <div style="text-align:center;padding:30px 0;color:var(--muted);">
-            ⏳ در حال بارگذاری...
-        </div>
-    `;
-
+    list.innerHTML = '<div style="text-align:center;padding:30px 0;color:var(--muted);">⏳ در حال بارگذاری...</div>';
     modal.classList.add('active');
-
-    const episodes = await loadEpisodeLinks();
-
+    let episodes = await loadEpisodeLinks();
     if (!episodes || !episodes.length) {
-        list.innerHTML = `
-            <div style="text-align:center;padding:30px 0;color:var(--muted);">
-                ⚠️ فایلی برای این دوره پیدا نشد.
-            </div>
-        `;
-        return;
+        episodes = EPISODE_SRCS.slice(1).map((src, i) => ({
+            episode_title: EPISODE_TITLES[i+1], audio_url: src, duration: EPISODE_DURATIONS[i+1]
+        }));
     }
-
     list.innerHTML = episodes.map((ep, idx) => `
         <div class="episode-item-player">
-
             <div class="episode-info-player">
-                <div class="episode-num-player">
-                    📍 قسمت ${idx + 1}
-                </div>
-
-                <div class="episode-title-player">
-                    ${escHtml(ep.episode_title || '')}
-                </div>
-
-                <div class="episode-duration-player">
-                    ⏱️ ${escHtml(ep.duration || '')}
-                </div>
+                <div class="episode-num-player">📍 قسمت ${idx+1}</div>
+                <div class="episode-title-player">${escHtml(ep.episode_title||'')}</div>
+                <div class="episode-duration-player">⏱️ ${escHtml(ep.duration||'')}</div>
             </div>
-
             <div class="episode-actions">
-
-                <button
-                    class="action-btn-sm btn-play-sm"
-                    onclick="playEpisodeFromPlayer(
-                        '${escHtml(ep.audio_url || '')}',
-                        '${escHtml(ep.episode_title || '')}'
-                    )">
-                    ▶️
-                </button>
-
-                <button
-                    class="action-btn-sm btn-download-sm"
-                    onclick="downloadEpisode(
-                        '${escHtml(ep.audio_url || '')}',
-                        '${escHtml(ep.episode_title || '')}'
-                    )">
-                    ⬇️
-                </button>
-
+                <button class="action-btn-sm btn-play-sm" onclick="playEpisodeFromPlayer('${escHtml(ep.audio_url||'')}','${escHtml(ep.episode_title||'')}')">▶️</button>
+                <button class="action-btn-sm btn-download-sm" onclick="downloadEpisode('${escHtml(ep.audio_url||'')}','${escHtml(ep.episode_title||'')}')">⬇️</button>
             </div>
-
-        </div>
-    `).join('');
+        </div>`).join('');
 }
-
 
 async function loadEpisodeLinks() {
     try {
-
-        const url =
-            `${SUPABASE_URL}/rest/v1/course_episodes1` +
-            `?course_name=eq.${encodeURIComponent(CATEGORY_KEY)}` +
-            `&order=episode_order.asc`;
-
-        const res = await fetch(url, {
-            headers: {
-                'apikey': SUPABASE_ANON_KEY,
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (!res.ok) {
-            console.error(
-                'Supabase error:',
-                res.status,
-                await res.text()
-            );
-            return [];
-        }
-
+        const res = await fetch(
+            `${SUPABASE_URL}/rest/v1/course_episodes1?course_name=eq.${encodeURIComponent(CATEGORY_KEY)}&order=episode_order.asc`,
+            { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' } }
+        );
         const data = await res.json();
-
-        console.log('Episodes loaded:', data);
-
         return Array.isArray(data) ? data : [];
-
-    } catch (e) {
-
-        console.error('loadEpisodeLinks error:', e);
-
-        return [];
-    }
+    } catch(e) { return []; }
 }
 
 function playEpisodeFromPlayer(url, title) {
