@@ -160,7 +160,7 @@
   .card-wrap:active{transform:scale(0.97);box-shadow:0 6px 18px rgba(0,0,0,0.3);}
   /* LOCKED card style */
   .card-wrap.locked{cursor:pointer;}
-  .card-wrap.locked .card{filter:brightness(0.6);}
+  .card-wrap.locked .card{filter:none;}
 
   .card{border-radius:24px;overflow:hidden;background:#fff;display:flex;flex-direction:column;position:relative;height:100%;}
   .card-photo{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;}
@@ -184,6 +184,151 @@
   }
   .lock-icon{font-size:32px;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.5));}
   .lock-text{font-size:11px;font-weight:700;color:rgba(255,255,255,0.85);text-shadow:0 1px 4px rgba(0,0,0,0.7);}
+
+  /* EXTRA GLASS LEARNING CARDS */
+  .extra-label{
+    margin-top:26px;
+    margin-bottom:12px;
+  }
+
+  .learning-carousel{
+    display:flex;
+    gap:12px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scroll-behavior:smooth;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding:3px 2px 16px;
+    direction:ltr;
+    cursor:grab;
+  }
+  .learning-carousel:active{cursor:grabbing;}
+  .learning-carousel::-webkit-scrollbar{display:none;}
+
+  
+.learning-carousel{
+  display:flex;
+  gap:18px;
+  overflow-x:auto;
+  padding:14px 4px 22px;
+  scroll-snap-type:x mandatory;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.learning-carousel::-webkit-scrollbar{display:none}
+
+.learning-card{
+  position:relative;
+  flex:0 0 250px;
+  height:310px;
+  border-radius:28px;
+  overflow:hidden;
+  scroll-snap-align:start;
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,.26);
+  background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.07));
+  box-shadow:0 18px 50px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.18);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.learning-card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(255,255,255,.45);
+  box-shadow:0 25px 65px rgba(0,0,0,.32), 0 0 35px rgba(174,87,255,.12);
+}
+.learning-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 35%,rgba(255,255,255,.04));
+}
+
+.learning-image{
+  position:relative;
+  height:165px;
+  margin:10px;
+  border-radius:22px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.24);
+  background:rgba(255,255,255,.08);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16);
+}
+.learning-image img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+}
+.learning-image-placeholder{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:52px;
+  background:
+    radial-gradient(circle at 50% 25%,rgba(255,255,255,.18),transparent 35%),
+    linear-gradient(145deg,rgba(160,90,255,.30),rgba(30,30,70,.18));
+}
+
+.learning-glass{
+  position:absolute;
+  left:10px;
+  right:10px;
+  bottom:10px;
+  padding:15px 16px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(12,10,32,.48);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+  z-index:2;
+}
+.learning-title{
+  margin:0;
+  color:#fff;
+  font-size:19px;
+  font-weight:800;
+  line-height:1.45;
+}
+.learning-desc{
+  margin:5px 0 0;
+  color:rgba(255,255,255,.68);
+  font-size:12px;
+  line-height:1.7;
+}
+.learning-arrow{
+  position:absolute;
+  left:14px;
+  bottom:14px;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  border:1px solid rgba(255,255,255,.30);
+  background:rgba(255,255,255,.10);
+  backdrop-filter:blur(10px);
+  z-index:3;
+}
+
+
+  @media (min-width:700px){
+    .learning-carousel{
+      gap:14px;
+    }
+    .learning-card{
+      flex-basis:158px;
+      width:158px;
+      height:158px;
+    }
+  }
 
   /* ══════════════════════════════════════
      PHONE LOGIN POPUP
@@ -332,6 +477,36 @@
     white-space:nowrap;
   }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* دکمه بستن پنجره ورود */
+.modal-close-btn{
+  position:absolute;
+  top:18px;
+  left:18px;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.35);
+  background:rgba(255,255,255,.10);
+  color:#fff;
+  font-size:30px;
+  line-height:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  z-index:50;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  box-shadow:0 8px 30px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.18);
+  transition:transform .2s ease, background .2s ease, border-color .2s ease;
+}
+.modal-close-btn:hover{
+  transform:scale(1.06);
+  background:rgba(255,255,255,.18);
+  border-color:rgba(255,255,255,.55);
+}
+
 </style>
 </head>
 <body>
@@ -418,6 +593,7 @@
     <div class="story-container">
       <div class="story-progress-bar" id="story-progress-bar"></div>
       <div class="story-modal-header">
+      <button type="button" class="modal-close-btn" aria-label="بستن">×</button>
         <div class="story-logo-section">
           <div class="story-logo-img"><img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife"></div>
           <div class="story-branding-text">planlife.ir</div>
@@ -439,6 +615,58 @@
   <div class="container">
     <div class="row-label">تمرینات ۴ گزینه‌ای</div>
     <div class="carousel" id="row1"></div>
+
+    <!-- EXTRA LEARNING CARDS -->
+    <div class="row-label extra-label">روش‌های یادگیری</div>
+    <div class="learning-carousel" id="learningCarousel">
+      <div class="learning-card" data-title="آموزش ویدیویی">
+        <div class="learning-icon video-icon">
+          <span>▶</span>
+        </div>
+        <div class="learning-glow"></div>
+        <div class="learning-content">
+          <div class="learning-title">آموزش ویدیویی</div>
+          <div class="learning-desc">یادگیری با ویدیوهای کوتاه و کاربردی</div>
+        </div>
+        <div class="learning-arrow">←</div>
+      </div>
+
+      <div class="learning-card" data-title="یادگیری با هوش مصنوعی">
+        <div class="learning-icon ai-icon">
+          <span>✦</span>
+        </div>
+        <div class="learning-glow"></div>
+        <div class="learning-content">
+          <div class="learning-title">یادگیری با هوش مصنوعی</div>
+          <div class="learning-desc">تمرین و یادگیری هوشمند با AI</div>
+        </div>
+        <div class="learning-arrow">←</div>
+      </div>
+
+      <div class="learning-card" data-title="آموزش با عکس">
+        <div class="learning-icon image-icon">
+          <span>▧</span>
+        </div>
+        <div class="learning-glow"></div>
+        <div class="learning-content">
+          <div class="learning-title">آموزش با عکس</div>
+          <div class="learning-desc">یادگیری تصویری و ساده‌تر</div>
+        </div>
+        <div class="learning-arrow">←</div>
+      </div>
+
+      <div class="learning-card" data-title="تمرینات">
+        <div class="learning-icon exercise-icon">
+          <span>✓</span>
+        </div>
+        <div class="learning-glow"></div>
+        <div class="learning-content">
+          <div class="learning-title">تمرینات</div>
+          <div class="learning-desc">تمرین کن و مهارتت را قوی‌تر کن</div>
+        </div>
+        <div class="learning-arrow">←</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -682,11 +910,11 @@ function makeCard(c, imgNum, index){
         <div class="card-desc">${c.desc}</div>
         <div class="card-footer">
           <div class="read-time">${c.hours} ساعت</div>
-          <button class="btn-read">${c.free?'شروع کن':'🔒 قفل'}</button>
+          <button class="btn-read">شروع کن</button>
         </div>
       </div>
     </div>
-    ${locked?'<div class="lock-overlay"><div class="lock-icon">🔒</div><div class="lock-text">نیاز به اشتراک</div></div>':''}
+    ${''}
   </div>`;
 }
 
@@ -723,6 +951,13 @@ r1.addEventListener('click', function(e){
     return;
   }
   showToast('✅ در حال بارگذاری...');
+});
+
+// EXTRA LEARNING CARDS
+document.querySelectorAll('.learning-card').forEach(function(card){
+  card.addEventListener('click',function(){
+    showToast('✨ ' + (card.dataset.title || 'بخش آموزشی') + ' به‌زودی');
+  });
 });
 
 // on load check session
@@ -781,6 +1016,19 @@ function clearStoryTimer(){if(storyTimer){clearTimeout(storyTimer);storyTimer=nu
 function storyNavigate(dir){clearStoryTimer();storyIndex+=dir;if(storyIndex<0)storyIndex=0;if(storyIndex>=stories.length){closeStoryModal();return;}renderStoryModal();buildProgressBar();startStoryTimer();}
 document.getElementById('story-modal').addEventListener('click',function(e){if(e.target===this)closeStoryModal();});
 window.addEventListener('load',function(){initStories();});
+
+// بستن پنجره ورود/اشتراک با دکمه ×
+document.addEventListener('click', function(e){
+  if(!e.target.closest('.modal-close-btn')) return;
+  const btn = e.target.closest('.modal-close-btn');
+  const modal = btn.closest('[class*="modal"], [id*="modal"], [class*="popup"], [id*="popup"]');
+  if(modal){
+    modal.style.display = 'none';
+    modal.classList.remove('show','active','open');
+    modal.setAttribute('aria-hidden','true');
+  }
+});
+
 </script>
 </body>
 </html>
