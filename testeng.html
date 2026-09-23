@@ -3,1143 +3,815 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=390, initial-scale=1">
-<title>E-Learning</title>
+<title>Lingua — یادگیری انگلیسی</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 :root{
-  --blue-deep:#0D47C8;
-  --blue-mid:#1565FF;
-  --blue-light:#4285F4;
-  --blue-bright:#00B4FF;
-  --teal:#00CFD1;
-  --bg-white:#F5F7FF;
-  --card-bg:#FFFFFF;
-  --text-dark:#0A0E2A;
-  --text-mid:#4B5580;
-  --text-light:#8B93C4;
-  --green-accent:#2ECC71;
-  --orange-accent:#FF6B35;
-  --purple-accent:#7C4DFF;
-  --pink-accent:#FF4081;
-  --gold:#FFC107;
-  --border:#E8ECF8;
+  --dark:#0D0B1E;
+  --dark2:#13112A;
+  --dark3:#1A1838;
+  --card:#1E1C3A;
+  --card2:#252344;
+  --purple:#7C5CFC;
+  --purple2:#9B7DFF;
+  --purple-dim:rgba(124,92,252,0.18);
+  --blue:#4FC3F7;
+  --teal:#00E5C3;
+  --pink:#FF6B9D;
+  --gold:#FFD166;
+  --green:#06D6A0;
+  --text:#FFFFFF;
+  --text2:rgba(255,255,255,0.65);
+  --text3:rgba(255,255,255,0.35);
+  --border:rgba(255,255,255,0.08);
+  --border2:rgba(255,255,255,0.14);
 }
 body{
-  font-family:'Inter',sans-serif;
-  background:#0D47C8;
+  font-family:'Vazirmatn','Inter',sans-serif;
+  background:var(--dark);
   width:390px;
   min-height:100vh;
   overflow-x:hidden;
-  position:relative;
 }
-.screen{
-  display:none;
-  width:390px;
-  min-height:100vh;
-  position:relative;
-  overflow:hidden;
-}
+.screen{display:none;width:390px;min-height:100vh;position:relative;overflow:hidden;}
 .screen.active{display:block;}
 
-/* ══════════════════════════════
-   SPLASH / ONBOARDING SCREENS
-══════════════════════════════ */
-.splash-bg{
-  position:absolute;inset:0;
-  background:linear-gradient(165deg, #1565FF 0%, #0D47C8 40%, #0A2D9E 100%);
-  overflow:hidden;
-}
-.splash-bg::before{
-  content:'';position:absolute;
-  width:500px;height:500px;
-  background:rgba(255,255,255,0.06);
-  border-radius:50%;
-  top:-180px;right:-120px;
-}
-.splash-bg::after{
-  content:'';position:absolute;
-  width:320px;height:320px;
-  background:rgba(0,180,255,0.08);
-  border-radius:50%;
-  bottom:-80px;left:-80px;
-}
-.splash-books-bg{
-  position:absolute;
-  top:0;left:0;right:0;
-  height:260px;
-  overflow:hidden;
-  opacity:0.18;
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  gap:2px;
-}
-.book-thumb{
-  height:260px;
-  background:linear-gradient(to bottom, #fff, #aab4ff);
-  display:flex;align-items:center;justify-content:center;
-  font-size:28px;
-  border-radius:2px;
-}
-.splash-center{
-  position:relative;z-index:2;
-  display:flex;flex-direction:column;align-items:center;
-  padding-top:60px;
-}
-.brand-icon{
-  width:110px;height:110px;
-  background:rgba(255,255,255,0.12);
-  border:2.5px solid rgba(255,255,255,0.25);
-  border-radius:28px;
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:28px;
-  position:relative;
-}
-.brand-icon svg{width:68px;height:68px;}
-.brand-label{
-  color:#fff;
-  font-size:13px;
-  font-weight:700;
-  letter-spacing:0.2em;
-  text-transform:uppercase;
-  margin-bottom:36px;
-  opacity:0.9;
-}
-.splash-title{
-  color:#fff;
-  font-size:26px;
-  font-weight:800;
-  text-align:center;
-  line-height:1.3;
-  padding:0 32px;
-  margin-bottom:14px;
-}
-.splash-sub{
-  color:rgba(255,255,255,0.7);
-  font-size:13px;
-  text-align:center;
-  line-height:1.7;
-  padding:0 40px;
-  margin-bottom:48px;
-}
-.onboard-dots{
-  display:flex;gap:8px;
-  justify-content:center;
-  margin-bottom:40px;
-}
-.od{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.3);}
-.od.active{width:26px;border-radius:4px;background:#fff;}
-.splash-btn{
-  width:calc(100% - 48px);
-  padding:17px;
-  background:#fff;
-  border:none;
-  border-radius:14px;
-  color:var(--blue-mid);
-  font-size:14px;
-  font-weight:700;
-  letter-spacing:0.04em;
-  cursor:pointer;
-  text-transform:uppercase;
-  margin:0 24px;
-  box-shadow:0 8px 30px rgba(0,0,0,0.2);
-}
-.splash-btn-outline{
-  width:calc(100% - 48px);
-  padding:17px;
-  background:rgba(255,255,255,0.12);
-  border:1.5px solid rgba(255,255,255,0.35);
-  border-radius:14px;
-  color:#fff;
-  font-size:14px;
-  font-weight:600;
-  cursor:pointer;
-  margin:12px 24px 0;
-}
-
-/* ══════════════════════════════
-   AUTH SCREEN
-══════════════════════════════ */
-.auth-screen{
-  background:#fff;
-  min-height:100vh;
-}
-.auth-top{
-  background:linear-gradient(165deg,#1565FF 0%,#0D47C8 100%);
-  padding:60px 24px 48px;
-  position:relative;overflow:hidden;
-  text-align:center;
-}
-.auth-top::before{
-  content:'';position:absolute;
-  width:300px;height:300px;
-  background:rgba(255,255,255,0.06);
-  border-radius:50%;top:-120px;right:-80px;
-}
-.auth-brand-icon{
-  width:80px;height:80px;
-  background:rgba(255,255,255,0.15);
-  border:2px solid rgba(255,255,255,0.3);
-  border-radius:20px;
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 16px;
-}
-.auth-title{
-  color:#fff;font-size:22px;font-weight:800;margin-bottom:6px;
-}
-.auth-sub{color:rgba(255,255,255,0.7);font-size:12px;}
-.auth-body{
-  padding:28px 24px 32px;
-  background:#fff;
-  border-radius:24px 24px 0 0;
-  margin-top:-16px;
-  position:relative;z-index:2;
-}
-.auth-label{color:var(--text-mid);font-size:11px;font-weight:600;margin-bottom:8px;letter-spacing:0.05em;text-transform:uppercase;}
-.auth-field{
-  display:flex;align-items:center;gap:12px;
-  border:1.5px solid var(--border);
-  border-radius:12px;
-  padding:14px 16px;
-  margin-bottom:14px;
-  background:#FAFBFF;
-}
-.auth-field .fi{font-size:18px;opacity:0.6;}
-.auth-field input{
-  flex:1;border:none;background:transparent;
-  font-size:14px;color:var(--text-dark);outline:none;
-  font-family:'Inter',sans-serif;
-  direction:ltr;
-}
-.auth-field input::placeholder{color:var(--text-light);}
-.auth-btn-primary{
+/* ─── SHARED ─── */
+.btn-primary{
   width:100%;padding:16px;
-  background:linear-gradient(135deg,#1565FF,#0D47C8);
-  border:none;border-radius:13px;
-  color:#fff;font-size:14px;font-weight:700;
-  cursor:pointer;margin-top:6px;
-  box-shadow:0 6px 20px rgba(21,101,255,0.35);
-  letter-spacing:0.03em;text-transform:uppercase;
+  background:var(--purple);
+  border:none;border-radius:16px;
+  color:#fff;font-size:15px;font-weight:700;
+  cursor:pointer;font-family:'Vazirmatn',sans-serif;
+  box-shadow:0 8px 28px rgba(124,92,252,0.45);
+  display:flex;align-items:center;justify-content:center;gap:8px;
 }
-.auth-divider{
-  display:flex;align-items:center;gap:12px;
-  margin:20px 0;
+.btn-ghost{
+  width:100%;padding:14px;
+  background:transparent;border:none;
+  color:var(--text2);font-size:13px;font-weight:600;
+  cursor:pointer;font-family:'Vazirmatn',sans-serif;text-align:center;
 }
-.auth-divider span{color:var(--text-light);font-size:12px;white-space:nowrap;}
-.auth-divider::before,.auth-divider::after{
-  content:'';flex:1;height:1px;background:var(--border);
-}
-.social-btn{
-  display:flex;align-items:center;gap:12px;
-  width:100%;padding:14px 16px;
-  border:1.5px solid var(--border);
-  border-radius:12px;
-  background:#fff;
-  font-size:13px;font-weight:600;color:var(--text-dark);
-  cursor:pointer;margin-bottom:10px;
-}
-.social-btn.fb{background:#1877F2;color:#fff;border-color:#1877F2;}
-.social-btn.gg{background:#fff;color:#444;border-color:#ddd;}
-.auth-bottom{
-  text-align:center;margin-top:16px;
-  color:var(--text-mid);font-size:12px;
-}
-.auth-bottom a{color:var(--blue-mid);font-weight:600;cursor:pointer;text-decoration:none;}
-.auth-tos{
-  color:var(--text-light);font-size:10.5px;
-  text-align:center;margin-top:14px;line-height:1.6;
-}
-.auth-tos a{color:var(--blue-mid);}
-
-/* ══════════════════════════════
-   INTERESTS SCREEN
-══════════════════════════════ */
-.interests-screen{
-  background:#fff;min-height:100vh;
-  padding:0;
-}
-.int-header{
-  padding:52px 24px 28px;
-}
-.int-back{
+.back-btn{
   width:36px;height:36px;
-  background:var(--bg-white);
+  background:var(--card);border:1px solid var(--border2);
+  border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:18px;cursor:pointer;color:var(--text);
+}
+.status-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px 0;
+  color:var(--text2);font-size:11px;font-family:'Inter',sans-serif;
+}
+.status-icons{display:flex;gap:5px;align-items:center;}
+
+/* ═══════════════════════════════
+   SCREEN 1 — SPLASH
+═══════════════════════════════ */
+#s-splash{background:linear-gradient(175deg,#0D0B1E 0%,#161230 50%,#0D0B1E 100%);}
+.splash-mountain{
+  position:absolute;bottom:0;left:0;right:0;height:65%;
+  background:linear-gradient(180deg,transparent 0%,rgba(0,0,20,0.3) 100%);
+  overflow:hidden;
+}
+.splash-mountain::before{
+  content:'';position:absolute;bottom:0;left:-20px;right:-20px;height:100%;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 120%, rgba(124,92,252,0.25) 0%, transparent 70%),
+    linear-gradient(180deg,transparent 0%,rgba(20,15,50,0.9) 100%);
+}
+/* mountain silhouette via SVG inline */
+.mountain-svg{position:absolute;bottom:0;left:0;width:100%;height:100%;}
+.splash-stars{
+  position:absolute;top:0;left:0;right:0;height:50%;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(80,60,180,0.35) 0%,transparent 70%);
+}
+.splash-glow{
+  position:absolute;bottom:30%;left:50%;transform:translateX(-50%);
+  width:200px;height:200px;
+  background:radial-gradient(circle,rgba(124,92,252,0.3) 0%,transparent 70%);
+  border-radius:50%;
+}
+.splash-content{
+  position:relative;z-index:2;
+  padding:0 28px;
+}
+.splash-logo-row{
+  display:flex;align-items:center;gap:10px;
+  padding-top:60px;padding-bottom:180px;
+}
+.lingua-icon{
+  width:36px;height:36px;
+  background:var(--purple);
   border-radius:10px;
   display:flex;align-items:center;justify-content:center;
-  font-size:16px;cursor:pointer;
-  border:1.5px solid var(--border);
-  margin-bottom:24px;
+  font-size:18px;font-weight:900;color:#fff;font-family:'Inter',sans-serif;
 }
-.int-skip{
-  position:absolute;top:52px;right:24px;
-  color:var(--text-light);font-size:13px;font-weight:600;cursor:pointer;
-}
-.int-title{
-  color:var(--text-dark);font-size:26px;font-weight:800;
-  margin-bottom:8px;line-height:1.2;
-}
-.int-sub{color:var(--text-mid);font-size:13px;line-height:1.6;}
-.int-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
-  padding:0 24px 24px;
-}
-.int-item{
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  padding:18px 8px;
-  border:2px solid var(--border);
-  border-radius:16px;
-  cursor:pointer;
-  transition:all 0.2s;
-}
-.int-item.sel{
-  border-color:var(--blue-mid);
-  background:#EEF3FF;
-}
-.int-icon-wrap{
-  width:52px;height:52px;
-  background:linear-gradient(135deg,#EEF3FF,#D6E4FF);
-  border-radius:14px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:24px;
-}
-.int-name{
-  font-size:11px;font-weight:600;color:var(--text-dark);text-align:center;
-}
-.int-next{
-  width:calc(100% - 48px);
-  padding:16px;
-  background:linear-gradient(135deg,#1565FF,#0D47C8);
-  border:none;border-radius:13px;
-  color:#fff;font-size:14px;font-weight:700;
-  cursor:pointer;margin:0 24px 32px;
-  box-shadow:0 6px 20px rgba(21,101,255,0.35);
-  text-transform:uppercase;letter-spacing:0.04em;
-  display:block;
-}
-
-/* ══════════════════════════════
-   HOME SCREEN
-══════════════════════════════ */
-.home-screen{
-  background:var(--bg-white);
-  min-height:100vh;
-  padding-bottom:80px;
-}
-.home-header{
-  background:linear-gradient(155deg,#1565FF 0%,#0D47C8 100%);
-  padding:52px 20px 28px;
-  position:relative;overflow:hidden;
-}
-.home-header::before{
-  content:'';position:absolute;
-  width:200px;height:200px;
-  background:rgba(255,255,255,0.06);
-  border-radius:50%;top:-60px;right:-40px;
-}
-.home-header::after{
-  content:'';position:absolute;
-  width:150px;height:150px;
-  background:rgba(0,180,255,0.08);
-  border-radius:50%;bottom:-50px;left:30px;
-}
-.home-top-row{
-  display:flex;align-items:center;justify-content:space-between;
-  position:relative;z-index:1;margin-bottom:18px;
-}
-.home-greeting small{display:block;color:rgba(255,255,255,0.65);font-size:11px;font-weight:500;margin-bottom:3px;}
-.home-greeting strong{color:#fff;font-size:18px;font-weight:700;}
-.home-notif{
-  width:38px;height:38px;
-  background:rgba(255,255,255,0.15);
-  border:1px solid rgba(255,255,255,0.2);
-  border-radius:11px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;position:relative;
-}
-.notif-dot{
-  position:absolute;top:6px;right:6px;
-  width:8px;height:8px;
-  background:#FF4081;border-radius:50%;
-  border:1.5px solid #1565FF;
-}
-.home-search{
-  display:flex;align-items:center;gap:10px;
-  background:rgba(255,255,255,0.15);
-  border:1px solid rgba(255,255,255,0.2);
-  border-radius:12px;
-  padding:11px 14px;
-  position:relative;z-index:1;
-}
-.home-search span{font-size:16px;opacity:0.7;}
-.home-search input{
-  flex:1;background:transparent;border:none;
-  color:#fff;font-size:13px;outline:none;
-  font-family:'Inter',sans-serif;
-}
-.home-search input::placeholder{color:rgba(255,255,255,0.5);}
-/* Featured banner */
-.featured-wrap{
-  padding:20px 16px 12px;
-}
-.featured-banner{
-  background:linear-gradient(135deg,#7C4DFF,#5722FF);
-  border-radius:18px;
-  padding:20px 16px;
-  display:flex;align-items:center;gap:12px;
-  position:relative;overflow:hidden;
-}
-.featured-banner::before{
-  content:'';position:absolute;
-  width:160px;height:160px;
-  background:rgba(255,255,255,0.07);
-  border-radius:50%;
-  right:-40px;top:-60px;
-}
-.feat-tag{
-  background:rgba(255,255,255,0.2);
-  color:#fff;font-size:9px;font-weight:700;
-  padding:3px 8px;border-radius:5px;
-  letter-spacing:0.06em;text-transform:uppercase;
-  margin-bottom:6px;display:inline-block;
-}
-.feat-title{color:#fff;font-size:15px;font-weight:700;line-height:1.3;margin-bottom:10px;}
-.feat-badge{
-  display:inline-flex;align-items:center;gap:4px;
-  background:rgba(255,255,255,0.15);
-  color:rgba(255,255,255,0.9);font-size:9px;font-weight:600;
-  padding:4px 8px;border-radius:6px;
-}
-.feat-view-btn{
-  margin-top:12px;
-  padding:8px 14px;
-  background:#fff;
-  border:none;border-radius:8px;
-  color:var(--purple-accent);font-size:10px;font-weight:700;
-  cursor:pointer;letter-spacing:0.04em;
-  text-transform:uppercase;
-}
-.feat-img{
-  flex:0 0 80px;
-  width:80px;height:80px;
-  background:rgba(255,255,255,0.15);
-  border-radius:14px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:40px;
-}
-/* Section header */
-.sec-head{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px 20px 10px;
-}
-.sec-head h3{color:var(--text-dark);font-size:14px;font-weight:700;}
-.sec-see{color:var(--blue-mid);font-size:11px;font-weight:600;cursor:pointer;}
-/* Tags row */
-.tags-row{
-  display:flex;gap:8px;
-  padding:0 16px 14px;
-  overflow-x:auto;scrollbar-width:none;
-}
-.tags-row::-webkit-scrollbar{display:none;}
-.tag-pill{
-  flex:0 0 auto;
-  padding:7px 14px;
-  border-radius:20px;
-  font-size:11px;font-weight:600;
-  cursor:pointer;white-space:nowrap;
-  border:1.5px solid var(--border);
-  background:#fff;color:var(--text-mid);
-}
-.tag-pill.active{
-  background:var(--blue-mid);
-  border-color:var(--blue-mid);
+.lingua-name{color:#fff;font-size:18px;font-weight:700;font-family:'Inter',sans-serif;}
+.splash-title{
   color:#fff;
+  font-size:36px;font-weight:900;
+  line-height:1.15;margin-bottom:16px;
+  font-family:'Vazirmatn',sans-serif;
 }
-/* Course cards horizontal */
-.courses-scroll{
-  display:flex;gap:12px;
-  padding:0 16px 16px;
-  overflow-x:auto;scrollbar-width:none;
+.splash-title .hi{color:var(--purple2);}
+.splash-sub{
+  color:rgba(255,255,255,0.6);
+  font-size:14px;line-height:1.75;
+  margin-bottom:48px;
+  font-family:'Vazirmatn',sans-serif;
 }
-.courses-scroll::-webkit-scrollbar{display:none;}
-.course-card{
-  flex:0 0 160px;
-  background:#fff;
-  border-radius:16px;
-  overflow:hidden;
-  box-shadow:0 2px 16px rgba(13,71,200,0.08);
-  cursor:pointer;
-}
-.course-thumb{
-  width:100%;height:100px;
+.splash-btns{display:flex;flex-direction:column;gap:10px;}
+
+/* ═══════════════════════════════
+   SCREEN 2 — ONBOARD (features)
+═══════════════════════════════ */
+#s-onboard{background:#fff;}
+.onboard-top{
+  background:linear-gradient(175deg,#0D0B1E 0%,#1A1548 100%);
+  height:340px;position:relative;overflow:hidden;
   display:flex;align-items:center;justify-content:center;
-  font-size:40px;
-  position:relative;overflow:hidden;
 }
-.cc1{background:linear-gradient(135deg,#4285F4 0%,#1565FF 100%);}
-.cc2{background:linear-gradient(135deg,#7C4DFF 0%,#5722FF 100%);}
-.cc3{background:linear-gradient(135deg,#FF6B35 0%,#E91E63 100%);}
-.cc4{background:linear-gradient(135deg,#00B4FF 0%,#0D47C8 100%);}
-.course-thumb-label{
-  position:absolute;top:8px;left:8px;
-  background:rgba(0,0,0,0.25);
-  color:#fff;font-size:9px;font-weight:700;
-  padding:3px 7px;border-radius:5px;
-  letter-spacing:0.04em;
+.onboard-glow{
+  position:absolute;
+  width:280px;height:280px;
+  background:radial-gradient(circle,rgba(124,92,252,0.35) 0%,transparent 70%);
+  border-radius:50%;top:-40px;
 }
-.course-info{padding:10px 11px 12px;}
-.course-name{color:var(--text-dark);font-size:12px;font-weight:700;margin-bottom:4px;}
-.course-cat{display:inline-block;font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px;margin-bottom:6px;}
-.cat-biz{background:#FFF3E0;color:#FF6B35;}
-.cat-phy{background:#F3E5F5;color:#7C4DFF;}
-.cat-des{background:#E8F5E9;color:#2ECC71;}
-.cat-eng{background:#E3F2FD;color:#1565FF;}
-.course-dur{color:var(--text-light);font-size:9.5px;}
-/* Recent courses vertical */
-.recent-list{padding:0 16px;}
-.recent-card{
+.onboard-girl{
+  width:200px;height:240px;
+  position:relative;z-index:2;
+  background:linear-gradient(175deg,rgba(124,92,252,0.12),transparent);
+  border-radius:50%;
+  display:flex;align-items:flex-end;justify-content:center;
+  overflow:hidden;
+}
+.girl-emoji{font-size:110px;line-height:1;margin-bottom:-10px;filter:drop-shadow(0 0 30px rgba(124,92,252,0.4));}
+.flag-bubble{
+  position:absolute;top:30px;right:20px;
+  width:56px;height:56px;
+  background:#fff;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:30px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.15);
+  z-index:3;
+}
+.chat-bubble{
+  position:absolute;top:60px;left:18px;
+  background:rgba(124,92,252,0.85);
+  border-radius:12px 12px 12px 2px;
+  padding:8px 12px;
+  color:#fff;font-size:10px;font-weight:600;
+  z-index:3;
+}
+.onboard-body{
   background:#fff;
+  border-radius:28px 28px 0 0;
+  margin-top:-28px;
+  position:relative;z-index:2;
+  padding:32px 28px 0;
+}
+.onboard-title{
+  color:#0D0B1E;font-size:26px;font-weight:900;
+  line-height:1.25;margin-bottom:12px;text-align:right;
+  font-family:'Vazirmatn',sans-serif;
+}
+.onboard-sub{
+  color:#666;font-size:13px;line-height:1.75;
+  text-align:right;margin-bottom:28px;
+  font-family:'Vazirmatn',sans-serif;
+}
+.onboard-dots{
+  display:flex;gap:7px;justify-content:center;margin-bottom:20px;
+}
+.od{width:8px;height:8px;border-radius:50%;background:#DDD;}
+.od.active{width:28px;border-radius:4px;background:var(--purple);}
+.btn-primary-light{
+  width:100%;padding:16px;
+  background:var(--purple);
+  border:none;border-radius:16px;
+  color:#fff;font-size:15px;font-weight:700;
+  cursor:pointer;font-family:'Vazirmatn',sans-serif;
+  box-shadow:0 8px 24px rgba(124,92,252,0.35);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-bottom:12px;
+}
+.btn-ghost-dark{
+  width:100%;padding:13px;background:transparent;border:none;
+  color:#999;font-size:13px;font-weight:600;cursor:pointer;
+  font-family:'Vazirmatn',sans-serif;text-align:center;margin-bottom:12px;
+}
+
+/* ═══════════════════════════════
+   SCREEN 3 — REGISTER
+═══════════════════════════════ */
+#s-auth{background:var(--dark);}
+.auth-wrap{padding:0 24px 40px;}
+.auth-head{padding:52px 0 28px;}
+.auth-head h2{color:var(--text);font-size:22px;font-weight:800;margin-bottom:6px;}
+.auth-head p{color:var(--text2);font-size:13px;}
+.field-label{color:var(--text2);font-size:11px;font-weight:600;margin-bottom:7px;letter-spacing:0.04em;display:block;}
+.field-wrap{
+  display:flex;align-items:center;gap:12px;
+  background:var(--card);
+  border:1.5px solid var(--border2);
   border-radius:14px;
-  padding:14px;
-  display:flex;gap:12px;align-items:center;
-  margin-bottom:10px;
-  box-shadow:0 2px 12px rgba(13,71,200,0.06);
+  padding:14px 16px;
+  margin-bottom:14px;
+  transition:border-color 0.2s;
+}
+.field-wrap:focus-within{border-color:var(--purple);}
+.field-icon{font-size:18px;opacity:0.6;}
+.field-wrap input{
+  flex:1;background:transparent;border:none;
+  color:var(--text);font-size:14px;outline:none;
+  font-family:'Vazirmatn','Inter',sans-serif;
+}
+.field-wrap input::placeholder{color:var(--text3);}
+.auth-btn{margin-top:8px;}
+.auth-divider{
+  display:flex;align-items:center;gap:12px;margin:20px 0;
+}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border2);}
+.auth-divider span{color:var(--text3);font-size:11px;white-space:nowrap;}
+
+/* ═══════════════════════════════
+   SCREEN 4 — LEVEL SELECT
+═══════════════════════════════ */
+#s-levels{background:var(--dark);}
+.levels-wrap{padding:52px 20px 40px;}
+.levels-head{margin-bottom:28px;}
+.levels-head h2{color:var(--text);font-size:22px;font-weight:800;margin-bottom:6px;}
+.levels-head p{color:var(--text2);font-size:13px;}
+.lvl-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:14px;margin-bottom:28px;
+}
+.lvl-item{
+  display:flex;flex-direction:column;align-items:center;gap:9px;
   cursor:pointer;
 }
-.rec-thumb{
-  width:50px;height:50px;
-  border-radius:12px;
+.lvl-circle{
+  width:76px;height:76px;border-radius:50%;
+  border:2px solid transparent;
   display:flex;align-items:center;justify-content:center;
-  font-size:22px;flex-shrink:0;
+  transition:all 0.22s;position:relative;
 }
-.rec-info{flex:1;}
-.rec-name{color:var(--text-dark);font-size:12px;font-weight:700;margin-bottom:3px;}
-.rec-sub{color:var(--text-light);font-size:10px;margin-bottom:6px;}
-.rec-progress{
-  height:3px;background:var(--border);
-  border-radius:2px;overflow:hidden;
+.lvl-circle svg{width:44px;height:44px;}
+.lvl-item.sel .lvl-circle{
+  border-color:var(--purple);
+  box-shadow:0 0 0 4px rgba(124,92,252,0.2);
+  transform:scale(1.08);
 }
-.rec-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,#1565FF,#00B4FF);}
-.rec-pct{color:var(--text-light);font-size:9px;margin-top:3px;}
+.lvl-label{text-align:center;}
+.lvl-label strong{display:block;color:var(--text);font-size:11px;font-weight:700;font-family:'Vazirmatn',sans-serif;}
+.lvl-label span{color:var(--text3);font-size:9px;}
 
-/* Bottom nav */
-.bottom-nav{
-  position:fixed;bottom:0;left:0;
-  width:390px;
-  background:#fff;
-  border-top:1px solid var(--border);
-  display:flex;align-items:center;
-  padding:8px 0 16px;
-  z-index:50;
-  box-shadow:0 -4px 20px rgba(13,71,200,0.08);
-}
-.nav-item{
-  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
-  cursor:pointer;position:relative;
-}
-.nav-item .ni{font-size:22px;}
-.nav-item span{font-size:9px;font-weight:600;color:var(--text-light);letter-spacing:0.03em;}
-.nav-item.active span{color:var(--blue-mid);}
-.nav-item.active .ni{filter:drop-shadow(0 2px 6px rgba(21,101,255,0.4));}
-.nav-add{
-  width:50px;height:50px;
-  background:linear-gradient(135deg,#1565FF,#0D47C8);
-  border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:24px;color:#fff;
-  box-shadow:0 6px 20px rgba(21,101,255,0.45);
-  margin-top:-20px;
-  cursor:pointer;
-  font-weight:300;
-}
-
-/* ══════════════════════════════
-   VIDEO LESSON SCREEN
-══════════════════════════════ */
-.lesson-screen{
-  background:#0A0E2A;
-  min-height:100vh;
-  padding-bottom:0;
-}
-.video-area{
-  position:relative;
-  width:390px;height:240px;
-  background:#111;overflow:hidden;
-}
-.video-thumb{
-  width:100%;height:100%;
-  background:linear-gradient(135deg,#1A2560,#0D47C8);
-  display:flex;align-items:center;justify-content:center;
-  font-size:70px;
-}
-.video-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(0,0,0,0.6) 0%,transparent 60%);
-}
-.video-controls{
-  position:absolute;bottom:0;left:0;right:0;
-  padding:8px 14px 12px;
-}
-.progress-bar{
-  height:3px;background:rgba(255,255,255,0.3);
-  border-radius:2px;margin-bottom:8px;
-  overflow:hidden;
-}
-.progress-fill{
-  height:100%;width:30%;
-  background:linear-gradient(90deg,#00B4FF,#1565FF);
-  border-radius:2px;
-}
-.vid-ctrl-row{
-  display:flex;align-items:center;justify-content:space-between;
-}
-.vid-time{color:rgba(255,255,255,0.8);font-size:10px;}
-.vid-btns{display:flex;gap:14px;}
-.vid-btn{color:#fff;font-size:20px;cursor:pointer;opacity:0.9;}
-.lesson-info{
-  padding:18px 18px 14px;
-  border-bottom:1px solid rgba(255,255,255,0.06);
-}
-.lesson-info h2{color:#fff;font-size:16px;font-weight:700;margin-bottom:6px;}
-.lesson-info p{color:rgba(255,255,255,0.5);font-size:12px;}
-.lesson-meta{
-  display:flex;gap:14px;margin-top:10px;
-}
-.lmeta{
-  display:flex;align-items:center;gap:5px;
-  color:rgba(255,255,255,0.6);font-size:10px;
-}
-.lesson-actions{
-  display:flex;padding:14px 18px;gap:12px;
-  border-bottom:1px solid rgba(255,255,255,0.06);
-}
-.lact{
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-  cursor:pointer;
-}
-.lact .la-icon{font-size:22px;}
-.lact span{color:rgba(255,255,255,0.5);font-size:9px;}
-.lact.liked .la-icon{filter:drop-shadow(0 0 6px rgba(255,64,129,0.6));}
-.comments-section{
-  padding:16px 18px;
-}
-.comm-title{
-  color:#fff;font-size:13px;font-weight:700;margin-bottom:14px;
-}
-.comment{
-  display:flex;gap:10px;margin-bottom:16px;
-}
-.comm-ava{
-  width:34px;height:34px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--blue-light),var(--purple-accent));
-  display:flex;align-items:center;justify-content:center;
-  font-size:14px;flex-shrink:0;color:#fff;font-weight:700;
-}
-.comm-body{flex:1;}
-.comm-name{color:#fff;font-size:11px;font-weight:600;margin-bottom:3px;}
-.comm-text{color:rgba(255,255,255,0.55);font-size:11px;line-height:1.6;margin-bottom:5px;}
-.comm-time{color:rgba(255,255,255,0.3);font-size:9.5px;}
-.comm-likes{display:flex;gap:10px;margin-top:4px;}
-.cl{color:rgba(255,255,255,0.4);font-size:10px;cursor:pointer;}
-.comm-input-row{
-  display:flex;gap:10px;align-items:center;
-  padding:12px 18px;
-  background:#13183A;
-  position:sticky;bottom:0;
-}
-.comm-in{
-  flex:1;background:rgba(255,255,255,0.07);
-  border:1px solid rgba(255,255,255,0.12);
-  border-radius:20px;
-  padding:10px 14px;
-  color:#fff;font-size:12px;outline:none;
-  font-family:'Inter',sans-serif;
-}
-.comm-send{
-  width:36px;height:36px;
-  background:linear-gradient(135deg,#1565FF,#0D47C8);
-  border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:16px;cursor:pointer;
-  box-shadow:0 4px 12px rgba(21,101,255,0.4);
-}
-
-/* ══════════════════════════════
-   QUIZ SCREEN
-══════════════════════════════ */
-.quiz-screen{
-  background:#fff;min-height:100vh;
-  padding-bottom:32px;
-}
-.quiz-header{
+/* ═══════════════════════════════
+   SCREEN 5 — HOME (dark gamified)
+═══════════════════════════════ */
+#s-home{background:var(--dark);padding-bottom:80px;}
+.home-topbar{
   display:flex;align-items:center;justify-content:space-between;
   padding:52px 20px 20px;
 }
-.q-back{
-  width:36px;height:36px;
-  background:var(--bg-white);
-  border:1.5px solid var(--border);
-  border-radius:10px;
+.home-greeting small{display:block;color:var(--text2);font-size:12px;margin-bottom:3px;}
+.home-greeting strong{color:var(--text);font-size:18px;font-weight:800;}
+.home-avatar{
+  width:40px;height:40px;
+  background:linear-gradient(135deg,var(--purple),#B45FFF);
+  border-radius:50%;border:2px solid var(--purple2);
   display:flex;align-items:center;justify-content:center;
-  font-size:16px;cursor:pointer;
+  font-size:20px;
 }
-.q-title-area{flex:1;padding:0 12px;}
-.q-title-area h3{color:var(--text-dark);font-size:14px;font-weight:700;margin-bottom:2px;}
-.q-title-area span{color:var(--text-light);font-size:11px;}
-.q-more{
-  width:34px;height:34px;
-  background:var(--bg-white);
-  border:1.5px solid var(--border);
-  border-radius:10px;
+/* Level ring */
+.level-ring-wrap{
+  display:flex;flex-direction:column;align-items:center;
+  padding:8px 20px 24px;
+}
+.ring-outer{
+  position:relative;
+  width:160px;height:160px;
   display:flex;align-items:center;justify-content:center;
-  font-size:18px;cursor:pointer;
 }
-.quiz-progress{
-  padding:0 20px 20px;
-}
-.q-prog-bar{
-  height:5px;background:var(--bg-white);
-  border-radius:3px;overflow:hidden;margin-bottom:6px;
-}
-.q-prog-fill{height:100%;background:linear-gradient(90deg,#1565FF,#00B4FF);border-radius:3px;}
-.q-prog-label{color:var(--text-light);font-size:10px;text-align:right;}
-.quiz-img{
-  margin:0 20px 24px;
-  height:150px;
-  background:linear-gradient(135deg,#FFF8E1,#FFF3CD);
-  border-radius:18px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:70px;
-  border:1.5px solid rgba(255,193,7,0.2);
-}
-.quiz-q{
-  padding:0 20px 24px;
-  color:var(--text-dark);font-size:15px;font-weight:700;line-height:1.5;
-}
-.q-options{padding:0 20px;}
-.q-opt{
-  width:100%;
-  padding:15px 18px;
-  background:var(--bg-white);
-  border:2px solid var(--border);
-  border-radius:13px;
-  color:var(--text-dark);
-  font-size:13px;font-weight:500;
-  cursor:pointer;margin-bottom:12px;
-  text-align:left;font-family:'Inter',sans-serif;
-  transition:all 0.2s;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.q-opt.correct{
-  border-color:#2ECC71;background:#EDFBF3;color:#1A9E5A;
-}
-.q-opt.wrong{
-  border-color:#FF4444;background:#FFF0F0;color:#CC2222;
-}
-.opt-letter{
-  width:26px;height:26px;
-  background:var(--border);
-  border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:700;color:var(--text-mid);
-  flex-shrink:0;
-}
-.q-opt.correct .opt-letter{background:#2ECC71;color:#fff;}
-.q-opt.wrong .opt-letter{background:#FF4444;color:#fff;}
-
-/* ══════════════════════════════
-   PROFILE SCREEN
-══════════════════════════════ */
-.profile-screen{
-  background:var(--bg-white);min-height:100vh;padding-bottom:80px;
-}
-.profile-top{
-  background:linear-gradient(155deg,#1565FF 0%,#0D47C8 100%);
-  padding:52px 20px 90px;
-  position:relative;overflow:hidden;
-  text-align:center;
-}
-.profile-top::before{
-  content:'';position:absolute;
-  width:200px;height:200px;
-  background:rgba(255,255,255,0.06);
-  border-radius:50%;top:-60px;right:-40px;
-}
-.prof-ava{
-  width:84px;height:84px;
-  background:linear-gradient(135deg,#00B4FF,#7C4DFF);
-  border-radius:50%;border:3px solid rgba(255,255,255,0.4);
-  display:flex;align-items:center;justify-content:center;
-  font-size:36px;margin:0 auto 12px;
-  position:relative;z-index:1;
-}
-.prof-name{color:#fff;font-size:18px;font-weight:700;margin-bottom:3px;position:relative;z-index:1;}
-.prof-id{color:rgba(255,255,255,0.6);font-size:11px;position:relative;z-index:1;}
-.prof-stats{
-  display:flex;justify-content:center;gap:32px;
-  margin-top:16px;position:relative;z-index:1;
-}
-.pstat{text-align:center;}
-.pstat strong{display:block;color:#fff;font-size:16px;font-weight:800;}
-.pstat span{color:rgba(255,255,255,0.6);font-size:10px;}
-.prof-actions{
+.ring-outer svg{position:absolute;top:0;left:0;width:160px;height:160px;}
+.ring-inner{text-align:center;position:relative;z-index:1;}
+.ring-level{color:var(--text);font-size:32px;font-weight:900;font-family:'Inter',sans-serif;line-height:1;}
+.ring-label{color:var(--text2);font-size:11px;margin-top:3px;font-family:'Vazirmatn',sans-serif;}
+.ring-pct{color:var(--purple2);font-size:13px;font-weight:700;margin-top:2px;}
+/* Stats row */
+.stats-row{
   display:flex;gap:10px;
-  margin-top:18px;position:relative;z-index:1;
+  padding:0 20px 22px;
 }
-.pact{
-  flex:1;padding:10px;
+.stat-card{
+  flex:1;background:var(--card);
+  border:1px solid var(--border2);border-radius:14px;
+  padding:12px 8px;text-align:center;
+}
+.stat-icon{font-size:20px;margin-bottom:4px;}
+.stat-val{color:var(--text);font-size:14px;font-weight:800;font-family:'Inter',sans-serif;}
+.stat-lbl{color:var(--text3);font-size:9px;margin-top:2px;font-family:'Vazirmatn',sans-serif;}
+/* Today lesson card */
+.today-section{padding:0 20px 18px;}
+.sec-title{
+  color:var(--text2);font-size:11px;font-weight:700;
+  letter-spacing:0.06em;margin-bottom:12px;
+  display:flex;align-items:center;gap:6px;
+}
+.today-card{
+  background:linear-gradient(135deg,#2A1F6F,#3D1F8F,#5A1FB0);
+  border-radius:18px;padding:20px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden;cursor:pointer;
+}
+.today-card::before{
+  content:'';position:absolute;
+  width:180px;height:180px;
+  background:rgba(255,255,255,0.04);border-radius:50%;
+  top:-60px;right:-40px;
+}
+.tc-text{}
+.tc-tag{
   background:rgba(255,255,255,0.15);
-  border:1px solid rgba(255,255,255,0.25);
-  border-radius:10px;
-  color:#fff;font-size:11px;font-weight:600;
-  cursor:pointer;text-align:center;
+  color:rgba(255,255,255,0.8);font-size:9px;font-weight:700;
+  padding:3px 8px;border-radius:5px;letter-spacing:0.05em;
+  display:inline-block;margin-bottom:6px;
 }
-.pact.primary{background:rgba(255,255,255,0.9);color:var(--blue-mid);}
-.prof-body{
-  margin:-40px 16px 0;
-  position:relative;z-index:2;
+.tc-title{color:#fff;font-size:17px;font-weight:800;margin-bottom:4px;font-family:'Inter',sans-serif;}
+.tc-sub{color:rgba(255,255,255,0.55);font-size:10px;}
+.tc-start-btn{
+  width:36px;height:36px;
+  background:rgba(255,255,255,0.15);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
 }
-.prof-card{
-  background:#fff;
-  border-radius:18px;
-  padding:18px;
-  margin-bottom:12px;
-  box-shadow:0 2px 16px rgba(13,71,200,0.08);
+.start-pill{
+  margin-top:10px;
+  padding:7px 14px;
+  background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);
+  border-radius:8px;
+  color:rgba(255,255,255,0.8);font-size:10px;font-weight:700;
+  display:inline-block;cursor:pointer;
+  font-family:'Vazirmatn',sans-serif;
 }
-.prof-card-title{
-  color:var(--text-dark);font-size:12px;font-weight:700;
-  margin-bottom:14px;letter-spacing:0.03em;
+/* Courses section */
+.courses-section{padding:0 20px;}
+.course-list{display:flex;flex-direction:column;gap:12px;}
+.course-row{
+  background:var(--card);border:1px solid var(--border2);
+  border-radius:16px;padding:14px;
+  display:flex;gap:14px;align-items:center;cursor:pointer;
 }
-.prof-menu-item{
+.cr-thumb{
+  width:62px;height:62px;border-radius:12px;
+  flex-shrink:0;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;font-size:28px;
+}
+.cr-info{flex:1;}
+.cr-name{color:var(--text);font-size:14px;font-weight:700;margin-bottom:4px;font-family:'Vazirmatn',sans-serif;}
+.cr-sub{color:var(--text2);font-size:11px;margin-bottom:8px;font-family:'Vazirmatn',sans-serif;}
+.cr-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 10px;border-radius:8px;
+  font-size:10px;font-weight:700;cursor:pointer;
+  font-family:'Vazirmatn',sans-serif;
+}
+.tag-purple{background:rgba(124,92,252,0.18);color:var(--purple2);border:1px solid rgba(124,92,252,0.3);}
+.tag-teal{background:rgba(0,229,195,0.12);color:var(--teal);border:1px solid rgba(0,229,195,0.25);}
+.tag-pink{background:rgba(255,107,157,0.12);color:var(--pink);border:1px solid rgba(255,107,157,0.25);}
+.lock-icon{font-size:18px;color:var(--text3);}
+
+/* ═══════════════════════════════
+   COURSES LIST SCREEN
+═══════════════════════════════ */
+#s-courses{background:#F5F5FA;padding-bottom:80px;}
+.cl-header{
+  background:#fff;padding:52px 20px 16px;
+  border-bottom:1px solid #EBEBF0;
   display:flex;align-items:center;gap:12px;
-  padding:12px 0;
-  border-bottom:1px solid var(--border);
+}
+.cl-header h2{color:#0D0B1E;font-size:18px;font-weight:800;font-family:'Vazirmatn',sans-serif;}
+.cl-search{
+  margin:14px 16px 0;
+  display:flex;align-items:center;gap:10px;
+  background:#fff;border:1.5px solid #EBEBF0;
+  border-radius:12px;padding:11px 14px;
+}
+.cl-search input{
+  flex:1;border:none;background:transparent;
+  font-size:13px;color:#333;outline:none;
+  font-family:'Vazirmatn',sans-serif;
+}
+.cl-search input::placeholder{color:#BBB;}
+.filter-row{
+  display:flex;gap:8px;padding:12px 16px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.filter-row::-webkit-scrollbar{display:none;}
+.fpill{
+  flex:0 0 auto;padding:7px 16px;
+  border-radius:20px;font-size:11px;font-weight:700;
+  cursor:pointer;white-space:nowrap;
+  font-family:'Vazirmatn',sans-serif;
+  border:1.5px solid #E0E0E8;background:#fff;color:#666;
+}
+.fpill.active{background:var(--purple);border-color:var(--purple);color:#fff;}
+.cl-list{padding:0 16px;display:flex;flex-direction:column;gap:12px;margin-top:4px;}
+.cl-card{
+  background:#fff;border-radius:16px;
+  padding:14px;display:flex;gap:14px;align-items:center;
+  box-shadow:0 2px 12px rgba(0,0,0,0.05);cursor:pointer;
+}
+.cl-thumb{
+  width:72px;height:72px;border-radius:14px;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:32px;
+}
+.cl-info{flex:1;}
+.cl-icon-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+.cl-name{color:#0D0B1E;font-size:14px;font-weight:700;margin-bottom:4px;font-family:'Vazirmatn',sans-serif;}
+.cl-desc{color:#888;font-size:11px;margin-bottom:8px;font-family:'Vazirmatn',sans-serif;}
+.cl-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 12px;border-radius:8px;
+  font-size:10px;font-weight:700;
+  font-family:'Vazirmatn',sans-serif;cursor:pointer;border:none;
+}
+.cl-btn-purple{background:rgba(124,92,252,0.1);color:var(--purple);}
+.cl-btn-teal{background:rgba(0,229,195,0.1);color:#00B89F;}
+.cl-btn-pink{background:rgba(255,107,157,0.1);color:#E0507A;}
+
+/* ═══════════════════════════════
+   BOTTOM NAV
+═══════════════════════════════ */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;width:390px;
+  background:var(--dark2);
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:10px 0 18px;z-index:50;
+}
+.bottom-nav-light{
+  position:fixed;bottom:0;left:0;width:390px;
+  background:#fff;
+  border-top:1px solid #EBEBF0;
+  display:flex;align-items:center;
+  padding:10px 0 18px;z-index:50;
+}
+.nav-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
   cursor:pointer;
 }
-.prof-menu-item:last-child{border-bottom:none;}
-.pmi-icon{
-  width:36px;height:36px;
-  border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;flex-shrink:0;
-}
-.pmi-info{flex:1;}
-.pmi-name{color:var(--text-dark);font-size:12px;font-weight:600;}
-.pmi-sub{color:var(--text-light);font-size:10px;margin-top:1px;}
-.pmi-arrow{color:var(--text-light);font-size:14px;}
-.pmi-blue{background:#EEF3FF;}
-.pmi-purple{background:#F3EEFF;}
-.pmi-green{background:#EDFBF3;}
-.pmi-orange{background:#FFF4EE;}
-
-/* Shared elements */
-.scr-back{
-  position:absolute;top:52px;left:20px;
-  width:36px;height:36px;
-  background:rgba(255,255,255,0.15);
-  border:1px solid rgba(255,255,255,0.25);
-  border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;cursor:pointer;color:#fff;z-index:10;
-}
-.scr-back-dark{
-  position:absolute;top:52px;left:20px;
-  width:36px;height:36px;
-  background:rgba(255,255,255,0.1);
-  border:1px solid rgba(255,255,255,0.15);
-  border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;cursor:pointer;color:#fff;z-index:10;
-}
+.nav-item .ni{font-size:22px;}
+.nav-item span{font-size:9px;font-weight:600;color:var(--text3);font-family:'Vazirmatn',sans-serif;}
+.nav-item.active span{color:var(--purple2);}
+.nav-item-light span{color:#BBB;}
+.nav-item-light.active span{color:var(--purple);}
 </style>
 </head>
 <body>
 
-<!-- ══════════ SCREEN 1: SPLASH ══════════ -->
+<!-- ═══════════ SPLASH ═══════════ -->
 <div class="screen active" id="s-splash">
-  <div class="splash-bg"></div>
-  <div class="splash-books-bg">
-    <div class="book-thumb">📚</div>
-    <div class="book-thumb">📖</div>
-    <div class="book-thumb">🎓</div>
-    <div class="book-thumb">📝</div>
-    <div class="book-thumb">📗</div>
-    <div class="book-thumb">📘</div>
+  <div class="status-bar" style="position:relative;z-index:3;">
+    <span>9:41</span>
+    <div class="status-icons">📶 🛜 🔋</div>
   </div>
-  <div class="splash-center">
-    <div class="brand-icon">
-      <svg viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="8" y="14" width="52" height="36" rx="4" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
-        <path d="M34 14 L34 50" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
-        <path d="M14 22 Q24 20 34 24 Q44 20 54 22" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M14 30 Q24 28 34 32 Q44 28 54 30" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round"/>
-        <path d="M14 38 Q24 36 34 40 Q44 36 54 38" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"/>
-        <circle cx="34" cy="57" r="5" fill="rgba(255,255,255,0.9)"/>
-        <path d="M28 57 L40 57" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
-      </svg>
+  <!-- starry sky background -->
+  <div style="position:absolute;inset:0;background:linear-gradient(175deg,#0A0818 0%,#120D2E 40%,#0A0818 100%);z-index:0;"></div>
+  <!-- purple aurora -->
+  <div style="position:absolute;top:0;left:0;right:0;height:50%;background:radial-gradient(ellipse 100% 60% at 50% -10%,rgba(100,60,220,0.35) 0%,transparent 70%);z-index:0;"></div>
+  <!-- star dots -->
+  <div style="position:absolute;inset:0;z-index:0;opacity:0.6;">
+    <div style="position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;top:12%;left:20%;box-shadow:0 0 4px #fff;"></div>
+    <div style="position:absolute;width:1.5px;height:1.5px;background:#fff;border-radius:50%;top:18%;left:70%;box-shadow:0 0 3px #fff;"></div>
+    <div style="position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;top:8%;left:50%;box-shadow:0 0 4px #fff;"></div>
+    <div style="position:absolute;width:1px;height:1px;background:#fff;border-radius:50%;top:25%;left:35%;"></div>
+    <div style="position:absolute;width:1.5px;height:1.5px;background:#fff;border-radius:50%;top:30%;left:80%;box-shadow:0 0 3px #fff;"></div>
+    <div style="position:absolute;width:2px;height:2px;background:#C8B8FF;border-radius:50%;top:5%;left:88%;box-shadow:0 0 5px #C8B8FF;"></div>
+  </div>
+  <!-- mountain landscape SVG -->
+  <div style="position:absolute;bottom:0;left:0;right:0;z-index:1;">
+    <svg viewBox="0 0 390 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+      <defs>
+        <linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#7C5CFC" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="#4A3A9E" stop-opacity="0.4"/>
+        </linearGradient>
+        <linearGradient id="m1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2A2060"/>
+          <stop offset="100%" stop-color="#110D30"/>
+        </linearGradient>
+        <linearGradient id="m2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1E1850"/>
+          <stop offset="100%" stop-color="#0D0B28"/>
+        </linearGradient>
+        <linearGradient id="glow1" x1="0.5" y1="0" x2="0.5" y2="1">
+          <stop offset="0%" stop-color="#7C5CFC" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#7C5CFC" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <!-- glow horizon -->
+      <ellipse cx="195" cy="200" rx="160" ry="60" fill="url(#glow1)" opacity="0.5"/>
+      <!-- back mountains -->
+      <polygon points="0,220 60,120 120,180 180,100 240,160 300,90 360,140 390,130 390,320 0,320" fill="url(#m1)"/>
+      <!-- front mountains -->
+      <polygon points="0,270 80,180 160,230 220,160 290,220 340,175 390,210 390,320 0,320" fill="url(#m2)"/>
+      <!-- ground glow -->
+      <ellipse cx="195" cy="290" rx="150" ry="30" fill="rgba(124,92,252,0.2)"/>
+      <!-- person silhouette -->
+      <g transform="translate(175,210)">
+        <!-- body -->
+        <rect x="10" y="12" width="10" height="22" rx="3" fill="#0D0B1E"/>
+        <!-- head -->
+        <circle cx="15" cy="8" r="7" fill="#0D0B1E"/>
+        <!-- backpack -->
+        <rect x="17" y="14" width="8" height="14" rx="2" fill="#1A1848"/>
+        <!-- legs -->
+        <rect x="10" y="32" width="5" height="14" rx="2" fill="#0D0B1E" transform="rotate(5,12,38)"/>
+        <rect x="16" y="32" width="5" height="14" rx="2" fill="#0D0B1E" transform="rotate(-3,19,38)"/>
+      </g>
+      <!-- ground fill -->
+      <rect x="0" y="280" width="390" height="40" fill="#0A0818"/>
+    </svg>
+  </div>
+  <!-- purple bottom glow -->
+  <div style="position:absolute;bottom:60px;left:50%;transform:translateX(-50%);width:280px;height:80px;background:radial-gradient(ellipse,rgba(124,92,252,0.4) 0%,transparent 70%);z-index:1;border-radius:50%;"></div>
+
+  <!-- content -->
+  <div class="splash-content" style="position:relative;z-index:3;">
+    <div class="splash-logo-row">
+      <div class="lingua-icon">L</div>
+      <span class="lingua-name">Lingua</span>
     </div>
-    <div class="brand-label">E — LEARNING</div>
-    <div class="splash-title">Welcome to the online<br>E-Learning App</div>
-    <p class="splash-sub">Learn anything, anywhere. Expert teachers and proven methods to reach your goals.</p>
+    <div class="splash-title">
+      Better <span class="hi">English</span><br>Bigger Dreams
+    </div>
+    <p class="splash-sub">با یادگیری انگلیسی<br>با دنیای فرصت‌ها روبرو شو</p>
+    <div class="splash-btns">
+      <button class="btn-primary" onclick="goTo('s-onboard')">← شروع کنید</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ ONBOARD ═══════════ -->
+<div class="screen" id="s-onboard">
+  <div class="status-bar" style="background:#0D0B1E;">
+    <span style="color:#fff;">9:41</span>
+    <div class="status-icons" style="color:#fff;">📶 🛜 🔋</div>
+  </div>
+  <div onclick="goTo('s-splash')" style="position:absolute;top:46px;right:20px;z-index:10;" class="back-btn">→</div>
+  <div class="onboard-top">
+    <div class="onboard-glow"></div>
+    <div class="onboard-girl" style="position:relative;z-index:2;">
+      <div class="girl-emoji">👩‍🎧</div>
+    </div>
+    <div class="flag-bubble">🇬🇧</div>
+    <div class="chat-bubble">Hello! 👋</div>
+    <!-- floating emoji badges -->
+    <div style="position:absolute;bottom:60px;left:22px;z-index:3;font-size:28px;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.3));">😊</div>
+    <div style="position:absolute;top:40px;left:30px;z-index:3;font-size:22px;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.3));">🌟</div>
+  </div>
+  <div class="onboard-body">
+    <div class="onboard-title">یادگیری طبیعی<br>مثل مکالمه واقعی</div>
+    <p class="onboard-sub">با روش‌های مدرن یادگیری، تمرین‌های تعاملی و محتوای اصیل، انگلیسی را در دل زندگی یاد بگیر</p>
     <div class="onboard-dots">
       <div class="od active"></div>
       <div class="od"></div>
       <div class="od"></div>
     </div>
-    <button class="splash-btn" onclick="goTo('s-splash2')">CONTINUES</button>
+    <button class="btn-primary-light" onclick="goTo('s-auth')">← بعدی</button>
+    <button class="btn-ghost-dark" onclick="goTo('s-auth')">پرش از این مرحله</button>
   </div>
 </div>
 
-<!-- ══════════ SCREEN 2: ONBOARD 2 ══════════ -->
-<div class="screen" id="s-splash2">
-  <div class="splash-bg"></div>
-  <div class="splash-books-bg">
-    <div class="book-thumb">📚</div>
-    <div class="book-thumb">📖</div>
-    <div class="book-thumb">🎓</div>
-    <div class="book-thumb">📝</div>
-    <div class="book-thumb">📗</div>
-    <div class="book-thumb">📘</div>
-  </div>
-  <div class="splash-center">
-    <div class="brand-icon">
-      <svg viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="8" y="14" width="52" height="36" rx="4" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
-        <path d="M34 14 L34 50" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
-        <path d="M14 22 Q24 20 34 24 Q44 20 54 22" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M14 30 Q24 28 34 32 Q44 28 54 30" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round"/>
-        <path d="M14 38 Q24 36 34 40 Q44 36 54 38" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"/>
-        <circle cx="34" cy="57" r="5" fill="rgba(255,255,255,0.9)"/>
-        <path d="M28 57 L40 57" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
-      </svg>
-    </div>
-    <div class="brand-label">E — LEARNING</div>
-    <div class="splash-title">Learn from the best<br>teachers worldwide</div>
-    <p class="splash-sub">Access hundreds of courses in English, Mathematics, Science, and more — all in one place.</p>
-    <div class="onboard-dots">
-      <div class="od"></div>
-      <div class="od active"></div>
-      <div class="od"></div>
-    </div>
-    <button class="splash-btn" onclick="goTo('s-auth')">LET'S GO</button>
-  </div>
-</div>
-
-<!-- ══════════ SCREEN 3: AUTH ══════════ -->
+<!-- ═══════════ REGISTER ═══════════ -->
 <div class="screen" id="s-auth">
-  <div class="auth-screen">
-    <div class="auth-top">
-      <div class="auth-brand-icon">
-        <svg viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:44px;height:44px;">
-          <rect x="8" y="14" width="52" height="36" rx="4" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
-          <path d="M34 14 L34 50" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
-          <path d="M14 22 Q24 20 34 24 Q44 20 54 22" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="auth-title">Log in or sign up</div>
-      <div class="auth-sub">Select a preferred login method</div>
+  <div class="status-bar" style="color:rgba(255,255,255,0.6);">
+    <span>9:41</span>
+    <div class="status-icons">📶 🛜 🔋</div>
+  </div>
+  <div class="auth-wrap">
+    <div class="auth-head">
+      <div onclick="goTo('s-onboard')" class="back-btn" style="margin-bottom:20px;">→</div>
+      <h2>ثبت‌نام</h2>
+      <p>اطلاعات خود را وارد کنید</p>
     </div>
-    <div class="auth-body">
-      <div class="auth-label">Phone number</div>
-      <div class="auth-field">
-        <span class="fi">📱</span>
-        <input type="tel" placeholder="Enter your phone number" dir="ltr">
-      </div>
-      <div class="auth-label">Email address</div>
-      <div class="auth-field">
-        <span class="fi">✉️</span>
-        <input type="email" placeholder="Enter your email" dir="ltr">
-      </div>
-      <button class="auth-btn-primary" onclick="goTo('s-interests')">LOGIN</button>
-      <div class="auth-divider"><span>or continue with</span></div>
-      <a class="social-btn fb" onclick="goTo('s-home')">
-        <span style="font-size:18px;">🔵</span>
-        Continue with Facebook
-      </a>
-      <a class="social-btn gg" onclick="goTo('s-home')">
-        <span style="font-size:18px;">🔴</span>
-        Continue with Google
-      </a>
-      <div class="auth-bottom">Don't have an account? <a onclick="goTo('s-interests')">Sign Up</a></div>
-      <div class="auth-tos">By registering or skipping this step you agree to our <a href="#">Terms of Service</a></div>
+
+    <label class="field-label">نام و نام‌خانوادگی</label>
+    <div class="field-wrap">
+      <span class="field-icon">👤</span>
+      <input type="text" id="inputName" placeholder="مثال: سارا احمدی">
+    </div>
+
+    <label class="field-label">شماره تلفن</label>
+    <div class="field-wrap">
+      <span class="field-icon">📱</span>
+      <input type="tel" id="inputPhone" placeholder="09..." dir="ltr">
+      <span style="color:var(--text3);font-size:12px;font-family:'Inter',sans-serif;">IR</span>
+    </div>
+
+    <label class="field-label">رمز عبور</label>
+    <div class="field-wrap">
+      <span class="field-icon">🔒</span>
+      <input type="password" id="inputPass" placeholder="حداقل ۶ کاراکتر">
+      <span style="font-size:16px;cursor:pointer;color:var(--text3);">👁</span>
+    </div>
+
+    <div id="authError" style="color:#FF6B9D;font-size:12px;text-align:right;margin:-6px 0 10px;display:none;font-family:'Vazirmatn',sans-serif;"></div>
+
+    <div class="auth-btn">
+      <button class="btn-primary" onclick="doRegister()">← ادامه</button>
+    </div>
+    <div class="auth-divider"><span>یا</span></div>
+    <div style="text-align:center;color:var(--text2);font-size:12px;">
+      قبلاً ثبت‌نام کردید؟ <span onclick="doRegister()" style="color:var(--purple2);font-weight:700;cursor:pointer;">ورود</span>
     </div>
   </div>
 </div>
 
-<!-- ══════════ SCREEN 4: INTERESTS ══════════ -->
-<div class="screen" id="s-interests">
-  <div class="interests-screen">
-    <div class="int-header" style="position:relative;">
-      <div class="int-back" onclick="goTo('s-auth')">←</div>
-      <div class="int-skip" onclick="goTo('s-home')">Skip</div>
-      <div class="int-title">Choose your<br>interests</div>
-      <p class="int-sub">Select the subjects you want to learn</p>
+<!-- ═══════════ LEVEL SELECT ═══════════ -->
+<div class="screen" id="s-levels">
+  <div class="status-bar" style="color:rgba(255,255,255,0.6);">
+    <span>9:41</span>
+    <div class="status-icons">📶 🛜 🔋</div>
+  </div>
+  <div class="levels-wrap">
+    <div onclick="goTo('s-auth')" class="back-btn" style="margin-bottom:22px;">→</div>
+    <div style="position:absolute;top:46px;left:20px;">
+      <span onclick="goTo('s-home')" style="color:var(--text3);font-size:13px;font-weight:600;cursor:pointer;">رد کردن</span>
     </div>
-    <div class="int-grid" id="intGrid">
-      <div class="int-item sel" onclick="toggleInt(this)">
-        <div class="int-icon-wrap">🔬</div>
-        <div class="int-name">Biology</div>
+    <div class="levels-head">
+      <h2>سطح خود را انتخاب کن</h2>
+      <p style="color:var(--text2);font-size:13px;margin-top:6px;">کدام سطح به توانایی شما نزدیک‌تر است؟</p>
+    </div>
+
+    <div class="lvl-grid">
+      <!-- پایه -->
+      <div class="lvl-item" onclick="pickLevel(this)">
+        <div class="lvl-circle" style="background:linear-gradient(135deg,#1A2A5E,#0D1A40);">
+          <svg viewBox="0 0 44 44" fill="none"><rect x="7" y="11" width="30" height="22" rx="3" fill="none" stroke="#4FC3F7" stroke-width="1.8"/><line x1="11" y1="17" x2="33" y2="17" stroke="#4FC3F7" stroke-width="1.5" stroke-linecap="round"/><line x1="11" y1="22" x2="26" y2="22" stroke="#4FC3F7" stroke-width="1.2" stroke-linecap="round"/><line x1="11" y1="27" x2="29" y2="27" stroke="#4FC3F7" stroke-width="1.2" stroke-linecap="round"/><text x="22" y="39" text-anchor="middle" font-size="7" fill="#4FC3F7" font-weight="800" font-family="Inter">A1</text></svg>
+        </div>
+        <div class="lvl-label"><strong>پایه</strong><span>0 → 5</span></div>
       </div>
-      <div class="int-item sel" onclick="toggleInt(this)">
-        <div class="int-icon-wrap">➗</div>
-        <div class="int-name">Mathematics</div>
+      <!-- مقدماتی -->
+      <div class="lvl-item" onclick="pickLevel(this)">
+        <div class="lvl-circle" style="background:linear-gradient(135deg,#0F2A1E,#0A1D14);">
+          <svg viewBox="0 0 44 44" fill="none"><rect x="5" y="10" width="14" height="18" rx="2" fill="none" stroke="#06D6A0" stroke-width="1.8"/><rect x="25" y="10" width="14" height="18" rx="2" fill="none" stroke="#06D6A0" stroke-width="1.8"/><line x1="8" y1="16" x2="16" y2="16" stroke="#06D6A0" stroke-width="1.2"/><line x1="28" y1="16" x2="36" y2="16" stroke="#06D6A0" stroke-width="1.2"/><text x="22" y="36" text-anchor="middle" font-size="7" fill="#06D6A0" font-weight="800" font-family="Inter">A2</text></svg>
+        </div>
+        <div class="lvl-label"><strong>مقدماتی</strong><span>5 → 10</span></div>
       </div>
-      <div class="int-item sel" onclick="toggleInt(this)">
-        <div class="int-icon-wrap">🔤</div>
-        <div class="int-name">English</div>
+      <!-- پیشرفته ۱ -->
+      <div class="lvl-item" onclick="pickLevel(this)">
+        <div class="lvl-circle" style="background:linear-gradient(135deg,#2A1A4E,#1A0E38);">
+          <svg viewBox="0 0 44 44" fill="none"><rect x="5" y="22" width="10" height="14" rx="1.5" fill="none" stroke="#9B7DFF" stroke-width="1.8"/><rect x="17" y="15" width="10" height="21" rx="1.5" fill="none" stroke="#9B7DFF" stroke-width="1.8"/><rect x="29" y="8" width="10" height="28" rx="1.5" fill="none" stroke="#9B7DFF" stroke-width="1.8"/><text x="22" y="41" text-anchor="middle" font-size="7" fill="#9B7DFF" font-weight="800" font-family="Inter">B1</text></svg>
+        </div>
+        <div class="lvl-label"><strong>پیشرفته ۱</strong><span>10 → 15</span></div>
       </div>
-      <div class="int-item" onclick="toggleInt(this)">
-        <div class="int-icon-wrap">⚛️</div>
-        <div class="int-name">Physics</div>
+      <!-- پیشرفته ۲ -->
+      <div class="lvl-item" onclick="pickLevel(this)">
+        <div class="lvl-circle" style="background:linear-gradient(135deg,#2A2010,#1A1408);">
+          <svg viewBox="0 0 44 44" fill="none"><polygon points="22,5 26,15 37,15 29,22 32,33 22,26 12,33 15,22 7,15 18,15" fill="none" stroke="#FFD166" stroke-width="1.8"/><text x="22" y="38" text-anchor="middle" font-size="7" fill="#FFD166" font-weight="800" font-family="Inter">B2</text></svg>
+        </div>
+        <div class="lvl-label"><strong>پیشرفته ۲</strong><span>15 → 30</span></div>
       </div>
-      <div class="int-item" onclick="toggleInt(this)">
-        <div class="int-icon-wrap">🧪</div>
-        <div class="int-name">Chemistry</div>
+      <!-- پیشرفته ۳ -->
+      <div class="lvl-item" onclick="pickLevel(this)">
+        <div class="lvl-circle" style="background:linear-gradient(135deg,#2A102A,#1A081A);">
+          <svg viewBox="0 0 44 44" fill="none"><circle cx="22" cy="18" r="11" fill="none" stroke="#FF6B9D" stroke-width="1.8"/><circle cx="22" cy="18" r="6" fill="none" stroke="#FF6B9D" stroke-width="1.2" opacity="0.6"/><circle cx="22" cy="18" r="2" fill="#FF6B9D"/><text x="22" y="37" text-anchor="middle" font-size="7" fill="#FF6B9D" font-weight="800" font-family="Inter">B3</text></svg>
+        </div>
+        <div class="lvl-label"><strong>پیشرفته ۳</strong><span>30 → 40</span></div>
       </div>
-      <div class="int-item" onclick="toggleInt(this)">
-        <div class="int-icon-wrap">📚</div>
-        <div class="int-name">Library</div>
+      <!-- حرفه‌ای -->
+      <div class="lvl-item" onclick="pickLevel(this)">
+        <div class="lvl-circle" style="background:linear-gradient(135deg,#102A2A,#081A1A);">
+          <svg viewBox="0 0 44 44" fill="none"><rect x="7" y="9" width="30" height="22" rx="3" fill="none" stroke="#00E5C3" stroke-width="1.8"/><text x="22" y="23" text-anchor="middle" font-size="9" fill="#00E5C3" font-weight="900" font-family="Inter">C1</text><text x="22" y="37" text-anchor="middle" font-size="7" fill="#00E5C3" font-weight="700" font-family="Vazirmatn">حرفه‌ای</text></svg>
+        </div>
+        <div class="lvl-label"><strong>حرفه‌ای</strong><span>40 → 60</span></div>
       </div>
-      <div class="int-item" onclick="toggleInt(this)">
-        <div class="int-icon-wrap">🧫</div>
-        <div class="int-name">Laboratory</div>
+      <!-- آیلتس ۱ -->
+      <div class="lvl-item" onclick="pickLevel(this)">
+        <div class="lvl-circle" style="background:linear-gradient(135deg,#101A3A,#080E22);">
+          <svg viewBox="0 0 44 44" fill="none"><rect x="6" y="8" width="32" height="24" rx="3" fill="none" stroke="#7C5CFC" stroke-width="1.8"/><text x="22" y="22" text-anchor="middle" font-size="8" fill="#7C5CFC" font-weight="900" font-family="Inter">IELTS</text><text x="22" y="36" text-anchor="middle" font-size="7.5" fill="#7C5CFC" font-weight="700" font-family="Inter">1</text></svg>
+        </div>
+        <div class="lvl-label"><strong>آیلتس ۱</strong><span>60 → 75</span></div>
       </div>
-      <div class="int-item" onclick="toggleInt(this)">
-        <div class="int-icon-wrap">🧩</div>
-        <div class="int-name">Reasoning</div>
+      <!-- آیلتس ۲ -->
+      <div class="lvl-item" onclick="pickLevel(this)">
+        <div class="lvl-circle" style="background:linear-gradient(135deg,#0D1A38,#080E20);">
+          <svg viewBox="0 0 44 44" fill="none"><rect x="6" y="8" width="32" height="24" rx="3" fill="none" stroke="#4FC3F7" stroke-width="1.8"/><text x="22" y="22" text-anchor="middle" font-size="8" fill="#4FC3F7" font-weight="900" font-family="Inter">IELTS</text><text x="22" y="36" text-anchor="middle" font-size="7.5" fill="#4FC3F7" font-weight="700" font-family="Inter">2</text></svg>
+        </div>
+        <div class="lvl-label"><strong>آیلتس ۲</strong><span>75 → 90</span></div>
       </div>
-      <div class="int-item" onclick="toggleInt(this)">
-        <div class="int-icon-wrap">⚡</div>
-        <div class="int-name">Physics II</div>
+      <!-- فول حرفه‌ای -->
+      <div class="lvl-item" onclick="pickLevel(this)">
+        <div class="lvl-circle" style="background:linear-gradient(135deg,#2A2000,#1A1400);">
+          <svg viewBox="0 0 44 44" fill="none"><polygon points="22,4 26,15 38,15 29,23 32,35 22,27 12,35 15,23 6,15 18,15" fill="#FFD166" opacity="0.25"/><polygon points="22,4 26,15 38,15 29,23 32,35 22,27 12,35 15,23 6,15 18,15" fill="none" stroke="#FFD166" stroke-width="1.5"/><text x="22" y="39" text-anchor="middle" font-size="6" fill="#FFD166" font-weight="800" font-family="Inter">100%</text></svg>
+        </div>
+        <div class="lvl-label"><strong>فول حرفه‌ای</strong><span>90 → 100</span></div>
       </div>
     </div>
-    <button class="int-next" onclick="goTo('s-home')">NEXT</button>
+
+    <button class="btn-primary" onclick="goHome()">← بعدی</button>
   </div>
 </div>
 
-<!-- ══════════ SCREEN 5: HOME ══════════ -->
+<!-- ═══════════ HOME ═══════════ -->
 <div class="screen" id="s-home">
-  <div class="home-screen">
-    <div class="home-header">
-      <div class="home-top-row">
-        <div class="home-greeting">
-          <small>Hi, Alina 👋</small>
-          <strong>You are enroll in English</strong>
-        </div>
-        <div style="display:flex;gap:8px;">
-          <div class="nav-icon" style="width:36px;height:36px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🔍</div>
-          <div class="home-notif">🔔<div class="notif-dot"></div></div>
-        </div>
-      </div>
-      <div class="home-search">
-        <span>🔍</span>
-        <input type="text" placeholder="Search here">
-      </div>
+  <div class="status-bar" style="color:rgba(255,255,255,0.6);">
+    <span>9:41</span>
+    <div class="status-icons">📶 🛜 🔋</div>
+  </div>
+  <!-- top bar -->
+  <div class="home-topbar">
+    <div class="home-greeting">
+      <small>سلام، <span id="displayName">سارا</span>! 🎉</small>
+      <strong>خوش اومدی به دنیای محبت</strong>
     </div>
+    <div class="home-avatar">🧑‍🎓</div>
+  </div>
 
-    <!-- Featured -->
-    <div class="featured-wrap">
-      <div class="featured-banner" onclick="goTo('s-lesson')">
-        <div style="flex:1;">
-          <div class="feat-tag">FEATURED</div>
-          <div class="feat-title">Business<br>MasterClass 1</div>
-          <div class="feat-badge">🎓 Business</div>
-          <br>
-          <button class="feat-view-btn">VIEW</button>
-        </div>
-        <div class="feat-img">📊</div>
+  <!-- Level ring -->
+  <div class="level-ring-wrap">
+    <div class="ring-outer">
+      <svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#7C5CFC"/>
+            <stop offset="100%" stop-color="#00E5C3"/>
+          </linearGradient>
+        </defs>
+        <!-- track -->
+        <circle cx="80" cy="80" r="68" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="12"/>
+        <!-- progress arc — 70% = 301.6 of 427.4 circumference -->
+        <circle cx="80" cy="80" r="68" fill="none" stroke="url(#ringGrad)"
+          stroke-width="12" stroke-linecap="round"
+          stroke-dasharray="299 129"
+          stroke-dashoffset="107"
+          transform="rotate(-90 80 80)"/>
+      </svg>
+      <div class="ring-inner">
+        <div class="ring-level" id="homeLevel">A2</div>
+        <div class="ring-label">سطح فعلی</div>
+        <div class="ring-pct">70%</div>
       </div>
     </div>
+  </div>
 
-    <!-- Top search / tags -->
-    <div class="sec-head">
-      <h3>Top search</h3>
-      <span class="sec-see">See all &rsaquo;</span>
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon">⚡</div>
+      <div class="stat-val">2,450</div>
+      <div class="stat-lbl">XP</div>
     </div>
-    <div class="tags-row">
-      <div class="tag-pill active">ALL COURSE</div>
-      <div class="tag-pill" onclick="this.parentNode.querySelectorAll('.tag-pill').forEach(t=>t.classList.remove('active'));this.classList.add('active');">DESIGN</div>
-      <div class="tag-pill" onclick="this.parentNode.querySelectorAll('.tag-pill').forEach(t=>t.classList.remove('active'));this.classList.add('active');">FINANCE</div>
-      <div class="tag-pill" onclick="this.parentNode.querySelectorAll('.tag-pill').forEach(t=>t.classList.remove('active'));this.classList.add('active');">ENGLISH</div>
-      <div class="tag-pill" onclick="this.parentNode.querySelectorAll('.tag-pill').forEach(t=>t.classList.remove('active'));this.classList.add('active');">SCIENCE</div>
+    <div class="stat-card">
+      <div class="stat-icon">🔥</div>
+      <div class="stat-val">12</div>
+      <div class="stat-lbl">Streak روز</div>
     </div>
+    <div class="stat-card">
+      <div class="stat-icon">📖</div>
+      <div class="stat-val">3/6</div>
+      <div class="stat-lbl">درس امروز</div>
+    </div>
+  </div>
 
-    <!-- Featured courses -->
-    <div class="sec-head">
-      <h3>Featured</h3>
-      <span class="sec-see">See all &rsaquo;</span>
+  <!-- Today's lesson -->
+  <div class="today-section">
+    <div class="sec-title">📅 درس امروز</div>
+    <div class="today-card" onclick="goTo('s-courses')">
+      <div class="tc-text">
+        <div class="tc-tag">GRAMMAR</div>
+        <div class="tc-title">Present Perfect</div>
+        <div class="tc-sub">ادامه‌ی آموزش دیروز...</div>
+        <div class="start-pill">← شروع ببینم</div>
+      </div>
+      <div class="tc-start-btn">▶</div>
     </div>
-    <div class="courses-scroll">
-      <div class="course-card" onclick="goTo('s-lesson')">
-        <div class="course-thumb cc1">
-          📈
-          <div class="course-thumb-label">Business</div>
-        </div>
-        <div class="course-info">
-          <div class="course-name">Business MasterClass</div>
-          <div class="course-cat cat-biz">Business</div>
-          <div class="course-dur">24 hrs</div>
-        </div>
-      </div>
-      <div class="course-card" onclick="goTo('s-lesson')">
-        <div class="course-thumb cc2">
-          💃
-          <div class="course-thumb-label">Physics</div>
-        </div>
-        <div class="course-info">
-          <div class="course-name">Learn Salsa</div>
-          <div class="course-cat cat-phy">Physics</div>
-          <div class="course-dur">99 hrs</div>
-        </div>
-      </div>
-      <div class="course-card" onclick="goTo('s-lesson')">
-        <div class="course-thumb cc3">
-          🎨
-          <div class="course-thumb-label">Design</div>
-        </div>
-        <div class="course-info">
-          <div class="course-name">UI/UX Design</div>
-          <div class="course-cat cat-des">Design</div>
-          <div class="course-dur">36 hrs</div>
-        </div>
-      </div>
-      <div class="course-card" onclick="goTo('s-lesson')">
-        <div class="course-thumb cc4">
-          🔤
-          <div class="course-thumb-label">English</div>
-        </div>
-        <div class="course-info">
-          <div class="course-name">English A1→C2</div>
-          <div class="course-cat cat-eng">English</div>
-          <div class="course-dur">120 hrs</div>
-        </div>
-      </div>
-    </div>
+  </div>
 
-    <!-- Recent courses -->
-    <div class="sec-head">
-      <h3>Continue Learning</h3>
-      <span class="sec-see">See all &rsaquo;</span>
-    </div>
-    <div class="recent-list">
-      <div class="recent-card" onclick="goTo('s-lesson')">
-        <div class="rec-thumb" style="background:linear-gradient(135deg,#EEF3FF,#D6E4FF);">🔤</div>
-        <div class="rec-info">
-          <div class="rec-name">English Fundamentals</div>
-          <div class="rec-sub">Lesson 12 of 48 · 24 hrs total</div>
-          <div class="rec-progress"><div class="rec-bar" style="width:25%;"></div></div>
-          <div class="rec-pct">25% complete</div>
+  <!-- Courses shortcut -->
+  <div class="courses-section">
+    <div class="sec-title">🎓 دوره‌های من</div>
+    <div class="course-list">
+      <div class="course-row" onclick="goTo('s-courses')">
+        <div class="cr-thumb" style="background:linear-gradient(135deg,#1A1838,#2A1F6F);">💬</div>
+        <div class="cr-info">
+          <div class="cr-name">مکالمه روزمره</div>
+          <div class="cr-sub">مکالمه در موقعیت‌های واقعی</div>
+          <div class="cr-tag tag-purple">← بستن داره یبینم</div>
         </div>
       </div>
-      <div class="recent-card" onclick="goTo('s-lesson')">
-        <div class="rec-thumb" style="background:linear-gradient(135deg,#F3EEFF,#E0D6FF);">➗</div>
-        <div class="rec-info">
-          <div class="rec-name">Calculus & Analysis</div>
-          <div class="rec-sub">Lesson 5 of 32 · 40 hrs total</div>
-          <div class="rec-progress"><div class="rec-bar" style="width:16%;"></div></div>
-          <div class="rec-pct">16% complete</div>
+      <div class="course-row" onclick="goTo('s-courses')">
+        <div class="cr-thumb" style="background:linear-gradient(135deg,#0F2A20,#0A1D14);">🎓</div>
+        <div class="cr-info">
+          <div class="cr-name">لایتس</div>
+          <div class="cr-sub">آمادگی کامل برای آزمون</div>
+          <div class="cr-tag tag-teal">← شروع بشیم</div>
         </div>
       </div>
     </div>
@@ -1147,290 +819,192 @@ body{
 
   <!-- Bottom nav -->
   <div class="bottom-nav">
-    <div class="nav-item active" onclick="goTo('s-home')">
-      <div class="ni">🔍</div>
-      <span>Discover</span>
+    <div class="nav-item active">
+      <div class="ni">🏠</div>
+      <span>خانه</span>
     </div>
-    <div class="nav-item" onclick="goTo('s-lesson')">
-      <div class="ni">📖</div>
-      <span>My Course</span>
+    <div class="nav-item" onclick="goTo('s-courses')">
+      <div class="ni">📚</div>
+      <span>دوره‌ها</span>
     </div>
-    <div class="nav-add">＋</div>
-    <div class="nav-item" onclick="goTo('s-lesson')">
-      <div class="ni">💬</div>
-      <span>Chat</span>
+    <div class="nav-item">
+      <div class="ni">🏆</div>
+      <span>رتبه‌بندی</span>
     </div>
-    <div class="nav-item" onclick="goTo('s-profile')">
+    <div class="nav-item">
       <div class="ni">👤</div>
-      <span>Account</span>
+      <span>پروفایل</span>
     </div>
   </div>
 </div>
 
-<!-- ══════════ SCREEN 6: LESSON / VIDEO ══════════ -->
-<div class="screen" id="s-lesson">
-  <div class="lesson-screen">
-    <div class="scr-back-dark" onclick="goTo('s-home')" style="position:relative;margin:52px 0 0 18px;">←</div>
+<!-- ═══════════ COURSES LIST ═══════════ -->
+<div class="screen" id="s-courses">
+  <div style="background:#fff;">
+    <div class="cl-header">
+      <div onclick="goTo('s-home')" style="width:36px;height:36px;background:#F5F5FA;border:1.5px solid #EBEBF0;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;flex-shrink:0;">→</div>
+      <h2 style="color:#0D0B1E;font-size:18px;font-weight:800;font-family:'Vazirmatn',sans-serif;">دوره‌های آموزشی</h2>
+    </div>
+    <div class="cl-search">
+      <span style="font-size:16px;opacity:0.4;">🔍</span>
+      <input type="text" placeholder="جست‌وجو کنید...">
+    </div>
+    <div class="filter-row">
+      <div class="fpill active" onclick="filterCourse(this)">همه</div>
+      <div class="fpill" onclick="filterCourse(this)">مقدماتی</div>
+      <div class="fpill" onclick="filterCourse(this)">میانه</div>
+      <div class="fpill" onclick="filterCourse(this)">پیشرفته</div>
+      <div class="fpill" onclick="filterCourse(this)">آیلتس</div>
+    </div>
+  </div>
+  <div class="cl-list" style="padding-top:12px;">
+    <div class="cl-card">
+      <div class="cl-thumb" style="background:linear-gradient(135deg,#EEF2FF,#DDE6FF);">💬</div>
+      <div class="cl-info">
+        <div class="cl-icon-row">
+          <span style="font-size:14px;">🟣</span>
+          <span style="font-size:10px;color:#999;font-family:'Inter',sans-serif;">★ 4.9</span>
+        </div>
+        <div class="cl-name">مکالمه روزمره</div>
+        <div class="cl-desc">مکالمه در موقعیت‌های واقعی</div>
+        <button class="cl-btn cl-btn-purple">← بستن داره یبینم</button>
+      </div>
+    </div>
+    <div class="cl-card">
+      <div class="cl-thumb" style="background:linear-gradient(135deg,#E8FDF6,#C8F5E8);">🎓</div>
+      <div class="cl-info">
+        <div class="cl-icon-row">
+          <span style="font-size:14px;">🟢</span>
+          <span style="font-size:10px;color:#999;font-family:'Inter',sans-serif;">★ 4.8</span>
+        </div>
+        <div class="cl-name">لایتس</div>
+        <div class="cl-desc">آمادگی کامل برای آزمون آیلتس</div>
+        <button class="cl-btn cl-btn-teal">← شروع بشیم</button>
+      </div>
+    </div>
+    <div class="cl-card">
+      <div class="cl-thumb" style="background:linear-gradient(135deg,#FFF0F5,#FFD6E7);">✈️</div>
+      <div class="cl-info">
+        <div class="cl-icon-row">
+          <span style="font-size:14px;">🔴</span>
+          <span style="font-size:10px;color:#999;font-family:'Inter',sans-serif;">★ 4.7</span>
+        </div>
+        <div class="cl-name">انگلیسی سفر</div>
+        <div class="cl-desc">عبارت‌های ضروری سفر</div>
+        <button class="cl-btn cl-btn-pink">← شروع بشیم</button>
+      </div>
+    </div>
+    <div class="cl-card">
+      <div class="cl-thumb" style="background:linear-gradient(135deg,#F5F0FF,#E8D6FF);">💼</div>
+      <div class="cl-info">
+        <div class="cl-icon-row">
+          <span style="font-size:14px;">🟣</span>
+          <span style="font-size:10px;color:#999;font-family:'Inter',sans-serif;">★ 4.9</span>
+        </div>
+        <div class="cl-name">انگلیسی کاری</div>
+        <div class="cl-desc">ایمیل، جلسه و گزارش‌نویسی</div>
+        <button class="cl-btn cl-btn-purple">← شروع بشیم</button>
+      </div>
+    </div>
+    <div class="cl-card">
+      <div class="cl-thumb" style="background:linear-gradient(135deg,#FFF8E0,#FFECAA);">📺</div>
+      <div class="cl-info">
+        <div class="cl-icon-row">
+          <span style="font-size:14px;">🟡</span>
+          <span style="font-size:10px;color:#999;font-family:'Inter',sans-serif;">★ 4.6</span>
+        </div>
+        <div class="cl-name">انگلیسی فیلم و سریال</div>
+        <div class="cl-desc">یادگیری با محتوای سرگرم‌کننده</div>
+        <button class="cl-btn" style="background:rgba(255,209,0,0.1);color:#C8900A;">← شروع بشیم</button>
+      </div>
+    </div>
+  </div>
 
-    <div class="video-area" style="margin-top:-52px;">
-      <div class="video-thumb">👩‍🏫</div>
-      <div class="video-overlay"></div>
-      <div style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:8px;padding:4px 10px;color:#fff;font-size:11px;font-weight:700;">
-        DAY 5 · CLASS
-      </div>
-      <div style="position:absolute;top:14px;left:14px;display:flex;gap:8px;">
-        <div style="background:rgba(255,64,129,0.85);border-radius:6px;padding:4px 8px;color:#fff;font-size:10px;font-weight:700;">● LIVE</div>
-      </div>
-      <div style="position:absolute;right:12px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-          <div style="font-size:20px;cursor:pointer;" onclick="goTo('s-lesson')">❤️</div>
-          <span style="color:#fff;font-size:9px;">500k</span>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-          <div style="font-size:20px;cursor:pointer;">💬</div>
-          <span style="color:#fff;font-size:9px;">1234</span>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-          <div style="font-size:20px;cursor:pointer;">↗️</div>
-          <span style="color:#fff;font-size:9px;">Share</span>
-        </div>
-      </div>
-      <div class="video-controls">
-        <div class="progress-bar"><div class="progress-fill"></div></div>
-        <div class="vid-ctrl-row">
-          <div class="vid-time">00:24 / 00:01:12</div>
-          <div class="vid-btns">
-            <div class="vid-btn">⏮</div>
-            <div class="vid-btn">▶</div>
-            <div class="vid-btn">⏭</div>
-          </div>
-        </div>
-      </div>
+  <!-- Bottom nav light -->
+  <div class="bottom-nav-light">
+    <div class="nav-item nav-item-light" onclick="goTo('s-home')">
+      <div class="ni" style="font-size:22px;">🏠</div>
+      <span style="font-size:9px;font-weight:600;color:#BBB;font-family:'Vazirmatn',sans-serif;">خانه</span>
     </div>
-
-    <div style="padding:14px 18px 6px;display:flex;align-items:center;gap:10px;">
-      <div style="width:36px;height:36px;background:linear-gradient(135deg,#1565FF,#7C4DFF);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;">👩</div>
-      <div>
-        <div style="color:#fff;font-size:12px;font-weight:700;">@Alina</div>
-        <div style="color:rgba(255,255,255,0.5);font-size:10px;">Algebra · English Academy</div>
-      </div>
-      <button style="margin-left:auto;padding:6px 14px;background:linear-gradient(135deg,#1565FF,#0D47C8);border:none;border-radius:7px;color:#fff;font-size:10px;font-weight:700;cursor:pointer;">+ Follow</button>
+    <div class="nav-item nav-item-light active">
+      <div class="ni" style="font-size:22px;">📚</div>
+      <span style="font-size:9px;font-weight:600;color:var(--purple);font-family:'Vazirmatn',sans-serif;">دوره‌ها</span>
     </div>
-    <div style="padding:6px 18px 12px;">
-      <p style="color:rgba(255,255,255,0.55);font-size:11px;line-height:1.6;">Advanced English speaking techniques — expressing yourself naturally with native speakers in everyday situations.</p>
+    <div class="nav-item nav-item-light">
+      <div class="ni" style="font-size:22px;">🏆</div>
+      <span style="font-size:9px;font-weight:600;color:#BBB;font-family:'Vazirmatn',sans-serif;">رتبه‌بندی</span>
     </div>
-
-    <!-- Comments -->
-    <div style="background:#13183A;border-top:1px solid rgba(255,255,255,0.06);padding:14px 18px 0;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-        <div class="comm-title">Comments 358</div>
-        <div style="color:rgba(255,255,255,0.3);font-size:18px;cursor:pointer;">✕</div>
-      </div>
-      <div class="comment">
-        <div class="comm-ava">A</div>
-        <div class="comm-body">
-          <div class="comm-name">Alina Joes <span style="color:rgba(255,255,255,0.25);font-size:9px;margin-left:6px;">3h ago</span></div>
-          <div class="comm-text">How are you</div>
-          <div class="comm-likes">
-            <span class="cl">❤️ 24</span>
-            <span class="cl">💬 3</span>
-            <span class="cl">Reply</span>
-          </div>
-        </div>
-        <div style="font-size:16px;color:rgba(255,255,255,0.2);cursor:pointer;">⋯</div>
-      </div>
-      <div class="comment">
-        <div class="comm-ava" style="background:linear-gradient(135deg,#FF6B35,#FF4081);">J</div>
-        <div class="comm-body">
-          <div class="comm-name">Julia Alex <span style="color:rgba(255,255,255,0.25);font-size:9px;margin-left:6px;">2d ago</span></div>
-          <div class="comm-text">Hi, I need your support in Math class</div>
-          <div style="margin-top:6px;background:rgba(255,255,255,0.04);border-radius:8px;padding:8px 10px;">
-            <div style="color:rgba(255,255,255,0.35);font-size:10px;line-height:1.5;">English speaking practice session starting now...</div>
-          </div>
-          <div class="comm-likes">
-            <span class="cl">❤️ 89</span>
-            <span class="cl">💬 3</span>
-          </div>
-        </div>
-        <div style="font-size:16px;color:rgba(255,255,255,0.2);cursor:pointer;">⋯</div>
-      </div>
-    </div>
-    <div class="comm-input-row">
-      <input class="comm-in" type="text" placeholder="Say something...">
-      <div style="font-size:18px;cursor:pointer;">😊</div>
-      <div style="font-size:18px;cursor:pointer;">📎</div>
-      <div class="comm-send">➤</div>
+    <div class="nav-item nav-item-light">
+      <div class="ni" style="font-size:22px;">👤</div>
+      <span style="font-size:9px;font-weight:600;color:#BBB;font-family:'Vazirmatn',sans-serif;">پروفایل</span>
     </div>
   </div>
 </div>
-
-<!-- ══════════ SCREEN 7: QUIZ ══════════ -->
-<div class="screen" id="s-quiz">
-  <div class="quiz-screen">
-    <div class="quiz-header">
-      <div class="q-back" onclick="goTo('s-home')">←</div>
-      <div class="q-title-area">
-        <h3>Calculus and analysis</h3>
-        <span>Question 1/20</span>
-      </div>
-      <div class="q-more">⋯</div>
-    </div>
-    <div class="quiz-progress">
-      <div class="q-prog-bar"><div class="q-prog-fill" style="width:5%;"></div></div>
-      <div class="q-prog-label">1 / 20</div>
-    </div>
-    <div class="quiz-img">🧮</div>
-    <div class="quiz-q">For one final point, tell us the answer to this: 112 × 5</div>
-    <div class="q-options">
-      <div class="q-opt" onclick="selectOpt(this,'wrong')">
-        <span>Option: A</span>
-        <div class="opt-letter">A</div>
-      </div>
-      <div style="margin-bottom:12px;text-align:center;color:var(--text-light);font-size:12px;font-weight:600;">550</div>
-      <div class="q-opt" onclick="selectOpt(this,'correct')">
-        <span>Option: B</span>
-        <div class="opt-letter">B</div>
-      </div>
-      <div style="margin-bottom:12px;text-align:center;color:var(--text-light);font-size:12px;font-weight:600;">560</div>
-      <div class="q-opt" onclick="selectOpt(this,'wrong')">
-        <span>Option: C</span>
-        <div class="opt-letter">C</div>
-      </div>
-      <div style="margin-bottom:12px;text-align:center;color:var(--text-light);font-size:12px;font-weight:600;">540</div>
-      <div class="q-opt" onclick="selectOpt(this,'wrong')">
-        <span>Option: D</span>
-        <div class="opt-letter">D</div>
-      </div>
-      <div style="margin-bottom:12px;text-align:center;color:var(--text-light);font-size:12px;font-weight:600;">580</div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════ SCREEN 8: PROFILE ══════════ -->
-<div class="screen" id="s-profile">
-  <div class="profile-screen">
-    <div class="profile-top">
-      <div class="scr-back" onclick="goTo('s-home')" style="position:absolute;top:52px;left:20px;">←</div>
-      <div style="padding-top:20px;">
-        <div class="prof-ava">👩</div>
-        <div class="prof-name">Alina Joy</div>
-        <div class="prof-id">ID: 1750842395</div>
-        <div class="prof-stats">
-          <div class="pstat"><strong>504</strong><span>Following</span></div>
-          <div class="pstat"><strong>218.0k</strong><span>Followers</span></div>
-          <div class="pstat"><strong>2.8m</strong><span>Likes</span></div>
-        </div>
-        <div class="prof-actions">
-          <div class="pact primary">Message</div>
-          <div class="pact">👤+</div>
-          <div class="pact">📹</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="prof-body">
-      <div class="prof-card">
-        <div class="prof-card-title">Learning Activity</div>
-        <div class="prof-menu-item">
-          <div class="pmi-icon pmi-blue">📺</div>
-          <div class="pmi-info">
-            <div class="pmi-name">Save Video</div>
-            <div class="pmi-sub">12 videos saved</div>
-          </div>
-          <div class="pmi-arrow">›</div>
-        </div>
-        <div class="prof-menu-item">
-          <div class="pmi-icon pmi-purple">🔖</div>
-          <div class="pmi-info">
-            <div class="pmi-name">Add to Favourites</div>
-            <div class="pmi-sub">8 courses bookmarked</div>
-          </div>
-          <div class="pmi-arrow">›</div>
-        </div>
-        <div class="prof-menu-item">
-          <div class="pmi-icon pmi-orange">🚫</div>
-          <div class="pmi-info">
-            <div class="pmi-name">Not Interested</div>
-            <div class="pmi-sub">Manage preferences</div>
-          </div>
-          <div class="pmi-arrow">›</div>
-        </div>
-        <div class="prof-menu-item">
-          <div class="pmi-icon" style="background:#FEF2F2;">🚩</div>
-          <div class="pmi-info">
-            <div class="pmi-name">Report</div>
-            <div class="pmi-sub">Report content</div>
-          </div>
-          <div class="pmi-arrow">›</div>
-        </div>
-      </div>
-
-      <div class="prof-card">
-        <div class="prof-card-title">My Progress</div>
-        <div style="display:flex;gap:10px;margin-bottom:12px;">
-          <div style="flex:1;background:#EEF3FF;border-radius:12px;padding:14px;text-align:center;">
-            <div style="font-size:22px;font-weight:800;color:var(--blue-mid);">7</div>
-            <div style="font-size:10px;color:var(--text-mid);margin-top:2px;">Courses<br>Enrolled</div>
-          </div>
-          <div style="flex:1;background:#EDFBF3;border-radius:12px;padding:14px;text-align:center;">
-            <div style="font-size:22px;font-weight:800;color:#2ECC71;">3</div>
-            <div style="font-size:10px;color:var(--text-mid);margin-top:2px;">Courses<br>Completed</div>
-          </div>
-          <div style="flex:1;background:#FFF4EE;border-radius:12px;padding:14px;text-align:center;">
-            <div style="font-size:22px;font-weight:800;color:#FF6B35;">142</div>
-            <div style="font-size:10px;color:var(--text-mid);margin-top:2px;">Hours<br>Learned</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bottom nav -->
-  <div class="bottom-nav">
-    <div class="nav-item" onclick="goTo('s-home')">
-      <div class="ni">🔍</div>
-      <span>Discover</span>
-    </div>
-    <div class="nav-item" onclick="goTo('s-lesson')">
-      <div class="ni">📖</div>
-      <span>My Course</span>
-    </div>
-    <div class="nav-add">＋</div>
-    <div class="nav-item" onclick="goTo('s-lesson')">
-      <div class="ni">💬</div>
-      <span>Chat</span>
-    </div>
-    <div class="nav-item active" onclick="goTo('s-profile')">
-      <div class="ni">👤</div>
-      <span>Account</span>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════ FLOATING NAV HINT (bottom of home/lesson/quiz) ══════════ -->
 
 <script>
+/* ── Navigate ── */
 function goTo(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
 }
-function toggleInt(el){
-  el.classList.toggle('sel');
+
+/* ── Register → save name → go to levels ── */
+function doRegister(){
+  const nameEl = document.getElementById('inputName');
+  const phoneEl = document.getElementById('inputPhone');
+  const passEl = document.getElementById('inputPass');
+  const errEl = document.getElementById('authError');
+
+  const name = nameEl ? nameEl.value.trim() : '';
+  const phone = phoneEl ? phoneEl.value.trim() : '';
+  const pass = passEl ? passEl.value.trim() : '';
+
+  if(!name){ showErr('نام و نام‌خانوادگی را وارد کنید'); return; }
+  if(!phone){ showErr('شماره تلفن را وارد کنید'); return; }
+  if(!pass || pass.length < 4){ showErr('رمز عبور حداقل ۴ کاراکتر باشد'); return; }
+
+  // Save first name to display
+  const firstName = name.split(' ')[0];
+  const dispEl = document.getElementById('displayName');
+  if(dispEl) dispEl.textContent = firstName;
+
+  if(errEl) errEl.style.display='none';
+  goTo('s-levels');
 }
-function selectOpt(el, type){
-  // reset all
-  document.querySelectorAll('.q-opt').forEach(o=>{
-    o.classList.remove('correct','wrong');
-    o.querySelector('.opt-letter').style.background='';
-    o.querySelector('.opt-letter').style.color='';
-  });
-  el.classList.add(type);
-  // show correct always
-  if(type === 'wrong'){
-    const opts = document.querySelectorAll('.q-opt');
-    opts[1].classList.add('correct'); // B is correct
+
+function showErr(msg){
+  const e = document.getElementById('authError');
+  if(e){ e.textContent = msg; e.style.display='block'; }
+}
+
+/* ── Level pick ── */
+function pickLevel(el){
+  document.querySelectorAll('.lvl-item').forEach(i=>i.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+/* ── Go home after level select ── */
+function goHome(){
+  const sel = document.querySelector('.lvl-item.sel');
+  if(sel){
+    const strong = sel.querySelector('strong');
+    const span = sel.querySelector('span');
+    const lvlMap = {
+      'پایه':'A1','مقدماتی':'A2','پیشرفته ۱':'B1','پیشرفته ۲':'B2',
+      'پیشرفته ۳':'B3','حرفه‌ای':'C1','آیلتس ۱':'C1+','آیلتس ۲':'C2','فول حرفه‌ای':'C2+'
+    };
+    const lv = strong ? lvlMap[strong.textContent] || strong.textContent : 'A2';
+    const lvEl = document.getElementById('homeLevel');
+    if(lvEl) lvEl.textContent = lv;
   }
+  goTo('s-home');
+}
+
+/* ── Filter pills ── */
+function filterCourse(el){
+  document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
 }
 </script>
 </body>
