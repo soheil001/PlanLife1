@@ -113,7 +113,6 @@
     z-index:0;
   }
 
-  /* overlay روشن‌تر — فقط یه لایه خیلی ملایم */
   .slide::after{
     content:'';
     position:absolute;
@@ -125,7 +124,6 @@
   .slide-2::after{ background:linear-gradient(135deg, rgba(26,10,94,0.20) 0%, rgba(91,31,168,0.14) 45%, rgba(192,32,110,0.08) 100%); }
   .slide-3::after{ background:linear-gradient(135deg, rgba(61,20,136,0.18) 0%, rgba(155,63,217,0.12) 45%, rgba(255,80,176,0.07) 100%); }
 
-  /* دات‌های ناوبری */
   .hero-dots{
     position:absolute;
     bottom:14px;
@@ -147,7 +145,6 @@
     transform:scale(1.4);
   }
 
-  /* دکمه‌های چپ/راست */
   .hero-prev,.hero-next{
     position:absolute;
     top:50%;
@@ -168,16 +165,133 @@
   .hero-next{ left:12px; }
 
   /* ══════════════════════════════
-     GREET
+     STORIES — جایگزین greet
   ══════════════════════════════ */
-  .greet{padding:22px 26px 4px;text-align:center;}
-  .greet h1{font-size:21px;font-weight:800;color:#fff;letter-spacing:-0.3px;text-shadow:0 2px 12px rgba(0,0,0,0.2);}
-  .greet p{margin-top:6px;font-size:13px;color:rgba(255,255,255,0.7);font-weight:500;}
+  .stories-outer{
+    margin:18px 0 0;
+    padding:0;
+    overflow:hidden;
+    position:relative;
+    z-index:10;
+  }
+  .stories-wrapper{width:100%;position:relative;}
+  .stories-scroll{
+    display:flex;flex-direction:row;direction:ltr;
+    gap:14px;overflow-x:auto;overflow-y:hidden;
+    padding:4px 16px 14px;
+    scroll-behavior:smooth;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    cursor:grab;
+  }
+  .stories-scroll:active{cursor:grabbing;}
+  .stories-scroll::-webkit-scrollbar{display:none;}
+  .stories-wrapper::before,.stories-wrapper::after{
+    content:'';position:absolute;top:0;bottom:0;
+    width:20px;z-index:10;pointer-events:none;
+  }
+  .stories-wrapper::before{right:0;background:linear-gradient(to left,rgba(80,30,140,0.7),transparent);}
+  .stories-wrapper::after{left:0;background:linear-gradient(to right,rgba(80,30,140,0.7),transparent);}
+
+  .story-item{
+    display:flex;flex-direction:column;align-items:center;gap:7px;
+    flex-shrink:0;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  }
+  .story-ring{
+    width:68px;height:68px;border-radius:50%;padding:2.5px;
+    background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888,#833ab4,#405de6,#5851db);
+    transition:background .4s ease;flex-shrink:0;
+  }
+  .story-item.seen .story-ring{background:rgba(255,255,255,0.25);}
+  .story-avatar{
+    width:100%;height:100%;border-radius:50%;
+    background:rgba(255,255,255,0.15);
+    border:2.5px solid rgba(255,255,255,0.9);
+    overflow:hidden;display:flex;align-items:center;justify-content:center;
+  }
+  .story-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+  .story-label{
+    font-size:10.5px;font-weight:700;color:rgba(255,255,255,0.9);
+    text-align:center;max-width:68px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    line-height:1.3;text-shadow:0 1px 6px rgba(0,0,0,0.4);
+  }
+
+  /* ══════════════════════════════
+     STORY MODAL
+  ══════════════════════════════ */
+  #story-modal{
+    position:fixed;top:0;left:0;right:0;bottom:0;z-index:9000;
+    background:rgba(0,0,0,0.92);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;transition:opacity .3s ease;
+  }
+  #story-modal.open{opacity:1;pointer-events:auto;}
+  .story-container{
+    width:100%;max-width:375px;aspect-ratio:9/16;background:#000;
+    border-radius:12px;overflow:hidden;position:relative;
+    box-shadow:0 20px 60px rgba(0,0,0,.9);
+  }
+  .story-modal-content{
+    position:absolute;inset:0;z-index:1;background:#000;
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+  }
+  .story-modal-content img,.story-modal-content video{width:100%;height:100%;object-fit:cover;display:block;}
+  .story-progress-bar{
+    position:absolute;top:0;left:0;right:0;z-index:10;
+    display:flex;gap:3px;direction:ltr;
+    padding:10px 12px 6px;
+    background:linear-gradient(to bottom,rgba(0,0,0,.55),transparent);
+  }
+  .progress-seg{flex:1;height:2.5px;background:rgba(255,255,255,.28);border-radius:3px;overflow:hidden;}
+  .progress-seg-fill{height:100%;background:white;width:0%;border-radius:3px;}
+  .progress-seg.done .progress-seg-fill{width:100%;}
+  .progress-seg.active .progress-seg-fill{animation:progress-run 5s linear forwards;}
+  @keyframes progress-run{from{width:0%;}to{width:100%;}}
+
+  .story-modal-header{
+    position:absolute;top:26px;left:0;right:0;z-index:10;
+    display:flex;align-items:center;gap:8px;padding:8px 12px;
+    direction:rtl;justify-content:space-between;flex-direction:row-reverse;
+    background:linear-gradient(to bottom,rgba(0,0,0,.35),transparent);
+  }
+  .story-logo-section{display:flex;align-items:center;gap:6px;flex:0 0 auto;}
+  .story-logo-img{width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);overflow:hidden;}
+  .story-logo-img img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+  .story-branding-text{font-size:14px;font-weight:700;color:white;text-shadow:0 1px 6px rgba(0,0,0,.7);}
+  .story-modal-close{font-size:22px;color:white;cursor:pointer;padding:4px 6px;}
+  .story-nav-left,.story-nav-right{position:absolute;top:0;bottom:0;width:40%;cursor:pointer;z-index:9;-webkit-tap-highlight-color:transparent;}
+  .story-nav-right{right:0;}
+  .story-nav-left{left:0;}
+  .story-footer{
+    position:absolute;bottom:0;left:0;right:0;z-index:10;
+    display:flex;flex-direction:column;gap:10px;padding:40px 14px 18px;
+    background:linear-gradient(to top,rgba(0,0,0,.72) 60%,transparent);
+  }
+  .story-caption{
+    font-size:13px;font-weight:500;color:rgba(255,255,255,.95);
+    text-align:center;line-height:1.6;min-height:20px;
+    display:flex;align-items:center;justify-content:center;
+    text-shadow:0 1px 8px rgba(0,0,0,.9);
+  }
+  .story-action-btn{
+    display:none;align-items:center;justify-content:center;width:100%;
+    padding:12px 16px;background:rgba(255,255,255,.13);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border:1.2px solid rgba(212,175,55,.6);border-radius:20px;
+    color:#ffd060;font-family:'Vazirmatn',sans-serif;font-size:15px;font-weight:800;
+    text-decoration:none;text-align:center;cursor:pointer;transition:all .2s ease;
+    position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.25);
+  }
+  .story-action-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);animation:glass-shine 2.5s ease-in-out infinite;}
+  @keyframes glass-shine{0%{left:-100%;}50%{left:100%;}100%{left:100%;}}
+  .story-action-btn:active{transform:scale(.97);}
+  .story-action-btn.show{display:flex;}
 
   /* ══════════════════════════════
      CARDS
   ══════════════════════════════ */
-  .container{padding:20px 16px 60px;}
+  .container{padding:4px 16px 60px;}
 
   .row-label{
     font-size:14px;font-weight:700;
@@ -293,37 +407,28 @@
     </div>
   </header>
 
-  <!-- HERO SLIDER — بدون متن -->
+  <!-- HERO SLIDER -->
   <div class="hero" id="hero">
     <div class="slides" id="slides">
-
-      <!-- اسلاید ۱ -->
       <div class="slide slide-1">
         <img class="slide-bg"
              src="http://fs3.centraldnserver.com/~planlife/pics/english/slide1.jpg"
              alt=""
              onerror="this.style.display='none'">
       </div>
-
-      <!-- اسلاید ۲ -->
       <div class="slide slide-2">
         <img class="slide-bg"
              src="http://fs3.centraldnserver.com/~planlife/pics/english/slide2.jpg"
              alt=""
              onerror="this.style.display='none'">
       </div>
-
-      <!-- اسلاید ۳ -->
       <div class="slide slide-3">
         <img class="slide-bg"
              src="http://fs3.centraldnserver.com/~planlife/pics/english/slide3.jpg"
              alt=""
              onerror="this.style.display='none'">
       </div>
-
     </div>
-
-    <!-- ناوبری -->
     <button class="hero-prev" id="heroPrev" aria-label="قبلی">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
         <path d="M9 18l6-6-6-6" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -334,7 +439,6 @@
         <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
-
     <div class="hero-dots">
       <div class="dot active" data-i="0"></div>
       <div class="dot" data-i="1"></div>
@@ -342,10 +446,107 @@
     </div>
   </div>
 
-  <!-- GREET -->
-  <div class="greet">
-    <h1>سلام، خوش برگشتی 👋</h1>
-    <p>یکی از دسته‌ها رو انتخاب کن و یادگیری رو شروع کن</p>
+  <!-- STORIES — جایگزین greet -->
+  <div class="stories-outer">
+    <div class="stories-wrapper">
+      <div class="stories-scroll" id="stories-scroll">
+
+        <div class="story-item" data-index="0"
+             data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png"
+             data-caption="پادکست‌های رایگان PlanLife درباره قانون جذب و تغییر افکار 🎙️"
+             data-btn-show="true" data-btn-text="شنیدن پادکست‌ها"
+             data-btn-link="https://planlife.ir/Pages/podcasts_free/index.html">
+          <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست"></div></div>
+          <div class="story-label">پادکست</div>
+        </div>
+
+        <div class="story-item" data-index="1"
+             data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg"
+             data-caption="دوره‌های تخصصی آموزش قانون جذب، باور و تغییر رفتار 🚀"
+             data-btn-show="true" data-btn-text="مشاهده دوره‌ها"
+             data-btn-link="https://planlife.ir/dores.html">
+          <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌ها"></div></div>
+          <div class="story-label">دوره‌ها</div>
+        </div>
+
+        <div class="story-item" data-index="2"
+             data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg"
+             data-caption="کتابخانه — بهترین کتاب‌های رشد فردی و تقویت باور 📚"
+             data-btn-show="true" data-btn-text="ورود به کتابخانه"
+             data-btn-link="https://planlife.ir/Pages/Book/index.html">
+          <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه"></div></div>
+          <div class="story-label">کتابخانه</div>
+        </div>
+
+        <div class="story-item" data-index="3"
+             data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png"
+             data-caption="مجله ماورایی — مقالات انگیزشی درباره تغییر افکار 📰"
+             data-btn-show="true" data-btn-text="ورود به مجله"
+             data-btn-link="https://planlife.ir/Pages/Magazine/index.html">
+          <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="مجله"></div></div>
+          <div class="story-label">مجله</div>
+        </div>
+
+        <div class="story-item" data-index="4"
+             data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg"
+             data-caption="تمرینات مجازی روزانه و آرامش ذهن برای موفقیت 🧘"
+             data-btn-show="true" data-btn-text="شروع تمرین ذهنی"
+             data-btn-link="https://planlife.ir/Pages/Tamrin/index.html">
+          <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرینات"></div></div>
+          <div class="story-label">تمرینات</div>
+        </div>
+
+        <div class="story-item" data-index="5"
+             data-img="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png"
+             data-caption="پاکسازی ذهن و رهایی از افکار منفی 🔥"
+             data-btn-show="true" data-btn-text="شروع پاکسازی ذهن"
+             data-btn-link="https://planlife.ir/Pages/paksazi/index.html">
+          <div class="story-ring"><div class="story-avatar"><img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" alt="پاکسازی ذهن"></div></div>
+          <div class="story-label">پاکسازی ذهن</div>
+        </div>
+
+        <div class="story-item" data-index="6"
+             data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg"
+             data-caption="تابلو آرزوها و ویژوالایزیشن برای تحقق رویاهای قانون جذب 🔖"
+             data-btn-show="true" data-btn-text="ساخت تابلو آرزو"
+             data-btn-link="https://planlife.ir/Pages/visionboard/index.html">
+          <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg" alt="تابلو آرزو"></div></div>
+          <div class="story-label">تابلو آرزو</div>
+        </div>
+
+        <div class="story-item" data-index="7"
+             data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png"
+             data-caption="موزیک‌های انگیزشی و مدیتیشن برای آرامش ذهن 🎵"
+             data-btn-show="true" data-btn-text="گوش دادن به موزیک‌ها"
+             data-btn-link="https://planlife.ir/Pages/Music/index.html">
+          <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="موزیک"></div></div>
+          <div class="story-label">موزیک</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- STORY MODAL -->
+  <div id="story-modal">
+    <div class="story-container">
+      <div class="story-progress-bar" id="story-progress-bar"></div>
+      <div class="story-modal-header">
+        <div class="story-logo-section">
+          <div class="story-logo-img"><img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife"></div>
+          <div class="story-branding-text">planlife.ir</div>
+        </div>
+        <div class="story-modal-close" onclick="closeStoryModal()">✕</div>
+      </div>
+      <div class="story-modal-content" id="story-modal-content">
+        <div class="story-nav-left" onclick="storyNavigate(-1)"></div>
+        <div class="story-nav-right" onclick="storyNavigate(1)"></div>
+      </div>
+      <div class="story-footer">
+        <div class="story-caption" id="story-caption"></div>
+        <a class="story-action-btn" id="story-action-btn" href="#" target="_blank" rel="noopener"></a>
+      </div>
+    </div>
   </div>
 
   <!-- CARDS -->
@@ -377,6 +578,102 @@ dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.i)));
 
 let timer = setInterval(() => goTo(cur + 1), 3800);
 document.getElementById('hero').addEventListener('touchstart', () => clearInterval(timer), {passive:true});
+
+/* ── STORIES ── */
+var stories = [], storyIndex = 0, storyTimer = null;
+var STORY_SEEN_KEY = 'planlife_lingua_stories_v1';
+var DAY_MS = 24 * 60 * 60 * 1000;
+
+function getSeenMap(){
+  try{ var raw=localStorage.getItem(STORY_SEEN_KEY); if(!raw) return {};
+    var map=JSON.parse(raw), now=Date.now(), cleaned={};
+    Object.keys(map).forEach(function(k){ if(now-map[k]<DAY_MS) cleaned[k]=map[k]; });
+    return cleaned;
+  }catch(e){ return {}; }
+}
+function markSeen(idx){ try{ var map=getSeenMap(); map[idx]=Date.now(); localStorage.setItem(STORY_SEEN_KEY,JSON.stringify(map)); }catch(e){} }
+function isSeen(idx){ return Object.prototype.hasOwnProperty.call(getSeenMap(), idx); }
+
+function initStories(){
+  var items = document.querySelectorAll('.story-item');
+  items.forEach(function(item){
+    var idx = parseInt(item.dataset.index, 10);
+    var seen = isSeen(idx);
+    stories.push({
+      el: item,
+      img: item.dataset.img||'',
+      caption: item.dataset.caption||'',
+      btnShow: (item.dataset.btnShow||'').toLowerCase()==='true',
+      btnText: item.dataset.btnText||'',
+      btnLink: item.dataset.btnLink||'',
+      seen: seen
+    });
+    if(seen) item.classList.add('seen');
+    item.addEventListener('click', function(){ openStoryModal(idx); });
+  });
+
+  /* drag scroll */
+  var el = document.getElementById('stories-scroll');
+  var isDown=false, startX, scrollLeft;
+  el.addEventListener('mousedown', function(e){ isDown=true; startX=e.pageX-el.offsetLeft; scrollLeft=el.scrollLeft; el.style.cursor='grabbing'; });
+  el.addEventListener('mouseleave', function(){ isDown=false; el.style.cursor='grab'; });
+  el.addEventListener('mouseup', function(){ isDown=false; el.style.cursor='grab'; });
+  el.addEventListener('mousemove', function(e){ if(!isDown) return; e.preventDefault(); el.scrollLeft=scrollLeft-(e.pageX-el.offsetLeft-startX)*1.4; });
+}
+
+var savedScrollY = 0;
+function openStoryModal(idx){
+  storyIndex = idx;
+  savedScrollY = window.scrollY||0;
+  document.body.style.position='fixed'; document.body.style.top=(-savedScrollY)+'px';
+  document.body.style.left='0'; document.body.style.right='0'; document.body.style.width='100%';
+  document.getElementById('story-modal').classList.add('open');
+  renderStoryModal(); buildProgressBar(); startStoryTimer();
+}
+function closeStoryModal(){
+  document.getElementById('story-modal').classList.remove('open');
+  clearStoryTimer();
+  var cd = document.getElementById('story-modal-content');
+  var vid = cd.querySelector('video');
+  if(vid){ vid.pause(); vid.removeAttribute('src'); vid.load(); vid.remove(); }
+  document.body.style.position=''; document.body.style.top='';
+  document.body.style.left=''; document.body.style.right=''; document.body.style.width='';
+  window.scrollTo(0, savedScrollY);
+}
+function renderStoryModal(){
+  var s = stories[storyIndex]; if(!s){ closeStoryModal(); return; }
+  s.seen=true; s.el.classList.add('seen'); markSeen(storyIndex);
+  var cd = document.getElementById('story-modal-content');
+  var oldV=cd.querySelector('video'); if(oldV){ oldV.pause(); oldV.src=''; oldV.remove(); }
+  var oldI=cd.querySelector('img'); if(oldI) oldI.remove();
+  var img=document.createElement('img'); img.src=s.img; img.alt='';
+  img.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
+  cd.appendChild(img);
+  document.getElementById('story-caption').textContent = s.caption;
+  var btn = document.getElementById('story-action-btn');
+  if(s.btnShow && s.btnLink){ btn.textContent=s.btnText||'مشاهده بیشتر'; btn.href=s.btnLink; btn.classList.add('show'); }
+  else{ btn.classList.remove('show'); btn.removeAttribute('href'); }
+}
+function buildProgressBar(){
+  var bar=document.getElementById('story-progress-bar'); bar.innerHTML='';
+  stories.forEach(function(s,i){
+    var seg=document.createElement('div'); seg.className='progress-seg';
+    if(i<storyIndex) seg.classList.add('done');
+    if(i===storyIndex) seg.classList.add('active');
+    var fill=document.createElement('div'); fill.className='progress-seg-fill';
+    seg.appendChild(fill); bar.appendChild(seg);
+  });
+}
+function startStoryTimer(){ clearStoryTimer(); storyTimer=setTimeout(function(){ storyNavigate(1); },5000); }
+function clearStoryTimer(){ if(storyTimer){ clearTimeout(storyTimer); storyTimer=null; } }
+function storyNavigate(dir){
+  clearStoryTimer();
+  storyIndex += dir;
+  if(storyIndex < 0) storyIndex=0;
+  if(storyIndex >= stories.length){ closeStoryModal(); return; }
+  renderStoryModal(); buildProgressBar(); startStoryTimer();
+}
+document.getElementById('story-modal').addEventListener('click', function(e){ if(e.target===this) closeStoryModal(); });
 
 /* ── CARDS ── */
 const BASE = 'http://fs3.centraldnserver.com/~planlife/pics/english/';
@@ -433,6 +730,9 @@ const r1 = document.getElementById('row1');
 const r2 = document.getElementById('row2');
 row1Cards.forEach((c,i) => r1.insertAdjacentHTML('beforeend', makeCard(c, sh1[i%7])));
 row2Cards.forEach((c,i) => r2.insertAdjacentHTML('beforeend', makeCard(c, sh2[i%7])));
+
+/* INIT */
+window.addEventListener('load', function(){ initStories(); });
 </script>
 </body>
 </html>
