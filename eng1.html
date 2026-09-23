@@ -8,239 +8,351 @@
 <style>
   :root{
     --ink:#1a1535; --muted:#8b84a8;
-    --glass:rgba(255,255,255,0.55); --glass-brd:rgba(255,255,255,0.7);
+    --glass:rgba(255,255,255,0.15);
+    --glass-brd:rgba(255,255,255,0.28);
+    --pink:#e040a0;
+    --purple:#5b3fe8;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html,body{height:100%;}
+
   body{
     font-family:'Vazirmatn',sans-serif;
     min-height:100%;
-    background:#eef0f8;
     padding-top:env(safe-area-inset-top,0px);
     padding-bottom:env(safe-area-inset-bottom,0px);
+    /* پس‌زمینه اصلی بنفش-صورتی */
+    background: linear-gradient(135deg,#2d1b8e 0%,#7b2fa0 38%,#c92c8a 68%,#6a1fc2 100%);
+    background-attachment: fixed;
   }
 
-  /* ── BACKGROUND: لکه‌های رنگی نرم ── */
+  /* لایه نویز برای عمق بیشتر */
   body::before{
     content:'';
     position:fixed;
     inset:0;
-    z-index:-2;
-    background:
-      radial-gradient(60% 45% at 88% 6%,  rgba(139,92,246,0.30), transparent 70%),
-      radial-gradient(55% 40% at 6% 32%,  rgba(91,140,247,0.28), transparent 70%),
-      radial-gradient(60% 45% at 92% 68%, rgba(244,114,182,0.18), transparent 70%),
-      radial-gradient(70% 50% at 12% 100%, rgba(45,212,191,0.18), transparent 70%),
-      linear-gradient(180deg,#f7f6fe 0%,#eaedf8 100%);
-  }
-
-  /* ── BACKGROUND: شبکهٔ نقطه‌ای ظریف که به پایین محو میشه ── */
-  body::after{
-    content:'';
-    position:fixed;
-    inset:0;
-    z-index:-1;
+    z-index:0;
     pointer-events:none;
-    background-image:radial-gradient(rgba(26,21,53,0.09) 1px, transparent 1px);
-    background-size:22px 22px;
-    -webkit-mask-image:linear-gradient(to bottom,#000 0%,transparent 75%);
-            mask-image:linear-gradient(to bottom,#000 0%,transparent 75%);
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(255,80,200,0.25), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 90% 80%, rgba(60,20,180,0.35), transparent 60%),
+      radial-gradient(ellipse 60% 70% at 60% 40%, rgba(180,30,220,0.15), transparent 60%);
   }
 
-  .wrap{max-width:520px;margin:0 auto;min-height:100%;position:relative;}
+  .wrap{max-width:520px;margin:0 auto;min-height:100%;position:relative;z-index:1;}
 
+  /* ══════════════════════════════
+     HEADER
+  ══════════════════════════════ */
   header{
-    position:sticky;top:0;z-index:10;
+    position:sticky;top:env(safe-area-inset-top,0px);z-index:100;
     margin:14px 16px 6px;
     padding:10px 16px;
     display:flex;align-items:center;justify-content:space-between;
-    background:var(--glass);
-    border:1px solid var(--glass-brd);
+    background:rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.3);
     border-radius:18px;
-    backdrop-filter:blur(20px) saturate(180%);
-    -webkit-backdrop-filter:blur(20px) saturate(180%);
-    box-shadow:0 8px 24px rgba(90,70,160,0.1), inset 0 1px 0 rgba(255,255,255,0.7);
+    backdrop-filter:blur(24px) saturate(180%);
+    -webkit-backdrop-filter:blur(24px) saturate(180%);
+    box-shadow:0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.4);
   }
   .brand{display:flex;align-items:center;gap:10px;}
-  .brand-mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#8b5cf6,#5b8cf7);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-weight:800;font-size:15px;color:#fff;flex-shrink:0;}
-  .brand-name{font-family:'Poppins',sans-serif;font-weight:700;font-size:14.5px;color:var(--ink);direction:ltr;letter-spacing:0.2px;}
-  .bell{width:34px;height:34px;border-radius:12px;background:rgba(255,255,255,0.55);border:1px solid var(--glass-brd);display:flex;align-items:center;justify-content:center;color:var(--ink);}
+  .brand-mark{
+    width:30px;height:30px;border-radius:9px;
+    background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,0.7) 100%);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Poppins',sans-serif;font-weight:800;font-size:15px;
+    color:#7b2fa0;flex-shrink:0;
+    box-shadow:0 2px 8px rgba(0,0,0,0.2);
+  }
+  .brand-name{
+    font-family:'Poppins',sans-serif;font-weight:700;font-size:14.5px;
+    color:#fff;direction:ltr;letter-spacing:0.2px;
+  }
+  .bell{
+    width:34px;height:34px;border-radius:12px;
+    background:rgba(255,255,255,0.15);
+    border:1px solid rgba(255,255,255,0.3);
+    display:flex;align-items:center;justify-content:center;
+  }
 
-  .greet{padding:18px 26px 4px;text-align:center;}
-  .greet h1{font-size:21px;font-weight:800;color:var(--ink);letter-spacing:-0.3px;}
-  .greet p{margin-top:6px;font-size:13px;color:var(--muted);font-weight:500;}
+  /* ══════════════════════════════
+     HERO SLIDER
+  ══════════════════════════════ */
+  .hero{
+    margin:16px 16px 0;
+    border-radius:28px;
+    overflow:hidden;
+    position:relative;
+    height:240px;
+    border:1px solid rgba(255,255,255,0.22);
+    box-shadow:0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3);
+  }
 
+  .slides{
+    display:flex;
+    width:100%;
+    height:100%;
+    transition:transform 0.55s cubic-bezier(0.77,0,0.18,1);
+  }
+
+  .slide{
+    min-width:100%;
+    height:100%;
+    position:relative;
+    overflow:hidden;
+    flex-shrink:0;
+  }
+
+  /* گرادینت هر اسلاید */
+  .slide-1{ background:linear-gradient(135deg,#2d1b8e 0%,#8b2fc9 45%,#e040a0 100%); }
+  .slide-2{ background:linear-gradient(135deg,#1a0a5e 0%,#5b1fa8 45%,#c0206e 100%); }
+  .slide-3{ background:linear-gradient(135deg,#3d1488 0%,#9b3fd9 45%,#ff50b0 100%); }
+
+  /* نقطه‌های دکوری */
+  .slide::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background-image:
+      radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size:28px 28px;
+    pointer-events:none;
+  }
+
+  .slide-text{
+    position:absolute;
+    right:22px;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:2;
+    text-align:right;
+  }
+  .slide-tag{
+    display:inline-block;
+    background:rgba(255,255,255,0.18);
+    border:1px solid rgba(255,255,255,0.35);
+    border-radius:50px;
+    padding:4px 14px;
+    font-size:11px;
+    font-weight:700;
+    color:#fff;
+    margin-bottom:10px;
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    letter-spacing:0.3px;
+  }
+  .slide-title{
+    font-size:28px;
+    font-weight:800;
+    color:#fff;
+    line-height:1.1;
+    letter-spacing:-1px;
+    text-shadow:0 2px 20px rgba(0,0,0,0.3);
+    margin-bottom:8px;
+  }
+  .slide-sub{
+    font-size:12px;
+    font-weight:500;
+    color:rgba(255,255,255,0.75);
+    line-height:1.6;
+    max-width:180px;
+  }
+  .slide-btn{
+    margin-top:16px;
+    display:inline-block;
+    background:#fff;
+    color:#7b2fa0;
+    border:none;
+    border-radius:50px;
+    padding:9px 22px;
+    font-size:12px;
+    font-family:'Vazirmatn',sans-serif;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 4px 20px rgba(0,0,0,0.2);
+    transition:transform 0.15s,opacity 0.15s;
+  }
+  .slide-btn:active{transform:scale(0.96);opacity:0.9;}
+
+  /* تصویر داخل اسلاید (چپ) */
+  .slide-img{
+    position:absolute;
+    left:-10px;
+    bottom:0;
+    height:110%;
+    width:55%;
+    object-fit:contain;
+    object-position:bottom center;
+    filter:drop-shadow(-8px 8px 24px rgba(0,0,0,0.45));
+    pointer-events:none;
+    z-index:1;
+  }
+
+  /* شماره بزرگ دکوری */
+  .slide-num{
+    position:absolute;
+    left:10px;
+    top:50%;
+    transform:translateY(-50%);
+    font-family:'Poppins',sans-serif;
+    font-weight:800;
+    font-size:130px;
+    color:rgba(255,255,255,0.07);
+    line-height:1;
+    pointer-events:none;
+    z-index:0;
+    user-select:none;
+    letter-spacing:-8px;
+  }
+
+  /* دات‌های ناوبری */
+  .hero-dots{
+    position:absolute;
+    bottom:14px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:6px;
+    z-index:10;
+  }
+  .dot{
+    width:6px;height:6px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.4);
+    cursor:pointer;
+    transition:background 0.25s, transform 0.25s;
+  }
+  .dot.active{
+    background:#fff;
+    transform:scale(1.4);
+  }
+
+  /* دکمه‌های چپ/راست */
+  .hero-prev,.hero-next{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:10;
+    width:32px;height:32px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.18);
+    border:1px solid rgba(255,255,255,0.3);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    transition:background 0.2s;
+  }
+  .hero-prev:active,.hero-next:active{background:rgba(255,255,255,0.35);}
+  .hero-prev{ right:12px; }
+  .hero-next{ left:12px; }
+
+  /* ══════════════════════════════
+     GREET
+  ══════════════════════════════ */
+  .greet{padding:22px 26px 4px;text-align:center;}
+  .greet h1{font-size:21px;font-weight:800;color:#fff;letter-spacing:-0.3px;text-shadow:0 2px 12px rgba(0,0,0,0.2);}
+  .greet p{margin-top:6px;font-size:13px;color:rgba(255,255,255,0.7);font-weight:500;}
+
+  /* ══════════════════════════════
+     CARDS
+  ══════════════════════════════ */
   .container{padding:20px 16px 60px;}
 
   .row-label{
-    font-size:14px;
-    font-weight:700;
-    color:var(--ink);
+    font-size:14px;font-weight:700;
+    color:rgba(255,255,255,0.9);
     margin:24px 0 12px 0;
     padding:0 4px;
     letter-spacing:-0.2px;
   }
 
   .carousel{
-    display:flex;
-    gap:16px;
-    overflow-x:auto;
-    scroll-behavior:smooth;
+    display:flex;gap:16px;
+    overflow-x:auto;scroll-behavior:smooth;
     padding-bottom:10px;
     margin:0 -16px;
-    padding-left:16px;
-    padding-right:16px;
+    padding-left:16px;padding-right:16px;
   }
   .carousel::-webkit-scrollbar{display:none;}
 
-  /* ── CARD WRAPPER — 9:16 Story ratio ── */
   .card-wrap{
-    flex:0 0 200px;           /* عرض کارت */
-    height:356px;             /* 200 × 16/9 ≈ 356px — نسبت ۹:۱۶ */
-    border-radius:26px;
-    padding:3px;
-    background:linear-gradient(145deg,rgba(255,255,255,0.85) 0%,rgba(200,195,230,0.5) 50%,rgba(255,255,255,0.6) 100%);
+    flex:0 0 200px;height:356px;
+    border-radius:26px;padding:3px;
+    background:linear-gradient(145deg,rgba(255,255,255,0.5) 0%,rgba(200,150,255,0.3) 50%,rgba(255,255,255,0.2) 100%);
     box-shadow:
-      0 2px 0 rgba(255,255,255,0.9),
-      0 16px 36px rgba(30,20,80,0.22),
-      inset 0 1px 0 rgba(255,255,255,0.95);
+      0 2px 0 rgba(255,255,255,0.5),
+      0 16px 36px rgba(0,0,0,0.35),
+      inset 0 1px 0 rgba(255,255,255,0.7);
     cursor:pointer;
     transition:transform 0.18s, box-shadow 0.18s;
     flex-shrink:0;
   }
   .card-wrap:active{
     transform:scale(0.97);
-    box-shadow:0 6px 18px rgba(30,20,80,0.18);
+    box-shadow:0 6px 18px rgba(0,0,0,0.3);
   }
 
-  /* ── CARD INNER ── */
   .card{
-    border-radius:24px;
-    overflow:hidden;
+    border-radius:24px;overflow:hidden;
     background:#fff;
-    display:flex;
-    flex-direction:column;
-    position:relative;
-    height:100%;
+    display:flex;flex-direction:column;
+    position:relative;height:100%;
   }
 
-  /* عکس کل کارت رو می‌پوشونه */
   .card-photo{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    overflow:hidden;
+    position:absolute;inset:0;
+    width:100%;height:100%;overflow:hidden;
   }
   .card-photo img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    object-position:center;
-    display:block;
+    width:100%;height:100%;
+    object-fit:cover;object-position:center;display:block;
   }
   .card-photo::after{
-    content:'';
-    position:absolute;
-    inset:0;
-    background:
-      linear-gradient(rgba(0,0,0,0.18), rgba(0,0,0,0.18)),
-      linear-gradient(to bottom,
-        rgba(0,0,0,0.04) 0%,
-        transparent 20%,
-        rgba(5,10,30,0.38) 50%,
-        rgba(5,10,30,0.92) 100%);
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.04) 0%,
+      transparent 20%,
+      rgba(5,10,30,0.4) 50%,
+      rgba(5,10,30,0.92) 100%
+    );
     pointer-events:none;
   }
 
   .badge{
-    position:absolute;
-    top:14px;
-    left:14px;
+    position:absolute;top:14px;left:14px;
     background:rgba(255,255,255,0.18);
-    backdrop-filter:blur(12px);
-    -webkit-backdrop-filter:blur(12px);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
     border:1px solid rgba(255,255,255,0.4);
-    border-radius:50px;
-    padding:5px 13px;
-    font-size:11px;
-    font-family:'Vazirmatn',sans-serif;
-    font-weight:700;
-    color:#fff;
-    z-index:2;
-    letter-spacing:0.2px;
+    border-radius:50px;padding:5px 13px;
+    font-size:11px;font-family:'Vazirmatn',sans-serif;
+    font-weight:700;color:#fff;z-index:2;letter-spacing:0.2px;
   }
 
   .card-body{
-    position:absolute;
-    bottom:0;
-    right:0;
-    left:0;
-    margin:10px;
-    padding:14px 14px 14px;
-    z-index:2;
-    display:flex;
-    flex-direction:column;
-    align-items:flex-start;
-    background:rgba(255,255,255,0.12);
+    position:absolute;bottom:0;right:0;left:0;
+    margin:10px;padding:14px;z-index:2;
+    display:flex;flex-direction:column;align-items:flex-start;
+    background:rgba(255,255,255,0.1);
     backdrop-filter:blur(16px) saturate(160%);
     -webkit-backdrop-filter:blur(16px) saturate(160%);
-    border:1px solid rgba(255,255,255,0.25);
+    border:1px solid rgba(255,255,255,0.22);
     border-radius:18px;
-    box-shadow:0 4px 24px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.3);
+    box-shadow:0 4px 24px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.3);
   }
-  .card-title{
-    font-size:16px;
-    font-weight:800;
-    color:#fff;
-    line-height:1.2;
-    margin-bottom:6px;
-    direction:rtl;
-    letter-spacing:-0.4px;
-  }
-  .card-desc{
-    font-size:11px;
-    font-weight:500;
-    color:rgba(255,255,255,0.8);
-    line-height:1.65;
-    direction:rtl;
-    margin-bottom:14px;
-    display:-webkit-box;
-    -webkit-line-clamp:3;
-    -webkit-box-orient:vertical;
-    overflow:hidden;
-  }
-  .card-footer{
-    width:100%;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    direction:ltr;
-  }
-  .read-time{
-    display:flex;
-    align-items:center;
-    gap:5px;
-    font-size:11px;
-    font-weight:600;
-    color:rgba(255,255,255,0.72);
-    font-family:'Vazirmatn',sans-serif;
-    direction:rtl;
-  }
+  .card-title{font-size:16px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:6px;direction:rtl;letter-spacing:-0.4px;}
+  .card-desc{font-size:11px;font-weight:500;color:rgba(255,255,255,0.8);line-height:1.65;direction:rtl;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+  .card-footer{width:100%;display:flex;align-items:center;justify-content:space-between;direction:ltr;}
+  .read-time{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.72);font-family:'Vazirmatn',sans-serif;direction:rtl;}
   .btn-read{
-    background:#fff;
-    color:#111;
-    border:none;
-    border-radius:50px;
-    padding:8px 16px;
-    font-size:12px;
-    font-family:'Vazirmatn',sans-serif;
-    font-weight:800;
-    cursor:pointer;
-    transition:opacity 0.15s, transform 0.15s;
-    white-space:nowrap;
-    letter-spacing:-0.2px;
-    box-shadow:0 2px 8px rgba(0,0,0,0.15);
+    background:#fff;color:#7b2fa0;border:none;border-radius:50px;
+    padding:8px 16px;font-size:12px;
+    font-family:'Vazirmatn',sans-serif;font-weight:800;
+    cursor:pointer;transition:opacity 0.15s,transform 0.15s;
+    white-space:nowrap;letter-spacing:-0.2px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.2);
   }
   .btn-read:active{opacity:0.85;transform:scale(0.97);}
 </style>
@@ -248,21 +360,126 @@
 <body>
 <div class="wrap">
 
+  <!-- HEADER -->
   <header>
     <div class="brand">
       <div class="brand-mark">L</div>
       <div class="brand-name">planlife.ir</div>
     </div>
     <div class="bell">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3a5 5 0 0 0-5 5v3.2c0 .5-.2 1-.5 1.4L5 15h14l-1.5-2.4a2.2 2.2 0 0 1-.5-1.4V8a5 5 0 0 0-5-5Z" stroke="#221a3d" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0" stroke="#221a3d" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M12 3a5 5 0 0 0-5 5v3.2c0 .5-.2 1-.5 1.4L5 15h14l-1.5-2.4a2.2 2.2 0 0 1-.5-1.4V8a5 5 0 0 0-5-5Z" stroke="rgba(255,255,255,0.9)" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M9.5 18a2.5 2.5 0 0 0 5 0" stroke="rgba(255,255,255,0.9)" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
     </div>
   </header>
 
+  <!-- HERO SLIDER -->
+  <div class="hero" id="hero">
+    <div class="slides" id="slides">
+
+      <!-- اسلاید ۱ -->
+      <div class="slide slide-1">
+        <div class="slide-num">۱</div>
+        <svg class="slide-img" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- آیکون کتاب/زبان -->
+          <ellipse cx="100" cy="170" rx="60" ry="10" fill="rgba(0,0,0,0.18)"/>
+          <rect x="50" y="60" width="100" height="90" rx="12" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+          <line x1="100" y1="60" x2="100" y2="150" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+          <rect x="58" y="72" width="32" height="4" rx="2" fill="rgba(255,255,255,0.6)"/>
+          <rect x="58" y="82" width="26" height="4" rx="2" fill="rgba(255,255,255,0.4)"/>
+          <rect x="58" y="92" width="30" height="4" rx="2" fill="rgba(255,255,255,0.5)"/>
+          <rect x="110" y="72" width="32" height="4" rx="2" fill="rgba(255,255,255,0.6)"/>
+          <rect x="110" y="82" width="22" height="4" rx="2" fill="rgba(255,255,255,0.4)"/>
+          <rect x="110" y="92" width="28" height="4" rx="2" fill="rgba(255,255,255,0.5)"/>
+          <circle cx="100" cy="30" r="20" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.45)" stroke-width="2"/>
+          <text x="100" y="37" text-anchor="middle" fill="white" font-size="20" font-weight="bold">A</text>
+        </svg>
+        <div class="slide-text">
+          <div class="slide-tag">شروع کن</div>
+          <div class="slide-title">یادگیری<br>زبان</div>
+          <div class="slide-sub">از صفر تا تسلط کامل با روش‌های علمی</div>
+          <button class="slide-btn">همین الان</button>
+        </div>
+      </div>
+
+      <!-- اسلاید ۲ -->
+      <div class="slide slide-2">
+        <div class="slide-num">۲</div>
+        <svg class="slide-img" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="100" cy="172" rx="58" ry="8" fill="rgba(0,0,0,0.18)"/>
+          <!-- آیکون IELTS / امتحان -->
+          <rect x="40" y="50" width="120" height="110" rx="14" fill="rgba(255,255,255,0.13)" stroke="rgba(255,255,255,0.35)" stroke-width="2"/>
+          <rect x="56" y="68" width="88" height="8" rx="4" fill="rgba(255,255,255,0.55)"/>
+          <rect x="56" y="84" width="60" height="5" rx="2.5" fill="rgba(255,255,255,0.35)"/>
+          <rect x="56" y="96" width="72" height="5" rx="2.5" fill="rgba(255,255,255,0.3)"/>
+          <rect x="56" y="110" width="50" height="5" rx="2.5" fill="rgba(255,255,255,0.25)"/>
+          <!-- ستاره امتیاز -->
+          <circle cx="100" cy="140" r="16" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+          <text x="100" y="146" text-anchor="middle" fill="white" font-size="16">★</text>
+        </svg>
+        <div class="slide-text">
+          <div class="slide-tag">آیلتس</div>
+          <div class="slide-title">آمادگی<br>IELTS</div>
+          <div class="slide-sub">استراتژی‌های اثبات‌شده برای نمره بالا</div>
+          <button class="slide-btn">شروع کن</button>
+        </div>
+      </div>
+
+      <!-- اسلاید ۳ -->
+      <div class="slide slide-3">
+        <div class="slide-num">۳</div>
+        <svg class="slide-img" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="100" cy="172" rx="58" ry="8" fill="rgba(0,0,0,0.18)"/>
+          <!-- آیکون مکالمه -->
+          <rect x="30" y="55" width="90" height="65" rx="16" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+          <polygon points="55,120 55,138 72,120" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+          <rect x="80" y="90" width="90" height="60" rx="16" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.45)" stroke-width="2"/>
+          <polygon points="145,150 145,165 130,150" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.45)" stroke-width="2"/>
+          <!-- نقطه‌های داخل حباب -->
+          <circle cx="95" cy="120" r="5" fill="rgba(255,255,255,0.6)"/>
+          <circle cx="110" cy="120" r="5" fill="rgba(255,255,255,0.4)"/>
+          <circle cx="125" cy="120" r="5" fill="rgba(255,255,255,0.6)"/>
+          <rect x="44" y="72" width="28" height="4" rx="2" fill="rgba(255,255,255,0.6)"/>
+          <rect x="44" y="82" width="48" height="4" rx="2" fill="rgba(255,255,255,0.4)"/>
+          <rect x="44" y="92" width="38" height="4" rx="2" fill="rgba(255,255,255,0.5)"/>
+        </svg>
+        <div class="slide-text">
+          <div class="slide-tag">مکالمه</div>
+          <div class="slide-title">تکلم<br>روان</div>
+          <div class="slide-sub">مکالمه طبیعی با اعتماد به نفس بالا</div>
+          <button class="slide-btn">ادامه بده</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ناوبری -->
+    <button class="hero-prev" id="heroPrev" aria-label="قبلی">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <path d="M9 18l6-6-6-6" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="hero-next" id="heroNext" aria-label="بعدی">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div class="hero-dots">
+      <div class="dot active" data-i="0"></div>
+      <div class="dot" data-i="1"></div>
+      <div class="dot" data-i="2"></div>
+    </div>
+  </div>
+
+  <!-- GREET -->
   <div class="greet">
     <h1>سلام، خوش برگشتی 👋</h1>
     <p>یکی از دسته‌ها رو انتخاب کن و یادگیری رو شروع کن</p>
   </div>
 
+  <!-- CARDS -->
   <div class="container">
     <div class="row-label">سطح‌های پایه</div>
     <div class="carousel" id="row1"></div>
@@ -273,6 +490,27 @@
 </div>
 
 <script>
+/* ── SLIDER ── */
+const slidesEl = document.getElementById('slides');
+const dots = document.querySelectorAll('.dot');
+let cur = 0;
+const total = 3;
+
+function goTo(n){
+  cur = (n + total) % total;
+  slidesEl.style.transform = `translateX(${cur * 100}%)`;
+  dots.forEach((d,i) => d.classList.toggle('active', i === cur));
+}
+
+document.getElementById('heroNext').addEventListener('click', () => goTo(cur - 1));
+document.getElementById('heroPrev').addEventListener('click', () => goTo(cur + 1));
+dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.i)));
+
+/* auto-play */
+let timer = setInterval(() => goTo(cur + 1), 3800);
+document.getElementById('hero').addEventListener('touchstart', () => clearInterval(timer), {passive:true});
+
+/* ── CARDS ── */
 const BASE = 'http://fs3.centraldnserver.com/~planlife/pics/english/';
 const imgs = [1,2,3,4,5,6,7];
 
@@ -283,21 +521,21 @@ function shuffle(arr){
 }
 
 const row1Cards = [
-  {title:'سوالات مبتدی',      desc:'یادگیری از صفر با ساده‌ترین سوالات. پایه‌های محکمی برای شروع زبان انگلیسی بسازید.',        badge:'مبتدی',        hours:'۳۲'},
-  {title:'سوالات مقدماتی',    desc:'مرحله بعدی برای ارتقای مهارت زبانی. گرامر و واژگان پایه را در قالب تمرین‌های جذاب تقویت کنید.', badge:'مقدماتی',     hours:'۴۸'},
-  {title:'سوالات پیشرفته ۱',  desc:'بالا بردن مهارت‌ها با تمرین‌های چالش‌برانگیز. ساختارهای پیچیده‌تر زبان را فرا بگیرید.',       badge:'پیشرفته ۱',    hours:'۶۴'},
-  {title:'سوالات پیشرفته ۲',  desc:'تقویت درک مطلب و مکالمه در سطح بالاتر با تمرکز بر موضوعات روزمره و کاربردی.',                 badge:'پیشرفته ۲',    hours:'۷۲'},
-  {title:'سوالات پیشرفته ۳',  desc:'مهارت نوشتاری و شنیداری را در این سطح به طرز چشمگیری تقویت خواهید کرد.',                    badge:'پیشرفته ۳',    hours:'۸۰'},
-  {title:'سوالات پیشرفته ۴',  desc:'آخرین سطح از مجموعه پیشرفته با تمرکز بر مهارت‌های ترکیبی و درک متون پیچیده.',               badge:'پیشرفته ۴',    hours:'۹۰'},
+  {title:'سوالات مبتدی',     desc:'یادگیری از صفر با ساده‌ترین سوالات. پایه‌های محکمی برای شروع زبان انگلیسی بسازید.',         badge:'مبتدی',       hours:'۳۲'},
+  {title:'سوالات مقدماتی',   desc:'مرحله بعدی برای ارتقای مهارت زبانی. گرامر و واژگان پایه را در قالب تمرین‌های جذاب تقویت کنید.',badge:'مقدماتی',    hours:'۴۸'},
+  {title:'سوالات پیشرفته ۱', desc:'بالا بردن مهارت‌ها با تمرین‌های چالش‌برانگیز. ساختارهای پیچیده‌تر زبان را فرا بگیرید.',      badge:'پیشرفته ۱',   hours:'۶۴'},
+  {title:'سوالات پیشرفته ۲', desc:'تقویت درک مطلب و مکالمه در سطح بالاتر با تمرکز بر موضوعات روزمره و کاربردی.',                badge:'پیشرفته ۲',   hours:'۷۲'},
+  {title:'سوالات پیشرفته ۳', desc:'مهارت نوشتاری و شنیداری را در این سطح به طرز چشمگیری تقویت خواهید کرد.',                   badge:'پیشرفته ۳',   hours:'۸۰'},
+  {title:'سوالات پیشرفته ۴', desc:'آخرین سطح از مجموعه پیشرفته با تمرکز بر مهارت‌های ترکیبی و درک متون پیچیده.',              badge:'پیشرفته ۴',   hours:'۹۰'},
 ];
 
 const row2Cards = [
-  {title:'سوالات پیشرفته ۵',  desc:'ورود به سطح حرفه‌ای با تمرین‌های فشرده و محتوای تخصصی زبان انگلیسی.',                       badge:'پیشرفته ۵',    hours:'۹۶'},
-  {title:'سوالات پیشرفته ۶',  desc:'تسلط کامل بر ساختارهای دستوری پیچیده و واژگان سطح بالا برای موفقیت بیشتر.',                  badge:'پیشرفته ۶',    hours:'۱۰۴'},
-  {title:'IELTS ۱',           desc:'آشنایی با ساختار آزمون IELTS و تمرین مهارت‌های چهارگانه در سطح پایه.',                       badge:'IELTS ۱',      hours:'۴۸'},
-  {title:'IELTS ۲',           desc:'تقویت Writing و Speaking با استفاده از نمونه سوالات واقعی آزمون IELTS.',                      badge:'IELTS ۲',      hours:'۶۴'},
-  {title:'IELTS ۳',           desc:'آمادگی کامل برای کسب نمره بالا در IELTS با استراتژی‌های اثبات‌شده و تمرین فشرده.',            badge:'IELTS ۳',      hours:'۸۰'},
-  {title:'فوق حرفه‌ای',        desc:'سطح نهایی و جامع برای تسلط کامل بر زبان انگلیسی. پکیج کامل از مبتدی تا پیشرفته.',            badge:'فوق حرفه‌ای',  hours:'۱۲۸'},
+  {title:'سوالات پیشرفته ۵', desc:'ورود به سطح حرفه‌ای با تمرین‌های فشرده و محتوای تخصصی زبان انگلیسی.',                      badge:'پیشرفته ۵',   hours:'۹۶'},
+  {title:'سوالات پیشرفته ۶', desc:'تسلط کامل بر ساختارهای دستوری پیچیده و واژگان سطح بالا برای موفقیت بیشتر.',                 badge:'پیشرفته ۶',   hours:'۱۰۴'},
+  {title:'IELTS ۱',          desc:'آشنایی با ساختار آزمون IELTS و تمرین مهارت‌های چهارگانه در سطح پایه.',                      badge:'IELTS ۱',     hours:'۴۸'},
+  {title:'IELTS ۲',          desc:'تقویت Writing و Speaking با استفاده از نمونه سوالات واقعی آزمون IELTS.',                     badge:'IELTS ۲',     hours:'۶۴'},
+  {title:'IELTS ۳',          desc:'آمادگی کامل برای کسب نمره بالا در IELTS با استراتژی‌های اثبات‌شده و تمرین فشرده.',           badge:'IELTS ۳',     hours:'۸۰'},
+  {title:'فوق حرفه‌ای',       desc:'سطح نهایی و جامع برای تسلط کامل بر زبان انگلیسی. پکیج کامل از مبتدی تا پیشرفته.',           badge:'فوق حرفه‌ای', hours:'۱۲۸'},
 ];
 
 function makeCard(c, imgNum){
@@ -305,7 +543,8 @@ function makeCard(c, imgNum){
   <div class="card-wrap">
     <div class="card">
       <div class="card-photo">
-        <img src="${BASE}${imgNum}.jpg" alt="${c.title}" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#667eea,#764ba2)'">
+        <img src="${BASE}${imgNum}.jpg" alt="${c.title}" loading="lazy"
+             onerror="this.style.background='linear-gradient(135deg,#7b2fa0,#e040a0)'">
       </div>
       <span class="badge">${c.badge}</span>
       <div class="card-body">
@@ -322,12 +561,10 @@ function makeCard(c, imgNum){
 
 const sh1 = shuffle(imgs);
 const sh2 = shuffle(imgs);
-
 const r1 = document.getElementById('row1');
 const r2 = document.getElementById('row2');
-
-row1Cards.forEach((c,i) => r1.insertAdjacentHTML('beforeend', makeCard(c, sh1[i % 7])));
-row2Cards.forEach((c,i) => r2.insertAdjacentHTML('beforeend', makeCard(c, sh2[i % 7])));
+row1Cards.forEach((c,i) => r1.insertAdjacentHTML('beforeend', makeCard(c, sh1[i%7])));
+row2Cards.forEach((c,i) => r2.insertAdjacentHTML('beforeend', makeCard(c, sh2[i%7])));
 </script>
 </body>
 </html>
