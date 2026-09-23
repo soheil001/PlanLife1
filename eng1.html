@@ -65,9 +65,9 @@
   }
   .carousel::-webkit-scrollbar{display:none;}
 
-  /* ── CARD WRAPPER (for border/frame effect) ── */
+  /* ── CARD WRAPPER (border/frame) ── */
   .card-wrap{
-    flex:0 0 204px;
+    flex:0 0 235px;
     border-radius:26px;
     padding:3px;
     background:linear-gradient(145deg,rgba(255,255,255,0.85) 0%,rgba(200,195,230,0.5) 50%,rgba(255,255,255,0.6) 100%);
@@ -95,11 +95,10 @@
     height:100%;
   }
 
-  /* photo fills the card */
   .card-photo{
     position:relative;
     width:100%;
-    height:278px;
+    height:320px;
     overflow:hidden;
     flex-shrink:0;
   }
@@ -109,20 +108,18 @@
     object-fit:cover;
     display:block;
   }
-  /* gradient overlay */
   .card-photo::after{
     content:'';
     position:absolute;
     inset:0;
     background:linear-gradient(to bottom,
       rgba(0,0,0,0.04) 0%,
-      transparent 28%,
-      rgba(5,10,30,0.45) 58%,
+      transparent 25%,
+      rgba(5,10,30,0.42) 55%,
       rgba(5,10,30,0.88) 100%);
     pointer-events:none;
   }
 
-  /* category badge */
   .badge{
     position:absolute;
     top:14px;
@@ -141,7 +138,6 @@
     letter-spacing:0.2px;
   }
 
-  /* text overlay bottom */
   .card-body{
     position:absolute;
     bottom:0;
@@ -228,13 +224,11 @@
   </div>
 
   <div class="container">
-
     <div class="row-label">سطح‌های پایه</div>
     <div class="carousel" id="row1"></div>
 
     <div class="row-label">سطح‌های پیشرفته</div>
     <div class="carousel" id="row2"></div>
-
   </div>
 </div>
 
@@ -248,13 +242,22 @@ function shuffle(arr){
   return a;
 }
 
-const cards = [
-  {title:'سوالات مبتدی',   desc:'یادگیری از صفر با ساده‌ترین سوالات. پایه‌های محکمی برای شروع زبان انگلیسی بسازید و با اطمینان پیش بروید.', badge:'پایه',      hours:'۳۲'},
-  {title:'سوالات مقدماتی', desc:'مرحله بعدی برای ارتقای مهارت زبانی. گرامر و واژگان پایه را در قالب تمرین‌های جذاب تقویت کنید.',             badge:'مقدماتی',   hours:'۴۸'},
-  {title:'سوالات پیشرفته ۱',desc:'بالا بردن مهارت‌ها با تمرین‌های چالش‌برانگیز. ساختارهای پیچیده‌تر زبان را در این سطح فرا بگیرید.',          badge:'متقدم',     hours:'۶۴'},
-  {title:'سوالات پیشرفته ۲',desc:'سطح حرفه‌ای برای کسانی که می‌خواهند زبان را در محیط کار و ارتباطات رسمی به‌کار ببرند.',                   badge:'حرفه‌ای',   hours:'۸۰'},
-  {title:'سوالات پیشرفته ۳',desc:'آمادگی کامل برای آزمون IELTS با سوالات واقعی و استراتژی‌های اثبات‌شده برای کسب نمره بالا.',               badge:'IELTS',     hours:'۹۶'},
-  {title:'حرفه‌ای کامل',   desc:'سطح نهایی و جامع برای تسلط کامل بر زبان انگلیسی. پکیج کامل از مبتدی تا پیشرفته در یک مسیر.',               badge:'فول',       hours:'۱۲۸'},
+const row1Cards = [
+  {title:'سوالات مبتدی',      desc:'یادگیری از صفر با ساده‌ترین سوالات. پایه‌های محکمی برای شروع زبان انگلیسی بسازید.',        badge:'مبتدی',        hours:'۳۲'},
+  {title:'سوالات مقدماتی',    desc:'مرحله بعدی برای ارتقای مهارت زبانی. گرامر و واژگان پایه را در قالب تمرین‌های جذاب تقویت کنید.', badge:'مقدماتی',     hours:'۴۸'},
+  {title:'سوالات پیشرفته ۱',  desc:'بالا بردن مهارت‌ها با تمرین‌های چالش‌برانگیز. ساختارهای پیچیده‌تر زبان را فرا بگیرید.',       badge:'پیشرفته ۱',    hours:'۶۴'},
+  {title:'سوالات پیشرفته ۲',  desc:'تقویت درک مطلب و مکالمه در سطح بالاتر با تمرکز بر موضوعات روزمره و کاربردی.',                 badge:'پیشرفته ۲',    hours:'۷۲'},
+  {title:'سوالات پیشرفته ۳',  desc:'مهارت نوشتاری و شنیداری را در این سطح به طرز چشمگیری تقویت خواهید کرد.',                    badge:'پیشرفته ۳',    hours:'۸۰'},
+  {title:'سوالات پیشرفته ۴',  desc:'آخرین سطح از مجموعه پیشرفته با تمرکز بر مهارت‌های ترکیبی و درک متون پیچیده.',               badge:'پیشرفته ۴',    hours:'۹۰'},
+];
+
+const row2Cards = [
+  {title:'سوالات پیشرفته ۵',  desc:'ورود به سطح حرفه‌ای با تمرین‌های فشرده و محتوای تخصصی زبان انگلیسی.',                       badge:'پیشرفته ۵',    hours:'۹۶'},
+  {title:'سوالات پیشرفته ۶',  desc:'تسلط کامل بر ساختارهای دستوری پیچیده و واژگان سطح بالا برای موفقیت بیشتر.',                  badge:'پیشرفته ۶',    hours:'۱۰۴'},
+  {title:'IELTS ۱',           desc:'آشنایی با ساختار آزمون IELTS و تمرین مهارت‌های چهارگانه در سطح پایه.',                       badge:'IELTS ۱',      hours:'۴۸'},
+  {title:'IELTS ۲',           desc:'تقویت Writing و Speaking با استفاده از نمونه سوالات واقعی آزمون IELTS.',                      badge:'IELTS ۲',      hours:'۶۴'},
+  {title:'IELTS ۳',           desc:'آمادگی کامل برای کسب نمره بالا در IELTS با استراتژی‌های اثبات‌شده و تمرین فشرده.',            badge:'IELTS ۳',      hours:'۸۰'},
+  {title:'فوق حرفه‌ای',        desc:'سطح نهایی و جامع برای تسلط کامل بر زبان انگلیسی. پکیج کامل از مبتدی تا پیشرفته.',            badge:'فوق حرفه‌ای',  hours:'۱۲۸'},
 ];
 
 function makeCard(c, imgNum){
@@ -277,12 +280,14 @@ function makeCard(c, imgNum){
   </div>`;
 }
 
-const shuffled = shuffle(imgs);
-const row1 = document.getElementById('row1');
-const row2 = document.getElementById('row2');
+const sh1 = shuffle(imgs);
+const sh2 = shuffle(imgs);
 
-cards.slice(0,3).forEach((c,i)=> row1.insertAdjacentHTML('beforeend', makeCard(c, shuffled[i])));
-cards.slice(3,6).forEach((c,i)=> row2.insertAdjacentHTML('beforeend', makeCard(c, shuffled[i+3])));
+const r1 = document.getElementById('row1');
+const r2 = document.getElementById('row2');
+
+row1Cards.forEach((c,i) => r1.insertAdjacentHTML('beforeend', makeCard(c, sh1[i % 7])));
+row2Cards.forEach((c,i) => r2.insertAdjacentHTML('beforeend', makeCard(c, sh2[i % 7])));
 </script>
 </body>
 </html>
