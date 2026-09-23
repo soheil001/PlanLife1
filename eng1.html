@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lingua — planlife.ir</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1535; --muted:#8b84a8;
+    --glass:rgba(255,255,255,0.55); --glass-brd:rgba(255,255,255,0.7);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Vazirmatn',sans-serif;
+    min-height:100%;
+    background:#dde0ec;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  .wrap{max-width:520px;margin:0 auto;min-height:100%;position:relative;}
+
+  header{
+    position:sticky;top:0;z-index:10;
+    margin:14px 16px 6px;
+    padding:10px 16px;
+    display:flex;align-items:center;justify-content:space-between;
+    background:var(--glass);
+    border:1px solid var(--glass-brd);
+    border-radius:18px;
+    backdrop-filter:blur(20px) saturate(180%);
+    -webkit-backdrop-filter:blur(20px) saturate(180%);
+    box-shadow:0 8px 24px rgba(90,70,160,0.1), inset 0 1px 0 rgba(255,255,255,0.7);
+  }
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#8b5cf6,#5b8cf7);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-weight:800;font-size:15px;color:#fff;flex-shrink:0;}
+  .brand-name{font-family:'Poppins',sans-serif;font-weight:700;font-size:14.5px;color:var(--ink);direction:ltr;letter-spacing:0.2px;}
+  .bell{width:34px;height:34px;border-radius:12px;background:rgba(255,255,255,0.55);border:1px solid var(--glass-brd);display:flex;align-items:center;justify-content:center;color:var(--ink);}
+
+  .greet{padding:18px 26px 4px;text-align:center;}
+  .greet h1{font-size:21px;font-weight:800;color:var(--ink);letter-spacing:-0.3px;}
+  .greet p{margin-top:6px;font-size:13px;color:var(--muted);font-weight:500;}
+
+  .container{padding:20px 16px 60px;}
+
+  .row-label{
+    font-size:14px;
+    font-weight:700;
+    color:var(--ink);
+    margin:24px 0 12px 0;
+    padding:0 4px;
+    letter-spacing:-0.2px;
+  }
+
+  .carousel{
+    display:flex;
+    gap:16px;
+    overflow-x:auto;
+    scroll-behavior:smooth;
+    padding-bottom:10px;
+    margin:0 -16px;
+    padding-left:16px;
+    padding-right:16px;
+  }
+  .carousel::-webkit-scrollbar{display:none;}
+
+  /* ── CARD WRAPPER (for border/frame effect) ── */
+  .card-wrap{
+    flex:0 0 204px;
+    border-radius:26px;
+    padding:3px;
+    background:linear-gradient(145deg,rgba(255,255,255,0.85) 0%,rgba(200,195,230,0.5) 50%,rgba(255,255,255,0.6) 100%);
+    box-shadow:
+      0 2px 0 rgba(255,255,255,0.9),
+      0 16px 36px rgba(30,20,80,0.22),
+      inset 0 1px 0 rgba(255,255,255,0.95);
+    cursor:pointer;
+    transition:transform 0.18s, box-shadow 0.18s;
+    flex-shrink:0;
+  }
+  .card-wrap:active{
+    transform:scale(0.97);
+    box-shadow:0 6px 18px rgba(30,20,80,0.18);
+  }
+
+  /* ── CARD INNER ── */
+  .card{
+    border-radius:24px;
+    overflow:hidden;
+    background:#fff;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    height:100%;
+  }
+
+  /* photo fills the card */
+  .card-photo{
+    position:relative;
+    width:100%;
+    height:278px;
+    overflow:hidden;
+    flex-shrink:0;
+  }
+  .card-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  /* gradient overlay */
+  .card-photo::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to bottom,
+      rgba(0,0,0,0.04) 0%,
+      transparent 28%,
+      rgba(5,10,30,0.45) 58%,
+      rgba(5,10,30,0.88) 100%);
+    pointer-events:none;
+  }
+
+  /* category badge */
+  .badge{
+    position:absolute;
+    top:14px;
+    left:14px;
+    background:rgba(255,255,255,0.18);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,0.4);
+    border-radius:50px;
+    padding:5px 13px;
+    font-size:11.5px;
+    font-family:'Vazirmatn',sans-serif;
+    font-weight:700;
+    color:#fff;
+    z-index:2;
+    letter-spacing:0.2px;
+  }
+
+  /* text overlay bottom */
+  .card-body{
+    position:absolute;
+    bottom:0;
+    right:0;
+    left:0;
+    padding:16px 15px 16px;
+    z-index:2;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .card-title{
+    font-size:18px;
+    font-weight:800;
+    color:#fff;
+    line-height:1.2;
+    margin-bottom:6px;
+    direction:rtl;
+    letter-spacing:-0.4px;
+  }
+  .card-desc{
+    font-size:11.5px;
+    font-weight:500;
+    color:rgba(255,255,255,0.8);
+    line-height:1.65;
+    direction:rtl;
+    margin-bottom:13px;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .card-footer{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    direction:ltr;
+  }
+  .read-time{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-size:11.5px;
+    font-weight:600;
+    color:rgba(255,255,255,0.72);
+    font-family:'Vazirmatn',sans-serif;
+    direction:rtl;
+  }
+  .btn-read{
+    background:#fff;
+    color:#111;
+    border:none;
+    border-radius:50px;
+    padding:9px 18px;
+    font-size:12.5px;
+    font-family:'Vazirmatn',sans-serif;
+    font-weight:800;
+    cursor:pointer;
+    transition:opacity 0.15s, transform 0.15s;
+    white-space:nowrap;
+    letter-spacing:-0.2px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.15);
+  }
+  .btn-read:active{opacity:0.85;transform:scale(0.97);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="brand-mark">L</div>
+      <div class="brand-name">planlife.ir</div>
+    </div>
+    <div class="bell">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3a5 5 0 0 0-5 5v3.2c0 .5-.2 1-.5 1.4L5 15h14l-1.5-2.4a2.2 2.2 0 0 1-.5-1.4V8a5 5 0 0 0-5-5Z" stroke="#221a3d" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0" stroke="#221a3d" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </div>
+  </header>
+
+  <div class="greet">
+    <h1>سلام، خوش برگشتی 👋</h1>
+    <p>یکی از دسته‌ها رو انتخاب کن و یادگیری رو شروع کن</p>
+  </div>
+
+  <div class="container">
+
+    <div class="row-label">سطح‌های پایه</div>
+    <div class="carousel" id="row1"></div>
+
+    <div class="row-label">سطح‌های پیشرفته</div>
+    <div class="carousel" id="row2"></div>
+
+  </div>
+</div>
+
+<script>
+const BASE = 'http://fs3.centraldnserver.com/~planlife/pics/english/';
+const imgs = [1,2,3,4,5,6,7];
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+const cards = [
+  {title:'سوالات مبتدی',   desc:'یادگیری از صفر با ساده‌ترین سوالات. پایه‌های محکمی برای شروع زبان انگلیسی بسازید و با اطمینان پیش بروید.', badge:'پایه',      hours:'۳۲'},
+  {title:'سوالات مقدماتی', desc:'مرحله بعدی برای ارتقای مهارت زبانی. گرامر و واژگان پایه را در قالب تمرین‌های جذاب تقویت کنید.',             badge:'مقدماتی',   hours:'۴۸'},
+  {title:'سوالات پیشرفته ۱',desc:'بالا بردن مهارت‌ها با تمرین‌های چالش‌برانگیز. ساختارهای پیچیده‌تر زبان را در این سطح فرا بگیرید.',          badge:'متقدم',     hours:'۶۴'},
+  {title:'سوالات پیشرفته ۲',desc:'سطح حرفه‌ای برای کسانی که می‌خواهند زبان را در محیط کار و ارتباطات رسمی به‌کار ببرند.',                   badge:'حرفه‌ای',   hours:'۸۰'},
+  {title:'سوالات پیشرفته ۳',desc:'آمادگی کامل برای آزمون IELTS با سوالات واقعی و استراتژی‌های اثبات‌شده برای کسب نمره بالا.',               badge:'IELTS',     hours:'۹۶'},
+  {title:'حرفه‌ای کامل',   desc:'سطح نهایی و جامع برای تسلط کامل بر زبان انگلیسی. پکیج کامل از مبتدی تا پیشرفته در یک مسیر.',               badge:'فول',       hours:'۱۲۸'},
+];
+
+function makeCard(c, imgNum){
+  return `
+  <div class="card-wrap">
+    <div class="card">
+      <div class="card-photo">
+        <img src="${BASE}${imgNum}.jpg" alt="${c.title}" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#667eea,#764ba2)'">
+        <span class="badge">${c.badge}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">${c.title}</div>
+        <div class="card-desc">${c.desc}</div>
+        <div class="card-footer">
+          <div class="read-time">${c.hours} ساعت</div>
+          <button class="btn-read">شروع کن</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+const shuffled = shuffle(imgs);
+const row1 = document.getElementById('row1');
+const row2 = document.getElementById('row2');
+
+cards.slice(0,3).forEach((c,i)=> row1.insertAdjacentHTML('beforeend', makeCard(c, shuffled[i])));
+cards.slice(3,6).forEach((c,i)=> row2.insertAdjacentHTML('beforeend', makeCard(c, shuffled[i+3])));
+</script>
+</body>
+</html>
