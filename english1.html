@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=390, initial-scale=1">
 <title>English Academy</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/@fontsource/sahel@latest/index.css" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -203,23 +202,37 @@ nav {
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  align-items: stretch;
 }
 .levels-scroll::-webkit-scrollbar { display: none; }
 
 .level-card {
-  flex: 0 0 148px;
+  flex: 0 0 140px;
   scroll-snap-align: start;
   background: rgba(255,255,255,0.1);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border: 1px solid rgba(255,255,255,0.18);
   border-radius: 14px;
-  padding: 14px 12px;
+  padding: 28px 10px;
   display: flex;
   flex-direction: column;
-  gap: 9px;
-  min-height: 240px;
+  gap: 13px;
+  min-height: 265px;
 }
+
+/* لینک کارت اول: باید مثل بقیه کارت‌ها رفتار کنه */
+a.level-card-link {
+  flex: 0 0 140px;
+  scroll-snap-align: start;
+  text-decoration: none;
+  display: flex; /* برای اینکه کارت داخلش پر بشه */
+}
+a.level-card-link .level-card {
+  flex: 1;
+  width: 100%;
+}
+
 .lc-range {
   display: inline-flex;
   align-items: center;
@@ -235,17 +248,17 @@ nav {
 }
 .lc-title {
   color: #fff;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   font-family: 'Vazirmatn', sans-serif;
-  line-height: 1.6;
+  line-height: 1.4;
   text-align: right;
   direction: rtl;
 }
 .lc-desc {
   color: rgba(255,255,255,0.6);
-  font-size: 9.5px;
-  line-height: 1.9;
+  font-size: 8.5px;
+  line-height: 1.7;
   font-family: 'Vazirmatn', sans-serif;
   font-weight: 300;
   direction: rtl;
@@ -338,6 +351,7 @@ nav {
 .footer-item { display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center; flex: 1; }
 .footer-icon { font-size: 18px; }
 .footer-label { color: rgba(255,255,255,0.7); font-size: 7.5px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.25; }
+
 /* FREE CARD */
 .free-card { border-color: rgba(134,239,172,0.4); }
 .free-btn {
@@ -540,15 +554,15 @@ nav {
     </div>
     <div class="levels-scroll" id="levelsScroll">
 
-      <!-- FREE CARD -->
-      <a href="https://planlife.ir/english.html" target="_blank" style="text-decoration:none;">
-      <div class="level-card free-card">
-        <div class="lc-range">0 → 5</div>
-        <div class="lc-title">پایه انگلیسی</div>
-        <div class="lc-desc">اگر یادگیری زبان انگلیسی را از ۰ تا ۱۰۰ در نظر بگیریم این سوالات در درجه‌ی ۰ تا ۵ می‌باشند.</div>
-        <div class="lc-bar"><div class="lc-fill" style="width:5%"></div></div>
-        <div class="lc-btn free-btn">🎁 رایگان</div>
-      </div>
+      <!-- FREE CARD — لینک روی کل کارت، همون ابعاد بقیه -->
+      <a href="https://planlife.ir/english.html" target="_blank" class="level-card-link">
+        <div class="level-card free-card">
+          <div class="lc-range">0 → 5</div>
+          <div class="lc-title">پایه انگلیسی</div>
+          <div class="lc-desc">اگر یادگیری زبان انگلیسی را از ۰ تا ۱۰۰ در نظر بگیریم این سوالات در درجه‌ی ۰ تا ۵ می‌باشند.</div>
+          <div class="lc-bar"><div class="lc-fill" style="width:5%"></div></div>
+          <div class="lc-btn free-btn">🎁 رایگان</div>
+        </div>
       </a>
 
       <div class="level-card" onclick="openPopup()">
@@ -724,7 +738,8 @@ nav {
 const scroll = document.getElementById('levelsScroll');
 const dots = document.querySelectorAll('#scrollDots .s-dot');
 scroll.addEventListener('scroll', () => {
-  const cardW = scroll.querySelector('.level-card').offsetWidth + 8;
+  const firstCard = scroll.querySelector('.level-card');
+  const cardW = firstCard.offsetWidth + 8;
   const idx = Math.min(Math.round(scroll.scrollLeft / cardW), dots.length - 1);
   dots.forEach((d, i) => d.classList.toggle('active', i === idx));
 });
