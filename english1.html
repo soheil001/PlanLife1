@@ -338,6 +338,103 @@ nav {
 .footer-item { display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center; flex: 1; }
 .footer-icon { font-size: 18px; }
 .footer-label { color: rgba(255,255,255,0.7); font-size: 7.5px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.25; }
+/* FREE CARD */
+.free-card { border-color: rgba(134,239,172,0.4); }
+.free-btn {
+  background: rgba(134,239,172,0.15) !important;
+  border-color: rgba(134,239,172,0.5) !important;
+  color: #86efac !important;
+  font-weight: 700 !important;
+}
+
+/* POPUP */
+.popup-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  align-items: center;
+  justify-content: center;
+}
+.popup-overlay.active { display: flex; }
+.popup-box {
+  width: 320px;
+  background: rgba(20,40,25,0.92);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 22px;
+  padding: 28px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  direction: rtl;
+  font-family: 'Vazirmatn', sans-serif;
+}
+.popup-close {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  color: rgba(255,255,255,0.5);
+  font-size: 16px;
+  cursor: pointer;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+}
+.popup-title {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
+  line-height: 1.5;
+}
+.popup-input {
+  width: 100%;
+  padding: 11px 14px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 12px;
+  font-family: 'Vazirmatn', sans-serif;
+  text-align: right;
+  direction: rtl;
+  outline: none;
+}
+.popup-input::placeholder { color: rgba(255,255,255,0.35); }
+.popup-enter {
+  width: 100%;
+  padding: 11px 0;
+  background: rgba(134,239,172,0.18);
+  border: 1.5px solid rgba(134,239,172,0.45);
+  border-radius: 10px;
+  color: #d1fae5;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Vazirmatn', sans-serif;
+  cursor: pointer;
+}
+.popup-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #fff;
+  justify-content: center;
+}
+.popup-link.telegram { background: rgba(41,182,246,0.18); border: 1px solid rgba(41,182,246,0.4); color: #7dd3fc; }
+.popup-link.whatsapp { background: rgba(74,222,128,0.15); border: 1px solid rgba(74,222,128,0.4); color: #86efac; }
+.popup-link.bale     { background: rgba(34,197,94,0.12);  border: 1px solid rgba(34,197,94,0.35); color: #4ade80; }
 </style>
 </head>
 <body>
@@ -443,15 +540,18 @@ nav {
     </div>
     <div class="levels-scroll" id="levelsScroll">
 
-      <div class="level-card">
+      <!-- FREE CARD -->
+      <a href="https://planlife.ir/english.html" target="_blank" style="text-decoration:none;">
+      <div class="level-card free-card">
         <div class="lc-range">0 → 5</div>
         <div class="lc-title">پایه انگلیسی</div>
         <div class="lc-desc">اگر یادگیری زبان انگلیسی را از ۰ تا ۱۰۰ در نظر بگیریم این سوالات در درجه‌ی ۰ تا ۵ می‌باشند.</div>
         <div class="lc-bar"><div class="lc-fill" style="width:5%"></div></div>
-        <div class="lc-btn">View</div>
+        <div class="lc-btn free-btn">🎁 رایگان</div>
       </div>
+      </a>
 
-      <div class="level-card">
+      <div class="level-card" onclick="openPopup()">
         <div class="lc-range">5 → 10</div>
         <div class="lc-title">مقدماتی</div>
         <div class="lc-desc">اگر یادگیری زبان انگلیسی را از ۰ تا ۱۰۰ در نظر بگیریم این سوالات در درجه‌ی ۵ تا ۱۰ می‌باشند.</div>
@@ -459,7 +559,7 @@ nav {
         <div class="lc-btn">View</div>
       </div>
 
-      <div class="level-card">
+      <div class="level-card" onclick="openPopup()">
         <div class="lc-range">10 → 15</div>
         <div class="lc-title">پیشرفته ۱</div>
         <div class="lc-desc">اگر یادگیری زبان انگلیسی را از ۰ تا ۱۰۰ در نظر بگیریم این سوالات در درجه‌ی ۱۰ تا ۱۵ می‌باشند.</div>
@@ -467,7 +567,7 @@ nav {
         <div class="lc-btn">View</div>
       </div>
 
-      <div class="level-card">
+      <div class="level-card" onclick="openPopup()">
         <div class="lc-range">15 → 20</div>
         <div class="lc-title">پیشرفته ۲</div>
         <div class="lc-desc">اگر یادگیری زبان انگلیسی را از ۰ تا ۱۰۰ در نظر بگیریم این سوالات در درجه‌ی ۱۵ تا ۲۰ می‌باشند.</div>
@@ -475,7 +575,7 @@ nav {
         <div class="lc-btn">View</div>
       </div>
 
-      <div class="level-card">
+      <div class="level-card" onclick="openPopup()">
         <div class="lc-range">20 → 30</div>
         <div class="lc-title">پیشرفته ۳</div>
         <div class="lc-desc">اگر یادگیری زبان انگلیسی را از ۰ تا ۱۰۰ در نظر بگیریم این سوالات در درجه‌ی ۲۰ تا ۳۰ می‌باشند.</div>
@@ -483,7 +583,7 @@ nav {
         <div class="lc-btn">View</div>
       </div>
 
-      <div class="level-card">
+      <div class="level-card" onclick="openPopup()">
         <div class="lc-range">30 → 40</div>
         <div class="lc-title">پیشرفته ۴</div>
         <div class="lc-desc">اگر یادگیری زبان انگلیسی را از ۰ تا ۱۰۰ در نظر بگیریم این سوالات در درجه‌ی ۳۰ تا ۴۰ می‌باشند.</div>
@@ -491,7 +591,7 @@ nav {
         <div class="lc-btn">View</div>
       </div>
 
-      <div class="level-card">
+      <div class="level-card" onclick="openPopup()">
         <div class="lc-range">40 → 50</div>
         <div class="lc-title">پیشرفته ۵</div>
         <div class="lc-desc">اگر یادگیری زبان انگلیسی را از ۰ تا ۱۰۰ در نظر بگیریم این سوالات در درجه‌ی ۴۰ تا ۵۰ می‌باشند.</div>
@@ -499,7 +599,7 @@ nav {
         <div class="lc-btn">View</div>
       </div>
 
-      <div class="level-card">
+      <div class="level-card" onclick="openPopup()">
         <div class="lc-range">50 → 70</div>
         <div class="lc-title">حرفه‌ای</div>
         <div class="lc-desc">اگر یادگیری زبان انگلیسی را از ۰ تا ۱۰۰ در نظر بگیریم این سوالات در درجه‌ی ۵۰ تا ۷۰ می‌باشند.</div>
@@ -507,7 +607,7 @@ nav {
         <div class="lc-btn">View</div>
       </div>
 
-      <div class="level-card">
+      <div class="level-card" onclick="openPopup()">
         <div class="lc-range">70 → 80</div>
         <div class="lc-title">آیلتس ۱</div>
         <div class="lc-desc">اگر یادگیری زبان انگلیسی را از ۰ تا ۱۰۰ در نظر بگیریم این سوالات در درجه‌ی ۷۰ تا ۸۰ می‌باشند.</div>
@@ -515,7 +615,7 @@ nav {
         <div class="lc-btn">View</div>
       </div>
 
-      <div class="level-card">
+      <div class="level-card" onclick="openPopup()">
         <div class="lc-range">80 → 90</div>
         <div class="lc-title">آیلتس ۲</div>
         <div class="lc-desc">اگر یادگیری زبان انگلیسی را از ۰ تا ۱۰۰ در نظر بگیریم این سوالات در درجه‌ی ۸۰ تا ۹۰ می‌باشند.</div>
@@ -523,7 +623,7 @@ nav {
         <div class="lc-btn">View</div>
       </div>
 
-      <div class="level-card">
+      <div class="level-card" onclick="openPopup()">
         <div class="lc-range">90 → 100</div>
         <div class="lc-title">فول حرفه‌ای</div>
         <div class="lc-desc">اگر یادگیری زبان انگلیسی را از ۰ تا ۱۰۰ در نظر بگیریم این سوالات در درجه‌ی ۹۰ تا ۱۰۰ می‌باشند.</div>
@@ -544,6 +644,25 @@ nav {
       <div class="s-dot"></div>
       <div class="s-dot"></div>
       <div class="s-dot"></div>
+    </div>
+  </div>
+
+  <!-- POPUP -->
+  <div class="popup-overlay" id="popupOverlay" onclick="closePopup(event)">
+    <div class="popup-box">
+      <div class="popup-close" onclick="closePopup()">✕</div>
+      <div class="popup-title">کد اشتراک خودتون رو وارد کنید</div>
+      <input class="popup-input" type="text" placeholder="کد اشتراک ...">
+      <button class="popup-enter">ورود</button>
+      <a href="https://t.me/" target="_blank" class="popup-link telegram">
+        <span>🔵</span> تهیه کد از طریق تلگرام
+      </a>
+      <a href="https://wa.me/" target="_blank" class="popup-link whatsapp">
+        <span>🟢</span> تهیه کد از طریق واتس‌اپ
+      </a>
+      <a href="https://ble.ir/" target="_blank" class="popup-link bale">
+        <span>🟩</span> تهیه کد از طریق بله
+      </a>
     </div>
   </div>
 
@@ -609,6 +728,14 @@ scroll.addEventListener('scroll', () => {
   const idx = Math.min(Math.round(scroll.scrollLeft / cardW), dots.length - 1);
   dots.forEach((d, i) => d.classList.toggle('active', i === idx));
 });
+function openPopup() {
+  document.getElementById('popupOverlay').classList.add('active');
+}
+function closePopup(e) {
+  if (!e || e.target === document.getElementById('popupOverlay')) {
+    document.getElementById('popupOverlay').classList.remove('active');
+  }
+}
 </script>
 </body>
 </html>
