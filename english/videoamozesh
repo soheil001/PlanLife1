@@ -33,9 +33,22 @@
   .back{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:12px;
     background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;text-decoration:none;}
   .back:active{background:rgba(255,255,255,.3);}
-  .status{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:10.5px;font-weight:700;
-    padding:5px 10px;border-radius:30px;background:rgba(5,15,40,.5);border:1px solid rgba(255,255,255,.25);}
-  .status.on{background:rgba(36,130,75,.55);}
+
+  .login-icon-btn{
+    position:absolute;right:12px;top:50%;transform:translateY(-50%);
+    width:34px;height:34px;border-radius:12px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    color:#ff5a5a;background:rgba(255,80,80,.16);
+    border:1px solid rgba(255,90,90,.65);
+    box-shadow:0 0 14px rgba(255,80,80,.28), inset 0 1px 0 rgba(255,255,255,.25);
+    transition:color .25s ease,background .25s ease,border-color .25s ease,box-shadow .25s ease;
+  }
+  .login-icon-btn.logged-in{
+    color:#2ecc71;background:rgba(46,204,113,.16);
+    border-color:rgba(46,204,113,.7);
+    box-shadow:0 0 14px rgba(46,204,113,.35), inset 0 1px 0 rgba(255,255,255,.25);
+  }
+  .login-icon-btn:active{transform:translateY(-50%) scale(.93);}
 
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:10px 3px 40px;}
   .item{position:relative;aspect-ratio:9/16;background:#0a1a3a;overflow:hidden;cursor:pointer;border-radius:6px;
@@ -128,7 +141,12 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
     <div class="title">Explore Lingua</div>
-    <div class="status" id="status">🔒 ویژه اعضا</div>
+    <button class="login-icon-btn" id="loginIconBtn" type="button" aria-label="ورود" onclick="onLoginIconClick()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 20c0-3.6 3.6-6 8-6s8 2.4 8 6"/>
+      </svg>
+    </button>
   </header>
   <div class="grid" id="grid"></div>
 </div>
@@ -216,9 +234,11 @@ const videos=VIDEO_IDS.map(n=>({
 let unlocked=false;
 function setAccess(on){
   unlocked=on;
-  const st=document.getElementById('status');
-  st.textContent=on?'✓ اشتراک فعال':'🔒 ویژه اعضا';
-  st.classList.toggle('on',on);
+  const ic=document.getElementById('loginIconBtn');
+  if(ic){
+    ic.classList.toggle('logged-in',on);
+    ic.setAttribute('aria-label',on?'حساب کاربری':'ورود');
+  }
   document.querySelectorAll('.item').forEach(el=>{
     el.classList.toggle('open',on);
     el.querySelector('.lock').textContent=on?'✓ فعال':'🔒 قفل';
@@ -233,6 +253,18 @@ async function verifySubscription(){
     if(!ok)try{localStorage.removeItem(SESSION_KEY);}catch(e){}
     setAccess(ok);return ok;
   }catch(e){setAccess(false);return false;}
+}
+
+/* آیکن ورود: اگر وارد نشده باشد پاپ‌آپ ورود، اگر وارد شده باشد خروج از حساب */
+function onLoginIconClick(){
+  if(isLoggedIn()){
+    if(confirm('می‌خواهید از حساب خود خارج شوید؟')){
+      try{localStorage.removeItem(SESSION_KEY);}catch(e){}
+      location.reload();
+    }
+  }else{
+    openLoginPopup(null);
+  }
 }
 
 /* ============ Grid ============ */
