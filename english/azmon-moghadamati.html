@@ -218,19 +218,12 @@
     <div class="modal-subtitle" id="modal-subtitle">اطلاعات خود را وارد کنید تا کد اختصاصی دریافت کنید</div>
     <div id="modal-body">
       <div class="form-field">
-        <label class="form-label" for="f-name">نام و نام خانوادگی</label>
-        <input class="form-input" id="f-name" type="text" placeholder="مثلاً: علی احمدی" autocomplete="name">
-      </div>
-      <div class="form-field">
         <label class="form-label" for="f-phone">شماره تلفن</label>
-        <input class="form-input" id="f-phone" type="tel" placeholder="مثلاً: 09123456789" autocomplete="tel" style="direction:ltr;text-align:right;">
+        <input class="form-input" id="f-phone" type="tel" inputmode="numeric" maxlength="11" placeholder="مثلاً: 09123456789" autocomplete="tel" style="direction:ltr;text-align:right;">
       </div>
-      <div class="form-field">
-        <label class="form-label" for="f-city">نام شهر</label>
-        <input class="form-input" id="f-city" type="text" placeholder="مثلاً: تهران">
-      </div>
+      <div id="code-form-error" style="display:none;color:#FCA5A5;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:12px;padding:12px;font-size:13px;line-height:1.7;margin-top:12px;text-align:right;"></div>
       <div class="modal-btn-row" style="margin-top:20px">
-        <button class="modal-btn-submit" onclick="submitCodeForm()">دریافت کد ←</button>
+        <button class="modal-btn-submit" id="get-code-submit" onclick="submitCodeForm()">دریافت کد ←</button>
         <button class="modal-btn-cancel" onclick="closeModal()">انصراف</button>
       </div>
     </div>
@@ -243,20 +236,19 @@
 
 <script>
 const SUPABASE_URL = 'https://hjzzvzxhrqovvducnxha.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhqenp2enhocnFvdnZkdWNueGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NDY0MTksImV4cCI6MjA5NzUyMjQxOX0.XfFimXnkKHFBlYUE-E7daaBNjPJZV-D21UfCL_1SeoQ';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhqenp2enhocnFvdnZkdWNueGhhIiwiaWF0IjoxNzgxOTQ2NDE5LCJleHAiOjIwOTc1MjI0MTl9.XfFimXnkKHFBlYUE-E7daaBNjPJZV-D21UfCL_1SeoQ';
 
-async function getExamSubscriptionCode(phone){
-  const normalizedPhone = phone.replace(/\D/g,'').replace(/^0/,'');
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_exam_subscription_code`,{
-    method:'POST',
-    headers:{
-      'apikey':SUPABASE_KEY,
-      'Authorization':'Bearer '+SUPABASE_KEY,
-      'Content-Type':'application/json'
-    },
-    body:JSON.stringify({p_phone:normalizedPhone})
+async function sbRpc(functionName, body) {
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${functionName}`, {
+    method: 'POST',
+    headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json'},
+    body: JSON.stringify(body)
   });
-  if(!response.ok) throw new Error('RPC_ERROR');
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Supabase RPC Error:', errorText);
+    throw new Error(errorText || 'خطا در ارتباط با سرور');
+  }
   return await response.json();
 }
 
@@ -338,83 +330,95 @@ function animateCounter(el,from,to,dur,fmt){
 // ── Modal ──────────────────────────────────────
 function openGetCodeModal() {
   document.getElementById('code-modal').classList.remove('hidden');
-  document.body.style.overflow='hidden';
-  document.getElementById('modal-icon').textContent='🎓';
-  document.getElementById('modal-title').textContent='دریافت کد اشتراک';
-  document.getElementById('modal-subtitle').textContent='شماره تلفن خود را که با آن اشتراک تهیه کرده‌اید وارد کنید.';
-  document.getElementById('modal-body').innerHTML=`
+  document.body.style.overflow = 'hidden';
+  document.getElementById('modal-icon').textContent = '🎓';
+  document.getElementById('modal-title').textContent = 'دریافت کد اشتراک';
+  document.getElementById('modal-subtitle').textContent = 'شماره تلفن خود را که با آن اشتراک تهیه کرده‌اید وارد کنید.';
+  document.getElementById('modal-body').innerHTML = `
     <div class="form-field">
       <label class="form-label" for="f-phone">شماره تلفن</label>
-      <input class="form-input" id="f-phone" type="tel" inputmode="numeric" placeholder="مثلاً: 09123456789" autocomplete="tel" style="direction:ltr;text-align:right;">
+      <input class="form-input" id="f-phone" type="tel" inputmode="numeric" maxlength="11" placeholder="مثلاً: 09123456789" autocomplete="tel" style="direction:ltr;text-align:right;">
     </div>
-    <div class="error-msg" id="subscription-error" style="display:none;margin-top:10px"></div>
+    <div id="code-form-error" style="display:none;color:#FCA5A5;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:12px;padding:12px;font-size:13px;line-height:1.7;margin-top:12px;text-align:right;"></div>
     <div class="modal-btn-row" style="margin-top:20px">
       <button class="modal-btn-submit" id="get-code-submit" onclick="submitCodeForm()">دریافت کد ←</button>
       <button class="modal-btn-cancel" onclick="closeModal()">انصراف</button>
     </div>
   `;
-  setTimeout(()=>{const i=document.getElementById('f-phone');if(i)i.focus();},80);
+  setTimeout(() => {
+    const input = document.getElementById('f-phone');
+    if (input) {
+      input.focus();
+      input.addEventListener('keydown', function(e) { if (e.key === 'Enter') submitCodeForm(); });
+    }
+  }, 100);
 }
+
 function closeModal() {
   document.getElementById('code-modal').classList.add('hidden');
-  document.body.style.overflow='';
+  document.body.style.overflow = '';
 }
+
 function handleModalOverlayClick(e) {
-  if(e.target===document.getElementById('code-modal')) closeModal();
+  if (e.target === document.getElementById('code-modal')) closeModal();
 }
+
 async function submitCodeForm() {
-  const input=document.getElementById('f-phone');
-  const errorEl=document.getElementById('subscription-error');
-  const button=document.getElementById('get-code-submit');
-  if(!input||!errorEl||!button)return;
+  const input = document.getElementById('f-phone');
+  const button = document.getElementById('get-code-submit');
+  const errorBox = document.getElementById('code-form-error');
+  if (!input) return;
 
-  let phone=input.value.trim().replace(/\D/g,'');
-  if(phone.startsWith('0'))phone=phone.slice(1);
+  let phone = input.value.trim()
+    .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+    .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+    .replace(/\D/g, '');
 
-  errorEl.style.display='none';
-  errorEl.textContent='';
-  input.classList.remove('field-error');
+  if (phone.startsWith('0')) phone = phone.substring(1);
 
-  if(!/^9\d{9}$/.test(phone)){
+  if (!/^9\d{9}$/.test(phone)) {
+    errorBox.textContent = 'لطفاً شماره تلفن معتبر خود را وارد کنید.';
+    errorBox.style.display = 'block';
     input.classList.add('field-error');
-    errorEl.textContent='⚠️ لطفاً یک شماره موبایل معتبر وارد کنید.';
-    errorEl.style.display='block';
     return;
   }
 
-  button.disabled=true;
-  button.textContent='در حال بررسی...';
+  errorBox.style.display = 'none';
+  input.classList.remove('field-error');
+  button.disabled = true;
+  button.style.opacity = '0.6';
+  button.textContent = 'در حال بررسی...';
 
-  try{
-    const result=await getExamSubscriptionCode(phone);
+  try {
+    const result = await sbRpc('get_exam_subscription_code', {p_phone: phone});
+    console.log('Supabase get code result:', result);
 
-    if(!result || !result.success){
-      errorEl.textContent='⚠️ '+(result?.message||'برای این شماره اشتراک فعالی پیدا نشد.');
-      errorEl.style.display='block';
-      return;
+    if (result && result.success === true && result.code) {
+      document.getElementById('modal-icon').textContent = '🎉';
+      document.getElementById('modal-title').textContent = 'کد اشتراک شما';
+      document.getElementById('modal-subtitle').textContent = 'این کد برای شماره تلفن شما اختصاص داده شده است.';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="code-reveal-box">
+          <div class="code-reveal-label">✦ کد اختصاصی آزمون</div>
+          <div class="code-reveal-number">${result.code}</div>
+          <div class="code-reveal-msg">این کد را ذخیره کنید.<br>برای ورود به آزمون از همین کد استفاده کنید.</div>
+        </div>
+        <button class="modal-btn-submit" onclick="closeModal()" style="margin-top:20px;width:100%">متوجه شدم ✓</button>
+      `;
+    } else {
+      errorBox.textContent = (result && result.message) || 'برای این شماره اشتراک فعالی پیدا نشد.';
+      errorBox.style.display = 'block';
+      button.disabled = false;
+      button.style.opacity = '1';
+      button.textContent = 'دریافت کد ←';
     }
-
-    const code=String(result.code||'').trim();
-    if(!/^\d{4}$/.test(code)) throw new Error('INVALID_CODE');
-
-    document.getElementById('modal-icon').textContent='🎉';
-    document.getElementById('modal-title').textContent='کد اشتراک شما';
-    document.getElementById('modal-subtitle').textContent='این کد به شماره شما اختصاص داده شده است.';
-    document.getElementById('modal-body').innerHTML=`
-      <div class="code-reveal-box">
-        <div class="code-reveal-label">✦ کد اختصاصی آزمون</div>
-        <div class="code-reveal-number">${code}</div>
-        <div class="code-reveal-msg">این کد را ذخیره کنید.<br>برای ورود به آزمون از همین کد استفاده کنید.</div>
-      </div>
-      <button class="modal-btn-submit" onclick="closeModal()" style="margin-top:20px;width:100%">متوجه شدم ✓</button>
-    `;
-  }catch(error){
-    console.error(error);
-    errorEl.textContent='⚠️ خطا در اتصال به سامانه. لطفاً دوباره تلاش کنید.';
-    errorEl.style.display='block';
-  }finally{
-    button.disabled=false;
-    button.textContent='دریافت کد ←';
+  } catch (error) {
+    console.error('Get exam code error:', error);
+    errorBox.textContent = 'ارتباط با سرور برقرار نشد. لطفاً چند لحظه بعد دوباره تلاش کنید.';
+    errorBox.style.display = 'block';
+    button.disabled = false;
+    button.style.opacity = '1';
+    button.textContent = 'دریافت کد ←';
   }
 }
 
@@ -426,67 +430,74 @@ function renderAccess(){
       <div class="brand-name"><span>آزمون زبان انگلیسی</span>ورود به آزمون</div>
     </div>
     <div class="access-icon">🔐</div>
-    <div class="access-title">کد کلاس را وارد کنید</div>
-    <div class="access-subtitle">برای دسترسی به آزمون، کد اختصاصی کلاس خود را وارد کنید.</div>
+    <div class="access-title">کد اشتراک را وارد کنید</div>
+    <div class="access-subtitle">برای دسترسی به آزمون، کد اختصاصی اشتراک خود را وارد کنید.</div>
     <label class="code-input-label" for="code-field">کد دسترسی</label>
     <div style="position:relative;margin-bottom:12px">
-      <input class="code-input" id="code-field" type="text" placeholder="کد کلاس را اینجا بنویسید"
-        autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
-        onkeydown="if(event.key==='Enter')checkCode()" oninput="clearError()"/>
+      <input class="code-input" id="code-field" type="text" inputmode="numeric" maxlength="4" placeholder="کد ۴ رقمی را اینجا بنویسید" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" onkeydown="if(event.key==='Enter')checkCode()" oninput="clearError()"/>
     </div>
     <div class="error-msg" id="error-msg"><span>⚠️</span><span>کد وارد شده اشتباه است. دوباره تلاش کنید.</span></div>
     <button class="btn-primary" onclick="checkCode()" style="margin-top:20px">ورود به آزمون ←</button>
     <button class="btn-get-code" onclick="openGetCodeModal()">🎓 دریافت کد اشتراک</button>
-    <div class="access-footer">کد کلاس را از مدرس خود دریافت کنید</div>
+    <div class="access-footer">کد اشتراک از طریق شماره تلفن شما قابل دریافت است</div>
   `;
   setTimeout(()=>{const i=document.getElementById('code-field');if(i)i.focus();},100);
 }
+
 function clearError(){
   const i=document.getElementById('code-field'),e=document.getElementById('error-msg');
-  if(i)i.classList.remove('error');if(e)e.classList.remove('visible');
+  if(i)i.classList.remove('error');
+  if(e)e.classList.remove('visible');
 }
+
 async function checkCode(){
-  const i=document.getElementById('code-field'),e=document.getElementById('error-msg');
+  const i=document.getElementById('code-field');
+  const e=document.getElementById('error-msg');
   if(!i)return;
-  const val=i.value.trim();
+
+  let val=i.value.trim()
+    .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+    .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+    .replace(/\D/g,'');
+  i.value=val;
+
   if(!/^\d{4}$/.test(val)){
     i.classList.add('error');
-    if(e){e.querySelector('span:last-child').textContent='کد باید دقیقاً ۴ رقم باشد.';e.classList.add('visible');}
+    if(e){
+      e.querySelector('span:last-child').textContent='کد باید یک عدد ۴ رقمی باشد.';
+      e.classList.add('visible');
+    }
     setTimeout(()=>i.classList.remove('error'),400);
     return;
   }
 
   i.disabled=true;
-  const oldText=e?.querySelector('span:last-child')?.textContent||'کد وارد شده اشتباه است. دوباره تلاش کنید.';
-  if(e)e.classList.remove('visible');
 
-  try{
-    const response=await fetch(`${SUPABASE_URL}/rest/v1/rpc/verify_exam_subscription_code`,{
-      method:'POST',
-      headers:{
-        'apikey':SUPABASE_KEY,
-        'Authorization':'Bearer '+SUPABASE_KEY,
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify({p_code:val})
-    });
-    if(!response.ok)throw new Error('CHECK_ERROR');
-    const result=await response.json();
-    if(result && result.success){
+  try {
+    const result=await sbRpc('verify_exam_subscription_code',{p_code:val});
+    console.log('Supabase verify result:',result);
+
+    if(result && result.success===true){
       i.classList.add('success');
       setTimeout(()=>{state.screen='start';transition(renderStart);},400);
-    }else{
+    } else {
+      i.disabled=false;
       i.classList.add('error');
-      if(e){e.querySelector('span:last-child').textContent=oldText;e.classList.add('visible');}
+      if(e){
+        e.querySelector('span:last-child').textContent='کد وارد شده معتبر نیست.';
+        e.classList.add('visible');
+      }
       setTimeout(()=>i.classList.remove('error'),400);
     }
-  }catch(error){
-    console.error(error);
-    i.classList.add('error');
-    if(e){e.querySelector('span:last-child').textContent='خطا در بررسی کد. لطفاً دوباره تلاش کنید.';e.classList.add('visible');}
-    setTimeout(()=>i.classList.remove('error'),400);
-  }finally{
+  } catch(err) {
+    console.error('Verify code error:',err);
     i.disabled=false;
+    i.classList.add('error');
+    if(e){
+      e.querySelector('span:last-child').textContent='خطا در ارتباط با سرور. دوباره تلاش کنید.';
+      e.classList.add('visible');
+    }
+    setTimeout(()=>i.classList.remove('error'),400);
   }
 }
 
