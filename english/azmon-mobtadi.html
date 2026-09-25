@@ -27,6 +27,7 @@
   #app { position:relative; z-index:1; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px 16px; }
 
   .card {
+    position:relative;
     background:rgba(255,255,255,0.06); backdrop-filter:blur(28px); -webkit-backdrop-filter:blur(28px);
     border:1px solid rgba(255,255,255,0.13); border-radius:28px; width:100%; max-width:640px;
     padding:40px 38px; box-shadow:0 36px 90px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.09);
@@ -77,6 +78,57 @@
   .option.correct  .opt-text { color:#6EE7B7; font-weight:600; }
   .option.wrong    .opt-text { color:#FCA5A5; }
   .opt-icon { font-size:17px; position:relative; z-index:1; opacity:0; transition:opacity .2s; min-width:20px; text-align:center; }
+
+  /* Wrong-answer explanation popup */
+  .explanation-popup {
+    position:relative; width:100%; margin:0 0 22px;
+    padding:18px 18px 16px;
+    background:linear-gradient(135deg,rgba(255,255,255,.13),rgba(255,255,255,.055));
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:20px;
+    backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px);
+    box-shadow:0 18px 45px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.12);
+    animation:explainIn .3s cubic-bezier(.22,.87,.33,1) both;
+  }
+  .explanation-popup::before {
+    content:''; position:absolute; inset:0; border-radius:inherit;
+    background:linear-gradient(120deg,rgba(239,68,68,.10),rgba(86,180,233,.06),rgba(255,255,255,.03));
+    pointer-events:none;
+  }
+  .explanation-head { display:flex; align-items:center; gap:10px; position:relative; z-index:1; margin-bottom:8px; }
+  .explanation-icon {
+    width:34px; height:34px; border-radius:11px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.25);
+    font-size:16px;
+  }
+  .explanation-title { font-size:13px; font-weight:800; color:#fff; }
+  .explanation-text {
+    position:relative; z-index:1;
+    font-size:13px; line-height:1.85; color:rgba(255,255,255,.72);
+    margin-bottom:14px;
+  }
+  .explanation-correct {
+    position:relative; z-index:1;
+    display:flex; align-items:center; gap:7px;
+    font-size:12px; color:#6EE7B7; font-weight:700;
+    background:rgba(16,185,129,.08); border:1px solid rgba(16,185,129,.16);
+    border-radius:10px; padding:8px 10px; margin-bottom:12px;
+  }
+  .explanation-btn {
+    position:relative; z-index:1; width:100%; padding:11px 16px;
+    border:1px solid rgba(255,255,255,.14); border-radius:11px;
+    background:linear-gradient(135deg,#2176AE,#0D4F8A);
+    color:#fff; font-family:'Vazirmatn',sans-serif; font-size:13px;
+    font-weight:800; cursor:pointer; box-shadow:0 7px 20px rgba(33,118,174,.28);
+    transition:transform .2s,box-shadow .2s;
+  }
+  .explanation-btn:hover { transform:translateY(-1px); box-shadow:0 10px 25px rgba(33,118,174,.38); }
+  .explanation-btn:active { transform:scale(.98); }
+  @keyframes explainIn {
+    from { opacity:0; transform:translateY(-10px) scale(.98); }
+    to { opacity:1; transform:translateY(0) scale(1); }
+  }
   .option.correct .opt-icon { opacity:1; }
   .option.wrong   .opt-icon { opacity:1; }
 
@@ -200,6 +252,8 @@
     .opt-text { font-size:14px; }
     .start-title { font-size:20px; }
     .modal-box { padding:28px 20px; }
+    .explanation-popup { padding:15px 14px 14px; margin-bottom:18px; }
+    .explanation-text { font-size:12.5px; }
     .result-score-big { font-size:72px; }
   }
 </style>
@@ -308,6 +362,79 @@ const QUESTIONS_BANK = [
   { badge:'معنی کلمه', text:'معنی کلمه "<span class="en">School</span>" چیست؟', options:['بیمارستان','پارک','مدرسه','فروشگاه'], correct:2 },
   { badge:'حال ساده', text:'کدام جمله درست است؟', options:['She have a cat','She has a cat','She haves a cat','She having a cat'], correct:1 },
 ];
+
+
+const EXPLANATIONS = {
+  'معنی کلمه|Book': 'کلمهٔ <span class="en">Book</span> به معنی «کتاب» است.',
+  'گرامر - to be|I ___ a student.': 'برای <span class="en">I</span> از فعل <span class="en">am</span> استفاده می‌کنیم: <span class="en">I am a student.</span>',
+  'رنگ‌ها|رنگ آسمان چیست؟': 'در این سؤال، رنگ موردنظر «آبی» است؛ <span class="en">Blue</span> یعنی آبی.',
+  'گرامر - to be|She ___ my sister.': 'برای <span class="en">She</span> از <span class="en">is</span> استفاده می‌کنیم: <span class="en">She is my sister.</span>',
+  'احوالپرسی|کدام کلمه به معنی «سلام» است؟': '<span class="en">Hello</span> یعنی «سلام» و برای سلام کردن استفاده می‌شود.',
+  'اعداد|Five': '<span class="en">Five</span> یعنی عدد ۵، یعنی «پنج».',
+  'اعضای خانواده|Mother': '<span class="en">Mother</span> یعنی «مادر».',
+  'گرامر - a/an|کدام جمله درست است؟': 'قبل از کلمه‌ای که با صدای مصوت شروع می‌شود، از <span class="en">an</span> استفاده می‌کنیم؛ پس <span class="en">an apple</span> درست است.',
+  'ضمایر|___ are friends.': 'برای «ما» از <span class="en">We</span> استفاده می‌کنیم: <span class="en">We are friends.</span>',
+  'حیوانات|Cat': '<span class="en">Cat</span> یعنی «گربه».',
+  'روزهای هفته|اولین روز هفته': 'در این آزمون، اولین روز هفته <span class="en">Monday</span> در نظر گرفته شده است.',
+  'غذاها|Water': '<span class="en">Water</span> یعنی «آب».',
+  'جمع اسم|Dog': 'برای جمع بستن بیشتر اسم‌های ساده، <span class="en">s</span> اضافه می‌کنیم؛ <span class="en">Dog → Dogs</span>.',
+  'جمله منفی|I am not a teacher.': 'وجود <span class="en">not</span> جمله را منفی می‌کند؛ یعنی «من معلم نیستم».',
+  'رنگ‌ها|Red': '<span class="en">Red</span> یعنی «قرمز».',
+  'گرامر - can|I can swim.': '<span class="en">can</span> توانایی را نشان می‌دهد؛ جمله یعنی «من می‌توانم شنا کنم».',
+  'this / that|وقتی چیزی دور': 'برای یک چیز دور از گوینده از <span class="en">That</span> استفاده می‌کنیم.',
+  'حروف اضافه|کتاب روی میز': 'برای قرار گرفتن یک چیز روی سطح، از <span class="en">on</span> استفاده می‌کنیم: <span class="en">on the table</span>.',
+  'گرامر - have/has|She ___ a pen.': 'با <span class="en">She</span> از <span class="en">has</span> استفاده می‌کنیم: <span class="en">She has a pen.</span>',
+  'حیوانات|Bird': '<span class="en">Bird</span> یعنی «پرنده».',
+  'سؤالی - What|What is your name?': '<span class="en">What is your name?</span> یعنی «اسم تو چیست؟».',
+  'متضاد|Hot': 'متضاد <span class="en">Hot</span> یعنی «داغ/گرم»، کلمهٔ <span class="en">Cold</span> یعنی «سرد» است.',
+  'ضمایر|وقتی درباره یک پسر': 'برای یک پسر از ضمیر <span class="en">He</span> استفاده می‌کنیم.',
+  'غذاها|Bread': '<span class="en">Bread</span> یعنی «نان».',
+  'گرامر - to be|They ___ happy.': 'برای <span class="en">They</span> از <span class="en">are</span> استفاده می‌کنیم: <span class="en">They are happy.</span>',
+  'اعداد|Ten': '<span class="en">Ten</span> یعنی عدد ۱۰، یعنی «ده».',
+  'معنی کلمه|House': '<span class="en">House</span> یعنی «خانه».',
+  'سؤالی - Where|Where are you?': '<span class="en">Where</span> درباره مکان می‌پرسد؛ جمله یعنی «کجا هستی؟».',
+  "گرامر - can't|He can't fly.": 'وجود <span class="en">can’t</span> یعنی توانایی انجام کار وجود ندارد؛ «او نمی‌تواند پرواز کند».',
+  'اعضای خانواده|Father': '<span class="en">Father</span> یعنی «پدر».',
+  'احوالپرسی|How are you?': '<span class="en">How are you?</span> برای پرسیدن حال شخص است؛ یعنی «حالت چطور است؟».',
+  'رنگ‌ها|Green': '<span class="en">Green</span> یعنی «سبز».',
+  'گرامر - a/an|کدام درست است؟': 'قبل از <span class="en">egg</span> که با صدای مصوت شروع می‌شود، <span class="en">an</span> می‌آید: <span class="en">an egg</span>.',
+  'حال ساده|I eat breakfast.': 'جمله یعنی «من صبحانه می‌خورم»؛ <span class="en">breakfast</span> یعنی صبحانه.',
+  'this / these|برای اشاره به چند چیز نزدیک': 'برای چند چیز نزدیک از <span class="en">These</span> استفاده می‌کنیم.',
+  'اعداد|Three': '<span class="en">Three</span> یعنی عدد ۳، یعنی «سه».',
+  'حیوانات|Fish': '<span class="en">Fish</span> یعنی «ماهی».',
+  'حروف اضافه|گربه زیر صندلی': 'برای قرار گرفتن چیزی زیر چیز دیگر از <span class="en">under</span> استفاده می‌کنیم.',
+  'وسایل روزمره|Pen': '<span class="en">Pen</span> یعنی «خودکار».',
+  'سؤالی - Who|Who is she?': '<span class="en">Who</span> دربارهٔ شخص می‌پرسد؛ جمله یعنی «او کیست؟».',
+  'گرامر - have|I ___ a dog.': 'با <span class="en">I</span> از <span class="en">have</span> استفاده می‌کنیم: <span class="en">I have a dog.</span>',
+  'روزهای هفته|روز بعد از دوشنبه': 'روز بعد از <span class="en">Monday</span>، <span class="en">Tuesday</span> است.',
+  'متضاد|Big': 'متضاد <span class="en">Big</span> یعنی «بزرگ»، <span class="en">Small</span> یعنی «کوچک» است.',
+  'غذاها|Milk': '<span class="en">Milk</span> یعنی «شیر».',
+  'ساخت جمله|کدام جمله درست است؟': 'ساختار درست جمله با <span class="en">I</span> این است: <span class="en">I am ...</span>.',
+  'ضمایر|وقتی درباره یک حیوان یا چیز': 'برای یک حیوان یا چیز معمولاً از ضمیر <span class="en">It</span> استفاده می‌کنیم.',
+  'وسایل روزمره|Chair': '<span class="en">Chair</span> یعنی «صندلی».',
+  'سؤال‌سازی|چطور از جمله': 'در سؤال‌های فعل <span class="en">to be</span>، فعل را قبل از فاعل می‌آوریم: <span class="en">Are you ...?</span>',
+  'اعداد|Seven': '<span class="en">Seven</span> یعنی عدد ۷، یعنی «هفت».',
+  'احوالپرسی|Goodbye': '<span class="en">Goodbye</span> یعنی «خداحافظ».',
+  'رنگ‌ها|Yellow': '<span class="en">Yellow</span> یعنی «زرد».',
+  'حروف اضافه|گوشی داخل کیف': 'برای چیزی که داخل یک فضا قرار دارد از <span class="en">in</span> استفاده می‌کنیم.',
+  'اعضای خانواده|Brother': '<span class="en">Brother</span> یعنی «برادر».',
+  'جمله منفی|He is not sad.': 'وجود <span class="en">not</span> جمله را منفی می‌کند؛ یعنی «او غمگین نیست».',
+  'حیوانات|Horse': '<span class="en">Horse</span> یعنی «اسب».',
+  'ساعت|It is two o’clock.': 'عبارت <span class="en">two o’clock</span> یعنی ساعت دو.',
+  'جمع اسم|Book': 'برای جمع بستن <span class="en">Book</span>، حرف <span class="en">s</span> اضافه می‌شود: <span class="en">Books</span>.',
+  'گرامر - can|کدام جمله سؤالی صحیح است؟': 'برای سؤال توانایی، <span class="en">Can</span> را ابتدای جمله می‌آوریم: <span class="en">Can you ...?</span>',
+  'معنی کلمه|School': '<span class="en">School</span> یعنی «مدرسه».',
+  'حال ساده|کدام جمله درست است؟': 'با <span class="en">She</span> در زمان حال ساده، <span class="en">have</span> به <span class="en">has</span> تبدیل می‌شود: <span class="en">She has ...</span>.'
+};
+
+function getExplanation(q) {
+  const t = q.text.replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();
+  for (const [key, value] of Object.entries(EXPLANATIONS)) {
+    const [badge, fragment] = key.split('|');
+    if (q.badge === badge && t.includes(fragment)) return value;
+  }
+  return `پاسخ درست «${q.options[q.correct]}» است. این گزینه با ساختار یا معنی موردنظر سؤال مطابقت دارد.`;
+}
 
 function toPersian(n) { return String(n).replace(/\d/g, d=>'۰۱۲۳۴۵۶۷۸۹'[d]); }
 const LETTERS = ['A','B','C','D'];
@@ -464,6 +591,7 @@ function renderQuestion(){
   const total=state.shuffled.length;
   const progress=Math.round((state.currentQ/total)*100);
   const answered=state.answers[state.currentQ];
+  const isWrong=answered!==undefined && answered!==q.correct;
 
   card.innerHTML=`
     <div class="brand" style="margin-bottom:18px">
@@ -477,6 +605,21 @@ function renderQuestion(){
       </div>
       <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${progress}%"></div></div>
     </div>
+
+    ${isWrong ? `
+      <div class="explanation-popup" id="explanation-popup">
+        <div class="explanation-head">
+          <div class="explanation-icon">💡</div>
+          <div class="explanation-title">چرا این پاسخ اشتباه بود؟</div>
+        </div>
+        <div class="explanation-text">${getExplanation(q)}</div>
+        <div class="explanation-correct">✓ پاسخ درست: ${q.options[q.correct]}</div>
+        <button class="explanation-btn" onclick="acknowledgeExplanation()">
+          متوجه شدم ✓
+        </button>
+      </div>
+    ` : ''}
+
     <div class="q-badge">✦ ${q.badge}</div>
     <div class="q-text">${q.text}</div>
     <div class="options" id="options-list">
@@ -497,12 +640,25 @@ function renderQuestion(){
     </div>
     <div style="display:flex;gap:10px;margin-top:22px;align-items:center">
       ${state.currentQ>0?`<button class="btn-ghost" onclick="prevQ()">→ قبلی</button>`:''}
-      <button class="btn-primary" id="next-btn" style="margin-top:0;${answered===undefined?'opacity:.4;cursor:not-allowed':''}"
-        onclick="nextQ()" ${answered===undefined?'disabled':''}>
+      <button class="btn-primary" id="next-btn" style="margin-top:0;${answered===undefined||isWrong?'opacity:.4;cursor:not-allowed':''}"
+        onclick="nextQ()" ${answered===undefined||isWrong?'disabled':''}>
         ${state.currentQ===total-1?'مشاهده نتیجه ✓':'سوال بعدی ←'}
       </button>
     </div>
   `;
+}
+
+function acknowledgeExplanation(){
+  const popup=document.getElementById('explanation-popup');
+  if(popup){
+    popup.style.animation='none';
+    popup.style.opacity='0';
+    popup.style.transform='translateY(-8px)';
+    popup.style.transition='opacity .18s ease, transform .18s ease';
+  }
+  setTimeout(()=>{
+    nextQ();
+  },180);
 }
 
 function selectAnswer(idx){
@@ -510,14 +666,23 @@ function selectAnswer(idx){
   const q=state.shuffled[state.currentQ];
   state.answers[state.currentQ]=idx;
   if(idx===q.correct)state.score++;
+
   document.querySelectorAll('.option').forEach((el,i)=>{
     if(i===q.correct){el.classList.add('correct');el.querySelector('.opt-icon').textContent='✓';}
     else if(i===idx&&idx!==q.correct){el.classList.add('wrong');el.querySelector('.opt-icon').textContent='✕';}
     el.style.pointerEvents='none';
   });
+
+  if(idx!==q.correct){
+    // نمایش توضیح شیشه‌ای و انتقال به سؤال بعدی فقط بعد از «متوجه شدم»
+    renderQuestion();
+    return;
+  }
+
   const btn=document.getElementById('next-btn');
   if(btn){btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';}
 }
+
 function nextQ(){
   if(state.answers[state.currentQ]===undefined)return;
   if(state.currentQ<state.shuffled.length-1){state.currentQ++;transition(renderQuestion);}
