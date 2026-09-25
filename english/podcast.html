@@ -4,4236 +4,790 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>English Podcast — PlanLife</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html, body {
-    width: 100%;
-    min-height: 100%;
-    background: #020813;
-    font-family: Inter, Arial, sans-serif;
-    color: #fff;
-    overflow-x: hidden;
-}
-
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -3;
-    background:
-        radial-gradient(circle at 20% 15%, rgba(40,104,255,.22), transparent 28%),
-        radial-gradient(circle at 80% 20%, rgba(124,69,255,.18), transparent 30%),
-        radial-gradient(circle at 50% 90%, rgba(0,150,255,.10), transparent 35%),
-        #020813;
-}
-
-body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -2;
-    background: linear-gradient(180deg, rgba(2,8,19,.10), rgba(2,8,19,.75));
-}
-
-.app {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 30px;
-}
-
-.phone {
-    width: 390px;
-    min-height: 820px;
-    max-height: 920px;
-    position: relative;
-    overflow: hidden;
-    border-radius: 44px;
-    background: linear-gradient(180deg, rgba(4,22,43,.95), rgba(1,10,21,.98));
-    border: 1px solid rgba(138,186,255,.55);
-    box-shadow:
-        0 30px 100px rgba(0,0,0,.65),
-        inset 0 0 40px rgba(65,130,255,.06);
-}
-
-.screen {
-    position: absolute;
-    inset: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateX(30px);
-    transition:
-        opacity .35s ease,
-        transform .35s ease,
-        visibility .35s ease;
-    z-index: 2;
-    scrollbar-width: none;
-}
-
-.screen::-webkit-scrollbar {
-    display: none;
-}
-
-.screen.active {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(0);
-}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;min-height:100%;background:#020813;font-family:Inter,Arial,sans-serif;color:#fff;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-3;background:radial-gradient(circle at 20% 15%,rgba(40,104,255,.22),transparent 28%),radial-gradient(circle at 80% 20%,rgba(124,69,255,.18),transparent 30%),radial-gradient(circle at 50% 90%,rgba(0,150,255,.10),transparent 35%),#020813}
+body::after{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradient(180deg,rgba(2,8,19,.10),rgba(2,8,19,.75))}
+.app{width:100%;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:30px}
+.phone{width:390px;min-height:820px;max-height:920px;position:relative;overflow:hidden;border-radius:44px;background:linear-gradient(180deg,rgba(4,22,43,.95),rgba(1,10,21,.98));border:1px solid rgba(138,186,255,.55);box-shadow:0 30px 100px rgba(0,0,0,.65),inset 0 0 40px rgba(65,130,255,.06)}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;opacity:0;visibility:hidden;transform:translateX(30px);transition:opacity .35s ease,transform .35s ease,visibility .35s ease;z-index:2;scrollbar-width:none}
+.screen::-webkit-scrollbar{display:none}
+.screen.active{opacity:1;visibility:visible;transform:translateX(0)}
 
 /* HEADER */
-
-.header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
-    padding: 28px 22px 12px;
-    background: linear-gradient(
-        180deg,
-        rgba(2,8,19,.85) 0%,
-        rgba(2,8,19,.4) 70%,
-        transparent 100%
-    );
-}
-
-.top-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-}
-
-.sound-logo {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 14px;
-    background: radial-gradient(
-        circle,
-        rgba(110,96,255,.25),
-        transparent 70%
-    );
-}
-
-.sound-bars {
-    display: flex;
-    gap: 3px;
-    align-items: center;
-    height: 28px;
-}
-
-.sound-bars span {
-    width: 4px;
-    border-radius: 5px;
-    background: linear-gradient(180deg, #9b7dff, #387eff);
-}
-
-.sound-bars span:nth-child(1) { height: 10px; }
-.sound-bars span:nth-child(2) { height: 19px; }
-.sound-bars span:nth-child(3) { height: 25px; }
-.sound-bars span:nth-child(4) { height: 15px; }
-.sound-bars span:nth-child(5) { height: 21px; }
-.sound-bars span:nth-child(6) { height: 11px; }
-
-.brand-text h1 {
-    font-size: 26px;
-    line-height: 1.1;
-    font-weight: 700;
-    letter-spacing: -1px;
-}
-
-.brand-text p {
-    margin-top: 3px;
-    color: #7e9abd;
-    font-size: 13px;
-}
-
-.login-icon-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ff5a5a;
-    background: rgba(255,80,80,.16);
-    border: 1px solid rgba(255,90,90,.65);
-    box-shadow:
-        0 0 14px rgba(255,80,80,.28),
-        inset 0 1px 0 rgba(255,255,255,.25);
-    transition: all .25s ease;
-}
-
-.login-icon-btn.logged-in {
-    color: #2ecc71;
-    background: rgba(46,204,113,.16);
-    border-color: rgba(46,204,113,.7);
-    box-shadow:
-        0 0 14px rgba(46,204,113,.35),
-        inset 0 1px 0 rgba(255,255,255,.25);
-}
-
-.login-icon-btn:active {
-    transform: scale(.93);
-}
+.header{position:absolute;top:0;left:0;right:0;z-index:10;padding:28px 22px 12px;background:linear-gradient(180deg,rgba(2,8,19,.85) 0%,rgba(2,8,19,.4) 70%,transparent 100%)}
+.top-row{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px}
+.sound-logo{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:14px;background:radial-gradient(circle,rgba(110,96,255,.25),transparent 70%)}
+.sound-bars{display:flex;gap:3px;align-items:center;height:28px}
+.sound-bars span{width:4px;border-radius:5px;background:linear-gradient(180deg,#9b7dff,#387eff)}
+.sound-bars span:nth-child(1){height:10px}.sound-bars span:nth-child(2){height:19px}.sound-bars span:nth-child(3){height:25px}.sound-bars span:nth-child(4){height:15px}.sound-bars span:nth-child(5){height:21px}.sound-bars span:nth-child(6){height:11px}
+.brand-text h1{font-size:26px;line-height:1.1;font-weight:700;letter-spacing:-1px}
+.brand-text p{margin-top:3px;color:#7e9abd;font-size:13px}
+.login-icon-btn{width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#ff5a5a;background:rgba(255,80,80,.16);border:1px solid rgba(255,90,90,.65);box-shadow:0 0 14px rgba(255,80,80,.28),inset 0 1px 0 rgba(255,255,255,.25);transition:all .25s ease}
+.login-icon-btn.logged-in{color:#2ecc71;background:rgba(46,204,113,.16);border-color:rgba(46,204,113,.7);box-shadow:0 0 14px rgba(46,204,113,.35),inset 0 1px 0 rgba(255,255,255,.25)}
+.login-icon-btn:active{transform:scale(.93)}
 
 /* HERO */
-
-.hero {
-    position: relative;
-    height: 260px;
-    background-image:
-        linear-gradient(
-            180deg,
-            rgba(2,8,19,.15) 0%,
-            rgba(2,8,19,.05) 30%,
-            rgba(2,8,19,.55) 65%,
-            rgba(2,8,19,.98) 100%
-        ),
-        url("http://fs3.centraldnserver.com/~planlife/pics/english/podcast/slide.jpeg");
-    background-size: cover;
-    background-position: center top;
-    background-repeat: no-repeat;
-}
-
-.hero-text {
-    position: absolute;
-    z-index: 2;
-    left: 22px;
-    bottom: 20px;
-}
-
-.hero-text p {
-    color: #89b4e7;
-    font-size: 14px;
-    letter-spacing: .2px;
-}
-
-.hero-text strong {
-    display: block;
-    margin-top: 4px;
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.search-button {
-    width: 40px;
-    height: 40px;
-    position: absolute;
-    right: 20px;
-    bottom: 18px;
-    border-radius: 50%;
-    background: rgba(2,13,28,.55);
-    border: 1px solid rgba(150,190,255,.2);
-    color: #fff;
-    font-size: 19px;
-    cursor: pointer;
-    z-index: 4;
-}
+.hero{position:relative;height:260px;background-image:linear-gradient(180deg,rgba(2,8,19,.15) 0%,rgba(2,8,19,.05) 30%,rgba(2,8,19,.55) 65%,rgba(2,8,19,.98) 100%),url("http://fs3.centraldnserver.com/~planlife/pics/english/podcast/slide.jpeg");background-size:cover;background-position:center top;background-repeat:no-repeat}
+.hero-text{position:absolute;z-index:2;left:22px;bottom:20px}
+.hero-text p{color:#89b4e7;font-size:14px;letter-spacing:.2px}
+.hero-text strong{display:block;margin-top:4px;font-size:16px;font-weight:600}
+.search-button{width:40px;height:40px;position:absolute;right:20px;bottom:18px;border-radius:50%;background:rgba(2,13,28,.55);border:1px solid rgba(150,190,255,.2);color:#fff;font-size:19px;cursor:pointer;z-index:4}
 
 /* CATEGORIES */
+.categories{display:flex;gap:9px;overflow-x:auto;padding:14px 20px 11px;scrollbar-width:none}
+.categories::-webkit-scrollbar{display:none}
+.category{white-space:nowrap;border:1px solid rgba(109,159,229,.22);background:rgba(8,29,52,.72);color:#b8cce5;padding:9px 17px;border-radius:30px;font-size:13px;cursor:pointer;transition:.25s}
+.category.active{color:#fff;border-color:transparent;background:linear-gradient(135deg,#586aff,#765eff);box-shadow:0 5px 20px rgba(79,86,255,.35)}
 
-.categories {
-    display: flex;
-    gap: 9px;
-    overflow-x: auto;
-    padding: 14px 20px 11px;
-    scrollbar-width: none;
-}
-
-.categories::-webkit-scrollbar {
-    display: none;
-}
-
-.category {
-    white-space: nowrap;
-    border: 1px solid rgba(109,159,229,.22);
-    background: rgba(8,29,52,.72);
-    color: #b8cce5;
-    padding: 9px 17px;
-    border-radius: 30px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: .25s;
-}
-
-.category.active {
-    color: #fff;
-    border-color: transparent;
-    background: linear-gradient(135deg, #586aff, #765eff);
-    box-shadow: 0 5px 20px rgba(79,86,255,.35);
-}
-
-/* PODCAST LIST */
-
-.list {
-    padding: 3px 16px 40px;
-}
-
-.podcast-card {
-    position: relative;
-    display: flex;
-    gap: 13px;
-    padding: 11px;
-    margin-bottom: 11px;
-    border-radius: 22px;
-    background: linear-gradient(
-        135deg,
-        rgba(9,34,59,.92),
-        rgba(3,19,35,.92)
-    );
-    border: 1px solid rgba(94,150,213,.16);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
-    cursor: pointer;
-    min-height: 116px;
-    align-items: flex-start;
-    transition:
-        transform .2s,
-        border-color .2s,
-        box-shadow .2s;
-}
-
-.podcast-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(102,135,255,.45);
-    box-shadow:
-        0 12px 30px rgba(0,0,0,.25),
-        0 0 25px rgba(69,92,255,.08);
-}
-
-.podcast-card.locked {
-    cursor: default;
-}
-
-.podcast-card.locked .play-small {
-    background: rgba(30,50,80,.7);
-    box-shadow: none;
-}
-
-.lock-overlay {
-    position: absolute;
-    inset: 0;
-    border-radius: 22px;
-    z-index: 8;
-    background: rgba(2,10,25,.5);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: flex-end;
-    padding: 14px;
-    pointer-events: none;
-}
-
-.lock-icon {
-    font-size: 20px;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,.6));
-}
-
-.cover {
-    width: 110px;
-    height: 110px;
-    flex: none;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid rgba(135,182,255,.25);
-    position: relative;
-    align-self: center;
-}
-
-.cover img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-}
-
-.cover::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        180deg,
-        transparent 40%,
-        rgba(0,0,0,.72)
-    );
-}
-
-.cover-title {
-    position: absolute;
-    left: 7px;
-    bottom: 7px;
-    right: 7px;
-    z-index: 2;
-    font-family: Georgia, serif;
-    font-size: 11px;
-    line-height: 1.1;
-    color: #fff;
-    text-shadow: 0 2px 5px #000;
-}
-
-.card-content {
-    min-width: 0;
-    flex: 1;
-    padding-top: 4px;
-    padding-right: 48px;
-}
-
-.card-content h3 {
-    font-size: 14px;
-    line-height: 1.25;
-    font-weight: 700;
-    color: #f4f8ff;
-    margin-bottom: 4px;
-}
-
-.card-description {
-    color: #8da7c4;
-    font-size: 11px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-bottom: 8px;
-}
-
-.card-meta {
-    display: flex;
-    gap: 8px;
-    color: #b4c8df;
-    font-size: 10px;
-    margin-bottom: 7px;
-    flex-wrap: wrap;
-}
-
-.tag {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 8px;
-    border-radius: 20px;
-    font-size: 9px;
-    background: rgba(47,110,204,.22);
-    color: #6fb5ff;
-}
-
-.level {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 10px;
-    color: #8eabca;
-    margin-top: 5px;
-}
-
-.level-bars {
-    display: flex;
-    gap: 2px;
-    align-items: flex-end;
-}
-
-.level-bars span {
-    width: 3px;
-    border-radius: 3px;
-    background: #3b9eff;
-}
-
-.level-bars span:nth-child(1) { height: 5px; }
-.level-bars span:nth-child(2) { height: 9px; }
-.level-bars span:nth-child(3) { height: 13px; }
-.level-bars span:nth-child(4) { height: 8px; }
-
-.play-small {
-    position: absolute;
-    right: 11px;
-    bottom: 13px;
-    width: 42px;
-    height: 42px;
-    border-radius: 14px;
-    border: none;
-    background: linear-gradient(135deg, #626cff, #7862ff);
-    color: #fff;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 6px 18px rgba(92,91,255,.35);
-    cursor: pointer;
-}
-
-.card-actions {
-    position: absolute;
-    right: 11px;
-    top: 12px;
-    display: flex;
-    gap: 6px;
-}
-
-.icon-button {
-    border: 0;
-    background: none;
-    color: #7f9bbd;
-    font-size: 18px;
-    cursor: pointer;
-}
+/* LIST */
+.list{padding:3px 16px 40px}
+.podcast-card{position:relative;display:flex;gap:13px;padding:11px;margin-bottom:11px;border-radius:22px;background:linear-gradient(135deg,rgba(9,34,59,.92),rgba(3,19,35,.92));border:1px solid rgba(94,150,213,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.025);cursor:pointer;min-height:116px;align-items:flex-start;transition:transform .2s,border-color .2s,box-shadow .2s}
+.podcast-card:hover{transform:translateY(-2px);border-color:rgba(102,135,255,.45);box-shadow:0 12px 30px rgba(0,0,0,.25),0 0 25px rgba(69,92,255,.08)}
+.podcast-card.locked{cursor:default}
+.podcast-card.locked .play-small{background:rgba(30,50,80,.7);box-shadow:none}
+.lock-overlay{position:absolute;inset:0;border-radius:22px;z-index:8;background:rgba(2,10,25,.5);display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;padding:14px;pointer-events:none}
+.lock-icon{font-size:20px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6))}
+.cover{width:110px;height:110px;flex:none;border-radius:16px;overflow:hidden;border:1px solid rgba(135,182,255,.25);position:relative;align-self:center}
+.cover img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.72))}
+.cover-title{position:absolute;left:7px;bottom:7px;right:7px;z-index:2;font-family:Georgia,serif;font-size:11px;line-height:1.1;color:#fff;text-shadow:0 2px 5px #000}
+.card-content{min-width:0;flex:1;padding-top:4px;padding-right:48px}
+.card-content h3{font-size:14px;line-height:1.25;font-weight:700;color:#f4f8ff;margin-bottom:4px}
+.card-description{color:#8da7c4;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:8px}
+.card-meta{display:flex;gap:8px;color:#b4c8df;font-size:10px;margin-bottom:7px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;padding:4px 8px;border-radius:20px;font-size:9px;background:rgba(47,110,204,.22);color:#6fb5ff}
+.level{display:flex;align-items:center;gap:5px;font-size:10px;color:#8eabca;margin-top:5px}
+.level-bars{display:flex;gap:2px;align-items:flex-end}
+.level-bars span{width:3px;border-radius:3px;background:#3b9eff}
+.level-bars span:nth-child(1){height:5px}.level-bars span:nth-child(2){height:9px}.level-bars span:nth-child(3){height:13px}.level-bars span:nth-child(4){height:8px}
+.play-small{position:absolute;right:11px;bottom:13px;width:42px;height:42px;border-radius:14px;border:none;background:linear-gradient(135deg,#626cff,#7862ff);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(92,91,255,.35);cursor:pointer}
+.card-actions{position:absolute;right:11px;top:12px;display:flex;gap:6px}
+.icon-button{border:0;background:none;color:#7f9bbd;font-size:18px;cursor:pointer}
 
 /* PLAYER */
-
-.player-page {
-    padding: 28px 25px 40px;
-}
-
-.player-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 25px;
-}
-
-.circle-btn {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    border: 1px solid rgba(120,160,210,.18);
-    background: rgba(8,28,49,.75);
-    color: #fff;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.player-top-actions {
-    display: flex;
-    gap: 10px;
-}
-
-.player-cover {
-    width: 100%;
-    aspect-ratio: 1/1;
-    max-width: 270px;
-    margin: 0 auto 25px;
-    border-radius: 27px;
-    overflow: hidden;
-    border: 1px solid rgba(125,177,255,.45);
-    box-shadow:
-        0 20px 50px rgba(0,0,0,.45),
-        0 0 35px rgba(52,100,255,.13);
-}
-
-.player-cover img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.player-info {
-    text-align: left;
-    margin-bottom: 18px;
-}
-
-.player-info h2 {
-    font-size: 24px;
-    line-height: 1.2;
-    margin-bottom: 8px;
-}
-
-.player-info p {
-    color: #87a1c0;
-    font-size: 13px;
-}
-
-.player-meta {
-    display: flex;
-    gap: 15px;
-    margin-top: 13px;
-    color: #9bb1ca;
-    font-size: 11px;
-}
-
-.player-tag {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 20px;
-    background: #5665df;
-    color: #fff;
-    font-size: 10px;
-    margin-bottom: 8px;
-}
+.player-page{padding:28px 25px 40px}
+.player-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}
+.circle-btn{width:42px;height:42px;border-radius:50%;border:1px solid rgba(120,160,210,.18);background:rgba(8,28,49,.75);color:#fff;font-size:20px;cursor:pointer}
+.player-top-actions{display:flex;gap:10px}
+.player-cover{width:100%;aspect-ratio:1/1;max-width:270px;margin:0 auto 25px;border-radius:27px;overflow:hidden;border:1px solid rgba(125,177,255,.45);box-shadow:0 20px 50px rgba(0,0,0,.45),0 0 35px rgba(52,100,255,.13)}
+.player-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.player-info{text-align:left;margin-bottom:18px}
+.player-info h2{font-size:24px;line-height:1.2;margin-bottom:8px}
+.player-info p{color:#87a1c0;font-size:13px}
+.player-meta{display:flex;gap:15px;margin-top:13px;color:#9bb1ca;font-size:11px}
+.player-tag{display:inline-block;padding:6px 12px;border-radius:20px;background:#5665df;color:#fff;font-size:10px;margin-bottom:8px}
 
 /* PROGRESS */
-
-.progress-container {
-    margin-top: 15px;
-}
-
-.progress-bar {
-    position: relative;
-    width: 100%;
-    height: 5px;
-    background: #253e5c;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-.progress-fill {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 0%;
-    border-radius: 10px;
-    background: linear-gradient(90deg, #506eff, #8c5fff);
-}
-
-.progress-dot {
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    top: 50%;
-    transform: translate(-50%,-50%);
-    left: 0%;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 0 12px #6c74ff;
-}
-
-.time-row {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 9px;
-    font-size: 11px;
-    color: #8da2bd;
-}
+.progress-container{margin-top:15px}
+.progress-bar{position:relative;width:100%;height:5px;background:#253e5c;border-radius:10px;cursor:pointer}
+.progress-fill{position:absolute;left:0;top:0;height:100%;width:0%;border-radius:10px;background:linear-gradient(90deg,#506eff,#8c5fff)}
+.progress-dot{position:absolute;width:12px;height:12px;top:50%;transform:translate(-50%,-50%);left:0%;border-radius:50%;background:#fff;box-shadow:0 0 12px #6c74ff}
+.time-row{display:flex;justify-content:space-between;margin-top:9px;font-size:11px;color:#8da2bd}
 
 /* CONTROLS */
-
-.player-controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 35px;
-    margin: 17px 0;
-}
-
-.skip {
-    width: 42px;
-    height: 42px;
-    border: 0;
-    background: none;
-    color: #fff;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.skip small {
-    font-size: 10px;
-}
-
-.big-play {
-    width: 78px;
-    height: 78px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #526bff, #845fff);
-    border: 3px solid rgba(125,147,255,.8);
-    color: #fff;
-    font-size: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow:
-        0 0 25px rgba(92,90,255,.55),
-        inset 0 0 15px rgba(255,255,255,.08);
-}
+.player-controls{display:flex;justify-content:center;align-items:center;gap:35px;margin:17px 0}
+.skip{width:42px;height:42px;border:0;background:none;color:#fff;font-size:20px;cursor:pointer}
+.skip small{font-size:10px}
+.big-play{width:78px;height:78px;border-radius:50%;background:linear-gradient(135deg,#526bff,#845fff);border:3px solid rgba(125,147,255,.8);color:#fff;font-size:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 25px rgba(92,90,255,.55),inset 0 0 15px rgba(255,255,255,.08)}
 
 /* WAVEFORM */
-
-.waveform {
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    margin: 10px 0 18px;
-}
-
-.wave {
-    width: 3px;
-    border-radius: 10px;
-    background: linear-gradient(180deg, #4b83ff, #8c63ff);
-    animation: wave 1s ease-in-out infinite alternate;
-}
-
-.wave:nth-child(2n) {
-    animation-delay: .1s;
-}
-
-.wave:nth-child(3n) {
-    animation-delay: .2s;
-}
-
-.wave:nth-child(4n) {
-    animation-delay: .3s;
-}
-
-@keyframes wave {
-    from {
-        transform: scaleY(.35);
-    }
-
-    to {
-        transform: scaleY(1);
-    }
-}
-
-.wave.paused {
-    animation-play-state: paused;
-}
+.waveform{height:50px;display:flex;align-items:center;justify-content:center;gap:3px;margin:10px 0 18px}
+.wave{width:3px;border-radius:10px;background:linear-gradient(180deg,#4b83ff,#8c63ff);animation:wave 1s ease-in-out infinite alternate}
+.wave:nth-child(2n){animation-delay:.1s}.wave:nth-child(3n){animation-delay:.2s}.wave:nth-child(4n){animation-delay:.3s}
+@keyframes wave{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
+.wave.paused{animation-play-state:paused}
 
 /* SPEED / VOLUME */
+.controls-row{display:flex;gap:10px}
+.speed-box{flex:1;display:flex;align-items:center;justify-content:space-around;padding:10px;border-radius:24px;background:rgba(7,29,52,.75);border:1px solid rgba(105,151,207,.18);color:#91a7c2;font-size:10px;min-width:0}
+.speed{cursor:pointer}
+.speed.active{padding:7px 13px;color:#fff;border-radius:20px;background:#5a69ff;box-shadow:0 0 15px rgba(89,94,255,.35)}
+.volume-box{width:130px;min-width:130px;max-width:130px;display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:24px;background:rgba(7,29,52,.75);border:1px solid rgba(105,151,207,.18);overflow:hidden}
+.volume-icon{font-size:15px;flex:none}
+.volume-slider{flex:1;min-width:0;width:100%;accent-color:#6c71ff;cursor:pointer;-webkit-appearance:none;appearance:none;height:4px;border-radius:4px;background:#253e5c;outline:none}
+.volume-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#6c71ff;cursor:pointer;box-shadow:0 0 6px rgba(108,113,255,.6)}
+.volume-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#6c71ff;cursor:pointer;border:none}
 
-.controls-row {
-    display: flex;
-    gap: 10px;
-}
-
-.speed-box {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    padding: 10px;
-    border-radius: 24px;
-    background: rgba(7,29,52,.75);
-    border: 1px solid rgba(105,151,207,.18);
-    color: #91a7c2;
-    font-size: 10px;
-    min-width: 0;
-}
-
-.speed {
-    cursor: pointer;
-}
-
-.speed.active {
-    padding: 7px 13px;
-    color: #fff;
-    border-radius: 20px;
-    background: #5a69ff;
-    box-shadow: 0 0 15px rgba(89,94,255,.35);
-}
-
-.volume-box {
-    width: 130px;
-    min-width: 130px;
-    max-width: 130px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    border-radius: 24px;
-    background: rgba(7,29,52,.75);
-    border: 1px solid rgba(105,151,207,.18);
-    overflow: hidden;
-}
-
-.volume-icon {
-    font-size: 15px;
-    flex: none;
-}
-
-.volume-slider {
-    flex: 1;
-    min-width: 0;
-    width: 100%;
-    accent-color: #6c71ff;
-    cursor: pointer;
-    -webkit-appearance: none;
-    appearance: none;
-    height: 4px;
-    border-radius: 4px;
-    background: #253e5c;
-    outline: none;
-}
-
-.volume-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #6c71ff;
-    cursor: pointer;
-    box-shadow: 0 0 6px rgba(108,113,255,.6);
-}
-
-.volume-slider::-moz-range-thumb {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #6c71ff;
-    cursor: pointer;
-    border: none;
-}
-
-/* LESSON TABS */
-
-.lesson-tabs {
-    display: flex;
-    margin-top: 18px;
-    padding: 6px;
-    border-radius: 24px;
-    background: #071b31;
-}
-
-.lesson-tab {
-    flex: 1;
-    text-align: center;
-    padding: 10px 5px;
-    color: #8b9db7;
-    font-size: 12px;
-    border-radius: 20px;
-    cursor: pointer;
-}
-
-.lesson-tab.active {
-    background: linear-gradient(135deg, #596cff, #755fff);
-    color: #fff;
-    box-shadow: 0 5px 15px rgba(86,92,255,.3);
-}
+/* TABS */
+.lesson-tabs{display:flex;margin-top:18px;padding:6px;border-radius:24px;background:#071b31}
+.lesson-tab{flex:1;text-align:center;padding:10px 5px;color:#8b9db7;font-size:12px;border-radius:20px;cursor:pointer}
+.lesson-tab.active{background:linear-gradient(135deg,#596cff,#755fff);color:#fff;box-shadow:0 5px 15px rgba(86,92,255,.3)}
 
 /* TRANSCRIPT */
-
-.transcript-box {
-    margin-top: 10px;
-    padding: 16px;
-    border-radius: 23px;
-    background: linear-gradient(
-        135deg,
-        rgba(8,35,68,.96),
-        rgba(3,20,38,.96)
-    );
-    border: 1px solid rgba(105,157,220,.16);
-}
-
-.transcript-loading {
-    text-align: center;
-    color: #6c8aaa;
-    font-size: 12px;
-    padding: 20px 0;
-}
-
-.transcript-line {
-    display: flex;
-    gap: 10px;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(120,150,190,.10);
-    cursor: pointer;
-    border-radius: 10px;
-    transition: background .2s ease;
-}
-
-.transcript-line:last-child {
-    border-bottom: 0;
-}
-
-.transcript-line:hover {
-    background: rgba(80,110,255,.08);
-}
-
-.transcript-line.active {
-    background: rgba(86,108,255,.14);
-}
-
-.transcript-time {
-    color: #5b7fa0;
-    font-size: 9px;
-    min-width: 38px;
-    padding-top: 2px;
-}
-
-.transcript-text {
-    flex: 1;
-}
-
-.transcript-en {
-    color: #eef4ff;
-    font-size: 12px;
-    line-height: 1.6;
-}
-
-.transcript-fa {
-    color: #9aaec7;
-    font-size: 10px;
-    line-height: 1.7;
-    direction: rtl;
-    text-align: right;
-    margin-top: 4px;
-}
+.transcript-box{margin-top:10px;padding:16px;border-radius:23px;background:linear-gradient(135deg,rgba(8,35,68,.96),rgba(3,20,38,.96));border:1px solid rgba(105,157,220,.16)}
+.transcript-loading{text-align:center;color:#6c8aaa;font-size:12px;padding:20px 0}
+.transcript-line{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid rgba(120,150,190,.10);cursor:pointer;border-radius:10px;transition:background .2s ease}
+.transcript-line:last-child{border-bottom:0}
+.transcript-line:hover{background:rgba(80,110,255,.08)}
+.transcript-line.active{background:rgba(86,108,255,.14)}
+.transcript-time{color:#5b7fa0;font-size:9px;min-width:38px;padding-top:2px}
+.transcript-text{flex:1}
+.transcript-en{color:#eef4ff;font-size:12px;line-height:1.6}
+.transcript-fa{color:#9aaec7;font-size:10px;line-height:1.7;direction:rtl;text-align:right;margin-top:4px}
 
 /* VOCABULARY */
-
-.vocabulary {
-    margin-top: 10px;
-    padding: 13px;
-    border-radius: 20px;
-    background: #06182c;
-    border: 1px solid rgba(102,153,219,.13);
-}
-
-.vocab-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 12px;
-}
-
-.vocab-header span {
-    color: #5eb1ff;
-    font-size: 10px;
-}
-
-.vocab-list {
-    display: flex;
-    gap: 6px;
-    overflow-x: auto;
-    scrollbar-width: none;
-}
-
-.vocab-list::-webkit-scrollbar {
-    display: none;
-}
-
-.vocab-item {
-    min-width: 88px;
-    padding: 10px;
-    border-radius: 14px;
-    background: #0a2748;
-    font-size: 10px;
-}
-
-.vocab-item strong {
-    display: block;
-    font-size: 10px;
-    margin-bottom: 4px;
-}
-
-.vocab-item small {
-    color: #92a7c1;
-    font-size: 9px;
-}
+.vocabulary{margin-top:10px;padding:13px;border-radius:20px;background:#06182c;border:1px solid rgba(102,153,219,.13)}
+.vocab-header{display:flex;justify-content:space-between;margin-bottom:10px;font-size:12px}
+.vocab-header span{color:#5eb1ff;font-size:10px}
+.vocab-list{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.vocab-list::-webkit-scrollbar{display:none}
+.vocab-item{min-width:88px;padding:10px;border-radius:14px;background:#0a2748;font-size:10px}
+.vocab-item strong{display:block;font-size:10px;margin-bottom:4px}
+.vocab-item small{color:#92a7c1;font-size:9px}
 
 /* NOTES */
-
-.notes-box {
-    margin-top: 10px;
-    padding: 10px;
-    border-radius: 23px;
-    background: linear-gradient(
-        135deg,
-        rgba(8,35,68,.96),
-        rgba(3,20,38,.96)
-    );
-    border: 1px solid rgba(105,157,220,.16);
-}
-
-.notes-textarea {
-    width: 100%;
-    min-height: 130px;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #c8ddf5;
-    font-size: 12px;
-    line-height: 1.8;
-    resize: none;
-    font-family: Inter, Arial, sans-serif;
-    padding: 8px;
-    direction: auto;
-}
-
-.notes-textarea::placeholder {
-    color: #4a6580;
-}
+.notes-box{margin-top:10px;padding:10px;border-radius:23px;background:linear-gradient(135deg,rgba(8,35,68,.96),rgba(3,20,38,.96));border:1px solid rgba(105,157,220,.16)}
+.notes-textarea{width:100%;min-height:130px;background:transparent;border:none;outline:none;color:#c8ddf5;font-size:12px;line-height:1.8;resize:none;font-family:Inter,Arial,sans-serif;padding:8px;direction:auto}
+.notes-textarea::placeholder{color:#4a6580}
 
 /* REPEAT */
-
-.repeat-button {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    margin-top: 10px;
-    padding: 13px;
-    border-radius: 20px;
-    border: 1px solid rgba(94,149,214,.16);
-    background: #06182c;
-    color: #fff;
-    cursor: pointer;
-    text-align: left;
-}
-
-.repeat-icon {
-    font-size: 22px;
-    color: #50b7ff;
-}
-
-.repeat-text strong {
-    display: block;
-    font-size: 12px;
-}
-
-.repeat-text small {
-    color: #8298b4;
-    font-size: 9px;
-}
+.repeat-button{width:100%;display:flex;align-items:center;gap:13px;margin-top:10px;padding:13px;border-radius:20px;border:1px solid rgba(94,149,214,.16);background:#06182c;color:#fff;cursor:pointer;text-align:left}
+.repeat-icon{font-size:22px;color:#50b7ff}
+.repeat-text strong{display:block;font-size:12px}
+.repeat-text small{color:#8298b4;font-size:9px}
 
 /* TOAST */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);z-index:99999;background:rgba(8,20,55,.95);border:1px solid rgba(255,255,255,.2);border-radius:50px;padding:10px 24px;font-size:13px;font-weight:700;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.4);opacity:0;transition:all .3s ease;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-.toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    z-index: 99999;
-    background: rgba(8,20,55,.95);
-    border: 1px solid rgba(255,255,255,.2);
-    border-radius: 50px;
-    padding: 10px 24px;
-    font-size: 13px;
-    font-weight: 700;
-    color: #fff;
-    box-shadow: 0 8px 32px rgba(0,0,0,.4);
-    opacity: 0;
-    transition: all .3s ease;
-    pointer-events: none;
-    white-space: nowrap;
-}
-
-.toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
-
-/* LOGIN POPUP */
-
-.popup-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 10000;
-    background: rgba(5,15,50,.72);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .3s ease;
-}
-
-.popup-overlay.open {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.popup-sheet {
-    width: 100%;
-    max-width: 520px;
-    background: rgba(8,20,55,.92);
-    border: 1px solid rgba(255,255,255,.18);
-    border-bottom: none;
-    border-radius: 28px 28px 0 0;
-    padding: 28px 24px 32px;
-    box-shadow:
-        0 -20px 60px rgba(0,0,0,.6),
-        inset 0 1px 0 rgba(255,255,255,.2);
-    transform: translateY(100%);
-    transition: transform .4s cubic-bezier(0.34,1.2,0.64,1);
-}
-
-.popup-overlay.open .popup-sheet {
-    transform: translateY(0);
-}
-
-.popup-handle {
-    width: 40px;
-    height: 4px;
-    border-radius: 2px;
-    background: rgba(255,255,255,.25);
-    margin: 0 auto 20px;
-}
-
-.popup-title {
-    font-size: 17px;
-    font-weight: 800;
-    color: #fff;
-    text-align: center;
-    margin-bottom: 6px;
-}
-
-.popup-sub {
-    font-size: 12px;
-    color: rgba(255,255,255,.55);
-    text-align: center;
-    margin-bottom: 22px;
-    line-height: 1.6;
-}
-
-.phone-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 14px;
-    direction: ltr;
-}
-
-.prefix-box {
-    flex-shrink: 0;
-    width: 64px;
-    height: 52px;
-    background: rgba(255,255,255,.1);
-    border: 1.5px solid rgba(255,255,255,.25);
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 700;
-    color: rgba(255,255,255,.75);
-    letter-spacing: .5px;
-}
-
-.phone-input {
-    flex: 1;
-    height: 52px;
-    background: rgba(255,255,255,.1);
-    border: 1.5px solid rgba(255,255,255,.25);
-    border-radius: 14px;
-    padding: 0 16px;
-    font-size: 15px;
-    font-weight: 600;
-    color: #fff;
-    font-family: Inter, sans-serif;
-    direction: ltr;
-    text-align: left;
-    outline: none;
-    transition:
-        border-color .2s,
-        background .2s;
-}
-
-.phone-input:focus {
-    border-color: rgba(0,150,255,.7);
-    background: rgba(255,255,255,.15);
-}
-
-.phone-input::placeholder {
-    color: rgba(255,255,255,.3);
-}
-
-.input-error {
-    font-size: 11px;
-    color: #6bb8ff;
-    text-align: center;
-    margin-top: -8px;
-    margin-bottom: 8px;
-    min-height: 16px;
-}
-
-.btn-login {
-    width: 100%;
-    height: 50px;
-    border-radius: 16px;
-    border: none;
-    background: linear-gradient(
-        135deg,
-        #0f3460,
-        #1a5276,
-        #1e90ff
-    );
-    color: #fff;
-    font-family: Inter, sans-serif;
-    font-size: 15px;
-    font-weight: 800;
-    cursor: pointer;
-    margin-bottom: 12px;
-    box-shadow: 0 8px 24px rgba(0,80,200,.4);
-    transition:
-        transform .15s,
-        opacity .15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.btn-login:active {
-    transform: scale(.97);
-    opacity: .9;
-}
-
-.btn-login:disabled {
-    opacity: .5;
-    cursor: not-allowed;
-}
-
-.subscribe-divider {
-    text-align: center;
-    font-size: 11px;
-    color: rgba(255,255,255,.35);
-    margin: 4px 0;
-}
-
-.subscribe-btns {
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-    margin-top: 4px;
-}
-
-.btn-sub {
-    width: 100%;
-    height: 46px;
-    border-radius: 14px;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-family: Inter, sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition:
-        transform .15s,
-        opacity .15s;
-    text-decoration: none;
-}
-
-.btn-sub:active {
-    transform: scale(.97);
-    opacity: .88;
-}
-
-.btn-sub.telegram {
-    background: linear-gradient(135deg, #1e88e5, #0d47a1);
-    color: #fff;
-}
-
-.btn-sub.bale {
-    background: linear-gradient(135deg, #00c853, #1b5e20);
-    color: #fff;
-}
-
-.btn-sub.whatsapp {
-    background: linear-gradient(135deg, #25d366, #128c7e);
-    color: #fff;
-}
+/* POPUP */
+.popup-overlay{position:fixed;inset:0;z-index:10000;background:rgba(5,15,50,.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease}
+.popup-overlay.open{opacity:1;pointer-events:auto}
+.popup-sheet{width:100%;max-width:520px;background:rgba(8,20,55,.92);border:1px solid rgba(255,255,255,.18);border-bottom:none;border-radius:28px 28px 0 0;padding:28px 24px 32px;box-shadow:0 -20px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.2);transform:translateY(100%);transition:transform .4s cubic-bezier(0.34,1.2,0.64,1)}
+.popup-overlay.open .popup-sheet{transform:translateY(0)}
+.popup-handle{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.25);margin:0 auto 20px}
+.popup-title{font-size:17px;font-weight:800;color:#fff;text-align:center;margin-bottom:6px}
+.popup-sub{font-size:12px;color:rgba(255,255,255,.55);text-align:center;margin-bottom:22px;line-height:1.6}
+.phone-row{display:flex;gap:10px;margin-bottom:14px;direction:ltr}
+.prefix-box{flex-shrink:0;width:64px;height:52px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.25);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:rgba(255,255,255,.75);letter-spacing:.5px}
+.phone-input{flex:1;height:52px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.25);border-radius:14px;padding:0 16px;font-size:15px;font-weight:600;color:#fff;font-family:Inter,sans-serif;direction:ltr;text-align:left;outline:none;transition:border-color .2s,background .2s}
+.phone-input:focus{border-color:rgba(0,150,255,.7);background:rgba(255,255,255,.15)}
+.phone-input::placeholder{color:rgba(255,255,255,.3)}
+.input-error{font-size:11px;color:#6bb8ff;text-align:center;margin-top:-8px;margin-bottom:8px;min-height:16px}
+.btn-login{width:100%;height:50px;border-radius:16px;border:none;background:linear-gradient(135deg,#0f3460,#1a5276,#1e90ff);color:#fff;font-family:Inter,sans-serif;font-size:15px;font-weight:800;cursor:pointer;margin-bottom:12px;box-shadow:0 8px 24px rgba(0,80,200,.4);transition:transform .15s,opacity .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-login:active{transform:scale(.97);opacity:.9}
+.btn-login:disabled{opacity:.5;cursor:not-allowed}
+.subscribe-divider{text-align:center;font-size:11px;color:rgba(255,255,255,.35);margin:4px 0}
+.subscribe-btns{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+.btn-sub{width:100%;height:46px;border-radius:14px;border:none;display:flex;align-items:center;justify-content:center;gap:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:transform .15s,opacity .15s;text-decoration:none}
+.btn-sub:active{transform:scale(.97);opacity:.88}
+.btn-sub.telegram{background:linear-gradient(135deg,#1e88e5,#0d47a1);color:#fff}
+.btn-sub.bale{background:linear-gradient(135deg,#00c853,#1b5e20);color:#fff}
+.btn-sub.whatsapp{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff}
 
 /* PRICE POPUP */
+.price-overlay{position:fixed;inset:0;z-index:11000;background:rgba(5,10,30,.8);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s ease}
+.price-overlay.open{opacity:1;pointer-events:auto}
+.price-sheet{width:100%;max-width:400px;background:rgba(8,18,50,.96);border:1px solid rgba(255,255,255,.18);border-radius:28px;padding:28px 22px 24px;box-shadow:0 24px 80px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.2);transform:scale(.9);transition:transform .35s cubic-bezier(0.34,1.3,0.64,1)}
+.price-overlay.open .price-sheet{transform:scale(1)}
+.price-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.price-title{font-size:17px;font-weight:800;color:#fff}
+.price-close{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.1);border:none;color:rgba(255,255,255,.6);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.plan-row{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.plan-name{font-size:13px;font-weight:700;color:rgba(255,255,255,.9)}
+.plan-old{font-size:11px;color:rgba(255,100,100,.7);text-decoration:line-through;direction:ltr}
+.plan-new{font-size:14px;font-weight:800;color:#7ec8ff;direction:ltr}
+.price-subscribe-btns{display:flex;flex-direction:column;gap:9px;margin-top:16px}
 
-.price-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 11000;
-    background: rgba(5,10,30,.8);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .3s ease;
-}
-
-.price-overlay.open {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.price-sheet {
-    width: 100%;
-    max-width: 400px;
-    background: rgba(8,18,50,.96);
-    border: 1px solid rgba(255,255,255,.18);
-    border-radius: 28px;
-    padding: 28px 22px 24px;
-    box-shadow:
-        0 24px 80px rgba(0,0,0,.7),
-        inset 0 1px 0 rgba(255,255,255,.2);
-    transform: scale(.9);
-    transition: transform .35s cubic-bezier(0.34,1.3,0.64,1);
-}
-
-.price-overlay.open .price-sheet {
-    transform: scale(1);
-}
-
-.price-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-
-.price-title {
-    font-size: 17px;
-    font-weight: 800;
-    color: #fff;
-}
-
-.price-close {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: rgba(255,255,255,.1);
-    border: none;
-    color: rgba(255,255,255,.6);
-    font-size: 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.plan-row {
-    background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.12);
-    border-radius: 16px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.plan-name {
-    font-size: 13px;
-    font-weight: 700;
-    color: rgba(255,255,255,.9);
-}
-
-.plan-old {
-    font-size: 11px;
-    color: rgba(255,100,100,.7);
-    text-decoration: line-through;
-    direction: ltr;
-}
-
-.plan-new {
-    font-size: 14px;
-    font-weight: 800;
-    color: #7ec8ff;
-    direction: ltr;
-}
-
-.price-subscribe-btns {
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-    margin-top: 16px;
-}
-
-@media (max-width: 600px) {
-    .app {
-        padding: 0;
-    }
-
-    .phone {
-        width: 100%;
-        min-height: 100vh;
-        max-height: none;
-        border-radius: 0;
-        border: none;
-    }
-}
-
-@media (min-width: 601px) {
-    .phone {
-        height: 900px;
-    }
-}
+@media(max-width:600px){.app{padding:0}.phone{width:100%;min-height:100vh;max-height:none;border-radius:0;border:none}}
+@media(min-width:601px){.phone{height:900px}}
 </style>
 </head>
-
 <body>
-
 <div class="app">
-
 <div class="phone">
 
-<!-- HOME SCREEN -->
-
+<!-- HOME -->
 <section class="screen active" id="homeScreen">
-
-<header class="header">
-
-<div class="top-row">
-
-<div class="brand">
-
-<div class="sound-logo">
-<div class="sound-bars">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
-<span></span>
-<span></span>
-</div>
-</div>
-
-<div class="brand-text">
-<h1>English</h1>
-<p>Podcast</p>
-</div>
-
-</div>
-
-<button
-class="login-icon-btn"
-id="loginIconBtn"
-type="button"
-onclick="onLoginIconClick()"
->
-
-<svg
-width="18"
-height="18"
-viewBox="0 0 24 24"
-fill="none"
-stroke="currentColor"
-stroke-width="1.9"
-stroke-linecap="round"
-stroke-linejoin="round"
->
-<circle cx="12" cy="8" r="4"/>
-<path d="M4 20c0-3.6 3.6-6 8-6s8 2.4 8 6"/>
-</svg>
-
-</button>
-
-</div>
-
-</header>
-
-<div class="hero">
-
-<button class="search-button">⌕</button>
-
-<div class="hero-text">
-<p>Better English</p>
-<strong>Brighter Future</strong>
-</div>
-
-</div>
-
-<div class="categories">
-
-<button class="category active" data-cat="All">
-All
-</button>
-
-<button class="category" data-cat="Daily English">
-Daily English
-</button>
-
-<button class="category" data-cat="Conversation">
-Conversation
-</button>
-
-<button class="category" data-cat="Vocabulary">
-Vocabulary
-</button>
-
-<button class="category" data-cat="Business">
-Business
-</button>
-
-</div>
-
-<div class="list" id="podcastList"></div>
-
+  <header class="header">
+    <div class="top-row">
+      <div class="brand">
+        <div class="sound-logo">
+          <div class="sound-bars"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+        <div class="brand-text"><h1>English</h1><p>Podcast</p></div>
+      </div>
+      <button class="login-icon-btn" id="loginIconBtn" type="button" onclick="onLoginIconClick()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.6 3.6-6 8-6s8 2.4 8 6"/></svg>
+      </button>
+    </div>
+  </header>
+  <div class="hero">
+    <button class="search-button">⌕</button>
+    <div class="hero-text"><p>Better English</p><strong>Brighter Future</strong></div>
+  </div>
+  <div class="categories">
+    <button class="category active" data-cat="All">All</button>
+    <button class="category" data-cat="Daily English">Daily English</button>
+    <button class="category" data-cat="Conversation">Conversation</button>
+    <button class="category" data-cat="Vocabulary">Vocabulary</button>
+    <button class="category" data-cat="Business">Business</button>
+  </div>
+  <div class="list" id="podcastList"></div>
 </section>
 
-
-<!-- PLAYER SCREEN -->
-
+<!-- PLAYER -->
 <section class="screen" id="playerScreen">
-
-<div class="player-page">
-
-<div class="player-top">
-
-<button class="circle-btn" onclick="goHome()">
-‹
-</button>
-
-<div class="player-top-actions">
-
-<button
-class="circle-btn"
-onclick="togglePlayerFavorite()"
-id="playerFavorite"
->
-♡
-</button>
-
-<button class="circle-btn">
-···
-</button>
-
-</div>
-
-</div>
-
-
-<div class="player-cover">
-
-<img
-id="playerImage"
-src=""
-alt=""
->
-
-</div>
-
-
-<div class="player-info">
-
-<span
-class="player-tag"
-id="playerTag"
->
-Intermediate
-</span>
-
-<h2 id="playerTitle">
-Daily English Conversations
-</h2>
-
-<p id="playerDescription">
-Real conversations. Real life.
-</p>
-
-<div class="player-meta">
-
-<span id="playerEpisodes">
-🎧 12 Episodes
-</span>
-
-<span id="playerDurEl">
-◷ 15–20 min
-</span>
-
-</div>
-
-</div>
-
-
-<audio
-id="audioPlayer"
-preload="metadata"
-></audio>
-
-
-<!-- PROGRESS -->
-
-<div class="progress-container">
-
-<div
-class="progress-bar"
-id="progressBar"
->
-
-<div
-class="progress-fill"
-id="progressFill"
-></div>
-
-<div
-class="progress-dot"
-id="progressDot"
-></div>
-
-</div>
-
-<div class="time-row">
-
-<span id="currentTime">
-00:00
-</span>
-
-<span id="audioDuration">
-00:00
-</span>
-
-</div>
-
-</div>
-
-
-<!-- PLAYER CONTROLS -->
-
-<div class="player-controls">
-
-<button
-class="skip"
-onclick="skip(-15)"
->
-↶<small>15</small>
-</button>
-
-<button
-class="big-play"
-id="mainPlay"
-onclick="togglePlay()"
->
-▶
-</button>
-
-<button
-class="skip"
-onclick="skip(15)"
->
-<small>15</small>↷
-</button>
-
-</div>
-
-
-<!-- WAVEFORM -->
-
-<div
-class="waveform"
-id="waveform"
-></div>
-
-
-<!-- SPEED / VOLUME -->
-
-<div class="controls-row">
-
-<div class="speed-box">
-
-<span
-class="speed"
-data-speed=".75"
->
-0.75x
-</span>
-
-<span
-class="speed active"
-data-speed="1"
->
-1x
-</span>
-
-<span
-class="speed"
-data-speed="1.25"
->
-1.25x
-</span>
-
-<span
-class="speed"
-data-speed="1.5"
->
-1.5x
-</span>
-
-</div>
-
-<div class="volume-box">
-
-<span class="volume-icon">
-🔊
-</span>
-
-<input
-class="volume-slider"
-type="range"
-min="0"
-max="1"
-step=".01"
-value="1"
-id="volumeSlider"
->
-
-</div>
-
-</div>
-
-
-<!-- LESSON TABS -->
-
-<div class="lesson-tabs">
-
-<div
-class="lesson-tab active"
-onclick="switchTab(this,'transcript')"
->
-Transcript
-</div>
-
-<div
-class="lesson-tab"
-onclick="switchTab(this,'vocab')"
->
-Vocabulary
-</div>
-
-<div
-class="lesson-tab"
-onclick="switchTab(this,'notes')"
->
-Notes
-</div>
-
-</div>
-
-
-<!-- TRANSCRIPT -->
-
-<div
-class="transcript-box"
-id="transcriptContent"
->
-
-<div
-class="transcript-loading"
-id="transcriptLoading"
->
-Loading transcript...
-</div>
-
-<div id="transcriptLines"></div>
-
-</div>
-
-
-<!-- VOCABULARY -->
-
-<div
-class="vocabulary"
-id="vocabContent"
-style="display:none"
->
-
-<div class="vocab-header">
-
-<strong>
-📖 Vocabulary
-</strong>
-
-<span>
-See All ›
-</span>
-
-</div>
-
-<div
-class="vocab-list"
-id="vocabList"
-></div>
-
-</div>
-
-
-<!-- NOTES -->
-
-<div
-class="notes-box"
-id="notesContent"
-style="display:none"
->
-
-<textarea
-class="notes-textarea"
-placeholder="Write your notes here... یادداشت‌هات رو اینجا بنویس…"
-></textarea>
-
-</div>
-
-
-<!-- REPEAT -->
-
-<button
-class="repeat-button"
-onclick="repeatSentence()"
->
-
-<div class="repeat-icon">
-↻
-</div>
-
-<div class="repeat-text">
-
-<strong>
-Repeat this sentence
-</strong>
-
-<small>
-تکرار این جمله
-</small>
-
-</div>
-
-<div style="margin-left:auto">
-›
-</div>
-
-</button>
-
-</div>
-
+  <div class="player-page">
+    <div class="player-top">
+      <button class="circle-btn" onclick="goHome()">‹</button>
+      <div class="player-top-actions">
+        <button class="circle-btn" onclick="togglePlayerFavorite()" id="playerFavorite">♡</button>
+        <button class="circle-btn">···</button>
+      </div>
+    </div>
+    <div class="player-cover"><img id="playerImage" src="" alt=""></div>
+    <div class="player-info">
+      <span class="player-tag" id="playerTag">Intermediate</span>
+      <h2 id="playerTitle">Daily English Conversations</h2>
+      <p id="playerDescription">Real conversations. Real life.</p>
+      <div class="player-meta">
+        <span id="playerEpisodes">🎧 12 Episodes</span>
+        <span id="playerDurEl">◷ 15–20 min</span>
+      </div>
+    </div>
+    <audio id="audioPlayer" preload="metadata"></audio>
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+        <div class="progress-dot" id="progressDot"></div>
+      </div>
+      <div class="time-row"><span id="currentTime">00:00</span><span id="audioDuration">00:00</span></div>
+    </div>
+    <div class="player-controls">
+      <button class="skip" onclick="skip(-15)">↶<small>15</small></button>
+      <button class="big-play" id="mainPlay" onclick="togglePlay()">▶</button>
+      <button class="skip" onclick="skip(15)"><small>15</small>↷</button>
+    </div>
+    <div class="waveform" id="waveform"></div>
+    <div class="controls-row">
+      <div class="speed-box">
+        <span class="speed" data-speed=".75">0.75x</span>
+        <span class="speed active" data-speed="1">1x</span>
+        <span class="speed" data-speed="1.25">1.25x</span>
+        <span class="speed" data-speed="1.5">1.5x</span>
+      </div>
+      <div class="volume-box">
+        <span class="volume-icon">🔊</span>
+        <input class="volume-slider" type="range" min="0" max="1" step=".01" value="1" id="volumeSlider">
+      </div>
+    </div>
+    <div class="lesson-tabs">
+      <div class="lesson-tab active" onclick="switchTab(this,'transcript')">Transcript</div>
+      <div class="lesson-tab" onclick="switchTab(this,'vocab')">Vocabulary</div>
+      <div class="lesson-tab" onclick="switchTab(this,'notes')">Notes</div>
+    </div>
+    <div class="transcript-box" id="transcriptContent">
+      <div class="transcript-loading" id="transcriptLoading">Loading transcript...</div>
+      <div id="transcriptLines"></div>
+    </div>
+    <div class="vocabulary" id="vocabContent" style="display:none">
+      <div class="vocab-header"><strong>📖 Vocabulary</strong><span>See All ›</span></div>
+      <div class="vocab-list" id="vocabList"></div>
+    </div>
+    <div class="notes-box" id="notesContent" style="display:none">
+      <textarea class="notes-textarea" placeholder="Write your notes here... یادداشت‌هات رو اینجا بنویس…"></textarea>
+    </div>
+    <button class="repeat-button" onclick="repeatSentence()">
+      <div class="repeat-icon">↻</div>
+      <div class="repeat-text"><strong>Repeat this sentence</strong><small>تکرار این جمله</small></div>
+      <div style="margin-left:auto">›</div>
+    </button>
+  </div>
 </section>
 
 </div>
 </div>
-
 
 <!-- LOGIN POPUP -->
-
-<div
-class="popup-overlay"
-id="loginPopup"
->
-
-<div class="popup-sheet">
-
-<div class="popup-handle"></div>
-
-<div class="popup-title">
-🔐 ورود به Podcast
+<div class="popup-overlay" id="loginPopup">
+  <div class="popup-sheet">
+    <div class="popup-handle"></div>
+    <div class="popup-title">🔐 ورود به Podcast</div>
+    <div class="popup-sub">برای پخش پادکست‌ها، شماره موبایل خود را وارد کنید</div>
+    <div class="phone-row">
+      <div class="prefix-box">+98</div>
+      <input class="phone-input" id="phoneInput" type="tel" inputmode="numeric" placeholder="9123456789" maxlength="11">
+    </div>
+    <div class="input-error" id="phoneError"></div>
+    <button class="btn-login" id="btnLogin" onclick="doLogin()"><span id="loginBtnText">ورود</span></button>
+    <div class="subscribe-divider">— یا —</div>
+    <div class="subscribe-btns">
+      <button class="btn-sub" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.65);font-size:12px" onclick="openPricePopup()">💎 قیمت اشتراک</button>
+      <a class="btn-sub telegram" href="https://t.me/planlifeir" target="_blank">تهیه کد اشتراک — تلگرام</a>
+      <a class="btn-sub bale" href="https://ble.ir/planlifeir" target="_blank">تهیه کد اشتراک — بله</a>
+      <a class="btn-sub whatsapp" href="https://wa.me/00905437333582" target="_blank">تهیه کد اشتراک — واتس‌اپ</a>
+    </div>
+  </div>
 </div>
-
-<div class="popup-sub">
-برای پخش پادکست‌ها، شماره موبایل خود را وارد کنید
-</div>
-
-<div class="phone-row">
-
-<div class="prefix-box">
-+98
-</div>
-
-<input
-class="phone-input"
-id="phoneInput"
-type="tel"
-inputmode="numeric"
-placeholder="9123456789"
-maxlength="11"
->
-
-</div>
-
-<div
-class="input-error"
-id="phoneError"
-></div>
-
-<button
-class="btn-login"
-id="btnLogin"
-onclick="doLogin()"
->
-
-<span id="loginBtnText">
-ورود
-</span>
-
-</button>
-
-<div class="subscribe-divider">
-— یا —
-</div>
-
-<div class="subscribe-btns">
-
-<button
-class="btn-sub"
-style="
-background:rgba(255,255,255,.08);
-border:1px solid rgba(255,255,255,.2);
-color:rgba(255,255,255,.65);
-font-size:12px;
-"
-onclick="openPricePopup()"
->
-💎 قیمت اشتراک
-</button>
-
-
-<a
-class="btn-sub telegram"
-href="https://t.me/planlifeir"
-target="_blank"
->
-تهیه کد اشتراک — تلگرام
-</a>
-
-
-<a
-class="btn-sub bale"
-href="https://ble.ir/planlifeir"
-target="_blank"
->
-تهیه کد اشتراک — بله
-</a>
-
-
-<a
-class="btn-sub whatsapp"
-href="https://wa.me/00905437333582"
-target="_blank"
->
-تهیه کد اشتراک — واتس‌اپ
-</a>
-
-</div>
-
-</div>
-
-</div>
-
 
 <!-- PRICE POPUP -->
-
-<div
-class="price-overlay"
-id="pricePopup"
-onclick="closePriceIfOutside(event)"
->
-
-<div class="price-sheet">
-
-<div class="price-header">
-
-<div class="price-title">
-💎 قیمت اشتراک
+<div class="price-overlay" id="pricePopup" onclick="closePriceIfOutside(event)">
+  <div class="price-sheet">
+    <div class="price-header">
+      <div class="price-title">💎 قیمت اشتراک</div>
+      <button class="price-close" onclick="closePricePopup()">✕</button>
+    </div>
+    <div class="plan-row">
+      <div class="plan-name">اشتراک ماهانه</div>
+      <div class="plan-prices"><div class="plan-new">۲۸۰,۰۰۰ تومان</div></div>
+    </div>
+    <div class="plan-row">
+      <div class="plan-name">اشتراک ۶ ماهه</div>
+      <div class="plan-prices"><div class="plan-old">۱,۶۸۰,۰۰۰</div><div class="plan-new">۱,۱۹۰,۰۰۰ تومان</div></div>
+    </div>
+    <div class="plan-row">
+      <div class="plan-name">اشتراک سالانه</div>
+      <div class="plan-prices"><div class="plan-old">۳,۳۶۰,۰۰۰</div><div class="plan-new">۲,۵۸۰,۰۰۰ تومان</div></div>
+    </div>
+    <div class="price-subscribe-btns">
+      <a class="btn-sub telegram" href="https://t.me/planlifeir" target="_blank">خرید از تلگرام</a>
+      <a class="btn-sub bale" href="https://ble.ir/planlifeir" target="_blank">خرید از بله</a>
+      <a class="btn-sub whatsapp" href="https://wa.me/00905437333582" target="_blank">خرید از واتس‌اپ</a>
+    </div>
+  </div>
 </div>
 
-<button
-class="price-close"
-onclick="closePricePopup()"
->
-✕
-</button>
-
-</div>
-
-
-<div class="plan-row">
-
-<div class="plan-name">
-اشتراک ماهانه
-</div>
-
-<div class="plan-prices">
-
-<div class="plan-new">
-۲۸۰,۰۰۰ تومان
-</div>
-
-</div>
-
-</div>
-
-
-<div class="plan-row">
-
-<div class="plan-name">
-اشتراک ۶ ماهه
-</div>
-
-<div class="plan-prices">
-
-<div class="plan-old">
-۱,۶۸۰,۰۰۰
-</div>
-
-<div class="plan-new">
-۱,۱۹۰,۰۰۰ تومان
-</div>
-
-</div>
-
-</div>
-
-
-<div class="plan-row">
-
-<div class="plan-name">
-اشتراک سالانه
-</div>
-
-<div class="plan-prices">
-
-<div class="plan-old">
-۳,۳۶۰,۰۰۰
-</div>
-
-<div class="plan-new">
-۲,۵۸۰,۰۰۰ تومان
-</div>
-
-</div>
-
-</div>
-
-
-<div class="price-subscribe-btns">
-
-<a
-class="btn-sub telegram"
-href="https://t.me/planlifeir"
-target="_blank"
->
-خرید از تلگرام
-</a>
-
-<a
-class="btn-sub bale"
-href="https://ble.ir/planlifeir"
-target="_blank"
->
-خرید از بله
-</a>
-
-<a
-class="btn-sub whatsapp"
-href="https://wa.me/00905437333582"
-target="_blank"
->
-خرید از واتس‌اپ
-</a>
-
-</div>
-
-</div>
-
-</div>
-
-
-<div
-class="toast"
-id="toast"
-></div>
-
+<div class="toast" id="toast"></div>
 
 <script>
-
-/* =====================================================
-   SUPABASE
-===================================================== */
-
-const SUPABASE_URL =
-'https://hjzzvzxhrqovvducnxha.supabase.co';
-
-const SUPABASE_KEY =
-'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhqenp2enhocnFvdnZkdWNueGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NDY0MTksImV4cCI6MjA5NzUyMjQxOX0.XfFimXnkKHFBlYUE-E7daaBNjPJZV-D21UfCL_1SeoQ';
-
+/* ── SUPABASE ── */
+const SB_URL = 'https://hjzzvzxhrqovvducnxha.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhqenp2enhocnFvdnZkdWNueGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NDY0MTksImV4cCI6MjA5NzUyMjQxOX0.XfFimXnkKHFBlYUE-E7daaBNjPJZV-D21UfCL_1SeoQ';
+const SB_HEADERS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
 
 async function sbGet(table, filter) {
-
-    const r = await fetch(
-        `${SUPABASE_URL}/rest/v1/${table}?${filter}&limit=1`,
-        {
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': 'Bearer ' + SUPABASE_KEY
-            }
-        }
-    );
-
-    return r.json();
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?${filter}&limit=1`, { headers: SB_HEADERS });
+  return r.json();
 }
-
-
 async function sbInsert(table, body) {
-
-    const r = await fetch(
-        `${SUPABASE_URL}/rest/v1/${table}`,
-        {
-            method: 'POST',
-
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': 'Bearer ' + SUPABASE_KEY,
-                'Content-Type': 'application/json',
-                'Prefer': 'return=minimal'
-            },
-
-            body: JSON.stringify(body)
-        }
-    );
-
-    return r.ok;
+  const r = await fetch(`${SB_URL}/rest/v1/${table}`, {
+    method: 'POST',
+    headers: { ...SB_HEADERS, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify(body)
+  });
+  return r.ok;
 }
 
-
-/* =====================================================
-   SESSION
-===================================================== */
-
+/* ── SESSION ── */
 const SESSION_KEY = 'lingua_session_v1';
+const getSession = () => { try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch(e) { return null; } };
+const setSession = d => localStorage.setItem(SESSION_KEY, JSON.stringify(d));
+const isLoggedIn = () => { const s = getSession(); return s && s.phone && s.verified; };
 
-
-function getSession() {
-
-    try {
-        return JSON.parse(
-            localStorage.getItem(SESSION_KEY) || 'null'
-        );
-    }
-
-    catch(e) {
-        return null;
-    }
-}
-
-
-function setSession(d) {
-
-    localStorage.setItem(
-        SESSION_KEY,
-        JSON.stringify(d)
-    );
-}
-
-
-function isLoggedIn() {
-
-    const s = getSession();
-
-    return s &&
-           s.phone &&
-           s.verified;
-}
-
-
-/* =====================================================
-   TOAST
-===================================================== */
-
+/* ── TOAST ── */
 function showToast(msg, dur=2800) {
-
-    const t = document.getElementById('toast');
-
-    t.textContent = msg;
-
-    t.classList.add('show');
-
-    setTimeout(() => {
-        t.classList.remove('show');
-    }, dur);
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
 }
 
-
-/* =====================================================
-   LOGIN
-===================================================== */
-
+/* ── LOGIN ICON ── */
 function updateLoginIcon() {
-
-    const b =
-        document.getElementById('loginIconBtn');
-
-    if (b) {
-
-        b.classList.toggle(
-            'logged-in',
-            !!isLoggedIn()
-        );
-
-    }
+  const b = document.getElementById('loginIconBtn');
+  if (b) b.classList.toggle('logged-in', !!isLoggedIn());
 }
-
-
 function onLoginIconClick() {
-
-    if (isLoggedIn()) {
-
-        if (
-            confirm(
-                'می‌خواهید از حساب خود خارج شوید؟'
-            )
-        ) {
-
-            localStorage.removeItem(
-                SESSION_KEY
-            );
-
-            location.reload();
-        }
-
+  if (isLoggedIn()) {
+    if (confirm('می‌خواهید از حساب خود خارج شوید؟')) {
+      localStorage.removeItem(SESSION_KEY);
+      location.reload();
     }
-
-    else {
-
-        openLoginPopup();
-
-    }
+  } else { openLoginPopup(); }
 }
-
-
 function openLoginPopup() {
-
-    document
-        .getElementById('loginPopup')
-        .classList.add('open');
-
-    setTimeout(() => {
-
-        document
-            .getElementById('phoneInput')
-            .focus();
-
-    }, 400);
+  document.getElementById('loginPopup').classList.add('open');
+  setTimeout(() => document.getElementById('phoneInput').focus(), 400);
 }
-
-
-function closeLoginPopup() {
-
-    document
-        .getElementById('loginPopup')
-        .classList.remove('open');
-}
-
-
-document
-    .getElementById('loginPopup')
-    .addEventListener(
-        'click',
-        function(e) {
-
-            if (e.target === this) {
-                closeLoginPopup();
-            }
-
-        }
-    );
-
+function closeLoginPopup() { document.getElementById('loginPopup').classList.remove('open'); }
+document.getElementById('loginPopup').addEventListener('click', function(e) { if (e.target === this) closeLoginPopup(); });
 
 async function doLogin() {
-
-    const input =
-        document.getElementById('phoneInput');
-
-    const errEl =
-        document.getElementById('phoneError');
-
-    const btn =
-        document.getElementById('btnLogin');
-
-    const btnText =
-        document.getElementById('loginBtnText');
-
-    errEl.textContent = '';
-
-    let phone =
-        input.value
-        .trim()
-        .replace(/\D/g, '');
-
-    if (phone.startsWith('0')) {
-        phone = phone.slice(1);
+  const input = document.getElementById('phoneInput');
+  const errEl = document.getElementById('phoneError');
+  const btn = document.getElementById('btnLogin');
+  const btnText = document.getElementById('loginBtnText');
+  errEl.textContent = '';
+  let phone = input.value.trim().replace(/\D/g, '');
+  if (phone.startsWith('0')) phone = phone.slice(1);
+  if (phone.length < 10 || phone.length > 11) { errEl.textContent = 'شماره موبایل معتبر نیست'; return; }
+  btn.disabled = true; btnText.textContent = 'در حال بررسی...';
+  try {
+    const subs = await sbGet('subscriptions', `phone=eq.${phone}&is_active=eq.true`);
+    if (subs && subs.length > 0) {
+      setSession({ phone, verified: true, ts: Date.now() });
+      await sbInsert('users', { phone });
+      closeLoginPopup();
+      showToast('✅ خوش آمدید! دسترسی همه پادکست‌ها فعال شد');
+      updateLoginIcon();
+      renderPodcastList();
+    } else {
+      await sbInsert('users', { phone });
+      errEl.textContent = 'اشتراک فعال یافت نشد. لطفاً کد اشتراک تهیه کنید.';
     }
-
-    if (
-        phone.length < 10 ||
-        phone.length > 11
-    ) {
-
-        errEl.textContent =
-            'شماره موبایل معتبر نیست';
-
-        return;
-    }
-
-    btn.disabled = true;
-
-    btnText.textContent =
-        'در حال بررسی...';
-
-    try {
-
-        const subs =
-            await sbGet(
-                'subscriptions',
-                `phone=eq.${phone}&is_active=eq.true`
-            );
-
-        if (
-            subs &&
-            subs.length > 0
-        ) {
-
-            setSession({
-                phone,
-                verified: true,
-                ts: Date.now()
-            });
-
-            await sbInsert(
-                'users',
-                { phone }
-            );
-
-            closeLoginPopup();
-
-            showToast(
-                '✅ خوش آمدید! دسترسی همه پادکست‌ها فعال شد'
-            );
-
-            updateLoginIcon();
-
-            renderPodcastList();
-
-        }
-
-        else {
-
-            await sbInsert(
-                'users',
-                { phone }
-            );
-
-            errEl.textContent =
-                'اشتراک فعال یافت نشد. لطفاً کد اشتراک تهیه کنید.';
-        }
-
-    }
-
-    catch(e) {
-
-        errEl.textContent =
-            'خطا در اتصال. دوباره تلاش کنید.';
-    }
-
-    btn.disabled = false;
-
-    btnText.textContent =
-        'ورود';
+  } catch(e) { errEl.textContent = 'خطا در اتصال. دوباره تلاش کنید.'; }
+  btn.disabled = false; btnText.textContent = 'ورود';
 }
+document.getElementById('phoneInput').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
+/* ── PRICE POPUP ── */
+function openPricePopup() { document.getElementById('pricePopup').classList.add('open'); }
+function closePricePopup() { document.getElementById('pricePopup').classList.remove('open'); }
+function closePriceIfOutside(e) { if (e.target === document.getElementById('pricePopup')) closePricePopup(); }
 
-document
-    .getElementById('phoneInput')
-    .addEventListener(
-        'keydown',
-        function(e) {
-
-            if (e.key === 'Enter') {
-                doLogin();
-            }
-
-        }
-    );
-
-
-/* =====================================================
-   PRICE POPUP
-===================================================== */
-
-function openPricePopup() {
-
-    document
-        .getElementById('pricePopup')
-        .classList.add('open');
-}
-
-
-function closePricePopup() {
-
-    document
-        .getElementById('pricePopup')
-        .classList.remove('open');
-}
-
-
-function closePriceIfOutside(e) {
-
-    if (
-        e.target ===
-        document.getElementById('pricePopup')
-    ) {
-
-        closePricePopup();
-
-    }
-}
-
-
-/* =====================================================
-   VERIFY SUBSCRIPTION
-===================================================== */
-
+/* ── VERIFY SUBSCRIPTION ── */
 async function verifyCurrentSubscription() {
-
-    const session =
-        getSession();
-
-    if (
-        !session ||
-        !session.phone ||
-        !session.verified
-    ) {
-
-        updateLoginIcon();
-
-        return false;
-    }
-
-    try {
-
-        const subs =
-            await sbGet(
-                'subscriptions',
-                `phone=eq.${encodeURIComponent(session.phone)}&is_active=eq.true`
-            );
-
-        const active =
-            Array.isArray(subs) &&
-            subs.length > 0;
-
-        if (!active) {
-
-            localStorage.removeItem(
-                SESSION_KEY
-            );
-
-            updateLoginIcon();
-
-            renderPodcastList();
-
-            return false;
-        }
-
-        updateLoginIcon();
-
-        return true;
-
-    }
-
-    catch(e) {
-
-        updateLoginIcon();
-
-        return false;
-    }
+  const session = getSession();
+  if (!session || !session.phone || !session.verified) { updateLoginIcon(); return false; }
+  try {
+    const subs = await sbGet('subscriptions', `phone=eq.${encodeURIComponent(session.phone)}&is_active=eq.true`);
+    const active = Array.isArray(subs) && subs.length > 0;
+    if (!active) { localStorage.removeItem(SESSION_KEY); updateLoginIcon(); renderPodcastList(); return false; }
+    updateLoginIcon(); return true;
+  } catch(e) { updateLoginIcon(); return false; }
 }
 
-
-/* =====================================================
-   PODCAST DATA
-===================================================== */
-
+/* ── DATA ── */
 const podcasts = [
-
-{
+  {
     free: true,
-
-    title:
-    "Daily English Conversations",
-
-    description:
-    "Real conversations. Real life.",
-
-    tag:
-    "Daily English",
-
-    level:
-    "Intermediate",
-
-    episodes:
-    "12 Episodes",
-
-    dur:
-    "15-20 min",
-
-    image:
-    "http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg",
-
-    audio:
-    "http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/The-decline-of-the-apostrophe.mp3",
-
-    /* =================================================
-       تغییر اصلی:
-       JSON حذف شد و فایل TEXT قرار گرفت
-    ================================================= */
-
-    transcriptUrl:
-    "http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/The-decline-of-the-apostrophe.text",
-
-    vocab: [
-
-        {
-            word: "conversation",
-            fa: "مکالمه"
-        },
-
-        {
-            word: "daily",
-            fa: "روزانه"
-        },
-
-        {
-            word: "real life",
-            fa: "زندگی واقعی"
-        },
-
-        {
-            word: "practice",
-            fa: "تمرین"
-        }
-
-    ]
-},
-
-
-{
+    title: "Daily English Conversations", description: "Real conversations. Real life.",
+    tag: "Daily English", level: "Intermediate", episodes: "12 Episodes", dur: "15-20 min",
+    image: "http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg",
+    audio: "http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/The-decline-of-the-apostrophe.mp3",
+    transcriptUrl: "http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/The-decline-of-the-apostrophe.text",
+    vocab: [{word:"conversation",fa:"مکالمه"},{word:"daily",fa:"روزانه"},{word:"real life",fa:"زندگی واقعی"},{word:"practice",fa:"تمرین"}]
+  },
+  {
     free: false,
-
-    title:
-    "Everyday English",
-
-    description:
-    "Small talk, big progress.",
-
-    tag:
-    "Conversation",
-
-    level:
-    "Beginner",
-
-    episodes:
-    "10 Episodes",
-
-    dur:
-    "10-15 min",
-
-    image:
-    "http://fs3.centraldnserver.com/~planlife/pics/english/podcast/2.jpeg",
-
-    audio:
-    "https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3",
-
-    transcriptUrl:
-    "",
-
-    vocab: [
-
-        {
-            word: "small talk",
-            fa: "گپ کوچک"
-        },
-
-        {
-            word: "progress",
-            fa: "پیشرفت"
-        },
-
-        {
-            word: "everyday",
-            fa: "هر روز"
-        },
-
-        {
-            word: "phrase",
-            fa: "عبارت"
-        }
-
-    ]
-},
-
-
-{
+    title: "Everyday English", description: "Small talk, big progress.",
+    tag: "Conversation", level: "Beginner", episodes: "10 Episodes", dur: "10-15 min",
+    image: "http://fs3.centraldnserver.com/~planlife/pics/english/podcast/2.jpeg",
+    audio: "https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3",
+    transcriptUrl: "",
+    vocab: [{word:"small talk",fa:"گپ کوچک"},{word:"progress",fa:"پیشرفت"},{word:"everyday",fa:"هر روز"},{word:"phrase",fa:"عبارت"}]
+  },
+  {
     free: false,
-
-    title:
-    "Advanced Vocabulary",
-
-    description:
-    "Learn words. Build confidence.",
-
-    tag:
-    "Vocabulary",
-
-    level:
-    "Advanced",
-
-    episodes:
-    "15 Episodes",
-
-    dur:
-    "10-18 min",
-
-    image:
-    "http://fs3.centraldnserver.com/~planlife/pics/english/podcast/3.jpeg",
-
-    audio:
-    "https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3",
-
-    transcriptUrl:
-    "",
-
-    vocab: [
-
-        {
-            word: "confidence",
-            fa: "اعتماد به نفس"
-        },
-
-        {
-            word: "advanced",
-            fa: "پیشرفته"
-        },
-
-        {
-            word: "vocabulary",
-            fa: "واژگان"
-        },
-
-        {
-            word: "fluency",
-            fa: "روانی"
-        }
-
-    ]
-},
-
-
-{
+    title: "Advanced Vocabulary", description: "Learn words. Build confidence.",
+    tag: "Vocabulary", level: "Advanced", episodes: "15 Episodes", dur: "10-18 min",
+    image: "http://fs3.centraldnserver.com/~planlife/pics/english/podcast/3.jpeg",
+    audio: "https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3",
+    transcriptUrl: "",
+    vocab: [{word:"confidence",fa:"اعتماد به نفس"},{word:"advanced",fa:"پیشرفته"},{word:"vocabulary",fa:"واژگان"},{word:"fluency",fa:"روانی"}]
+  },
+  {
     free: false,
-
-    title:
-    "Travel English",
-
-    description:
-    "Speak English Anywhere.",
-
-    tag:
-    "Conversation",
-
-    level:
-    "Intermediate",
-
-    episodes:
-    "8 Episodes",
-
-    dur:
-    "10-15 min",
-
-    image:
-    "http://fs3.centraldnserver.com/~planlife/pics/english/podcast/4.jpeg",
-
-    audio:
-    "https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3",
-
-    transcriptUrl:
-    "",
-
-    vocab: [
-
-        {
-            word: "travel",
-            fa: "سفر"
-        },
-
-        {
-            word: "airport",
-            fa: "فرودگاه"
-        },
-
-        {
-            word: "hotel",
-            fa: "هتل"
-        },
-
-        {
-            word: "direction",
-            fa: "مسیر"
-        }
-
-    ]
-},
-
-
-{
+    title: "Travel English", description: "Speak English Anywhere.",
+    tag: "Conversation", level: "Intermediate", episodes: "8 Episodes", dur: "10-15 min",
+    image: "http://fs3.centraldnserver.com/~planlife/pics/english/podcast/4.jpeg",
+    audio: "https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3",
+    transcriptUrl: "",
+    vocab: [{word:"travel",fa:"سفر"},{word:"airport",fa:"فرودگاه"},{word:"hotel",fa:"هتل"},{word:"direction",fa:"مسیر"}]
+  },
+  {
     free: false,
-
-    title:
-    "English for Work",
-
-    description:
-    "Communicate. Create. Grow.",
-
-    tag:
-    "Business",
-
-    level:
-    "Advanced",
-
-    episodes:
-    "10 Episodes",
-
-    dur:
-    "12-18 min",
-
-    image:
-    "http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg",
-
-    audio:
-    "https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3",
-
-    transcriptUrl:
-    "",
-
-    vocab: [
-
-        {
-            word: "meeting",
-            fa: "جلسه"
-        },
-
-        {
-            word: "deadline",
-            fa: "ددلاین"
-        },
-
-        {
-            word: "presentation",
-            fa: "ارائه"
-        },
-
-        {
-            word: "colleague",
-            fa: "همکار"
-        }
-
-    ]
-}
-
+    title: "English for Work", description: "Communicate. Create. Grow.",
+    tag: "Business", level: "Advanced", episodes: "10 Episodes", dur: "12-18 min",
+    image: "http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg",
+    audio: "https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3",
+    transcriptUrl: "",
+    vocab: [{word:"meeting",fa:"جلسه"},{word:"deadline",fa:"ددلاین"},{word:"presentation",fa:"ارائه"},{word:"colleague",fa:"همکار"}]
+  }
 ];
-
 
 let activeCategory = 'All';
 
-
-/* =====================================================
-   LEVEL BARS
-===================================================== */
-
+/* ── LEVEL BARS ── */
 function levelBars(n) {
-
-    let b = '';
-
-    for (
-        let i = 0;
-        i < n;
-        i++
-    ) {
-
-        b += '<span></span>';
-
-    }
-
-    return b;
+  let b = '';
+  for (let i = 0; i < n; i++) b += '<span></span>';
+  return b;
 }
 
-
-/* =====================================================
-   RENDER PODCAST LIST
-===================================================== */
-
+/* ── RENDER LIST ── */
 function renderPodcastList() {
-
-    const loggedIn =
-        isLoggedIn();
-
-    const list =
-        document.getElementById(
-            'podcastList'
-        );
-
-    list.innerHTML = '';
-
-    const filtered =
-        activeCategory === 'All'
-        ? podcasts
-        : podcasts.filter(
-            p => p.tag === activeCategory
-        );
-
-
-    filtered.forEach(p => {
-
-        const globalIdx =
-            podcasts.indexOf(p);
-
-        const locked =
-            !p.free && !loggedIn;
-
-        const bars =
-            p.level === 'Beginner'
-            ? 3
-            : 4;
-
-
-        const card =
-            document.createElement(
-                'article'
-            );
-
-        card.className =
-            'podcast-card' +
-            (locked ? ' locked' : '');
-
-
-        card.innerHTML = `
-
-            <div class="cover">
-
-                <img
-                    src="${p.image}"
-                    alt="${p.title}"
-                    loading="lazy"
-                >
-
-                <div class="cover-title">
-                    ${p.title
-                        .split(' ')
-                        .slice(0,2)
-                        .join('<br>')}
-                </div>
-
-            </div>
-
-
-            <div class="card-content">
-
-                <h3>
-                    ${p.title}
-                </h3>
-
-                <p class="card-description">
-                    ${p.description}
-                </p>
-
-                <div class="card-meta">
-
-                    <span>
-                        🎧 ${p.episodes}
-                    </span>
-
-                    <span>
-                        ◷ ${p.dur}
-                    </span>
-
-                </div>
-
-                <div class="tag">
-                    ${p.tag}
-                </div>
-
-                <div class="level">
-
-                    <div class="level-bars">
-                        ${levelBars(bars)}
-                    </div>
-
-                    ${p.level}
-
-                </div>
-
-            </div>
-
-
-            <div class="card-actions">
-
-                <button
-                    class="icon-button"
-                    onclick="event.stopPropagation();toggleFavorite(this)"
-                >
-                    ♡
-                </button>
-
-                <button
-                    class="icon-button"
-                    onclick="event.stopPropagation()"
-                >
-                    ···
-                </button>
-
-            </div>
-
-
-            ${
-                locked
-
-                ?
-
-                `
-                <div class="lock-overlay">
-                    <span class="lock-icon">
-                        🔒
-                    </span>
-                </div>
-
-                <button
-                    class="play-small"
-                    onclick="event.stopPropagation();openLoginPopup()"
-                >
-                    🔒
-                </button>
-                `
-
-                :
-
-                `
-                <button class="play-small">
-                    ▶
-                </button>
-                `
-            }
-
-        `;
-
-
-        card.addEventListener(
-            'click',
-            () => {
-
-                if (locked) {
-
-                    openLoginPopup();
-
-                }
-
-                else {
-
-                    openPlayer(
-                        globalIdx
-                    );
-
-                }
-
-            }
-        );
-
-
-        list.appendChild(card);
-
-    });
-
+  const loggedIn = isLoggedIn();
+  const list = document.getElementById('podcastList');
+  list.innerHTML = '';
+  const filtered = activeCategory === 'All' ? podcasts : podcasts.filter(p => p.tag === activeCategory);
+  filtered.forEach(p => {
+    const globalIdx = podcasts.indexOf(p);
+    const locked = !p.free && !loggedIn;
+    const bars = p.level === 'Beginner' ? 3 : 4;
+    const card = document.createElement('article');
+    card.className = 'podcast-card' + (locked ? ' locked' : '');
+    card.innerHTML = `
+      <div class="cover">
+        <img src="${p.image}" alt="${p.title}" loading="lazy">
+        <div class="cover-title">${p.title.split(' ').slice(0,2).join('<br>')}</div>
+      </div>
+      <div class="card-content">
+        <h3>${p.title}</h3>
+        <p class="card-description">${p.description}</p>
+        <div class="card-meta"><span>🎧 ${p.episodes}</span><span>◷ ${p.dur}</span></div>
+        <div class="tag">${p.tag}</div>
+        <div class="level"><div class="level-bars">${levelBars(bars)}</div>${p.level}</div>
+      </div>
+      <div class="card-actions">
+        <button class="icon-button" onclick="event.stopPropagation();toggleFavorite(this)">♡</button>
+        <button class="icon-button" onclick="event.stopPropagation()">···</button>
+      </div>
+      ${locked
+        ? `<div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+           <button class="play-small" onclick="event.stopPropagation();openLoginPopup()">🔒</button>`
+        : `<button class="play-small">▶</button>`}
+    `;
+    card.addEventListener('click', () => locked ? openLoginPopup() : openPlayer(globalIdx));
+    list.appendChild(card);
+  });
 }
 
+/* ── CATEGORY FILTER ── */
+document.querySelectorAll('.category').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.category').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    activeCategory = this.dataset.cat;
+    renderPodcastList();
+  });
+});
 
-/* =====================================================
-   CATEGORY FILTER
-===================================================== */
-
-document
-    .querySelectorAll('.category')
-    .forEach(btn => {
-
-        btn.addEventListener(
-            'click',
-            function() {
-
-                document
-                    .querySelectorAll('.category')
-                    .forEach(b =>
-                        b.classList.remove('active')
-                    );
-
-                this.classList.add('active');
-
-                activeCategory =
-                    this.dataset.cat;
-
-                renderPodcastList();
-
-            }
-        );
-
-    });
-
-
-/* =====================================================
-   WAVEFORM
-===================================================== */
-
-const waveform =
-    document.getElementById(
-        'waveform'
-    );
-
-
-for (
-    let i = 0;
-    i < 48;
-    i++
-) {
-
-    const bar =
-        document.createElement(
-            'div'
-        );
-
-    bar.className =
-        'wave paused';
-
-    bar.style.height =
-        (
-            Math.floor(
-                Math.random() * 34
-            ) + 8
-        ) + 'px';
-
-    waveform.appendChild(bar);
-
+/* ── WAVEFORM ── */
+const waveform = document.getElementById('waveform');
+for (let i = 0; i < 48; i++) {
+  const bar = document.createElement('div');
+  bar.className = 'wave paused';
+  bar.style.height = (Math.floor(Math.random() * 34) + 8) + 'px';
+  waveform.appendChild(bar);
 }
 
-
-/* =====================================================
-   PLAYER
-===================================================== */
-
-const homeScreen =
-    document.getElementById(
-        'homeScreen'
-    );
-
-const playerScreen =
-    document.getElementById(
-        'playerScreen'
-    );
-
-const audio =
-    document.getElementById(
-        'audioPlayer'
-    );
-
-const mainPlay =
-    document.getElementById(
-        'mainPlay'
-    );
-
+/* ── PLAYER ── */
+const homeScreen = document.getElementById('homeScreen');
+const playerScreen = document.getElementById('playerScreen');
+const audio = document.getElementById('audioPlayer');
+const mainPlay = document.getElementById('mainPlay');
 
 function openPlayer(index) {
-
-    const p =
-        podcasts[index];
-
-
-    document.getElementById(
-        'playerTitle'
-    ).textContent =
-        p.title;
-
-
-    document.getElementById(
-        'playerDescription'
-    ).textContent =
-        p.description;
-
-
-    document.getElementById(
-        'playerTag'
-    ).textContent =
-        p.level;
-
-
-    document.getElementById(
-        'playerImage'
-    ).src =
-        p.image;
-
-
-    document.getElementById(
-        'playerEpisodes'
-    ).innerHTML =
-        '🎧 ' + p.episodes;
-
-
-    document.getElementById(
-        'playerDurEl'
-    ).innerHTML =
-        '◷ ' + p.dur;
-
-
-    /* VOCABULARY */
-
-    const vocabList =
-        document.getElementById(
-            'vocabList'
-        );
-
-    vocabList.innerHTML = '';
-
-
-    (p.vocab || []).forEach(
-        v => {
-
-            const item =
-                document.createElement(
-                    'div'
-                );
-
-            item.className =
-                'vocab-item';
-
-            item.innerHTML = `
-                <strong>
-                    ${v.word}
-                </strong>
-
-                <small>
-                    ${v.fa}
-                </small>
-            `;
-
-            vocabList.appendChild(
-                item
-            );
-
-        }
-    );
-
-
-    /* AUDIO */
-
-    audio.src =
-        p.audio;
-
-    audio.load();
-
-
-    homeScreen.classList.remove(
-        'active'
-    );
-
-    playerScreen.classList.add(
-        'active'
-    );
-
-    playerScreen.scrollTop = 0;
-
-
-    mainPlay.textContent =
-        '▶';
-
-    setWave(false);
-
-
-    /* LOAD TEXT TRANSCRIPT */
-
-    loadTranscript(
-        p.transcriptUrl
-    );
-
-
-    document
-        .querySelectorAll('.lesson-tab')
-        .forEach(
-            t =>
-                t.classList.remove(
-                    'active'
-                )
-        );
-
-
-    document
-        .querySelectorAll('.lesson-tab')[0]
-        .classList.add('active');
-
-
-    document.getElementById(
-        'transcriptContent'
-    ).style.display =
-        'block';
-
-
-    document.getElementById(
-        'vocabContent'
-    ).style.display =
-        'none';
-
-
-    document.getElementById(
-        'notesContent'
-    ).style.display =
-        'none';
-
+  const p = podcasts[index];
+  document.getElementById('playerTitle').textContent = p.title;
+  document.getElementById('playerDescription').textContent = p.description;
+  document.getElementById('playerTag').textContent = p.level;
+  document.getElementById('playerImage').src = p.image;
+  document.getElementById('playerEpisodes').innerHTML = '🎧 ' + p.episodes;
+  document.getElementById('playerDurEl').innerHTML = '◷ ' + p.dur;
+  const vocabList = document.getElementById('vocabList');
+  vocabList.innerHTML = '';
+  (p.vocab || []).forEach(v => {
+    const item = document.createElement('div');
+    item.className = 'vocab-item';
+    item.innerHTML = `<strong>${v.word}</strong><small>${v.fa}</small>`;
+    vocabList.appendChild(item);
+  });
+  audio.src = p.audio;
+  audio.load();
+  homeScreen.classList.remove('active');
+  playerScreen.classList.add('active');
+  playerScreen.scrollTop = 0;
+  mainPlay.textContent = '▶';
+  setWave(false);
+  loadTranscript(p.transcriptUrl);
+  document.querySelectorAll('.lesson-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.lesson-tab')[0].classList.add('active');
+  document.getElementById('transcriptContent').style.display = 'block';
+  document.getElementById('vocabContent').style.display = 'none';
+  document.getElementById('notesContent').style.display = 'none';
 }
 
-
-/* =====================================================
-   TEXT TRANSCRIPT
-===================================================== */
-
+/* ── TRANSCRIPT LOADER ── */
 /*
-    فرمت فایل TEXT:
-
-    00:00|Hello, welcome.|سلام، خوش آمدید.
-    00:05|How are you?|حالت چطوره؟
-    00:10|I am fine.|من خوبم.
-
-    جداکننده:
-    |
-
-    ستون اول:
-    زمان
-
-    ستون دوم:
-    انگلیسی
-
-    ستون سوم:
-    فارسی
+  فرمت فایل TEXT:
+  00:00|Hello, welcome.|سلام، خوش آمدید.
+  جداکننده: |
+  ستون ۱: زمان  ستون ۲: انگلیسی  ستون ۳: فارسی (اختیاری)
 */
 
+const PROXIES = [
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://cors-anywhere.herokuapp.com/${url}`
+];
+
+async function fetchWithFallback(url) {
+  /* ابتدا مستقیم امتحان می‌کنیم */
+  try {
+    const r = await fetch(url + '?v=' + Date.now());
+    if (r.ok) return r.text();
+  } catch(e) {}
+  /* سپس proxy ها را یکی یکی امتحان می‌کنیم */
+  for (const proxy of PROXIES) {
+    try {
+      const r = await fetch(proxy(url));
+      if (r.ok) return r.text();
+    } catch(e) {}
+  }
+  throw new Error('All fetch attempts failed');
+}
 
 function loadTranscript(url) {
-
-    const loading =
-        document.getElementById(
-            'transcriptLoading'
-        );
-
-    const lines =
-        document.getElementById(
-            'transcriptLines'
-        );
-
-
-    lines.innerHTML = '';
-
-
-    if (!url) {
-
-        loading.style.display =
-            'block';
-
-        loading.textContent =
-            'No transcript available yet.';
-
-        return;
-    }
-
-
-    loading.style.display =
-        'block';
-
-    loading.textContent =
-        '⏳ در حال بارگذاری Transcript...';
-
-
-    /*
-        فایل TEXT را مستقیم می‌خوانیم
-    */
-
-    fetch(
-        url + '?v=' + Date.now()
-    )
-
-    .then(response => {
-
-        if (!response.ok) {
-
-            throw new Error(
-                'HTTP ' + response.status
-            );
-
-        }
-
-        return response.text();
-
-    })
-
-    .then(text => {
-
-        renderTextTranscript(
-            text,
-            loading,
-            lines
-        );
-
-    })
-
-    .catch(error => {
-
-        console.error(
-            'Transcript Error:',
-            error
-        );
-
-
-        /*
-            اگر CORS مشکل داشت،
-            یک بار از proxy امتحان می‌کنیم.
-        */
-
-        const proxyUrl =
-            'https://corsproxy.io/?' +
-            encodeURIComponent(url);
-
-
-        fetch(
-            proxyUrl
-        )
-
-        .then(response => {
-
-            if (!response.ok) {
-
-                throw new Error(
-                    'Proxy HTTP ' +
-                    response.status
-                );
-
-            }
-
-            return response.text();
-
-        })
-
-        .then(text => {
-
-            renderTextTranscript(
-                text,
-                loading,
-                lines
-            );
-
-        })
-
-        .catch(proxyError => {
-
-            console.error(
-                'Transcript Proxy Error:',
-                proxyError
-            );
-
-
-            loading.style.display =
-                'block';
-
-            loading.textContent =
-                '⚠️ Transcript قابل بارگذاری نیست. آدرس فایل یا تنظیمات CORS سرور را بررسی کنید.';
-
-        });
-
+  const loading = document.getElementById('transcriptLoading');
+  const lines = document.getElementById('transcriptLines');
+  lines.innerHTML = '';
+  if (!url) {
+    loading.style.display = 'block';
+    loading.textContent = 'No transcript available yet.';
+    return;
+  }
+  loading.style.display = 'block';
+  loading.textContent = '⏳ در حال بارگذاری Transcript...';
+  fetchWithFallback(url)
+    .then(text => renderTextTranscript(text, loading, lines))
+    .catch(() => {
+      loading.style.display = 'block';
+      loading.textContent = '⚠️ Transcript بارگذاری نشد. لطفاً CORS سرور را فعال کنید.';
     });
-
 }
 
-
-/* =====================================================
-   PARSE TEXT TRANSCRIPT
-===================================================== */
-
-function renderTextTranscript(
-    text,
-    loading,
-    lines
-) {
-
-    lines.innerHTML = '';
-
-
-    /*
-        حذف BOM احتمالی فایل
-    */
-
-    text =
-        text.replace(
-            /^\uFEFF/,
-            ''
-        );
-
-
-    /*
-        تبدیل خطوط مختلف به خط استاندارد
-    */
-
-    const rows =
-        text
-        .replace(/\r\n/g, '\n')
-        .replace(/\r/g, '\n')
-        .split('\n');
-
-
-    let count = 0;
-
-
-    rows.forEach(
-        (row, index) => {
-
-            row = row.trim();
-
-
-            /*
-                خطوط خالی نادیده گرفته شوند
-            */
-
-            if (!row) {
-                return;
-            }
-
-
-            /*
-                اگر خط با # شروع شد
-                به عنوان comment در نظر گرفته شود
-            */
-
-            if (
-                row.startsWith('#')
-            ) {
-                return;
-            }
-
-
-            /*
-                تقسیم بر اساس |
-            */
-
-            const parts =
-                row.split('|');
-
-
-            if (parts.length < 2) {
-
-                return;
-
-            }
-
-
-            const time =
-                (parts[0] || '').trim();
-
-
-            const english =
-                (parts[1] || '').trim();
-
-
-            const persian =
-                parts
-                    .slice(2)
-                    .join('|')
-                    .trim();
-
-
-            if (
-                !time &&
-                !english &&
-                !persian
-            ) {
-
-                return;
-
-            }
-
-
-            const div =
-                document.createElement(
-                    'div'
-                );
-
-
-            div.className =
-                'transcript-line';
-
-
-            /*
-                زمان را به ثانیه تبدیل می‌کنیم
-            */
-
-            const seconds =
-                timeToSeconds(time);
-
-
-            div.dataset.time =
-                seconds;
-
-
-            div.innerHTML = `
-
-                <span class="transcript-time">
-                    ${escapeHTML(time)}
-                </span>
-
-                <div class="transcript-text">
-
-                    <div class="transcript-en">
-                        ${escapeHTML(english)}
-                    </div>
-
-                    ${
-                        persian
-
-                        ?
-
-                        `
-                        <div class="transcript-fa">
-                            ${escapeHTML(persian)}
-                        </div>
-                        `
-
-                        :
-
-                        ''
-                    }
-
-                </div>
-
-            `;
-
-
-            /*
-                کلیک روی جمله
-                = رفتن به همان زمان صوت
-            */
-
-            div.addEventListener(
-                'click',
-                () => {
-
-                    if (
-                        isFinite(seconds)
-                    ) {
-
-                        audio.currentTime =
-                            seconds;
-
-                        audio.play()
-                            .catch(() => {});
-
-                    }
-
-                }
-            );
-
-
-            lines.appendChild(
-                div
-            );
-
-
-            count++;
-
-        }
-    );
-
-
-    if (count === 0) {
-
-        loading.style.display =
-            'block';
-
-        loading.textContent =
-            'Transcript خالی است یا فرمت فایل صحیح نیست.';
-
-        return;
-
-    }
-
-
-    loading.style.display =
-        'none';
-
+/* ── PARSE TEXT TRANSCRIPT ── */
+function renderTextTranscript(text, loading, lines) {
+  lines.innerHTML = '';
+  text = text.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const rows = text.split('\n');
+  let count = 0;
+  rows.forEach(row => {
+    row = row.trim();
+    if (!row || row.startsWith('#')) return;
+    const parts = row.split('|');
+    if (parts.length < 2) return;
+    const time = (parts[0] || '').trim();
+    const english = (parts[1] || '').trim();
+    const persian = parts.slice(2).join('|').trim();
+    if (!time && !english && !persian) return;
+    const div = document.createElement('div');
+    div.className = 'transcript-line';
+    const seconds = timeToSeconds(time);
+    div.dataset.time = seconds;
+    div.innerHTML = `
+      <span class="transcript-time">${escapeHTML(time)}</span>
+      <div class="transcript-text">
+        <div class="transcript-en">${escapeHTML(english)}</div>
+        ${persian ? `<div class="transcript-fa">${escapeHTML(persian)}</div>` : ''}
+      </div>`;
+    div.addEventListener('click', () => { if (isFinite(seconds)) { audio.currentTime = seconds; audio.play().catch(()=>{}); } });
+    lines.appendChild(div);
+    count++;
+  });
+  if (count === 0) {
+    loading.style.display = 'block';
+    loading.textContent = 'Transcript خالی است یا فرمت فایل صحیح نیست.';
+    return;
+  }
+  loading.style.display = 'none';
 }
 
-
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
-
-function escapeHTML(value) {
-
-    return String(value)
-        .replace(
-            /&/g,
-            '&amp;'
-        )
-        .replace(
-            /</g,
-            '&lt;'
-        )
-        .replace(
-            />/g,
-            '&gt;'
-        )
-        .replace(
-            /"/g,
-            '&quot;'
-        )
-        .replace(
-            /'/g,
-            '&#039;'
-        );
-
+/* ── HELPERS ── */
+function escapeHTML(v) {
+  return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 }
-
-
-/* =====================================================
-   TIME TO SECONDS
-===================================================== */
-
 function timeToSeconds(time) {
-
-    if (!time) {
-        return NaN;
-    }
-
-
-    time =
-        String(time).trim();
-
-
-    /*
-        حالت:
-
-        00:15
-    */
-
-    if (
-        /^\d+:\d{2}$/.test(time)
-    ) {
-
-        const parts =
-            time.split(':');
-
-        return (
-            Number(parts[0]) * 60 +
-            Number(parts[1])
-        );
-
-    }
-
-
-    /*
-        حالت:
-
-        01:02:15
-    */
-
-    if (
-        /^\d+:\d{2}:\d{2}$/.test(time)
-    ) {
-
-        const parts =
-            time.split(':');
-
-        return (
-            Number(parts[0]) * 3600 +
-            Number(parts[1]) * 60 +
-            Number(parts[2])
-        );
-
-    }
-
-
-    /*
-        اگر خود عدد باشد
-    */
-
-    if (
-        !isNaN(Number(time))
-    ) {
-
-        return Number(time);
-
-    }
-
-
-    return NaN;
+  if (!time) return NaN;
+  time = String(time).trim();
+  if (/^\d+:\d{2}$/.test(time)) { const p=time.split(':'); return Number(p[0])*60+Number(p[1]); }
+  if (/^\d+:\d{2}:\d{2}$/.test(time)) { const p=time.split(':'); return Number(p[0])*3600+Number(p[1])*60+Number(p[2]); }
+  if (!isNaN(Number(time))) return Number(time);
+  return NaN;
 }
 
+/* ── ACTIVE TRANSCRIPT ── */
+audio.addEventListener('timeupdate', () => {
+  const lines = document.querySelectorAll('.transcript-line');
+  if (!lines.length) return;
+  let active = null;
+  lines.forEach(l => { const s = Number(l.dataset.time); if (isFinite(s) && s <= audio.currentTime) active = l; });
+  lines.forEach(l => l.classList.remove('active'));
+  if (active) active.classList.add('active');
+});
 
-/* =====================================================
-   ACTIVE TRANSCRIPT LINE
-===================================================== */
+/* ── NAVIGATION ── */
+function goHome() { audio.pause(); playerScreen.classList.remove('active'); homeScreen.classList.add('active'); }
 
-audio.addEventListener(
-    'timeupdate',
-    updateActiveTranscript
-);
-
-
-function updateActiveTranscript() {
-
-    const lines =
-        document.querySelectorAll(
-            '.transcript-line'
-        );
-
-
-    if (!lines.length) {
-        return;
-    }
-
-
-    let activeLine = null;
-
-
-    lines.forEach(
-        line => {
-
-            const start =
-                Number(
-                    line.dataset.time
-                );
-
-
-            if (
-                isFinite(start) &&
-                start <= audio.currentTime
-            ) {
-
-                activeLine =
-                    line;
-
-            }
-
-        }
-    );
-
-
-    lines.forEach(
-        line => {
-
-            line.classList.remove(
-                'active'
-            );
-
-        }
-    );
-
-
-    if (activeLine) {
-
-        activeLine.classList.add(
-            'active'
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   HOME
-===================================================== */
-
-function goHome() {
-
-    audio.pause();
-
-    playerScreen.classList.remove(
-        'active'
-    );
-
-    homeScreen.classList.add(
-        'active'
-    );
-
-}
-
-
-/* =====================================================
-   PLAY / PAUSE
-===================================================== */
-
+/* ── PLAYBACK ── */
 function togglePlay() {
-
-    if (audio.paused) {
-
-        audio.play()
-
-            .then(() => {
-
-                mainPlay.textContent =
-                    'Ⅱ';
-
-                setWave(true);
-
-            })
-
-            .catch(
-                e =>
-                    console.log(e)
-            );
-
-    }
-
-    else {
-
-        audio.pause();
-
-        mainPlay.textContent =
-            '▶';
-
-        setWave(false);
-
-    }
-
+  if (audio.paused) { audio.play().then(() => { mainPlay.textContent='Ⅱ'; setWave(true); }).catch(e=>console.log(e)); }
+  else { audio.pause(); mainPlay.textContent='▶'; setWave(false); }
 }
+audio.addEventListener('play', () => { mainPlay.textContent='Ⅱ'; setWave(true); });
+audio.addEventListener('pause', () => { mainPlay.textContent='▶'; setWave(false); });
+audio.addEventListener('ended', () => { mainPlay.textContent='▶'; setWave(false); });
+function setWave(active) { document.querySelectorAll('.wave').forEach(b => b.classList.toggle('paused', !active)); }
 
-
-audio.addEventListener(
-    'play',
-    () => {
-
-        mainPlay.textContent =
-            'Ⅱ';
-
-        setWave(true);
-
-    }
-);
-
-
-audio.addEventListener(
-    'pause',
-    () => {
-
-        mainPlay.textContent =
-            '▶';
-
-        setWave(false);
-
-    }
-);
-
-
-audio.addEventListener(
-    'ended',
-    () => {
-
-        mainPlay.textContent =
-            '▶';
-
-        setWave(false);
-
-    }
-);
-
-
-/* =====================================================
-   WAVE
-===================================================== */
-
-function setWave(active) {
-
-    document
-        .querySelectorAll('.wave')
-        .forEach(
-            b => {
-
-                b.classList.toggle(
-                    'paused',
-                    !active
-                );
-
-            }
-        );
-
-}
-
-
-/* =====================================================
-   FORMAT TIME
-===================================================== */
-
+/* ── TIME / PROGRESS ── */
 function formatTime(s) {
-
-    if (!isFinite(s)) {
-        return '00:00';
-    }
-
-
-    return (
-        String(
-            Math.floor(s / 60)
-        ).padStart(2,'0')
-        +
-        ':'
-        +
-        String(
-            Math.floor(s % 60)
-        ).padStart(2,'0')
-    );
-
+  if (!isFinite(s)) return '00:00';
+  return String(Math.floor(s/60)).padStart(2,'0') + ':' + String(Math.floor(s%60)).padStart(2,'0');
 }
+audio.addEventListener('loadedmetadata', () => { document.getElementById('audioDuration').textContent = formatTime(audio.duration); });
+audio.addEventListener('timeupdate', () => {
+  if (!audio.duration) return;
+  const pct = (audio.currentTime / audio.duration) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressDot').style.left = pct + '%';
+  document.getElementById('currentTime').textContent = formatTime(audio.currentTime);
+});
+document.getElementById('progressBar').addEventListener('click', e => {
+  if (!audio.duration) return;
+  const rect = document.getElementById('progressBar').getBoundingClientRect();
+  audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+});
+function skip(sec) { if (audio.duration) audio.currentTime = Math.max(0, Math.min(audio.duration, audio.currentTime + sec)); }
 
+/* ── VOLUME / SPEED ── */
+document.getElementById('volumeSlider').addEventListener('input', function() { audio.volume = parseFloat(this.value); });
+document.querySelectorAll('.speed').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.speed').forEach(s => s.classList.remove('active'));
+    this.classList.add('active');
+    audio.playbackRate = Number(this.dataset.speed);
+  });
+});
 
-/* =====================================================
-   AUDIO METADATA
-===================================================== */
-
-audio.addEventListener(
-    'loadedmetadata',
-    () => {
-
-        document.getElementById(
-            'audioDuration'
-        ).textContent =
-            formatTime(
-                audio.duration
-            );
-
-    }
-);
-
-
-/* =====================================================
-   AUDIO PROGRESS
-===================================================== */
-
-audio.addEventListener(
-    'timeupdate',
-    () => {
-
-        if (!audio.duration) {
-            return;
-        }
-
-
-        const pct =
-            (
-                audio.currentTime /
-                audio.duration
-            ) * 100;
-
-
-        document.getElementById(
-            'progressFill'
-        ).style.width =
-            pct + '%';
-
-
-        document.getElementById(
-            'progressDot'
-        ).style.left =
-            pct + '%';
-
-
-        document.getElementById(
-            'currentTime'
-        ).textContent =
-            formatTime(
-                audio.currentTime
-            );
-
-    }
-);
-
-
-/* =====================================================
-   PROGRESS CLICK
-===================================================== */
-
-document
-    .getElementById('progressBar')
-    .addEventListener(
-        'click',
-        e => {
-
-            if (!audio.duration) {
-                return;
-            }
-
-
-            const rect =
-                document
-                    .getElementById(
-                        'progressBar'
-                    )
-                    .getBoundingClientRect();
-
-
-            audio.currentTime =
-                (
-                    (e.clientX - rect.left) /
-                    rect.width
-                ) *
-                audio.duration;
-
-        }
-    );
-
-
-/* =====================================================
-   SKIP
-===================================================== */
-
-function skip(sec) {
-
-    if (!audio.duration) {
-        return;
-    }
-
-
-    audio.currentTime =
-        Math.max(
-            0,
-            Math.min(
-                audio.duration,
-                audio.currentTime + sec
-            )
-        );
-
-}
-
-
-/* =====================================================
-   VOLUME
-===================================================== */
-
-document
-    .getElementById('volumeSlider')
-    .addEventListener(
-        'input',
-        function() {
-
-            audio.volume =
-                parseFloat(
-                    this.value
-                );
-
-        }
-    );
-
-
-/* =====================================================
-   SPEED
-===================================================== */
-
-document
-    .querySelectorAll('.speed')
-    .forEach(
-        btn => {
-
-            btn.addEventListener(
-                'click',
-                function() {
-
-                    document
-                        .querySelectorAll('.speed')
-                        .forEach(
-                            s =>
-                                s.classList.remove(
-                                    'active'
-                                )
-                        );
-
-
-                    this.classList.add(
-                        'active'
-                    );
-
-
-                    audio.playbackRate =
-                        Number(
-                            this.dataset.speed
-                        );
-
-                }
-            );
-
-        }
-    );
-
-
-/* =====================================================
-   FAVORITE
-===================================================== */
-
+/* ── FAVORITES ── */
 function toggleFavorite(btn) {
-
-    if (
-        btn.textContent.trim() === '♡'
-    ) {
-
-        btn.textContent =
-            '♥';
-
-        btn.style.color =
-            '#ff6f9f';
-
-    }
-
-    else {
-
-        btn.textContent =
-            '♡';
-
-        btn.style.color =
-            '';
-
-    }
-
+  if (btn.textContent.trim() === '♡') { btn.textContent='♥'; btn.style.color='#ff6f9f'; }
+  else { btn.textContent='♡'; btn.style.color=''; }
 }
+function togglePlayerFavorite() { toggleFavorite(document.getElementById('playerFavorite')); }
 
-
-function togglePlayerFavorite() {
-
-    toggleFavorite(
-        document.getElementById(
-            'playerFavorite'
-        )
-    );
-
-}
-
-
-/* =====================================================
-   TABS
-===================================================== */
-
+/* ── TABS ── */
 function switchTab(el, tab) {
-
-    document
-        .querySelectorAll('.lesson-tab')
-        .forEach(
-            t =>
-                t.classList.remove(
-                    'active'
-                )
-        );
-
-
-    el.classList.add(
-        'active'
-    );
-
-
-    document.getElementById(
-        'transcriptContent'
-    ).style.display =
-        tab === 'transcript'
-        ? 'block'
-        : 'none';
-
-
-    document.getElementById(
-        'vocabContent'
-    ).style.display =
-        tab === 'vocab'
-        ? 'block'
-        : 'none';
-
-
-    document.getElementById(
-        'notesContent'
-    ).style.display =
-        tab === 'notes'
-        ? 'block'
-        : 'none';
-
+  document.querySelectorAll('.lesson-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('transcriptContent').style.display = tab === 'transcript' ? 'block' : 'none';
+  document.getElementById('vocabContent').style.display = tab === 'vocab' ? 'block' : 'none';
+  document.getElementById('notesContent').style.display = tab === 'notes' ? 'block' : 'none';
 }
 
+/* ── REPEAT ── */
+function repeatSentence() { if (audio.duration) { audio.currentTime = Math.max(0, audio.currentTime - 5); audio.play(); } }
 
-/* =====================================================
-   REPEAT
-===================================================== */
+/* ── KEYBOARD ── */
+document.addEventListener('keydown', e => {
+  if (!playerScreen.classList.contains('active')) return;
+  if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+  if (e.code === 'Escape') goHome();
+});
 
-function repeatSentence() {
-
-    if (!audio.duration) {
-        return;
-    }
-
-
-    audio.currentTime =
-        Math.max(
-            0,
-            audio.currentTime - 5
-        );
-
-
-    audio.play();
-
-}
-
-
-/* =====================================================
-   KEYBOARD
-===================================================== */
-
-document.addEventListener(
-    'keydown',
-    e => {
-
-        if (
-            !playerScreen.classList.contains(
-                'active'
-            )
-        ) {
-
-            return;
-
-        }
-
-
-        if (e.code === 'Space') {
-
-            e.preventDefault();
-
-            togglePlay();
-
-        }
-
-
-        if (e.code === 'Escape') {
-
-            goHome();
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   INIT
-===================================================== */
-
+/* ── INIT ── */
 updateLoginIcon();
-
 renderPodcastList();
-
 verifyCurrentSubscription();
-
 </script>
-
 </body>
 </html>
