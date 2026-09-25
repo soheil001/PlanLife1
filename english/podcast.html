@@ -1,3652 +1,437 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
->
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>English Podcast — PlanLife</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
-
-<link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
->
-
-<link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
->
-
-
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-
-/* =========================================================
-   RESET
-========================================================= */
-
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-html,
-body{
-    width:100%;
-    min-height:100%;
-    background:#020813;
-    font-family:Inter,Arial,sans-serif;
-    color:#fff;
-}
-
-body{
-    overflow-x:hidden;
-}
-
-
-/* =========================================================
-   BACKGROUND
-========================================================= */
-
-body::before{
-
-    content:"";
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:-3;
-
-    background:
-        radial-gradient(
-            circle at 20% 15%,
-            rgba(40,104,255,.22),
-            transparent 28%
-        ),
-        radial-gradient(
-            circle at 80% 20%,
-            rgba(124,69,255,.18),
-            transparent 30%
-        ),
-        radial-gradient(
-            circle at 50% 90%,
-            rgba(0,150,255,.10),
-            transparent 35%
-        ),
-        #020813;
-}
-
-body::after{
-
-    content:"";
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:-2;
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(2,8,19,.10),
-            rgba(2,8,19,.75)
-        );
-}
-
-
-/* =========================================================
-   APP
-========================================================= */
-
-.app{
-
-    width:100%;
-
-    min-height:100vh;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    padding:30px;
-}
-
-
-.phone{
-
-    width:390px;
-
-    min-height:820px;
-
-    max-height:920px;
-
-    position:relative;
-
-    overflow:hidden;
-
-    border-radius:44px;
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(4,22,43,.95),
-            rgba(1,10,21,.98)
-        );
-
-    border:1px solid rgba(138,186,255,.55);
-
-    box-shadow:
-        0 30px 100px rgba(0,0,0,.65),
-        inset 0 0 40px rgba(65,130,255,.06);
-
-    transition:.4s ease;
-}
-
-
-.phone::before{
-
-    content:"";
-
-    position:absolute;
-
-    top:0;
-    left:0;
-    right:0;
-
-    height:270px;
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(0,0,0,.05),
-            rgba(2,8,19,.92)
-        );
-
-    pointer-events:none;
-
-    z-index:0;
-}
-
-
-/* =========================================================
-   SCREENS
-========================================================= */
-
-.screen{
-
-    position:absolute;
-
-    inset:0;
-
-    overflow-y:auto;
-
-    overflow-x:hidden;
-
-    opacity:0;
-
-    visibility:hidden;
-
-    transform:translateX(30px);
-
-    transition:
-        opacity .35s ease,
-        transform .35s ease,
-        visibility .35s ease;
-
-    z-index:2;
-
-    scrollbar-width:none;
-}
-
-.screen::-webkit-scrollbar{
-    display:none;
-}
-
-.screen.active{
-
-    opacity:1;
-
-    visibility:visible;
-
-    transform:translateX(0);
-}
-
-
-/* =========================================================
-   HEADER
-========================================================= */
-
-.header{
-
-    position:relative;
-
-    z-index:5;
-
-    padding:34px 26px 15px;
-}
-
-
-.top-row{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-}
-
-
-.brand{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:13px;
-}
-
-
-.sound-logo{
-
-    width:43px;
-
-    height:43px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    border-radius:14px;
-
-    color:#8175ff;
-
-    font-size:25px;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(110,96,255,.22),
-            transparent 70%
-        );
-}
-
-
-.sound-bars{
-
-    display:flex;
-
-    gap:3px;
-
-    align-items:center;
-
-    height:30px;
-}
-
-
-.sound-bars span{
-
-    width:4px;
-
-    border-radius:5px;
-
-    background:
-        linear-gradient(
-            180deg,
-            #9b7dff,
-            #387eff
-        );
-}
-
-
-.sound-bars span:nth-child(1){
-    height:12px;
-}
-
-.sound-bars span:nth-child(2){
-    height:21px;
-}
-
-.sound-bars span:nth-child(3){
-    height:27px;
-}
-
-.sound-bars span:nth-child(4){
-    height:17px;
-}
-
-.sound-bars span:nth-child(5){
-    height:23px;
-}
-
-.sound-bars span:nth-child(6){
-    height:13px;
-}
-
-
-.brand-text h1{
-
-    font-size:28px;
-
-    line-height:1.1;
-
-    font-weight:600;
-
-    letter-spacing:-1px;
-}
-
-
-.brand-text p{
-
-    margin-top:5px;
-
-    color:#7e9abd;
-
-    font-size:15px;
-}
-
-
-.profile{
-
-    width:40px;
-
-    height:40px;
-
-    border-radius:50%;
-
-    background:
-        linear-gradient(
-            135deg,
-            #78aaff,
-            #6959ff
-        );
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-size:17px;
-
-    border:1px solid rgba(255,255,255,.25);
-}
-
-
-/* =========================================================
-   HERO / SLIDE BACKGROUND
-========================================================= */
-
-.hero{
-
-    position:relative;
-
-    height:185px;
-
-    margin-top:2px;
-
-    background-image:
-        linear-gradient(
-            180deg,
-            rgba(0,8,18,.05) 0%,
-            rgba(0,8,18,.18) 35%,
-            rgba(2,8,19,.92) 100%
-        ),
-        url("http://fs3.centraldnserver.com/~planlife/pics/english/podcast/slide.jpeg");
-
-    background-size:cover;
-
-    background-position:center;
-
-    background-repeat:no-repeat;
-
-    border-bottom:1px solid rgba(120,165,255,.08);
-}
-
-
-.hero::after{
-
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    background:
-        linear-gradient(
-            180deg,
-            transparent 5%,
-            rgba(2,8,19,.05) 30%,
-            rgba(2,8,19,.25) 55%,
-            rgba(2,8,19,.98) 100%
-        );
-
-    pointer-events:none;
-}
-
-
-.hero-text{
-
-    position:absolute;
-
-    z-index:2;
-
-    left:28px;
-
-    bottom:22px;
-}
-
-
-.hero-text p{
-
-    color:#89b4e7;
-
-    font-size:14px;
-
-    letter-spacing:.2px;
-}
-
-
-.hero-text strong{
-
-    display:block;
-
-    margin-top:5px;
-
-    font-size:15px;
-
-    font-weight:500;
-}
-
-
-.search-button{
-
-    width:40px;
-
-    height:40px;
-
-    position:absolute;
-
-    right:20px;
-
-    top:22px;
-
-    border-radius:50%;
-
-    background:rgba(2,13,28,.55);
-
-    border:1px solid rgba(150,190,255,.2);
-
-    color:#fff;
-
-    font-size:19px;
-
-    cursor:pointer;
-
-    z-index:4;
-}
-
-
-/* =========================================================
-   CATEGORIES
-========================================================= */
-
-.categories{
-
-    display:flex;
-
-    gap:9px;
-
-    overflow-x:auto;
-
-    padding:15px 22px 12px;
-
-    scrollbar-width:none;
-}
-
-.categories::-webkit-scrollbar{
-    display:none;
-}
-
-
-.category{
-
-    white-space:nowrap;
-
-    border:1px solid rgba(109,159,229,.22);
-
-    background:rgba(8,29,52,.72);
-
-    color:#b8cce5;
-
-    padding:10px 18px;
-
-    border-radius:30px;
-
-    font-size:13px;
-
-    cursor:pointer;
-
-    transition:.25s;
-}
-
-
-.category.active{
-
-    color:#fff;
-
-    border-color:transparent;
-
-    background:
-        linear-gradient(
-            135deg,
-            #586aff,
-            #765eff
-        );
-
-    box-shadow:
-        0 5px 20px rgba(79,86,255,.35);
-}
-
-
-/* =========================================================
-   PODCAST LIST
-========================================================= */
-
-.list{
-
-    padding:3px 20px 40px;
-}
-
-
-.podcast-card{
-
-    position:relative;
-
-    display:flex;
-
-    gap:14px;
-
-    padding:11px;
-
-    margin-bottom:11px;
-
-    min-height:126px;
-
-    border-radius:23px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(9,34,59,.92),
-            rgba(3,19,35,.92)
-        );
-
-    border:1px solid rgba(94,150,213,.16);
-
-    box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.025);
-
-    cursor:pointer;
-
-    transition:
-        transform .2s,
-        border-color .2s,
-        box-shadow .2s;
-}
-
-
-.podcast-card:hover{
-
-    transform:translateY(-2px);
-
-    border-color:rgba(102,135,255,.45);
-
-    box-shadow:
-        0 12px 30px rgba(0,0,0,.25),
-        0 0 25px rgba(69,92,255,.08);
-}
-
-
-.cover{
-
-    width:104px;
-
-    height:104px;
-
-    flex:none;
-
-    border-radius:17px;
-
-    overflow:hidden;
-
-    border:1px solid rgba(135,182,255,.28);
-
-    position:relative;
-}
-
-
-.cover img{
-
-    width:100%;
-
-    height:100%;
-
-    object-fit:cover;
-
-    display:block;
-}
-
-
-.cover::after{
-
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    background:
-        linear-gradient(
-            180deg,
-            transparent 40%,
-            rgba(0,0,0,.75)
-        );
-}
-
-
-.cover-title{
-
-    position:absolute;
-
-    left:8px;
-
-    bottom:8px;
-
-    right:8px;
-
-    z-index:2;
-
-    font-family:Georgia,serif;
-
-    font-size:12px;
-
-    line-height:1.1;
-
-    color:#fff;
-
-    text-shadow:0 2px 5px #000;
-}
-
-
-.card-content{
-
-    min-width:0;
-
-    flex:1;
-
-    padding-top:3px;
-
-    padding-right:32px;
-}
-
-
-.card-content h3{
-
-    font-size:15px;
-
-    line-height:1.25;
-
-    font-weight:700;
-
-    color:#f4f8ff;
-
-    margin-bottom:5px;
-}
-
-
-.card-description{
-
-    color:#8da7c4;
-
-    font-size:11.5px;
-
-    white-space:nowrap;
-
-    overflow:hidden;
-
-    text-overflow:ellipsis;
-
-    margin-bottom:10px;
-}
-
-
-.card-meta{
-
-    display:flex;
-
-    gap:10px;
-
-    color:#b4c8df;
-
-    font-size:10px;
-
-    margin-bottom:9px;
-}
-
-
-.tag{
-
-    display:inline-flex;
-
-    align-items:center;
-
-    padding:5px 9px;
-
-    border-radius:20px;
-
-    font-size:9px;
-
-    background:rgba(47,110,204,.22);
-
-    color:#6fb5ff;
-}
-
-
-.level{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:5px;
-
-    font-size:10px;
-
-    color:#8eabca;
-
-    margin-top:5px;
-}
-
-
-.level-bars{
-
-    display:flex;
-
-    gap:2px;
-
-    align-items:flex-end;
-}
-
-
-.level-bars span{
-
-    width:3px;
-
-    border-radius:3px;
-
-    background:#3b9eff;
-}
-
-
-.level-bars span:nth-child(1){
-    height:6px;
-}
-
-.level-bars span:nth-child(2){
-    height:10px;
-}
-
-.level-bars span:nth-child(3){
-    height:14px;
-}
-
-.level-bars span:nth-child(4){
-    height:9px;
-}
-
-
-.play-small{
-
-    position:absolute;
-
-    right:12px;
-
-    bottom:15px;
-
-    width:43px;
-
-    height:43px;
-
-    border-radius:15px;
-
-    border:none;
-
-    background:
-        linear-gradient(
-            135deg,
-            #626cff,
-            #7862ff
-        );
-
-    color:#fff;
-
-    font-size:17px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    box-shadow:
-        0 6px 18px rgba(92,91,255,.35);
-
-    cursor:pointer;
-}
-
-
-.card-actions{
-
-    position:absolute;
-
-    right:15px;
-
-    top:14px;
-
-    display:flex;
-
-    gap:7px;
-}
-
-
-.icon-button{
-
-    border:0;
-
-    background:none;
-
-    color:#7f9bbd;
-
-    font-size:18px;
-
-    cursor:pointer;
-}
-
-
-/* =========================================================
-   PLAYER PAGE
-========================================================= */
-
-.player-page{
-
-    padding:28px 25px 40px;
-}
-
-
-.player-top{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-    margin-bottom:25px;
-}
-
-
-.circle-btn{
-
-    width:42px;
-
-    height:42px;
-
-    border-radius:50%;
-
-    border:1px solid rgba(120,160,210,.18);
-
-    background:rgba(8,28,49,.75);
-
-    color:#fff;
-
-    font-size:20px;
-
-    cursor:pointer;
-}
-
-
-.player-top-actions{
-
-    display:flex;
-
-    gap:10px;
-}
-
-
-.player-cover{
-
-    width:100%;
-
-    aspect-ratio:1/1;
-
-    max-width:270px;
-
-    margin:0 auto 25px;
-
-    border-radius:27px;
-
-    overflow:hidden;
-
-    border:1px solid rgba(125,177,255,.45);
-
-    box-shadow:
-        0 20px 50px rgba(0,0,0,.45),
-        0 0 35px rgba(52,100,255,.13);
-}
-
-
-.player-cover img{
-
-    width:100%;
-
-    height:100%;
-
-    object-fit:cover;
-
-    display:block;
-}
-
-
-.player-info{
-
-    text-align:left;
-
-    margin-bottom:18px;
-}
-
-
-.player-info h2{
-
-    font-size:24px;
-
-    line-height:1.2;
-
-    margin-bottom:8px;
-}
-
-
-.player-info p{
-
-    color:#87a1c0;
-
-    font-size:13px;
-}
-
-
-.player-meta{
-
-    display:flex;
-
-    gap:15px;
-
-    margin-top:13px;
-
-    color:#9bb1ca;
-
-    font-size:11px;
-}
-
-
-.player-tag{
-
-    display:inline-block;
-
-    padding:6px 12px;
-
-    border-radius:20px;
-
-    background:#5665df;
-
-    color:#fff;
-
-    font-size:10px;
-
-    margin-bottom:8px;
-}
-
-
-/* =========================================================
-   PROGRESS
-========================================================= */
-
-.progress-container{
-
-    margin-top:15px;
-}
-
-
-.progress-bar{
-
-    position:relative;
-
-    width:100%;
-
-    height:5px;
-
-    background:#253e5c;
-
-    border-radius:10px;
-
-    cursor:pointer;
-}
-
-
-.progress-fill{
-
-    position:absolute;
-
-    left:0;
-
-    top:0;
-
-    height:100%;
-
-    width:0%;
-
-    border-radius:10px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #506eff,
-            #8c5fff
-        );
-}
-
-
-.progress-dot{
-
-    position:absolute;
-
-    width:12px;
-
-    height:12px;
-
-    top:50%;
-
-    transform:translate(-50%,-50%);
-
-    left:0%;
-
-    border-radius:50%;
-
-    background:#fff;
-
-    box-shadow:
-        0 0 12px #6c74ff;
-}
-
-
-.time-row{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    margin-top:9px;
-
-    font-size:11px;
-
-    color:#8da2bd;
-}
-
-
-/* =========================================================
-   PLAYER CONTROLS
-========================================================= */
-
-.player-controls{
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    gap:35px;
-
-    margin:17px 0;
-}
-
-
-.skip{
-
-    width:42px;
-
-    height:42px;
-
-    border:0;
-
-    background:none;
-
-    color:#fff;
-
-    font-size:20px;
-
-    cursor:pointer;
-}
-
-
-.skip small{
-
-    font-size:10px;
-}
-
-
-.big-play{
-
-    width:78px;
-
-    height:78px;
-
-    border-radius:50%;
-
-    background:
-        linear-gradient(
-            135deg,
-            #526bff,
-            #845fff
-        );
-
-    border:3px solid rgba(125,147,255,.8);
-
-    color:#fff;
-
-    font-size:28px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    cursor:pointer;
-
-    box-shadow:
-        0 0 25px rgba(92,90,255,.55),
-        inset 0 0 15px rgba(255,255,255,.08);
-}
-
-
-/* =========================================================
-   WAVEFORM
-========================================================= */
-
-.waveform{
-
-    height:50px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    gap:3px;
-
-    margin:10px 0 18px;
-}
-
-
-.wave{
-
-    width:3px;
-
-    border-radius:10px;
-
-    background:
-        linear-gradient(
-            180deg,
-            #4b83ff,
-            #8c63ff
-        );
-
-    animation:
-        wave 1s ease-in-out infinite alternate;
-}
-
-
-.wave:nth-child(2n){
-    animation-delay:.1s;
-}
-
-.wave:nth-child(3n){
-    animation-delay:.2s;
-}
-
-.wave:nth-child(4n){
-    animation-delay:.3s;
-}
-
-
-@keyframes wave{
-
-    from{
-        transform:scaleY(.35);
-    }
-
-    to{
-        transform:scaleY(1);
-    }
-
-}
-
-
-.wave.paused{
-
-    animation-play-state:paused;
-}
-
-
-/* =========================================================
-   SPEED / VOLUME
-========================================================= */
-
-.controls-row{
-
-    display:flex;
-
-    gap:10px;
-}
-
-
-.speed-box{
-
-    flex:1;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-around;
-
-    padding:10px;
-
-    border-radius:24px;
-
-    background:rgba(7,29,52,.75);
-
-    border:1px solid rgba(105,151,207,.18);
-
-    color:#91a7c2;
-
-    font-size:10px;
-}
-
-
-.speed{
-
-    cursor:pointer;
-}
-
-
-.speed.active{
-
-    padding:7px 13px;
-
-    color:#fff;
-
-    border-radius:20px;
-
-    background:#5a69ff;
-
-    box-shadow:
-        0 0 15px rgba(89,94,255,.35);
-}
-
-
-.volume-box{
-
-    width:145px;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:10px;
-
-    padding:10px 13px;
-
-    border-radius:24px;
-
-    background:rgba(7,29,52,.75);
-
-    border:1px solid rgba(105,151,207,.18);
-}
-
-
-.volume-icon{
-
-    font-size:15px;
-}
-
-
-.volume-slider{
-
-    flex:1;
-
-    accent-color:#6c71ff;
-}
-
-
-/* =========================================================
-   LESSON TABS
-========================================================= */
-
-.lesson-tabs{
-
-    display:flex;
-
-    margin-top:18px;
-
-    padding:6px;
-
-    border-radius:24px;
-
-    background:#071b31;
-}
-
-
-.lesson-tab{
-
-    flex:1;
-
-    text-align:center;
-
-    padding:10px 5px;
-
-    color:#8b9db7;
-
-    font-size:12px;
-
-    border-radius:20px;
-
-    cursor:pointer;
-}
-
-
-.lesson-tab.active{
-
-    background:
-        linear-gradient(
-            135deg,
-            #596cff,
-            #755fff
-        );
-
-    color:#fff;
-
-    box-shadow:
-        0 5px 15px rgba(86,92,255,.3);
-}
-
-
-/* =========================================================
-   LESSON
-========================================================= */
-
-.lesson-box{
-
-    margin-top:10px;
-
-    padding:10px;
-
-    border-radius:23px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(8,35,68,.96),
-            rgba(3,20,38,.96)
-        );
-
-    border:1px solid rgba(105,157,220,.16);
-}
-
-
-.lesson-line{
-
-    display:flex;
-
-    gap:12px;
-
-    padding:14px 7px;
-
-    border-bottom:1px solid rgba(120,150,190,.11);
-}
-
-
-.lesson-line:last-child{
-
-    border-bottom:0;
-}
-
-
-.lesson-play{
-
-    width:32px;
-
-    height:32px;
-
-    flex:none;
-
-    border-radius:50%;
-
-    border:0;
-
-    color:#fff;
-
-    background:#526cff;
-
-    cursor:pointer;
-}
-
-
-.lesson-text{
-
-    flex:1;
-}
-
-
-.english{
-
-    color:#eef4ff;
-
-    font-size:12px;
-
-    line-height:1.5;
-}
-
-
-.persian{
-
-    color:#9aaec7;
-
-    font-size:10px;
-
-    line-height:1.7;
-
-    direction:rtl;
-
-    text-align:right;
-
-    margin-top:4px;
-}
-
-
-.lesson-time{
-
-    color:#8298b4;
-
-    font-size:9px;
-}
-
-
-/* =========================================================
-   VOCABULARY
-========================================================= */
-
-.vocabulary{
-
-    margin-top:10px;
-
-    padding:13px;
-
-    border-radius:20px;
-
-    background:#06182c;
-
-    border:1px solid rgba(102,153,219,.13);
-}
-
-
-.vocab-header{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    margin-bottom:10px;
-
-    font-size:12px;
-}
-
-
-.vocab-header span{
-
-    color:#5eb1ff;
-
-    font-size:10px;
-}
-
-
-.vocab-list{
-
-    display:flex;
-
-    gap:6px;
-
-    overflow-x:auto;
-
-    scrollbar-width:none;
-}
-
-
-.vocab-list::-webkit-scrollbar{
-    display:none;
-}
-
-
-.vocab-item{
-
-    min-width:88px;
-
-    padding:10px;
-
-    border-radius:14px;
-
-    background:#0a2748;
-
-    font-size:10px;
-}
-
-
-.vocab-item strong{
-
-    display:block;
-
-    font-size:10px;
-
-    margin-bottom:4px;
-}
-
-
-.vocab-item small{
-
-    color:#92a7c1;
-
-    font-size:9px;
-}
-
-
-/* =========================================================
-   REPEAT
-========================================================= */
-
-.repeat-button{
-
-    width:100%;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:13px;
-
-    margin-top:10px;
-
-    padding:13px;
-
-    border-radius:20px;
-
-    border:1px solid rgba(94,149,214,.16);
-
-    background:#06182c;
-
-    color:#fff;
-
-    cursor:pointer;
-
-    text-align:left;
-}
-
-
-.repeat-icon{
-
-    font-size:22px;
-
-    color:#50b7ff;
-}
-
-
-.repeat-text strong{
-
-    display:block;
-
-    font-size:12px;
-}
-
-
-.repeat-text small{
-
-    color:#8298b4;
-
-    font-size:9px;
-}
-
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media(max-width:600px){
-
-    .app{
-
-        padding:0;
-    }
-
-
-    .phone{
-
-        width:100%;
-
-        min-height:100vh;
-
-        max-height:none;
-
-        border-radius:0;
-
-        border:none;
-    }
-
-}
-
-
-@media(min-width:601px){
-
-    .phone{
-
-        height:900px;
-    }
-
-}
-
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;min-height:100%;background:#020813;font-family:Inter,Arial,sans-serif;color:#fff;}
+body{overflow-x:hidden;}
+body::before{content:"";position:fixed;inset:0;z-index:-3;background:radial-gradient(circle at 20% 15%,rgba(40,104,255,.22),transparent 28%),radial-gradient(circle at 80% 20%,rgba(124,69,255,.18),transparent 30%),radial-gradient(circle at 50% 90%,rgba(0,150,255,.10),transparent 35%),#020813;}
+body::after{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradient(180deg,rgba(2,8,19,.10),rgba(2,8,19,.75));}
+.app{width:100%;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:30px;}
+.phone{width:390px;min-height:820px;max-height:920px;position:relative;overflow:hidden;border-radius:44px;background:linear-gradient(180deg,rgba(4,22,43,.95),rgba(1,10,21,.98));border:1px solid rgba(138,186,255,.55);box-shadow:0 30px 100px rgba(0,0,0,.65),inset 0 0 40px rgba(65,130,255,.06);transition:.4s ease;}
+.phone::before{content:"";position:absolute;top:0;left:0;right:0;height:270px;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(2,8,19,.92));pointer-events:none;z-index:0;}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;opacity:0;visibility:hidden;transform:translateX(30px);transition:opacity .35s ease,transform .35s ease,visibility .35s ease;z-index:2;scrollbar-width:none;}
+.screen::-webkit-scrollbar{display:none;}
+.screen.active{opacity:1;visibility:visible;transform:translateX(0);}
+.header{position:relative;z-index:5;padding:34px 26px 15px;}
+.top-row{display:flex;align-items:center;justify-content:space-between;}
+.brand{display:flex;align-items:center;gap:13px;}
+.sound-logo{width:43px;height:43px;display:flex;align-items:center;justify-content:center;border-radius:14px;color:#8175ff;font-size:25px;background:radial-gradient(circle,rgba(110,96,255,.22),transparent 70%);}
+.sound-bars{display:flex;gap:3px;align-items:center;height:30px;}
+.sound-bars span{width:4px;border-radius:5px;background:linear-gradient(180deg,#9b7dff,#387eff);}
+.sound-bars span:nth-child(1){height:12px;}
+.sound-bars span:nth-child(2){height:21px;}
+.sound-bars span:nth-child(3){height:27px;}
+.sound-bars span:nth-child(4){height:17px;}
+.sound-bars span:nth-child(5){height:23px;}
+.sound-bars span:nth-child(6){height:13px;}
+.brand-text h1{font-size:28px;line-height:1.1;font-weight:600;letter-spacing:-1px;}
+.brand-text p{margin-top:5px;color:#7e9abd;font-size:15px;}
+.profile{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#78aaff,#6959ff);display:flex;align-items:center;justify-content:center;font-size:17px;border:1px solid rgba(255,255,255,.25);}
+.hero{position:relative;height:185px;margin-top:2px;background-image:linear-gradient(180deg,rgba(0,8,18,.05) 0%,rgba(0,8,18,.18) 35%,rgba(2,8,19,.92) 100%),url("http://fs3.centraldnserver.com/~planlife/pics/english/podcast/slide.jpeg");background-size:cover;background-position:center;background-repeat:no-repeat;border-bottom:1px solid rgba(120,165,255,.08);}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 5%,rgba(2,8,19,.05) 30%,rgba(2,8,19,.25) 55%,rgba(2,8,19,.98) 100%);pointer-events:none;}
+.hero-text{position:absolute;z-index:2;left:28px;bottom:22px;}
+.hero-text p{color:#89b4e7;font-size:14px;letter-spacing:.2px;}
+.hero-text strong{display:block;margin-top:5px;font-size:15px;font-weight:500;}
+.search-button{width:40px;height:40px;position:absolute;right:20px;top:22px;border-radius:50%;background:rgba(2,13,28,.55);border:1px solid rgba(150,190,255,.2);color:#fff;font-size:19px;cursor:pointer;z-index:4;}
+.categories{display:flex;gap:9px;overflow-x:auto;padding:15px 22px 12px;scrollbar-width:none;}
+.categories::-webkit-scrollbar{display:none;}
+.category{white-space:nowrap;border:1px solid rgba(109,159,229,.22);background:rgba(8,29,52,.72);color:#b8cce5;padding:10px 18px;border-radius:30px;font-size:13px;cursor:pointer;transition:.25s;}
+.category.active{color:#fff;border-color:transparent;background:linear-gradient(135deg,#586aff,#765eff);box-shadow:0 5px 20px rgba(79,86,255,.35);}
+.list{padding:3px 20px 40px;}
+.podcast-card{position:relative;display:flex;gap:14px;padding:11px;margin-bottom:11px;min-height:126px;border-radius:23px;background:linear-gradient(135deg,rgba(9,34,59,.92),rgba(3,19,35,.92));border:1px solid rgba(94,150,213,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.025);cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s;}
+.podcast-card:hover{transform:translateY(-2px);border-color:rgba(102,135,255,.45);box-shadow:0 12px 30px rgba(0,0,0,.25),0 0 25px rgba(69,92,255,.08);}
+.cover{width:104px;height:104px;flex:none;border-radius:17px;overflow:hidden;border:1px solid rgba(135,182,255,.28);position:relative;}
+.cover img{width:100%;height:100%;object-fit:cover;display:block;}
+.cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.75));}
+.cover-title{position:absolute;left:8px;bottom:8px;right:8px;z-index:2;font-family:Georgia,serif;font-size:12px;line-height:1.1;color:#fff;text-shadow:0 2px 5px #000;}
+.card-content{min-width:0;flex:1;padding-top:3px;padding-right:32px;}
+.card-content h3{font-size:15px;line-height:1.25;font-weight:700;color:#f4f8ff;margin-bottom:5px;}
+.card-description{color:#8da7c4;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:10px;}
+.card-meta{display:flex;gap:10px;color:#b4c8df;font-size:10px;margin-bottom:9px;}
+.tag{display:inline-flex;align-items:center;padding:5px 9px;border-radius:20px;font-size:9px;background:rgba(47,110,204,.22);color:#6fb5ff;}
+.level{display:flex;align-items:center;gap:5px;font-size:10px;color:#8eabca;margin-top:5px;}
+.level-bars{display:flex;gap:2px;align-items:flex-end;}
+.level-bars span{width:3px;border-radius:3px;background:#3b9eff;}
+.level-bars span:nth-child(1){height:6px;}
+.level-bars span:nth-child(2){height:10px;}
+.level-bars span:nth-child(3){height:14px;}
+.level-bars span:nth-child(4){height:9px;}
+.play-small{position:absolute;right:12px;bottom:15px;width:43px;height:43px;border-radius:15px;border:none;background:linear-gradient(135deg,#626cff,#7862ff);color:#fff;font-size:17px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(92,91,255,.35);cursor:pointer;}
+.card-actions{position:absolute;right:15px;top:14px;display:flex;gap:7px;}
+.icon-button{border:0;background:none;color:#7f9bbd;font-size:18px;cursor:pointer;}
+.player-page{padding:28px 25px 40px;}
+.player-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px;}
+.circle-btn{width:42px;height:42px;border-radius:50%;border:1px solid rgba(120,160,210,.18);background:rgba(8,28,49,.75);color:#fff;font-size:20px;cursor:pointer;}
+.player-top-actions{display:flex;gap:10px;}
+.player-cover{width:100%;aspect-ratio:1/1;max-width:270px;margin:0 auto 25px;border-radius:27px;overflow:hidden;border:1px solid rgba(125,177,255,.45);box-shadow:0 20px 50px rgba(0,0,0,.45),0 0 35px rgba(52,100,255,.13);}
+.player-cover img{width:100%;height:100%;object-fit:cover;display:block;}
+.player-info{text-align:left;margin-bottom:18px;}
+.player-info h2{font-size:24px;line-height:1.2;margin-bottom:8px;}
+.player-info p{color:#87a1c0;font-size:13px;}
+.player-meta{display:flex;gap:15px;margin-top:13px;color:#9bb1ca;font-size:11px;}
+.player-tag{display:inline-block;padding:6px 12px;border-radius:20px;background:#5665df;color:#fff;font-size:10px;margin-bottom:8px;}
+.progress-container{margin-top:15px;}
+.progress-bar{position:relative;width:100%;height:5px;background:#253e5c;border-radius:10px;cursor:pointer;}
+.progress-fill{position:absolute;left:0;top:0;height:100%;width:0%;border-radius:10px;background:linear-gradient(90deg,#506eff,#8c5fff);}
+.progress-dot{position:absolute;width:12px;height:12px;top:50%;transform:translate(-50%,-50%);left:0%;border-radius:50%;background:#fff;box-shadow:0 0 12px #6c74ff;}
+.time-row{display:flex;justify-content:space-between;margin-top:9px;font-size:11px;color:#8da2bd;}
+.player-controls{display:flex;justify-content:center;align-items:center;gap:35px;margin:17px 0;}
+.skip{width:42px;height:42px;border:0;background:none;color:#fff;font-size:20px;cursor:pointer;}
+.skip small{font-size:10px;}
+.big-play{width:78px;height:78px;border-radius:50%;background:linear-gradient(135deg,#526bff,#845fff);border:3px solid rgba(125,147,255,.8);color:#fff;font-size:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 25px rgba(92,90,255,.55),inset 0 0 15px rgba(255,255,255,.08);}
+.waveform{height:50px;display:flex;align-items:center;justify-content:center;gap:3px;margin:10px 0 18px;}
+.wave{width:3px;border-radius:10px;background:linear-gradient(180deg,#4b83ff,#8c63ff);animation:wave 1s ease-in-out infinite alternate;}
+.wave:nth-child(2n){animation-delay:.1s;}
+.wave:nth-child(3n){animation-delay:.2s;}
+.wave:nth-child(4n){animation-delay:.3s;}
+@keyframes wave{from{transform:scaleY(.35);}to{transform:scaleY(1);}}
+.wave.paused{animation-play-state:paused;}
+.controls-row{display:flex;gap:10px;}
+.speed-box{flex:1;display:flex;align-items:center;justify-content:space-around;padding:10px;border-radius:24px;background:rgba(7,29,52,.75);border:1px solid rgba(105,151,207,.18);color:#91a7c2;font-size:10px;}
+.speed{cursor:pointer;}
+.speed.active{padding:7px 13px;color:#fff;border-radius:20px;background:#5a69ff;box-shadow:0 0 15px rgba(89,94,255,.35);}
+.volume-box{width:145px;display:flex;align-items:center;gap:10px;padding:10px 13px;border-radius:24px;background:rgba(7,29,52,.75);border:1px solid rgba(105,151,207,.18);}
+.volume-icon{font-size:15px;}
+.volume-slider{flex:1;accent-color:#6c71ff;}
+.lesson-tabs{display:flex;margin-top:18px;padding:6px;border-radius:24px;background:#071b31;}
+.lesson-tab{flex:1;text-align:center;padding:10px 5px;color:#8b9db7;font-size:12px;border-radius:20px;cursor:pointer;}
+.lesson-tab.active{background:linear-gradient(135deg,#596cff,#755fff);color:#fff;box-shadow:0 5px 15px rgba(86,92,255,.3);}
+.lesson-box{margin-top:10px;padding:10px;border-radius:23px;background:linear-gradient(135deg,rgba(8,35,68,.96),rgba(3,20,38,.96));border:1px solid rgba(105,157,220,.16);}
+.lesson-line{display:flex;gap:12px;padding:14px 7px;border-bottom:1px solid rgba(120,150,190,.11);}
+.lesson-line:last-child{border-bottom:0;}
+.lesson-play{width:32px;height:32px;flex:none;border-radius:50%;border:0;color:#fff;background:#526cff;cursor:pointer;}
+.lesson-text{flex:1;}
+.english{color:#eef4ff;font-size:12px;line-height:1.5;}
+.persian{color:#9aaec7;font-size:10px;line-height:1.7;direction:rtl;text-align:right;margin-top:4px;}
+.lesson-time{color:#8298b4;font-size:9px;}
+.vocabulary{margin-top:10px;padding:13px;border-radius:20px;background:#06182c;border:1px solid rgba(102,153,219,.13);}
+.vocab-header{display:flex;justify-content:space-between;margin-bottom:10px;font-size:12px;}
+.vocab-header span{color:#5eb1ff;font-size:10px;}
+.vocab-list{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;}
+.vocab-list::-webkit-scrollbar{display:none;}
+.vocab-item{min-width:88px;padding:10px;border-radius:14px;background:#0a2748;font-size:10px;}
+.vocab-item strong{display:block;font-size:10px;margin-bottom:4px;}
+.vocab-item small{color:#92a7c1;font-size:9px;}
+.repeat-button{width:100%;display:flex;align-items:center;gap:13px;margin-top:10px;padding:13px;border-radius:20px;border:1px solid rgba(94,149,214,.16);background:#06182c;color:#fff;cursor:pointer;text-align:left;}
+.repeat-icon{font-size:22px;color:#50b7ff;}
+.repeat-text strong{display:block;font-size:12px;}
+.repeat-text small{color:#8298b4;font-size:9px;}
+@media(max-width:600px){.app{padding:0;}.phone{width:100%;min-height:100vh;max-height:none;border-radius:0;border:none;}}
+@media(min-width:601px){.phone{height:900px;}}
 </style>
-
 </head>
-
-
 <body>
-
-
 <div class="app">
-
 <div class="phone">
 
-
-<!-- =====================================================
-     PAGE 1
-===================================================== -->
-
-<section
-    class="screen active"
-    id="homeScreen"
->
-
-
+<!-- PAGE 1 -->
+<section class="screen active" id="homeScreen">
 <header class="header">
-
 <div class="top-row">
-
 <div class="brand">
-
 <div class="sound-logo">
-
 <div class="sound-bars">
-
-<span></span>
-<span></span>
-<span></span>
-<span></span>
-<span></span>
-<span></span>
-
+<span></span><span></span><span></span><span></span><span></span><span></span>
 </div>
-
 </div>
-
-
 <div class="brand-text">
-
 <h1>English</h1>
-
 <p>Podcast</p>
-
 </div>
-
 </div>
-
-
-<div class="profile">
-👤
+<div class="profile">👤</div>
 </div>
-
-</div>
-
 </header>
 
-
-<!-- =====================================================
-     SLIDE
-===================================================== -->
-
 <div class="hero">
-
-<button
-    class="search-button"
->
-⌕
-</button>
-
-
+<button class="search-button">⌕</button>
 <div class="hero-text">
-
-<p>
-Better English
-</p>
-
-<strong>
-Brighter Future
-</strong>
-
+<p>Better English</p>
+<strong>Brighter Future</strong>
 </div>
-
 </div>
-
-
-<!-- =====================================================
-     CATEGORIES
-===================================================== -->
 
 <div class="categories">
-
-<button class="category active">
-All
-</button>
-
-<button class="category">
-Daily English
-</button>
-
-<button class="category">
-Conversation
-</button>
-
-<button class="category">
-Vocabulary
-</button>
-
+<button class="category active">All</button>
+<button class="category">Daily English</button>
+<button class="category">Conversation</button>
+<button class="category">Vocabulary</button>
 </div>
-
-
-<!-- =====================================================
-     PODCAST LIST
-===================================================== -->
 
 <div class="list">
 
-
-<!-- 1 -->
-
-<article
-    class="podcast-card"
-    onclick="openPlayer(0)"
->
-
+<article class="podcast-card" onclick="openPlayer(0)">
 <div class="cover">
-
-<img
-src="http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg"
-alt="Daily English Conversations"
->
-
-<div class="cover-title">
-
-Daily English<br>
-Conversations
-
+<img src="http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg" alt="Daily English Conversations">
+<div class="cover-title">Daily English<br>Conversations</div>
 </div>
-
-</div>
-
-
 <div class="card-content">
-
-<h3>
-Daily English<br>
-Conversations
-</h3>
-
-<p class="card-description">
-Real conversations. Real life.
-</p>
-
-<div class="card-meta">
-
-<span>
-🎧 12 Episodes
-</span>
-
-<span>
-◷ 15–20 min
-</span>
-
+<h3>Daily English<br>Conversations</h3>
+<p class="card-description">Real conversations. Real life.</p>
+<div class="card-meta"><span>🎧 12 Episodes</span><span>◷ 15–20 min</span></div>
+<div class="tag">Daily English</div>
+<div class="level"><div class="level-bars"><span></span><span></span><span></span><span></span></div>Intermediate</div>
 </div>
-
-
-<div class="tag">
-Daily English
-</div>
-
-
-<div class="level">
-
-<div class="level-bars">
-
-<span></span>
-<span></span>
-<span></span>
-<span></span>
-
-</div>
-
-Intermediate
-
-</div>
-
-</div>
-
-
 <div class="card-actions">
-
-<button
-class="icon-button"
-onclick="event.stopPropagation();toggleFavorite(this)"
->
-♡
-</button>
-
-<button
-class="icon-button"
-onclick="event.stopPropagation()"
->
-···
-</button>
-
+<button class="icon-button" onclick="event.stopPropagation();toggleFavorite(this)">♡</button>
+<button class="icon-button" onclick="event.stopPropagation()">···</button>
 </div>
-
-
-<button class="play-small">
-▶
-</button>
-
+<button class="play-small">▶</button>
 </article>
 
-
-
-<!-- 2 -->
-
-<article
-class="podcast-card"
-onclick="openPlayer(1)"
->
-
+<article class="podcast-card" onclick="openPlayer(1)">
 <div class="cover">
-
-<img
-src="http://fs3.centraldnserver.com/~planlife/pics/english/podcast/2.jpeg"
-alt="Everyday English"
->
-
-<div class="cover-title">
-
-Everyday<br>
-English
-
+<img src="http://fs3.centraldnserver.com/~planlife/pics/english/podcast/2.jpeg" alt="Everyday English">
+<div class="cover-title">Everyday<br>English</div>
 </div>
-
-</div>
-
-
 <div class="card-content">
-
-<h3>
-Everyday English
-</h3>
-
-<p class="card-description">
-Small talk, big progress.
-</p>
-
-<div class="card-meta">
-
-<span>
-🎧 10 Episodes
-</span>
-
-<span>
-◷ 10–15 min
-</span>
-
+<h3>Everyday English</h3>
+<p class="card-description">Small talk, big progress.</p>
+<div class="card-meta"><span>🎧 10 Episodes</span><span>◷ 10–15 min</span></div>
+<div class="tag">Conversation</div>
+<div class="level"><div class="level-bars"><span></span><span></span><span></span></div>Beginner</div>
 </div>
-
-
-<div class="tag">
-Conversation
-</div>
-
-
-<div class="level">
-
-<div class="level-bars">
-
-<span></span>
-<span></span>
-<span></span>
-
-</div>
-
-Beginner
-
-</div>
-
-</div>
-
-
 <div class="card-actions">
-
-<button
-class="icon-button"
-onclick="event.stopPropagation();toggleFavorite(this)"
->
-♡
-</button>
-
-<button
-class="icon-button"
-onclick="event.stopPropagation()"
->
-···
-</button>
-
+<button class="icon-button" onclick="event.stopPropagation();toggleFavorite(this)">♡</button>
+<button class="icon-button" onclick="event.stopPropagation()">···</button>
 </div>
-
-
-<button class="play-small">
-▶
-</button>
-
+<button class="play-small">▶</button>
 </article>
 
-
-
-<!-- 3 -->
-
-<article
-class="podcast-card"
-onclick="openPlayer(2)"
->
-
+<article class="podcast-card" onclick="openPlayer(2)">
 <div class="cover">
-
-<img
-src="http://fs3.centraldnserver.com/~planlife/pics/english/podcast/3.jpeg"
-alt="Advanced Vocabulary"
->
-
-<div class="cover-title">
-
-Advanced<br>
-Vocabulary
-
+<img src="http://fs3.centraldnserver.com/~planlife/pics/english/podcast/3.jpeg" alt="Advanced Vocabulary">
+<div class="cover-title">Advanced<br>Vocabulary</div>
 </div>
-
-</div>
-
-
 <div class="card-content">
-
-<h3>
-Advanced Vocabulary
-</h3>
-
-<p class="card-description">
-Learn words. Build confidence.
-</p>
-
-<div class="card-meta">
-
-<span>
-🎧 15 Episodes
-</span>
-
-<span>
-◷ 10–18 min
-</span>
-
+<h3>Advanced Vocabulary</h3>
+<p class="card-description">Learn words. Build confidence.</p>
+<div class="card-meta"><span>🎧 15 Episodes</span><span>◷ 10–18 min</span></div>
+<div class="tag">Vocabulary</div>
+<div class="level"><div class="level-bars"><span></span><span></span><span></span><span></span></div>Advanced</div>
 </div>
-
-
-<div class="tag">
-Vocabulary
-</div>
-
-
-<div class="level">
-
-<div class="level-bars">
-
-<span></span>
-<span></span>
-<span></span>
-<span></span>
-
-</div>
-
-Advanced
-
-</div>
-
-</div>
-
-
 <div class="card-actions">
-
-<button
-class="icon-button"
-onclick="event.stopPropagation();toggleFavorite(this)"
->
-♡
-</button>
-
-<button
-class="icon-button"
-onclick="event.stopPropagation()"
->
-···
-</button>
-
+<button class="icon-button" onclick="event.stopPropagation();toggleFavorite(this)">♡</button>
+<button class="icon-button" onclick="event.stopPropagation()">···</button>
 </div>
-
-
-<button class="play-small">
-▶
-</button>
-
+<button class="play-small">▶</button>
 </article>
 
-
-
-<!-- 4 -->
-
-<article
-class="podcast-card"
-onclick="openPlayer(3)"
->
-
+<article class="podcast-card" onclick="openPlayer(3)">
 <div class="cover">
-
-<img
-src="http://fs3.centraldnserver.com/~planlife/pics/english/podcast/4.jpeg"
-alt="Travel English"
->
-
-<div class="cover-title">
-
-Travel<br>
-English
-
+<img src="http://fs3.centraldnserver.com/~planlife/pics/english/podcast/4.jpeg" alt="Travel English">
+<div class="cover-title">Travel<br>English</div>
 </div>
-
-</div>
-
-
 <div class="card-content">
-
-<h3>
-Travel English
-</h3>
-
-<p class="card-description">
-Speak English Anywhere.
-</p>
-
-<div class="card-meta">
-
-<span>
-🎧 8 Episodes
-</span>
-
-<span>
-◷ 10–15 min
-</span>
-
+<h3>Travel English</h3>
+<p class="card-description">Speak English Anywhere.</p>
+<div class="card-meta"><span>🎧 8 Episodes</span><span>◷ 10–15 min</span></div>
+<div class="tag">Conversation</div>
+<div class="level"><div class="level-bars"><span></span><span></span><span></span><span></span></div>Intermediate</div>
 </div>
-
-
-<div class="tag">
-Conversation
-</div>
-
-
-<div class="level">
-
-<div class="level-bars">
-
-<span></span>
-<span></span>
-<span></span>
-<span></span>
-
-</div>
-
-Intermediate
-
-</div>
-
-</div>
-
-
 <div class="card-actions">
-
-<button
-class="icon-button"
-onclick="event.stopPropagation();toggleFavorite(this)"
->
-♡
-</button>
-
-<button
-class="icon-button"
-onclick="event.stopPropagation()"
->
-···
-</button>
-
+<button class="icon-button" onclick="event.stopPropagation();toggleFavorite(this)">♡</button>
+<button class="icon-button" onclick="event.stopPropagation()">···</button>
 </div>
-
-
-<button class="play-small">
-▶
-</button>
-
+<button class="play-small">▶</button>
 </article>
 
-
-
-<!-- 5 -->
-
-<article
-class="podcast-card"
-onclick="openPlayer(4)"
->
-
+<article class="podcast-card" onclick="openPlayer(4)">
 <div class="cover">
-
-<img
-src="http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg"
-alt="English for Work"
->
-
-<div class="cover-title">
-
-English<br>
-for Work
-
+<img src="http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg" alt="English for Work">
+<div class="cover-title">English<br>for Work</div>
 </div>
-
-</div>
-
-
 <div class="card-content">
-
-<h3>
-English for Work
-</h3>
-
-<p class="card-description">
-Communicate. Create. Grow.
-</p>
-
-<div class="card-meta">
-
-<span>
-🎧 10 Episodes
-</span>
-
-<span>
-◷ 12–18 min
-</span>
-
+<h3>English for Work</h3>
+<p class="card-description">Communicate. Create. Grow.</p>
+<div class="card-meta"><span>🎧 10 Episodes</span><span>◷ 12–18 min</span></div>
+<div class="tag">Business</div>
+<div class="level"><div class="level-bars"><span></span><span></span><span></span><span></span></div>Advanced</div>
 </div>
-
-
-<div class="tag">
-Business
-</div>
-
-
-<div class="level">
-
-<div class="level-bars">
-
-<span></span>
-<span></span>
-<span></span>
-<span></span>
-
-</div>
-
-Advanced
-
-</div>
-
-</div>
-
-
 <div class="card-actions">
-
-<button
-class="icon-button"
-onclick="event.stopPropagation();toggleFavorite(this)"
->
-♡
-</button>
-
-<button
-class="icon-button"
-onclick="event.stopPropagation()"
->
-···
-</button>
-
+<button class="icon-button" onclick="event.stopPropagation();toggleFavorite(this)">♡</button>
+<button class="icon-button" onclick="event.stopPropagation()">···</button>
 </div>
-
-
-<button class="play-small">
-▶
-</button>
-
+<button class="play-small">▶</button>
 </article>
 
-
 </div>
-
 </section>
 
-
-
-<!-- =====================================================
-     PAGE 2 — PLAYER
-===================================================== -->
-
-<section
-class="screen"
-id="playerScreen"
->
-
-
+<!-- PAGE 2 — PLAYER -->
+<section class="screen" id="playerScreen">
 <div class="player-page">
-
-
 <div class="player-top">
-
-
-<button
-class="circle-btn"
-onclick="goHome()"
->
-‹
-</button>
-
-
+<button class="circle-btn" onclick="goHome()">‹</button>
 <div class="player-top-actions">
-
-<button
-class="circle-btn"
-onclick="togglePlayerFavorite()"
-id="playerFavorite"
->
-♡
-</button>
-
-
-<button class="circle-btn">
-···
-</button>
-
+<button class="circle-btn" onclick="togglePlayerFavorite()" id="playerFavorite">♡</button>
+<button class="circle-btn">···</button>
 </div>
-
 </div>
-
-
-
-<!-- =====================================================
-     PLAYER COVER
-===================================================== -->
 
 <div class="player-cover">
-
-<img
-id="playerImage"
-src="http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg"
-alt="Podcast Cover"
->
-
+<img id="playerImage" src="http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg" alt="Podcast Cover">
 </div>
-
-
-
-<!-- =====================================================
-     PLAYER INFO
-===================================================== -->
 
 <div class="player-info">
-
-
-<span
-class="player-tag"
-id="playerTag"
->
-Intermediate
-</span>
-
-
-<h2 id="playerTitle">
-Daily English Conversations
-</h2>
-
-
-<p id="playerDescription">
-Real conversations. Real life.
-</p>
-
-
-<div class="player-meta">
-
-<span>
-🎧 12 Episodes
-</span>
-
-<span>
-◷ 15–20 min
-</span>
-
+<span class="player-tag" id="playerTag">Intermediate</span>
+<h2 id="playerTitle">Daily English Conversations</h2>
+<p id="playerDescription">Real conversations. Real life.</p>
+<div class="player-meta"><span>🎧 12 Episodes</span><span>◷ 15–20 min</span></div>
 </div>
 
-</div>
-
-
-
-<!-- =====================================================
-     AUDIO
-===================================================== -->
-
-<audio
-id="audioPlayer"
-preload="metadata"
-></audio>
-
-
-
-<!-- =====================================================
-     PROGRESS
-===================================================== -->
+<audio id="audioPlayer" preload="metadata"></audio>
 
 <div class="progress-container">
-
-<div
-class="progress-bar"
-id="progressBar"
->
-
-<div
-class="progress-fill"
-id="progressFill"
-></div>
-
-
-<div
-class="progress-dot"
-id="progressDot"
-></div>
-
+<div class="progress-bar" id="progressBar">
+<div class="progress-fill" id="progressFill"></div>
+<div class="progress-dot" id="progressDot"></div>
 </div>
-
-
 <div class="time-row">
-
-<span id="currentTime">
-00:00
-</span>
-
-<span id="duration">
-00:00
-</span>
-
+<span id="currentTime">00:00</span>
+<span id="duration">00:00</span>
 </div>
-
 </div>
-
-
-
-<!-- =====================================================
-     PLAYER BUTTONS
-===================================================== -->
 
 <div class="player-controls">
-
-
-<button
-class="skip"
-onclick="skip(-15)"
->
-
-↶
-
-<small>
-15
-</small>
-
-</button>
-
-
-<button
-class="big-play"
-id="mainPlay"
-onclick="togglePlay()"
->
-▶
-</button>
-
-
-<button
-class="skip"
-onclick="skip(15)"
->
-
-<small>
-15
-</small>
-
-↷
-
-</button>
-
+<button class="skip" onclick="skip(-15)">↶<small>15</small></button>
+<button class="big-play" id="mainPlay" onclick="togglePlay()">▶</button>
+<button class="skip" onclick="skip(15)"><small>15</small>↷</button>
 </div>
 
-
-
-<!-- =====================================================
-     WAVEFORM
-===================================================== -->
-
-<div
-class="waveform"
-id="waveform"
-></div>
-
-
-
-<!-- =====================================================
-     SPEED / VOLUME
-===================================================== -->
+<div class="waveform" id="waveform"></div>
 
 <div class="controls-row">
-
-
 <div class="speed-box">
-
-<span
-class="speed"
-data-speed=".75"
->
-0.75x
-</span>
-
-
-<span
-class="speed active"
-data-speed="1"
->
-1x
-</span>
-
-
-<span
-class="speed"
-data-speed="1.25"
->
-1.25x
-</span>
-
-
-<span
-class="speed"
-data-speed="1.5"
->
-1.5x
-</span>
-
+<span class="speed" data-speed=".75">0.75x</span>
+<span class="speed active" data-speed="1">1x</span>
+<span class="speed" data-speed="1.25">1.25x</span>
+<span class="speed" data-speed="1.5">1.5x</span>
 </div>
-
-
 <div class="volume-box">
-
-<span class="volume-icon">
-🔊
-</span>
-
-
-<input
-class="volume-slider"
-type="range"
-min="0"
-max="1"
-step=".01"
-value="1"
-id="volume"
->
-
+<span class="volume-icon">🔊</span>
+<input class="volume-slider" type="range" min="0" max="1" step=".01" value="1" id="volume">
 </div>
-
 </div>
-
-
-
-<!-- =====================================================
-     TABS
-===================================================== -->
 
 <div class="lesson-tabs">
-
-
-<div
-class="lesson-tab active"
-onclick="switchTab(this,'lesson')"
->
-Lesson
+<div class="lesson-tab active" onclick="switchTab(this,'lesson')">Lesson</div>
+<div class="lesson-tab" onclick="switchTab(this,'vocab')">Vocabulary</div>
+<div class="lesson-tab" onclick="switchTab(this,'notes')">Notes</div>
 </div>
 
-
-<div
-class="lesson-tab"
-onclick="switchTab(this,'vocab')"
->
-Vocabulary
-</div>
-
-
-<div
-class="lesson-tab"
-onclick="switchTab(this,'notes')"
->
-Notes
-</div>
-
-
-</div>
-
-
-
-<!-- =====================================================
-     LESSON
-===================================================== -->
-
-<div
-class="lesson-box"
-id="lessonContent"
->
-
-
+<div class="lesson-box" id="lessonContent">
 <div class="lesson-line">
-
-
-<button class="lesson-play">
-▶
-</button>
-
-
+<button class="lesson-play">▶</button>
 <div class="lesson-text">
-
-<div class="english">
-
-I think traveling opens your mind and helps you see the world in a new way.
-
+<div class="english">I think traveling opens your mind and helps you see the world in a new way.</div>
+<div class="persian">فکر می‌کنم سفر کردن ذهنت رو باز می‌کنه و بهت کمک می‌کنه دنیا رو از یه زاویه جدید ببینی.</div>
 </div>
-
-
-<div class="persian">
-
-فکر می‌کنم سفر کردن ذهنت رو باز می‌کنه و بهت کمک می‌کنه دنیا رو از یه زاویه جدید ببینی.
-
+<span class="lesson-time">03:24</span>
 </div>
-
-</div>
-
-
-<span class="lesson-time">
-03:24
-</span>
-
-</div>
-
-
-
 <div class="lesson-line">
-
-
-<button class="lesson-play">
-○
-</button>
-
-
+<button class="lesson-play">○</button>
 <div class="lesson-text">
-
-<div class="english">
-
-It teaches you about different cultures, new people and their stories.
-
+<div class="english">It teaches you about different cultures, new people and their stories.</div>
+<div class="persian">بهت درباره فرهنگ‌های مختلف، آدم‌های جدید و داستان‌های اون‌ها یاد میده.</div>
 </div>
-
-
-<div class="persian">
-
-بهت درباره فرهنگ‌های مختلف، آدم‌های جدید و داستان‌های اون‌ها یاد میده.
-
+<span class="lesson-time">04:12</span>
 </div>
-
-</div>
-
-
-<span class="lesson-time">
-04:12
-</span>
-
-</div>
-
-
-
 <div class="lesson-line">
-
-
-<button class="lesson-play">
-○
-</button>
-
-
+<button class="lesson-play">○</button>
 <div class="lesson-text">
-
-<div class="english">
-
-It makes you more confident and independent.
-
+<div class="english">It makes you more confident and independent.</div>
+<div class="persian">باعث میشه که اعتماد به نفس بیشتری داشته باشی و مستقل‌تر باشی.</div>
 </div>
-
-
-<div class="persian">
-
-باعث میشه که اعتماد به نفس بیشتری داشته باشی و مستقل‌تر باشی.
-
+<span class="lesson-time">05:03</span>
 </div>
-
-</div>
-
-
-<span class="lesson-time">
-05:03
-</span>
-
-</div>
-
-
-
 <div class="lesson-line">
-
-
-<button class="lesson-play">
-○
-</button>
-
-
+<button class="lesson-play">○</button>
 <div class="lesson-text">
-
-<div class="english">
-
-And of course, you get to try amazing food!
-
+<div class="english">And of course, you get to try amazing food!</div>
+<div class="persian">و البته، غذاهای فوق‌العاده‌ای رو هم امتحان می‌کنی!</div>
+</div>
+<span class="lesson-time">06:37</span>
+</div>
 </div>
 
-
-<div class="persian">
-
-و البته، غذاهای فوق‌العاده‌ای رو هم امتحان می‌کنی!
-
-</div>
-
-</div>
-
-
-<span class="lesson-time">
-06:37
-</span>
-
-</div>
-
-
-</div>
-
-
-
-<!-- =====================================================
-     VOCABULARY
-===================================================== -->
-
-<div
-class="vocabulary"
-id="vocabContent"
-style="display:none"
->
-
-
-<div class="vocab-header">
-
-<strong>
-📖 Vocabulary
-</strong>
-
-<span>
-See All ›
-</span>
-
-</div>
-
-
+<div class="vocabulary" id="vocabContent" style="display:none">
+<div class="vocab-header"><strong>📖 Vocabulary</strong><span>See All ›</span></div>
 <div class="vocab-list">
-
-
-<div class="vocab-item">
-
-<strong>
-travel
-</strong>
-
-<small>
-سفر کردن
-</small>
-
+<div class="vocab-item"><strong>travel</strong><small>سفر کردن</small></div>
+<div class="vocab-item"><strong>opportunity</strong><small>فرصت</small></div>
+<div class="vocab-item"><strong>confidence</strong><small>اعتماد به نفس</small></div>
+<div class="vocab-item"><strong>culture</strong><small>فرهنگ</small></div>
+</div>
 </div>
 
-
-<div class="vocab-item">
-
-<strong>
-opportunity
-</strong>
-
-<small>
-فرصت
-</small>
-
+<div class="lesson-box" id="notesContent" style="display:none">
+<div style="padding:18px;color:#9aafc8;font-size:12px;line-height:1.8;text-align:center;">Write your notes while listening to this lesson.</div>
 </div>
 
-
-<div class="vocab-item">
-
-<strong>
-confidence
-</strong>
-
-<small>
-اعتماد به نفس
-</small>
-
-</div>
-
-
-<div class="vocab-item">
-
-<strong>
-culture
-</strong>
-
-<small>
-فرهنگ
-</small>
-
-</div>
-
-
-</div>
-
-</div>
-
-
-
-<!-- =====================================================
-     NOTES
-===================================================== -->
-
-<div
-class="lesson-box"
-id="notesContent"
-style="display:none"
->
-
-<div
-style="
-padding:18px;
-color:#9aafc8;
-font-size:12px;
-line-height:1.8;
-text-align:center;
-"
->
-
-Write your notes while listening to this lesson.
-
-</div>
-
-</div>
-
-
-
-<!-- =====================================================
-     REPEAT
-===================================================== -->
-
-<button
-class="repeat-button"
-onclick="repeatSentence()"
->
-
-
-<div class="repeat-icon">
-↻
-</div>
-
-
-<div class="repeat-text">
-
-<strong>
-Repeat this sentence
-</strong>
-
-<small>
-تکرار این جمله
-</small>
-
-</div>
-
-
-<div style="margin-left:auto">
-›
-</div>
-
-
+<button class="repeat-button" onclick="repeatSentence()">
+<div class="repeat-icon">↻</div>
+<div class="repeat-text"><strong>Repeat this sentence</strong><small>تکرار این جمله</small></div>
+<div style="margin-left:auto">›</div>
 </button>
-
-
 </div>
-
 </section>
 
-
 </div>
-
 </div>
-
-
 
 <script>
-
-/* =========================================================
-   AUDIO URL
-========================================================= */
-
-const AUDIO_URL =
-"https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3";
-
-
-/* =========================================================
-   PODCAST DATA
-========================================================= */
-
-const podcasts = [
-
-{
-    title:"Daily English Conversations",
-    description:"Real conversations. Real life.",
-    tag:"Daily English",
-    level:"Intermediate",
-    image:"http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg"
-},
-
-{
-    title:"Everyday English",
-    description:"Small talk, big progress.",
-    tag:"Conversation",
-    level:"Beginner",
-    image:"http://fs3.centraldnserver.com/~planlife/pics/english/podcast/2.jpeg"
-},
-
-{
-    title:"Advanced Vocabulary",
-    description:"Learn words. Build confidence.",
-    tag:"Vocabulary",
-    level:"Advanced",
-    image:"http://fs3.centraldnserver.com/~planlife/pics/english/podcast/3.jpeg"
-},
-
-{
-    title:"Travel English",
-    description:"Speak English Anywhere.",
-    tag:"Conversation",
-    level:"Intermediate",
-    image:"http://fs3.centraldnserver.com/~planlife/pics/english/podcast/4.jpeg"
-},
-
-{
-    title:"English for Work",
-    description:"Communicate. Create. Grow.",
-    tag:"Business",
-    level:"Advanced",
-    image:"http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg"
-}
-
+const AUDIO_URL="https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3";
+const podcasts=[
+{title:"Daily English Conversations",description:"Real conversations. Real life.",tag:"Daily English",level:"Intermediate",image:"http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg"},
+{title:"Everyday English",description:"Small talk, big progress.",tag:"Conversation",level:"Beginner",image:"http://fs3.centraldnserver.com/~planlife/pics/english/podcast/2.jpeg"},
+{title:"Advanced Vocabulary",description:"Learn words. Build confidence.",tag:"Vocabulary",level:"Advanced",image:"http://fs3.centraldnserver.com/~planlife/pics/english/podcast/3.jpeg"},
+{title:"Travel English",description:"Speak English Anywhere.",tag:"Conversation",level:"Intermediate",image:"http://fs3.centraldnserver.com/~planlife/pics/english/podcast/4.jpeg"},
+{title:"English for Work",description:"Communicate. Create. Grow.",tag:"Business",level:"Advanced",image:"http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg"}
 ];
-
-
-/* =========================================================
-   ELEMENTS
-========================================================= */
-
-const homeScreen =
-document.getElementById("homeScreen");
-
-const playerScreen =
-document.getElementById("playerScreen");
-
-const audio =
-document.getElementById("audioPlayer");
-
-const mainPlay =
-document.getElementById("mainPlay");
-
-const playerTitle =
-document.getElementById("playerTitle");
-
-const playerDescription =
-document.getElementById("playerDescription");
-
-const playerTag =
-document.getElementById("playerTag");
-
-const playerImage =
-document.getElementById("playerImage");
-
-const progressBar =
-document.getElementById("progressBar");
-
-const progressFill =
-document.getElementById("progressFill");
-
-const progressDot =
-document.getElementById("progressDot");
-
-const currentTime =
-document.getElementById("currentTime");
-
-const duration =
-document.getElementById("duration");
-
-const volume =
-document.getElementById("volume");
-
-const waveform =
-document.getElementById("waveform");
-
-
-/* =========================================================
-   WAVEFORM
-========================================================= */
-
-for(
-    let i=0;
-    i<48;
-    i++
-){
-
-    const bar =
-    document.createElement("div");
-
-    bar.className="wave";
-
-    const height =
-    Math.floor(
-        Math.random()*34
-    )+8;
-
-    bar.style.height =
-    height+"px";
-
-    waveform.appendChild(bar);
-
-}
-
-
-/* =========================================================
-   OPEN PLAYER
-========================================================= */
-
-function openPlayer(index){
-
-    const podcast =
-    podcasts[index];
-
-
-    playerTitle.textContent =
-    podcast.title;
-
-
-    playerDescription.textContent =
-    podcast.description;
-
-
-    playerTag.textContent =
-    podcast.level;
-
-
-    /* مهم:
-       کاور همان پادکست را
-       در صفحه دوم قرار می‌دهد
-    */
-
-    playerImage.src =
-    podcast.image;
-
-
-    /* همان فایل صوتی برای هر ۵ مورد */
-
-    audio.src =
-    AUDIO_URL;
-
-
-    audio.load();
-
-
-    homeScreen.classList.remove("active");
-
-    playerScreen.classList.add("active");
-
-
-    playerScreen.scrollTop=0;
-
-
-    mainPlay.textContent="▶";
-
-
-    setWave(false);
-
-}
-
-
-/* =========================================================
-   GO HOME
-========================================================= */
-
-function goHome(){
-
-    audio.pause();
-
-    playerScreen.classList.remove("active");
-
-    homeScreen.classList.add("active");
-
-}
-
-
-/* =========================================================
-   PLAY / PAUSE
-========================================================= */
-
-function togglePlay(){
-
-    if(audio.paused){
-
-        audio.play()
-
-        .then(()=>{
-
-            mainPlay.textContent="Ⅱ";
-
-            setWave(true);
-
-        })
-
-        .catch(error=>{
-
-            console.log(
-                "Audio could not start:",
-                error
-            );
-
-        });
-
-    }
-
-    else{
-
-        audio.pause();
-
-        mainPlay.textContent="▶";
-
-        setWave(false);
-
-    }
-
-}
-
-
-/* =========================================================
-   AUDIO EVENTS
-========================================================= */
-
-audio.addEventListener(
-    "play",
-    function(){
-
-        mainPlay.textContent="Ⅱ";
-
-        setWave(true);
-
-    }
-);
-
-
-audio.addEventListener(
-    "pause",
-    function(){
-
-        mainPlay.textContent="▶";
-
-        setWave(false);
-
-    }
-);
-
-
-audio.addEventListener(
-    "ended",
-    function(){
-
-        mainPlay.textContent="▶";
-
-        setWave(false);
-
-    }
-);
-
-
-/* =========================================================
-   WAVE
-========================================================= */
-
-function setWave(active){
-
-    document
-    .querySelectorAll(".wave")
-    .forEach(bar=>{
-
-        if(active){
-
-            bar.classList.remove("paused");
-
-        }
-
-        else{
-
-            bar.classList.add("paused");
-
-        }
-
-    });
-
-}
-
-
-/* =========================================================
-   FORMAT TIME
-========================================================= */
-
-function formatTime(seconds){
-
-    if(!isFinite(seconds)){
-
-        return "00:00";
-
-    }
-
-
-    const minutes =
-    Math.floor(seconds/60);
-
-
-    const secs =
-    Math.floor(seconds%60);
-
-
-    return (
-
-        String(minutes).padStart(2,"0")
-
-        +
-
-        ":"
-
-        +
-
-        String(secs).padStart(2,"0")
-
-    );
-
-}
-
-
-/* =========================================================
-   AUDIO METADATA
-========================================================= */
-
-audio.addEventListener(
-    "loadedmetadata",
-    function(){
-
-        duration.textContent =
-        formatTime(audio.duration);
-
-    }
-);
-
-
-/* =========================================================
-   AUDIO TIME
-========================================================= */
-
-audio.addEventListener(
-    "timeupdate",
-    function(){
-
-        if(!audio.duration){
-
-            return;
-
-        }
-
-
-        const percent =
-        (
-            audio.currentTime /
-            audio.duration
-        ) * 100;
-
-
-        progressFill.style.width =
-        percent+"%";
-
-
-        progressDot.style.left =
-        percent+"%";
-
-
-        currentTime.textContent =
-        formatTime(audio.currentTime);
-
-    }
-);
-
-
-/* =========================================================
-   PROGRESS CLICK
-========================================================= */
-
-progressBar.addEventListener(
-    "click",
-    function(e){
-
-        if(!audio.duration){
-
-            return;
-
-        }
-
-
-        const rect =
-        progressBar.getBoundingClientRect();
-
-
-        const percent =
-        (
-            e.clientX -
-            rect.left
-        ) / rect.width;
-
-
-        audio.currentTime =
-        percent *
-        audio.duration;
-
-    }
-);
-
-
-/* =========================================================
-   SKIP
-========================================================= */
-
-function skip(seconds){
-
-    if(!audio.duration){
-
-        return;
-
-    }
-
-
-    audio.currentTime =
-    Math.max(
-        0,
-        Math.min(
-            audio.duration,
-            audio.currentTime + seconds
-        )
-    );
-
-}
-
-
-/* =========================================================
-   VOLUME
-========================================================= */
-
-volume.addEventListener(
-    "input",
-    function(){
-
-        audio.volume =
-        this.value;
-
-    }
-);
-
-
-/* =========================================================
-   SPEED
-========================================================= */
-
-document
-.querySelectorAll(".speed")
-.forEach(button=>{
-
-    button.addEventListener(
-        "click",
-        function(){
-
-            document
-            .querySelectorAll(".speed")
-            .forEach(item=>{
-
-                item.classList.remove(
-                    "active"
-                );
-
-            });
-
-
-            this.classList.add(
-                "active"
-            );
-
-
-            audio.playbackRate =
-            Number(
-                this.dataset.speed
-            );
-
-        }
-    );
-
-});
-
-
-/* =========================================================
-   FAVORITE
-========================================================= */
-
-function toggleFavorite(button){
-
-    if(
-        button.textContent.trim()==="♡"
-    ){
-
-        button.textContent="♥";
-
-        button.style.color="#ff6f9f";
-
-    }
-
-    else{
-
-        button.textContent="♡";
-
-        button.style.color="";
-
-    }
-
-}
-
-
-function togglePlayerFavorite(){
-
-    const button =
-    document.getElementById(
-        "playerFavorite"
-    );
-
-
-    if(
-        button.textContent.trim()==="♡"
-    ){
-
-        button.textContent="♥";
-
-        button.style.color="#ff6f9f";
-
-    }
-
-    else{
-
-        button.textContent="♡";
-
-        button.style.color="";
-
-    }
-
-}
-
-
-/* =========================================================
-   TABS
-========================================================= */
-
-function switchTab(
-    element,
-    tab
-){
-
-    document
-    .querySelectorAll(".lesson-tab")
-    .forEach(item=>{
-
-        item.classList.remove(
-            "active"
-        );
-
-    });
-
-
-    element.classList.add(
-        "active"
-    );
-
-
-    document
-    .getElementById("lessonContent")
-    .style.display =
-    tab==="lesson"
-    ? "block"
-    : "none";
-
-
-    document
-    .getElementById("vocabContent")
-    .style.display =
-    tab==="vocab"
-    ? "block"
-    : "none";
-
-
-    document
-    .getElementById("notesContent")
-    .style.display =
-    tab==="notes"
-    ? "block"
-    : "none";
-
-}
-
-
-/* =========================================================
-   REPEAT
-========================================================= */
-
-function repeatSentence(){
-
-    if(!audio.duration){
-
-        return;
-
-    }
-
-
-    audio.currentTime =
-    Math.max(
-        0,
-        audio.currentTime - 5
-    );
-
-
-    audio.play();
-
-}
-
-
-/* =========================================================
-   CATEGORY BUTTONS
-========================================================= */
-
-document
-.querySelectorAll(".category")
-.forEach(button=>{
-
-    button.addEventListener(
-        "click",
-        function(){
-
-            document
-            .querySelectorAll(".category")
-            .forEach(item=>{
-
-                item.classList.remove(
-                    "active"
-                );
-
-            });
-
-
-            this.classList.add(
-                "active"
-            );
-
-        }
-    );
-
-});
-
-
-/* =========================================================
-   KEYBOARD
-========================================================= */
-
-document.addEventListener(
-    "keydown",
-    function(e){
-
-        if(
-            e.code==="Space" &&
-            playerScreen.classList.contains(
-                "active"
-            )
-        ){
-
-            e.preventDefault();
-
-            togglePlay();
-
-        }
-
-
-        if(
-            e.code==="Escape" &&
-            playerScreen.classList.contains(
-                "active"
-            )
-        ){
-
-            goHome();
-
-        }
-
-    }
-);
-
+const homeScreen=document.getElementById("homeScreen");
+const playerScreen=document.getElementById("playerScreen");
+const audio=document.getElementById("audioPlayer");
+const mainPlay=document.getElementById("mainPlay");
+const playerTitle=document.getElementById("playerTitle");
+const playerDescription=document.getElementById("playerDescription");
+const playerTag=document.getElementById("playerTag");
+const playerImage=document.getElementById("playerImage");
+const progressBar=document.getElementById("progressBar");
+const progressFill=document.getElementById("progressFill");
+const progressDot=document.getElementById("progressDot");
+const currentTime=document.getElementById("currentTime");
+const duration=document.getElementById("duration");
+const volume=document.getElementById("volume");
+const waveform=document.getElementById("waveform");
+for(let i=0;i<48;i++){const bar=document.createElement("div");bar.className="wave";const height=Math.floor(Math.random()*34)+8;bar.style.height=height+"px";waveform.appendChild(bar);}
+function openPlayer(index){const podcast=podcasts[index];playerTitle.textContent=podcast.title;playerDescription.textContent=podcast.description;playerTag.textContent=podcast.level;playerImage.src=podcast.image;audio.src=AUDIO_URL;audio.load();homeScreen.classList.remove("active");playerScreen.classList.add("active");playerScreen.scrollTop=0;mainPlay.textContent="▶";setWave(false);}
+function goHome(){audio.pause();playerScreen.classList.remove("active");homeScreen.classList.add("active");}
+function togglePlay(){if(audio.paused){audio.play().then(()=>{mainPlay.textContent="Ⅱ";setWave(true);}).catch(error=>{console.log("Audio could not start:",error);});}else{audio.pause();mainPlay.textContent="▶";setWave(false);}}
+audio.addEventListener("play",function(){mainPlay.textContent="Ⅱ";setWave(true);});
+audio.addEventListener("pause",function(){mainPlay.textContent="▶";setWave(false);});
+audio.addEventListener("ended",function(){mainPlay.textContent="▶";setWave(false);});
+function setWave(active){document.querySelectorAll(".wave").forEach(bar=>{if(active){bar.classList.remove("paused");}else{bar.classList.add("paused");}});}
+function formatTime(seconds){if(!isFinite(seconds)){return"00:00";}const minutes=Math.floor(seconds/60);const secs=Math.floor(seconds%60);return String(minutes).padStart(2,"0")+":"+String(secs).padStart(2,"0");}
+audio.addEventListener("loadedmetadata",function(){duration.textContent=formatTime(audio.duration);});
+audio.addEventListener("timeupdate",function(){if(!audio.duration){return;}const percent=(audio.currentTime/audio.duration)*100;progressFill.style.width=percent+"%";progressDot.style.left=percent+"%";currentTime.textContent=formatTime(audio.currentTime);});
+progressBar.addEventListener("click",function(e){if(!audio.duration){return;}const rect=progressBar.getBoundingClientRect();const percent=(e.clientX-rect.left)/rect.width;audio.currentTime=percent*audio.duration;});
+function skip(seconds){if(!audio.duration){return;}audio.currentTime=Math.max(0,Math.min(audio.duration,audio.currentTime+seconds));}
+volume.addEventListener("input",function(){audio.volume=this.value;});
+document.querySelectorAll(".speed").forEach(button=>{button.addEventListener("click",function(){document.querySelectorAll(".speed").forEach(item=>{item.classList.remove("active");});this.classList.add("active");audio.playbackRate=Number(this.dataset.speed);});});
+function toggleFavorite(button){if(button.textContent.trim()==="♡"){button.textContent="♥";button.style.color="#ff6f9f";}else{button.textContent="♡";button.style.color="";}}
+function togglePlayerFavorite(){const button=document.getElementById("playerFavorite");if(button.textContent.trim()==="♡"){button.textContent="♥";button.style.color="#ff6f9f";}else{button.textContent="♡";button.style.color="";}}
+function switchTab(element,tab){document.querySelectorAll(".lesson-tab").forEach(item=>{item.classList.remove("active");});element.classList.add("active");document.getElementById("lessonContent").style.display=tab==="lesson"?"block":"none";document.getElementById("vocabContent").style.display=tab==="vocab"?"block":"none";document.getElementById("notesContent").style.display=tab==="notes"?"block":"none";}
+function repeatSentence(){if(!audio.duration){return;}audio.currentTime=Math.max(0,audio.currentTime-5);audio.play();}
+document.querySelectorAll(".category").forEach(button=>{button.addEventListener("click",function(){document.querySelectorAll(".category").forEach(item=>{item.classList.remove("active");});this.classList.add("active");});});
+document.addEventListener("keydown",function(e){if(e.code==="Space"&&playerScreen.classList.contains("active")){e.preventDefault();togglePlay();}if(e.code==="Escape"&&playerScreen.classList.contains("active")){goHome();}});
 </script>
-
-
 </body>
-
 </html>
