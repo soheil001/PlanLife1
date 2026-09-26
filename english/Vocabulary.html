@@ -488,13 +488,13 @@ body::after{
       <input class="phone-input" id="phoneInput" type="tel" inputmode="numeric" placeholder="9123456789" maxlength="11">
     </div>
     <div class="input-error" id="phoneError"></div>
-    <button class="btn-login" id="btnLogin" onclick="doLogin()"><span id="loginBtnText">Sign In</span></button>
+    <button class="btn-login" id="btnLogin" onclick="doLogin()"><span id="loginBtnText">ورود</span></button>
     <div class="subscribe-divider">— یا —</div>
     <div class="subscribe-btns">
-      <button class="btn-sub" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.65);font-size:12px" onclick="openPricePopup()">💎 Subscription Plans</button>
-      <a class="btn-sub telegram" href="https://t.me/planlifeir" target="_blank">Get Code — Telegram</a>
-      <a class="btn-sub bale" href="https://ble.ir/planlifeir" target="_blank">Get Code — Bale</a>
-      <a class="btn-sub whatsapp" href="https://wa.me/00905437333582" target="_blank">Get Code — WhatsApp</a>
+      <button class="btn-sub" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.65);font-size:12px" onclick="openPricePopup()">💎 پلن‌های اشتراک</button>
+      <a class="btn-sub telegram" href="https://t.me/planlifeir" target="_blank">دریافت کد — تلگرام</a>
+      <a class="btn-sub bale" href="https://ble.ir/planlifeir" target="_blank">دریافت کد — بله</a>
+      <a class="btn-sub whatsapp" href="https://wa.me/00905437333582" target="_blank">دریافت کد — واتساپ</a>
     </div>
   </div>
 </div>
@@ -503,16 +503,16 @@ body::after{
 <div class="price-overlay" id="pricePopup" onclick="closePriceIfOutside(event)">
   <div class="price-sheet">
     <div class="price-header">
-      <div class="price-title">💎 Subscription Plans</div>
+      <div class="price-title">💎 پلن‌های اشتراک</div>
       <button class="price-close" onclick="closePricePopup()">✕</button>
     </div>
     <div class="plan-row"><div class="plan-name">Monthly Plan</div><div class="plan-prices"><div class="plan-new">۲۸۰,۰۰۰ تومان</div></div></div>
     <div class="plan-row"><div class="plan-name">6-Month Plan</div><div class="plan-prices"><div class="plan-old">۱,۶۸۰,۰۰۰</div><div class="plan-new">۱,۱۹۰,۰۰۰ تومان</div></div></div>
     <div class="plan-row"><div class="plan-name">Annual Plan</div><div class="plan-prices"><div class="plan-old">۳,۳۶۰,۰۰۰</div><div class="plan-new">۲,۵۸۰,۰۰۰ تومان</div></div></div>
     <div class="price-subscribe-btns">
-      <a class="btn-sub telegram" href="https://t.me/planlifeir" target="_blank">Buy via Telegram</a>
-      <a class="btn-sub bale" href="https://ble.ir/planlifeir" target="_blank">Buy via Bale</a>
-      <a class="btn-sub whatsapp" href="https://wa.me/00905437333582" target="_blank">Buy via WhatsApp</a>
+      <a class="btn-sub telegram" href="https://t.me/planlifeir" target="_blank">خرید از تلگرام</a>
+      <a class="btn-sub bale" href="https://ble.ir/planlifeir" target="_blank">خرید از بله</a>
+      <a class="btn-sub whatsapp" href="https://wa.me/00905437333582" target="_blank">خرید از واتساپ</a>
     </div>
   </div>
 </div>
@@ -1022,23 +1022,23 @@ async function doLogin() {
   errEl.textContent = '';
   let phone = input.value.trim().replace(/\D/g, '');
   if (phone.startsWith('0')) phone = phone.slice(1);
-  if (phone.length < 10 || phone.length > 11) { errEl.textContent = 'Invalid mobile number'; return; }
-  btn.disabled = true; btnText.textContent = 'Checking...';
+  if (phone.length < 10 || phone.length > 11) { errEl.textContent = 'شماره موبایل معتبر نیست'; return; }
+  btn.disabled = true; btnText.textContent = 'در حال بررسی...';
   try {
     const subs = await sbGet('subscriptions', `phone=eq.${phone}&is_active=eq.true`);
     if (subs && subs.length > 0) {
       setSession({ phone, verified: true, ts: Date.now() });
       await sbInsert('users', { phone });
       closeLoginPopup();
-      showToast('✅ Welcome! All lessons are now unlocked');
+      showToast('✅ خوش اومدی! همه درس‌ها باز شدن');
       updateLoginIcon();
       renderAll();
     } else {
       await sbInsert('users', { phone });
-      errEl.textContent = 'No active subscription found. Please get a subscription code.';
+      errEl.textContent = 'اشتراک فعالی پیدا نشد. لطفاً کد اشتراک دریافت کن.';
     }
-  } catch(e) { errEl.textContent = 'Connection error. Please try again.'; }
-  btn.disabled = false; btnText.textContent = 'Sign In';
+  } catch(e) { errEl.textContent = 'خطا در اتصال. دوباره امتحان کن.'; }
+  btn.disabled = false; btnText.textContent = 'ورود';
 }
 document.getElementById('phoneInput').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
@@ -1187,14 +1187,31 @@ async function loadTranscript(id) {
 }
 
 /* =============================================
-   اسکرول آرام به سمت Transcript
+   اسکرول آرام و کم به سمت Transcript
 ============================================= */
 function scrollToTranscript() {
-  const box = document.getElementById('transcriptContent');
-  if (!box) return;
   setTimeout(() => {
-    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 300);
+    const screen = document.getElementById('playerScreen');
+    if (!screen) return;
+    const start = screen.scrollTop;
+    const distance = 80;
+    const duration = 900;
+    let startTime = null;
+
+    function easeInOutQuad(t) {
+      return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    }
+
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      screen.scrollTop = start + distance * easeInOutQuad(progress);
+      if (progress < 1) requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
+  }, 600);
 }
 
 /* CONTROLS */
