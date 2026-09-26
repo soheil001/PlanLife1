@@ -94,7 +94,6 @@ body::after{
   color:#fff;font-size:19px;cursor:pointer;z-index:4
 }
 
-/* تب‌های یک‌ردیفه — شیشه‌ای */
 .source-tabs-wrap{
   padding:16px 16px 0;
   overflow-x:auto;scrollbar-width:none
@@ -143,10 +142,8 @@ body::after{
   background:linear-gradient(90deg,#6c88ff,#a57bff)
 }
 
-/* لیست لغت‌ها */
 .list{padding:16px 16px 40px}
 
-/* کارت لغت */
 .vocab-card{
   position:relative;display:flex;gap:13px;padding:11px;margin-bottom:11px;
   border-radius:22px;
@@ -274,7 +271,6 @@ body::after{
 .volume-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#6c71ff;cursor:pointer;box-shadow:0 0 6px rgba(108,113,255,.6)}
 .volume-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#6c71ff;cursor:pointer;border:none}
 
-/* تب‌های پلیر */
 .lesson-tabs{display:flex;margin-top:18px;padding:6px;border-radius:24px;background:#071b31}
 .lesson-tab{flex:1;text-align:center;padding:10px 5px;color:#8b9db7;font-size:12px;border-radius:20px;cursor:pointer}
 .lesson-tab.active{background:linear-gradient(135deg,#596cff,#755fff);color:#fff;box-shadow:0 5px 15px rgba(86,92,255,.3)}
@@ -400,12 +396,10 @@ body::after{
     <div class="hero-text"><p>PlanLife English</p><strong>From Beginner to Pro</strong></div>
   </div>
 
-  <!-- تب‌های یک‌ردیفه -->
   <div class="source-tabs-wrap">
     <div class="source-tabs" id="sourceTabs"></div>
   </div>
 
-  <!-- لیست لغت‌ها -->
   <div class="list" id="vocabList"></div>
 
 </section>
@@ -487,8 +481,8 @@ body::after{
 <div class="popup-overlay" id="loginPopup">
   <div class="popup-sheet">
     <div class="popup-handle"></div>
-    <div class="popup-title">🔐 Sign In to Vocabulary</div>
-    <div class="popup-sub">Enter your mobile number to access audio lessons</div>
+    <div class="popup-title">🔐 ورود به Vocabulary</div>
+    <div class="popup-sub">شماره موبایلت رو وارد کن تا به درس‌های صوتی دسترسی داشته باشی</div>
     <div class="phone-row">
       <div class="prefix-box">+98</div>
       <input class="phone-input" id="phoneInput" type="tel" inputmode="numeric" placeholder="9123456789" maxlength="11">
@@ -530,10 +524,6 @@ const SB_URL = 'https://hjzzvzxhrqovvducnxha.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhqenp2enhocnFvdnZkdWNueGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NDY0MTksImV4cCI6MjA5NzUyMjQxOX0.XfFimXnkKHFBlYUE-E7daaBNjPJZV-D21UfCL_1SeoQ';
 const SB_H   = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
 
-/* ================================================================
-   DATA — تب‌ها و لغت‌ها
-   هر تب = یه دسته لغت با فایل‌های صوتی مختص خودش
-================================================================ */
 const tabs = [
   {
     id: 'beginner',
@@ -1161,14 +1151,12 @@ function openPlayer(item) {
   playerScreen.scrollTop = 0;
   mainPlay.textContent = '▶'; setWave(false);
 
-  // تب‌های پلیر ریست
   document.querySelectorAll('.lesson-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.lesson-tab')[0].classList.add('active');
   document.getElementById('transcriptContent').style.display = 'block';
   document.getElementById('vocabContent').style.display      = 'none';
   document.getElementById('notesContent').style.display      = 'none';
 
-  // نمایش لغات
   const pl = document.getElementById('playerVocabList');
   pl.innerHTML = '';
   (item.vocab || []).forEach(v => {
@@ -1178,7 +1166,6 @@ function openPlayer(item) {
     pl.appendChild(el);
   });
 
-  // ترنسکریپت از Supabase
   loadTranscript(item.id);
 }
 
@@ -1199,15 +1186,34 @@ async function loadTranscript(id) {
   } catch(e) { loading.textContent = '⚠️ Failed to load transcript.'; }
 }
 
+/* =============================================
+   اسکرول آرام به سمت Transcript
+============================================= */
+function scrollToTranscript() {
+  const box = document.getElementById('transcriptContent');
+  if (!box) return;
+  setTimeout(() => {
+    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 300);
+}
+
 /* CONTROLS */
 function goHome() { audio.pause(); playerScreen.classList.remove('active'); homeScreen.classList.add('active'); }
+
 function togglePlay() {
   if (audio.paused) {
-    audio.play().then(() => { mainPlay.textContent = 'Ⅱ'; setWave(true); }).catch(e => console.log(e));
+    audio.play().then(() => {
+      mainPlay.textContent = 'Ⅱ';
+      setWave(true);
+      scrollToTranscript(); // اسکرول آروم به Transcript بعد از پلی
+    }).catch(e => console.log(e));
   } else {
-    audio.pause(); mainPlay.textContent = '▶'; setWave(false);
+    audio.pause();
+    mainPlay.textContent = '▶';
+    setWave(false);
   }
 }
+
 audio.addEventListener('play',  () => { mainPlay.textContent = 'Ⅱ'; setWave(true);  });
 audio.addEventListener('pause', () => { mainPlay.textContent = '▶'; setWave(false); });
 audio.addEventListener('ended', () => { mainPlay.textContent = '▶'; setWave(false); });
