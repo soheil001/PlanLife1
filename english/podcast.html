@@ -1,574 +1,999 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>English Podcast — PlanLife</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lingua — planlife.ir</title>
+<link href="https://fonts.googleapis.com/css2?family=Estedad:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════════
-   RESET & BASE
-═══════════════════════════════════════════════════ */
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;min-height:100%;background:#020813;font-family:Inter,Arial,sans-serif;color:#fff;overflow-x:hidden}
+  @font-face{font-family:'Farhang';src:url('fonts/farhang-regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+  @font-face{font-family:'Farhang';src:url('fonts/farhang-bold.woff2') format('woff2');font-weight:700 900;font-style:normal;font-display:swap;}
 
-/* ── پس‌زمینه اصلی ── */
-body::before{
-  content:"";position:fixed;inset:0;z-index:-3;
-  background:
-    radial-gradient(circle at 20% 15%,rgba(40,104,255,.22),transparent 28%),
-    radial-gradient(circle at 80% 20%,rgba(124,69,255,.18),transparent 30%),
-    radial-gradient(circle at 50% 90%,rgba(0,150,255,.10),transparent 35%),
-    #020813
-}
-body::after{
-  content:"";position:fixed;inset:0;z-index:-2;
-  background:linear-gradient(180deg,rgba(2,8,19,.10),rgba(2,8,19,.75))
-}
+  /* ===== TOKENS ===== */
+  :root {
+    /* layout */
+    --max-w: 520px;
+    --side-pad: 16px;
 
-/* ── قاب موبایل ── */
-.app{width:100%;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:30px}
-.phone{
-  width:390px;min-height:820px;max-height:920px;
-  position:relative;overflow:hidden;border-radius:44px;
-  background:linear-gradient(180deg,rgba(4,22,43,.95),rgba(1,10,21,.98));
-  border:1px solid rgba(138,186,255,.55);
-  box-shadow:0 30px 100px rgba(0,0,0,.65),inset 0 0 40px rgba(65,130,255,.06)
-}
+    /* card */
+    --card-w: 192px;
+    --card-h: 342px;
 
-/* ── صفحه‌ها (home / player) ── */
-.screen{
-  position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
-  opacity:0;visibility:hidden;transform:translateX(30px);
-  transition:opacity .35s ease,transform .35s ease,visibility .35s ease;
-  z-index:2;scrollbar-width:none
-}
-.screen::-webkit-scrollbar{display:none}
-.screen.active{opacity:1;visibility:visible;transform:translateX(0)}
+    /* hero */
+    --hero-h: 240px;
+    --hero-radius: 28px;
 
+    /* story */
+    --story-ring: 76px;
 
-/* ═══════════════════════════════════════════════════
-   HEADER
-═══════════════════════════════════════════════════ */
-.header{
-  position:absolute;top:0;left:0;right:0;z-index:10;
-  padding:28px 22px 12px;
-  background:linear-gradient(180deg,rgba(2,8,19,.85) 0%,rgba(2,8,19,.4) 70%,transparent 100%)
-}
-.top-row{display:flex;align-items:center;justify-content:space-between}
-.brand{display:flex;align-items:center;gap:11px}
-.sound-logo{
-  width:40px;height:40px;display:flex;align-items:center;justify-content:center;
-  border-radius:14px;background:radial-gradient(circle,rgba(110,96,255,.25),transparent 70%)
-}
-.sound-bars{display:flex;gap:3px;align-items:center;height:28px}
-.sound-bars span{width:4px;border-radius:5px;background:linear-gradient(180deg,#9b7dff,#387eff)}
-.sound-bars span:nth-child(1){height:10px}.sound-bars span:nth-child(2){height:19px}
-.sound-bars span:nth-child(3){height:25px}.sound-bars span:nth-child(4){height:15px}
-.sound-bars span:nth-child(5){height:21px}.sound-bars span:nth-child(6){height:11px}
-.brand-text h1{font-size:26px;line-height:1.1;font-weight:700;letter-spacing:-1px}
-.brand-text p{margin-top:3px;color:#7e9abd;font-size:13px}
+    /* learning */
+    --learning-w: 228px;
+    --learning-h: 280px;
 
-/* دکمه ورود/خروج */
-.login-icon-btn{
-  width:40px;height:40px;border-radius:50%;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  color:#ff5a5a;background:rgba(255,80,80,.16);
-  border:1px solid rgba(255,90,90,.65);
-  box-shadow:0 0 14px rgba(255,80,80,.28),inset 0 1px 0 rgba(255,255,255,.25);
-  transition:all .25s ease
-}
-.login-icon-btn.logged-in{
-  color:#2ecc71;background:rgba(46,204,113,.16);
-  border-color:rgba(46,204,113,.7);
-  box-shadow:0 0 14px rgba(46,204,113,.35),inset 0 1px 0 rgba(255,255,255,.25)
-}
-.login-icon-btn:active{transform:scale(.93)}
+    /* more */
+    --more-w: 160px;
+    --more-h: 284px;
 
+    /* colors */
+    --bg-deep: #0d1b3e;
+    --accent: #1a5276;
+    --accent-mid: #0f3460;
+    --glass: rgba(255,255,255,0.12);
+    --glass-brd: rgba(255,255,255,0.28);
+    --glass-strong: rgba(255,255,255,0.18);
+    --text: #fff;
+    --text-muted: rgba(255,255,255,0.6);
+  }
 
-/* ═══════════════════════════════════════════════════
-   HERO
-═══════════════════════════════════════════════════ */
-.hero{
-  position:relative;height:220px;
-  background-image:
-    linear-gradient(180deg,rgba(2,8,19,.15) 0%,rgba(2,8,19,.05) 30%,rgba(2,8,19,.55) 65%,rgba(2,8,19,.98) 100%),
-    url("http://fs3.centraldnserver.com/~planlife/pics/english/podcast/slide.jpeg");
-  background-size:cover;background-position:center top;background-repeat:no-repeat
-}
-.hero-text{position:absolute;z-index:2;left:22px;bottom:20px}
-.hero-text p{color:#89b4e7;font-size:14px;letter-spacing:.2px}
-.hero-text strong{display:block;margin-top:4px;font-size:16px;font-weight:600}
-.search-button{
-  width:40px;height:40px;position:absolute;right:20px;bottom:18px;
-  border-radius:50%;background:rgba(2,13,28,.55);border:1px solid rgba(150,190,255,.2);
-  color:#fff;font-size:19px;cursor:pointer;z-index:4
-}
+  /* ===== RESET ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
 
+  /* ===== BASE ===== */
+  body {
+    font-family: 'Farhang','Estedad', sans-serif;
+    min-height: 100%;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: linear-gradient(150deg, #0d1b3e 0%, #0f3460 35%, #1a5276 65%, #0a2540 100%);
+    background-attachment: fixed;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(0,100,220,0.2), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 90% 80%, rgba(0,40,140,0.18), transparent 60%),
+      radial-gradient(ellipse 60% 70% at 60% 40%, rgba(0,80,200,0.1), transparent 60%);
+  }
 
-/* ═══════════════════════════════════════════════════
-   تب‌های منبع — شیشه‌ای (glassmorphism)
-   هر تب = یه کلاس/منبع اصلی (British Council, BBC, ...)
-═══════════════════════════════════════════════════ */
-.source-tabs-wrap{
-  padding:16px 16px 0;
-  overflow-x:auto;scrollbar-width:none
-}
-.source-tabs-wrap::-webkit-scrollbar{display:none}
+  /* ===== LAYOUT ===== */
+  .wrap {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    min-height: 100%;
+    position: relative;
+    z-index: 1;
+  }
 
-.source-tabs{
-  display:flex;gap:10px;
-  padding-bottom:4px;
-  width:fit-content;min-width:100%
-}
+  /* ===== HEADER ===== */
+  header {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 100;
+    margin: 14px var(--side-pad) 6px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--glass);
+    border: 1px solid var(--glass-brd);
+    border-radius: 18px;
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.4);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark {
+    width: 30px; height: 30px; border-radius: 9px;
+    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 15px; color: #0f3460;
+    flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .brand-name {
+    font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 14.5px;
+    color: #fff; direction: ltr; letter-spacing: 0.2px;
+  }
+  .header-actions { display: flex; align-items: center; gap: 8px; }
 
-/* هر تب شیشه‌ای */
-.source-tab{
-  position:relative;
-  white-space:nowrap;
-  padding:10px 18px;
-  border-radius:20px;
-  font-size:12px;font-weight:700;
-  letter-spacing:.3px;
-  cursor:pointer;
-  color:rgba(180,210,255,.65);
-  /* شیشه */
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.10);
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.12),
-    0 4px 16px rgba(0,0,0,.25);
-  transition:all .25s ease;
-  overflow:hidden
-}
-/* نور داخلی هاور */
-.source-tab::before{
-  content:"";position:absolute;inset:0;border-radius:inherit;
-  background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 60%);
-  opacity:0;transition:opacity .25s
-}
-.source-tab:hover::before{opacity:1}
-.source-tab:hover{color:rgba(220,235,255,.9);border-color:rgba(255,255,255,.2)}
+  .bell {
+    width: 34px; height: 34px; border-radius: 12px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .bell:hover { background: rgba(255,255,255,0.22); }
 
-/* تب فعال */
-.source-tab.active{
-  color:#fff;
-  background:rgba(86,106,255,.25);
-  border-color:rgba(130,160,255,.45);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.25),
-    0 6px 24px rgba(70,90,255,.35),
-    0 0 0 1px rgba(100,130,255,.2);
-}
-.source-tab.active::after{
-  content:"";
-  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
-  width:30px;height:2px;border-radius:2px;
-  background:linear-gradient(90deg,#6c88ff,#a57bff)
-}
+  .login-icon-btn {
+    width: 34px; height: 34px; border-radius: 12px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #ff5a5a; background: rgba(255,80,80,.16);
+    border: 1px solid rgba(255,90,90,.65);
+    box-shadow: 0 0 14px rgba(255,80,80,.28), inset 0 1px 0 rgba(255,255,255,.25);
+    transition: all .25s ease;
+  }
+  .login-icon-btn.logged-in {
+    color: #2ecc71; background: rgba(46,204,113,.16);
+    border-color: rgba(46,204,113,.7);
+    box-shadow: 0 0 14px rgba(46,204,113,.35), inset 0 1px 0 rgba(255,255,255,.25);
+  }
+  .login-icon-btn:active { transform: scale(.93); }
 
+  /* ===== HERO ===== */
+  .hero {
+    margin: 16px var(--side-pad) 0;
+    border-radius: var(--hero-radius);
+    overflow: hidden;
+    position: relative;
+    height: var(--hero-h);
+    border: 1px solid rgba(255,255,255,0.22);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+  .slides { display: flex; width: 100%; height: 100%; transition: transform 0.55s cubic-bezier(0.77,0,0.18,1); }
+  .slide { min-width: 100%; height: 100%; position: relative; overflow: hidden; flex-shrink: 0; }
+  .slide-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; z-index: 0; }
+  .slide::after { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+  .slide-1::after { background: linear-gradient(135deg,rgba(10,30,80,0.22) 0%,rgba(15,52,96,0.14) 45%,rgba(26,82,118,0.08) 100%); }
+  .slide-2::after { background: linear-gradient(135deg,rgba(8,20,60,0.24) 0%,rgba(12,44,88,0.16) 45%,rgba(20,70,110,0.08) 100%); }
+  .slide-3::after { background: linear-gradient(135deg,rgba(10,25,70,0.20) 0%,rgba(18,58,100,0.14) 45%,rgba(30,90,130,0.07) 100%); }
+  .hero-dots { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 10; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: background 0.25s, transform 0.25s; }
+  .dot.active { background: #fff; transform: scale(1.4); }
+  .hero-prev, .hero-next {
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3);
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: background 0.2s;
+  }
+  .hero-prev:hover, .hero-next:hover { background: rgba(255,255,255,0.28); }
+  .hero-prev:active, .hero-next:active { background: rgba(255,255,255,0.35); }
+  .hero-prev { right: 12px; } .hero-next { left: 12px; }
 
-/* ═══════════════════════════════════════════════════
-   تب‌های زیردسته — pills ساده
-   اینا زیرمجموعه‌های هر منبع هستن (All, Daily, ...)
-═══════════════════════════════════════════════════ */
-.categories{
-  display:flex;gap:9px;overflow-x:auto;
-  padding:12px 16px 11px;
-  scrollbar-width:none
-}
-.categories::-webkit-scrollbar{display:none}
+  /* ===== STORIES ===== */
+  .stories-outer { margin: 18px var(--side-pad) 0; overflow: visible; position: relative; z-index: 10; }
+  .stories-wrapper {
+    width: 100%; position: relative; padding: 16px 8px 13px; border-radius: 26px;
+    background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.07));
+    border: 1px solid rgba(255,255,255,.28);
+    box-shadow: 0 15px 40px rgba(0,10,40,.3), inset 0 1px 0 rgba(255,255,255,.32), inset 0 -1px 0 rgba(255,255,255,.08);
+    backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%);
+  }
+  .stories-wrapper::before {
+    content: ''; position: absolute; top: 0; left: 12%; right: 12%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.7), transparent); pointer-events: none;
+  }
+  .stories-wrapper::after {
+    content: ''; position: absolute; top: 12px; bottom: 12px; left: 0; width: 45px;
+    background: linear-gradient(to right, rgba(10,40,100,.42), transparent); pointer-events: none; z-index: 3;
+  }
+  .stories-scroll {
+    display: flex; flex-direction: row; direction: ltr; gap: 15px;
+    overflow-x: auto; overflow-y: hidden; padding: 2px 8px 5px;
+    scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; cursor: grab;
+  }
+  .stories-scroll:active { cursor: grabbing; }
+  .stories-scroll::-webkit-scrollbar { display: none; }
+  .story-item {
+    display: flex; flex-direction: column; align-items: center; gap: 7px;
+    flex-shrink: 0; cursor: pointer; -webkit-tap-highlight-color: transparent;
+    transition: transform .2s ease, filter .2s ease;
+  }
+  .story-item:active { transform: scale(.94); }
+  .story-ring {
+    width: var(--story-ring); height: var(--story-ring); border-radius: 50%; padding: 3px;
+    background: linear-gradient(135deg,#ffd36a 0%,#f09433 18%,#e6683c 34%,#dc2743 50%,#cc2366 65%,#833ab4 82%,#5851db 100%);
+    box-shadow: 0 5px 18px rgba(0,0,0,.25), 0 0 0 3px rgba(255,255,255,.06);
+    transition: transform .25s ease, box-shadow .25s ease; flex-shrink: 0;
+  }
+  .story-item:hover .story-ring { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 24px rgba(0,100,220,.28), 0 0 0 3px rgba(255,255,255,.08); }
+  .story-item.seen .story-ring { background: linear-gradient(135deg, rgba(255,255,255,.38), rgba(255,255,255,.16)); box-shadow: 0 4px 12px rgba(0,0,0,.18); }
+  .story-avatar {
+    width: 100%; height: 100%; border-radius: 50%;
+    background: rgba(10,30,80,.5); border: 2.5px solid rgba(255,255,255,.95);
+    overflow: hidden; display: flex; align-items: center; justify-content: center;
+    box-shadow: inset 0 0 12px rgba(0,0,0,.25);
+  }
+  .story-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .story-label {
+    font-size: 10.5px; font-weight: 700; color: #fff; text-align: center;
+    max-width: var(--story-ring); overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap; line-height: 1.3; text-shadow: 0 1px 6px rgba(0,0,0,.5);
+  }
 
-.category{
-  white-space:nowrap;
-  border:1px solid rgba(109,159,229,.22);
-  background:rgba(8,29,52,.72);
-  color:#b8cce5;
-  padding:7px 14px;
-  border-radius:30px;
-  font-size:12px;
-  cursor:pointer;
-  transition:.25s
-}
-.category.active{
-  color:#fff;border-color:transparent;
-  background:linear-gradient(135deg,#586aff,#765eff);
-  box-shadow:0 5px 20px rgba(79,86,255,.35)
-}
+  /* ===== STORY MODAL ===== */
+  #story-modal {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9000;
+    background: rgba(0,0,0,0.92); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity .3s ease;
+  }
+  #story-modal.open { opacity: 1; pointer-events: auto; }
+  .story-container { width: 100%; max-width: 375px; aspect-ratio: 9/16; background: #000; border-radius: 12px; overflow: hidden; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,.9); }
+  .story-modal-content { position: absolute; inset: 0; z-index: 1; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .story-modal-content img, .story-modal-content video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .story-progress-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 10; display: flex; gap: 3px; direction: ltr; padding: 10px 12px 6px; background: linear-gradient(to bottom, rgba(0,0,0,.55), transparent); }
+  .progress-seg { flex: 1; height: 2.5px; background: rgba(255,255,255,.28); border-radius: 3px; overflow: hidden; }
+  .progress-seg-fill { height: 100%; background: white; width: 0%; border-radius: 3px; }
+  .progress-seg.done .progress-seg-fill { width: 100%; }
+  .progress-seg.active .progress-seg-fill { animation: progress-run 5s linear forwards; }
+  @keyframes progress-run { from { width: 0%; } to { width: 100%; } }
+  .story-modal-header { position: absolute; top: 26px; left: 0; right: 0; z-index: 10; display: flex; align-items: center; gap: 8px; padding: 8px 12px; direction: rtl; justify-content: space-between; flex-direction: row-reverse; background: linear-gradient(to bottom,rgba(0,0,0,.35),transparent); }
+  .story-logo-section { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
+  .story-logo-img { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,.2); overflow: hidden; }
+  .story-logo-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .story-branding-text { font-size: 14px; font-weight: 700; color: white; text-shadow: 0 1px 6px rgba(0,0,0,.7); }
+  .story-modal-close { font-size: 22px; color: white; cursor: pointer; padding: 4px 6px; }
+  .story-nav-left, .story-nav-right { position: absolute; top: 0; bottom: 0; width: 40%; cursor: pointer; z-index: 9; -webkit-tap-highlight-color: transparent; }
+  .story-nav-right { right: 0; } .story-nav-left { left: 0; }
+  .story-footer { position: absolute; bottom: 0; left: 0; right: 0; z-index: 10; display: flex; flex-direction: column; gap: 10px; padding: 40px 14px 18px; background: linear-gradient(to top,rgba(0,0,0,.72) 60%,transparent); }
+  .story-caption { font-size: 13px; font-weight: 500; color: rgba(255,255,255,.95); text-align: center; line-height: 1.6; min-height: 20px; display: flex; align-items: center; justify-content: center; text-shadow: 0 1px 8px rgba(0,0,0,.9); }
+  .story-action-btn { display: none; align-items: center; justify-content: center; width: 100%; padding: 12px 16px; background: rgba(255,255,255,.13); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1.2px solid rgba(100,180,255,.6); border-radius: 20px; color: #7ec8ff; font-family: 'Farhang','Estedad',sans-serif; font-size: 15px; font-weight: 800; text-decoration: none; text-align: center; cursor: pointer; transition: all .2s ease; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.25); }
+  .story-action-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.2), transparent); animation: glass-shine 2.5s ease-in-out infinite; }
+  @keyframes glass-shine { 0% { left: -100%; } 50% { left: 100%; } 100% { left: 100%; } }
+  .story-action-btn:active { transform: scale(.97); }
+  .story-action-btn.show { display: flex; }
 
+  /* ===== CARDS ===== */
+  .container { padding: 4px var(--side-pad) 60px; }
+  .row-label { font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.9); margin: 24px 0 12px; padding: 0 4px; letter-spacing: -0.2px; }
+  .carousel { display: flex; gap: 16px; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 10px; margin: 0 calc(-1 * var(--side-pad)); padding-left: var(--side-pad); padding-right: var(--side-pad); scrollbar-width: none; }
+  .carousel::-webkit-scrollbar { display: none; }
 
-/* ═══════════════════════════════════════════════════
-   کارت‌های پادکست
-═══════════════════════════════════════════════════ */
-.list{padding:3px 16px 40px}
+  .card-wrap {
+    flex: 0 0 var(--card-w); height: var(--card-h); border-radius: 26px; padding: 3px;
+    background: linear-gradient(145deg,rgba(255,255,255,0.5) 0%,rgba(100,180,255,0.3) 50%,rgba(255,255,255,0.2) 100%);
+    box-shadow: 0 2px 0 rgba(255,255,255,0.5), 0 16px 36px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.7);
+    cursor: pointer; transition: transform 0.18s, box-shadow 0.18s; flex-shrink: 0; position: relative;
+  }
+  .card-wrap:hover { transform: translateY(-4px); box-shadow: 0 2px 0 rgba(255,255,255,0.5), 0 24px 50px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.7); }
+  .card-wrap:active { transform: scale(0.97); box-shadow: 0 6px 18px rgba(0,0,0,0.3); }
+  .card { border-radius: 24px; overflow: hidden; background: #fff; display: flex; flex-direction: column; position: relative; height: 100%; }
+  .card-photo { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; }
+  .card-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+  .card-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom,rgba(0,0,0,0.04) 0%,transparent 20%,rgba(5,15,40,0.4) 50%,rgba(5,15,40,0.92) 100%); pointer-events: none; }
+  .badge { position: absolute; top: 14px; left: 14px; background: rgba(255,255,255,0.18); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.4); border-radius: 50px; padding: 5px 13px; font-size: 11px; font-family: 'Farhang','Estedad',sans-serif; font-weight: 700; color: #fff; z-index: 2; letter-spacing: 0.2px; }
+  .card-body { position: absolute; bottom: 0; right: 0; left: 0; margin: 10px; padding: 14px; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; background: rgba(255,255,255,0.1); backdrop-filter: blur(16px) saturate(160%); -webkit-backdrop-filter: blur(16px) saturate(160%); border: 1px solid rgba(255,255,255,0.22); border-radius: 18px; box-shadow: 0 4px 24px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.3); }
+  .card-title { font-size: 16px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 6px; direction: rtl; letter-spacing: -0.4px; }
+  .card-desc { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.8); line-height: 1.65; direction: rtl; margin-bottom: 14px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .card-footer { width: 100%; display: flex; align-items: center; justify-content: space-between; direction: ltr; }
+  .read-time { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.72); font-family: 'Farhang','Estedad',sans-serif; direction: rtl; }
+  .btn-read { background: #fff; color: #0f3460; border: none; border-radius: 50px; padding: 8px 16px; font-size: 12px; font-family: 'Farhang','Estedad',sans-serif; font-weight: 800; cursor: pointer; transition: opacity 0.15s, transform 0.15s; white-space: nowrap; letter-spacing: -0.2px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .btn-read:active { opacity: 0.85; transform: scale(0.97); }
+  .extra-label { margin-top: 26px; margin-bottom: 12px; }
 
-.podcast-card{
-  position:relative;display:flex;gap:13px;padding:11px;margin-bottom:11px;
-  border-radius:22px;
-  background:linear-gradient(135deg,rgba(9,34,59,.92),rgba(3,19,35,.92));
-  border:1px solid rgba(94,150,213,.16);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
-  cursor:pointer;min-height:116px;align-items:flex-start;
-  transition:transform .2s,border-color .2s,box-shadow .2s
-}
-.podcast-card:hover{
-  transform:translateY(-2px);
-  border-color:rgba(102,135,255,.45);
-  box-shadow:0 12px 30px rgba(0,0,0,.25),0 0 25px rgba(69,92,255,.08)
-}
-.podcast-card.locked{cursor:default}
-.podcast-card.locked .play-small{background:rgba(30,50,80,.7);box-shadow:none}
+  /* ===== LEARNING ===== */
+  .learning-carousel {
+    display: flex; gap: 18px; overflow-x: auto;
+    padding: 14px 4px 22px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .learning-carousel::-webkit-scrollbar { display: none; }
+  .learning-item { position: relative; flex: 0 0 var(--learning-w); width: var(--learning-w); scroll-snap-align: start; }
+  .learning-card {
+    position: relative; width: 100%; height: var(--learning-h); border-radius: 26px; overflow: hidden;
+    cursor: pointer; border: 1px solid rgba(255,255,255,.28);
+    background: #0a1a3a; box-shadow: 0 18px 50px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.2);
+    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+  }
+  .learning-card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,.5); box-shadow: 0 25px 65px rgba(0,0,0,.38), 0 0 35px rgba(0,100,220,.16); }
+  .learning-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; z-index: 0; transition: transform .5s ease; }
+  .learning-card:hover .learning-bg { transform: scale(1.04); }
+  .learning-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to bottom,rgba(5,15,40,.05) 0%,rgba(5,15,40,.12) 25%,rgba(5,15,40,.5) 55%,rgba(5,15,40,.94) 100%); pointer-events: none; }
+  .learning-card-title { position: absolute; left: 16px; right: 16px; bottom: 60px; text-align: center; color: #fff; font-family: 'Farhang','Estedad',sans-serif; font-size: 16px; font-weight: 800; text-shadow: 0 3px 12px rgba(0,0,0,.55); z-index: 3; }
+  .learning-enter { display: block; position: relative; width: 100%; height: 40px; margin: 10px 0 0; border: 1px solid rgba(255,255,255,.38); border-radius: 16px; background: rgba(255,255,255,.16); backdrop-filter: blur(18px) saturate(160%); -webkit-backdrop-filter: blur(18px) saturate(160%); color: #fff; font-family: 'Farhang','Estedad',sans-serif; font-size: 13px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.28); transition: transform .15s, opacity .15s, background .15s; z-index: 3; }
+  .learning-item .learning-enter { z-index: 5; }
+  .learning-enter:hover { background: rgba(255,255,255,.22); }
+  .learning-enter:active { transform: scale(.97); opacity: .88; }
 
-.lock-overlay{
-  position:absolute;inset:0;border-radius:22px;z-index:8;
-  background:rgba(2,10,25,.5);
-  display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;
-  padding:14px;pointer-events:none
-}
-.lock-icon{font-size:20px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6))}
+  /* ===== MORE ===== */
+  .more-label { margin-top: 28px; margin-bottom: 12px; }
+  .more-carousel {
+    display: flex; gap: 3px; overflow-x: auto; overflow-y: hidden;
+    padding: 5px 0 20px; direction: rtl;
+    scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; scroll-snap-type: x mandatory;
+  }
+  .more-carousel::-webkit-scrollbar { display: none; }
+  .more-item { flex: 0 0 var(--more-w); min-width: var(--more-w); display: flex; flex-direction: column; align-items: center; gap: 10px; scroll-snap-align: start; }
+  .more-item img { width: var(--more-w); height: var(--more-h); object-fit: cover; object-position: center; display: block; border-radius: 14px; }
+  .more-read-btn {
+    width: 100px; height: 36px; border-radius: 14px;
+    border: 1px solid rgba(255,255,255,.35); background: rgba(255,255,255,.16);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    color: #fff; font-family: 'Farhang','Estedad',sans-serif; font-size: 12px; font-weight: 800;
+    cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.28);
+    transition: .2s;
+  }
+  .more-read-btn:hover { background: rgba(255,255,255,.24); }
+  .more-read-btn:active { transform: scale(.95); }
 
-.cover{
-  width:110px;height:110px;flex:none;border-radius:16px;overflow:hidden;
-  border:1px solid rgba(135,182,255,.25);position:relative;align-self:center
-}
-.cover img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
-.cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.72))}
-.cover-title{
-  position:absolute;left:7px;bottom:7px;right:7px;z-index:2;
-  font-family:Georgia,serif;font-size:11px;line-height:1.1;color:#fff;text-shadow:0 2px 5px #000
-}
+  /* ===== LEADERBOARD ===== */
+  .monthly-leaderboard {
+    margin: 34px var(--side-pad) 40px; padding: 22px 14px 20px; border-radius: 30px; position: relative; overflow: hidden;
+    background: radial-gradient(circle at 50% 12%,rgba(100,180,255,.16),transparent 28%), linear-gradient(145deg,rgba(255,255,255,.11),rgba(255,255,255,.045));
+    border: 1px solid rgba(255,255,255,.20);
+    box-shadow: 0 18px 55px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.18);
+  }
+  .monthly-leaderboard::before { content: ''; position: absolute; width: 260px; height: 260px; left: 50%; top: 70px; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(circle,rgba(100,180,255,.13),transparent 68%); pointer-events: none; }
+  .leaderboard-head { position: relative; z-index: 2; text-align: center; margin-bottom: 24px; }
+  .leaderboard-kicker { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; margin-bottom: 9px; border-radius: 30px; background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.78); font-size: 10px; font-weight: 700; }
+  .leaderboard-title { color: #fff; font-size: 21px; font-weight: 900; line-height: 1.35; letter-spacing: -.5px; }
+  .leaderboard-subtitle { margin-top: 5px; color: rgba(255,255,255,.58); font-size: 11px; line-height: 1.7; }
+  .podium-stage { position: relative; z-index: 2; height: 330px; display: flex; align-items: flex-end; justify-content: center; gap: 7px; direction: ltr; padding: 0 2px; }
+  .podium-person { position: relative; width: 24%; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+  .podium-person.rank-1 { z-index: 4; } .podium-person.rank-2 { z-index: 3; } .podium-person.rank-3 { z-index: 2; } .podium-person.rank-4 { z-index: 1; }
+  .podium-avatar-wrap { position: relative; width: 62px; height: 62px; margin-bottom: -8px; flex-shrink: 0; }
+  .podium-person.rank-1 .podium-avatar-wrap { width: 76px; height: 76px; margin-bottom: -10px; }
+  .podium-avatar { width: 100%; height: 100%; border-radius: 50%; padding: 3px; background: linear-gradient(135deg,#fff1a8,#d8a42b,#fff3a6); box-shadow: 0 7px 20px rgba(0,0,0,.35), 0 0 24px rgba(255,210,80,.18); }
+  .rank-2 .podium-avatar { background: linear-gradient(135deg,#f5f7fa,#aeb8c5,#e9edf2); }
+  .rank-3 .podium-avatar { background: linear-gradient(135deg,#ffd7aa,#b87945,#f0bd82); }
+  .rank-4 .podium-avatar { background: linear-gradient(135deg,#a8d4ff,#4080c8,#b6d8ff); }
+  .podium-avatar-inner { width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; background: linear-gradient(145deg,#1a4a8a,#0a2050); border: 2px solid rgba(255,255,255,.72); color: #fff; font-family: 'Poppins',sans-serif; font-size: 18px; font-weight: 800; }
+  .rank-1 .podium-avatar-inner { font-size: 21px; }
+  .podium-crown { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-6deg); font-size: 22px; filter: drop-shadow(0 3px 6px rgba(0,0,0,.35)); }
+  .podium-medal { position: absolute; right: -4px; bottom: 0; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #d9a927; border: 2px solid rgba(255,255,255,.85); color: #fff; font-size: 9px; font-weight: 900; box-shadow: 0 4px 10px rgba(0,0,0,.3); }
+  .rank-2 .podium-medal { background: #98a4b3; } .rank-3 .podium-medal { background: #b87945; } .rank-4 .podium-medal { background: #3a70b0; }
+  .podium-name { width: 100%; margin-top: 13px; color: #fff; text-align: center; font-size: 10px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: rtl; }
+  .podium-stat { margin-top: 3px; color: rgba(255,255,255,.58); font-size: 8.5px; white-space: nowrap; }
+  .podium-block { position: relative; width: 100%; border-radius: 14px 14px 4px 4px; border: 1px solid rgba(255,255,255,.20); border-bottom: none; background: linear-gradient(145deg,rgba(255,255,255,.20),rgba(255,255,255,.07)); box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 -8px 25px rgba(0,0,0,.10); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .podium-block::after { content: ''; position: absolute; inset: 0; background: linear-gradient(120deg,rgba(255,255,255,.12),transparent 42%); pointer-events: none; }
+  .rank-1 .podium-block { height: 150px; background: linear-gradient(145deg,rgba(100,180,255,.34),rgba(255,255,255,.10)); }
+  .rank-2 .podium-block { height: 112px; background: linear-gradient(145deg,rgba(180,210,245,.25),rgba(255,255,255,.08)); }
+  .rank-3 .podium-block { height: 82px; background: linear-gradient(145deg,rgba(200,160,100,.25),rgba(255,255,255,.08)); }
+  .rank-4 .podium-block { height: 62px; background: linear-gradient(145deg,rgba(100,160,245,.24),rgba(255,255,255,.07)); }
+  .podium-number { position: relative; z-index: 2; color: rgba(255,255,255,.95); font-family: 'Poppins',sans-serif; font-size: 42px; line-height: 1; font-weight: 800; text-shadow: 0 4px 14px rgba(0,0,0,.25); }
+  .rank-1 .podium-number { font-size: 58px; color: #bde0ff; } .rank-4 .podium-number { font-size: 28px; }
+  .leaderboard-note { position: relative; z-index: 2; margin-top: 18px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.10); text-align: center; color: rgba(255,255,255,.45); font-size: 9.5px; line-height: 1.7; }
+  .leaderboard-note strong { color: rgba(255,255,255,.68); font-weight: 800; }
 
-.card-content{min-width:0;flex:1;padding-top:4px;padding-right:48px}
-.card-content h3{font-size:14px;line-height:1.25;font-weight:700;color:#f4f8ff;margin-bottom:4px}
-.card-description{color:#8da7c4;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:8px}
-.card-meta{display:flex;gap:8px;color:#b4c8df;font-size:10px;margin-bottom:7px;flex-wrap:wrap}
-.tag{display:inline-flex;align-items:center;padding:4px 8px;border-radius:20px;font-size:9px;background:rgba(47,110,204,.22);color:#6fb5ff}
-.level{display:flex;align-items:center;gap:5px;font-size:10px;color:#8eabca;margin-top:5px}
-.level-bars{display:flex;gap:2px;align-items:flex-end}
-.level-bars span{width:3px;border-radius:3px;background:#3b9eff}
-.level-bars span:nth-child(1){height:5px}.level-bars span:nth-child(2){height:9px}
-.level-bars span:nth-child(3){height:13px}.level-bars span:nth-child(4){height:8px}
-.play-small{
-  position:absolute;right:11px;bottom:13px;
-  width:42px;height:42px;border-radius:14px;border:none;
-  background:linear-gradient(135deg,#626cff,#7862ff);
-  color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 6px 18px rgba(92,91,255,.35);cursor:pointer
-}
-.card-actions{position:absolute;right:11px;top:12px;display:flex;gap:6px}
-.icon-button{border:0;background:none;color:#7f9bbd;font-size:18px;cursor:pointer}
+  /* ===== POPUPS ===== */
+  .popup-overlay { position: fixed; inset: 0; z-index: 10000; background: rgba(5,15,50,0.72); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+  .popup-overlay.open { opacity: 1; pointer-events: auto; }
+  .popup-sheet { width: 100%; max-width: 520px; background: rgba(8,20,55,0.92); border: 1px solid rgba(255,255,255,0.18); border-bottom: none; border-radius: 28px 28px 0 0; padding: 28px 24px 32px; box-shadow: 0 -20px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.2); transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.34,1.2,0.64,1); }
+  .popup-overlay.open .popup-sheet { transform: translateY(0); }
+  .popup-handle { width: 40px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.25); margin: 0 auto 20px; }
+  .popup-title { font-size: 17px; font-weight: 800; color: #fff; text-align: center; margin-bottom: 6px; }
+  .popup-sub { font-size: 12px; color: rgba(255,255,255,0.55); text-align: center; margin-bottom: 22px; line-height: 1.6; }
+  .phone-row { display: flex; gap: 10px; margin-bottom: 14px; direction: ltr; }
+  .prefix-box { flex-shrink: 0; width: 64px; height: 52px; background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.25); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.75); font-family: 'Poppins',sans-serif; letter-spacing: 0.5px; }
+  .phone-input { flex: 1; height: 52px; background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.25); border-radius: 14px; padding: 0 16px; font-size: 15px; font-weight: 600; color: #fff; font-family: 'Farhang','Estedad',sans-serif; direction: ltr; text-align: left; outline: none; transition: border-color 0.2s, background 0.2s; }
+  .phone-input:focus { border-color: rgba(0,150,255,0.7); background: rgba(255,255,255,0.15); }
+  .phone-input::placeholder { color: rgba(255,255,255,0.3); }
+  .btn-login { width: 100%; height: 50px; border-radius: 16px; border: none; background: linear-gradient(135deg,#0f3460,#1a5276,#1e90ff); color: #fff; font-family: 'Farhang','Estedad',sans-serif; font-size: 15px; font-weight: 800; cursor: pointer; margin-bottom: 12px; box-shadow: 0 8px 24px rgba(0,80,200,0.4); transition: transform 0.15s, opacity 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-login:hover { opacity: 0.9; }
+  .btn-login:active { transform: scale(0.97); opacity: 0.9; }
+  .btn-login:disabled { opacity: 0.5; cursor: not-allowed; }
+  .subscribe-btns { display: flex; flex-direction: column; gap: 9px; margin-top: 4px; }
+  .subscribe-divider { text-align: center; font-size: 11px; color: rgba(255,255,255,0.35); margin: 4px 0; }
+  .btn-sub { width: 100%; height: 46px; border-radius: 14px; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Farhang','Estedad',sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: transform 0.15s, opacity 0.15s; text-decoration: none; }
+  .btn-sub:active { transform: scale(0.97); opacity: 0.88; }
+  .btn-sub.telegram { background: linear-gradient(135deg,#1e88e5,#0d47a1); color: #fff; }
+  .btn-sub.bale { background: linear-gradient(135deg,#00c853,#1b5e20); color: #fff; }
+  .btn-sub.whatsapp { background: linear-gradient(135deg,#25d366,#128c7e); color: #fff; }
+  .btn-sub.price { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.65); font-size: 12px; }
+  .input-error { font-size: 11px; color: #6bb8ff; text-align: center; margin-top: -8px; margin-bottom: 8px; min-height: 16px; }
+  .price-overlay { position: fixed; inset: 0; z-index: 11000; background: rgba(5,10,30,0.8); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+  .price-overlay.open { opacity: 1; pointer-events: auto; }
+  .price-sheet { width: 100%; max-width: 400px; background: rgba(8,18,50,0.96); border: 1px solid rgba(255,255,255,0.18); border-radius: 28px; padding: 28px 22px 24px; box-shadow: 0 24px 80px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.2); transform: scale(0.9); transition: transform 0.35s cubic-bezier(0.34,1.3,0.64,1); }
+  .price-overlay.open .price-sheet { transform: scale(1); }
+  .price-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .price-title { font-size: 17px; font-weight: 800; color: #fff; }
+  .price-close { width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.1); border: none; color: rgba(255,255,255,0.6); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .plan-row { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+  .plan-name { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.9); }
+  .plan-prices { text-align: left; }
+  .plan-old { font-size: 11px; color: rgba(255,100,100,0.7); text-decoration: line-through; direction: ltr; }
+  .plan-new { font-size: 14px; font-weight: 800; color: #7ec8ff; direction: ltr; }
+  .price-subscribe-btns { display: flex; flex-direction: column; gap: 9px; margin-top: 16px; }
 
+  /* ===== TOAST ===== */
+  .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); z-index: 99999; background: rgba(8,20,55,0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 50px; padding: 10px 24px; font-size: 13px; font-weight: 700; color: #fff; box-shadow: 0 8px 32px rgba(0,0,0,0.4); opacity: 0; transition: all 0.3s ease; pointer-events: none; white-space: nowrap; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ═══════════════════════════════════════════════════
-   PLAYER
-═══════════════════════════════════════════════════ */
-.player-page{padding:28px 25px 40px}
-.player-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}
-.circle-btn{
-  width:42px;height:42px;border-radius:50%;
-  border:1px solid rgba(120,160,210,.18);background:rgba(8,28,49,.75);color:#fff;font-size:20px;cursor:pointer
-}
-.player-top-actions{display:flex;gap:10px}
-.player-cover{
-  width:100%;aspect-ratio:1/1;max-width:270px;margin:0 auto 25px;
-  border-radius:27px;overflow:hidden;
-  border:1px solid rgba(125,177,255,.45);
-  box-shadow:0 20px 50px rgba(0,0,0,.45),0 0 35px rgba(52,100,255,.13)
-}
-.player-cover img{width:100%;height:100%;object-fit:cover;display:block}
-.player-info{text-align:left;margin-bottom:18px}
-.player-info h2{font-size:22px;line-height:1.2;margin-bottom:8px}
-.player-info p{color:#87a1c0;font-size:13px}
-.player-meta{display:flex;gap:15px;margin-top:13px;color:#9bb1ca;font-size:11px}
-.player-tag{display:inline-block;padding:6px 12px;border-radius:20px;background:#5665df;color:#fff;font-size:10px;margin-bottom:8px}
-.progress-container{margin-top:15px}
-.progress-bar{position:relative;width:100%;height:5px;background:#253e5c;border-radius:10px;cursor:pointer}
-.progress-fill{position:absolute;left:0;top:0;height:100%;width:0%;border-radius:10px;background:linear-gradient(90deg,#506eff,#8c5fff)}
-.progress-dot{position:absolute;width:12px;height:12px;top:50%;transform:translate(-50%,-50%);left:0%;border-radius:50%;background:#fff;box-shadow:0 0 12px #6c74ff}
-.time-row{display:flex;justify-content:space-between;margin-top:9px;font-size:11px;color:#8da2bd}
-.player-controls{display:flex;justify-content:center;align-items:center;gap:35px;margin:17px 0}
-.skip{width:42px;height:42px;border:0;background:none;color:#fff;font-size:20px;cursor:pointer}
-.skip small{font-size:10px}
-.big-play{
-  width:78px;height:78px;border-radius:50%;
-  background:linear-gradient(135deg,#526bff,#845fff);
-  border:3px solid rgba(125,147,255,.8);
-  color:#fff;font-size:28px;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;
-  box-shadow:0 0 25px rgba(92,90,255,.55),inset 0 0 15px rgba(255,255,255,.08)
-}
-.waveform{height:50px;display:flex;align-items:center;justify-content:center;gap:3px;margin:10px 0 18px}
-.wave{width:3px;border-radius:10px;background:linear-gradient(180deg,#4b83ff,#8c63ff);animation:wave 1s ease-in-out infinite alternate}
-.wave:nth-child(2n){animation-delay:.1s}.wave:nth-child(3n){animation-delay:.2s}
-.wave:nth-child(4n){animation-delay:.3s}
-@keyframes wave{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
-.wave.paused{animation-play-state:paused}
-.controls-row{display:flex;gap:10px}
-.speed-box{
-  flex:1;display:flex;align-items:center;justify-content:space-around;
-  padding:10px;border-radius:24px;
-  background:rgba(7,29,52,.75);border:1px solid rgba(105,151,207,.18);
-  color:#91a7c2;font-size:10px;min-width:0
-}
-.speed{cursor:pointer}
-.speed.active{padding:7px 13px;color:#fff;border-radius:20px;background:#5a69ff;box-shadow:0 0 15px rgba(89,94,255,.35)}
-.volume-box{
-  width:130px;min-width:130px;max-width:130px;
-  display:flex;align-items:center;gap:8px;
-  padding:10px 12px;border-radius:24px;
-  background:rgba(7,29,52,.75);border:1px solid rgba(105,151,207,.18);overflow:hidden
-}
-.volume-icon{font-size:15px;flex:none}
-.volume-slider{
-  flex:1;min-width:0;width:100%;accent-color:#6c71ff;cursor:pointer;
-  -webkit-appearance:none;appearance:none;height:4px;border-radius:4px;
-  background:#253e5c;outline:none
-}
-.volume-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#6c71ff;cursor:pointer;box-shadow:0 0 6px rgba(108,113,255,.6)}
-.volume-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#6c71ff;cursor:pointer;border:none}
-.lesson-tabs{display:flex;margin-top:18px;padding:6px;border-radius:24px;background:#071b31}
-.lesson-tab{flex:1;text-align:center;padding:10px 5px;color:#8b9db7;font-size:12px;border-radius:20px;cursor:pointer}
-.lesson-tab.active{background:linear-gradient(135deg,#596cff,#755fff);color:#fff;box-shadow:0 5px 15px rgba(86,92,255,.3)}
-.transcript-box{margin-top:10px;padding:16px;border-radius:23px;background:linear-gradient(135deg,rgba(8,35,68,.96),rgba(3,20,38,.96));border:1px solid rgba(105,157,220,.16)}
-.transcript-loading{text-align:center;color:#6c8aaa;font-size:12px;padding:20px 0}
-.transcript-plain{white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;color:#eef4ff;font-size:13px;line-height:2;text-align:left;direction:ltr;padding:4px 2px}
-.transcript-plain::selection{background:rgba(100,110,255,.35)}
-.vocabulary{margin-top:10px;padding:13px;border-radius:20px;background:#06182c;border:1px solid rgba(102,153,219,.13)}
-.vocab-header{display:flex;justify-content:space-between;margin-bottom:10px;font-size:12px}
-.vocab-header span{color:#5eb1ff;font-size:10px}
-.vocab-list{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
-.vocab-list::-webkit-scrollbar{display:none}
-.vocab-item{min-width:88px;padding:10px;border-radius:14px;background:#0a2748;font-size:10px}
-.vocab-item strong{display:block;font-size:10px;margin-bottom:4px}
-.vocab-item small{color:#92a7c1;font-size:9px}
-.notes-box{margin-top:10px;padding:10px;border-radius:23px;background:linear-gradient(135deg,rgba(8,35,68,.96),rgba(3,20,38,.96));border:1px solid rgba(105,157,220,.16)}
-.notes-textarea{width:100%;min-height:130px;background:transparent;border:none;outline:none;color:#c8ddf5;font-size:12px;line-height:1.8;resize:none;font-family:Inter,Arial,sans-serif;padding:8px;direction:auto}
-.notes-textarea::placeholder{color:#4a6580}
-.repeat-button{width:100%;display:flex;align-items:center;gap:13px;margin-top:10px;padding:13px;border-radius:20px;border:1px solid rgba(94,149,214,.16);background:#06182c;color:#fff;cursor:pointer;text-align:left}
-.repeat-icon{font-size:22px;color:#50b7ff}
-.repeat-text strong{display:block;font-size:12px}
-.repeat-text small{color:#8298b4;font-size:9px}
+  .modal-close-btn { position: absolute; top: 18px; left: 18px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); background: rgba(255,255,255,.10); color: #fff; font-size: 30px; line-height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 50; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 8px 30px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.18); transition: transform .2s ease, background .2s ease, border-color .2s ease; }
+  .modal-close-btn:hover { transform: scale(1.06); background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.55); }
 
+  /* ===================================================
+     TABLET: 600px – 1023px
+     two-column main layout; sidebar stays sticky
+  =================================================== */
+  @media (min-width: 600px) {
+    :root {
+      --max-w: 100%;
+      --side-pad: 24px;
+      --card-w: 210px;
+      --card-h: 355px;
+      --hero-h: 300px;
+      --hero-radius: 32px;
+      --story-ring: 68px;
+      --learning-w: 236px;
+      --learning-h: 286px;
+      --more-w: 168px;
+      --more-h: 298px;
+    }
 
-/* ═══════════════════════════════════════════════════
-   TOAST
-═══════════════════════════════════════════════════ */
-.toast{
-  position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);
-  z-index:99999;background:rgba(8,20,55,.95);border:1px solid rgba(255,255,255,.2);
-  border-radius:50px;padding:10px 24px;font-size:13px;font-weight:700;color:#fff;
-  box-shadow:0 8px 32px rgba(0,0,0,.4);opacity:0;transition:all .3s ease;
-  pointer-events:none;white-space:nowrap
-}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .wrap {
+      max-width: 820px;
+      padding: 0;
+    }
 
+    header {
+      margin: 18px var(--side-pad) 8px;
+      padding: 11px 20px;
+      border-radius: 20px;
+    }
+    .brand-mark { width: 32px; height: 32px; font-size: 16px; border-radius: 10px; }
+    .brand-name { font-size: 15.5px; }
+    .bell, .login-icon-btn { width: 38px; height: 38px; border-radius: 13px; }
+    .bell svg { width: 18px; height: 18px; }
+    .login-icon-btn svg { width: 20px; height: 20px; }
 
-/* ═══════════════════════════════════════════════════
-   LOGIN POPUP
-═══════════════════════════════════════════════════ */
-.popup-overlay{
-  position:fixed;inset:0;z-index:10000;
-  background:rgba(5,15,50,.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  display:flex;align-items:flex-end;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity .3s ease
-}
-.popup-overlay.open{opacity:1;pointer-events:auto}
-.popup-sheet{
-  width:100%;max-width:520px;
-  background:rgba(8,20,55,.92);border:1px solid rgba(255,255,255,.18);border-bottom:none;
-  border-radius:28px 28px 0 0;padding:28px 24px 32px;
-  box-shadow:0 -20px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.2);
-  transform:translateY(100%);transition:transform .4s cubic-bezier(.34,1.2,.64,1)
-}
-.popup-overlay.open .popup-sheet{transform:translateY(0)}
-.popup-handle{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.25);margin:0 auto 20px}
-.popup-title{font-size:17px;font-weight:800;color:#fff;text-align:center;margin-bottom:6px}
-.popup-sub{font-size:12px;color:rgba(255,255,255,.55);text-align:center;margin-bottom:22px;line-height:1.6}
-.phone-row{display:flex;gap:10px;margin-bottom:14px;direction:ltr}
-.prefix-box{flex-shrink:0;width:64px;height:52px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.25);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:rgba(255,255,255,.75);letter-spacing:.5px}
-.phone-input{flex:1;height:52px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.25);border-radius:14px;padding:0 16px;font-size:15px;font-weight:600;color:#fff;font-family:Inter,sans-serif;direction:ltr;text-align:left;outline:none;transition:border-color .2s,background .2s}
-.phone-input:focus{border-color:rgba(0,150,255,.7);background:rgba(255,255,255,.15)}
-.phone-input::placeholder{color:rgba(255,255,255,.3)}
-.input-error{font-size:11px;color:#6bb8ff;text-align:center;margin-top:-8px;margin-bottom:8px;min-height:16px}
-.btn-login{width:100%;height:50px;border-radius:16px;border:none;background:linear-gradient(135deg,#0f3460,#1a5276,#1e90ff);color:#fff;font-family:Inter,sans-serif;font-size:15px;font-weight:800;cursor:pointer;margin-bottom:12px;box-shadow:0 8px 24px rgba(0,80,200,.4);transition:transform .15s,opacity .15s;display:flex;align-items:center;justify-content:center;gap:8px}
-.btn-login:active{transform:scale(.97);opacity:.9}
-.btn-login:disabled{opacity:.5;cursor:not-allowed}
-.subscribe-divider{text-align:center;font-size:11px;color:rgba(255,255,255,.35);margin:4px 0}
-.subscribe-btns{display:flex;flex-direction:column;gap:9px;margin-top:4px}
-.btn-sub{width:100%;height:46px;border-radius:14px;border:none;display:flex;align-items:center;justify-content:center;gap:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:transform .15s,opacity .15s;text-decoration:none}
-.btn-sub:active{transform:scale(.97);opacity:.88}
-.btn-sub.telegram{background:linear-gradient(135deg,#1e88e5,#0d47a1);color:#fff}
-.btn-sub.bale{background:linear-gradient(135deg,#00c853,#1b5e20);color:#fff}
-.btn-sub.whatsapp{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff}
+    .hero {
+      margin: 16px var(--side-pad) 0;
+      border-radius: var(--hero-radius);
+    }
+    .hero-prev, .hero-next { width: 38px; height: 38px; }
+    .hero-prev { right: 16px; } .hero-next { left: 16px; }
+    .dot { width: 7px; height: 7px; }
 
+    .stories-outer { margin: 20px var(--side-pad) 0; }
+    .stories-wrapper { padding: 18px 10px 15px; border-radius: 26px; }
+    .stories-scroll { gap: 20px; padding: 3px 10px 6px; }
+    .story-label { font-size: 11px; }
 
-/* ═══════════════════════════════════════════════════
-   PRICE POPUP
-═══════════════════════════════════════════════════ */
-.price-overlay{position:fixed;inset:0;z-index:11000;background:rgba(5,10,30,.8);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s ease}
-.price-overlay.open{opacity:1;pointer-events:auto}
-.price-sheet{width:100%;max-width:400px;background:rgba(8,18,50,.96);border:1px solid rgba(255,255,255,.18);border-radius:28px;padding:28px 22px 24px;box-shadow:0 24px 80px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.2);transform:scale(.9);transition:transform .35s cubic-bezier(.34,1.3,.64,1)}
-.price-overlay.open .price-sheet{transform:scale(1)}
-.price-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.price-title{font-size:17px;font-weight:800;color:#fff}
-.price-close{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.1);border:none;color:rgba(255,255,255,.6);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.plan-row{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
-.plan-name{font-size:13px;font-weight:700;color:rgba(255,255,255,.9)}
-.plan-old{font-size:11px;color:rgba(255,100,100,.7);text-decoration:line-through;direction:ltr}
-.plan-new{font-size:14px;font-weight:800;color:#7ec8ff;direction:ltr}
-.price-subscribe-btns{display:flex;flex-direction:column;gap:9px;margin-top:16px}
+    .container { padding: 4px var(--side-pad) 60px; }
+    .row-label { font-size: 15px; margin: 28px 0 14px; }
 
+    .carousel { margin: 0 calc(-1 * var(--side-pad)); padding-left: var(--side-pad); padding-right: var(--side-pad); gap: 18px; }
+    .card-title { font-size: 17px; }
+    .card-desc { font-size: 11.5px; }
+    .btn-read { font-size: 12.5px; padding: 9px 18px; }
+    .badge { font-size: 11.5px; padding: 5px 14px; }
 
-/* ═══════════════════════════════════════════════════
-   RESPONSIVE
-═══════════════════════════════════════════════════ */
-@media(max-width:600px){
-  .app{padding:0}
-  .phone{width:100%;min-height:100vh;max-height:none;border-radius:0;border:none}
-}
-@media(min-width:601px){.phone{height:900px}}
+    .learning-carousel { gap: 20px; padding: 14px 0 24px; }
+    .learning-card-title { font-size: 17px; }
+    .learning-enter { height: 42px; font-size: 14px; }
+
+    .more-item img { border-radius: 16px; }
+
+    .monthly-leaderboard {
+      margin: 36px var(--side-pad) 50px;
+      padding: 28px 22px 24px;
+      border-radius: 32px;
+    }
+    .leaderboard-title { font-size: 23px; }
+    .podium-stage { height: 360px; gap: 10px; }
+    .podium-avatar-wrap { width: 68px; height: 68px; }
+    .podium-person.rank-1 .podium-avatar-wrap { width: 84px; height: 84px; }
+    .podium-name { font-size: 11px; }
+    .podium-stat { font-size: 9px; }
+    .podium-number { font-size: 46px; }
+    .rank-1 .podium-number { font-size: 62px; }
+    .rank-4 .podium-number { font-size: 30px; }
+    .rank-1 .podium-block { height: 165px; }
+    .rank-2 .podium-block { height: 124px; }
+    .rank-3 .podium-block { height: 92px; }
+    .rank-4 .podium-block { height: 70px; }
+
+    .popup-sheet { max-width: 560px; }
+    .price-sheet { max-width: 440px; }
+  }
+
+  /* ===================================================
+     DESKTOP: 1024px+
+     two-column layout: main content + sticky sidebar
+  =================================================== */
+  @media (min-width: 1024px) {
+    :root {
+      --side-pad: 0px;
+      --card-w: 220px;
+      --card-h: 368px;
+      --hero-h: 380px;
+      --hero-radius: 36px;
+      --story-ring: 70px;
+      --learning-w: 248px;
+      --learning-h: 296px;
+      --more-w: 176px;
+      --more-h: 310px;
+    }
+
+    body { background-attachment: fixed; }
+
+    /* centred shell */
+    .page-shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* two-column grid */
+    .desktop-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .desktop-main { min-width: 0; }
+
+    /* sticky sidebar */
+    .desktop-sidebar {
+      position: sticky;
+      top: 90px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .wrap {
+      max-width: 1200px;
+      padding: 0 40px;
+    }
+
+    /* header */
+    header {
+      margin: 20px 0 10px;
+      padding: 13px 24px;
+      border-radius: 22px;
+    }
+    .brand-mark { width: 36px; height: 36px; font-size: 18px; border-radius: 11px; }
+    .brand-name { font-size: 16.5px; letter-spacing: 0.4px; }
+    .header-actions { gap: 10px; }
+    .bell { width: 40px; height: 40px; border-radius: 14px; }
+    .bell svg { width: 19px; height: 19px; }
+    .login-icon-btn { width: 40px; height: 40px; border-radius: 14px; }
+    .login-icon-btn svg { width: 21px; height: 21px; }
+
+    /* hero spans full main column */
+    .hero {
+      margin: 14px 0 0;
+      border-radius: var(--hero-radius);
+    }
+    .hero-prev { right: 20px; width: 44px; height: 44px; }
+    .hero-next { left: 20px; width: 44px; height: 44px; }
+    .dot { width: 8px; height: 8px; }
+    .hero-dots { bottom: 18px; gap: 7px; }
+
+    /* stories */
+    .stories-outer { margin: 22px 0 0; }
+    .stories-wrapper { padding: 18px 12px 16px; border-radius: 28px; }
+    .stories-scroll { gap: 22px; padding: 3px 12px 6px; }
+
+    /* container */
+    .container { padding: 4px 0 60px; }
+    .row-label { font-size: 16px; margin: 30px 0 16px; }
+
+    .carousel { margin: 0; padding-left: 0; padding-right: 0; gap: 20px; }
+    .card-title { font-size: 18px; }
+    .card-desc { font-size: 12px; }
+    .btn-read { font-size: 13px; padding: 10px 20px; }
+    .badge { font-size: 12px; padding: 6px 15px; }
+
+    .learning-carousel { gap: 22px; padding: 16px 0 26px; }
+    .learning-card-title { font-size: 18px; }
+    .learning-enter { height: 44px; font-size: 15px; border-radius: 18px; }
+
+    .more-carousel { gap: 5px; }
+    .more-item img { border-radius: 18px; }
+    .more-read-btn { font-size: 13px; width: 116px; height: 40px; border-radius: 16px; }
+
+    /* sidebar: leaderboard */
+    .monthly-leaderboard {
+      margin: 0;
+      padding: 24px 18px 20px;
+      border-radius: 28px;
+    }
+    .leaderboard-title { font-size: 18px; }
+    .leaderboard-subtitle { font-size: 10.5px; }
+    .leaderboard-kicker { font-size: 9.5px; }
+    .podium-stage { height: 280px; gap: 6px; }
+    .podium-avatar-wrap { width: 54px; height: 54px; }
+    .podium-person.rank-1 .podium-avatar-wrap { width: 68px; height: 68px; }
+    .podium-name { font-size: 9.5px; }
+    .podium-stat { font-size: 7.5px; }
+    .podium-number { font-size: 36px; }
+    .rank-1 .podium-number { font-size: 48px; color: #bde0ff; }
+    .rank-4 .podium-number { font-size: 24px; }
+    .rank-1 .podium-block { height: 130px; }
+    .rank-2 .podium-block { height: 98px; }
+    .rank-3 .podium-block { height: 72px; }
+    .rank-4 .podium-block { height: 56px; }
+    .podium-crown { font-size: 18px; top: -13px; }
+    .podium-medal { width: 19px; height: 19px; font-size: 8px; }
+    .leaderboard-note { font-size: 9px; margin-top: 14px; padding-top: 10px; }
+    .monthly-leaderboard::before { width: 200px; height: 200px; top: 60px; }
+
+    /* sidebar quick links card */
+    .sidebar-links-card {
+      padding: 20px 18px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.22);
+      box-shadow: 0 14px 40px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.2);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+    }
+    .sidebar-links-title {
+      font-size: 13px; font-weight: 800; color: rgba(255,255,255,.85);
+      margin-bottom: 14px; padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      letter-spacing: -0.2px;
+    }
+    .sidebar-links-list { display: flex; flex-direction: column; gap: 8px; }
+    .sidebar-link-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 14px;
+      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12);
+      cursor: pointer; text-decoration: none;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    }
+    .sidebar-link-item:hover {
+      background: rgba(255,255,255,.13); border-color: rgba(255,255,255,.25);
+      transform: translateX(-2px);
+    }
+    .sidebar-link-icon {
+      width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px;
+      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18);
+    }
+    .sidebar-link-text { display: flex; flex-direction: column; gap: 1px; }
+    .sidebar-link-name { font-size: 12.5px; font-weight: 700; color: #fff; }
+    .sidebar-link-desc { font-size: 10px; color: rgba(255,255,255,.45); }
+
+    /* popup stays centered on desktop */
+    .popup-overlay { align-items: center; }
+    .popup-sheet {
+      max-width: 500px;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.18);
+      transform: scale(0.92) translateY(0);
+    }
+    .popup-overlay.open .popup-sheet { transform: scale(1) translateY(0); }
+    .popup-handle { display: none; }
+    .price-sheet { max-width: 460px; }
+  }
+
+  /* ===================================================
+     WIDE DESKTOP: 1400px+
+     more breathing room
+  =================================================== */
+  @media (min-width: 1400px) {
+    .wrap { max-width: 1360px; padding: 0 60px; }
+    :root {
+      --card-w: 236px;
+      --card-h: 386px;
+      --hero-h: 420px;
+      --learning-w: 264px;
+      --learning-h: 310px;
+    }
+    header { padding: 14px 28px; border-radius: 24px; }
+    .desktop-grid { grid-template-columns: 1fr 340px; gap: 32px; }
+  }
+
+  /* ===== SMALL MOBILE ===== */
+  @media (max-width: 380px) {
+    :root { --story-ring: 70px; }
+    .stories-outer { margin-left: 10px; margin-right: 10px; }
+    .stories-wrapper { padding: 14px 5px 12px; border-radius: 23px; }
+    .stories-scroll { gap: 12px; padding-left: 6px; padding-right: 6px; }
+    .story-label { max-width: 70px; font-size: 10px; }
+    .podium-stage { height: 305px; gap: 5px; }
+    .podium-avatar-wrap { width: 56px; height: 56px; }
+    .podium-person.rank-1 .podium-avatar-wrap { width: 70px; height: 70px; }
+    .podium-name { font-size: 9px; }
+    .podium-stat { font-size: 8px; }
+  }
+
+  /* ===== REDUCED MOTION ===== */
+  @media (prefers-reduced-motion: reduce) {
+    .slides { transition: none; }
+    .learning-card, .card-wrap, .sidebar-link-item { transition: none; }
+    .story-action-btn::before { animation: none; }
+  }
 </style>
 </head>
 <body>
-<div class="app"><div class="phone">
+<div class="wrap">
 
-<!-- ══════════════════ HOME SCREEN ══════════════════ -->
-<section class="screen active" id="homeScreen">
-
-  <header class="header">
-    <div class="top-row">
-      <div class="brand">
-        <div class="sound-logo">
-          <div class="sound-bars"><span></span><span></span><span></span><span></span><span></span><span></span></div>
-        </div>
-        <div class="brand-text"><h1>English</h1><p>Podcast</p></div>
-      </div>
-      <button class="login-icon-btn" id="loginIconBtn" type="button" onclick="onLoginIconClick()">
+  <header>
+    <div class="brand">
+      <div class="brand-mark">L</div>
+      <div class="brand-name">planlife.ir</div>
+    </div>
+    <div class="header-actions">
+      <button class="login-icon-btn" id="loginIconBtn" type="button" aria-label="ورود" onclick="onLoginIconClick()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.6 3.6-6 8-6s8 2.4 8 6"/>
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 20c0-3.6 3.6-6 8-6s8 2.4 8 6"/>
         </svg>
       </button>
+      <div class="bell">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M12 3a5 5 0 0 0-5 5v3.2c0 .5-.2 1-.5 1.4L5 15h14l-1.5-2.4a2.2 2.2 0 0 1-.5-1.4V8a5 5 0 0 0-5-5Z" stroke="rgba(255,255,255,0.9)" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M9.5 18a2.5 2.5 0 0 0 5 0" stroke="rgba(255,255,255,0.9)" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
     </div>
   </header>
 
-  <div class="hero">
-    <button class="search-button">⌕</button>
-    <div class="hero-text"><p>Better English</p><strong>Brighter Future</strong></div>
-  </div>
+  <!-- DESKTOP TWO-COLUMN wrapper (JS sets this up) -->
+  <!-- On mobile/tablet: flat structure. On desktop: grid via JS class -->
 
-  <!-- ── تب‌های منبع اصلی (شیشه‌ای) ── -->
-  <div class="source-tabs-wrap">
-    <div class="source-tabs" id="sourceTabs"></div>
-  </div>
-
-  <!-- ── زیردسته‌های منبع انتخابی ── -->
-  <div class="categories" id="categoryPills"></div>
-
-  <!-- ── لیست پادکست‌ها ── -->
-  <div class="list" id="podcastList"></div>
-
-</section>
-
-<!-- ══════════════════ PLAYER SCREEN ══════════════════ -->
-<section class="screen" id="playerScreen">
-  <div class="player-page">
-    <div class="player-top">
-      <button class="circle-btn" onclick="goHome()">‹</button>
-      <div class="player-top-actions">
-        <button class="circle-btn" onclick="togglePlayerFavorite()" id="playerFavorite">♡</button>
-        <button class="circle-btn">···</button>
+  <div class="hero" id="hero">
+    <div class="slides" id="slides">
+      <div class="slide slide-1">
+        <img class="slide-bg" src="http://fs3.centraldnserver.com/~planlife/pics/english/slide1.jpg" alt="" onerror="this.style.display='none'">
+      </div>
+      <div class="slide slide-2">
+        <img class="slide-bg" src="http://fs3.centraldnserver.com/~planlife/pics/english/slide2.jpg" alt="" onerror="this.style.display='none'">
+      </div>
+      <div class="slide slide-3">
+        <img class="slide-bg" src="http://fs3.centraldnserver.com/~planlife/pics/english/slide3.jpg" alt="" onerror="this.style.display='none'">
       </div>
     </div>
-    <div class="player-cover"><img id="playerImage" src="" alt=""></div>
-    <div class="player-info">
-      <span class="player-tag" id="playerTag">Intermediate</span>
-      <h2 id="playerTitle">Podcast Title</h2>
-      <p id="playerDescription">Description</p>
-      <div class="player-meta">
-        <span id="playerEpisodes">🎧 Episodes</span>
-        <span id="playerDurEl">◷ Duration</span>
-      </div>
-    </div>
-    <audio id="audioPlayer" preload="metadata"></audio>
-    <div class="progress-container">
-      <div class="progress-bar" id="progressBar">
-        <div class="progress-fill" id="progressFill"></div>
-        <div class="progress-dot" id="progressDot"></div>
-      </div>
-      <div class="time-row"><span id="currentTime">00:00</span><span id="audioDuration">00:00</span></div>
-    </div>
-    <div class="player-controls">
-      <button class="skip" onclick="skip(-15)">↶<small>15</small></button>
-      <button class="big-play" id="mainPlay" onclick="togglePlay()">▶</button>
-      <button class="skip" onclick="skip(15)"><small>15</small>↷</button>
-    </div>
-    <div class="waveform" id="waveform"></div>
-    <div class="controls-row">
-      <div class="speed-box">
-        <span class="speed" data-speed=".75">0.75x</span>
-        <span class="speed active" data-speed="1">1x</span>
-        <span class="speed" data-speed="1.25">1.25x</span>
-        <span class="speed" data-speed="1.5">1.5x</span>
-      </div>
-      <div class="volume-box">
-        <span class="volume-icon">🔊</span>
-        <input class="volume-slider" type="range" min="0" max="1" step=".01" value="1" id="volumeSlider">
-      </div>
-    </div>
-    <div class="lesson-tabs">
-      <div class="lesson-tab active" onclick="switchTab(this,'transcript')">Transcript</div>
-      <div class="lesson-tab" onclick="switchTab(this,'vocab')">Vocabulary</div>
-      <div class="lesson-tab" onclick="switchTab(this,'notes')">Notes</div>
-    </div>
-    <div class="transcript-box" id="transcriptContent">
-      <div class="transcript-loading" id="transcriptLoading">Loading transcript...</div>
-      <div id="transcriptLines"></div>
-    </div>
-    <div class="vocabulary" id="vocabContent" style="display:none">
-      <div class="vocab-header"><strong>📖 Vocabulary</strong><span>See All ›</span></div>
-      <div class="vocab-list" id="vocabList"></div>
-    </div>
-    <div class="notes-box" id="notesContent" style="display:none">
-      <textarea class="notes-textarea" placeholder="Write your notes here... یادداشت‌هات رو اینجا بنویس…"></textarea>
-    </div>
-    <button class="repeat-button" onclick="repeatSentence()">
-      <div class="repeat-icon">↻</div>
-      <div class="repeat-text"><strong>Repeat this sentence</strong><small>تکرار این جمله</small></div>
-      <div style="margin-left:auto">›</div>
+    <button class="hero-prev" id="heroPrev" aria-label="اسلاید قبلی">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
+    <button class="hero-next" id="heroNext" aria-label="اسلاید بعدی">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="hero-dots">
+      <div class="dot active" data-i="0"></div>
+      <div class="dot" data-i="1"></div>
+      <div class="dot" data-i="2"></div>
+    </div>
   </div>
-</section>
 
-</div></div><!-- /phone /app -->
+  <div class="stories-outer">
+    <div class="stories-wrapper">
+      <div class="stories-scroll" id="stories-scroll">
+        <div class="story-item" data-index="0" data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" data-caption="پادکست‌های رایگان PlanLife درباره قانون جذب و تغییر افکار 🎙️" data-btn-show="true" data-btn-text="شنیدن پادکست‌ها" data-btn-link="https://planlife.ir/Pages/podcasts_free/index.html">
+          <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779450993/phonto_jmcfqk.png" alt="پادکست"></div></div>
+          <div class="story-label">پادکست</div>
+        </div>
+        <div class="story-item" data-index="1" data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" data-caption="دوره‌های تخصصی آموزش قانون جذب، باور و تغییر رفتار 🚀" data-btn-show="true" data-btn-text="مشاهده دوره‌ها" data-btn-link="https://planlife.ir/dores.html">
+          <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779278212/IMG_0906_o7pnur.jpg" alt="دوره‌ها"></div></div>
+          <div class="story-label">دوره‌ها</div>
+        </div>
+        <div class="story-item" data-index="2" data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" data-caption="کتابخانه — بهترین کتاب‌های رشد فردی و تقویت باور 📚" data-btn-show="true" data-btn-text="ورود به کتابخانه" data-btn-link="https://planlife.ir/Pages/Book/index.html">
+          <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781397270/IMG_1897_kgkgss.jpg" alt="کتابخانه"></div></div>
+          <div class="story-label">کتابخانه</div>
+        </div>
+        <div class="story-item" data-index="3" data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" data-caption="مجله ماورایی — مقالات انگیزشی درباره تغییر افکار 📰" data-btn-show="true" data-btn-text="ورود به مجله" data-btn-link="https://planlife.ir/Pages/Magazine/index.html">
+          <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779568027/IMG_1109_xpxghq.png" alt="مجله"></div></div>
+          <div class="story-label">مجله</div>
+        </div>
+        <div class="story-item" data-index="4" data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" data-caption="تمرینات مجازی روزانه و آرامش ذهن برای موفقیت 🧘" data-btn-show="true" data-btn-text="شروع تمرین ذهنی" data-btn-link="https://planlife.ir/Pages/Tamrin/index.html">
+          <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454914/IMG_0217_fnjv9i.jpg" alt="تمرینات"></div></div>
+          <div class="story-label">تمرینات</div>
+        </div>
+        <div class="story-item" data-index="5" data-img="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" data-caption="پاکسازی ذهن و رهایی از افکار منفی 🔥" data-btn-show="true" data-btn-text="شروع پاکسازی ذهن" data-btn-link="https://planlife.ir/Pages/paksazi/index.html">
+          <div class="story-ring"><div class="story-avatar"><img src="http://fs3.centraldnserver.com/~planlife/pics/IMG_2478.png" alt="پاکسازی ذهن"></div></div>
+          <div class="story-label">پاکسازی ذهن</div>
+        </div>
+        <div class="story-item" data-index="6" data-img="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg" data-caption="تابلو آرزوها و ویژوالایزیشن برای تحقق رویاهای قانون جذب 🔖" data-btn-show="true" data-btn-text="ساخت تابلو آرزو" data-btn-link="https://planlife.ir/Pages/visionboard/index.html">
+          <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dwxaids40/image/upload/q_auto/f_auto/v1781592734/IMG_1963_hhf5wp.jpg" alt="تابلو آرزو"></div></div>
+          <div class="story-label">تابلو آرزو</div>
+        </div>
+        <div class="story-item" data-index="7" data-img="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" data-caption="موزیک‌های انگیزشی و مدیتیشن برای آرامش ذهن 🎵" data-btn-show="true" data-btn-text="گوش دادن به موزیک‌ها" data-btn-link="https://planlife.ir/Pages/Music/index.html">
+          <div class="story-ring"><div class="story-avatar"><img src="https://res.cloudinary.com/dshielkdt/image/upload/q_auto/f_auto/v1779454037/IMG_0213_mrxvu1.png" alt="موزیک"></div></div>
+          <div class="story-label">موزیک</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- STORY MODAL -->
+  <div id="story-modal">
+    <div class="story-container">
+      <div class="story-progress-bar" id="story-progress-bar"></div>
+      <div class="story-modal-header">
+        <button type="button" class="modal-close-btn" aria-label="بستن">×</button>
+        <div class="story-logo-section">
+          <div class="story-logo-img"><img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="PlanLife"></div>
+          <div class="story-branding-text">planlife.ir</div>
+        </div>
+        <div class="story-modal-close" onclick="closeStoryModal()">✕</div>
+      </div>
+      <div class="story-modal-content" id="story-modal-content">
+        <div class="story-nav-left" onclick="storyNavigate(-1)"></div>
+        <div class="story-nav-right" onclick="storyNavigate(1)"></div>
+      </div>
+      <div class="story-footer">
+        <div class="story-caption" id="story-caption"></div>
+        <a class="story-action-btn" id="story-action-btn" href="#" target="_blank" rel="noopener"></a>
+      </div>
+    </div>
+  </div>
 
-<!-- ══════════════════ LOGIN POPUP ══════════════════ -->
+  <!-- MAIN CONTENT AREA (becomes left column on desktop) -->
+  <div id="main-content-area">
+
+    <div class="container">
+      <div class="row-label">تمرینات ۴ گزینه‌ای</div>
+      <div class="carousel" id="row1"></div>
+
+      <div class="row-label extra-label">روش‌های یادگیری</div>
+      <div class="learning-carousel" id="learningCarousel">
+        <div class="learning-item"><div class="learning-card" data-title="ویدیو آموزشی" data-url="https://planlife.ir/english/videoamozesh">
+          <img class="learning-bg" src="http://fs3.centraldnserver.com/~planlife/pics/english/videoamozesh.jpeg" alt="ویدیو آموزشی">
+          <div class="learning-overlay"></div>
+          <div class="learning-card-title">ویدیو آموزشی</div>
+        </div><button class="learning-enter" type="button">ورود</button></div>
+
+        <div class="learning-item"><div class="learning-card" data-title="پادکست انگلیسی" data-url="">
+          <img class="learning-bg" src="http://fs3.centraldnserver.com/~planlife/pics/english/podcastamozesh.webp" alt="پادکست انگلیسی">
+          <div class="learning-overlay"></div>
+          <div class="learning-card-title">پادکست انگلیسی</div>
+        </div><button class="learning-enter" type="button">ورود</button></div>
+
+        <div class="learning-item"><div class="learning-card" data-title="آموزش با هوش مصنوعی" data-url="">
+          <img class="learning-bg" src="http://fs3.centraldnserver.com/~planlife/pics/english/aiamozesh.webp" alt="آموزش با هوش مصنوعی">
+          <div class="learning-overlay"></div>
+          <div class="learning-card-title">آموزش با هوش مصنوعی</div>
+        </div><button class="learning-enter" type="button">ورود</button></div>
+
+        <div class="learning-item"><div class="learning-card" data-title="تمرینات" data-url="">
+          <img class="learning-bg" src="http://fs3.centraldnserver.com/~planlife/pics/english/tamrin.jpg" alt="تمرینات">
+          <div class="learning-overlay"></div>
+          <div class="learning-card-title">تمرینات</div>
+        </div><button class="learning-enter" type="button">ورود</button></div>
+      </div>
+
+      <div class="row-label more-label">بیشتر بدانیم</div>
+      <div class="more-carousel">
+        <div class="more-item"><img src="http://fs3.centraldnserver.com/~planlife/pics/english/Png/kingston.webp" alt="London"><button class="more-read-btn">خواندن</button></div>
+        <div class="more-item"><img src="http://fs3.centraldnserver.com/~planlife/pics/english/Png/london.webp" alt="London"><button class="more-read-btn">خواندن</button></div>
+        <div class="more-item"><img src="http://fs3.centraldnserver.com/~planlife/pics/english/Png/miami.webp" alt="Miami"><button class="more-read-btn">خواندن</button></div>
+        <div class="more-item"><img src="http://fs3.centraldnserver.com/~planlife/pics/english/Png/amesterdam.webp" alt="Amsterdam"><button class="more-read-btn">خواندن</button></div>
+        <div class="more-item"><img src="http://fs3.centraldnserver.com/~planlife/pics/english/Png/d7d63a2a-efc6-4238-ab4d-03c16513b540.webp" alt=""><button class="more-read-btn">خواندن</button></div>
+        <div class="more-item"><img src="http://fs3.centraldnserver.com/~planlife/pics/english/Png/rosia.webp" alt="Russia"><button class="more-read-btn">خواندن</button></div>
+        <div class="more-item"><img src="http://fs3.centraldnserver.com/~planlife/pics/english/Png/chicago.webp" alt="Chicago"><button class="more-read-btn">خواندن</button></div>
+        <div class="more-item"><img src="http://fs3.centraldnserver.com/~planlife/pics/english/Png/spain.webp" alt="Spain"><button class="more-read-btn">خواندن</button></div>
+        <div class="more-item"><img src="http://fs3.centraldnserver.com/~planlife/pics/english/Png/kingston.webp" alt="Kingston"><button class="more-read-btn">خواندن</button></div>
+        <div class="more-item"><img src="http://fs3.centraldnserver.com/~planlife/pics/english/Png/london.webp" alt="London"><button class="more-read-btn">خواندن</button></div>
+        <div class="more-item"><img src="http://fs3.centraldnserver.com/~planlife/pics/english/Png/miami.webp" alt="Miami"><button class="more-read-btn">خواندن</button></div>
+        <div class="more-item"><img src="http://fs3.centraldnserver.com/~planlife/pics/english/Png/baku.webp" alt="Baku"><button class="more-read-btn">خواندن</button></div>
+      </div>
+    </div>
+
+  </div><!-- /main-content-area -->
+
+  <!-- LEADERBOARD: on mobile/tablet stays below; on desktop goes to sidebar -->
+  <section id="leaderboard-section" class="monthly-leaderboard" aria-label="برترین‌های ماه پیش">
+    <div class="leaderboard-head">
+      <div class="leaderboard-kicker">🏆 گزارش ماهانه</div>
+      <div class="leaderboard-title">برترین‌های ماه پیش</div>
+      <div class="leaderboard-subtitle">بیشترین مشارکت در تمرین‌ها، استمرار و زمانی که برای یادگیری صرف شده</div>
+    </div>
+    <div class="podium-stage">
+      <div class="podium-person rank-4">
+        <div class="podium-avatar-wrap"><div class="podium-avatar"><div class="podium-avatar-inner">AR</div></div><div class="podium-medal">۴</div></div>
+        <div class="podium-name">آرین</div><div class="podium-stat">نمادین • ۲۸ تمرین</div>
+        <div class="podium-block"><div class="podium-number">4</div></div>
+      </div>
+      <div class="podium-person rank-2">
+        <div class="podium-avatar-wrap"><div class="podium-avatar"><div class="podium-avatar-inner">SA</div></div><div class="podium-medal">۲</div></div>
+        <div class="podium-name">سارا</div><div class="podium-stat">نمادین • ۴۶ تمرین</div>
+        <div class="podium-block"><div class="podium-number">2</div></div>
+      </div>
+      <div class="podium-person rank-1">
+        <div class="podium-avatar-wrap"><div class="podium-crown">👑</div><div class="podium-avatar"><div class="podium-avatar-inner">AM</div></div><div class="podium-medal">۱</div></div>
+        <div class="podium-name">آرمان</div><div class="podium-stat">نمادین • ۶۴ تمرین</div>
+        <div class="podium-block"><div class="podium-number">1</div></div>
+      </div>
+      <div class="podium-person rank-3">
+        <div class="podium-avatar-wrap"><div class="podium-avatar"><div class="podium-avatar-inner">NI</div></div><div class="podium-medal">۳</div></div>
+        <div class="podium-name">نیلوفر</div><div class="podium-stat">نمادین • ۳۸ تمرین</div>
+        <div class="podium-block"><div class="podium-number">3</div></div>
+      </div>
+    </div>
+    <div class="leaderboard-note">
+      این آمار فعلاً <strong>نمادین</strong> است؛ بعداً رتبه‌بندی و اعداد واقعی به‌صورت الگوریتمی از فعالیت کاربران محاسبه می‌شوند.
+    </div>
+  </section>
+
+</div><!-- /wrap -->
+
+<!-- Sidebar quick links (hidden on mobile/tablet, injected on desktop) -->
+<div id="sidebar-links-tpl" style="display:none">
+  <div class="sidebar-links-card">
+    <div class="sidebar-links-title">دسترسی سریع</div>
+    <div class="sidebar-links-list">
+      <a class="sidebar-link-item" href="https://planlife.ir/Pages/podcasts_free/index.html" target="_blank">
+        <div class="sidebar-link-icon">🎙️</div>
+        <div class="sidebar-link-text">
+          <div class="sidebar-link-name">پادکست</div>
+          <div class="sidebar-link-desc">پادکست‌های رایگان قانون جذب</div>
+        </div>
+      </a>
+      <a class="sidebar-link-item" href="https://planlife.ir/dores.html" target="_blank">
+        <div class="sidebar-link-icon">🚀</div>
+        <div class="sidebar-link-text">
+          <div class="sidebar-link-name">دوره‌ها</div>
+          <div class="sidebar-link-desc">دوره‌های تخصصی آموزشی</div>
+        </div>
+      </a>
+      <a class="sidebar-link-item" href="https://planlife.ir/Pages/Book/index.html" target="_blank">
+        <div class="sidebar-link-icon">📚</div>
+        <div class="sidebar-link-text">
+          <div class="sidebar-link-name">کتابخانه</div>
+          <div class="sidebar-link-desc">بهترین کتاب‌های رشد فردی</div>
+        </div>
+      </a>
+      <a class="sidebar-link-item" href="https://planlife.ir/Pages/Magazine/index.html" target="_blank">
+        <div class="sidebar-link-icon">📰</div>
+        <div class="sidebar-link-text">
+          <div class="sidebar-link-name">مجله</div>
+          <div class="sidebar-link-desc">مقالات انگیزشی</div>
+        </div>
+      </a>
+      <a class="sidebar-link-item" href="https://planlife.ir/Pages/visionboard/index.html" target="_blank">
+        <div class="sidebar-link-icon">🔖</div>
+        <div class="sidebar-link-text">
+          <div class="sidebar-link-name">تابلو آرزو</div>
+          <div class="sidebar-link-desc">ویژوالایزیشن قانون جذب</div>
+        </div>
+      </a>
+      <a class="sidebar-link-item" href="https://planlife.ir/Pages/Music/index.html" target="_blank">
+        <div class="sidebar-link-icon">🎵</div>
+        <div class="sidebar-link-text">
+          <div class="sidebar-link-name">موزیک</div>
+          <div class="sidebar-link-desc">موزیک‌های مدیتیشن</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- POPUPS -->
 <div class="popup-overlay" id="loginPopup">
   <div class="popup-sheet">
     <div class="popup-handle"></div>
-    <div class="popup-title">🔐 ورود به Podcast</div>
-    <div class="popup-sub">برای پخش پادکست‌ها، شماره موبایل خود را وارد کنید</div>
+    <div class="popup-title">🔐 ورود به Lingua</div>
+    <div class="popup-sub">برای دسترسی به محتوا، شماره موبایل خود را وارد کنید</div>
     <div class="phone-row">
       <div class="prefix-box">+98</div>
       <input class="phone-input" id="phoneInput" type="tel" inputmode="numeric" placeholder="9123456789" maxlength="11">
     </div>
     <div class="input-error" id="phoneError"></div>
-    <button class="btn-login" id="btnLogin" onclick="doLogin()"><span id="loginBtnText">ورود</span></button>
+    <button class="btn-login" id="btnLogin" onclick="doLogin()">
+      <span id="loginBtnText">ورود</span>
+    </button>
     <div class="subscribe-divider">— یا —</div>
     <div class="subscribe-btns">
-      <button class="btn-sub" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.65);font-size:12px" onclick="openPricePopup()">💎 قیمت اشتراک</button>
-      <a class="btn-sub telegram" href="https://t.me/planlifeir" target="_blank">تهیه کد اشتراک — تلگرام</a>
-      <a class="btn-sub bale" href="https://ble.ir/planlifeir" target="_blank">تهیه کد اشتراک — بله</a>
-      <a class="btn-sub whatsapp" href="https://wa.me/00905437333582" target="_blank">تهیه کد اشتراک — واتس‌اپ</a>
+      <button class="btn-sub price" onclick="openPricePopup()">💎 قیمت اشتراک</button>
+      <a class="btn-sub telegram" href="https://t.me/planlifeir" target="_blank">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.869 4.326-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.83.94z"/></svg>
+        تهیه کد اشتراک — تلگرام
+      </a>
+      <a class="btn-sub bale" href="https://ble.ir/planlifeir" target="_blank">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="10" stroke="white" stroke-width="2" fill="none"/><path d="M8 12l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        تهیه کد اشتراک — بله
+      </a>
+      <a class="btn-sub whatsapp" href="https://wa.me/00905437333582" target="_blank">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.555 4.122 1.528 5.855L.057 23.617a.5.5 0 0 0 .611.674l5.99-1.57A11.942 11.942 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.007-1.371l-.36-.214-3.724.977.993-3.633-.235-.374A9.818 9.818 0 1 1 12 21.818z"/></svg>
+        تهیه کد اشتراک — واتس‌اپ
+      </a>
     </div>
   </div>
 </div>
 
-
-<!-- ══════════════════ PRICE POPUP ══════════════════ -->
 <div class="price-overlay" id="pricePopup" onclick="closePriceIfOutside(event)">
   <div class="price-sheet">
     <div class="price-header">
@@ -579,1202 +1004,266 @@ body::after{
     <div class="plan-row"><div class="plan-name">اشتراک ۶ ماهه</div><div class="plan-prices"><div class="plan-old">۱,۶۸۰,۰۰۰</div><div class="plan-new">۱,۱۹۰,۰۰۰ تومان</div></div></div>
     <div class="plan-row"><div class="plan-name">اشتراک سالانه</div><div class="plan-prices"><div class="plan-old">۳,۳۶۰,۰۰۰</div><div class="plan-new">۲,۵۸۰,۰۰۰ تومان</div></div></div>
     <div class="price-subscribe-btns">
-      <a class="btn-sub telegram" href="https://t.me/planlifeir" target="_blank">خرید از تلگرام</a>
-      <a class="btn-sub bale" href="https://ble.ir/planlifeir" target="_blank">خرید از بله</a>
-      <a class="btn-sub whatsapp" href="https://wa.me/00905437333582" target="_blank">خرید از واتس‌اپ</a>
+      <a class="btn-sub telegram" href="https://t.me/planlifeir" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.869 4.326-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.83.94z"/></svg>
+        خرید از تلگرام
+      </a>
+      <a class="btn-sub bale" href="https://ble.ir/planlifeir" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="10" stroke="white" stroke-width="2" fill="none"/><path d="M8 12l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        خرید از بله
+      </a>
+      <a class="btn-sub whatsapp" href="https://wa.me/00905437333582" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.555 4.122 1.528 5.855L.057 23.617a.5.5 0 0 0 .611.674l5.99-1.57A11.942 11.942 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.007-1.371l-.36-.214-3.724.977.993-3.633-.235-.374A9.818 9.818 0 1 1 12 21.818z"/></svg>
+        خرید از واتس‌اپ
+      </a>
     </div>
   </div>
 </div>
 
-
 <div class="toast" id="toast"></div>
 
-
 <script>
-/* ================================================================
-   ⚙️  SUPABASE CONFIG
-   → آدرس و کلید پایگاه داده رو اینجا بذار
-================================================================ */
-const SB_URL = 'https://hjzzvzxhrqovvducnxha.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhqenp2enhocnFvdnZkdWNueGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NDY0MTksImV4cCI6MjA5NzUyMjQxOX0.XfFimXnkKHFBlYUE-E7daaBNjPJZV-D21UfCL_1SeoQ';
-const SB_H   = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+/* ===== SUPABASE ===== */
+const SUPABASE_URL = 'https://hjzzvzxhrqovvducnxha.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhqenp2enhocnFvdnZkdWNueGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NDY0MTksImV4cCI6MjA5NzUyMjQxOX0.XfFimXnkKHFBlYUE-E7daaBNjPJZV-D21UfCL_1SeoQ';
 
+async function sbGet(table,filter){const url=`${SUPABASE_URL}/rest/v1/${table}?${filter}&limit=1`;const r=await fetch(url,{headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});return r.json();}
+async function sbInsert(table,body){const r=await fetch(`${SUPABASE_URL}/rest/v1/${table}`,{method:'POST',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(body)});return r.ok;}
 
-/* ================================================================
-   📚  DATA — منابع و پادکست‌ها
-   ================================================================
+/* ===== SESSION ===== */
+const SESSION_KEY = 'lingua_session_v1';
+function getSession(){try{return JSON.parse(localStorage.getItem(SESSION_KEY)||'null');}catch(e){return null;}}
+function setSession(data){localStorage.setItem(SESSION_KEY,JSON.stringify(data));}
+function isLoggedIn(){const s=getSession();return s&&s.phone&&s.verified;}
 
-   ساختار کلی:
-   ┌──────────────────────────────────────────────────────────────┐
-   │  sources  →  آرایه‌ای از منابع (تب‌های اصلی بالای صفحه)    │
-   │                                                              │
-   │  هر source شامل:                                            │
-   │    id          → شناسه یکتا (انگلیسی، بدون فاصله)          │
-   │    label       → متنی که روی تب نمایش داده می‌شه           │
-   │    categories  → آرایه زیردسته‌ها (تب‌های پایین‌تر)        │
-   │                  اولی باید 'All' باشه                       │
-   │    podcasts    → آرایه پادکست‌های این منبع                  │
-   │                                                              │
-   │  هر podcast شامل:                                           │
-   │    id          → باید با podcast_id در Supabase یکی باشه    │
-   │    free        → true = بدون لاگین قابل پخش                │
-   │    title       → عنوان                                      │
-   │    description → توضیح کوتاه                                │
-   │    tag         → دسته‌بندی (باید در categories منبع باشه)  │
-   │    level       → Beginner | Intermediate | Advanced         │
-   │    episodes    → مثلاً "12 Episodes"                        │
-   │    dur         → مثلاً "15-20 min"                         │
-   │    image       → URL عکس کاور                              │
-   │    audio       → URL فایل صوتی                             │
-   └──────────────────────────────────────────────────────────────┘
+/* ===== TOAST ===== */
+function showToast(msg,dur=2800){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
 
-   ➕ برای اضافه کردن منبع جدید:
-      → یه آبجکت جدید به آرایه sources اضافه کن
-      → id و label و categories و podcasts بذار
+/* ===== LOGIN POPUP ===== */
+var pendingCardAction = null;
+function openLoginPopup(cardAction){pendingCardAction=cardAction||null;document.getElementById('loginPopup').classList.add('open');setTimeout(()=>document.getElementById('phoneInput').focus(),400);}
+function closeLoginPopup(){document.getElementById('loginPopup').classList.remove('open');pendingCardAction=null;}
+document.getElementById('loginPopup').addEventListener('click',function(e){if(e.target===this)closeLoginPopup();});
 
-   ➕ برای اضافه کردن پادکست جدید به یه منبع:
-      → به آرایه podcasts اون منبع یه آبجکت اضافه کن
-      → tag باید در categories اون منبع وجود داشته باشه
-      → همون id رو توی جداول transcripts و vocabulary سوپابیس بذار
+async function doLogin(){
+  const input=document.getElementById('phoneInput');
+  const errEl=document.getElementById('phoneError');
+  const btn=document.getElementById('btnLogin');
+  const btnText=document.getElementById('loginBtnText');
+  errEl.textContent='';
+  let phone=input.value.trim().replace(/\D/g,'');
+  if(phone.startsWith('0'))phone=phone.slice(1);
+  if(phone.length<10||phone.length>11){errEl.textContent='شماره موبایل معتبر نیست';return;}
+  btn.disabled=true;btnText.textContent='در حال بررسی...';
+  try{
+    const subs=await sbGet('subscriptions',`phone=eq.${phone}&is_active=eq.true`);
+    if(subs&&subs.length>0){
+      setSession({phone,verified:true,ts:Date.now()});
+      await sbInsert('users',{phone});
+      const action=pendingCardAction;
+      closeLoginPopup();showToast('✅ خوش آمدید! دسترسی همه بخش‌ها فعال شد');
+      unlockAllCards();setLearningAccess(true);
+      if(action)setTimeout(()=>action(),150);
+    }else{await sbInsert('users',{phone});errEl.textContent='اشتراک فعال یافت نشد. لطفاً کد اشتراک تهیه کنید.';}
+  }catch(e){errEl.textContent='خطا در اتصال. دوباره تلاش کنید.';}
+  btn.disabled=false;btnText.textContent='ورود';
+}
+document.getElementById('phoneInput').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
 
-================================================================ */
-const sources = [
+/* ===== PRICE POPUP ===== */
+function openPricePopup(){document.getElementById('pricePopup').classList.add('open');}
+function closePricePopup(){document.getElementById('pricePopup').classList.remove('open');}
+function closePriceIfOutside(e){if(e.target===document.getElementById('pricePopup'))closePricePopup();}
 
-  /* ════════════════════════════════════════════════
-     منبع ۱ — British Council
-  ════════════════════════════════════════════════ */
-  {
-    id: 'british-council',
-    label: 'British Council',
-
-    /* زیردسته‌های این منبع (تب‌های پایین‌تر) */
-    categories: ['All', 'Daily English', 'Conversation', 'Vocabulary', 'Business', 'Grammar', 'Pronunciation'],
-
-    podcasts: [
-      {
-        id:          'bc-daily-conversations',
-        free:        true,
-        title:       'Daily Conversations',
-        description: 'Real British English in daily life.',
-        tag:         'Daily English',
-        level:       'Intermediate',
-        episodes:    '12 Episodes',
-        dur:         '15-20 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'bc-small-talk',
-        free:        false,
-        title:       'Small Talk Skills',
-        description: 'Break the ice with confidence.',
-        tag:         'Conversation',
-        level:       'Beginner',
-        episodes:    '10 Episodes',
-        dur:         '10-15 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/2.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'bc-advanced-vocab',
-        free:        false,
-        title:       'Advanced Vocabulary',
-        description: 'Expand your word power.',
-        tag:         'Vocabulary',
-        level:       'Advanced',
-        episodes:    '15 Episodes',
-        dur:         '10-18 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/3.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'bc-travel-english',
-        free:        false,
-        title:       'Travel English',
-        description: 'Speak English anywhere in the world.',
-        tag:         'Conversation',
-        level:       'Intermediate',
-        episodes:    '8 Episodes',
-        dur:         '10-15 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/4.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'bc-work-english',
-        free:        false,
-        title:       'English for Work',
-        description: 'Meetings, emails and presentations.',
-        tag:         'Business',
-        level:       'Advanced',
-        episodes:    '10 Episodes',
-        dur:         '12-18 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'bc-grammar-tips',
-        free:        false,
-        title:       'Grammar in Use',
-        description: 'Master tricky grammar points.',
-        tag:         'Grammar',
-        level:       'Intermediate',
-        episodes:    '14 Episodes',
-        dur:         '8-12 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'bc-pronunciation',
-        free:        false,
-        title:       'Pronunciation Power',
-        description: 'Sound like a native speaker.',
-        tag:         'Pronunciation',
-        level:       'Beginner',
-        episodes:    '9 Episodes',
-        dur:         '8-10 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/2.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'bc-idioms',
-        free:        false,
-        title:       'Everyday Idioms',
-        description: 'Common expressions made easy.',
-        tag:         'Vocabulary',
-        level:       'Intermediate',
-        episodes:    '11 Episodes',
-        dur:         '10-14 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/3.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'bc-news-english',
-        free:        false,
-        title:       'News English',
-        description: 'Understand global news in English.',
-        tag:         'Daily English',
-        level:       'Advanced',
-        episodes:    '20 Episodes',
-        dur:         '12-15 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/4.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'bc-story-time',
-        free:        false,
-        title:       'Story Time',
-        description: 'Short stories for better listening.',
-        tag:         'Conversation',
-        level:       'Beginner',
-        episodes:    '6 Episodes',
-        dur:         '15-25 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-             {
-        id:          'bc-story-time',
-        free:        false,
-        title:       'Story Time',
-        description: 'Short stories for better listening.',
-        tag:         'Conversation',
-        level:       'Beginner',
-        episodes:    '6 Episodes',
-        dur:         '15-25 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-             {
-        id:          'bc-story-time',
-        free:        false,
-        title:       'Story Time',
-        description: 'Short stories for better listening.',
-        tag:         'Conversation',
-        level:       'Beginner',
-        episodes:    '6 Episodes',
-        dur:         '15-25 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-             {
-        id:          'bc-story-time',
-        free:        false,
-        title:       'Story Time',
-        description: 'Short stories for better listening.',
-        tag:         'Conversation',
-        level:       'Beginner',
-        episodes:    '6 Episodes',
-        dur:         '15-25 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-             {
-        id:          'bc-story-time',
-        free:        false,
-        title:       'Story Time',
-        description: 'Short stories for better listening.',
-        tag:         'Conversation',
-        level:       'Beginner',
-        episodes:    '6 Episodes',
-        dur:         '15-25 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-       
-    ]
-  },
-
-
-  /* ════════════════════════════════════════════════
-     منبع ۲ — BBC Learn English
-  ════════════════════════════════════════════════ */
-  {
-    id: 'bbc-learn-english',
-    label: 'BBC Learn English',
-
-    /* زیردسته‌های این منبع */
-    categories: ['All', 'podcast', 'Business', 'Vocabulary', 'Conversation', 'Grammar'],
-
-    podcasts: [
-      {
-        id:          '1-podcst',
-        free:        true,
-        title:       'The decline of the apostrophe',
-        description: '#6_Minute_English #BBC ',
-        tag:         'podcast',
-        level:       'Intermediate',
-        episodes:    '1 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg',
-        audio:       'http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/The-decline-of-the-apostrophe.mp3',
-      },
-      {
-        id:          '2-podcast',
-        free:        false,
-        title:       'Could you give up booze for a month',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Intermediate',
-        episodes:    '2 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/2.jpeg',
-        audio:       'http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/Could%20you%20give%20up%20booze%20for%20a%20month.mp3',
-      },
-      {
-        id:          '3-podcast',
-        free:        false,
-        title:       'Why does seeing someone yawn make you yawn',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Advanced',
-        episodes:    '3 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/3.jpeg',
-        audio:       'http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/Why%20does%20seeing%20someone%20yawn%20make%20you%20yawn.mp3',
-      },
-      {
-        id:          '4-podcast',
-        free:        false,
-        title:       'The benefits of low emission zones',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Advanced',
-        episodes:    '4 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/4.jpeg',
-        audio:       'http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/The%20benefits%20of%20low%20emission%20zones.mp3',
-      },
-      {
-        id:          '5-podcast',
-        free:        false,
-        title:       'Is it good to disagree ?',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Beginner',
-        episodes:    '5 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/Is%20it%20good%20to%20disagree.mp3',
-      },
-      {
-        id:          '6-podcast',
-        free:        false,
-        title:       'How resilient are you',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Intermediate',
-        episodes:    '6 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg',
-        audio:       'http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/How%20resilient%20are%20you.mp3',
-      },
-      {
-        id:          '7-podcast',
-        free:        false,
-        title:       'Could you give up fast fashion',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Intermediate',
-        episodes:    '7 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/2.jpeg',
-        audio:       'http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/Could%20you%20give%20up%20fast%20fashion.mp3',
-      },
-      {
-        id:          '8-podcast',
-        free:        false,
-        title:       ' Eating pond scum',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Advanced',
-        episodes:    '8 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/3.jpeg',
-        audio:       'http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/Eating%20pond%20scum.mp3',
-      },
-      {
-        id:          '9-podcast',
-        free:        false,
-        title:       'The circular economy',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Intermediate',
-        episodes:    '9 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/4.jpeg',
-        audio:       'http://fs3.centraldnserver.com/~planlife/english/The%20circular%20economy.mp3',
-      },
-      {
-        id:          '10-podcast',
-        free:        false,
-        title:       'A future without doctors',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Advanced',
-        episodes:    '10 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/A%20future%20without%20doctors.mp3',
-      },
-             {
-        id:          '11-podcast',
-        free:        false,
-        title:       'A quieter world',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Advanced',
-        episodes:    '11 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/A%20quieter%20world.mp3',
-      },
-             {
-        id:          '12-podcast',
-        free:        false,
-        title:       'Women in politics',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Advanced',
-        episodes:    '12 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/Women%20in%20politics.mp3',
-      },
-             {
-        id:          '13-podcast',
-        free:        false,
-        title:       'Angela merkel',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Advanced',
-        episodes:    '13 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/Angela%20merkel.mp3',
-      },
-     {
-        id:          '14-podcast',
-        free:        false,
-        title:       'Too much stuff',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Advanced',
-        episodes:    '14 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'https://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/too_much_stuff.mp3',
-      },
-             {
-        id:          '15-podcast',
-        free:        false,
-        title:       'Are humans a messy species',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Advanced',
-        episodes:    '15 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'https://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/Are%20humans%20a%20messy%20species.mp3',
-      },
-             {
-        id:          '16-podcast',
-        free:        false,
-        title:       'Why we forget the things we learn',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Advanced',
-        episodes:    '16 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/Why%20we%20forget%20the%20things%20we%20learn.mp3',
-      },
-             {
-        id:          '17-podcast',
-        free:        false,
-        title:       'What makes a good story?',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Advanced',
-        episodes:    '17 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'http://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/What%20makes%20a%20good%20story.mp3',
-      },
-             {
-        id:          '18-podcast',
-        free:        false,
-        title:       'What’s the key to happiness',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Advanced',
-        episodes:    '18 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'https://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/What%E2%80%99s%20the%20key%20to%20happiness.mp3',
-      },
-             {
-        id:          '19-podcast',
-        free:        false,
-        title:       'When males are not needed',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Advanced',
-        episodes:    '19 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'https://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/When%20males%20are%20not%20needed.mp3',
-      },
-      {
-        id:          '20-podcast',
-        free:        false,
-        title:       'Where do your tips go',
-        description: '#6_Minute_English #BBC',
-        tag:         'podcast',
-        level:       'Advanced',
-        episodes:    '20 Episodes',
-        dur:         '6 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'https://fs3.centraldnserver.com/~planlife/english/podcasts/bbclearn/Where%20do%20your%20tips%20go.mp3',
-      },
-    ]
-  },
-
-
-  /* ════════════════════════════════════════════════
-     منبع ۳ — VOA English
-  ════════════════════════════════════════════════ */
-  {
-    id: 'voa-english',
-    label: 'VOA English',
-
-    /* زیردسته‌های این منبع */
-    categories: ['All', 'Daily English', 'Grammar', 'Vocabulary', 'Conversation', 'Business', 'Pronunciation'],
-
-    podcasts: [
-      {
-        id:          'voa-learning-english',
-        free:        true,
-        title:       'VOA Learning English',
-        description: 'Clear American English for learners.',
-        tag:         'Daily English',
-        level:       'Beginner',
-        episodes:    '20 Episodes',
-        dur:         '10-15 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'voa-everyday-grammar',
-        free:        false,
-        title:       'Everyday Grammar',
-        description: 'Grammar explained in simple English.',
-        tag:         'Grammar',
-        level:       'Beginner',
-        episodes:    '15 Episodes',
-        dur:         '5-10 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/2.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'voa-health-english',
-        free:        false,
-        title:       'Health & Science English',
-        description: 'Medical and science vocabulary.',
-        tag:         'Vocabulary',
-        level:       'Intermediate',
-        episodes:    '12 Episodes',
-        dur:         '8-12 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/3.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'voa-american-stories',
-        free:        false,
-        title:       'American Stories',
-        description: 'Classic stories in simple English.',
-        tag:         'Conversation',
-        level:       'Intermediate',
-        episodes:    '10 Episodes',
-        dur:         '15-20 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/4.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'voa-econ-english',
-        free:        false,
-        title:       'Economics in English',
-        description: 'Understand global economics.',
-        tag:         'Business',
-        level:       'Advanced',
-        episodes:    '8 Episodes',
-        dur:         '12-16 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'voa-words-phrases',
-        free:        false,
-        title:       'Words and Their Stories',
-        description: 'The history behind English words.',
-        tag:         'Vocabulary',
-        level:       'Intermediate',
-        episodes:    '14 Episodes',
-        dur:         '5-8 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'voa-culture',
-        free:        false,
-        title:       'American Culture',
-        description: 'Life and culture in the USA.',
-        tag:         'Daily English',
-        level:       'Beginner',
-        episodes:    '9 Episodes',
-        dur:         '10-14 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/2.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'voa-tech-talk',
-        free:        false,
-        title:       'Tech Talk',
-        description: 'Technology news in plain English.',
-        tag:         'Business',
-        level:       'Intermediate',
-        episodes:    '11 Episodes',
-        dur:         '8-12 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/3.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'voa-pronunciation',
-        free:        false,
-        title:       'Pronunciation Tips',
-        description: 'Master American English sounds.',
-        tag:         'Pronunciation',
-        level:       'Beginner',
-        episodes:    '10 Episodes',
-        dur:         '5-8 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/4.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'voa-advanced-news',
-        free:        false,
-        title:       'Advanced News English',
-        description: 'Full-speed news for advanced learners.',
-        tag:         'Daily English',
-        level:       'Advanced',
-        episodes:    '18 Episodes',
-        dur:         '12-18 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-    ]
-  },
-
-
-  /* ════════════════════════════════════════════════
-     منبع ۴ — My Podcasts (اسمش رو عوض کن)
-  ════════════════════════════════════════════════ */
-  {
-    id: 'my-podcasts',
-    label: 'My Podcasts',
-
-    /* زیردسته‌های این منبع */
-    categories: ['All', 'Daily English', 'Conversation', 'Vocabulary', 'Business'],
-
-    podcasts: [
-      {
-        id:          'my-ep-01',
-        free:        true,
-        title:       'Episode 1 — Introduction',
-        description: 'Welcome to our podcast series.',
-        tag:         'Daily English',
-        level:       'Beginner',
-        episodes:    '1 Episode',
-        dur:         '10-15 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'my-ep-02',
-        free:        false,
-        title:       'Episode 2 — Greetings',
-        description: 'How to greet people naturally.',
-        tag:         'Conversation',
-        level:       'Beginner',
-        episodes:    '1 Episode',
-        dur:         '10-15 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/2.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'my-ep-03',
-        free:        false,
-        title:       'Episode 3 — Numbers',
-        description: 'Numbers and counting in English.',
-        tag:         'Vocabulary',
-        level:       'Beginner',
-        episodes:    '1 Episode',
-        dur:         '10-15 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/3.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'my-ep-04',
-        free:        false,
-        title:       'Episode 4 — Food & Drink',
-        description: 'Ordering food like a native.',
-        tag:         'Daily English',
-        level:       'Beginner',
-        episodes:    '1 Episode',
-        dur:         '10-15 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/4.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'my-ep-05',
-        free:        false,
-        title:       'Episode 5 — Directions',
-        description: 'Asking and giving directions.',
-        tag:         'Conversation',
-        level:       'Intermediate',
-        episodes:    '1 Episode',
-        dur:         '10-15 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'my-ep-06',
-        free:        false,
-        title:       'Episode 6 — Shopping',
-        description: 'English for shops and markets.',
-        tag:         'Daily English',
-        level:       'Intermediate',
-        episodes:    '1 Episode',
-        dur:         '10-15 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'my-ep-07',
-        free:        false,
-        title:       'Episode 7 — Weather',
-        description: 'Talking about the weather.',
-        tag:         'Conversation',
-        level:       'Beginner',
-        episodes:    '1 Episode',
-        dur:         '10-15 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/2.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'my-ep-08',
-        free:        false,
-        title:       'Episode 8 — At the Doctor',
-        description: 'Medical English made simple.',
-        tag:         'Vocabulary',
-        level:       'Intermediate',
-        episodes:    '1 Episode',
-        dur:         '10-15 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/3.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'my-ep-09',
-        free:        false,
-        title:       'Episode 9 — Job Interview',
-        description: 'Ace your English job interview.',
-        tag:         'Business',
-        level:       'Advanced',
-        episodes:    '1 Episode',
-        dur:         '10-15 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/4.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-      {
-        id:          'my-ep-10',
-        free:        false,
-        title:       'Episode 10 — Wrap Up',
-        description: 'Review and what comes next.',
-        tag:         'Daily English',
-        level:       'Intermediate',
-        episodes:    '1 Episode',
-        dur:         '10-15 min',
-        image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
-        audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
-      },
-    ]
-  },
-
-  /* ════════════════════════════════════════════════
-     ➕ منبع جدید رو اینجا اضافه کن
-     ════════════════════════════════════════════════
-     {
-       id: 'my-new-source',
-       label: 'New Source',
-       categories: ['All', 'Daily English', ...],
-       podcasts: [...]
-     },
-  ════════════════════════════════════════════════ */
-
+/* ===== CARDS ===== */
+const BASE = 'http://fs3.centraldnserver.com/~planlife/pics/english/';
+const imgs = [1,2,3,4,5,6,7];
+const row1Cards = [
+  {title:'سوالات مبتدی',desc:'اگر یادگیری انگلیسی را ۰ تا ۱۰۰ در نظر بگیریم، این بخش در درجهٔ ۰ تا ۵ قرار دارد.',badge:'مبتدی',hours:'۳۲',free:true,url:'https://planlife.ir/english/azmon-mobtadi.html'},
+  {title:'سوالات مقدماتی',desc:'اگر یادگیری انگلیسی را ۰ تا ۱۰۰ در نظر بگیریم، این بخش در درجهٔ ۵ تا ۱۰ قرار دارد.',badge:'مقدماتی',hours:'۴۸',free:false,url:'https://planlife.ir/english/azmon-moghadamati.html'},
+  {title:'سوالات پیشرفته ۱',desc:'اگر یادگیری انگلیسی را ۰ تا ۱۰۰ در نظر بگیریم، این بخش در درجهٔ ۱۰ تا ۱۵ قرار دارد.',badge:'پیشرفته ۱',hours:'۶۴',free:false,url:'https://planlife.ir/english/azmon-pish1.html'},
+  {title:'سوالات پیشرفته ۲',desc:'اگر یادگیری انگلیسی را ۰ تا ۱۰۰ در نظر بگیریم، این بخش در درجهٔ ۱۵ تا ۲۰ قرار دارد.',badge:'پیشرفته ۲',hours:'۷۲',free:false,url:''},
+  {title:'سوالات پیشرفته ۳',desc:'اگر یادگیری انگلیسی را ۰ تا ۱۰۰ در نظر بگیریم، این بخش در درجهٔ ۲۰ تا ۲۵ قرار دارد.',badge:'پیشرفته ۳',hours:'۸۰',free:false,url:''},
+  {title:'سوالات پیشرفته ۴',desc:'اگر یادگیری انگلیسی را ۰ تا ۱۰۰ در نظر بگیریم، این بخش در درجهٔ ۲۵ تا ۳۰ قرار دارد.',badge:'پیشرفته ۴',hours:'۹۰',free:false,url:''},
+  {title:'سوالات پیشرفته ۵',desc:'اگر یادگیری انگلیسی را ۰ تا ۱۰۰ در نظر بگیریم، این بخش در درجهٔ ۳۰ تا ۳۵ قرار دارد.',badge:'پیشرفته ۵',hours:'۹۶',free:false,url:''},
+  {title:'سوالات پیشرفته ۶',desc:'اگر یادگیری انگلیسی را ۰ تا ۱۰۰ در نظر بگیریم، این بخش در درجهٔ ۳۵ تا ۴۰ قرار دارد.',badge:'پیشرفته ۶',hours:'۱۰۴',free:false,url:''},
+  {title:'IELTS ۱',desc:'اگر یادگیری انگلیسی را ۰ تا ۱۰۰ در نظر بگیریم، این بخش در درجهٔ ۴۰ تا ۴۵ قرار دارد.',badge:'IELTS ۱',hours:'۴۸',free:false,url:''},
+  {title:'IELTS ۲',desc:'اگر یادگیری انگلیسی را ۰ تا ۱۰۰ در نظر بگیریم، این بخش در درجهٔ ۴۵ تا ۵۰ قرار دارد.',badge:'IELTS ۲',hours:'۶۴',free:false,url:''},
+  {title:'IELTS ۳',desc:'اگر یادگیری انگلیسی را ۰ تا ۱۰۰ در نظر بگیریم، این بخش در درجهٔ ۵۰ تا ۵۵ قرار دارد.',badge:'IELTS ۳',hours:'۸۰',free:false,url:''},
+  {title:'فوق حرفه‌ای',desc:'اگر یادگیری انگلیسی را ۰ تا ۱۰۰ در نظر بگیریم، این بخش در درجهٔ ۵۵ تا ۶۰ قرار دارد.',badge:'فوق حرفه‌ای',hours:'۱۲۸',free:false,url:''},
 ];
 
-
-/* ================================================================
-   STATE — وضعیت فعلی صفحه
-================================================================ */
-let activeSourceId  = sources[0].id;   // کدوم منبع انتخابه
-let activeCategory  = 'All';           // کدوم زیردسته انتخابه
-
-
-/* ================================================================
-   SUPABASE HELPERS — توابع کمکی برای پایگاه داده
-================================================================ */
-async function sbGet(table, filter) {
-  const r = await fetch(`${SB_URL}/rest/v1/${table}?${filter}&limit=1`, { headers: SB_H });
-  return r.json();
-}
-async function sbGetAll(table, filter) {
-  const r = await fetch(`${SB_URL}/rest/v1/${table}?${filter}`, { headers: SB_H });
-  return r.json();
-}
-async function sbInsert(table, body) {
-  const r = await fetch(`${SB_URL}/rest/v1/${table}`, {
-    method: 'POST',
-    headers: { ...SB_H, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-    body: JSON.stringify(body),
-  });
-  return r.ok;
+function makeCard(c,imgNum,index){
+  const locked=!c.free&&!isLoggedIn();
+  return`<div class="card-wrap${locked?' locked':''}" data-index="${index}" data-free="${c.free}"><div class="card"><div class="card-photo"><img src="${BASE}${imgNum}.jpg" alt="${c.title}" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#0f3460,#1e90ff)'"></div><span class="badge">${c.badge}</span><div class="card-body"><div class="card-title">${c.title}</div><div class="card-desc">${c.desc}</div><div class="card-footer"><div class="read-time">${c.hours} ساعت</div><button class="btn-read">شروع کن</button></div></div></div></div>`;
 }
 
+function unlockAllCards(){document.querySelectorAll('.card-wrap.locked').forEach(wrap=>{wrap.classList.remove('locked');const btn=wrap.querySelector('.btn-read');if(btn)btn.textContent='شروع کن';});}
 
-/* ================================================================
-   SESSION — مدیریت ورود کاربر
-================================================================ */
-const SESSION_KEY = 'lingua_session_v1';
-const getSession  = () => { try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch(e) { return null; } };
-const setSession  = d  => localStorage.setItem(SESSION_KEY, JSON.stringify(d));
-const isLoggedIn  = () => { const s = getSession(); return s && s.phone && s.verified; };
+const r1=document.getElementById('row1');
+row1Cards.forEach((c,i)=>{r1.insertAdjacentHTML('beforeend',makeCard(c,imgs[i%imgs.length],i));});
 
-
-/* ================================================================
-   TOAST — پیام کوتاه موقت
-================================================================ */
-function showToast(msg, dur = 2800) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), dur);
-}
-
-
-/* ================================================================
-   LOGIN — ورود / خروج
-================================================================ */
-function updateLoginIcon() {
-  const b = document.getElementById('loginIconBtn');
-  if (b) b.classList.toggle('logged-in', !!isLoggedIn());
-}
-function onLoginIconClick() {
-  if (isLoggedIn()) {
-    if (confirm('می‌خواهید از حساب خود خارج شوید؟')) { localStorage.removeItem(SESSION_KEY); location.reload(); }
-  } else { openLoginPopup(); }
-}
-function openLoginPopup() {
-  document.getElementById('loginPopup').classList.add('open');
-  setTimeout(() => document.getElementById('phoneInput').focus(), 400);
-}
-function closeLoginPopup() { document.getElementById('loginPopup').classList.remove('open'); }
-document.getElementById('loginPopup').addEventListener('click', function(e) { if (e.target === this) closeLoginPopup(); });
-
-async function doLogin() {
-  const input   = document.getElementById('phoneInput');
-  const errEl   = document.getElementById('phoneError');
-  const btn     = document.getElementById('btnLogin');
-  const btnText = document.getElementById('loginBtnText');
-  errEl.textContent = '';
-  let phone = input.value.trim().replace(/\D/g, '');
-  if (phone.startsWith('0')) phone = phone.slice(1);
-  if (phone.length < 10 || phone.length > 11) { errEl.textContent = 'شماره موبایل معتبر نیست'; return; }
-  btn.disabled = true; btnText.textContent = 'در حال بررسی...';
-  try {
-    const subs = await sbGet('subscriptions', `phone=eq.${phone}&is_active=eq.true`);
-    if (subs && subs.length > 0) {
-      setSession({ phone, verified: true, ts: Date.now() });
-      await sbInsert('users', { phone });
-      closeLoginPopup();
-      showToast('✅ خوش آمدید! دسترسی همه پادکست‌ها فعال شد');
-      updateLoginIcon();
-      renderAll();
-    } else {
-      await sbInsert('users', { phone });
-      errEl.textContent = 'اشتراک فعال یافت نشد. لطفاً کد اشتراک تهیه کنید.';
-    }
-  } catch(e) { errEl.textContent = 'خطا در اتصال. دوباره تلاش کنید.'; }
-  btn.disabled = false; btnText.textContent = 'ورود';
-}
-document.getElementById('phoneInput').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
-
-
-/* ================================================================
-   PRICE POPUP — پنجره قیمت اشتراک
-================================================================ */
-function openPricePopup()       { document.getElementById('pricePopup').classList.add('open'); }
-function closePricePopup()      { document.getElementById('pricePopup').classList.remove('open'); }
-function closePriceIfOutside(e) { if (e.target === document.getElementById('pricePopup')) closePricePopup(); }
-
-
-/* ================================================================
-   VERIFY SUBSCRIPTION — بررسی اعتبار اشتراک
-================================================================ */
-async function verifyCurrentSubscription() {
-  const session = getSession();
-  if (!session || !session.phone || !session.verified) { updateLoginIcon(); return false; }
-  try {
-    const subs   = await sbGet('subscriptions', `phone=eq.${encodeURIComponent(session.phone)}&is_active=eq.true`);
-    const active = Array.isArray(subs) && subs.length > 0;
-    if (!active) { localStorage.removeItem(SESSION_KEY); updateLoginIcon(); renderAll(); return false; }
-    updateLoginIcon(); return true;
-  } catch(e) { updateLoginIcon(); return false; }
-}
-
-
-/* ================================================================
-   RENDER SOURCE TABS — رندر تب‌های منبع (شیشه‌ای)
-   هر کلیک: منبع رو عوض می‌کنه، زیردسته رو ریست می‌کنه
-================================================================ */
-function renderSourceTabs() {
-  const wrap = document.getElementById('sourceTabs');
-  wrap.innerHTML = '';
-
-  sources.forEach(src => {
-    const btn = document.createElement('button');
-    btn.className   = 'source-tab' + (src.id === activeSourceId ? ' active' : '');
-    btn.textContent = src.label;
-    btn.onclick = () => {
-      activeSourceId = src.id;
-      activeCategory = 'All';          // ریست زیردسته وقتی منبع عوض میشه
-      renderSourceTabs();
-      renderCategoryPills();
-      renderPodcastList();
-    };
-    wrap.appendChild(btn);
-  });
-}
-
-
-/* ================================================================
-   RENDER CATEGORY PILLS — رندر زیردسته‌های منبع انتخابی
-   هر منبع categories مختص خودشو داره
-================================================================ */
-function renderCategoryPills() {
-  const wrap = document.getElementById('categoryPills');
-  wrap.innerHTML = '';
-
-  // پیدا کردن منبع فعال و خوندن categories اون
-  const source = sources.find(s => s.id === activeSourceId);
-  if (!source) return;
-
-  source.categories.forEach(cat => {
-    const btn = document.createElement('button');
-    btn.className   = 'category' + (cat === activeCategory ? ' active' : '');
-    btn.textContent = cat;
-    btn.onclick = () => {
-      activeCategory = cat;
-      renderCategoryPills();
-      renderPodcastList();
-    };
-    wrap.appendChild(btn);
-  });
-}
-
-
-/* ================================================================
-   RENDER PODCAST LIST — رندر لیست پادکست‌ها
-================================================================ */
-function levelBars(n) {
-  let b = '';
-  for (let i = 0; i < n; i++) b += '<span></span>';
-  return b;
-}
-
-function renderPodcastList() {
-  const loggedIn = isLoggedIn();
-  const list     = document.getElementById('podcastList');
-  list.innerHTML = '';
-
-  const source = sources.find(s => s.id === activeSourceId);
-  if (!source) return;
-
-  // فیلتر بر اساس زیردسته انتخابی
-  const filtered = activeCategory === 'All'
-    ? source.podcasts
-    : source.podcasts.filter(p => p.tag === activeCategory);
-
-  if (filtered.length === 0) {
-    list.innerHTML = '<p style="text-align:center;color:#5a7a9a;font-size:13px;padding:30px 0">پادکستی در این دسته‌بندی وجود ندارد.</p>';
-    return;
-  }
-
-  filtered.forEach(p => {
-    const locked = !p.free && !loggedIn;
-    const bars   = p.level === 'Beginner' ? 3 : 4;
-    const card   = document.createElement('article');
-    card.className = 'podcast-card' + (locked ? ' locked' : '');
-    card.innerHTML = `
-      <div class="cover">
-        <img src="${p.image}" alt="${p.title}" loading="lazy">
-        <div class="cover-title">${p.title.split(' ').slice(0,2).join('<br>')}</div>
-      </div>
-      <div class="card-content">
-        <h3>${p.title}</h3>
-        <p class="card-description">${p.description}</p>
-        <div class="card-meta"><span>🎧 ${p.episodes}</span><span>◷ ${p.dur}</span></div>
-        <div class="tag">${p.tag}</div>
-        <div class="level"><div class="level-bars">${levelBars(bars)}</div>${p.level}</div>
-      </div>
-      <div class="card-actions">
-        <button class="icon-button" onclick="event.stopPropagation();toggleFavorite(this)">♡</button>
-        <button class="icon-button" onclick="event.stopPropagation()">···</button>
-      </div>
-      ${locked
-        ? `<div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-           <button class="play-small" onclick="event.stopPropagation();openLoginPopup()">🔒</button>`
-        : `<button class="play-small">▶</button>`
-      }`;
-    card.addEventListener('click', () => locked ? openLoginPopup() : openPlayer(p));
-    list.appendChild(card);
-  });
-}
-
-/* رندر همه چیز با هم */
-function renderAll() {
-  renderSourceTabs();
-  renderCategoryPills();
-  renderPodcastList();
-}
-
-
-/* ================================================================
-   WAVEFORM — موج صوتی تزئینی
-================================================================ */
-const waveform = document.getElementById('waveform');
-for (let i = 0; i < 48; i++) {
-  const bar = document.createElement('div');
-  bar.className    = 'wave paused';
-  bar.style.height = (Math.floor(Math.random() * 34) + 8) + 'px';
-  waveform.appendChild(bar);
-}
-
-
-/* ================================================================
-   PLAYER — پخش پادکست
-================================================================ */
-const homeScreen   = document.getElementById('homeScreen');
-const playerScreen = document.getElementById('playerScreen');
-const audio        = document.getElementById('audioPlayer');
-const mainPlay     = document.getElementById('mainPlay');
-
-async function openPlayer(p) {
-  document.getElementById('playerTitle').textContent       = p.title;
-  document.getElementById('playerDescription').textContent = p.description;
-  document.getElementById('playerTag').textContent         = p.level;
-  document.getElementById('playerImage').src               = p.image;
-  document.getElementById('playerEpisodes').innerHTML      = '🎧 ' + p.episodes;
-  document.getElementById('playerDurEl').innerHTML         = '◷ '  + p.dur;
-  audio.src = p.audio; audio.load();
-  homeScreen.classList.remove('active');
-  playerScreen.classList.add('active');
-  playerScreen.scrollTop = 0;
-  mainPlay.textContent = '▶'; setWave(false);
-  // ریست تب‌های پلیر
-  document.querySelectorAll('.lesson-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.lesson-tab')[0].classList.add('active');
-  document.getElementById('transcriptContent').style.display = 'block';
-  document.getElementById('vocabContent').style.display      = 'none';
-  document.getElementById('notesContent').style.display      = 'none';
-  // بارگذاری محتوا از Supabase
-  loadTranscript(p.id);
-  loadVocab(p.id);
-}
-
-
-/* ================================================================
-   TRANSCRIPT — بارگذاری از Supabase
-================================================================ */
-async function loadTranscript(podcastId) {
-  const loading = document.getElementById('transcriptLoading');
-  const lines   = document.getElementById('transcriptLines');
-  lines.innerHTML = '';
-  loading.style.display = 'block';
-  loading.textContent   = '⏳ در حال بارگذاری Transcript...';
-  try {
-    const rows = await sbGet('transcripts', `podcast_id=eq.${podcastId}&order=sort_order.asc`);
-    if (!rows || rows.length === 0) { loading.textContent = 'No transcript available yet.'; return; }
-    loading.style.display = 'none';
-    const div = document.createElement('div');
-    div.className   = 'transcript-plain';
-    div.textContent = rows[0].content;
-    lines.appendChild(div);
-  } catch(e) { loading.textContent = '⚠️ Transcript بارگذاری نشد.'; }
-}
-
-
-/* ================================================================
-   VOCABULARY — بارگذاری از Supabase
-================================================================ */
-async function loadVocab(podcastId) {
-  const vocabList = document.getElementById('vocabList');
-  vocabList.innerHTML = '<div style="color:#6c8aaa;font-size:11px;padding:8px">در حال بارگذاری...</div>';
-  try {
-    const rows = await sbGetAll('vocabulary', `podcast_id=eq.${podcastId}&order=sort_order.asc`);
-    vocabList.innerHTML = '';
-    if (!rows || rows.length === 0) {
-      vocabList.innerHTML = '<div style="color:#6c8aaa;font-size:11px;padding:8px">کلمه‌ای ثبت نشده.</div>';
-      return;
-    }
-    rows.forEach(v => {
-      const item = document.createElement('div');
-      item.className = 'vocab-item';
-      item.innerHTML = `<strong>${v.word}</strong><small>${v.translation_fa}</small>`;
-      if (v.example) item.title = v.example;
-      vocabList.appendChild(item);
-    });
-  } catch(e) {
-    vocabList.innerHTML = '<div style="color:#f66;font-size:11px;padding:8px">⚠️ خطا در بارگذاری</div>';
-  }
-}
-
-
-/* ================================================================
-   NAVIGATION & PLAYBACK — ناوبری و کنترل پخش
-================================================================ */
-function goHome() { audio.pause(); playerScreen.classList.remove('active'); homeScreen.classList.add('active'); }
-function togglePlay() {
-  if (audio.paused) {
-    audio.play().then(() => { mainPlay.textContent = 'Ⅱ'; setWave(true); }).catch(e => console.log(e));
-  } else {
-    audio.pause(); mainPlay.textContent = '▶'; setWave(false);
-  }
-}
-audio.addEventListener('play',  () => { mainPlay.textContent = 'Ⅱ'; setWave(true);  });
-audio.addEventListener('pause', () => { mainPlay.textContent = '▶'; setWave(false); });
-audio.addEventListener('ended', () => { mainPlay.textContent = '▶'; setWave(false); });
-function setWave(on) { document.querySelectorAll('.wave').forEach(b => b.classList.toggle('paused', !on)); }
-function skip(sec)   { if (audio.duration) audio.currentTime = Math.max(0, Math.min(audio.duration, audio.currentTime + sec)); }
-function repeatSentence() { if (audio.duration) { audio.currentTime = Math.max(0, audio.currentTime - 5); audio.play(); } }
-
-
-/* ================================================================
-   PROGRESS — نوار پیشرفت
-================================================================ */
-function formatTime(s) {
-  if (!isFinite(s)) return '00:00';
-  return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(Math.floor(s % 60)).padStart(2, '0');
-}
-audio.addEventListener('loadedmetadata', () => { document.getElementById('audioDuration').textContent = formatTime(audio.duration); });
-audio.addEventListener('timeupdate', () => {
-  if (!audio.duration) return;
-  const pct = (audio.currentTime / audio.duration) * 100;
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressDot').style.left   = pct + '%';
-  document.getElementById('currentTime').textContent  = formatTime(audio.currentTime);
-});
-document.getElementById('progressBar').addEventListener('click', e => {
-  if (!audio.duration) return;
-  const rect = document.getElementById('progressBar').getBoundingClientRect();
-  audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+r1.addEventListener('click',function(e){
+  const wrap=e.target.closest('.card-wrap');if(!wrap)return;
+  const isFree=wrap.dataset.free==='true';
+  const isLocked=wrap.classList.contains('locked');
+  const idx=parseInt(wrap.dataset.index,10);
+  const url=(row1Cards[idx]&&row1Cards[idx].url||'').trim();
+  if(isFree){if(url)window.location.href=url;else showToast('✅ در حال بارگذاری...');return;}
+  if(isLocked||!isLoggedIn()){openLoginPopup(null);return;}
+  if(url)window.location.href=url;else showToast('✅ در حال بارگذاری...');
 });
 
+function updateLoginIcon(){const b=document.getElementById('loginIconBtn');if(b)b.classList.toggle('logged-in',!!isLoggedIn());}
+function setLearningAccess(){updateLoginIcon();}
 
-/* ================================================================
-   VOLUME & SPEED — حجم صدا و سرعت پخش
-================================================================ */
-document.getElementById('volumeSlider').addEventListener('input', function() { audio.volume = parseFloat(this.value); });
-document.querySelectorAll('.speed').forEach(btn => {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.speed').forEach(s => s.classList.remove('active'));
-    this.classList.add('active');
-    audio.playbackRate = Number(this.dataset.speed);
-  });
-});
-
-
-/* ================================================================
-   FAVORITES & LESSON TABS — علاقه‌مندی و تب‌های پلیر
-================================================================ */
-function toggleFavorite(btn) {
-  if (btn.textContent.trim() === '♡') { btn.textContent = '♥'; btn.style.color = '#ff6f9f'; }
-  else                                 { btn.textContent = '♡'; btn.style.color = ''; }
-}
-function togglePlayerFavorite() { toggleFavorite(document.getElementById('playerFavorite')); }
-function switchTab(el, tab) {
-  document.querySelectorAll('.lesson-tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('transcriptContent').style.display = tab === 'transcript' ? 'block' : 'none';
-  document.getElementById('vocabContent').style.display      = tab === 'vocab'       ? 'block' : 'none';
-  document.getElementById('notesContent').style.display      = tab === 'notes'       ? 'block' : 'none';
+function onLoginIconClick(){
+  if(isLoggedIn()){if(confirm('می‌خواهید از حساب خود خارج شوید؟')){localStorage.removeItem(SESSION_KEY);location.reload();}}
+  else{openLoginPopup(null);}
 }
 
-
-/* ================================================================
-   KEYBOARD — کیبورد شورتکات
-================================================================ */
-document.addEventListener('keydown', e => {
-  if (!playerScreen.classList.contains('active')) return;
-  if (e.code === 'Space')  { e.preventDefault(); togglePlay(); }
-  if (e.code === 'Escape') { goHome(); }
+/* ===== LEARNING CARDS ===== */
+const learningCards=Array.from(document.querySelectorAll('.learning-card'));
+function enterLearningCard(card){const url=(card.dataset.url||'').trim();if(url){window.location.href=url;}else{showToast('به‌زودی این بخش فعال می‌شود');}}
+document.querySelectorAll('.learning-item .learning-enter').forEach(function(btn){
+  btn.addEventListener('click',function(e){e.stopPropagation();enterLearningCard(btn.closest('.learning-item').querySelector('.learning-card'));});
 });
+learningCards.forEach(function(card){card.addEventListener('click',function(){enterLearningCard(card);});});
 
+async function verifyCurrentSubscription(){
+  const session=getSession();
+  if(!session||!session.phone||!session.verified){updateLoginIcon();return false;}
+  try{
+    const subs=await sbGet('subscriptions',`phone=eq.${encodeURIComponent(session.phone)}&is_active=eq.true`);
+    const active=Array.isArray(subs)&&subs.length>0;
+    if(!active){localStorage.removeItem(SESSION_KEY);updateLoginIcon();return false;}
+    updateLoginIcon();unlockAllCards();return true;
+  }catch(e){updateLoginIcon();return false;}
+}
 
-/* ================================================================
-   INIT — اجرای اولیه
-================================================================ */
 updateLoginIcon();
-renderAll();
 verifyCurrentSubscription();
+
+/* ===== HERO SLIDER ===== */
+const slidesEl=document.getElementById('slides');
+const dots=document.querySelectorAll('.dot');
+let cur=0;const total=3;
+function goTo(n){cur=(n+total)%total;slidesEl.style.transform=`translateX(${cur*100}%)`;dots.forEach((d,i)=>d.classList.toggle('active',i===cur));}
+document.getElementById('heroNext').addEventListener('click',()=>goTo(cur-1));
+document.getElementById('heroPrev').addEventListener('click',()=>goTo(cur+1));
+dots.forEach(d=>d.addEventListener('click',()=>goTo(+d.dataset.i)));
+let timer=setInterval(()=>goTo(cur+1),3800);
+document.getElementById('hero').addEventListener('touchstart',()=>clearInterval(timer),{passive:true});
+
+/* ===== STORIES ===== */
+var stories=[],storyIndex=0,storyTimer=null;
+var STORY_SEEN_KEY='planlife_lingua_stories_v1';var DAY_MS=24*60*60*1000;
+function getSeenMap(){try{var raw=localStorage.getItem(STORY_SEEN_KEY);if(!raw)return{};var map=JSON.parse(raw),now=Date.now(),cleaned={};Object.keys(map).forEach(function(k){if(now-map[k]<DAY_MS)cleaned[k]=map[k];});return cleaned;}catch(e){return{};}}
+function markSeen(idx){try{var map=getSeenMap();map[idx]=Date.now();localStorage.setItem(STORY_SEEN_KEY,JSON.stringify(map));}catch(e){}}
+function isSeen(idx){return Object.prototype.hasOwnProperty.call(getSeenMap(),idx);}
+function initStories(){
+  var items=document.querySelectorAll('.story-item');
+  items.forEach(function(item){
+    var idx=parseInt(item.dataset.index,10);var seen=isSeen(idx);
+    stories.push({el:item,img:item.dataset.img||'',caption:item.dataset.caption||'',btnShow:(item.dataset.btnShow||'').toLowerCase()==='true',btnText:item.dataset.btnText||'',btnLink:item.dataset.btnLink||'',seen:seen});
+    if(seen)item.classList.add('seen');
+    item.addEventListener('click',function(){openStoryModal(idx);});
+  });
+  var el=document.getElementById('stories-scroll');
+  var isDown=false,startX,scrollLeft;
+  el.addEventListener('mousedown',function(e){isDown=true;startX=e.pageX-el.offsetLeft;scrollLeft=el.scrollLeft;el.style.cursor='grabbing';});
+  el.addEventListener('mouseleave',function(){isDown=false;el.style.cursor='grab';});
+  el.addEventListener('mouseup',function(){isDown=false;el.style.cursor='grab';});
+  el.addEventListener('mousemove',function(e){if(!isDown)return;e.preventDefault();el.scrollLeft=scrollLeft-(e.pageX-el.offsetLeft-startX)*1.4;});
+}
+var savedScrollY=0;
+function openStoryModal(idx){storyIndex=idx;savedScrollY=window.scrollY||0;document.body.style.position='fixed';document.body.style.top=(-savedScrollY)+'px';document.body.style.left='0';document.body.style.right='0';document.body.style.width='100%';document.getElementById('story-modal').classList.add('open');renderStoryModal();buildProgressBar();startStoryTimer();}
+function closeStoryModal(){document.getElementById('story-modal').classList.remove('open');clearStoryTimer();var cd=document.getElementById('story-modal-content');var vid=cd.querySelector('video');if(vid){vid.pause();vid.removeAttribute('src');vid.load();vid.remove();}document.body.style.position='';document.body.style.top='';document.body.style.left='';document.body.style.right='';document.body.style.width='';window.scrollTo(0,savedScrollY);}
+function renderStoryModal(){var s=stories[storyIndex];if(!s){closeStoryModal();return;}s.seen=true;s.el.classList.add('seen');markSeen(storyIndex);var cd=document.getElementById('story-modal-content');var oldV=cd.querySelector('video');if(oldV){oldV.pause();oldV.src='';oldV.remove();}var oldI=cd.querySelector('img');if(oldI)oldI.remove();var img=document.createElement('img');img.src=s.img;img.alt='';img.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';cd.appendChild(img);document.getElementById('story-caption').textContent=s.caption;var btn=document.getElementById('story-action-btn');if(s.btnShow&&s.btnLink){btn.textContent=s.btnText||'مشاهده بیشتر';btn.href=s.btnLink;btn.classList.add('show');}else{btn.classList.remove('show');btn.removeAttribute('href');}}
+function buildProgressBar(){var bar=document.getElementById('story-progress-bar');bar.innerHTML='';stories.forEach(function(s,i){var seg=document.createElement('div');seg.className='progress-seg';if(i<storyIndex)seg.classList.add('done');if(i===storyIndex)seg.classList.add('active');var fill=document.createElement('div');fill.className='progress-seg-fill';seg.appendChild(fill);bar.appendChild(seg);});}
+function startStoryTimer(){clearStoryTimer();storyTimer=setTimeout(function(){storyNavigate(1);},5000);}
+function clearStoryTimer(){if(storyTimer){clearTimeout(storyTimer);storyTimer=null;}}
+function storyNavigate(dir){clearStoryTimer();storyIndex+=dir;if(storyIndex<0)storyIndex=0;if(storyIndex>=stories.length){closeStoryModal();return;}renderStoryModal();buildProgressBar();startStoryTimer();}
+document.getElementById('story-modal').addEventListener('click',function(e){if(e.target===this)closeStoryModal();});
+
+/* ===== DESKTOP TWO-COLUMN LAYOUT ===== */
+function setupDesktopLayout(){
+  const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+  const wrap = document.querySelector('.wrap');
+  const mainArea = document.getElementById('main-content-area');
+  const hero = document.getElementById('hero');
+  const storiesOuter = document.querySelector('.stories-outer');
+  const leaderboard = document.getElementById('leaderboard-section');
+  const sidebarTpl = document.getElementById('sidebar-links-tpl');
+  const existingGrid = document.querySelector('.desktop-grid');
+
+  if(isDesktop){
+    if(existingGrid) return; // already set up
+
+    // Build grid wrapper
+    const grid = document.createElement('div');
+    grid.className = 'desktop-grid';
+
+    // Left (main) col
+    const mainCol = document.createElement('div');
+    mainCol.className = 'desktop-main';
+
+    // Right (sidebar) col
+    const sideCol = document.createElement('div');
+    sideCol.className = 'desktop-sidebar';
+
+    // Move elements into grid
+    grid.appendChild(mainCol);
+    grid.appendChild(sideCol);
+
+    // Insert grid after header (before hero)
+    const header = document.querySelector('header');
+    header.after(grid);
+
+    // Move hero + stories + main content into left col
+    mainCol.appendChild(hero);
+    mainCol.appendChild(storiesOuter);
+    mainCol.appendChild(mainArea);
+
+    // Move leaderboard + sidebar links into right col
+    sideCol.appendChild(leaderboard);
+    const linksHTML = sidebarTpl.innerHTML;
+    sideCol.insertAdjacentHTML('beforeend', linksHTML);
+
+  } else {
+    if(!existingGrid) return; // already flat
+
+    // Tear down grid, restore flat structure
+    const grid = document.querySelector('.desktop-grid');
+    if(!grid) return;
+    const parent = grid.parentNode;
+
+    // Restore elements to wrap in order
+    const header = document.querySelector('header');
+    parent.insertBefore(hero, grid);
+    parent.insertBefore(storiesOuter, grid);
+    parent.insertBefore(mainArea, grid);
+    parent.insertBefore(leaderboard, grid);
+    parent.removeChild(grid);
+  }
+}
+
+/* ===== MODAL CLOSE BUTTON ===== */
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.modal-close-btn'))return;
+  const btn=e.target.closest('.modal-close-btn');
+  const modal=btn.closest('[class*="modal"],[id*="modal"],[class*="popup"],[id*="popup"]');
+  if(modal){modal.style.display='none';modal.classList.remove('show','active','open');modal.setAttribute('aria-hidden','true');}
+});
+
+/* ===== INIT ===== */
+window.addEventListener('load', function(){
+  initStories();
+  setupDesktopLayout();
+});
+window.addEventListener('resize', function(){
+  setupDesktopLayout();
+});
 </script>
 </body>
 </html>
