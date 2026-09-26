@@ -8,57 +8,239 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* ═══════════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;min-height:100%;background:#020813;font-family:Inter,Arial,sans-serif;color:#fff;overflow-x:hidden}
-body::before{content:"";position:fixed;inset:0;z-index:-3;background:radial-gradient(circle at 20% 15%,rgba(40,104,255,.22),transparent 28%),radial-gradient(circle at 80% 20%,rgba(124,69,255,.18),transparent 30%),radial-gradient(circle at 50% 90%,rgba(0,150,255,.10),transparent 35%),#020813}
-body::after{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradient(180deg,rgba(2,8,19,.10),rgba(2,8,19,.75))}
+
+/* ── پس‌زمینه اصلی ── */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-3;
+  background:
+    radial-gradient(circle at 20% 15%,rgba(40,104,255,.22),transparent 28%),
+    radial-gradient(circle at 80% 20%,rgba(124,69,255,.18),transparent 30%),
+    radial-gradient(circle at 50% 90%,rgba(0,150,255,.10),transparent 35%),
+    #020813
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-2;
+  background:linear-gradient(180deg,rgba(2,8,19,.10),rgba(2,8,19,.75))
+}
+
+/* ── قاب موبایل ── */
 .app{width:100%;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:30px}
-.phone{width:390px;min-height:820px;max-height:920px;position:relative;overflow:hidden;border-radius:44px;background:linear-gradient(180deg,rgba(4,22,43,.95),rgba(1,10,21,.98));border:1px solid rgba(138,186,255,.55);box-shadow:0 30px 100px rgba(0,0,0,.65),inset 0 0 40px rgba(65,130,255,.06)}
-.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;opacity:0;visibility:hidden;transform:translateX(30px);transition:opacity .35s ease,transform .35s ease,visibility .35s ease;z-index:2;scrollbar-width:none}
+.phone{
+  width:390px;min-height:820px;max-height:920px;
+  position:relative;overflow:hidden;border-radius:44px;
+  background:linear-gradient(180deg,rgba(4,22,43,.95),rgba(1,10,21,.98));
+  border:1px solid rgba(138,186,255,.55);
+  box-shadow:0 30px 100px rgba(0,0,0,.65),inset 0 0 40px rgba(65,130,255,.06)
+}
+
+/* ── صفحه‌ها (home / player) ── */
+.screen{
+  position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
+  opacity:0;visibility:hidden;transform:translateX(30px);
+  transition:opacity .35s ease,transform .35s ease,visibility .35s ease;
+  z-index:2;scrollbar-width:none
+}
 .screen::-webkit-scrollbar{display:none}
 .screen.active{opacity:1;visibility:visible;transform:translateX(0)}
-/* HEADER */
-.header{position:absolute;top:0;left:0;right:0;z-index:10;padding:28px 22px 12px;background:linear-gradient(180deg,rgba(2,8,19,.85) 0%,rgba(2,8,19,.4) 70%,transparent 100%)}
+
+
+/* ═══════════════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════════════ */
+.header{
+  position:absolute;top:0;left:0;right:0;z-index:10;
+  padding:28px 22px 12px;
+  background:linear-gradient(180deg,rgba(2,8,19,.85) 0%,rgba(2,8,19,.4) 70%,transparent 100%)
+}
 .top-row{display:flex;align-items:center;justify-content:space-between}
 .brand{display:flex;align-items:center;gap:11px}
-.sound-logo{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:14px;background:radial-gradient(circle,rgba(110,96,255,.25),transparent 70%)}
+.sound-logo{
+  width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+  border-radius:14px;background:radial-gradient(circle,rgba(110,96,255,.25),transparent 70%)
+}
 .sound-bars{display:flex;gap:3px;align-items:center;height:28px}
 .sound-bars span{width:4px;border-radius:5px;background:linear-gradient(180deg,#9b7dff,#387eff)}
-.sound-bars span:nth-child(1){height:10px}.sound-bars span:nth-child(2){height:19px}.sound-bars span:nth-child(3){height:25px}.sound-bars span:nth-child(4){height:15px}.sound-bars span:nth-child(5){height:21px}.sound-bars span:nth-child(6){height:11px}
+.sound-bars span:nth-child(1){height:10px}.sound-bars span:nth-child(2){height:19px}
+.sound-bars span:nth-child(3){height:25px}.sound-bars span:nth-child(4){height:15px}
+.sound-bars span:nth-child(5){height:21px}.sound-bars span:nth-child(6){height:11px}
 .brand-text h1{font-size:26px;line-height:1.1;font-weight:700;letter-spacing:-1px}
 .brand-text p{margin-top:3px;color:#7e9abd;font-size:13px}
-.login-icon-btn{width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#ff5a5a;background:rgba(255,80,80,.16);border:1px solid rgba(255,90,90,.65);box-shadow:0 0 14px rgba(255,80,80,.28),inset 0 1px 0 rgba(255,255,255,.25);transition:all .25s ease}
-.login-icon-btn.logged-in{color:#2ecc71;background:rgba(46,204,113,.16);border-color:rgba(46,204,113,.7);box-shadow:0 0 14px rgba(46,204,113,.35),inset 0 1px 0 rgba(255,255,255,.25)}
+
+/* دکمه ورود/خروج */
+.login-icon-btn{
+  width:40px;height:40px;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:#ff5a5a;background:rgba(255,80,80,.16);
+  border:1px solid rgba(255,90,90,.65);
+  box-shadow:0 0 14px rgba(255,80,80,.28),inset 0 1px 0 rgba(255,255,255,.25);
+  transition:all .25s ease
+}
+.login-icon-btn.logged-in{
+  color:#2ecc71;background:rgba(46,204,113,.16);
+  border-color:rgba(46,204,113,.7);
+  box-shadow:0 0 14px rgba(46,204,113,.35),inset 0 1px 0 rgba(255,255,255,.25)
+}
 .login-icon-btn:active{transform:scale(.93)}
-/* HERO */
-.hero{position:relative;height:220px;background-image:linear-gradient(180deg,rgba(2,8,19,.15) 0%,rgba(2,8,19,.05) 30%,rgba(2,8,19,.55) 65%,rgba(2,8,19,.98) 100%),url("http://fs3.centraldnserver.com/~planlife/pics/english/podcast/slide.jpeg");background-size:cover;background-position:center top;background-repeat:no-repeat}
+
+
+/* ═══════════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════════ */
+.hero{
+  position:relative;height:220px;
+  background-image:
+    linear-gradient(180deg,rgba(2,8,19,.15) 0%,rgba(2,8,19,.05) 30%,rgba(2,8,19,.55) 65%,rgba(2,8,19,.98) 100%),
+    url("http://fs3.centraldnserver.com/~planlife/pics/english/podcast/slide.jpeg");
+  background-size:cover;background-position:center top;background-repeat:no-repeat
+}
 .hero-text{position:absolute;z-index:2;left:22px;bottom:20px}
 .hero-text p{color:#89b4e7;font-size:14px;letter-spacing:.2px}
 .hero-text strong{display:block;margin-top:4px;font-size:16px;font-weight:600}
-.search-button{width:40px;height:40px;position:absolute;right:20px;bottom:18px;border-radius:50%;background:rgba(2,13,28,.55);border:1px solid rgba(150,190,255,.2);color:#fff;font-size:19px;cursor:pointer;z-index:4}
-/* SOURCE TABS (تب‌های منبع) */
-.source-tabs-wrap{padding:14px 16px 0;overflow-x:auto;scrollbar-width:none}
+.search-button{
+  width:40px;height:40px;position:absolute;right:20px;bottom:18px;
+  border-radius:50%;background:rgba(2,13,28,.55);border:1px solid rgba(150,190,255,.2);
+  color:#fff;font-size:19px;cursor:pointer;z-index:4
+}
+
+
+/* ═══════════════════════════════════════════════════
+   تب‌های منبع — شیشه‌ای (glassmorphism)
+   هر تب = یه کلاس/منبع اصلی (British Council, BBC, ...)
+═══════════════════════════════════════════════════ */
+.source-tabs-wrap{
+  padding:16px 16px 0;
+  overflow-x:auto;scrollbar-width:none
+}
 .source-tabs-wrap::-webkit-scrollbar{display:none}
-.source-tabs{display:flex;gap:8px;padding:5px;background:rgba(7,27,49,.8);border-radius:20px;width:fit-content;min-width:100%}
-.source-tab{white-space:nowrap;padding:9px 16px;border-radius:16px;font-size:12px;font-weight:600;color:#7a9abf;cursor:pointer;transition:.25s;letter-spacing:.2px}
-.source-tab.active{color:#fff;background:linear-gradient(135deg,#4a5cff,#6a4fff);box-shadow:0 4px 16px rgba(79,86,255,.4)}
-/* CATEGORY PILLS (زیر تب‌ها) */
-.categories{display:flex;gap:9px;overflow-x:auto;padding:10px 16px 11px;scrollbar-width:none}
+
+.source-tabs{
+  display:flex;gap:10px;
+  padding-bottom:4px;
+  width:fit-content;min-width:100%
+}
+
+/* هر تب شیشه‌ای */
+.source-tab{
+  position:relative;
+  white-space:nowrap;
+  padding:10px 18px;
+  border-radius:20px;
+  font-size:12px;font-weight:700;
+  letter-spacing:.3px;
+  cursor:pointer;
+  color:rgba(180,210,255,.65);
+  /* شیشه */
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.10);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),
+    0 4px 16px rgba(0,0,0,.25);
+  transition:all .25s ease;
+  overflow:hidden
+}
+/* نور داخلی هاور */
+.source-tab::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 60%);
+  opacity:0;transition:opacity .25s
+}
+.source-tab:hover::before{opacity:1}
+.source-tab:hover{color:rgba(220,235,255,.9);border-color:rgba(255,255,255,.2)}
+
+/* تب فعال */
+.source-tab.active{
+  color:#fff;
+  background:rgba(86,106,255,.25);
+  border-color:rgba(130,160,255,.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.25),
+    0 6px 24px rgba(70,90,255,.35),
+    0 0 0 1px rgba(100,130,255,.2);
+}
+.source-tab.active::after{
+  content:"";
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:30px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,#6c88ff,#a57bff)
+}
+
+
+/* ═══════════════════════════════════════════════════
+   تب‌های زیردسته — pills ساده
+   اینا زیرمجموعه‌های هر منبع هستن (All, Daily, ...)
+═══════════════════════════════════════════════════ */
+.categories{
+  display:flex;gap:9px;overflow-x:auto;
+  padding:12px 16px 11px;
+  scrollbar-width:none
+}
 .categories::-webkit-scrollbar{display:none}
-.category{white-space:nowrap;border:1px solid rgba(109,159,229,.22);background:rgba(8,29,52,.72);color:#b8cce5;padding:7px 14px;border-radius:30px;font-size:12px;cursor:pointer;transition:.25s}
-.category.active{color:#fff;border-color:transparent;background:linear-gradient(135deg,#586aff,#765eff);box-shadow:0 5px 20px rgba(79,86,255,.35)}
-/* LIST */
+
+.category{
+  white-space:nowrap;
+  border:1px solid rgba(109,159,229,.22);
+  background:rgba(8,29,52,.72);
+  color:#b8cce5;
+  padding:7px 14px;
+  border-radius:30px;
+  font-size:12px;
+  cursor:pointer;
+  transition:.25s
+}
+.category.active{
+  color:#fff;border-color:transparent;
+  background:linear-gradient(135deg,#586aff,#765eff);
+  box-shadow:0 5px 20px rgba(79,86,255,.35)
+}
+
+
+/* ═══════════════════════════════════════════════════
+   کارت‌های پادکست
+═══════════════════════════════════════════════════ */
 .list{padding:3px 16px 40px}
-.podcast-card{position:relative;display:flex;gap:13px;padding:11px;margin-bottom:11px;border-radius:22px;background:linear-gradient(135deg,rgba(9,34,59,.92),rgba(3,19,35,.92));border:1px solid rgba(94,150,213,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.025);cursor:pointer;min-height:116px;align-items:flex-start;transition:transform .2s,border-color .2s,box-shadow .2s}
-.podcast-card:hover{transform:translateY(-2px);border-color:rgba(102,135,255,.45);box-shadow:0 12px 30px rgba(0,0,0,.25),0 0 25px rgba(69,92,255,.08)}
+
+.podcast-card{
+  position:relative;display:flex;gap:13px;padding:11px;margin-bottom:11px;
+  border-radius:22px;
+  background:linear-gradient(135deg,rgba(9,34,59,.92),rgba(3,19,35,.92));
+  border:1px solid rgba(94,150,213,.16);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+  cursor:pointer;min-height:116px;align-items:flex-start;
+  transition:transform .2s,border-color .2s,box-shadow .2s
+}
+.podcast-card:hover{
+  transform:translateY(-2px);
+  border-color:rgba(102,135,255,.45);
+  box-shadow:0 12px 30px rgba(0,0,0,.25),0 0 25px rgba(69,92,255,.08)
+}
 .podcast-card.locked{cursor:default}
 .podcast-card.locked .play-small{background:rgba(30,50,80,.7);box-shadow:none}
-.lock-overlay{position:absolute;inset:0;border-radius:22px;z-index:8;background:rgba(2,10,25,.5);display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;padding:14px;pointer-events:none}
+
+.lock-overlay{
+  position:absolute;inset:0;border-radius:22px;z-index:8;
+  background:rgba(2,10,25,.5);
+  display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;
+  padding:14px;pointer-events:none
+}
 .lock-icon{font-size:20px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6))}
-.cover{width:110px;height:110px;flex:none;border-radius:16px;overflow:hidden;border:1px solid rgba(135,182,255,.25);position:relative;align-self:center}
+
+.cover{
+  width:110px;height:110px;flex:none;border-radius:16px;overflow:hidden;
+  border:1px solid rgba(135,182,255,.25);position:relative;align-self:center
+}
 .cover img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
 .cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.72))}
-.cover-title{position:absolute;left:7px;bottom:7px;right:7px;z-index:2;font-family:Georgia,serif;font-size:11px;line-height:1.1;color:#fff;text-shadow:0 2px 5px #000}
+.cover-title{
+  position:absolute;left:7px;bottom:7px;right:7px;z-index:2;
+  font-family:Georgia,serif;font-size:11px;line-height:1.1;color:#fff;text-shadow:0 2px 5px #000
+}
+
 .card-content{min-width:0;flex:1;padding-top:4px;padding-right:48px}
 .card-content h3{font-size:14px;line-height:1.25;font-weight:700;color:#f4f8ff;margin-bottom:4px}
 .card-description{color:#8da7c4;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:8px}
@@ -67,16 +249,35 @@ body::after{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradi
 .level{display:flex;align-items:center;gap:5px;font-size:10px;color:#8eabca;margin-top:5px}
 .level-bars{display:flex;gap:2px;align-items:flex-end}
 .level-bars span{width:3px;border-radius:3px;background:#3b9eff}
-.level-bars span:nth-child(1){height:5px}.level-bars span:nth-child(2){height:9px}.level-bars span:nth-child(3){height:13px}.level-bars span:nth-child(4){height:8px}
-.play-small{position:absolute;right:11px;bottom:13px;width:42px;height:42px;border-radius:14px;border:none;background:linear-gradient(135deg,#626cff,#7862ff);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(92,91,255,.35);cursor:pointer}
+.level-bars span:nth-child(1){height:5px}.level-bars span:nth-child(2){height:9px}
+.level-bars span:nth-child(3){height:13px}.level-bars span:nth-child(4){height:8px}
+.play-small{
+  position:absolute;right:11px;bottom:13px;
+  width:42px;height:42px;border-radius:14px;border:none;
+  background:linear-gradient(135deg,#626cff,#7862ff);
+  color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 18px rgba(92,91,255,.35);cursor:pointer
+}
 .card-actions{position:absolute;right:11px;top:12px;display:flex;gap:6px}
 .icon-button{border:0;background:none;color:#7f9bbd;font-size:18px;cursor:pointer}
-/* PLAYER */
+
+
+/* ═══════════════════════════════════════════════════
+   PLAYER
+═══════════════════════════════════════════════════ */
 .player-page{padding:28px 25px 40px}
 .player-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}
-.circle-btn{width:42px;height:42px;border-radius:50%;border:1px solid rgba(120,160,210,.18);background:rgba(8,28,49,.75);color:#fff;font-size:20px;cursor:pointer}
+.circle-btn{
+  width:42px;height:42px;border-radius:50%;
+  border:1px solid rgba(120,160,210,.18);background:rgba(8,28,49,.75);color:#fff;font-size:20px;cursor:pointer
+}
 .player-top-actions{display:flex;gap:10px}
-.player-cover{width:100%;aspect-ratio:1/1;max-width:270px;margin:0 auto 25px;border-radius:27px;overflow:hidden;border:1px solid rgba(125,177,255,.45);box-shadow:0 20px 50px rgba(0,0,0,.45),0 0 35px rgba(52,100,255,.13)}
+.player-cover{
+  width:100%;aspect-ratio:1/1;max-width:270px;margin:0 auto 25px;
+  border-radius:27px;overflow:hidden;
+  border:1px solid rgba(125,177,255,.45);
+  box-shadow:0 20px 50px rgba(0,0,0,.45),0 0 35px rgba(52,100,255,.13)
+}
 .player-cover img{width:100%;height:100%;object-fit:cover;display:block}
 .player-info{text-align:left;margin-bottom:18px}
 .player-info h2{font-size:22px;line-height:1.2;margin-bottom:8px}
@@ -91,19 +292,41 @@ body::after{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradi
 .player-controls{display:flex;justify-content:center;align-items:center;gap:35px;margin:17px 0}
 .skip{width:42px;height:42px;border:0;background:none;color:#fff;font-size:20px;cursor:pointer}
 .skip small{font-size:10px}
-.big-play{width:78px;height:78px;border-radius:50%;background:linear-gradient(135deg,#526bff,#845fff);border:3px solid rgba(125,147,255,.8);color:#fff;font-size:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 25px rgba(92,90,255,.55),inset 0 0 15px rgba(255,255,255,.08)}
+.big-play{
+  width:78px;height:78px;border-radius:50%;
+  background:linear-gradient(135deg,#526bff,#845fff);
+  border:3px solid rgba(125,147,255,.8);
+  color:#fff;font-size:28px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 0 25px rgba(92,90,255,.55),inset 0 0 15px rgba(255,255,255,.08)
+}
 .waveform{height:50px;display:flex;align-items:center;justify-content:center;gap:3px;margin:10px 0 18px}
 .wave{width:3px;border-radius:10px;background:linear-gradient(180deg,#4b83ff,#8c63ff);animation:wave 1s ease-in-out infinite alternate}
-.wave:nth-child(2n){animation-delay:.1s}.wave:nth-child(3n){animation-delay:.2s}.wave:nth-child(4n){animation-delay:.3s}
+.wave:nth-child(2n){animation-delay:.1s}.wave:nth-child(3n){animation-delay:.2s}
+.wave:nth-child(4n){animation-delay:.3s}
 @keyframes wave{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
 .wave.paused{animation-play-state:paused}
 .controls-row{display:flex;gap:10px}
-.speed-box{flex:1;display:flex;align-items:center;justify-content:space-around;padding:10px;border-radius:24px;background:rgba(7,29,52,.75);border:1px solid rgba(105,151,207,.18);color:#91a7c2;font-size:10px;min-width:0}
+.speed-box{
+  flex:1;display:flex;align-items:center;justify-content:space-around;
+  padding:10px;border-radius:24px;
+  background:rgba(7,29,52,.75);border:1px solid rgba(105,151,207,.18);
+  color:#91a7c2;font-size:10px;min-width:0
+}
 .speed{cursor:pointer}
 .speed.active{padding:7px 13px;color:#fff;border-radius:20px;background:#5a69ff;box-shadow:0 0 15px rgba(89,94,255,.35)}
-.volume-box{width:130px;min-width:130px;max-width:130px;display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:24px;background:rgba(7,29,52,.75);border:1px solid rgba(105,151,207,.18);overflow:hidden}
+.volume-box{
+  width:130px;min-width:130px;max-width:130px;
+  display:flex;align-items:center;gap:8px;
+  padding:10px 12px;border-radius:24px;
+  background:rgba(7,29,52,.75);border:1px solid rgba(105,151,207,.18);overflow:hidden
+}
 .volume-icon{font-size:15px;flex:none}
-.volume-slider{flex:1;min-width:0;width:100%;accent-color:#6c71ff;cursor:pointer;-webkit-appearance:none;appearance:none;height:4px;border-radius:4px;background:#253e5c;outline:none}
+.volume-slider{
+  flex:1;min-width:0;width:100%;accent-color:#6c71ff;cursor:pointer;
+  -webkit-appearance:none;appearance:none;height:4px;border-radius:4px;
+  background:#253e5c;outline:none
+}
 .volume-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#6c71ff;cursor:pointer;box-shadow:0 0 6px rgba(108,113,255,.6)}
 .volume-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#6c71ff;cursor:pointer;border:none}
 .lesson-tabs{display:flex;margin-top:18px;padding:6px;border-radius:24px;background:#071b31}
@@ -128,13 +351,38 @@ body::after{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradi
 .repeat-icon{font-size:22px;color:#50b7ff}
 .repeat-text strong{display:block;font-size:12px}
 .repeat-text small{color:#8298b4;font-size:9px}
-/* TOAST */
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);z-index:99999;background:rgba(8,20,55,.95);border:1px solid rgba(255,255,255,.2);border-radius:50px;padding:10px 24px;font-size:13px;font-weight:700;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.4);opacity:0;transition:all .3s ease;pointer-events:none;white-space:nowrap}
+
+
+/* ═══════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════ */
+.toast{
+  position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);
+  z-index:99999;background:rgba(8,20,55,.95);border:1px solid rgba(255,255,255,.2);
+  border-radius:50px;padding:10px 24px;font-size:13px;font-weight:700;color:#fff;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);opacity:0;transition:all .3s ease;
+  pointer-events:none;white-space:nowrap
+}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-/* LOGIN POPUP */
-.popup-overlay{position:fixed;inset:0;z-index:10000;background:rgba(5,15,50,.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease}
+
+
+/* ═══════════════════════════════════════════════════
+   LOGIN POPUP
+═══════════════════════════════════════════════════ */
+.popup-overlay{
+  position:fixed;inset:0;z-index:10000;
+  background:rgba(5,15,50,.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .3s ease
+}
 .popup-overlay.open{opacity:1;pointer-events:auto}
-.popup-sheet{width:100%;max-width:520px;background:rgba(8,20,55,.92);border:1px solid rgba(255,255,255,.18);border-bottom:none;border-radius:28px 28px 0 0;padding:28px 24px 32px;box-shadow:0 -20px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.2);transform:translateY(100%);transition:transform .4s cubic-bezier(.34,1.2,.64,1)}
+.popup-sheet{
+  width:100%;max-width:520px;
+  background:rgba(8,20,55,.92);border:1px solid rgba(255,255,255,.18);border-bottom:none;
+  border-radius:28px 28px 0 0;padding:28px 24px 32px;
+  box-shadow:0 -20px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.2);
+  transform:translateY(100%);transition:transform .4s cubic-bezier(.34,1.2,.64,1)
+}
 .popup-overlay.open .popup-sheet{transform:translateY(0)}
 .popup-handle{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.25);margin:0 auto 20px}
 .popup-title{font-size:17px;font-weight:800;color:#fff;text-align:center;margin-bottom:6px}
@@ -155,7 +403,11 @@ body::after{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradi
 .btn-sub.telegram{background:linear-gradient(135deg,#1e88e5,#0d47a1);color:#fff}
 .btn-sub.bale{background:linear-gradient(135deg,#00c853,#1b5e20);color:#fff}
 .btn-sub.whatsapp{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff}
-/* PRICE POPUP */
+
+
+/* ═══════════════════════════════════════════════════
+   PRICE POPUP
+═══════════════════════════════════════════════════ */
 .price-overlay{position:fixed;inset:0;z-index:11000;background:rgba(5,10,30,.8);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s ease}
 .price-overlay.open{opacity:1;pointer-events:auto}
 .price-sheet{width:100%;max-width:400px;background:rgba(8,18,50,.96);border:1px solid rgba(255,255,255,.18);border-radius:28px;padding:28px 22px 24px;box-shadow:0 24px 80px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.2);transform:scale(.9);transition:transform .35s cubic-bezier(.34,1.3,.64,1)}
@@ -168,7 +420,15 @@ body::after{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradi
 .plan-old{font-size:11px;color:rgba(255,100,100,.7);text-decoration:line-through;direction:ltr}
 .plan-new{font-size:14px;font-weight:800;color:#7ec8ff;direction:ltr}
 .price-subscribe-btns{display:flex;flex-direction:column;gap:9px;margin-top:16px}
-@media(max-width:600px){.app{padding:0}.phone{width:100%;min-height:100vh;max-height:none;border-radius:0;border:none}}
+
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════ */
+@media(max-width:600px){
+  .app{padding:0}
+  .phone{width:100%;min-height:100vh;max-height:none;border-radius:0;border:none}
+}
 @media(min-width:601px){.phone{height:900px}}
 </style>
 </head>
@@ -187,7 +447,9 @@ body::after{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradi
         <div class="brand-text"><h1>English</h1><p>Podcast</p></div>
       </div>
       <button class="login-icon-btn" id="loginIconBtn" type="button" onclick="onLoginIconClick()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.6 3.6-6 8-6s8 2.4 8 6"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.6 3.6-6 8-6s8 2.4 8 6"/>
+        </svg>
       </button>
     </div>
   </header>
@@ -197,14 +459,15 @@ body::after{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradi
     <div class="hero-text"><p>Better English</p><strong>Brighter Future</strong></div>
   </div>
 
-  <!-- ── تب‌های منبع ── -->
+  <!-- ── تب‌های منبع اصلی (شیشه‌ای) ── -->
   <div class="source-tabs-wrap">
     <div class="source-tabs" id="sourceTabs"></div>
   </div>
 
-  <!-- ── فیلتر دسته‌بندی ── -->
+  <!-- ── زیردسته‌های منبع انتخابی ── -->
   <div class="categories" id="categoryPills"></div>
 
+  <!-- ── لیست پادکست‌ها ── -->
   <div class="list" id="podcastList"></div>
 
 </section>
@@ -279,9 +542,10 @@ body::after{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradi
   </div>
 </section>
 
-</div></div>
+</div></div><!-- /phone /app -->
 
-<!-- LOGIN POPUP -->
+
+<!-- ══════════════════ LOGIN POPUP ══════════════════ -->
 <div class="popup-overlay" id="loginPopup">
   <div class="popup-sheet">
     <div class="popup-handle"></div>
@@ -303,7 +567,8 @@ body::after{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradi
   </div>
 </div>
 
-<!-- PRICE POPUP -->
+
+<!-- ══════════════════ PRICE POPUP ══════════════════ -->
 <div class="price-overlay" id="pricePopup" onclick="closePriceIfOutside(event)">
   <div class="price-sheet">
     <div class="price-header">
@@ -321,49 +586,70 @@ body::after{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradi
   </div>
 </div>
 
+
 <div class="toast" id="toast"></div>
+
 
 <script>
 /* ================================================================
    ⚙️  SUPABASE CONFIG
+   → آدرس و کلید پایگاه داده رو اینجا بذار
 ================================================================ */
 const SB_URL = 'https://hjzzvzxhrqovvducnxha.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhqenp2enhocnFvdnZkdWNueGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NDY0MTksImV4cCI6MjA5NzUyMjQxOX0.XfFimXnkKHFBlYUE-E7daaBNjPJZV-D21UfCL_1SeoQ';
 const SB_H   = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
 
+
 /* ================================================================
-   📚  DATA — تب‌های منبع و پادکست‌ها
+   📚  DATA — منابع و پادکست‌ها
    ================================================================
 
-   ساختار:
+   ساختار کلی:
    ┌──────────────────────────────────────────────────────────────┐
-   │  sources  ←  آرایه‌ای از تب‌های بالای صفحه                  │
-   │  هر source یه id، label، و آرایه podcasts داره             │
+   │  sources  →  آرایه‌ای از منابع (تب‌های اصلی بالای صفحه)    │
+   │                                                              │
+   │  هر source شامل:                                            │
+   │    id          → شناسه یکتا (انگلیسی، بدون فاصله)          │
+   │    label       → متنی که روی تب نمایش داده می‌شه           │
+   │    categories  → آرایه زیردسته‌ها (تب‌های پایین‌تر)        │
+   │                  اولی باید 'All' باشه                       │
+   │    podcasts    → آرایه پادکست‌های این منبع                  │
+   │                                                              │
    │  هر podcast شامل:                                           │
-   │    id          ← باید با podcast_id در Supabase یکی باشه  │
-   │    free        ← true = بدون لاگین                         │
-   │    title       ← عنوان                                     │
-   │    description ← توضیح کوتاه                               │
-   │    tag         ← دسته‌بندی (Daily/Conversation/...)        │
-   │    level       ← Beginner | Intermediate | Advanced        │
-   │    episodes    ← مثلاً "12 Episodes"                       │
-   │    dur         ← مثلاً "15-20 min"                        │
-   │    image       ← URL عکس                                   │
-   │    audio       ← URL فایل صوتی                            │
+   │    id          → باید با podcast_id در Supabase یکی باشه    │
+   │    free        → true = بدون لاگین قابل پخش                │
+   │    title       → عنوان                                      │
+   │    description → توضیح کوتاه                                │
+   │    tag         → دسته‌بندی (باید در categories منبع باشه)  │
+   │    level       → Beginner | Intermediate | Advanced         │
+   │    episodes    → مثلاً "12 Episodes"                        │
+   │    dur         → مثلاً "15-20 min"                         │
+   │    image       → URL عکس کاور                              │
+   │    audio       → URL فایل صوتی                             │
    └──────────────────────────────────────────────────────────────┘
 
-   برای اضافه کردن podcast جدید:
-   → یه آبجکت به آرایه podcasts اضافه کن
-   → همون id رو توی جدول transcripts و vocabulary سوپابیس بذار
+   ➕ برای اضافه کردن منبع جدید:
+      → یه آبجکت جدید به آرایه sources اضافه کن
+      → id و label و categories و podcasts بذار
+
+   ➕ برای اضافه کردن پادکست جدید به یه منبع:
+      → به آرایه podcasts اون منبع یه آبجکت اضافه کن
+      → tag باید در categories اون منبع وجود داشته باشه
+      → همون id رو توی جداول transcripts و vocabulary سوپابیس بذار
 
 ================================================================ */
-
 const sources = [
 
-  /* ── تب ۱: British Council ─────────────────────────────── */
+  /* ════════════════════════════════════════════════
+     منبع ۱ — British Council
+  ════════════════════════════════════════════════ */
   {
     id: 'british-council',
     label: 'British Council',
+
+    /* زیردسته‌های این منبع (تب‌های پایین‌تر) */
+    categories: ['All', 'Daily English', 'Conversation', 'Vocabulary', 'Business', 'Grammar', 'Pronunciation'],
+
     podcasts: [
       {
         id:          'bc-daily-conversations',
@@ -488,10 +774,17 @@ const sources = [
     ]
   },
 
-  /* ── تب ۲: BBC Learn English ────────────────────────────── */
+
+  /* ════════════════════════════════════════════════
+     منبع ۲ — BBC Learn English
+  ════════════════════════════════════════════════ */
   {
     id: 'bbc-learn-english',
     label: 'BBC Learn English',
+
+    /* زیردسته‌های این منبع */
+    categories: ['All', 'Daily English', 'Business', 'Vocabulary', 'Conversation', 'Grammar'],
+
     podcasts: [
       {
         id:          'bbc-6min-english',
@@ -616,10 +909,17 @@ const sources = [
     ]
   },
 
-  /* ── تب ۳: VOA English ──────────────────────────────────── */
+
+  /* ════════════════════════════════════════════════
+     منبع ۳ — VOA English
+  ════════════════════════════════════════════════ */
   {
     id: 'voa-english',
     label: 'VOA English',
+
+    /* زیردسته‌های این منبع */
+    categories: ['All', 'Daily English', 'Grammar', 'Vocabulary', 'Conversation', 'Business', 'Pronunciation'],
+
     podcasts: [
       {
         id:          'voa-learning-english',
@@ -744,10 +1044,17 @@ const sources = [
     ]
   },
 
-  /* ── تب ۴: My Podcasts (اسم بعداً تغییر بده) ───────────── */
+
+  /* ════════════════════════════════════════════════
+     منبع ۴ — My Podcasts (اسمش رو عوض کن)
+  ════════════════════════════════════════════════ */
   {
     id: 'my-podcasts',
     label: 'My Podcasts',
+
+    /* زیردسته‌های این منبع */
+    categories: ['All', 'Daily English', 'Conversation', 'Vocabulary', 'Business'],
+
     podcasts: [
       {
         id:          'my-ep-01',
@@ -872,19 +1179,29 @@ const sources = [
     ]
   },
 
+  /* ════════════════════════════════════════════════
+     ➕ منبع جدید رو اینجا اضافه کن
+     ════════════════════════════════════════════════
+     {
+       id: 'my-new-source',
+       label: 'New Source',
+       categories: ['All', 'Daily English', ...],
+       podcasts: [...]
+     },
+  ════════════════════════════════════════════════ */
+
 ];
 
-/* ── دسته‌بندی‌های قابل فیلتر ── */
-const ALL_CATEGORIES = ['All', 'Daily English', 'Conversation', 'Vocabulary', 'Business', 'Grammar', 'Pronunciation'];
 
 /* ================================================================
-   STATE
+   STATE — وضعیت فعلی صفحه
 ================================================================ */
-let activeSourceId  = sources[0].id;
-let activeCategory  = 'All';
+let activeSourceId  = sources[0].id;   // کدوم منبع انتخابه
+let activeCategory  = 'All';           // کدوم زیردسته انتخابه
+
 
 /* ================================================================
-   SUPABASE HELPERS
+   SUPABASE HELPERS — توابع کمکی برای پایگاه داده
 ================================================================ */
 async function sbGet(table, filter) {
   const r = await fetch(`${SB_URL}/rest/v1/${table}?${filter}&limit=1`, { headers: SB_H });
@@ -903,16 +1220,18 @@ async function sbInsert(table, body) {
   return r.ok;
 }
 
+
 /* ================================================================
-   SESSION
+   SESSION — مدیریت ورود کاربر
 ================================================================ */
 const SESSION_KEY = 'lingua_session_v1';
 const getSession  = () => { try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch(e) { return null; } };
 const setSession  = d  => localStorage.setItem(SESSION_KEY, JSON.stringify(d));
 const isLoggedIn  = () => { const s = getSession(); return s && s.phone && s.verified; };
 
+
 /* ================================================================
-   TOAST
+   TOAST — پیام کوتاه موقت
 ================================================================ */
 function showToast(msg, dur = 2800) {
   const t = document.getElementById('toast');
@@ -921,8 +1240,9 @@ function showToast(msg, dur = 2800) {
   setTimeout(() => t.classList.remove('show'), dur);
 }
 
+
 /* ================================================================
-   LOGIN
+   LOGIN — ورود / خروج
 ================================================================ */
 function updateLoginIcon() {
   const b = document.getElementById('loginIconBtn');
@@ -968,15 +1288,17 @@ async function doLogin() {
 }
 document.getElementById('phoneInput').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
+
 /* ================================================================
-   PRICE POPUP
+   PRICE POPUP — پنجره قیمت اشتراک
 ================================================================ */
 function openPricePopup()       { document.getElementById('pricePopup').classList.add('open'); }
 function closePricePopup()      { document.getElementById('pricePopup').classList.remove('open'); }
 function closePriceIfOutside(e) { if (e.target === document.getElementById('pricePopup')) closePricePopup(); }
 
+
 /* ================================================================
-   VERIFY SUBSCRIPTION
+   VERIFY SUBSCRIPTION — بررسی اعتبار اشتراک
 ================================================================ */
 async function verifyCurrentSubscription() {
   const session = getSession();
@@ -989,19 +1311,22 @@ async function verifyCurrentSubscription() {
   } catch(e) { updateLoginIcon(); return false; }
 }
 
+
 /* ================================================================
-   RENDER SOURCE TABS
+   RENDER SOURCE TABS — رندر تب‌های منبع (شیشه‌ای)
+   هر کلیک: منبع رو عوض می‌کنه، زیردسته رو ریست می‌کنه
 ================================================================ */
 function renderSourceTabs() {
   const wrap = document.getElementById('sourceTabs');
   wrap.innerHTML = '';
+
   sources.forEach(src => {
     const btn = document.createElement('button');
     btn.className   = 'source-tab' + (src.id === activeSourceId ? ' active' : '');
     btn.textContent = src.label;
     btn.onclick = () => {
       activeSourceId = src.id;
-      activeCategory = 'All';
+      activeCategory = 'All';          // ریست زیردسته وقتی منبع عوض میشه
       renderSourceTabs();
       renderCategoryPills();
       renderPodcastList();
@@ -1010,13 +1335,20 @@ function renderSourceTabs() {
   });
 }
 
+
 /* ================================================================
-   RENDER CATEGORY PILLS
+   RENDER CATEGORY PILLS — رندر زیردسته‌های منبع انتخابی
+   هر منبع categories مختص خودشو داره
 ================================================================ */
 function renderCategoryPills() {
   const wrap = document.getElementById('categoryPills');
   wrap.innerHTML = '';
-  ALL_CATEGORIES.forEach(cat => {
+
+  // پیدا کردن منبع فعال و خوندن categories اون
+  const source = sources.find(s => s.id === activeSourceId);
+  if (!source) return;
+
+  source.categories.forEach(cat => {
     const btn = document.createElement('button');
     btn.className   = 'category' + (cat === activeCategory ? ' active' : '');
     btn.textContent = cat;
@@ -1029,10 +1361,15 @@ function renderCategoryPills() {
   });
 }
 
+
 /* ================================================================
-   RENDER PODCAST LIST
+   RENDER PODCAST LIST — رندر لیست پادکست‌ها
 ================================================================ */
-function levelBars(n) { let b = ''; for (let i = 0; i < n; i++) b += '<span></span>'; return b; }
+function levelBars(n) {
+  let b = '';
+  for (let i = 0; i < n; i++) b += '<span></span>';
+  return b;
+}
 
 function renderPodcastList() {
   const loggedIn = isLoggedIn();
@@ -1042,6 +1379,7 @@ function renderPodcastList() {
   const source = sources.find(s => s.id === activeSourceId);
   if (!source) return;
 
+  // فیلتر بر اساس زیردسته انتخابی
   const filtered = activeCategory === 'All'
     ? source.podcasts
     : source.podcasts.filter(p => p.tag === activeCategory);
@@ -1082,25 +1420,28 @@ function renderPodcastList() {
   });
 }
 
+/* رندر همه چیز با هم */
 function renderAll() {
   renderSourceTabs();
   renderCategoryPills();
   renderPodcastList();
 }
 
+
 /* ================================================================
-   WAVEFORM
+   WAVEFORM — موج صوتی تزئینی
 ================================================================ */
 const waveform = document.getElementById('waveform');
 for (let i = 0; i < 48; i++) {
   const bar = document.createElement('div');
-  bar.className   = 'wave paused';
+  bar.className    = 'wave paused';
   bar.style.height = (Math.floor(Math.random() * 34) + 8) + 'px';
   waveform.appendChild(bar);
 }
 
+
 /* ================================================================
-   PLAYER
+   PLAYER — پخش پادکست
 ================================================================ */
 const homeScreen   = document.getElementById('homeScreen');
 const playerScreen = document.getElementById('playerScreen');
@@ -1119,19 +1460,20 @@ async function openPlayer(p) {
   playerScreen.classList.add('active');
   playerScreen.scrollTop = 0;
   mainPlay.textContent = '▶'; setWave(false);
-  // reset tabs
+  // ریست تب‌های پلیر
   document.querySelectorAll('.lesson-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.lesson-tab')[0].classList.add('active');
   document.getElementById('transcriptContent').style.display = 'block';
   document.getElementById('vocabContent').style.display      = 'none';
   document.getElementById('notesContent').style.display      = 'none';
-  // load from Supabase
+  // بارگذاری محتوا از Supabase
   loadTranscript(p.id);
   loadVocab(p.id);
 }
 
+
 /* ================================================================
-   TRANSCRIPT از Supabase
+   TRANSCRIPT — بارگذاری از Supabase
 ================================================================ */
 async function loadTranscript(podcastId) {
   const loading = document.getElementById('transcriptLoading');
@@ -1150,8 +1492,9 @@ async function loadTranscript(podcastId) {
   } catch(e) { loading.textContent = '⚠️ Transcript بارگذاری نشد.'; }
 }
 
+
 /* ================================================================
-   VOCABULARY از Supabase
+   VOCABULARY — بارگذاری از Supabase
 ================================================================ */
 async function loadVocab(podcastId) {
   const vocabList = document.getElementById('vocabList');
@@ -1175,13 +1518,17 @@ async function loadVocab(podcastId) {
   }
 }
 
+
 /* ================================================================
-   NAVIGATION & PLAYBACK
+   NAVIGATION & PLAYBACK — ناوبری و کنترل پخش
 ================================================================ */
-function goHome()     { audio.pause(); playerScreen.classList.remove('active'); homeScreen.classList.add('active'); }
+function goHome() { audio.pause(); playerScreen.classList.remove('active'); homeScreen.classList.add('active'); }
 function togglePlay() {
-  if (audio.paused) { audio.play().then(() => { mainPlay.textContent = 'Ⅱ'; setWave(true); }).catch(e => console.log(e)); }
-  else              { audio.pause(); mainPlay.textContent = '▶'; setWave(false); }
+  if (audio.paused) {
+    audio.play().then(() => { mainPlay.textContent = 'Ⅱ'; setWave(true); }).catch(e => console.log(e));
+  } else {
+    audio.pause(); mainPlay.textContent = '▶'; setWave(false);
+  }
 }
 audio.addEventListener('play',  () => { mainPlay.textContent = 'Ⅱ'; setWave(true);  });
 audio.addEventListener('pause', () => { mainPlay.textContent = '▶'; setWave(false); });
@@ -1190,8 +1537,9 @@ function setWave(on) { document.querySelectorAll('.wave').forEach(b => b.classLi
 function skip(sec)   { if (audio.duration) audio.currentTime = Math.max(0, Math.min(audio.duration, audio.currentTime + sec)); }
 function repeatSentence() { if (audio.duration) { audio.currentTime = Math.max(0, audio.currentTime - 5); audio.play(); } }
 
+
 /* ================================================================
-   PROGRESS
+   PROGRESS — نوار پیشرفت
 ================================================================ */
 function formatTime(s) {
   if (!isFinite(s)) return '00:00';
@@ -1211,8 +1559,9 @@ document.getElementById('progressBar').addEventListener('click', e => {
   audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
 });
 
+
 /* ================================================================
-   VOLUME & SPEED
+   VOLUME & SPEED — حجم صدا و سرعت پخش
 ================================================================ */
 document.getElementById('volumeSlider').addEventListener('input', function() { audio.volume = parseFloat(this.value); });
 document.querySelectorAll('.speed').forEach(btn => {
@@ -1223,8 +1572,9 @@ document.querySelectorAll('.speed').forEach(btn => {
   });
 });
 
+
 /* ================================================================
-   FAVORITES & TABS
+   FAVORITES & LESSON TABS — علاقه‌مندی و تب‌های پلیر
 ================================================================ */
 function toggleFavorite(btn) {
   if (btn.textContent.trim() === '♡') { btn.textContent = '♥'; btn.style.color = '#ff6f9f'; }
@@ -1239,8 +1589,9 @@ function switchTab(el, tab) {
   document.getElementById('notesContent').style.display      = tab === 'notes'       ? 'block' : 'none';
 }
 
+
 /* ================================================================
-   KEYBOARD
+   KEYBOARD — کیبورد شورتکات
 ================================================================ */
 document.addEventListener('keydown', e => {
   if (!playerScreen.classList.contains('active')) return;
@@ -1248,13 +1599,13 @@ document.addEventListener('keydown', e => {
   if (e.code === 'Escape') { goHome(); }
 });
 
+
 /* ================================================================
-   INIT
+   INIT — اجرای اولیه
 ================================================================ */
 updateLoginIcon();
 renderAll();
 verifyCurrentSubscription();
-
 </script>
 </body>
 </html>
