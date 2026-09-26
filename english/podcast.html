@@ -188,129 +188,406 @@ body::after{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradi
 <div class="price-overlay" id="pricePopup" onclick="closePriceIfOutside(event)"><div class="price-sheet"><div class="price-header"><div class="price-title">💎 قیمت اشتراک</div><button class="price-close" onclick="closePricePopup()">✕</button></div><div class="plan-row"><div class="plan-name">اشتراک ماهانه</div><div class="plan-prices"><div class="plan-new">۲۸۰,۰۰۰ تومان</div></div></div><div class="plan-row"><div class="plan-name">اشتراک ۶ ماهه</div><div class="plan-prices"><div class="plan-old">۱,۶۸۰,۰۰۰</div><div class="plan-new">۱,۱۹۰,۰۰۰ تومان</div></div></div><div class="plan-row"><div class="plan-name">اشتراک سالانه</div><div class="plan-prices"><div class="plan-old">۳,۳۶۰,۰۰۰</div><div class="plan-new">۲,۵۸۰,۰۰۰ تومان</div></div></div><div class="price-subscribe-btns"><a class="btn-sub telegram" href="https://t.me/planlifeir" target="_blank">خرید از تلگرام</a><a class="btn-sub bale" href="https://ble.ir/planlifeir" target="_blank">خرید از بله</a><a class="btn-sub whatsapp" href="https://wa.me/00905437333582" target="_blank">خرید از واتس‌اپ</a></div></div></div>
 <div class="toast" id="toast"></div>
 <script>
-const SB_URL='https://hjzzvzxhrqovvducnxha.supabase.co';
-const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhqenp2enhocnFvdnZkdWNueGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NDY0MTksImV4cCI6MjA5NzUyMjQxOX0.XfFimXnkKHFBlYUE-E7daaBNjPJZV-D21UfCL_1SeoQ';
-const SB_HEADERS={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
-async function sbGet(table,filter){const r=await fetch(`${SB_URL}/rest/v1/${table}?${filter}&limit=1`,{headers:SB_HEADERS});return r.json()}
-async function sbInsert(table,body){const r=await fetch(`${SB_URL}/rest/v1/${table}`,{method:'POST',headers:{...SB_HEADERS,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(body)});return r.ok}
-const SESSION_KEY='lingua_session_v1';
-const getSession=()=>{try{return JSON.parse(localStorage.getItem(SESSION_KEY)||'null')}catch(e){return null}};
-const setSession=d=>localStorage.setItem(SESSION_KEY,JSON.stringify(d));
-const isLoggedIn=()=>{const s=getSession();return s&&s.phone&&s.verified};
-function showToast(msg,dur=2800){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur)}
-function updateLoginIcon(){const b=document.getElementById('loginIconBtn');if(b)b.classList.toggle('logged-in',!!isLoggedIn())}
-function onLoginIconClick(){if(isLoggedIn()){if(confirm('می‌خواهید از حساب خود خارج شوید؟')){localStorage.removeItem(SESSION_KEY);location.reload()}}else{openLoginPopup()}}
-function openLoginPopup(){document.getElementById('loginPopup').classList.add('open');setTimeout(()=>document.getElementById('phoneInput').focus(),400)}
-function closeLoginPopup(){document.getElementById('loginPopup').classList.remove('open')}
-document.getElementById('loginPopup').addEventListener('click',function(e){if(e.target===this)closeLoginPopup()});
-async function doLogin(){
-  const input=document.getElementById('phoneInput'),errEl=document.getElementById('phoneError'),btn=document.getElementById('btnLogin'),btnText=document.getElementById('loginBtnText');
-  errEl.textContent='';
-  let phone=input.value.trim().replace(/\D/g,'');
-  if(phone.startsWith('0'))phone=phone.slice(1);
-  if(phone.length<10||phone.length>11){errEl.textContent='شماره موبایل معتبر نیست';return}
-  btn.disabled=true;btnText.textContent='در حال بررسی...';
-  try{
-    const subs=await sbGet('subscriptions',`phone=eq.${phone}&is_active=eq.true`);
-    if(subs&&subs.length>0){setSession({phone,verified:true,ts:Date.now()});await sbInsert('users',{phone});closeLoginPopup();showToast('✅ خوش آمدید! دسترسی همه پادکست‌ها فعال شد');updateLoginIcon();renderPodcastList()}
-    else{await sbInsert('users',{phone});errEl.textContent='اشتراک فعال یافت نشد. لطفاً کد اشتراک تهیه کنید.'}
-  }catch(e){errEl.textContent='خطا در اتصال. دوباره تلاش کنید.'}
-  btn.disabled=false;btnText.textContent='ورود'
-}
-document.getElementById('phoneInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
-function openPricePopup(){document.getElementById('pricePopup').classList.add('open')}
-function closePricePopup(){document.getElementById('pricePopup').classList.remove('open')}
-function closePriceIfOutside(e){if(e.target===document.getElementById('pricePopup'))closePricePopup()}
-async function verifyCurrentSubscription(){
-  const session=getSession();
-  if(!session||!session.phone||!session.verified){updateLoginIcon();return false}
-  try{
-    const subs=await sbGet('subscriptions',`phone=eq.${encodeURIComponent(session.phone)}&is_active=eq.true`);
-    const active=Array.isArray(subs)&&subs.length>0;
-    if(!active){localStorage.removeItem(SESSION_KEY);updateLoginIcon();renderPodcastList();return false}
-    updateLoginIcon();return true
-  }catch(e){updateLoginIcon();return false}
-}
-const podcasts=[
-  {free:true,title:"Daily English Conversations",description:"Real conversations. Real life.",tag:"Daily English",level:"Intermediate",episodes:"12 Episodes",dur:"15-20 min",image:"http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg",audio:"https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3",transcriptUrl:"",vocab:[{word:"conversation",fa:"مکالمه"},{word:"daily",fa:"روزانه"},{word:"real life",fa:"زندگی واقعی"},{word:"practice",fa:"تمرین"}]},
-  {free:false,title:"Everyday English",description:"Small talk, big progress.",tag:"Conversation",level:"Beginner",episodes:"10 Episodes",dur:"10-15 min",image:"http://fs3.centraldnserver.com/~planlife/pics/english/podcast/2.jpeg",audio:"https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3",transcriptUrl:"",vocab:[{word:"small talk",fa:"گپ کوچک"},{word:"progress",fa:"پیشرفت"},{word:"everyday",fa:"هر روز"},{word:"phrase",fa:"عبارت"}]},
-  {free:false,title:"Advanced Vocabulary",description:"Learn words. Build confidence.",tag:"Vocabulary",level:"Advanced",episodes:"15 Episodes",dur:"10-18 min",image:"http://fs3.centraldnserver.com/~planlife/pics/english/podcast/3.jpeg",audio:"https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3",transcriptUrl:"",vocab:[{word:"confidence",fa:"اعتماد به نفس"},{word:"advanced",fa:"پیشرفته"},{word:"vocabulary",fa:"واژگان"},{word:"fluency",fa:"روانی"}]},
-  {free:false,title:"Travel English",description:"Speak English Anywhere.",tag:"Conversation",level:"Intermediate",episodes:"8 Episodes",dur:"10-15 min",image:"http://fs3.centraldnserver.com/~planlife/pics/english/podcast/4.jpeg",audio:"https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3",transcriptUrl:"",vocab:[{word:"travel",fa:"سفر"},{word:"airport",fa:"فرودگاه"},{word:"hotel",fa:"هتل"},{word:"direction",fa:"مسیر"}]},
-  {free:false,title:"English for Work",description:"Communicate. Create. Grow.",tag:"Business",level:"Advanced",episodes:"10 Episodes",dur:"12-18 min",image:"http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg",audio:"https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3",transcriptUrl:"",vocab:[{word:"meeting",fa:"جلسه"},{word:"deadline",fa:"ددلاین"},{word:"presentation",fa:"ارائه"},{word:"colleague",fa:"همکار"}]}
+
+/* ================================================================
+   ⚙️  SUPABASE CONFIG
+   ================================================================ */
+const SB_URL = 'https://hjzzvzxhrqovvducnxha.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhqenp2enhocnFvdnZkdWNueGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NDY0MTksImV4cCI6MjA5NzUyMjQxOX0.XfFimXnkKHFBlYUE-E7daaBNjPJZV-D21UfCL_1SeoQ';
+const SB_H   = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+
+/* ================================================================
+   🎙️  PODCAST LIST  ← اینجا هر podcast رو اضافه / ویرایش کن
+   ================================================================
+
+   هر آیتم یه آبجکت جداست — فقط این بخش رو لازمه دست بزنی.
+
+   فیلدها:
+   ┌─────────────────┬────────────────────────────────────────────────┐
+   │ id              │ باید با podcast_id در جدول Supabase یکی باشه  │
+   │ free            │ true = بدون لاگین قابل پخشه                   │
+   │ title           │ عنوان نمایشی                                   │
+   │ description     │ زیرنویس کوتاه                                  │
+   │ tag             │ دسته‌بندی (باید با دکمه‌های categories یکی باشه)│
+   │ level           │ "Beginner" | "Intermediate" | "Advanced"       │
+   │ episodes        │ مثلاً "12 Episodes"                            │
+   │ dur             │ مثلاً "15-20 min"                              │
+   │ image           │ URL تصویر کاور                                 │
+   │ audio           │ URL فایل صوتی                                  │
+   └─────────────────┴────────────────────────────────────────────────┘
+
+   Transcript و Vocabulary از Supabase خوانده می‌شن (نیازی به تغییر اینجا نیست).
+
+   ================================================================ */
+
+const podcasts = [
+
+  // ── Podcast 1 ──────────────────────────────────────────────────
+  {
+    id:          'daily-english-conversations',
+    free:        true,
+    title:       'Daily English Conversations',
+    description: 'Real conversations. Real life.',
+    tag:         'Daily English',
+    level:       'Intermediate',
+    episodes:    '12 Episodes',
+    dur:         '15-20 min',
+    image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/1.jpeg',
+    audio:       'https://learnenglish.britishcouncil.org/sites/podcasts/files/podcast/elementary-podcasts-s01-e01.mp3',
+  },
+
+  // ── Podcast 2 ──────────────────────────────────────────────────
+  {
+    id:          'everyday-english',
+    free:        false,
+    title:       'Everyday English',
+    description: 'Small talk, big progress.',
+    tag:         'Conversation',
+    level:       'Beginner',
+    episodes:    '10 Episodes',
+    dur:         '10-15 min',
+    image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/2.jpeg',
+    audio:       'https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3',
+  },
+
+  // ── Podcast 3 ──────────────────────────────────────────────────
+  {
+    id:          'advanced-vocabulary',
+    free:        false,
+    title:       'Advanced Vocabulary',
+    description: 'Learn words. Build confidence.',
+    tag:         'Vocabulary',
+    level:       'Advanced',
+    episodes:    '15 Episodes',
+    dur:         '10-18 min',
+    image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/3.jpeg',
+    audio:       'https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3',
+  },
+
+  // ── Podcast 4 ──────────────────────────────────────────────────
+  {
+    id:          'travel-english',
+    free:        false,
+    title:       'Travel English',
+    description: 'Speak English Anywhere.',
+    tag:         'Conversation',
+    level:       'Intermediate',
+    episodes:    '8 Episodes',
+    dur:         '10-15 min',
+    image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/4.jpeg',
+    audio:       'https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3',
+  },
+
+  // ── Podcast 5 ──────────────────────────────────────────────────
+  {
+    id:          'english-for-work',
+    free:        false,
+    title:       'English for Work',
+    description: 'Communicate. Create. Grow.',
+    tag:         'Business',
+    level:       'Advanced',
+    episodes:    '10 Episodes',
+    dur:         '12-18 min',
+    image:       'http://fs3.centraldnserver.com/~planlife/pics/english/podcast/5.jpeg',
+    audio:       'https://delivery-edge.libsyn.com/shows/90154/items/7133268/2015qq.mp3',
+  },
+
 ];
-let activeCategory='All';
-function levelBars(n){let b='';for(let i=0;i<n;i++)b+='<span></span>';return b}
-function renderPodcastList(){
-  const loggedIn=isLoggedIn();
-  const list=document.getElementById('podcastList');
-  list.innerHTML='';
-  const filtered=activeCategory==='All'?podcasts:podcasts.filter(p=>p.tag===activeCategory);
-  filtered.forEach(p=>{
-    const globalIdx=podcasts.indexOf(p),locked=!p.free&&!loggedIn,bars=p.level==='Beginner'?3:4;
-    const card=document.createElement('article');
-    card.className='podcast-card'+(locked?' locked':'');
-    card.innerHTML=`<div class="cover"><img src="${p.image}" alt="${p.title}" loading="lazy"><div class="cover-title">${p.title.split(' ').slice(0,2).join('<br>')}</div></div><div class="card-content"><h3>${p.title}</h3><p class="card-description">${p.description}</p><div class="card-meta"><span>🎧 ${p.episodes}</span><span>◷ ${p.dur}</span></div><div class="tag">${p.tag}</div><div class="level"><div class="level-bars">${levelBars(bars)}</div>${p.level}</div></div><div class="card-actions"><button class="icon-button" onclick="event.stopPropagation();toggleFavorite(this)">♡</button><button class="icon-button" onclick="event.stopPropagation()">···</button></div>${locked?`<div class="lock-overlay"><span class="lock-icon">🔒</span></div><button class="play-small" onclick="event.stopPropagation();openLoginPopup()">🔒</button>`:`<button class="play-small">▶</button>`}`;
-    card.addEventListener('click',()=>locked?openLoginPopup():openPlayer(globalIdx));
-    list.appendChild(card)
-  })
+
+/* ================================================================
+   🗄️  SUPABASE HELPERS
+   ================================================================ */
+async function sbGet(table, filter) {
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?${filter}&limit=1`, { headers: SB_H });
+  return r.json();
 }
-document.querySelectorAll('.category').forEach(btn=>{btn.addEventListener('click',function(){document.querySelectorAll('.category').forEach(b=>b.classList.remove('active'));this.classList.add('active');activeCategory=this.dataset.cat;renderPodcastList()})});
-const waveform=document.getElementById('waveform');
-for(let i=0;i<48;i++){const bar=document.createElement('div');bar.className='wave paused';bar.style.height=(Math.floor(Math.random()*34)+8)+'px';waveform.appendChild(bar)}
-const homeScreen=document.getElementById('homeScreen'),playerScreen=document.getElementById('playerScreen'),audio=document.getElementById('audioPlayer'),mainPlay=document.getElementById('mainPlay');
-function openPlayer(index){
-  const p=podcasts[index];
-  document.getElementById('playerTitle').textContent=p.title;
-  document.getElementById('playerDescription').textContent=p.description;
-  document.getElementById('playerTag').textContent=p.level;
-  document.getElementById('playerImage').src=p.image;
-  document.getElementById('playerEpisodes').innerHTML='🎧 '+p.episodes;
-  document.getElementById('playerDurEl').innerHTML='◷ '+p.dur;
-  const vocabList=document.getElementById('vocabList');
-  vocabList.innerHTML='';
-  (p.vocab||[]).forEach(v=>{const item=document.createElement('div');item.className='vocab-item';item.innerHTML=`<strong>${v.word}</strong><small>${v.fa}</small>`;vocabList.appendChild(item)});
-  audio.src=p.audio;audio.load();
-  homeScreen.classList.remove('active');playerScreen.classList.add('active');playerScreen.scrollTop=0;
-  mainPlay.textContent='▶';setWave(false);
-  loadTranscript(p.transcriptUrl);
-  document.querySelectorAll('.lesson-tab').forEach(t=>t.classList.remove('active'));
+async function sbGetAll(table, filter) {
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?${filter}`, { headers: SB_H });
+  return r.json();
+}
+async function sbInsert(table, body) {
+  const r = await fetch(`${SB_URL}/rest/v1/${table}`, {
+    method: 'POST',
+    headers: { ...SB_H, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify(body),
+  });
+  return r.ok;
+}
+
+/* ================================================================
+   🔐  SESSION
+   ================================================================ */
+const SESSION_KEY = 'lingua_session_v1';
+const getSession  = () => { try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch(e) { return null; } };
+const setSession  = d  => localStorage.setItem(SESSION_KEY, JSON.stringify(d));
+const isLoggedIn  = () => { const s = getSession(); return s && s.phone && s.verified; };
+
+/* ================================================================
+   🔔  TOAST
+   ================================================================ */
+function showToast(msg, dur = 2800) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+/* ================================================================
+   👤  LOGIN ICON
+   ================================================================ */
+function updateLoginIcon() {
+  const b = document.getElementById('loginIconBtn');
+  if (b) b.classList.toggle('logged-in', !!isLoggedIn());
+}
+function onLoginIconClick() {
+  if (isLoggedIn()) {
+    if (confirm('می‌خواهید از حساب خود خارج شوید؟')) { localStorage.removeItem(SESSION_KEY); location.reload(); }
+  } else { openLoginPopup(); }
+}
+function openLoginPopup() {
+  document.getElementById('loginPopup').classList.add('open');
+  setTimeout(() => document.getElementById('phoneInput').focus(), 400);
+}
+function closeLoginPopup() { document.getElementById('loginPopup').classList.remove('open'); }
+document.getElementById('loginPopup').addEventListener('click', function(e) { if (e.target === this) closeLoginPopup(); });
+
+async function doLogin() {
+  const input = document.getElementById('phoneInput'), errEl = document.getElementById('phoneError');
+  const btn = document.getElementById('btnLogin'), btnText = document.getElementById('loginBtnText');
+  errEl.textContent = '';
+  let phone = input.value.trim().replace(/\D/g, '');
+  if (phone.startsWith('0')) phone = phone.slice(1);
+  if (phone.length < 10 || phone.length > 11) { errEl.textContent = 'شماره موبایل معتبر نیست'; return; }
+  btn.disabled = true; btnText.textContent = 'در حال بررسی...';
+  try {
+    const subs = await sbGet('subscriptions', `phone=eq.${phone}&is_active=eq.true`);
+    if (subs && subs.length > 0) {
+      setSession({ phone, verified: true, ts: Date.now() });
+      await sbInsert('users', { phone });
+      closeLoginPopup();
+      showToast('✅ خوش آمدید! دسترسی همه پادکست‌ها فعال شد');
+      updateLoginIcon(); renderPodcastList();
+    } else {
+      await sbInsert('users', { phone });
+      errEl.textContent = 'اشتراک فعال یافت نشد. لطفاً کد اشتراک تهیه کنید.';
+    }
+  } catch(e) { errEl.textContent = 'خطا در اتصال. دوباره تلاش کنید.'; }
+  btn.disabled = false; btnText.textContent = 'ورود';
+}
+document.getElementById('phoneInput').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+/* ================================================================
+   💎  PRICE POPUP
+   ================================================================ */
+function openPricePopup()       { document.getElementById('pricePopup').classList.add('open'); }
+function closePricePopup()      { document.getElementById('pricePopup').classList.remove('open'); }
+function closePriceIfOutside(e) { if (e.target === document.getElementById('pricePopup')) closePricePopup(); }
+
+/* ================================================================
+   ✅  VERIFY SUBSCRIPTION
+   ================================================================ */
+async function verifyCurrentSubscription() {
+  const session = getSession();
+  if (!session || !session.phone || !session.verified) { updateLoginIcon(); return false; }
+  try {
+    const subs = await sbGet('subscriptions', `phone=eq.${encodeURIComponent(session.phone)}&is_active=eq.true`);
+    const active = Array.isArray(subs) && subs.length > 0;
+    if (!active) { localStorage.removeItem(SESSION_KEY); updateLoginIcon(); renderPodcastList(); return false; }
+    updateLoginIcon(); return true;
+  } catch(e) { updateLoginIcon(); return false; }
+}
+
+/* ================================================================
+   🏠  RENDER PODCAST LIST
+   ================================================================ */
+let activeCategory = 'All';
+
+function levelBars(n) { let b = ''; for (let i = 0; i < n; i++) b += '<span></span>'; return b; }
+
+function renderPodcastList() {
+  const loggedIn = isLoggedIn();
+  const list = document.getElementById('podcastList');
+  list.innerHTML = '';
+  const filtered = activeCategory === 'All' ? podcasts : podcasts.filter(p => p.tag === activeCategory);
+  filtered.forEach(p => {
+    const globalIdx = podcasts.indexOf(p), locked = !p.free && !loggedIn, bars = p.level === 'Beginner' ? 3 : 4;
+    const card = document.createElement('article');
+    card.className = 'podcast-card' + (locked ? ' locked' : '');
+    card.innerHTML = `<div class="cover"><img src="${p.image}" alt="${p.title}" loading="lazy"><div class="cover-title">${p.title.split(' ').slice(0,2).join('<br>')}</div></div><div class="card-content"><h3>${p.title}</h3><p class="card-description">${p.description}</p><div class="card-meta"><span>🎧 ${p.episodes}</span><span>◷ ${p.dur}</span></div><div class="tag">${p.tag}</div><div class="level"><div class="level-bars">${levelBars(bars)}</div>${p.level}</div></div><div class="card-actions"><button class="icon-button" onclick="event.stopPropagation();toggleFavorite(this)">♡</button><button class="icon-button" onclick="event.stopPropagation()">···</button></div>${locked ? `<div class="lock-overlay"><span class="lock-icon">🔒</span></div><button class="play-small" onclick="event.stopPropagation();openLoginPopup()">🔒</button>` : `<button class="play-small">▶</button>`}`;
+    card.addEventListener('click', () => locked ? openLoginPopup() : openPlayer(globalIdx));
+    list.appendChild(card);
+  });
+}
+
+document.querySelectorAll('.category').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.category').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    activeCategory = this.dataset.cat;
+    renderPodcastList();
+  });
+});
+
+/* ================================================================
+   🌊  WAVEFORM
+   ================================================================ */
+const waveform = document.getElementById('waveform');
+for (let i = 0; i < 48; i++) {
+  const bar = document.createElement('div');
+  bar.className = 'wave paused';
+  bar.style.height = (Math.floor(Math.random() * 34) + 8) + 'px';
+  waveform.appendChild(bar);
+}
+
+/* ================================================================
+   ▶️  PLAYER
+   ================================================================ */
+const homeScreen   = document.getElementById('homeScreen');
+const playerScreen = document.getElementById('playerScreen');
+const audio        = document.getElementById('audioPlayer');
+const mainPlay     = document.getElementById('mainPlay');
+
+async function openPlayer(index) {
+  const p = podcasts[index];
+  document.getElementById('playerTitle').textContent       = p.title;
+  document.getElementById('playerDescription').textContent = p.description;
+  document.getElementById('playerTag').textContent         = p.level;
+  document.getElementById('playerImage').src               = p.image;
+  document.getElementById('playerEpisodes').innerHTML      = '🎧 ' + p.episodes;
+  document.getElementById('playerDurEl').innerHTML         = '◷ '  + p.dur;
+  audio.src = p.audio; audio.load();
+  homeScreen.classList.remove('active'); playerScreen.classList.add('active'); playerScreen.scrollTop = 0;
+  mainPlay.textContent = '▶'; setWave(false);
+  // reset tabs
+  document.querySelectorAll('.lesson-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.lesson-tab')[0].classList.add('active');
-  document.getElementById('transcriptContent').style.display='block';
-  document.getElementById('vocabContent').style.display='none';
-  document.getElementById('notesContent').style.display='none'
+  document.getElementById('transcriptContent').style.display = 'block';
+  document.getElementById('vocabContent').style.display      = 'none';
+  document.getElementById('notesContent').style.display      = 'none';
+  // load from Supabase
+  loadTranscript(p.id);
+  loadVocab(p.id);
 }
-const PROXIES=[url=>`https://corsproxy.io/?${encodeURIComponent(url)}`,url=>`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,url=>`https://cors-anywhere.herokuapp.com/${url}`];
-async function fetchWithFallback(url){
-  try{const r=await fetch(url+'?v='+Date.now(),{cache:'no-store'});if(r.ok)return await r.text()}catch(e){}
-  for(const proxy of PROXIES){try{const r=await fetch(proxy(url),{cache:'no-store'});if(r.ok)return await r.text()}catch(e){}}
-  throw new Error('Transcript could not be loaded')
+
+/* ================================================================
+   📄  TRANSCRIPT — از Supabase می‌خونه
+   ================================================================ */
+async function loadTranscript(podcastId) {
+  const loading = document.getElementById('transcriptLoading');
+  const lines   = document.getElementById('transcriptLines');
+  lines.innerHTML = '';
+  loading.style.display  = 'block';
+  loading.textContent    = '⏳ در حال بارگذاری Transcript...';
+  try {
+    const rows = await sbGet('transcripts', `podcast_id=eq.${podcastId}&order=sort_order.asc`);
+    if (!rows || rows.length === 0) { loading.textContent = 'No transcript available yet.'; return; }
+    loading.style.display = 'none';
+    const row = rows[0];
+    const div = document.createElement('div');
+    div.className = 'transcript-plain';
+    div.textContent = row.content;   // متن ساده
+    lines.appendChild(div);
+  } catch(e) {
+    loading.textContent = '⚠️ Transcript بارگذاری نشد.';
+  }
 }
-function loadTranscript(url){
-  const loading=document.getElementById('transcriptLoading'),lines=document.getElementById('transcriptLines');
-  lines.innerHTML='';
-  if(!url){loading.style.display='block';loading.textContent='No transcript available yet.';return}
-  loading.style.display='block';loading.textContent='⏳ در حال بارگذاری Transcript...';
-  fetchWithFallback(url).then(text=>{loading.style.display='none';const cleanText=text.replace(/^\uFEFF/,'').replace(/\r\n/g,'\n').replace(/\r/g,'\n').trim();const div=document.createElement('div');div.className='transcript-plain';div.textContent=cleanText;lines.appendChild(div)}).catch(error=>{loading.style.display='block';loading.textContent='⚠️ Transcript بارگذاری نشد.'})
+
+/* ================================================================
+   📖  VOCABULARY — از Supabase می‌خونه
+   ================================================================ */
+async function loadVocab(podcastId) {
+  const vocabList = document.getElementById('vocabList');
+  vocabList.innerHTML = '<div style="color:#6c8aaa;font-size:11px;padding:8px">در حال بارگذاری...</div>';
+  try {
+    const rows = await sbGetAll('vocabulary', `podcast_id=eq.${podcastId}&order=sort_order.asc`);
+    vocabList.innerHTML = '';
+    if (!rows || rows.length === 0) { vocabList.innerHTML = '<div style="color:#6c8aaa;font-size:11px;padding:8px">کلمه‌ای ثبت نشده.</div>'; return; }
+    rows.forEach(v => {
+      const item = document.createElement('div');
+      item.className = 'vocab-item';
+      item.innerHTML = `<strong>${v.word}</strong><small>${v.translation_fa}</small>`;
+      if (v.example) item.title = v.example;
+      vocabList.appendChild(item);
+    });
+  } catch(e) {
+    vocabList.innerHTML = '<div style="color:#f66;font-size:11px;padding:8px">⚠️ خطا در بارگذاری</div>';
+  }
 }
-function goHome(){audio.pause();playerScreen.classList.remove('active');homeScreen.classList.add('active')}
-function togglePlay(){if(audio.paused){audio.play().then(()=>{mainPlay.textContent='Ⅱ';setWave(true)}).catch(e=>console.log(e))}else{audio.pause();mainPlay.textContent='▶';setWave(false)}}
-audio.addEventListener('play',()=>{mainPlay.textContent='Ⅱ';setWave(true)});
-audio.addEventListener('pause',()=>{mainPlay.textContent='▶';setWave(false)});
-audio.addEventListener('ended',()=>{mainPlay.textContent='▶';setWave(false)});
-function setWave(active){document.querySelectorAll('.wave').forEach(b=>b.classList.toggle('paused',!active))}
-function formatTime(s){if(!isFinite(s))return '00:00';return String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.floor(s%60)).padStart(2,'0')}
-audio.addEventListener('loadedmetadata',()=>{document.getElementById('audioDuration').textContent=formatTime(audio.duration)});
-audio.addEventListener('timeupdate',()=>{if(!audio.duration)return;const pct=(audio.currentTime/audio.duration)*100;document.getElementById('progressFill').style.width=pct+'%';document.getElementById('progressDot').style.left=pct+'%';document.getElementById('currentTime').textContent=formatTime(audio.currentTime)});
-document.getElementById('progressBar').addEventListener('click',e=>{if(!audio.duration)return;const rect=document.getElementById('progressBar').getBoundingClientRect();audio.currentTime=((e.clientX-rect.left)/rect.width)*audio.duration});
-function skip(sec){if(audio.duration)audio.currentTime=Math.max(0,Math.min(audio.duration,audio.currentTime+sec))}
-document.getElementById('volumeSlider').addEventListener('input',function(){audio.volume=parseFloat(this.value)});
-document.querySelectorAll('.speed').forEach(btn=>{btn.addEventListener('click',function(){document.querySelectorAll('.speed').forEach(s=>s.classList.remove('active'));this.classList.add('active');audio.playbackRate=Number(this.dataset.speed)})});
-function toggleFavorite(btn){if(btn.textContent.trim()==='♡'){btn.textContent='♥';btn.style.color='#ff6f9f'}else{btn.textContent='♡';btn.style.color=''}}
-function togglePlayerFavorite(){toggleFavorite(document.getElementById('playerFavorite'))}
-function switchTab(el,tab){document.querySelectorAll('.lesson-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('transcriptContent').style.display=tab==='transcript'?'block':'none';document.getElementById('vocabContent').style.display=tab==='vocab'?'block':'none';document.getElementById('notesContent').style.display=tab==='notes'?'block':'none'}
-function repeatSentence(){if(audio.duration){audio.currentTime=Math.max(0,audio.currentTime-5);audio.play()}}
-document.addEventListener('keydown',e=>{if(!playerScreen.classList.contains('active'))return;if(e.code==='Space'){e.preventDefault();togglePlay()}if(e.code==='Escape')goHome()});
-updateLoginIcon();renderPodcastList();verifyCurrentSubscription();
+
+/* ================================================================
+   🧭  NAVIGATION & PLAYBACK
+   ================================================================ */
+function goHome()      { audio.pause(); playerScreen.classList.remove('active'); homeScreen.classList.add('active'); }
+function togglePlay()  {
+  if (audio.paused) { audio.play().then(() => { mainPlay.textContent = 'Ⅱ'; setWave(true); }).catch(e => console.log(e)); }
+  else              { audio.pause(); mainPlay.textContent = '▶'; setWave(false); }
+}
+audio.addEventListener('play',   () => { mainPlay.textContent = 'Ⅱ'; setWave(true);  });
+audio.addEventListener('pause',  () => { mainPlay.textContent = '▶'; setWave(false); });
+audio.addEventListener('ended',  () => { mainPlay.textContent = '▶'; setWave(false); });
+function setWave(active) { document.querySelectorAll('.wave').forEach(b => b.classList.toggle('paused', !active)); }
+function skip(sec) { if (audio.duration) audio.currentTime = Math.max(0, Math.min(audio.duration, audio.currentTime + sec)); }
+function repeatSentence() { if (audio.duration) { audio.currentTime = Math.max(0, audio.currentTime - 5); audio.play(); } }
+
+/* ================================================================
+   ⏱️  PROGRESS
+   ================================================================ */
+function formatTime(s) { if (!isFinite(s)) return '00:00'; return String(Math.floor(s/60)).padStart(2,'0') + ':' + String(Math.floor(s%60)).padStart(2,'0'); }
+audio.addEventListener('loadedmetadata', () => { document.getElementById('audioDuration').textContent = formatTime(audio.duration); });
+audio.addEventListener('timeupdate', () => {
+  if (!audio.duration) return;
+  const pct = (audio.currentTime / audio.duration) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressDot').style.left   = pct + '%';
+  document.getElementById('currentTime').textContent   = formatTime(audio.currentTime);
+});
+document.getElementById('progressBar').addEventListener('click', e => {
+  if (!audio.duration) return;
+  const rect = document.getElementById('progressBar').getBoundingClientRect();
+  audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+});
+
+/* ================================================================
+   🔊  VOLUME & SPEED
+   ================================================================ */
+document.getElementById('volumeSlider').addEventListener('input', function() { audio.volume = parseFloat(this.value); });
+document.querySelectorAll('.speed').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.speed').forEach(s => s.classList.remove('active'));
+    this.classList.add('active');
+    audio.playbackRate = Number(this.dataset.speed);
+  });
+});
+
+/* ================================================================
+   ❤️  FAVORITES & TABS
+   ================================================================ */
+function toggleFavorite(btn) { if (btn.textContent.trim() === '♡') { btn.textContent = '♥'; btn.style.color = '#ff6f9f'; } else { btn.textContent = '♡'; btn.style.color = ''; } }
+function togglePlayerFavorite() { toggleFavorite(document.getElementById('playerFavorite')); }
+function switchTab(el, tab) {
+  document.querySelectorAll('.lesson-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('transcriptContent').style.display = tab === 'transcript' ? 'block' : 'none';
+  document.getElementById('vocabContent').style.display      = tab === 'vocab'       ? 'block' : 'none';
+  document.getElementById('notesContent').style.display      = tab === 'notes'       ? 'block' : 'none';
+}
+
+/* ================================================================
+   ⌨️  KEYBOARD
+   ================================================================ */
+document.addEventListener('keydown', e => {
+  if (!playerScreen.classList.contains('active')) return;
+  if (e.code === 'Space')  { e.preventDefault(); togglePlay(); }
+  if (e.code === 'Escape') { goHome(); }
+});
+
+/* ================================================================
+   🚀  INIT
+   ================================================================ */
+updateLoginIcon();
+renderPodcastList();
+verifyCurrentSubscription();
+
 </script>
 </body>
 </html>
