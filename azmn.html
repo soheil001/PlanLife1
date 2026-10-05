@@ -1,0 +1,311 @@
+```html
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>آزمون کشف باورهای مالی</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+font-family:'Vazirmatn',sans-serif;direction:rtl;color:#fff;min-height:100vh;
+background:linear-gradient(140deg,#0D1B2A 0%,#12304F 45%,#0A2540 70%,#0D1B2A 100%);
+overflow-x:hidden
+}
+.bg-orb{position:fixed;border-radius:50%;filter:blur(90px);opacity:.15;pointer-events:none}
+.orb1{width:520px;height:520px;background:#2176AE;top:-180px;right:-120px}
+.orb2{width:420px;height:420px;background:#0D4F8A;bottom:-120px;left:-120px}
+.orb3{width:280px;height:280px;background:#0E7FC0;top:50%;left:50%;transform:translate(-50%,-50%)}
+
+#app{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:25px 15px}
+
+.card{
+width:100%;max-width:640px;padding:38px;background:rgba(255,255,255,.06);
+border:1px solid rgba(255,255,255,.13);border-radius:28px;
+backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
+box-shadow:0 36px 90px rgba(0,0,0,.4),inset 0 1px rgba(255,255,255,.09);
+animation:up .45s ease both
+}
+@keyframes up{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:none}}
+@keyframes out{to{opacity:0;transform:translateX(30px)}}
+@keyframes in{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:none}}
+
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+.brand-icon{
+width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,#2176AE,#0D4F8A);
+display:flex;align-items:center;justify-content:center;font-size:20px;
+box-shadow:0 4px 16px rgba(33,118,174,.45)
+}
+.brand-name{font-size:12px;color:rgba(255,255,255,.55);line-height:1.5}
+.brand-name span{display:block;color:#fff;font-size:15px;font-weight:700}
+
+.progress{margin-bottom:30px}
+.progress-top{display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.5);margin-bottom:10px}
+.progress-top b{color:#fff}
+.bar{height:6px;background:rgba(255,255,255,.09);border-radius:99px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,#56B4E9,#2176AE);transition:.5s}
+
+.badge{
+display:inline-block;background:rgba(33,118,174,.18);
+border:1px solid rgba(33,118,174,.35);color:#90CAF9;
+padding:5px 14px;border-radius:99px;font-size:11px;font-weight:600;margin-bottom:14px
+}
+.question{font-size:19px;font-weight:700;line-height:1.8;margin-bottom:20px}
+.question span{color:#90CAF9}
+
+.answer{
+width:100%;min-height:155px;resize:vertical;outline:none;
+padding:16px 17px;border-radius:16px;
+background:rgba(255,255,255,.055);
+border:1.5px solid rgba(255,255,255,.13);
+color:#fff;font-family:'Vazirmatn',sans-serif;font-size:15px;
+line-height:2;transition:.2s
+}
+.answer::placeholder{color:rgba(255,255,255,.25)}
+.answer:focus{
+border-color:rgba(86,180,233,.65);background:rgba(33,118,174,.1);
+box-shadow:0 0 0 3px rgba(33,118,174,.12)
+}
+
+.helper{font-size:11px;color:rgba(255,255,255,.35);margin-top:9px;line-height:1.8}
+
+.btn{
+width:100%;padding:15px 22px;margin-top:22px;border:0;border-radius:14px;
+background:linear-gradient(135deg,#2176AE,#0D4F8A);color:#fff;
+font-family:'Vazirmatn',sans-serif;font-size:15px;font-weight:700;
+cursor:pointer;box-shadow:0 8px 28px rgba(33,118,174,.4);transition:.2s
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 35px rgba(33,118,174,.5)}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+.intro-icon,.result-icon{
+width:72px;height:72px;border-radius:20px;
+background:linear-gradient(135deg,#2176AE,#0D4F8A);
+display:flex;align-items:center;justify-content:center;
+font-size:34px;margin-bottom:22px;box-shadow:0 12px 40px rgba(33,118,174,.45)
+}
+.title{font-size:24px;font-weight:800;line-height:1.5;margin-bottom:12px}
+.desc{font-size:14px;color:rgba(255,255,255,.6);line-height:2;margin-bottom:25px}
+
+.chips{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:25px}
+.chip{
+background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);
+border-radius:99px;padding:7px 14px;font-size:11px;color:rgba(255,255,255,.65)
+}
+.chip b{color:#90CAF9}
+
+.result{text-align:center}
+.result-icon{margin:0 auto 20px}
+.result-title{font-size:25px;font-weight:900;margin-bottom:10px}
+.result-sub{font-size:13px;color:rgba(255,255,255,.5);line-height:1.9;margin-bottom:25px}
+
+.answers{
+text-align:right;display:flex;flex-direction:column;gap:12px;margin-top:22px
+}
+.answer-box{
+background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);
+border-radius:16px;padding:16px
+}
+.answer-number{font-size:11px;color:#90CAF9;font-weight:700;margin-bottom:7px}
+.answer-question{font-size:14px;font-weight:700;line-height:1.8;margin-bottom:9px}
+.answer-text{
+font-size:13px;line-height:1.9;color:rgba(255,255,255,.62);
+background:rgba(0,0,0,.14);padding:10px 12px;border-radius:10px;
+white-space:pre-wrap;word-break:break-word
+}
+.empty{color:rgba(255,255,255,.3);font-style:italic}
+
+.restart{
+margin-top:22px;background:rgba(255,255,255,.07);
+border:1px solid rgba(255,255,255,.13);box-shadow:none
+}
+
+@media(max-width:480px){
+.card{padding:27px 18px;border-radius:22px}
+.title{font-size:20px}.question{font-size:16px}
+.answer{min-height:140px;font-size:14px}
+}
+</style>
+</head>
+
+<body>
+<div class="bg-orb orb1"></div>
+<div class="bg-orb orb2"></div>
+<div class="bg-orb orb3"></div>
+
+<div id="app"><div class="card" id="card"></div></div>
+
+<script>
+const QUESTIONS=[
+'پول برای من یعنی چه؟ اولین چیزی که وقتی کلمه «پول» را می‌شنوم به ذهنم می‌آید چیست؟',
+'آدم‌های ثروتمند از نظر من چه ویژگی‌هایی دارند؟ درباره آن‌ها چه فکری می‌کنم؟',
+'برای پولدار شدن، به نظر من یک انسان باید چه کارهایی انجام دهد؟',
+'اگر من روزی ثروت بسیار زیادی داشته باشم، چه چیزی در زندگی‌ام ممکن است تغییر کند؟ چه چیزی ممکن است از دست بدهم؟',
+'اگر درآمد من ناگهان ۱۰ برابر شود، اولین نگرانی یا ترسی که ممکن است در ذهنم ظاهر شود چیست؟',
+'آیا فکر می‌کنم پول زیاد برای من به‌راحتی به دست می‌آید یا باید برای آن خیلی سختی بکشم؟ چرا؟',
+'وقتی می‌بینم شخص دیگری ثروتمند شده یا درآمد بسیار بالایی دارد، اولین احساس و فکری که در من ایجاد می‌شود چیست؟',
+'در کودکی یا خانواده‌ام درباره پول چه جمله‌هایی زیاد شنیده‌ام؟ مثلاً درباره ثروتمندان، خرج کردن، پس‌انداز یا پولدار شدن.',
+'اگر همین امروز ۱۰ میلیارد تومان داشته باشم، اولین کاری که با آن انجام می‌دهم چیست؟ و چرا آن کار را انتخاب می‌کنم؟',
+'اگر قرار باشد بدون ترس از شکست، محدودیت مالی یا نظر دیگران هر مقدار درآمدی که می‌خواهم داشته باشم، دوست دارم ماهانه چقدر درآمد داشته باشم؟ چرا؟',
+'آیا در اعماق ذهنم فکر می‌کنم واقعاً لیاقت ثروت زیاد را دارم؟ اگر جوابم بله یا خیر است، دلیل واقعی آن چیست؟',
+'برای اینکه ثروتمند شوم، چه چیزی را در ذهنم «باید» انجام دهم که شاید باعث شود احساس کنم پول به سختی به دست می‌آید؟',
+'کدام یک برای من ترسناک‌تر است: نداشتن پول، از دست دادن پول، داشتن پول زیاد، یا مسئولیت داشتن پول زیاد؟ چرا؟',
+'اگر هیچ‌کس قرار نبود درباره میزان پول من قضاوت کند، رابطه ایده‌آل من با پول و ثروت چه شکلی بود؟',
+'اگر مطمئن بودم پول داشتن کاملاً امن است و هیچ اتفاق بدی به خاطر ثروتمند شدن برایم نمی‌افتد، چه باور یا رفتاری را در خودم تغییر می‌دادم؟'
+];
+
+let state={q:0,answers:[]};
+
+const card=document.getElementById('card');
+
+function fa(n){
+return String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+}
+
+function transition(fn){
+card.style.animation='out .2s ease forwards';
+setTimeout(()=>{
+fn();
+card.style.animation='in .35s ease both';
+},190);
+}
+
+function intro(){
+card.innerHTML=`
+<div class="brand">
+<div class="brand-icon">💰</div>
+<div class="brand-name"><span>آزمون خودشناسی مالی</span>کشف باورهای پنهان درباره پول و ثروت</div>
+</div>
+
+<div class="intro-icon">🧠</div>
+<div class="title">باورهای مالی من چیست؟</div>
+<div class="desc">
+این آزمون برای پیدا کردن افکار و باورهایی طراحی شده که ممکن است
+در ناخودآگاه ما درباره پول، ثروت، لیاقت، امنیت مالی و سختی یا آسانی کسب درآمد وجود داشته باشند.
+هیچ جواب درست یا غلطی وجود ندارد؛ مهم این است که صادقانه جواب بدهی.
+</div>
+
+<div class="chips">
+<div class="chip">📝 <b>۱۵ سوال</b></div>
+<div class="chip">🧠 پاسخ آزاد</div>
+<div class="chip">🔍 خودشناسی</div>
+</div>
+
+<button class="btn" onclick="start()">شروع آزمون ←</button>
+`;
+}
+
+function render(){
+let i=state.q,total=QUESTIONS.length;
+let old=state.answers[i]||'';
+
+card.innerHTML=`
+<div class="brand" style="margin-bottom:20px">
+<div class="brand-icon" style="width:34px;height:34px;font-size:16px;border-radius:9px">💰</div>
+<div class="brand-name" style="font-size:10px">
+<span style="font-size:13px">آزمون باورهای مالی</span>خودشناسی و کشف باورهای پنهان
+</div>
+</div>
+
+<div class="progress">
+<div class="progress-top">
+<b>سؤال ${fa(i+1)} از ${fa(total)}</b>
+<span>${fa(Math.round((i/total)*100))}٪ تکمیل شده</span>
+</div>
+<div class="bar"><div class="fill" style="width:${((i+1)/total)*100}%"></div></div>
+</div>
+
+<div class="badge">✦ خودشناسی مالی</div>
+<div class="question">${QUESTIONS[i]}</div>
+
+<textarea class="answer" id="answer"
+placeholder="هر چیزی که واقعاً در ذهنت می‌آید بنویس... لازم نیست جواب را زیبا یا منطقی کنی.">${old}</textarea>
+
+<div class="helper">
+جواب درست یا غلط وجود ندارد. اولین فکر، خاطره یا احساسی که به ذهنت می‌رسد را بنویس.
+</div>
+
+<button class="btn" onclick="next()">
+${i===total-1?'مشاهده تمام پاسخ‌ها ✓':'ثبت پاسخ و ادامه ←'}
+</button>
+`;
+
+document.getElementById('answer').focus();
+}
+
+function next(){
+let input=document.getElementById('answer');
+let value=input.value.trim();
+
+if(!value){
+input.style.borderColor='rgba(239,68,68,.7)';
+input.placeholder='لطفاً قبل از ادامه، پاسخ خودت را بنویس...';
+input.focus();
+return;
+}
+
+state.answers[state.q]=value;
+
+if(state.q<QUESTIONS.length-1){
+state.q++;
+transition(render);
+}else{
+transition(result);
+}
+}
+
+function result(){
+let html=`
+<div class="result">
+<div class="result-icon">✨</div>
+<div class="result-title">پاسخ‌های تو ثبت شد</div>
+<div class="result-sub">
+حالا می‌توانی تمام جواب‌هایی را که در طول آزمون دادی یکجا ببینی.
+از کنار هم گذاشتن این پاسخ‌ها می‌توان الگوهای فکری و باورهای تکرارشونده درباره پول را بهتر مشاهده کرد.
+</div>
+</div>
+
+<div class="answers">
+`;
+
+QUESTIONS.forEach((q,i)=>{
+let a=state.answers[i]||'';
+html+=`
+<div class="answer-box">
+<div class="answer-number">سؤال ${fa(i+1)}</div>
+<div class="answer-question">${q}</div>
+<div class="answer-text ${!a?'empty':''}">
+${escapeHTML(a||'پاسخی ثبت نشده است.')}
+</div>
+</div>
+`;
+});
+
+html+=`
+</div>
+<button class="btn restart" onclick="start()">شروع دوباره آزمون ↻</button>
+`;
+
+card.innerHTML=html;
+window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function escapeHTML(str){
+return str.replace(/[&<>"']/g,m=>({
+'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+}[m]));
+}
+
+function start(){
+state={q:0,answers:[]};
+transition(render);
+}
+
+intro();
+</script>
+</body>
+</html>
+```
