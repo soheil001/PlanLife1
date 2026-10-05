@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دیوار / اجاره - سامانه آنلاین ثبت و پیدا کردن آگهی اجاره</title>
+    <!-- Vazirmatn Font -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --divar-red: #a62626;
+            --divar-red-hover: #801e1e;
+            --bg-gray: #f5f5f5;
+            --border-color: #e0e0e0;
+            --text-dark: #242424;
+            --text-muted: #707070;
+            --card-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            --card-hover-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: #fcfcfc;
+            color: var(--text-dark);
+            direction: rtl;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logo-badge {
+            background-color: var(--divar-red);
+            color: #fff;
+            font-weight: 900;
+            font-size: 20px;
+            padding: 2px 10px;
+            border-radius: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .search-bar {
+            position: relative;
+            flex-grow: 1;
+            max-width: 500px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 40px 10px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--bg-gray);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-bar input:focus {
+            background-color: #fff;
+            border-color: var(--divar-red);
+            box-shadow: 0 0 0 3px rgba(166, 38, 38, 0.1);
+        }
+
+        .search-bar i {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 9px 18px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--divar-red);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--divar-red-hover);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--bg-gray);
+        }
+
+        /* Layout Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 24px auto;
+            padding: 0 20px;
+        }
+
+        /* Category Filter Pills */
+        .categories-wrapper {
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            white-space: nowrap;
+        }
+
+        .category-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            margin-left: 8px;
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 14px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .category-pill:hover, .category-pill.active {
+            border-color: var(--divar-red);
+            color: var(--divar-red);
+            background-color: rgba(166, 38, 38, 0.04);
+        }
+
+        /* GRID SYSTEM & UNIFORM CARDS */
+        .ads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 20px;
+        }
+
+        .ad-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            height: 380px; /* Exact uniform height */
+        }
+
+        .ad-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--card-hover-shadow);
+            border-color: #ccc;
+        }
+
+        .ad-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 200px; /* Fixed height for picture box */
+            background-color: #eee;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .ad-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Prevents stretching and ensures neat fill */
+            transition: transform 0.3s;
+        }
+
+        .ad-card:hover .ad-image-wrapper img {
+            transform: scale(1.03);
+        }
+
+        .ad-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.65);
+            color: #fff;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            backdrop-filter: blur(4px);
+        }
+
+        .ad-body {
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1;
+        }
+
+        .ad-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+            height: 42px; /* Uniform height for title */
+        }
+
+        .ad-details {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: auto;
+        }
+
+        .ad-price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .price-label {
+            color: var(--text-muted);
+        }
+
+        .price-value {
+            font-weight: 700;
+            color: var(--divar-red);
+        }
+
+        .ad-footer {
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* New Listing Form */
+        .form-section {
+            display: none;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            max-width: 750px;
+            margin: 0 auto 40px auto;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+
+        .form-header h2 {
+            font-size: 20px;
+            color: var(--text-dark);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--divar-red);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Drive Banner Box */
+        .drive-box {
+            background-color: #f0f7ff;
+            border: 1px dashed #2196f3;
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 8px;
+            font-size: 13px;
+            color: #0c5460;
+        }
+
+        .drive-box code {
+            background: #e1f0ff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 12px;
+            max-width: 650px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            padding: 24px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-muted);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f0f0;
+        }
+
+        .modal-img-container {
+            width: 100%;
+            height: 300px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 16px;
+            background-color: #eee;
+        }
+
+        .modal-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+            .search-bar {
+                order: 3;
+                max-width: 100%;
+                width: 100%;
+            }
+            .row-2 {
+                grid-template-columns: 1fr;
+            }
+            .ads-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="header-right">
+                <div class="logo-box" onclick="showSection('home')">
+                    <span class="logo-badge">دیوار</span>
+                    <span class="logo-title">اجاره</span>
+                </div>
+            </div>
+
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" placeholder="جستجو در تمام کالاها و تجهیزات اجاره‌ای..." oninput="filterAds()">
+            </div>
+
+            <div class="header-left">
+                <button class="btn btn-outline" onclick="showSection('home')">
+                    <i class="fa-solid fa-house"></i> آگهی‌ها
+                </button>
+                <button class="btn btn-primary" onclick="showSection('add')">
+                    <i class="fa-solid fa-plus"></i> ثبت آگهی اجاره
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+
+        <!-- HOME SECTION -->
+        <div id="homeSection">
+            <!-- Category Pills -->
+            <div class="categories-wrapper">
+                <div class="category-pill active" onclick="filterCategory('all', this)"><i class="fa-solid fa-border-all"></i> همه آگهی‌ها</div>
+                <div class="category-pill" onclick="filterCategory('ساختمانی', this)"><i class="fa-solid fa-trowel-bricks"></i> وسایل ساختمانی</div>
+                <div class="category-pill" onclick="filterCategory('دوربین', this)"><i class="fa-solid fa-camera"></i> دوربین و عکاسی</div>
+                <div class="category-pill" onclick="filterCategory('ماشین', this)"><i class="fa-solid fa-car"></i> ماشین و خودرو</div>
+                <div class="category-pill" onclick="filterCategory('ویلا', this)"><i class="fa-solid fa-house-chimney"></i> ویلا و اقامتگاه</div>
+                <div class="category-pill" onclick="filterCategory('تالار', this)"><i class="fa-solid fa-champagne-glasses"></i> تالار و تشریفات</div>
+                <div class="category-pill" onclick="filterCategory('کامپیوتر', this)"><i class="fa-solid fa-laptop"></i> کامپیوتر و دیجیتال</div>
+                <div class="category-pill" onclick="filterCategory('میکروفون', this)"><i class="fa-solid fa-microphone-lines"></i> میکروفون و صوت</div>
+            </div>
+
+            <!-- Uniform Cards Grid -->
+            <div class="ads-grid" id="adsGrid">
+                <!-- Ads dynamically injected here -->
+            </div>
+        </div>
+
+        <!-- NEW AD FORM SECTION -->
+        <div id="addSection" class="form-section">
+            <div class="form-header">
+                <h2>ثبت آگهی جدید اجاره</h2>
+                <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">اطلاعات دستگاه یا وسیله خود را جهت اجاره وارد کنید.</p>
+            </div>
+
+            <form id="newAdForm" onsubmit="handleFormSubmit(event)">
+                <div class="form-group">
+                    <label>عنوان آگهی *</label>
+                    <input type="text" id="title" class="form-control" placeholder="مثال: اجاره هیلتی ۱۵ کیلویی / اجاره دوربین Alfa 7" required>
+                </div>
+
+                <div class="row-2">
+                    <div class="form-group">
+                        <label>دسته‌بندی *</label>
+                        <select id="category" class="form-control" required>
+                            <option value="ساختمانی">وسایل ساختمانی</option>
+                            <option value="دوربین">دوربین و تجهیزات عکاسی</option>
+                            <option value="ماشین">ماشین و وسایل نقلیه</option>
+                            <option value="ویلا">ویلا و اقامتگاه</option>
+                            <option value="تالار">تالار و باغ تشریفات</option>
+                            <option value="کامپیوتر">کامپیوتر، لپ‌تاپ و کنسول</option>
+                            <option value="میکروفون">میکروفون و سیستم صوتی</option>
+                            <option value="سایر">سایر ابزارها</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>شهر / محله *</label>
+                        <input type="text" id="location" class="form-control" placeholder="مثال: تهران، مرزداران" required>
+                    </div>
+                </div>
+
+                <div class="row-2">
+                    <div class="form-group">
+                        <label>نرخ اجاره روزانه (تومان) *</label>
+                        <input type="number" id="dailyPrice" class="form-control" placeholder="مثال: 500000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>مبلغ ودیعه / ضمانت (تومان)</label>
+                        <input type="number" id="deposit" class="form-control" placeholder="مثال: 2000000">
+                    </div>
+                </div>
+
+                <!-- Google Drive Image URL Option -->
+                <div class="form-group">
+                    <label><i class="fa-brands fa-google-drive" style="color: #4285F4;"></i> لینک عکس از گوگل درایو (پوشه دیوار) یا آدرس عکس</label>
+                    <input type="url" id="imageUrl" class="form-control" placeholder="https://drive.google.com/uc?id=YOUR_FILE_ID یا لینک مستقیم تصویر">
+                    <div class="drive-box">
+                        <i class="fa-solid fa-circle-info"></i> <strong>راهنما:</strong> برای استفاده از تصاویر پوشه <code>دیوار</code> در Google Drive، فایل را روی حالت <code>Anyone with the link</code> بگذارید و لینک شناسه تصویر را وارد کنید.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>مدارک مورد نیاز جهت تحویل / ضمانت</label>
+                    <input type="text" id="guarantee" class="form-control" placeholder="مثال: کارت ملی هوشمند + چک یا سفته">
+                </div>
+
+                <div class="form-group">
+                    <label>توضیحات آگهی</label>
+                    <textarea id="description" class="form-control" placeholder="جزئیات فنی، شرایط تحویل، ساعت پاسخگویی و..."></textarea>
+                </div>
+
+                <div class="row-2">
+                    <div class="form-group">
+                        <label>شماره تماس *</label>
+                        <input type="tel" id="phone" class="form-control" placeholder="0912-------" required>
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: flex-end;">
+                        <button type="submit" class="btn btn-primary" style="width: 100%; height: 44px; justify-content: center;">
+                            <i class="fa-solid fa-check"></i> انتشار آگهی اجاره
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- AD DETAILS MODAL -->
+    <div id="adModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div class="modal-img-container">
+                <img id="modalImg" src="" alt="عکس آگهی">
+            </div>
+            <h2 id="modalTitle" style="font-size: 18px; margin-bottom: 12px;"></h2>
+            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                <span id="modalCategory" class="ad-badge" style="position: static; background: var(--bg-gray); color: var(--text-dark);"></span>
+                <span id="modalLocation" style="font-size: 13px; color: var(--text-muted); display: flex; align-items: center;"><i class="fa-solid fa-location-dot" style="margin-left: 4px;"></i></span>
+            </div>
+
+            <div style="background: var(--bg-gray); padding: 14px; border-radius: 8px; margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--text-muted); font-size: 14px;">اجاره روزانه:</span>
+                    <span id="modalPrice" style="font-weight: 700; color: var(--divar-red);"></span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-muted); font-size: 14px;">ودیعه / ضمانت:</span>
+                    <span id="modalDeposit" style="font-weight: 600;"></span>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <h4 style="font-size: 14px; margin-bottom: 6px;">مدارک و شرایط تحویل:</h4>
+                <p id="modalGuarantee" style="font-size: 13px; color: #555;"></p>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <h4 style="font-size: 14px; margin-bottom: 6px;">توضیحات:</h4>
+                <p id="modalDesc" style="font-size: 13px; color: #444; white-space: pre-line;"></p>
+            </div>
+
+            <a id="modalPhoneLink" href="" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 15px;">
+                <i class="fa-solid fa-phone"></i> اطلاعات تماس: <span id="modalPhone"></span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Initial Mock Data
+        let adsList = [
+            {
+                id: 1,
+                title: 'اجاره چکش تخریب (هیلتی) ۱۵ کیلویی صنعتی',
+                category: 'ساختمانی',
+                location: 'تهران، مرزداران',
+                dailyPrice: 350000,
+                deposit: 3000000,
+                guarantee: 'کارت ملی هوشمند + سفته 10 میلیونی',
+                description: 'دستگاه کاملا سالم و آماده به‌کار. ارسال با پیک به سراسر تهران.',
+                phone: '09121111111',
+                image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=500&q=80',
+                time: '۱۰ دقیقه پیش'
+            },
+            {
+                id: 2,
+                title: 'اجاره دوربین Sony A7 IV با لنز 24-70 GM',
+                category: 'دوربین',
+                location: 'تهران، سعادت‌آباد',
+                dailyPrice: 1200000,
+                deposit: 10000000,
+                guarantee: 'عقد قرارداد رسمی + کارت شناسایی معتبر',
+                description: 'مناسب پروژه‌های فیلم‌برداری و تیزر. تحویل به همراه ۲ عدد باتری و رم 128.',
+                phone: '09122222222',
+                image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500&q=80',
+                time: '۱ ساعت پیش'
+            },
+            {
+                id: 3,
+                title: 'اجاره 207 اتوماتیک مدل 1402 بدون راننده',
+                category: 'ماشین',
+                location: 'تهران، نیاوران',
+                dailyPrice: 1800000,
+                deposit: 15000000,
+                guarantee: 'چک صیادی به مبلغ خودرو + ودیعه نقدی',
+                description: 'خودرو بسیار تمیز، بیمه بدنه کامل، تحویل درب منزل.',
+                phone: '09123333333',
+                image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=500&q=80',
+                time: '۳ ساعت پیش'
+            },
+            {
+                id: 4,
+                title: 'اجاره ویلای استخردار لوکس ۴ خوابه',
+                category: 'ویلا',
+                location: 'کردان، البرز',
+                dailyPrice: 4500000,
+                deposit: 2000000,
+                guarantee: 'کارت شناسایی معتبر سرپرست',
+                description: 'استخر آبگرم سرپوشیده، سیستم صوتی حرفه‌ای، فوتبال‌دستی و بیلیارد.',
+                phone: '09124444444',
+                image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=500&q=80',
+                time: 'دیروز'
+            },
+            {
+                id: 5,
+                title: 'اجاره ست میکروفون یقه ای بی سیم Rode Wireless GO II',
+                category: 'میکروفون',
+                location: 'تهران، صادقیه',
+                dailyPrice: 400000,
+                deposit: 2000000,
+                guarantee: 'کارت ملی جدید',
+                description: 'دو کاناله، کیفیت صدای شفاف، مناسب مصاحبه و تولید محتوا.',
+                phone: '09125555555',
+                image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=500&q=80',
+                time: 'دیروز'
+            },
+            {
+                id: 6,
+                title: 'اجاره مک‌بوک پرو M1 برای ادیت و رندرینگ',
+                category: 'کامپیوتر',
+                location: 'تهران، ولیعصر',
+                dailyPrice: 700000,
+                deposit: 5000000,
+                guarantee: 'سفته یا چک به ارزش روز دستگاه',
+                description: 'رم 16 گیگ، حافظه 512 SSD. نصب تمامی نرم‌افزارهای ادوب.',
+                phone: '09126666666',
+                image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&q=80',
+                time: '۲ روز پیش'
+            }
+        ];
+
+        let currentCategory = 'all';
+
+        // Format Currency Function
+        function formatMoney(amount) {
+            return new Intl.NumberFormat('fa-IR').format(amount) + ' تومان';
+        }
+
+        // Render Ads Grid
+        function renderAds(data) {
+            const grid = document.getElementById('adsGrid');
+            grid.innerHTML = '';
+
+            if (data.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px 0; color: var(--text-muted);">
+                    <i class="fa-regular fa-folder-open" style="font-size: 48px; margin-bottom: 12px; display: block;"></i>
+                    هیچ آگهی اجاره‌ای در این بخش یافت نشد.
+                </div>`;
+                return;
+            }
+
+            data.forEach(ad => {
+                const card = document.createElement('div');
+                card.className = 'ad-card';
+                card.onclick = () => openModal(ad);
+
+                card.innerHTML = `
+                    <div class="ad-image-wrapper">
+                        <img src="${ad.image}" alt="${ad.title}" onerror="this.src='https://via.placeholder.com/300x200?text=بدون+تصویر'">
+                        <span class="ad-badge">${ad.category}</span>
+                    </div>
+                    <div class="ad-body">
+                        <h3 class="ad-title">${ad.title}</h3>
+                        <div class="ad-details">
+                            <div class="ad-price-row">
+                                <span class="price-label">اجاره روزانه:</span>
+                                <span class="price-value">${formatMoney(ad.dailyPrice)}</span>
+                            </div>
+                            <div class="ad-price-row">
+                                <span class="price-label">ودیعه / ضمانت:</span>
+                                <span style="font-weight: 600; font-size: 12px;">${ad.deposit ? formatMoney(ad.deposit) : 'توافقی'}</span>
+                            </div>
+                        </div>
+                        <div class="ad-footer">
+                            <span><i class="fa-solid fa-location-dot"></i> ${ad.location}</span>
+                            <span>${ad.time}</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Switch Sections
+        function showSection(section) {
+            if (section === 'home') {
+                document.getElementById('homeSection').style.display = 'block';
+                document.getElementById('addSection').classList.remove('active');
+            } else if (section === 'add') {
+                document.getElementById('homeSection').style.display = 'none';
+                document.getElementById('addSection').classList.add('active');
+            }
+        }
+
+        // Filter Ads by Search & Category
+        function filterAds() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const filtered = adsList.filter(ad => {
+                const matchesCategory = currentCategory === 'all' || ad.category === currentCategory;
+                const matchesSearch = ad.title.toLowerCase().includes(query) || ad.location.toLowerCase().includes(query);
+                return matchesCategory && matchesSearch;
+            });
+            renderAds(filtered);
+        }
+
+        function filterCategory(cat, element) {
+            currentCategory = cat;
+            document.querySelectorAll('.category-pill').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            filterAds();
+        }
+
+        // Form Submit Handler
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const category = document.getElementById('category').value;
+            const location = document.getElementById('location').value;
+            const dailyPrice = parseInt(document.getElementById('dailyPrice').value);
+            const deposit = parseInt(document.getElementById('deposit').value) || 0;
+            const guarantee = document.getElementById('guarantee').value || 'توافقی';
+            const description = document.getElementById('description').value;
+            const phone = document.getElementById('phone').value;
+            let imageUrl = document.getElementById('imageUrl').value.trim();
+
+            if (!imageUrl) {
+                imageUrl = 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=500&q=80';
+            }
+
+            const newAd = {
+                id: Date.now(),
+                title,
+                category,
+                location,
+                dailyPrice,
+                deposit,
+                guarantee,
+                description,
+                phone,
+                image: imageUrl,
+                time: 'لحظاتی پیش'
+            };
+
+            adsList.unshift(newAd);
+            document.getElementById('newAdForm').reset();
+            showSection('home');
+            filterAds();
+            alert('آگهی اجاره شما با موفقیت ثبت گردید.');
+        }
+
+        // Modal Logic
+        function openModal(ad) {
+            document.getElementById('modalImg').src = ad.image;
+            document.getElementById('modalTitle').innerText = ad.title;
+            document.getElementById('modalCategory').innerText = ad.category;
+            document.getElementById('modalLocation').innerHTML = `<i class="fa-solid fa-location-dot"></i> ${ad.location}`;
+            document.getElementById('modalPrice').innerText = formatMoney(ad.dailyPrice);
+            document.getElementById('modalDeposit').innerText = ad.deposit ? formatMoney(ad.deposit) : 'توافقی';
+            document.getElementById('modalGuarantee').innerText = ad.guarantee || 'توضیحات اختصاصی ثبت نشده است.';
+            document.getElementById('modalDesc').innerText = ad.description || 'توضیحات بیشتری برای این آگهی وارد نشده است.';
+            document.getElementById('modalPhone').innerText = ad.phone;
+            document.getElementById('modalPhoneLink').href = `tel:${ad.phone}`;
+
+            document.getElementById('adModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('adModal').classList.remove('active');
+        }
+
+        // Initial render
+        renderAds(adsList);
+    </script>
+</body>
+</html>
