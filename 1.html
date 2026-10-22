@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0c10">
+<title>PlanLife - محتوای رایگان</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--or:#ff9a2e;--bl:#3d8bff;--tx:#f2f3f7;--mu:#8b8fa0;--gl:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.02));--bd:rgba(255,255,255,.1)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Vazirmatn',sans-serif;background:#07080b;color:var(--tx);min-height:100dvh;padding:28px;overflow-x:hidden}
+body:before,body:after{content:"";position:fixed;width:420px;height:420px;border-radius:50%;filter:blur(110px);z-index:0;opacity:.35}
+body:before{background:var(--or);left:-120px;top:25%}
+body:after{background:var(--bl);left:2%;bottom:-120px;opacity:.28}
+.app{position:relative;z-index:1;max-width:1200px;margin:0 auto;direction:ltr;border:1px solid var(--bd);border-radius:30px;background:linear-gradient(160deg,#14161c,#0c0d12);box-shadow:0 30px 80px rgba(0,0,0,.6);padding:22px;display:grid;grid-template-columns:104px 1fr 340px;gap:20px}
+.app>*{direction:rtl}
+.glass{background:var(--gl);border:1px solid var(--bd);border-radius:20px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+button{font-family:inherit;color:inherit;background:none;border:0;cursor:pointer}
+svg{fill:currentColor}
+/* sidebar */
+.side{display:flex;flex-direction:column;align-items:center;gap:18px;grid-row:1/3}
+.me{text-align:center;font-size:11.5px}
+.me img{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid var(--bl);box-shadow:0 0 14px rgba(61,139,255,.5);display:block;margin:0 auto 6px}
+.nav{width:100%;flex:1;border-radius:22px;padding:10px 8px;display:flex;flex-direction:column;gap:6px}
+.nv{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 4px;border-radius:16px;font-size:12px;color:var(--mu);font-weight:500;transition:.2s}
+.nv svg{width:24px;height:24px}
+.nv.on{color:#fff;background:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.05));box-shadow:inset 0 1px 0 rgba(255,255,255,.15)}
+/* top */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;grid-column:2/4}
+.search{flex:0 1 300px;display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;font-size:13px;color:var(--mu)}
+.search input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--tx);font-family:inherit;font-size:13px}
+.topr{display:flex;align-items:center;gap:14px;font-size:13px}
+.topr .logo{width:28px;height:28px;border-radius:50%;object-fit:cover}
+.bell{position:relative;width:20px;height:20px;color:var(--mu)}
+.bell i{position:absolute;top:-2px;right:-1px;width:7px;height:7px;background:#ff3b5c;border-radius:50%}
+/* main */
+.main{min-width:0}
+.hero{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+.wel small{display:block;font-size:20px;color:#b9bcc8;font-weight:500}
+.wel b{display:block;font-size:30px;font-weight:900;line-height:1.3}
+.wel span{font-size:12px;color:var(--mu)}
+.nowmini{display:flex;align-items:center;gap:10px;padding:8px 10px;min-width:250px;box-shadow:0 0 30px rgba(255,154,46,.15)}
+.nowmini img{width:46px;height:46px;border-radius:10px;object-fit:cover}
+.nowmini div{flex:1;min-width:0}
+.nowmini b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nowmini small{font-size:11.5px;color:var(--mu)}
+.rnd{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);border:1px solid var(--bd);flex-shrink:0}
+.rnd svg{width:14px;height:14px}
+.sh{display:flex;justify-content:space-between;align-items:center;margin:6px 0 14px}
+.sh h2{font-size:18px;font-weight:700}
+.sh span{font-size:12.5px;color:var(--mu)}
+.row{display:flex;gap:14px;overflow-x:auto;padding:2px 2px 18px;scrollbar-width:none;direction:rtl}
+.row::-webkit-scrollbar{display:none}
+.card{flex:0 0 calc(25% - 11px);min-width:150px;padding:12px;cursor:pointer;transition:.22s;position:relative}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,.4),0 0 0 1px rgba(255,154,46,.35)}
+.card.on{box-shadow:0 0 0 1.5px var(--or),0 0 24px rgba(255,154,46,.25)}
+.card img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:14px;display:block;margin-bottom:10px}
+.card h3{font-size:13.5px;font-weight:700;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card p{font-size:11.5px;color:var(--mu);margin:2px 0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ctl{display:flex;justify-content:space-between;align-items:center;direction:ltr}
+.ctl .rnd{width:26px;height:26px}
+.ctl .rnd.pl{width:32px;height:32px;background:rgba(255,255,255,.12)}
+.nw{position:absolute;top:18px;left:18px;background:var(--or);color:#000;font-size:10px;font-weight:900;padding:2px 8px;border-radius:999px}
+.cat{display:flex;flex-direction:column;justify-content:flex-end}
+.cat .tile{aspect-ratio:1;border-radius:14px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-weight:900;font-size:19px;line-height:1.35;text-shadow:0 2px 12px rgba(0,0,0,.4)}
+.qa .tile{aspect-ratio:auto;height:130px;font-size:12.5px;font-weight:600;line-height:1.7;overflow:hidden;background:linear-gradient(135deg,rgba(255,154,46,.25),rgba(61,139,255,.25))}
+.g1{background:linear-gradient(135deg,#1b1b2f,#ff7a18)}.g2{background:linear-gradient(135deg,#7b2ff7,#ff2d95)}.g3{background:linear-gradient(135deg,#1fa2ff,#6a5cff)}.g4{background:linear-gradient(135deg,#f7b733,#fc4a1a)}
+/* right */
+.right{display:flex;flex-direction:column;gap:18px;min-width:0}
+.player{padding:16px;position:relative}
+.player .dots{position:absolute;top:12px;left:12px;z-index:2}
+#wave{width:100%;height:190px;display:block;cursor:pointer}
+.tinfo{text-align:center;margin:4px 0 10px}
+.tinfo b{font-size:16px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tinfo small{font-size:12px;color:var(--mu)}
+.bar{height:4px;background:rgba(255,255,255,.12);border-radius:9px;margin:10px 4px 6px;position:relative;cursor:pointer;direction:ltr}
+.bar i{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,#ffd19a,var(--or));border-radius:9px}
+.bar i:after{content:"";position:absolute;right:-6px;top:-4px;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 0 10px var(--or)}
+.tm{display:flex;justify-content:space-between;font-size:11.5px;color:var(--mu);direction:ltr;padding:0 4px}
+.main-ctl{display:flex;justify-content:space-between;align-items:center;margin-top:14px;direction:ltr;padding:0 6px}
+.main-ctl button{width:36px;height:36px;color:var(--or)}
+.main-ctl svg{width:22px;height:22px}
+.main-ctl .big{width:58px;height:58px;border-radius:50%;border:1.5px solid var(--or);box-shadow:0 0 22px rgba(255,154,46,.45),inset 0 0 14px rgba(255,154,46,.2);display:flex;align-items:center;justify-content:center}
+.main-ctl .big svg{width:26px;height:26px}
+.main-ctl .off{color:var(--mu)}
+.again h2{font-size:18px;font-weight:700;margin-bottom:12px}
+.li{display:flex;align-items:center;gap:12px;padding:10px;margin-bottom:10px;cursor:pointer}
+.li img{width:44px;height:44px;border-radius:10px;object-fit:cover}
+.li div{flex:1;min-width:0}
+.li b{font-size:13.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li small{font-size:11.5px;color:var(--mu)}
+.pill{font-size:11.5px;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid var(--bd)}
+/* comments */
+.cm{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);display:none;align-items:flex-end;justify-content:center}
+.cm.on{display:flex}
+.cm .box{width:100%;max-width:480px;max-height:80dvh;overflow:auto;background:#14161c;border:1px solid var(--bd);border-radius:24px 24px 0 0;padding:20px}
+.cm h3{display:flex;justify-content:space-between;margin-bottom:12px;font-size:16px}
+.cmi{background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:14px;padding:10px 12px;margin-bottom:8px;font-size:13.5px;line-height:1.6}
+.cmi b{color:var(--or);font-size:13px}
+.cm input,.cm textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--bd);border-radius:12px;padding:11px 13px;color:var(--tx);font-family:inherit;font-size:14px;margin-top:8px;outline:0}
+.cm input:focus,.cm textarea:focus{border-color:var(--or)}
+.send{width:100%;margin-top:10px;padding:12px;border-radius:999px;background:var(--or);color:#000;font-weight:800}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#222;border:1px solid var(--bd);padding:10px 18px;border-radius:999px;font-size:13px;z-index:99;display:none}
+@media(max-width:1000px){
+ body{padding:10px 10px 90px}
+ .app{grid-template-columns:1fr;padding:14px;border-radius:24px}
+ .side{grid-row:auto;position:fixed;bottom:10px;left:10px;right:10px;z-index:40;flex-direction:row;background:rgba(18,19,25,.92);backdrop-filter:blur(20px);border:1px solid var(--bd);border-radius:22px;padding:4px;justify-content:space-around}
+ .me{display:none}.nav{flex-direction:row;background:none;border:0;padding:0;backdrop-filter:none}
+ .nv{flex:1;padding:8px 2px;font-size:11px}.nv svg{width:20px;height:20px}
+ .top{grid-column:auto}.topr .nm{display:none}
+ .right{order:-1}
+ .card{flex-basis:150px}.hero{flex-direction:column;align-items:stretch}.nowmini{min-width:0}
+}
+</style>
+</head>
+<body>
+<div class="app">
+ <aside class="side">
+  <div class="me"><img src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="">PlanLife</div>
+  <nav class="glass nav" id="nav"></nav>
+ </aside>
+
+ <div class="top">
+  <label class="glass search"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M15.5 14h-.8l-.3-.3A6.5 6.5 0 1 0 14 15.5l.3.3v.8l5 5 1.5-1.5-5-5zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg><input id="q" placeholder="جستجوی پادکست..." oninput="render()"></label>
+  <div class="topr">
+   <svg class="bell" viewBox="0 0 24 24"><path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6v-5c0-3-2-5.5-5-6.2V4a1 1 0 0 0-2 0v.8C8 5.5 6 8 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+   <span class="nm">PlanLife</span><img class="logo" src="http://fs3.centraldnserver.com/~planlife/pics/planlife.jpeg" alt="">
+  </div>
+ </div>
+
+ <main class="main">
+  <div class="hero">
+   <div class="wel"><small>خوش اومدی به</small><b>PlanLife</b><span id="dt"></span></div>
+   <div class="glass nowmini" id="mini">
+    <img id="mImg" src="" alt=""><div><b id="mT">—</b><small id="mS">PlanLife</small></div>
+    <button class="rnd" onclick="step(-1)"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
+    <button class="rnd" onclick="step(1)"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6zM16 6v12h2V6z"/></svg></button>
+   </div>
+  </div>
+
+  <section id="s-p"><div class="sh"><h2>جدیدترین پادکست‌ها</h2><span id="allP" onclick="setCat('')" style="cursor:pointer">همه</span></div><div class="row" id="rowP"></div></section>
+  <section id="s-c"><div class="sh"><h2>دسته‌بندی‌ها</h2><span></span></div><div class="row" id="rowC"></div></section>
+  <section id="s-q"><div class="sh"><h2>پاسخ به سوالات شما</h2><span></span></div><div class="row" id="rowQ"></div></section>
+ </main>
+
+ <aside class="right">
+  <div class="glass player">
+   <button class="rnd dots" onclick="openCm()" title="نظرات"><svg viewBox="0 0 24 24"><path d="M21 6.5C21 5.1 19.9 4 18.5 4h-13C4.1 4 3 5.1 3 6.5v8C3 15.9 4.1 17 5.5 17H7l3 3 3-3h5.5c1.4 0 2.5-1.1 2.5-2.5z"/></svg></button>
+   <canvas id="wave"></canvas>
+   <div class="tinfo"><b id="pT">یک پادکست انتخاب کنید</b><small id="pS">PlanLife</small></div>
+   <div class="bar" id="bar"><i id="fill"></i></div>
+   <div class="tm"><span id="ct">0:00</span><span id="tt">0:00</span></div>
+   <div class="main-ctl">
+    <button id="shf" class="off" onclick="tgl('shf')"><svg viewBox="0 0 24 24"><path d="M10.6 9.2L5.4 4 4 5.4l5.2 5.2zM14.5 4l2.1 2.1L4 18.6 5.4 20 18 7.4 20 9.5V4zm.3 9.4l-1.4 1.4 3.3 3.3L14.5 20H20v-5.5l-2.1 2.1z"/></svg></button>
+    <button onclick="step(-1)"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
+    <button class="big" onclick="toggle()"><svg id="pi" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+    <button onclick="step(1)"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6zM16 6v12h2V6z"/></svg></button>
+    <button id="rpt" class="off" onclick="tgl('rpt')"><svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2z"/></svg></button>
+   </div>
+  </div>
+  <div class="again"><h2>دوباره گوش بده</h2><div id="again"></div></div>
+ </aside>
+</div>
+
+<div class="cm" id="cm" onclick="if(event.target===this)this.classList.remove('on')">
+ <div class="box">
+  <h3><span>💬 نظرات <span id="cc">0</span></span><button onclick="cm.classList.remove('on')">✕</button></h3>
+  <div id="cl"></div>
+  <input id="cn" placeholder="نام شما (اختیاری)"><textarea id="ct2" rows="3" placeholder="نظر خود را بنویسید..."></textarea>
+  <button class="send" id="sb" onclick="addC()">ارسال نظر</button>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
+<audio id="au"></audio>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const sb=supabase.createClient('https://hjzzvzxhrqovvducnxha.supabase.co','sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC');
+const B='http://fs3.centraldnserver.com/~planlife/',LOGO=B+'pics/planlife.jpeg';
+const P=[
+ {id:102,n:1,c:"موضوعات متفاوت",e:"فرکانس خواسته",s:B+"podcast_free/Mozoatdigar/Frequency_free.m4a",i:B+"pics/podcast_free/4AD48B99-0DD5-45E6-879F-B1D7E21EF676.png"},
+ {id:101,n:1,c:"موضوعات متفاوت",e:"رسیدن به خواسته ها",s:B+"podcast_free/Mozoatdigar/hadaf_az_residan_be_khaste.m4a",i:B+"pics/podcast_free/IMG_2789.jpeg"},
+ {id:0,n:1,c:"موضوعات متفاوت",e:"کد نویسی ذهن",s:B+"podcast_free/codenevisi/Codenevisizehn_free.m4a",i:B+"pics/podcast_free/IMG_2409.jpeg"},
+ {id:24,n:1,c:"موضوعات متفاوت",e:"به خودت حق بده",s:B+"podcast_free/Mozoatdigar/PlanLife.ir-Hagh nadadan be khod.m4a",i:B+"pics/motafareqe/IMG_2254.jpeg"},
+ {id:1,c:"باورهای ثروت",e:"کار کردن روی باورها",s:"https://res.cloudinary.com/dfthbclzi/video/upload/v1780854988/Bavar_free_w9yucc.m4a",i:B+"pics/Servat/IMG_1053.JPG"},
+ {id:25,n:1,c:"عشق و روابط",e:"از نظر همه باید جذاب باشم",s:B+"podcast_free/ravabet/PlanLife.ir-jazab bodan az nazare hame.m4a",i:B+"pics/ravabet/IMG_2269.jpeg"},
+ {id:4,c:"باورهای ثروت",e:"فقط با سختی کشیدن میشود؟",s:B+"podcast_free/servat/SakhTi keshidan - planlife Free.m4a",i:B+"pics/motafareqe/IMG_2318.JPG"},
+ {id:5,c:"باورهای ثروت",e:"خسیس بودن در زندگی",s:"https://res.cloudinary.com/dshielkdt/video/upload/q_auto/f_auto/v1779530272/Khasis_bodan_-_planLife.ir_Free_sv3vbr.m4a",i:B+"pics/motafareqe/IMG_2223.jpeg"}];
+const Q=[
+ {id:100,c:"سوالات در حوزه مالی",q:"چطور می‌تونم معنا و رسالت واقعی زندگی خودم رو پیدا کنم؟ از کجا بفهمم که رسالت من چی هست و به سمتی باید برم؟",s:B+"soaljavab/planlife.ir-resalate-vagheiy-man.m4a"},
+ {id:101,c:"سوالات در حوزه مالی",q:"چرا پول از من فرار می‌کنه؟",s:""},
+ {id:102,c:"سوالات در حوزه روابط",q:"چرا دختر جذب پسرای بد میشن؟ پسرهای بد چه جذابیتی دارند که پسرهای خوب ندارند؟",s:B+"soaljavab/Planlife.ir-che-psarayebad-jazaban.m4a"},
+ {id:103,c:"سوالات در حوزه روابط",q:"چطور با ترس از تنهایی یا طرد شدن کنار بیام و کیفیت روابطم رو فدای این ترس‌ها نکنم؟",s:B+"soaljavab/Project-chtor-kenarbiyam-ba-tanhaei.m4a"},
+ {id:104,c:"سوالات در حوزه اعتماد به نفس",q:"چطور اعتماد به نفسم رو بالا ببرم؟",s:""}];
+const T=[...P.map(p=>({k:'p',id:p.id,t:p.e,sub:p.c,s:p.s,i:p.i})),...Q.map(q=>({k:'q',id:q.id,t:q.c,sub:q.q.slice(0,40)+'…',s:q.s,i:LOGO}))];
+const au=document.getElementById('au'),cv=document.getElementById('wave');
+let cur=-1,cat='',hist=[],opt={shf:0,rpt:0},cmts=[];
+const $=id=>document.getElementById(id);
+const fa=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fm=s=>!s||!isFinite(s)?'0:00':Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+const toast=m=>{const t=$('toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',2200)};
+$('dt').textContent=new Date().toLocaleDateString('fa-IR',{year:'numeric',month:'long',day:'numeric'});
+const ico={h:'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z',s:'M15.5 14h-.8l-.3-.3A6.5 6.5 0 1 0 14 15.5l.3.3v.8l5 5 1.5-1.5-5-5zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z',l:'M4 6h2v12H4zm4 0h2v12H8zm4.5.3l1.9-.6 3.6 11.5-1.9.6z',e:'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-3 0-8 1.5-8 4.5V21h16v-2.5c0-3-5-4.5-8-4.5z'};
+const navs=[['h','خانه','top'],['s','جستجو','q'],['l','پادکست‌ها','s-p'],['e','پرسش‌ها','s-q']];
+$('nav').innerHTML=navs.map((n,i)=>`<button class="nv${i?'':' on'}" onclick="go(this,'${n[2]}')"><svg viewBox="0 0 24 24"><path d="${ico[n[0]]}"/></svg>${n[1]}</button>`).join('');
+function go(b,id){document.querySelectorAll('.nv').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+ if(id==='top')scrollTo({top:0,behavior:'smooth'});else if(id==='q')$('q').focus();else $(id).scrollIntoView({behavior:'smooth',block:'start'})}
+const btns=i=>`<div class="ctl"><button class="rnd" onclick="event.stopPropagation();play(${i}-1<0?0:${i}-1)"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button><button class="rnd pl"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><button class="rnd" onclick="event.stopPropagation();play(${i}+1>=T.length?${i}:${i}+1)"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6zM16 6v12h2V6z"/></svg></button></div>`;
+function render(){
+ const f=($('q').value||'').trim();
+ $('rowP').innerHTML=P.map((p,j)=>({p,j})).filter(({p})=>(!cat||p.c===cat)&&(!f||(p.e+p.c).includes(f))).map(({p,j})=>`<div class="glass card${cur===j?' on':''}" onclick="play(${j})">${p.n?'<span class="nw">جدید</span>':''}<img src="${p.i}" alt=""><h3>${p.e}</h3><p>${p.c}</p>${btns(j)}</div>`).join('')||'<p style="color:var(--mu);padding:20px">موردی پیدا نشد</p>';
+ const cats=[...new Set(P.map(p=>p.c))];
+ $('rowC').innerHTML=cats.map((c,i)=>`<div class="glass card cat" onclick="setCat('${c}')"><div class="tile g${i+1}">${c}</div><h3>${c}</h3><p>${fa(P.filter(p=>p.c===c).length)} پادکست</p></div>`).join('');
+ $('rowQ').innerHTML=Q.map((q,j)=>({q,j})).filter(({q})=>!f||(q.q+q.c).includes(f)).map(({q,j})=>`<div class="glass card cat qa${cur===P.length+j?' on':''}" onclick="play(${P.length+j})"><div class="tile">${q.q}</div><p>${q.c}</p>${btns(P.length+j)}</div>`).join('');
+ $('again').innerHTML=(hist.length?hist:[0,1,2]).slice(0,3).map(i=>`<div class="glass li" onclick="play(${i})"><img src="${T[i].i}" alt=""><div><b>${T[i].t}</b><small>${T[i].sub}</small></div><span class="pill">پخش</span></div>`).join('');
+}
+function setCat(c){cat=c;render();$('s-p').scrollIntoView({behavior:'smooth'})}
+function play(i){
+ const t=T[i];if(!t)return;
+ if(!t.s){toast('صوت این مورد هنوز آماده نیست');return}
+ cur=i;hist=[i,...hist.filter(x=>x!==i)].slice(0,3);
+ au.src=t.s;au.play().catch(()=>{});
+ $('pT').textContent=$('mT').textContent=t.t;$('pS').textContent=$('mS').textContent=t.sub;$('mImg').src=t.i;
+ sb.from('play_events').insert([t.k==='p'?{podcast_id:t.id}:{qa_id:t.id}]).then(()=>{},()=>{});
+ render();draw();loadC();
+}
+function step(d){
+ if(cur<0){play(0);return}
+ let n=opt.shf?Math.floor(Math.random()*T.length):cur+d;
+ n=(n+T.length)%T.length;
+ for(let k=0;k<T.length&&!T[n].s;k++)n=(n+d+T.length)%T.length;
+ play(n)
+}
+function toggle(){if(cur<0){play(0);return}au.paused?au.play():au.pause()}
+function tgl(k){opt[k]^=1;$(k).classList.toggle('off',!opt[k])}
+const I={p:'<path d="M8 5v14l11-7z"/>',z:'<path d="M6 19h4V5H6zm8-14v14h4V5z"/>'};
+au.onplay=()=>$('pi').innerHTML=I.z;au.onpause=()=>$('pi').innerHTML=I.p;
+au.onended=()=>{if(opt.rpt){au.currentTime=0;au.play()}else step(1)};
+au.onloadedmetadata=()=>$('tt').textContent=fm(au.duration);
+au.ontimeupdate=()=>{const p=au.duration?au.currentTime/au.duration:0;$('fill').style.width=p*100+'%';$('ct').textContent=fm(au.currentTime);draw()};
+$('bar').onclick=e=>{if(!au.duration)return;const r=e.currentTarget.getBoundingClientRect();au.currentTime=(e.clientX-r.left)/r.width*au.duration};
+cv.onclick=e=>{if(!au.duration)return;const r=cv.getBoundingClientRect();au.currentTime=(e.clientX-r.left)/r.width*au.duration};
+/* waveform */
+function env(x,s){let v=0;for(let k=0;k<6;k++){const c=((Math.sin(s*7.3+k*12.9)+1)/2),w=.04+((Math.sin(s*3.1+k*5.7)+1)/2)*.07,a=.35+((Math.cos(s*5.9+k*3.3)+1)/2)*.65;v+=a*Math.exp(-Math.pow((x-c)/w,2))}return Math.min(1,.07+v)}
+function draw(){
+ const d=devicePixelRatio||1,r=cv.getBoundingClientRect();if(!r.width)return;
+ cv.width=r.width*d;cv.height=r.height*d;const g=cv.getContext('2d');g.scale(d,d);
+ const W=r.width,H=r.height,p=au.duration?au.currentTime/au.duration:0,seed=cur<0?1:cur+2;
+ for(let x=2;x<W;x+=4){
+  const u=x/W,h=env(u,seed)*(H*.46)*(.82+.18*Math.sin(x*1.7)),on=u<=p||(cur<0&&u<.5);
+  g.fillStyle=on?'#ff9a2e':'#3d8bff';g.globalAlpha=on?1:.85;g.shadowColor=on?'rgba(255,154,46,.7)':'rgba(61,139,255,.7)';g.shadowBlur=6;
+  g.fillRect(x,H/2-h,1.6,h*2)}
+}
+addEventListener('resize',draw);
+/* comments */
+async function loadC(){
+ const t=T[cur];if(!t)return;$('cl').innerHTML='<p style="color:var(--mu)">⏳ در حال بارگذاری...</p>';
+ try{const tb=t.k==='p'?'comments':'qa_comments',col=t.k==='p'?'podcast_id':'qa_id';
+  const {data,error}=await sb.from(tb).select('*').eq(col,t.id).order('created_at',{ascending:false});if(error)throw error;cmts=data||[]}catch(e){cmts=[]}
+ rc()}
+function rc(){$('cc').textContent=fa(cmts.length);$('cl').innerHTML=cmts.length?cmts.map(c=>`<div class="cmi"><b>${esc(c.name)}</b><br>${esc(c.text)}</div>`).join(''):'<p style="color:var(--mu);text-align:center;padding:14px">هنوز نظری ثبت نشده. اولین نفر باشید!</p>'}
+function openCm(){if(cur<0){toast('اول یک مورد را پخش کنید');return}$('cm').classList.add('on')}
+async function addC(){
+ const t=T[cur],text=$('ct2').value.trim(),name=$('cn').value.trim()||'ناشناس';if(!t||!text)return;
+ $('sb').disabled=true;
+ try{const tb=t.k==='p'?'comments':'qa_comments',row=t.k==='p'?{podcast_id:t.id,name,text}:{qa_id:t.id,name,text};
+  const {data,error}=await sb.from(tb).insert([row]).select();if(error)throw error;cmts.unshift(data[0]);rc();$('ct2').value=''}catch(e){toast('ارسال نظر با خطا مواجه شد')}
+ $('sb').disabled=false}
+render();draw();
+</script>
+</body>
+</html>
