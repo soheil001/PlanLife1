@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>دوره احساس لیاقت و ارزشمندی</title>
+<style>
+:root{--bg:#f4f5f9;--card:#fff;--text:#1d2236;--muted:#6b7190;--accent:#5b4de0;--accent-soft:#ecebfc;--border:#e2e4ee}
+@media (prefers-color-scheme:dark){:root{--bg:#12141d;--card:#1b1e2b;--text:#eceefa;--muted:#9aa0bd;--accent:#8b80ff;--accent-soft:#272a40;--border:#2c3048}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Vazirmatn,Tahoma,"Segoe UI",sans-serif;line-height:1.7}
+.wrap{max-width:1200px;margin:0 auto;padding:20px;display:grid;grid-template-columns:1fr 340px;gap:20px}
+h1{font-size:1.2rem;margin:0 0 4px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+video{width:100%;aspect-ratio:16/9;background:#000;display:block}
+.info{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.info b{font-size:1.05rem}
+.info small{color:var(--muted)}
+.btns{display:flex;gap:8px}
+button{font:inherit;border:0;background:var(--accent);color:#fff;padding:8px 16px;border-radius:9px;cursor:pointer}
+button.ghost{background:var(--accent-soft);color:var(--accent)}
+button:disabled{opacity:.4;cursor:default}
+.side{max-height:calc(100vh - 40px);display:flex;flex-direction:column;position:sticky;top:20px}
+.side h2{margin:0;padding:14px 16px;font-size:1rem;border-bottom:1px solid var(--border)}
+ol{list-style:none;margin:0;padding:6px;overflow:auto}
+li{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:10px;cursor:pointer}
+li:hover{background:var(--accent-soft)}
+li.active{background:var(--accent);color:#fff}
+li .n{min-width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-size:.85rem}
+li.active .n{background:rgba(255,255,255,.25);color:#fff}
+.err{display:none;padding:10px 16px;color:#c0392b;font-size:.9rem}
+@media(max-width:860px){.wrap{grid-template-columns:1fr;padding:12px}.side{position:static;max-height:420px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <main>
+    <h1>دوره احساس لیاقت و احساس ارزشمندی</h1>
+    <div class="card">
+      <video id="v" controls playsinline preload="metadata"></video>
+      <div class="err" id="err">پخش این ویدیو ممکن نیست؛ احتمالاً لینک منقضی شده است.</div>
+      <div class="info">
+        <div><b id="t"></b><br><small id="c"></small></div>
+        <div class="btns">
+          <button class="ghost" id="prev">قبلی</button>
+          <button id="next">بعدی</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <aside class="card side">
+    <h2>لیست ویدیوها</h2>
+    <ol id="list"></ol>
+  </aside>
+</div>
+
+<script>
+const videos = [
+  {title:"مقدمه", url:"https://video-uploads.archive.thr1.sotoon.ir/v-v/20004-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D8%A7%DB%8C%D8%A7%D9%82%D8%AA-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D8%A7%D8%B1%D8%B2%D8%B4%D9%85%D9%86%D8%AF%DB%8C/e0a8e9cc5e134e90a22397eb1e380c8f.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=e6f85e267ae70fdabb8c07d828cb80f03a07e329%2F20261027%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261027T080425Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=1bd80e267dd501bba0d021dda6f8459663657e03e0c187283fbab145358ce4d8"},
+  {title:"قسمت ۱", url:"https://video-uploads.archive.thr1.sotoon.ir/l_v/20004/1-60493-%D8%AF%D9%88%D8%B1%D9%87-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D9%84%DB%8C%D8%A7%D9%82%D8%AA-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D8%A7%D8%B1%D8%B2%D8%B4%D9%85%D9%86%D8%AF%DB%8C/1-306907/11d0ab7fd8a44de5abcdc9fcd63f9e54.MP4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=e6f85e267ae70fdabb8c07d828cb80f03a07e329%2F20261027%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261027T080825Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=400762adec03d5756bbe8531e5eec1077c10351690941d0fdf0013ee7dbf2b92"},
+  {title:"قسمت ۲", url:"https://video-uploads.archive.thr1.sotoon.ir/l_v/20004/1-60493-%D8%AF%D9%88%D8%B1%D9%87-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D9%84%DB%8C%D8%A7%D9%82%D8%AA-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D8%A7%D8%B1%D8%B2%D8%B4%D9%85%D9%86%D8%AF%DB%8C/2-308602/1345ee3e65cc4cbd993f5017978bf92b.MP4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=e6f85e267ae70fdabb8c07d828cb80f03a07e329%2F20261027%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261027T080904Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=e20ee193a2136686627a81e55562b660ec0d646de0335522f86345590afdbef5"},
+  {title:"قسمت ۳", url:"https://video-uploads.archive.thr1.sotoon.ir/l_v/20004/1-60493-%D8%AF%D9%88%D8%B1%D9%87-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D9%84%DB%8C%D8%A7%D9%82%D8%AA-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D8%A7%D8%B1%D8%B2%D8%B4%D9%85%D9%86%D8%AF%DB%8C/4-309137/70b097fea80848f7b19d423138b53544.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=e6f85e267ae70fdabb8c07d828cb80f03a07e329%2F20261027%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261027T080924Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=7ed2e5b5a6d0f545d801f8970aaf43681eae67416a6bae81c3548b183cd1c39c"},
+  {title:"قسمت ۴", url:"https://video-uploads.archive.thr1.sotoon.ir/l_v/20004/1-60493-%D8%AF%D9%88%D8%B1%D9%87-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D9%84%DB%8C%D8%A7%D9%82%D8%AA-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D8%A7%D8%B1%D8%B2%D8%B4%D9%85%D9%86%D8%AF%DB%8C/4-310905/ee88f1c92ca6461fadface7b543a91a0.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=e6f85e267ae70fdabb8c07d828cb80f03a07e329%2F20261027%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261027T080947Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=11a5531d25b18539acc317d804536944c9105c598999f73eaed78b6c64bdcce3"},
+  {title:"قسمت ۵", url:"https://video-uploads.archive.thr1.sotoon.ir/l_v/20004/1-60493-%D8%AF%D9%88%D8%B1%D9%87-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D9%84%DB%8C%D8%A7%D9%82%D8%AA-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D8%A7%D8%B1%D8%B2%D8%B4%D9%85%D9%86%D8%AF%DB%8C/5-310987/76bdbd5b442145ae91ce0fecf73daad7.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=e6f85e267ae70fdabb8c07d828cb80f03a07e329%2F20261027%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261027T081015Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=cf8bb8551574ad30fbc0de562375b4b1456094969ddb90410ebdd7545022d93b"},
+  {title:"قسمت ۶", url:"https://video-uploads.archive.thr1.sotoon.ir/l_v/20004/1-60493-%D8%AF%D9%88%D8%B1%D9%87-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D9%84%DB%8C%D8%A7%D9%82%D8%AA-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D8%A7%D8%B1%D8%B2%D8%B4%D9%85%D9%86%D8%AF%DB%8C/6-310988/425ca8ba3ee748b89c1530ddcaf88920.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=e6f85e267ae70fdabb8c07d828cb80f03a07e329%2F20261027%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261027T081049Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=837f75249035a14941157c334fd8e9caa393e8aac1e68bc8907fd5d7d69e6c53"},
+  {title:"قسمت ۷", url:"https://video-uploads.archive.thr1.sotoon.ir/l_v/20004/1-60493-%D8%AF%D9%88%D8%B1%D9%87-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D9%84%DB%8C%D8%A7%D9%82%D8%AA-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D8%A7%D8%B1%D8%B2%D8%B4%D9%85%D9%86%D8%AF%DB%8C/7-310993/f8fe16bf57aa459489d0710ef63d7a15.MP4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=e6f85e267ae70fdabb8c07d828cb80f03a07e329%2F20261027%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261027T081131Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=04d4ddaf22069fd3922a8db9a6fe15d4feb2d7adb27689d98abbf555e967c826"},
+  {title:"قسمت ۸", url:"https://video-uploads.archive.thr1.sotoon.ir/l_v/20004/1-60493-%D8%AF%D9%88%D8%B1%D9%87-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D9%84%DB%8C%D8%A7%D9%82%D8%AA-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D8%A7%D8%B1%D8%B2%D8%B4%D9%85%D9%86%D8%AF%DB%8C/8-311977/e8f3b6b1869f40c5abb76827278a0793.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=e6f85e267ae70fdabb8c07d828cb80f03a07e329%2F20261027%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261027T081133Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=09098284500fe0f0c0bf27c1e55385dcacaa207bddafb002a2ff8a251ae731c9"},
+  {title:"قسمت ۹", url:"https://video-uploads.archive.thr1.sotoon.ir/l_v/20004/1-60493-%D8%AF%D9%88%D8%B1%D9%87-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D9%84%DB%8C%D8%A7%D9%82%D8%AA-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D8%A7%D8%B1%D8%B2%D8%B4%D9%85%D9%86%D8%AF%DB%8C/9-312021/ff85c915531041f88cb92e7d3183bc14.MP4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=e6f85e267ae70fdabb8c07d828cb80f03a07e329%2F20261027%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261027T081135Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=ba9007927cc0f8be184e5a24d501c0d74534550e8025f8daf87117440e49bf0e"},
+  {title:"قسمت ۱۰", url:"https://video-uploads.archive.thr1.sotoon.ir/l_v/20004/1-60493-%D8%AF%D9%88%D8%B1%D9%87-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D9%84%DB%8C%D8%A7%D9%82%D8%AA-%D8%A7%D8%AD%D8%B3%D8%A7%D8%B3-%D8%A7%D8%B1%D8%B2%D8%B4%D9%85%D9%86%D8%AF%DB%8C/10-312858/a450c178024644e1bc8efab2c21705a7.MP4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=e6f85e267ae70fdabb8c07d828cb80f03a07e329%2F20261027%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261027T080750Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=abf17eed751873e31df67fa1f83ff1da4d711727c11501a1201b683e54aa5ab8"}
+];
+
+// حذف لینک‌های تکراری (بر اساس نام فایل، بدون پارامترهای امضا)
+const seen = new Set();
+const playlist = videos.filter(x => {
+  const key = x.url.split('?')[0];
+  if (seen.has(key)) return false;
+  seen.add(key);
+  return true;
+});
+
+const fa = n => String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+const v = document.getElementById('v'), list = document.getElementById('list'),
+      t = document.getElementById('t'), c = document.getElementById('c'),
+      err = document.getElementById('err'),
+      prev = document.getElementById('prev'), next = document.getElementById('next');
+let cur = 0;
+
+playlist.forEach((item, i) => {
+  const li = document.createElement('li');
+  li.innerHTML = '<span class="n">' + fa(i + 1) + '</span><span>' + item.title + '</span>';
+  li.onclick = () => play(i, true);
+  list.appendChild(li);
+});
+
+function play(i, auto) {
+  cur = i;
+  err.style.display = 'none';
+  v.src = playlist[i].url;
+  t.textContent = playlist[i].title;
+  c.textContent = 'ویدیو ' + fa(i + 1) + ' از ' + fa(playlist.length);
+  [...list.children].forEach((li, k) => li.classList.toggle('active', k === i));
+  list.children[i].scrollIntoView({block: 'nearest'});
+  prev.disabled = i === 0;
+  next.disabled = i === playlist.length - 1;
+  if (auto) v.play().catch(() => {});
+}
+
+prev.onclick = () => cur > 0 && play(cur - 1, true);
+next.onclick = () => cur < playlist.length - 1 && play(cur + 1, true);
+v.addEventListener('ended', () => { if (cur < playlist.length - 1) play(cur + 1, true); });
+v.addEventListener('error', () => { err.style.display = 'block'; });
+
+play(0, false);
+</script>
+</body>
+</html>
