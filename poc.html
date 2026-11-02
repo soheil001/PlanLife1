@@ -20,7 +20,7 @@ h1{font-size:30px;font-weight:900;letter-spacing:-.5px}
 .pills i{height:6px;width:7px;border-radius:9px;background:var(--hair);transition:.3s;cursor:pointer}
 .pills i.on{width:20px;background:var(--ink)}
 .sbtn{width:42px;height:42px;border-radius:50%;background:var(--inv);font-size:18px;display:grid;place-items:center;box-shadow:0 8px 18px rgba(0,0,0,.2)}
-.sbtn svg{width:18px;height:18px;stroke:var(--invt);fill:none;stroke-width:2.4;stroke-linecap:round}
+.sbtn svg{width:20px;height:20px;fill:var(--invt)}
 .search{display:none;margin-top:14px}
 .search.on{display:block}
 .search input{width:100%;border:0;background:var(--bg);border-radius:16px;padding:13px 16px;font:inherit;font-size:14px;outline:none}
@@ -64,7 +64,7 @@ h1{font-size:30px;font-weight:900;letter-spacing:-.5px}
 .row .t{flex:1;min-width:0}
 .row b{display:block;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row small{color:var(--mut);font-size:12px}
-.row .dots{color:#c4c8d0;letter-spacing:3px;font-weight:900}
+.row .dots{display:grid;place-items:center}.row .dots svg{width:24px;height:24px;fill:#c4c8d0}
 .row.cur b{color:#e5484d}
 /* mini player */
 .mini{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 12px);max-width:536px;margin:0 auto;height:66px;border-radius:33px;background:var(--mini);color:#fff;display:none;align-items:center;gap:12px;padding:0 14px;z-index:50;box-shadow:0 14px 30px rgba(0,0,0,.3);cursor:pointer}
@@ -131,7 +131,7 @@ input,textarea{color:var(--ink)}
 .pb{display:block;width:100%;height:50px;line-height:50px;border-radius:25px;font-weight:800;font-size:15px;margin-top:8px;color:#fff;text-decoration:none;text-align:center}
 .pb.g{background:#22c55e;box-shadow:0 10px 20px rgba(34,197,94,.35)}
 .pb.y{background:#facc15;color:#2a2200;box-shadow:0 10px 20px rgba(250,204,21,.35)}
-.px{position:absolute;top:12px;left:16px;font-size:18px;color:var(--mut)}
+.px{position:absolute;top:12px;left:14px;width:34px;height:34px;display:grid;place-items:center}.px svg{width:20px;height:20px;fill:var(--mut)}
 /* glass cards */
 .gc{position:relative;flex:0 0 230px;height:272px;border-radius:30px;overflow:hidden;cursor:pointer;box-shadow:0 18px 30px -10px rgba(40,40,120,.45);background:#333;color:#fff}
 .gc>img,.gb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -154,7 +154,7 @@ input,textarea{color:var(--ink)}
 .cc:last-child:nth-child(odd){grid-column:span 2}
 .cc:before{content:'';position:absolute;left:-30%;right:-30%;top:18%;height:150px;background:radial-gradient(ellipse,var(--c),transparent 65%);opacity:.22;pointer-events:none}
 .ch{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800;line-height:1.5;padding-bottom:11px;border-bottom:1px solid rgba(255,255,255,.07);position:relative}
-.ch svg{width:17px;height:17px;flex-shrink:0;stroke:var(--c);fill:none;stroke-width:1.8;stroke-linejoin:round}
+.ch svg{width:20px;height:20px;flex-shrink:0;fill:var(--c)}
 .art{position:relative;height:128px;display:grid;place-items:center}
 .art:before{content:'';position:absolute;width:120px;height:120px;border-radius:50%;background:radial-gradient(var(--c),transparent 68%);opacity:.5;filter:blur(8px)}
 .art:after{content:'';position:absolute;bottom:12px;width:82%;height:30px;border-radius:10px;background:linear-gradient(#2b2f40,#151721);border-top:2px solid var(--c);box-shadow:0 0 22px var(--c)}
@@ -162,7 +162,7 @@ input,textarea{color:var(--ink)}
 .ci{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;font-weight:700;margin:6px 0 12px;position:relative}
 .ci b{color:#59e08a}.ci i{font-style:normal;color:#6c7186;font-weight:600}
 .cb{position:relative;width:100%;height:42px;border-radius:21px;background:linear-gradient(#86e9a0,#3dbd69);color:#0b2a16;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 8px 18px rgba(61,189,105,.35)}
-.cb svg{width:15px;height:15px;stroke:#0b2a16;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.cb svg{width:18px;height:18px;fill:#0b2a16}
 /* featured glass cards */
 .fc{position:relative;flex:0 0 240px;height:260px;border-radius:26px;overflow:hidden;cursor:pointer;box-shadow:0 16px 28px -10px rgba(20,30,90,.5);background:#222;color:#fff}
 .fc>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -175,55 +175,163 @@ input,textarea{color:var(--ink)}
 .fg small{font-size:11px;opacity:.8}
 .fb{width:46px;height:46px;border-radius:14px;background:linear-gradient(145deg,#5b95ff,#2f6fed);display:grid;place-items:center;flex-shrink:0;box-shadow:0 8px 18px rgba(47,111,237,.55),inset 0 1px 0 rgba(255,255,255,.4)}
 .fb svg{width:20px;height:20px;fill:#fff}
+
+/* ===== section frames ===== */
+.box{
+  --a:#7c5cff;
+  position:relative;margin-top:22px;padding:18px 16px 4px;border-radius:30px;overflow:hidden;
+  background:var(--bg);
+  background:linear-gradient(165deg,color-mix(in srgb,var(--a) 13%,var(--bg)),var(--bg) 58%);
+  border:1px solid var(--hair);
+  border:1px solid color-mix(in srgb,var(--a) 24%,var(--hair));
+  box-shadow:0 22px 38px -24px color-mix(in srgb,var(--a) 75%,transparent),inset 0 1px 0 rgba(255,255,255,.35);
+}
+[data-t=dark] .box{box-shadow:0 22px 38px -24px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.06)}
+.box:before{ /* درخشش گوشه */
+  content:'';position:absolute;top:-70px;right:-50px;width:190px;height:190px;border-radius:50%;
+  background:radial-gradient(var(--a),transparent 68%);opacity:.22;pointer-events:none;
+}
+.box:after{ /* خط نوری بالای فریم */
+  content:'';position:absolute;top:0;left:22%;right:22%;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,transparent,var(--a),transparent);opacity:.7;
+}
+.bh{position:relative;display:flex;align-items:center;gap:11px;margin-bottom:14px}
+.bi{
+  width:40px;height:40px;border-radius:14px;flex-shrink:0;display:grid;place-items:center;font-size:19px;
+  background:var(--a);
+  background:linear-gradient(145deg,var(--a),color-mix(in srgb,var(--a) 55%,#000));
+  box-shadow:0 8px 16px -4px color-mix(in srgb,var(--a) 70%,transparent),inset 0 1px 0 rgba(255,255,255,.4);
+}
+.bh .bt{flex:1;min-width:0}
+.bh h2{font-size:17px;font-weight:900;line-height:1.4}
+.bh small{display:block;font-size:11.5px;color:var(--mut);margin-top:1px}
+.bh a{font-size:12px;font-weight:700;color:var(--a);padding:6px 12px;border-radius:99px;
+  background:color-mix(in srgb,var(--a) 14%,transparent);cursor:pointer;white-space:nowrap}
+.box .h-scroll{margin:0 -16px;padding:4px 16px 16px}
+.box .row{padding:10px 8px;border-radius:18px;transition:.2s}
+.box .row+.row{border-top:1px dashed var(--hair);border-radius:0}
+.box .row:active{background:color-mix(in srgb,var(--a) 10%,transparent)}
+.box #plist{padding-bottom:8px}
+.box .cats{padding-bottom:16px}
+.box.dk{background:linear-gradient(165deg,#1b1d2b,#11131b);border-color:rgba(255,255,255,.08);color:#eef0f6}
+.box.dk .bh small{color:#7d8397}
+
+/* ===== icons ===== */
+.ico{width:1em;height:1em;fill:currentColor;stroke:none;display:block;flex-shrink:0}
+.pi{display:contents}
+.bi svg{width:23px;height:23px;fill:#fff;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28))}
+.art span svg{width:66px;height:66px;fill:var(--c)}
+.crown svg{width:100px;height:100px;fill:#fff}
+.bdg{display:inline-flex;align-items:center;gap:5px}
+.bdg svg{width:13px;height:13px;fill:#fff}
+.gl{display:flex;align-items:center;gap:5px}
+.gl svg{width:12px;height:12px;fill:#fff}
+.row .ic svg{width:26px;height:26px;fill:#fff;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2))}
+.mini .ph svg{width:24px;height:24px;fill:#fff}
+.empty svg{display:inline-block;width:1.2em;height:1.2em;vertical-align:-.25em;fill:currentColor;margin-left:4px}
+.hi{display:grid;place-items:center}
+.hi svg{width:24px;height:24px}
+.cm h3{display:flex;align-items:center;gap:8px}
+.cm .hi svg{fill:#7c5cff}
+.pbox h3{display:flex;align-items:center;justify-content:center;gap:8px}
+.pbox .hi svg{fill:#f59e0b}
+#close svg{fill:var(--ink)}
+.gp svg,.fb svg{width:22px;height:22px}
 </style>
 </head>
 <body>
 <div class="app">
   <div class="top">
     <div><h1 id="ttl">پادکست‌ها</h1><div class="pills"><i class="on" data-s="p"></i><i data-s="q"></i></div></div>
-    <div style="display:flex;gap:10px"><button class="sbtn" id="tg" aria-label="تم">🌙</button><button class="sbtn" id="sbtn" aria-label="جستجو"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></button></div>
+    <div style="display:flex;gap:10px"><button class="sbtn" id="tg" aria-label="تم"></button><button class="sbtn" id="sbtn" aria-label="جستجو" data-ic="magnifying-glass.f"></button></div>
   </div>
   <div class="search" id="sbox"><input id="sin" placeholder="جستجو..."></div>
 
   <div class="panel on" id="pp">
     <div class="hero" id="hero"></div>
-    <div class="sec"><h2>رایگان‌ها</h2><a onclick="document.getElementById('plist').scrollIntoView({behavior:'smooth'})">Radio VIP ‹</a></div>
-    <div class="h-scroll" id="newList"></div>
-    <div class="sec" id="plistH"><h2>Radio VIP 👑</h2></div>
-    <div class="h-scroll" id="vipRow"></div>
-    <div id="plist"></div>
-    <div class="sec"><h2>برگزیده‌ها 🔥</h2></div><div class="h-scroll fr"></div>
-    <div class="sec"><h2>کل دسته‌بندی</h2></div><div class="cats"></div>
+
+    <div class="box" style="--a:#22c55e">
+      <div class="bh">
+        <span class="bi" data-ic="gift"></span>
+        <div class="bt"><h2>رایگان‌ها</h2><small>بدون نیاز به اشتراک گوش بده</small></div>
+        <a onclick="document.getElementById('plist').scrollIntoView({behavior:'smooth'})">Radio VIP ‹</a>
+      </div>
+      <div class="h-scroll" id="newList"></div>
+    </div>
+
+    <div class="box" style="--a:#f59e0b" id="plistH">
+      <div class="bh">
+        <span class="bi" data-ic="crown-simple"></span>
+        <div class="bt"><h2>Radio VIP</h2><small>پادکست‌های اختصاصی اعضا</small></div>
+      </div>
+      <div class="h-scroll" id="vipRow"></div>
+      <div id="plist"></div>
+    </div>
+
+    <div class="box" style="--a:#ef4444">
+      <div class="bh">
+        <span class="bi" data-ic="fire"></span>
+        <div class="bt"><h2>برگزیده‌ها</h2><small>پرشنونده‌ترین‌های این هفته</small></div>
+      </div>
+      <div class="h-scroll fr"></div>
+    </div>
+
+    <div class="box dk" style="--a:#7c5cff">
+      <div class="bh">
+        <span class="bi" data-ic="squares-four"></span>
+        <div class="bt"><h2>کل دسته‌بندی</h2><small>پک‌های کامل موضوعی</small></div>
+      </div>
+      <div class="cats"></div>
+    </div>
   </div>
 
   <div class="panel" id="pq">
-    <div class="sec" style="margin-top:26px"><h2>پاسخ به سوالات ذهنی شما</h2></div>
-    <div class="h-scroll" id="qRow"></div>
-    <div id="qlist"></div>
-    <div class="sec"><h2>برگزیده‌ها 🔥</h2></div><div class="h-scroll fr"></div>
-    <div class="sec"><h2>کل دسته‌بندی</h2></div><div class="cats"></div>
+    <div class="box" style="--a:#06b6d4;margin-top:26px">
+      <div class="bh">
+        <span class="bi" data-ic="chat-circle-dots"></span>
+        <div class="bt"><h2>پاسخ به سوالات ذهنی شما</h2><small>سوال‌های واقعی، جواب‌های صوتی</small></div>
+      </div>
+      <div class="h-scroll" id="qRow"></div>
+      <div id="qlist"></div>
+    </div>
+
+    <div class="box" style="--a:#ef4444">
+      <div class="bh">
+        <span class="bi" data-ic="fire"></span>
+        <div class="bt"><h2>برگزیده‌ها</h2><small>پرشنونده‌ترین‌ها</small></div>
+      </div>
+      <div class="h-scroll fr"></div>
+    </div>
+
+    <div class="box dk" style="--a:#7c5cff">
+      <div class="bh">
+        <span class="bi" data-ic="squares-four"></span>
+        <div class="bt"><h2>کل دسته‌بندی</h2><small>پک‌های کامل موضوعی</small></div>
+      </div>
+      <div class="cats"></div>
+    </div>
   </div>
 </div>
 
 <div class="mini" id="mini">
   <div class="eq"><i></i><i></i><i></i></div>
-  <img id="mImg" alt=""><div class="ph" id="mPh" style="display:none">🧠</div>
+  <img id="mImg" alt=""><div class="ph" id="mPh" style="display:none" data-ic="brain"></div>
   <div class="t"><b id="mT"></b><small id="mS"></small></div>
-  <button class="mb" data-a="prev"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
-  <button class="mb pl" data-a="toggle"><svg viewBox="0 0 24 24" class="pi"><path d="M8 5v14l11-7z"/></svg></button>
-  <button class="mb" data-a="next"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6zM16 6v12h2V6z"/></svg></button>
+  <button class="mb" data-a="prev" data-ic="skip-back.f"></button>
+  <button class="mb pl" data-a="toggle"><span class="pi" data-ic="play.f"></span></button>
+  <button class="mb" data-a="next" data-ic="skip-forward.f"></button>
 </div>
 
 <div class="sheet" id="sheet"><div class="in" id="in">
   <div class="top">
     <div><h1>پخش</h1><div class="pills"><i></i><i class="on"></i></div></div>
-    <button class="sbtn" style="background:var(--bg);box-shadow:none" id="close" aria-label="بستن"><svg viewBox="0 0 24 24" style="stroke:var(--ink)"><path d="M6 9l6 6 6-6"/></svg></button>
+    <button class="sbtn" style="background:var(--bg);box-shadow:none" id="close" aria-label="بستن" data-ic="caret-down"></button>
   </div>
   <div class="stage"><div class="vin"></div><img class="cv" id="cv" alt=""><img class="nx" id="nx" alt=""></div>
   <div class="qbox" id="qbox"></div>
   <div class="meta">
     <div><h2 id="nT"></h2><small id="nS"></small></div>
-    <button class="heart" id="heart" aria-label="علاقه‌مندی"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.7-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2 0 3.5 1 5.4 3 1.9-2 3.4-3 5.4-3 3.600 0 5.700 3.700 4.200 7.200C19.500 16.300 12 21 12 21z"/></svg></button>
+    <button class="heart" id="heart" aria-label="علاقه‌مندی" data-ic="heart.f"></button>
   </div>
   <div class="wave" id="wave">
     <svg id="wsvg"><defs><clipPath id="wc"><rect id="wr" x="0" y="-20" height="80" width="0"/></clipPath></defs><path id="w0" fill="none" style="stroke:var(--hair)" stroke-width="2.5" stroke-linecap="round"/><path id="w1" fill="none" style="stroke:var(--ink)" stroke-width="3" stroke-linecap="round" clip-path="url(#wc)"/></svg>
@@ -231,14 +339,14 @@ input,textarea{color:var(--ink)}
   </div>
   <div class="times"><span id="cT">0:00</span><span id="tT">0:00</span></div>
   <div class="ctl">
-    <button class="rep" id="rep" aria-label="تکرار"><svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2z"/></svg></button>
-    <button data-a="prev"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
-    <button class="big" data-a="toggle"><svg viewBox="0 0 24 24" class="pi"><path d="M8 5v14l11-7z"/></svg></button>
-    <button data-a="next"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6zM16 6v12h2V6z"/></svg></button>
-    <button id="lst" aria-label="لیست"><svg viewBox="0 0 24 24"><path d="M3 5h3v3H3zm5 0h13v3H8zM3 10.500h3v3H3zm5 0h13v3H8zM3 16h3v3H3zm5 0h13v3H8z"/></svg></button>
+    <button class="rep" id="rep" aria-label="تکرار" data-ic="repeat.f"></button>
+    <button data-a="prev" data-ic="skip-back.f"></button>
+    <button class="big" data-a="toggle"><span class="pi" data-ic="play.f"></span></button>
+    <button data-a="next" data-ic="skip-forward.f"></button>
+    <button id="lst" aria-label="لیست" data-ic="list-bullets.f"></button>
   </div>
   <div class="cm">
-    <h3>💬 نظرات <span id="cc">0</span></h3>
+    <h3><span class="hi" data-ic="chat-circle-text"></span>نظرات <span id="cc">0</span></h3>
     <div id="cl"></div>
     <input id="cn" placeholder="نام شما (اختیاری)">
     <textarea id="ct" placeholder="نظر خود را اینجا بنویسید..."></textarea>
@@ -247,8 +355,8 @@ input,textarea{color:var(--ink)}
 </div></div>
 <audio id="au"></audio>
 <div class="pop" id="pop"><div class="pbox">
-  <button class="px" id="px" aria-label="بستن">✕</button>
-  <h3>🔒 محتوای Radio VIP</h3>
+  <button class="px" id="px" aria-label="بستن" data-ic="x"></button>
+  <h3><span class="hi" data-ic="lock-simple"></span>محتوای Radio VIP</h3>
   <p>کد اشتراک خود را وارد کنید</p>
   <input id="pin" type="text" inputmode="numeric" maxlength="5" placeholder="•••••" autocomplete="off">
   <div class="perr" id="perr"></div>
@@ -276,13 +384,55 @@ const Q=[
 {id:104,t:"سوالات در حوزه اعتماد به نفس",q:"چطور اعتماد به نفسم رو بالا ببرم؟",s:""}];
 
 const $=id=>document.getElementById(id),au=$('au');
+/* آیکون‌ها: Phosphor Icons (MIT) — .f = نسخه توپر، بدون پسوند = دوتونه */
+const IK={
+'gift':`<path d="M208,128v72a8,8,0,0,1-8,8H56a8,8,0,0,1-8-8V128Z" opacity="0.2"/><path d="M216,72H180.92c.39-.33.79-.65,1.17-1A29.53,29.53,0,0,0,192,49.57,32.62,32.62,0,0,0,158.44,16,29.53,29.53,0,0,0,137,25.91a54.94,54.94,0,0,0-9,14.48,54.94,54.94,0,0,0-9-14.48A29.53,29.53,0,0,0,97.56,16,32.62,32.62,0,0,0,64,49.57,29.53,29.53,0,0,0,73.91,71c.38.33.78.65,1.17,1H40A16,16,0,0,0,24,88v32a16,16,0,0,0,16,16v64a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V136a16,16,0,0,0,16-16V88A16,16,0,0,0,216,72ZM149,36.51a13.69,13.69,0,0,1,10-4.5h.49A16.62,16.62,0,0,1,176,49.08a13.69,13.69,0,0,1-4.5,10c-9.49,8.4-25.24,11.36-35,12.4C137.7,60.89,141,45.5,149,36.51Zm-64.09.36A16.63,16.63,0,0,1,96.59,32h.49a13.69,13.69,0,0,1,10,4.5c8.39,9.48,11.35,25.2,12.39,34.92-9.72-1-25.44-4-34.92-12.39a13.69,13.69,0,0,1-4.5-10A16.6,16.6,0,0,1,84.87,36.87ZM40,88h80v32H40Zm16,48h64v64H56Zm144,64H136V136h64Zm16-80H136V88h80v32Z"/>`,
+'crown-simple':`<path d="M231.87,89.42l-22.7,104a8,8,0,0,1-7.88,6.61H54.71a8,8,0,0,1-7.88-6.61l-22.7-104A8,8,0,0,1,38,82.76L80,128l40.74-91.35a8,8,0,0,1,14.52,0L176,128l42-45.24A8,8,0,0,1,231.87,89.42Z" opacity="0.2"/><path d="M230.9,73.6A15.85,15.85,0,0,0,212,77.39l-33.67,36.29-35.8-80.29a1,1,0,0,1,0-.1,16,16,0,0,0-29.06,0,1,1,0,0,1,0,.1l-35.8,80.29L44,77.39A16,16,0,0,0,16.25,90.81c0,.11,0,.21.07.32L39,195a16,16,0,0,0,15.72,13H201.29A16,16,0,0,0,217,195L239.68,91.13c0-.11,0-.21.07-.32A15.85,15.85,0,0,0,230.9,73.6ZM201.35,191.68l-.06.32H54.71l-.06-.32L32,88l.14.16,42,45.24a8,8,0,0,0,13.18-2.18L128,40l40.69,91.25a8,8,0,0,0,13.18,2.18l42-45.24L224,88Z"/>`,
+'crown':`<path d="M216.71,99.73l-15.6,93.59a8,8,0,0,1-7.89,6.68H62.78a8,8,0,0,1-7.89-6.68L39.29,99.73l.08,0a19.82,19.82,0,0,0,9.22-4.16h0L88,144l32-73.65h0a20,20,0,0,0,15.92,0h0L168,144l39.39-48.48h0a19.82,19.82,0,0,0,9.22,4.16Z" opacity="0.2"/><path d="M248,80a28,28,0,1,0-51.12,15.77l-26.79,33L146,73.4a28,28,0,1,0-36.06,0L85.91,128.74l-26.79-33a28,28,0,1,0-26.6,12L47,194.63A16,16,0,0,0,62.78,208H193.22A16,16,0,0,0,209,194.63l14.47-86.85A28,28,0,0,0,248,80ZM128,40a12,12,0,1,1-12,12A12,12,0,0,1,128,40ZM24,80A12,12,0,1,1,36,92,12,12,0,0,1,24,80ZM193.22,192H62.78L48.86,108.52,81.79,149A8,8,0,0,0,88,152a7.83,7.83,0,0,0,1.08-.07,8,8,0,0,0,6.26-4.74l29.3-67.4a27,27,0,0,0,6.72,0l29.3,67.4a8,8,0,0,0,6.26,4.74A7.83,7.83,0,0,0,168,152a8,8,0,0,0,6.21-3l32.93-40.52ZM220,92a12,12,0,1,1,12-12A12,12,0,0,1,220,92Z"/>`,
+'fire':`<path d="M208,144a80,80,0,0,1-160,0c0-30.57,14.42-58.26,31-80l33,32,26.27-72C159.86,41.92,208,88.15,208,144Z" opacity="0.2"/><path d="M183.89,153.34a57.6,57.6,0,0,1-46.56,46.55A8.75,8.75,0,0,1,136,200a8,8,0,0,1-1.32-15.89c16.57-2.79,30.63-16.85,33.44-33.45a8,8,0,0,1,15.78,2.68ZM216,144a88,88,0,0,1-176,0c0-27.92,11-56.47,32.66-84.85a8,8,0,0,1,11.93-.89l24.12,23.41,22-60.41a8,8,0,0,1,12.63-3.41C165.21,36,216,84.55,216,144Zm-16,0c0-46.09-35.79-85.92-58.21-106.33L119.52,98.74a8,8,0,0,1-13.09,3L80.06,76.16C64.09,99.21,56,122,56,144a72,72,0,0,0,144,0Z"/>`,
+'squares-four':`<path d="M112,56v48a8,8,0,0,1-8,8H56a8,8,0,0,1-8-8V56a8,8,0,0,1,8-8h48A8,8,0,0,1,112,56Zm88-8H152a8,8,0,0,0-8,8v48a8,8,0,0,0,8,8h48a8,8,0,0,0,8-8V56A8,8,0,0,0,200,48Zm-96,96H56a8,8,0,0,0-8,8v48a8,8,0,0,0,8,8h48a8,8,0,0,0,8-8V152A8,8,0,0,0,104,144Zm96,0H152a8,8,0,0,0-8,8v48a8,8,0,0,0,8,8h48a8,8,0,0,0,8-8V152A8,8,0,0,0,200,144Z" opacity="0.2"/><path d="M200,136H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,200,136Zm0,64H152V152h48v48ZM104,40H56A16,16,0,0,0,40,56v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,104,40Zm0,64H56V56h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,64H152V56h48v48Zm-96,32H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,136Zm0,64H56V152h48v48Z"/>`,
+'chat-circle-dots':`<path d="M224,128A96,96,0,0,1,79.93,211.11h0L42.54,223.58a8,8,0,0,1-10.12-10.12l12.47-37.39h0A96,96,0,1,1,224,128Z" opacity="0.2"/><path d="M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-4-1.08,7.85,7.85,0,0,0-2.53.42L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Zm12-88a12,12,0,1,1-12-12A12,12,0,0,1,140,128Zm-44,0a12,12,0,1,1-12-12A12,12,0,0,1,96,128Zm88,0a12,12,0,1,1-12-12A12,12,0,0,1,184,128Z"/>`,
+'chat-circle-text':`<path d="M224,128A96,96,0,0,1,79.93,211.11h0L42.54,223.58a8,8,0,0,1-10.12-10.12l12.47-37.39h0A96,96,0,1,1,224,128Z" opacity="0.2"/><path d="M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-4-1.08,7.85,7.85,0,0,0-2.53.42L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Zm40-104a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,112Zm0,32a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,144Z"/>`,
+'lock-simple':`<path d="M216,96V208a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V96a8,8,0,0,1,8-8H208A8,8,0,0,1,216,96Z" opacity="0.2"/><path d="M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Z"/>`,
+'brain':`<path d="M240,124a48,48,0,0,1-32,45.27h0V176a40,40,0,0,1-80,0,40,40,0,0,1-80,0v-6.73h0a48,48,0,0,1,0-90.54V72a40,40,0,0,1,80,0,40,40,0,0,1,80,0v6.73A48,48,0,0,1,240,124Z" opacity="0.2"/><path d="M248,124a56.11,56.11,0,0,0-32-50.61V72a48,48,0,0,0-88-26.49A48,48,0,0,0,40,72v1.39a56,56,0,0,0,0,101.2V176a48,48,0,0,0,88,26.49A48,48,0,0,0,216,176v-1.41A56.09,56.09,0,0,0,248,124ZM88,208a32,32,0,0,1-31.81-28.56A55.87,55.87,0,0,0,64,180h8a8,8,0,0,0,0-16H64A40,40,0,0,1,50.67,86.27,8,8,0,0,0,56,78.73V72a32,32,0,0,1,64,0v68.26A47.8,47.8,0,0,0,88,128a8,8,0,0,0,0,16,32,32,0,0,1,0,64Zm104-44h-8a8,8,0,0,0,0,16h8a55.87,55.87,0,0,0,7.81-.56A32,32,0,1,1,168,144a8,8,0,0,0,0-16,47.8,47.8,0,0,0-32,12.26V72a32,32,0,0,1,64,0v6.73a8,8,0,0,0,5.33,7.54A40,40,0,0,1,192,164Zm16-52a8,8,0,0,1-8,8h-4a36,36,0,0,1-36-36V80a8,8,0,0,1,16,0v4a20,20,0,0,0,20,20h4A8,8,0,0,1,208,112ZM60,120H56a8,8,0,0,1,0-16h4A20,20,0,0,0,80,84V80a8,8,0,0,1,16,0v4A36,36,0,0,1,60,120Z"/>`,
+'x':`<path d="M216,56V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V56A16,16,0,0,1,56,40H200A16,16,0,0,1,216,56Z" opacity="0.2"/><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/>`,
+'caret-down':`<path d="M208,96l-80,80L48,96Z" opacity="0.2"/><path d="M215.39,92.94A8,8,0,0,0,208,88H48a8,8,0,0,0-5.66,13.66l80,80a8,8,0,0,0,11.32,0l80-80A8,8,0,0,0,215.39,92.94ZM128,164.69,67.31,104H188.69Z"/>`,
+'hourglass-medium':`<path d="M180.92,88,128,128,74.67,88Z" opacity="0.2"/><path d="M200,75.64V40a16,16,0,0,0-16-16H72A16,16,0,0,0,56,40V76a16.07,16.07,0,0,0,6.4,12.8L114.67,128,62.4,167.2A16.07,16.07,0,0,0,56,180v36a16,16,0,0,0,16,16H184a16,16,0,0,0,16-16V180.36a16.09,16.09,0,0,0-6.35-12.77L141.27,128l52.38-39.59A16.09,16.09,0,0,0,200,75.64ZM72,40H184V75.64L178.23,80H77.33L72,76Zm56,78L98.67,96h58.4Zm56,98H72V180l48-36v24a8,8,0,0,0,16,0V144.08l48,36.28Z"/>`,
+'cube':`<path d="M128,129.09V232a8,8,0,0,1-3.84-1l-88-48.16a8,8,0,0,1-4.16-7V80.2a8,8,0,0,1,.7-3.27Z" opacity="0.2"/><path d="M223.68,66.15,135.68,18h0a15.88,15.88,0,0,0-15.36,0l-88,48.17a16,16,0,0,0-8.32,14v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,223.68,66.15ZM128,32h0l80.34,44L128,120,47.66,76ZM40,90l80,43.78v85.79L40,175.82Zm96,129.57V133.82L216,90v85.78Z"/>`,
+'shopping-bag-open':`<path d="M224,56V80H32V56a8,8,0,0,1,8-8H216A8,8,0,0,1,224,56Z" opacity="0.2"/><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V72H40V56Zm0,144H40V88H216V200Zm-40-88a48,48,0,0,1-96,0,8,8,0,0,1,16,0,32,32,0,0,0,64,0,8,8,0,0,1,16,0Z"/>`,
+'diamond':`<path d="M229.67,133.62l-96,96a7.94,7.94,0,0,1-11.24,0l-96-96a7.94,7.94,0,0,1,0-11.24l96.05-96a7.94,7.94,0,0,1,11.24,0l96,96.05A7.94,7.94,0,0,1,229.67,133.62Z" opacity="0.2"/><path d="M235.33,116.72,139.28,20.66a16,16,0,0,0-22.56,0l-96,96.06a16,16,0,0,0,0,22.56l96.05,96.06h0a16,16,0,0,0,22.56,0l96.05-96.06a16,16,0,0,0,0-22.56ZM128,224h0L32,128,128,32,224,128Z"/>`,
+'coins':`<path d="M240,132c0,19.88-35.82,36-80,36-19.6,0-37.56-3.17-51.47-8.44h0C146.76,156.85,176,142,176,124V96.72h0C212.52,100.06,240,114.58,240,132ZM176,84c0-19.88-35.82-36-80-36S16,64.12,16,84s35.82,36,80,36S176,103.88,176,84Z" opacity="0.2"/><path d="M184,89.57V84c0-25.08-37.83-44-88-44S8,58.92,8,84v40c0,20.89,26.25,37.49,64,42.46V172c0,25.08,37.83,44,88,44s88-18.92,88-44V132C248,111.3,222.58,94.68,184,89.57ZM232,132c0,13.22-30.79,28-72,28-3.73,0-7.43-.13-11.08-.37C170.49,151.77,184,139,184,124V105.74C213.87,110.19,232,122.27,232,132ZM72,150.25V126.46A183.74,183.74,0,0,0,96,128a183.74,183.74,0,0,0,24-1.54v23.79A163,163,0,0,1,96,152,163,163,0,0,1,72,150.25Zm96-40.32V124c0,8.39-12.41,17.4-32,22.87V123.5C148.91,120.37,159.84,115.71,168,109.93ZM96,56c41.21,0,72,14.78,72,28s-30.79,28-72,28S24,97.22,24,84,54.79,56,96,56ZM24,124V109.93c8.16,5.78,19.09,10.44,32,13.57v23.37C36.41,141.4,24,132.39,24,124Zm64,48v-4.17c2.63.1,5.29.17,8,.17,3.88,0,7.67-.13,11.39-.35A121.92,121.92,0,0,0,120,171.41v23.46C100.41,189.4,88,180.39,88,172Zm48,26.25V174.4a179.48,179.48,0,0,0,24,1.6,183.74,183.74,0,0,0,24-1.54v23.79a165.45,165.45,0,0,1-48,0Zm64-3.38V171.5c12.91-3.13,23.84-7.79,32-13.57V172C232,180.39,219.59,189.4,200,194.87Z"/>`,
+'medal':`<path d="M176,96a48,48,0,1,1-48-48A48,48,0,0,1,176,96Z" opacity="0.2"/><path d="M216,96A88,88,0,1,0,72,163.83V240a8,8,0,0,0,11.58,7.16L128,225l44.43,22.21A8.07,8.07,0,0,0,176,248a8,8,0,0,0,8-8V163.83A87.85,87.85,0,0,0,216,96ZM56,96a72,72,0,1,1,72,72A72.08,72.08,0,0,1,56,96ZM168,227.06l-36.43-18.21a8,8,0,0,0-7.16,0L88,227.06V174.37a87.89,87.89,0,0,0,80,0ZM128,152A56,56,0,1,0,72,96,56.06,56.06,0,0,0,128,152Zm0-96A40,40,0,1,1,88,96,40,40,0,0,1,128,56Z"/>`,
+'rocket-launch':`<path d="M184,120v61.65a8,8,0,0,1-2.34,5.65l-34.35,34.35a8,8,0,0,1-13.57-4.53L128,176ZM136,72H74.35a8,8,0,0,0-5.65,2.34L34.35,108.69a8,8,0,0,0,4.53,13.57L80,128ZM40,216c37.65,0,50.69-19.69,54.56-28.18L68.18,161.44C59.69,165.31,40,178.35,40,216Z" opacity="0.2"/><path d="M223.85,47.12a16,16,0,0,0-15-15c-12.58-.75-44.73.4-71.41,27.07L132.69,64H74.36A15.91,15.91,0,0,0,63,68.68L28.7,103a16,16,0,0,0,9.07,27.16l38.47,5.37,44.21,44.21,5.37,38.49a15.94,15.94,0,0,0,10.78,12.92,16.11,16.11,0,0,0,5.1.83A15.91,15.91,0,0,0,153,227.3L187.32,193A15.91,15.91,0,0,0,192,181.64V123.31l4.77-4.77C223.45,91.86,224.6,59.71,223.85,47.12ZM74.36,80h42.33L77.16,119.52,40,114.34Zm74.41-9.45a76.65,76.65,0,0,1,59.11-22.47,76.46,76.46,0,0,1-22.42,59.16L128,164.68,91.32,128ZM176,181.64,141.67,216l-5.19-37.17L176,139.31Zm-74.16,9.5C97.34,201,82.29,224,40,224a8,8,0,0,1-8-8c0-42.29,23-57.34,32.86-61.85a8,8,0,0,1,6.64,14.56c-6.43,2.93-20.62,12.36-23.12,38.91,26.55-2.5,36-16.69,38.91-23.12a8,8,0,1,1,14.56,6.64Z"/>`,
+'leaf':`<path d="M63.81,192.19c-47.89-79.81,16-159.62,151.64-151.64C223.43,176.23,143.62,240.08,63.81,192.19Z" opacity="0.2"/><path d="M223.45,40.07a8,8,0,0,0-7.52-7.52C139.8,28.08,78.82,51,52.82,94a87.09,87.09,0,0,0-12.76,49c.57,15.92,5.21,32,13.79,47.85l-19.51,19.5a8,8,0,0,0,11.32,11.32l19.5-19.51C81,210.73,97.09,215.37,113,215.94q1.67.06,3.33.06A86.93,86.93,0,0,0,162,203.18C205,177.18,227.93,116.21,223.45,40.07ZM153.75,189.5c-22.75,13.78-49.68,14-76.71.77l88.63-88.62a8,8,0,0,0-11.32-11.32L65.73,179c-13.19-27-13-54,.77-76.71,22.09-36.47,74.6-56.44,141.31-54.06C210.2,114.89,190.22,167.41,153.75,189.5Z"/>`,
+'code':`<path d="M240,128l-48,40H64L16,128,64,88H192Z" opacity="0.2"/><path d="M69.12,94.15,28.5,128l40.62,33.85a8,8,0,1,1-10.24,12.29l-48-40a8,8,0,0,1,0-12.29l48-40a8,8,0,0,1,10.24,12.3Zm176,27.7-48-40a8,8,0,1,0-10.24,12.3L227.5,128l-40.62,33.85a8,8,0,1,0,10.24,12.29l48-40a8,8,0,0,0,0-12.29ZM162.73,32.48a8,8,0,0,0-10.25,4.79l-64,176a8,8,0,0,0,4.79,10.26A8.14,8.14,0,0,0,96,224a8,8,0,0,0,7.52-5.27l64-176A8,8,0,0,0,162.73,32.48Z"/>`,
+'play-circle':`<path d="M128,32a96,96,0,1,0,96,96A96,96,0,0,0,128,32ZM108,168V88l64,40Z" opacity="0.2"/><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm48.24-94.78-64-40A8,8,0,0,0,100,88v80a8,8,0,0,0,12.24,6.78l64-40a8,8,0,0,0,0-13.56ZM116,153.57V102.43L156.91,128Z"/>`,
+'play.f':`<path d="M240,128a15.74,15.74,0,0,1-7.6,13.51L88.32,229.65a16,16,0,0,1-16.2.3A15.86,15.86,0,0,1,64,216.13V39.87a15.86,15.86,0,0,1,8.12-13.82,16,16,0,0,1,16.2.3L232.4,114.49A15.74,15.74,0,0,1,240,128Z"/>`,
+'pause.f':`<path d="M216,48V208a16,16,0,0,1-16,16H160a16,16,0,0,1-16-16V48a16,16,0,0,1,16-16h40A16,16,0,0,1,216,48ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Z"/>`,
+'skip-back.f':`<path d="M208,47.88V208.12a16,16,0,0,1-24.43,13.43L64,146.77V216a8,8,0,0,1-16,0V40a8,8,0,0,1,16,0v69.23L183.57,34.45A15.95,15.95,0,0,1,208,47.88Z"/>`,
+'skip-forward.f':`<path d="M208,40V216a8,8,0,0,1-16,0V146.77L72.43,221.55A15.95,15.95,0,0,1,48,208.12V47.88A15.95,15.95,0,0,1,72.43,34.45L192,109.23V40a8,8,0,0,1,16,0Z"/>`,
+'repeat.f':`<path d="M24,128A72.08,72.08,0,0,1,96,56h96V40a8,8,0,0,1,13.66-5.66l24,24a8,8,0,0,1,0,11.32l-24,24A8,8,0,0,1,192,88V72H96a56.06,56.06,0,0,0-56,56,8,8,0,0,1-16,0Zm200-8a8,8,0,0,0-8,8,56.06,56.06,0,0,1-56,56H64V168a8,8,0,0,0-13.66-5.66l-24,24a8,8,0,0,0,0,11.32l24,24A8,8,0,0,0,64,216V200h96a72.08,72.08,0,0,0,72-72A8,8,0,0,0,224,120Z"/>`,
+'list-bullets.f':`<path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM68,188a12,12,0,1,1,12-12A12,12,0,0,1,68,188Zm0-48a12,12,0,1,1,12-12A12,12,0,0,1,68,140Zm0-48A12,12,0,1,1,80,80,12,12,0,0,1,68,92Zm124,92H104a8,8,0,0,1,0-16h88a8,8,0,0,1,0,16Zm0-48H104a8,8,0,0,1,0-16h88a8,8,0,0,1,0,16Zm0-48H104a8,8,0,0,1,0-16h88a8,8,0,0,1,0,16Z"/>`,
+'heart.f':`<path d="M240,102c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,228.66,16,172,16,102A62.07,62.07,0,0,1,78,40c20.65,0,38.73,8.88,50,23.89C139.27,48.88,157.35,40,178,40A62.07,62.07,0,0,1,240,102Z"/>`,
+'headphones.f':`<path d="M232,128v56a24,24,0,0,1-24,24H192a24,24,0,0,1-24-24V144a24,24,0,0,1,24-24h23.65a87.71,87.71,0,0,0-87-80H128a88,88,0,0,0-87.64,80H64a24,24,0,0,1,24,24v40a24,24,0,0,1-24,24H48a24,24,0,0,1-24-24V128A104.11,104.11,0,0,1,201.89,54.66,103.41,103.41,0,0,1,232,128Z"/>`,
+'sun.f':`<path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm8,24a64,64,0,1,0,64,64A64.07,64.07,0,0,0,128,64ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"/>`,
+'moon.f':`<path d="M235.54,150.21a104.84,104.84,0,0,1-37,52.91A104,104,0,0,1,32,120,103.09,103.09,0,0,1,52.88,57.48a104.84,104.84,0,0,1,52.91-37,8,8,0,0,1,10,10,88.08,88.08,0,0,0,109.8,109.8,8,8,0,0,1,10,10Z"/>`,
+'magnifying-glass.f':`<path d="M168,112a56,56,0,1,1-56-56A56,56,0,0,1,168,112Zm61.66,117.66a8,8,0,0,1-11.32,0l-50.06-50.07a88,88,0,1,1,11.32-11.31l50.06,50.06A8,8,0,0,1,229.66,229.66ZM112,184a72,72,0,1,0-72-72A72.08,72.08,0,0,0,112,184Z"/>`,
+'gift.f':`<path d="M216,72H180.92c.39-.33.79-.65,1.17-1A29.53,29.53,0,0,0,192,49.57,32.62,32.62,0,0,0,158.44,16,29.53,29.53,0,0,0,137,25.91a54.94,54.94,0,0,0-9,14.48,54.94,54.94,0,0,0-9-14.48A29.53,29.53,0,0,0,97.56,16,32.62,32.62,0,0,0,64,49.57,29.53,29.53,0,0,0,73.91,71c.38.33.78.65,1.17,1H40A16,16,0,0,0,24,88v32a16,16,0,0,0,16,16v64a16,16,0,0,0,16,16h60a4,4,0,0,0,4-4V120H40V88h80v32h16V88h80v32H136v92a4,4,0,0,0,4,4h60a16,16,0,0,0,16-16V136a16,16,0,0,0,16-16V88A16,16,0,0,0,216,72ZM84.51,59a13.69,13.69,0,0,1-4.5-10A16.62,16.62,0,0,1,96.59,32h.49a13.69,13.69,0,0,1,10,4.5c8.39,9.48,11.35,25.2,12.39,34.92C109.71,70.39,94,67.43,84.51,59Zm87,0c-9.49,8.4-25.24,11.36-35,12.4C137.7,60.89,141,45.5,149,36.51a13.69,13.69,0,0,1,10-4.5h.49A16.62,16.62,0,0,1,176,49.08,13.69,13.69,0,0,1,171.49,59Z"/>`,
+'crown-simple.f':`<path d="M239.75,90.81c0,.11,0,.21-.07.32L217,195a16,16,0,0,1-15.72,13H54.71A16,16,0,0,1,39,195L16.32,91.13c0-.11-.05-.21-.07-.32A16,16,0,0,1,44,77.39l33.67,36.29,35.8-80.29a1,1,0,0,0,0-.1,16,16,0,0,1,29.06,0,1,1,0,0,0,0,.1l35.8,80.29L212,77.39a16,16,0,0,1,27.71,13.42Z"/>`,
+'lock-simple.f':`<path d="M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96Z"/>`,
+'question.f':`<path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,168a12,12,0,1,1,12-12A12,12,0,0,1,128,192Zm8-48.72V144a8,8,0,0,1-16,0v-8a8,8,0,0,1,8-8c13.23,0,24-9,24-20s-10.77-20-24-20-24,9-24,20v4a8,8,0,0,1-16,0v-4c0-19.85,17.94-36,40-36s40,16.15,40,36C168,125.38,154.24,139.93,136,143.28Z"/>`
+};
+const ic=n=>`<svg class="ico" viewBox="0 0 256 256" aria-hidden="true">${IK[n]||''}</svg>`;
+document.querySelectorAll('[data-ic]').forEach(e=>e.innerHTML=ic(e.dataset.ic));
+
 /* آمار: [پخش، شنونده، لایک] — اعداد را اینجا ویرایش کن */
 const STATS={p1:[1240,986,412],p25:[2310,1754,689],p4:[1875,1420,533],p5:[964,731,298],q100:[1520,1198,455],q101:[812,640,221],q102:[2890,2210,974],q103:[1346,1067,390],q104:[903,711,267]};
 const GR=['linear-gradient(135deg,#4f46e5,#c026d3)','linear-gradient(135deg,#0ea5e9,#6366f1)','linear-gradient(135deg,#f43f5e,#f59e0b)','linear-gradient(135deg,#10b981,#0ea5e9)','linear-gradient(135deg,#7c3aed,#ec4899)'];
-const IC=['M8 5v14l11-7z','M12 1a9 9 0 0 0-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7a9 9 0 0 0-9-9z','M12 21s-7.5-4.7-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2 0 3.5 1 5.4 3 1.9-2 3.4-3 5.4-3 3.6 0 5.7 3.7 4.2 7.2C19.5 16.3 12 21 12 21z'];
+const IC=['play.f','headphones.f','heart.f'];
 function card(m,i){
   const isP=m==='p',it=(isP?P:Q)[i],st=STATS[m+it.id]||[0,0,0];
-  return `<div class="gc ${isP?'':'qa'}" onclick="play('${m}',${i})">${isP?`<img src="${it.c}" alt="">`:`<div class="gb" style="background:${GR[i%5]}"></div>`}<div class="gs"></div>${VIP?'':'<span class="gl">🔒 VIP</span>'}<b class="gt">${isP?it.e:it.q}</b><div class="gr"><span class="gp"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><div class="gst">${st.map((n,k)=>`<div><svg viewBox="0 0 24 24"><path d="${IC[k]}"/></svg><em>${n.toLocaleString('fa-IR')}</em></div>`).join('')}</div></div></div>`;
+  return `<div class="gc ${isP?'':'qa'}" onclick="play('${m}',${i})">${isP?`<img src="${it.c}" alt="">`:`<div class="gb" style="background:${GR[i%5]}"></div>`}<div class="gs"></div>${VIP?'':`<span class="gl">${ic('lock-simple.f')}VIP</span>`}<b class="gt">${isP?it.e:it.q}</b><div class="gr"><span class="gp">${ic('play.f')}</span><div class="gst">${st.map((n,k)=>`<div>${ic(IC[k])}<em>${n.toLocaleString('fa-IR')}</em></div>`).join('')}</div></div></div>`;
 }
 let mode='p',idx=-1,fav={};
 try{fav=JSON.parse(localStorage.getItem('pl_fav')||'{}')}catch(e){}
@@ -295,8 +445,8 @@ function render(f=''){
   f=f.trim();
   const ps=P.map((p,i)=>[p,i]).filter(([p])=>!p.f&&(!f||(p.e+p.t).includes(f)));
   $('newList').innerHTML=P.map((p,i)=>p.f&&(!f||(p.e+p.t).includes(f))?`<div class="alb" onclick="play('p',${i})"><img src="${p.c}" alt=""><b>${p.e}</b><small>${p.t}</small></div>`:'').join('');
-  $('plist').innerHTML=ps.map(([p,i])=>`<div class="row ${mode==='p'&&idx===i?'cur':''}" onclick="play('p',${i})"><img src="${p.c}" alt=""><div class="t"><b>${p.e}</b><small>${p.t}</small></div><span class="dots">${VIP?'••':'🔒'}</span></div>`).join('')||'<p class="empty">نتیجه‌ای پیدا نشد</p>';
-  $('qlist').innerHTML=Q.map((q,i)=>[q,i]).filter(([q])=>!f||(q.q+q.t).includes(f)).map(([q,i])=>`<div class="row ${mode==='q'&&idx===i?'cur':''}" onclick="play('q',${i})"><div class="ic">؟</div><div class="t"><b>${q.q}</b><small>${q.t}</small></div><span class="dots">${VIP?'••':'🔒'}</span></div>`).join('')||'<p class="empty">نتیجه‌ای پیدا نشد</p>';
+  $('plist').innerHTML=ps.map(([p,i])=>`<div class="row ${mode==='p'&&idx===i?'cur':''}" onclick="play('p',${i})"><img src="${p.c}" alt=""><div class="t"><b>${p.e}</b><small>${p.t}</small></div><span class="dots">${ic(VIP?'play-circle':'lock-simple')}</span></div>`).join('')||'<p class="empty">نتیجه‌ای پیدا نشد</p>';
+  $('qlist').innerHTML=Q.map((q,i)=>[q,i]).filter(([q])=>!f||(q.q+q.t).includes(f)).map(([q,i])=>`<div class="row ${mode==='q'&&idx===i?'cur':''}" onclick="play('q',${i})"><div class="ic">${ic('question.f')}</div><div class="t"><b>${q.q}</b><small>${q.t}</small></div><span class="dots">${ic(VIP?'play-circle':'lock-simple')}</span></div>`).join('')||'<p class="empty">نتیجه‌ای پیدا نشد</p>';
   $('vipRow').innerHTML=P.map((p,i)=>!p.f&&(!f||(p.e+p.t).includes(f))?card('p',i):'').join('');
   $('qRow').innerHTML=Q.map((q,i)=>!f||(q.q+q.t).includes(f)?card('q',i):'').join('');
 }
@@ -330,7 +480,7 @@ function play(m,i){
   render($('sin').value);loadC();
 }
 function icons(p){
-  document.querySelectorAll('.pi').forEach(s=>s.innerHTML=p?'<path d="M6 19h4V5H6zm8-14v14h4V5z"/>':'<path d="M8 5v14l11-7z"/>');
+  document.querySelectorAll('.pi').forEach(s=>s.innerHTML=ic(p?'pause.f':'play.f'));
   $('mini').classList.toggle('playing',p);
 }
 au.onplay=()=>icons(true);au.onpause=()=>icons(false);
@@ -373,7 +523,7 @@ addEventListener('resize',drawWave);
 /* comments */
 const tbl=()=>mode==='p'?['comments','podcast_id']:['qa_comments','qa_id'];
 async function loadC(){
-  const [t,k]=tbl();$('cl').innerHTML='<p class="empty">⏳ در حال بارگذاری...</p>';
+  const [t,k]=tbl();$('cl').innerHTML=`<p class="empty">${ic('hourglass-medium')}در حال بارگذاری...</p>`;
   try{
     const {data,error}=await SB.from(t).select('*').eq(k,list()[idx].id).order('created_at',{ascending:false});
     if(error)throw error;showC(data||[]);
@@ -396,7 +546,7 @@ $('send').onclick=async()=>{
 
 /* theme */
 const per=()=>{const h=new Date().getHours();return h>=6&&h<18?'d':'n'};
-function setT(t,man){document.documentElement.dataset.t=t;$('tg').textContent=t==='dark'?'☀️':'🌙';if(man){try{localStorage.setItem('pl_theme',JSON.stringify({t,p:per()}))}catch(e){}}}
+function setT(t,man){document.documentElement.dataset.t=t;$('tg').innerHTML=ic(t==='dark'?'sun.f':'moon.f');if(man){try{localStorage.setItem('pl_theme',JSON.stringify({t,p:per()}))}catch(e){}}}
 function autoT(){let m=null;try{m=JSON.parse(localStorage.getItem('pl_theme'))}catch(e){}setT(m&&m.p===per()?m.t:(per()==='d'?'light':'dark'))}
 let lp=per();autoT();
 $('tg').onclick=()=>setT(document.documentElement.dataset.t==='dark'?'light':'dark',1);
@@ -419,21 +569,21 @@ function login(){
 $('pok').onclick=login;$('pin').onkeydown=e=>{if(e.key==='Enter')login()};
 /* category packs — تعداد و مدت را ویرایش کن */
 const CATS=[
-['پک کامل پادکست‌های احساس لیاقت','💎','#ffd24a',12,'۴ ساعت'],
-['پادکست‌های فراوانی ثروت','💰','#3ddc84',18,'۶ ساعت'],
-['پادکست‌های اعتماد به نفس','🦁','#ff9a3c',15,'۵ ساعت'],
-['پادکست‌های رشد بیزینس','🚀','#4aa8ff',10,'۳ ساعت'],
-['پادکست‌های حال خوب','🌿','#5ef0c4',20,'۷ ساعت'],
-['پادکست‌های کارت ذهن','🧠','#c06bff',14,'۴ ساعت'],
-['پادکست‌های کدنویسی ذهن','💻','#35e0ff',16,'۵ ساعت']];
+['پک کامل پادکست‌های احساس لیاقت','diamond','#ffd24a',12,'۴ ساعت'],
+['پادکست‌های فراوانی ثروت','coins','#3ddc84',18,'۶ ساعت'],
+['پادکست‌های اعتماد به نفس','medal','#ff9a3c',15,'۵ ساعت'],
+['پادکست‌های رشد بیزینس','rocket-launch','#4aa8ff',10,'۳ ساعت'],
+['پادکست‌های حال خوب','leaf','#5ef0c4',20,'۷ ساعت'],
+['پادکست‌های کارت ذهن','brain','#c06bff',14,'۴ ساعت'],
+['پادکست‌های کدنویسی ذهن','code','#35e0ff',16,'۵ ساعت']];
 function buildCats(){
-  const h=CATS.map(c=>`<div class="cc" style="--c:${c[2]}"><div class="ch"><svg viewBox="0 0 24 24"><path d="M12 2.5l8.500 4.800v9.400L12 21.500l-8.500-4.800V7.300zM12 12l8.500-4.700M12 12v9.500M12 12L3.500 7.300"/></svg>${c[0]}</div><div class="art"><span>${c[1]}</span></div><div class="ci"><span>تعداد: <b>${c[3].toLocaleString('fa-IR')}</b></span><i>مدت: ${c[4]}</i></div><button class="cb" onclick="VIP?document.getElementById('plist').scrollIntoView({behavior:'smooth'}):openPop()"><svg viewBox="0 0 24 24"><path d="M5 7h14l-1.200 12H6.200zM9 7a3 3 0 0 1 6 0"/></svg>مشاهده پک</button></div>`).join('');
+  const h=CATS.map(c=>`<div class="cc" style="--c:${c[2]}"><div class="ch">${ic('cube')}${c[0]}</div><div class="art"><span>${ic(c[1])}</span></div><div class="ci"><span>تعداد: <b>${c[3].toLocaleString('fa-IR')}</b></span><i>مدت: ${c[4]}</i></div><button class="cb" onclick="VIP?document.getElementById('plist').scrollIntoView({behavior:'smooth'}):openPop()">${ic('shopping-bag-open')}مشاهده پک</button></div>`).join('');
   document.querySelectorAll('.cats').forEach(e=>e.innerHTML=h);
 }
 buildCats();buildFeat();
 function buildFeat(){
   const mk=(m,i)=>{const isP=m==='p',it=(isP?P:Q)[i],st=STATS[m+it.id],n=(st?st[1]:300+(it.id*97)%700).toLocaleString('fa-IR');
-    return `<div class="fc" onclick="play('${m}',${i})">${isP?`<img src="${it.c}" alt="">`:`<div class="gb" style="background:${GR[i%5]}"></div>`}<span class="fo"><i></i>${n} شنونده</span><div class="fg"><div><b>${isP?it.e:it.q}</b><small>${it.t}</small></div><span class="fb"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div></div>`};
+    return `<div class="fc" onclick="play('${m}',${i})">${isP?`<img src="${it.c}" alt="">`:`<div class="gb" style="background:${GR[i%5]}"></div>`}<span class="fo"><i></i>${n} شنونده</span><div class="fg"><div><b>${isP?it.e:it.q}</b><small>${it.t}</small></div><span class="fb">${ic('play.f')}</span></div></div>`};
   document.querySelector('#pp .fr').innerHTML=P.map((_,i)=>mk('p',i)).join('');
   document.querySelector('#pq .fr').innerHTML=Q.map((_,i)=>mk('q',i)).join('');
 }
@@ -441,8 +591,8 @@ function buildFeat(){
 let hc=0,ht,HN=0;
 function buildHero(){
   const h=$('hero'),fr=P.filter(p=>p.f);HN=fr.length+1;
-  h.innerHTML=fr.map((p,k)=>`<div class="sl"><img class="bg" src="${p.c}" alt=""><div class="shade"></div><div class="sc"><div class="tx"><span class="bdg">🎁 رایگان</span><h3>${p.e}</h3><small>${p.t}</small><button class="hp" onclick="event.stopPropagation();play('p',${P.indexOf(p)})"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>پخش کن</button></div><div class="cvw"><i class="vn"></i><img src="${p.c}" alt=""></div></div></div>`).join('')
-  +`<div class="sl vp"><div class="shade"></div><div class="sc"><div class="tx"><span class="bdg">👑 اشتراکی</span><h3>Radio VIP</h3><small>همه پادکست‌ها و پاسخ‌ها با کد اشتراک</small><button class="hp" onclick="event.stopPropagation();openPop()">ورود با کد اشتراک</button></div><div class="cvw crown">👑</div></div></div>`
+  h.innerHTML=fr.map((p,k)=>`<div class="sl"><img class="bg" src="${p.c}" alt=""><div class="shade"></div><div class="sc"><div class="tx"><span class="bdg">${ic('gift.f')}رایگان</span><h3>${p.e}</h3><small>${p.t}</small><button class="hp" onclick="event.stopPropagation();play('p',${P.indexOf(p)})">${ic('play.f')}پخش کن</button></div><div class="cvw"><i class="vn"></i><img src="${p.c}" alt=""></div></div></div>`).join('')
+  +`<div class="sl vp"><div class="shade"></div><div class="sc"><div class="tx"><span class="bdg">${ic('crown-simple.f')}اشتراکی</span><h3>Radio VIP</h3><small>همه پادکست‌ها و پاسخ‌ها با کد اشتراک</small><button class="hp" onclick="event.stopPropagation();openPop()">ورود با کد اشتراک</button></div><div class="cvw crown">${ic('crown')}</div></div></div>`
   +`<div class="hd">${'<i></i>'.repeat(HN)}</div>`;
   let sx=0,dn=false;
   h.onpointerdown=e=>{dn=true;sx=e.clientX;clearInterval(ht)};
