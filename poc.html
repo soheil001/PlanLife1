@@ -86,19 +86,22 @@ h1{font-size:30px;font-weight:900;letter-spacing:-.5px}
 /* full player */
 .sheet{position:fixed;inset:0;background:var(--pg);z-index:100;overflow-y:auto;transform:translateY(105%);transition:transform .5s cubic-bezier(.32,.72,0,1);padding:calc(env(safe-area-inset-top) + 22px) 22px 40px}
 .sheet.on{transform:none}
-/* فضای نورانی پس‌زمینه پخش */
 .sheet::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background:
     radial-gradient(circle at 12% 18%,rgba(255,46,77,.22),transparent 42%),
     radial-gradient(circle at 88% 30%,rgba(155,77,255,.26),transparent 48%),
     radial-gradient(circle at 20% 80%,rgba(255,122,26,.2),transparent 45%),
     radial-gradient(circle at 85% 92%,rgba(255,61,154,.22),transparent 45%)}
-.sheet .in{max-width:460px;margin:0 auto;position:relative;z-index:1}
-.stage{direction:ltr;position:relative;height:290px;margin:26px 0 0 -22px;padding-left:22px}
-.stage .vin{position:absolute;left:210px;top:30px;width:230px;height:230px;border-radius:50%;background:radial-gradient(#444 0 12%,#111 13%)}
-/* فریم نورانی کاور پخش: قرمز، بنفش، صورتی، نارنجی */
+/* فریم مرتب دور محتوای صفحه پخش */
+.sheet .in{max-width:460px;margin:0 auto;position:relative;z-index:1;overflow:hidden;
+  padding:20px 18px 26px;border-radius:32px;
+  background:linear-gradient(165deg,color-mix(in srgb,#9b4dff 12%,var(--bg)),var(--bg) 60%);
+  border:1px solid color-mix(in srgb,#9b4dff 30%,var(--hair));
+  box-shadow:0 24px 44px -22px rgba(155,77,255,.55),inset 0 1px 0 rgba(255,255,255,.35)}
+.stage{direction:ltr;position:relative;height:290px;margin:26px 0 0 0;padding-left:0}
+.stage .vin{position:absolute;left:160px;top:30px;width:230px;height:230px;border-radius:50%;background:radial-gradient(#444 0 12%,#111 13%)}
 @property --ang{syntax:'<angle>';initial-value:0deg;inherits:false}
-.cfr{position:absolute;left:22px;top:0;width:min(270px,70vw);aspect-ratio:1;padding:7px;border-radius:calc(var(--r) + 7px);
+.cfr{position:absolute;left:0;top:0;width:min(270px,70vw);aspect-ratio:1;padding:7px;border-radius:calc(var(--r) + 7px);
   background:conic-gradient(from var(--ang),#ff2e4d,#ff7a1a,#ff3d9a,#9b4dff,#ff2e4d,#ff7a1a,#ff3d9a,#9b4dff,#ff2e4d);
   animation:ringSpin 6s linear infinite;
   box-shadow:0 0 26px rgba(255,46,77,.55),0 0 56px rgba(155,77,255,.45),0 0 90px rgba(255,122,26,.25)}
@@ -125,7 +128,6 @@ h1{font-size:30px;font-weight:900;letter-spacing:-.5px}
 .ctl .big{width:70px;height:70px;border-radius:50%;background:var(--inv);color:var(--invt);box-shadow:0 16px 26px rgba(0,0,0,.3)}
 .ctl .big svg{width:30px;height:30px}
 .ctl .rep.on{color:#e5484d}
-/* دکمه یادداشت برداری */
 .notebtn{display:flex;align-items:center;justify-content:center;gap:8px;margin:24px auto 0;height:46px;padding:0 22px;border-radius:23px;font-weight:800;font-size:14px;color:#fff;background:linear-gradient(135deg,#ff2e4d,#ff7a1a 40%,#9b4dff 80%,#ff3d9a);box-shadow:0 12px 26px -6px rgba(255,46,77,.5)}
 .notebtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 /* comments */
@@ -150,7 +152,6 @@ input,textarea{color:var(--ink)}
 .pb.g{background:#22c55e;box-shadow:0 10px 20px rgba(34,197,94,.35)}
 .pb.y{background:#facc15;color:#2a2200;box-shadow:0 10px 20px rgba(250,204,21,.35)}
 .px{position:absolute;top:12px;left:14px;width:34px;height:34px;display:grid;place-items:center}.px svg{width:20px;height:20px;fill:var(--mut)}
-/* پنجره یادداشت */
 .notepop .pbox{max-width:380px}
 .notepop h3{display:flex;align-items:center;justify-content:center;gap:8px}
 .notepop h3 .hi svg{fill:#ff3d9a}
@@ -210,26 +211,17 @@ input,textarea{color:var(--ink)}
   box-shadow:0 22px 38px -24px color-mix(in srgb,var(--a) 75%,transparent),inset 0 1px 0 rgba(255,255,255,.35);
 }
 [data-t=dark] .box{box-shadow:0 22px 38px -24px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.06)}
-.box:before{ /* درخشش گوشه */
-  content:'';position:absolute;top:-70px;right:-50px;width:190px;height:190px;border-radius:50%;
-  background:radial-gradient(var(--a),transparent 68%);opacity:.22;pointer-events:none;
-}
-.box:after{ /* خط نوری بالای فریم */
-  content:'';position:absolute;top:0;left:22%;right:22%;height:2px;border-radius:2px;
-  background:linear-gradient(90deg,transparent,var(--a),transparent);opacity:.7;
-}
+.box:before{content:'';position:absolute;top:-70px;right:-50px;width:190px;height:190px;border-radius:50%;background:radial-gradient(var(--a),transparent 68%);opacity:.22;pointer-events:none}
+.box:after{content:'';position:absolute;top:0;left:22%;right:22%;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--a),transparent);opacity:.7}
 .bh{position:relative;display:flex;align-items:center;gap:11px;margin-bottom:14px}
-.bi{
-  width:40px;height:40px;border-radius:14px;flex-shrink:0;display:grid;place-items:center;font-size:19px;
+.bi{width:40px;height:40px;border-radius:14px;flex-shrink:0;display:grid;place-items:center;font-size:19px;
   background:var(--a);
   background:linear-gradient(145deg,var(--a),color-mix(in srgb,var(--a) 55%,#000));
-  box-shadow:0 8px 16px -4px color-mix(in srgb,var(--a) 70%,transparent),inset 0 1px 0 rgba(255,255,255,.4);
-}
+  box-shadow:0 8px 16px -4px color-mix(in srgb,var(--a) 70%,transparent),inset 0 1px 0 rgba(255,255,255,.4)}
 .bh .bt{flex:1;min-width:0}
 .bh h2{font-size:17px;font-weight:900;line-height:1.4}
 .bh small{display:block;font-size:11.5px;color:var(--mut);margin-top:1px}
-.bh a{font-size:12px;font-weight:700;color:var(--a);padding:6px 12px;border-radius:99px;
-  background:color-mix(in srgb,var(--a) 14%,transparent);cursor:pointer;white-space:nowrap}
+.bh a{font-size:12px;font-weight:700;color:var(--a);padding:6px 12px;border-radius:99px;background:color-mix(in srgb,var(--a) 14%,transparent);cursor:pointer;white-space:nowrap}
 .box .h-scroll{margin:0 -16px;padding:4px 16px 16px}
 .box .row{padding:10px 8px;border-radius:18px;transition:.2s}
 .box .row+.row{border-top:1px dashed var(--hair);border-radius:0}
@@ -260,7 +252,6 @@ input,textarea{color:var(--ink)}
 #close svg{fill:var(--ink)}
 .gp svg,.fb svg{width:22px;height:22px}
 
-/* موبایل: فریم بخش‌ها نزدیک‌تر به لبه‌ها */
 @media (max-width:600px){
   .box{margin-left:-12px;margin-right:-12px;border-radius:24px}
 }
@@ -268,16 +259,16 @@ input,textarea{color:var(--ink)}
 /* ===== Radio VIP ===== */
 #vipRow .gl{color:#facc15;background:rgba(250,204,21,.18);border-color:rgba(250,204,21,.8);box-shadow:0 0 12px rgba(250,204,21,.7),0 0 22px rgba(250,204,21,.35)}
 #vipRow .gl svg{fill:#c9a227;filter:none}
-#vipRow .gst svg{fill:#facc15;filter:drop-shadow(0 0 4px rgba(250,204,21,.8))}
-#vipRow .gst em{color:#facc15;text-shadow:0 0 6px rgba(250,204,21,.7)}
-#vipRow .gst div:nth-child(3) svg{fill:#ff3b4e;filter:drop-shadow(0 0 5px rgba(255,59,78,.95))}
+/* آمار: اعداد سفید، آیکن پلی و گوش دادن زرد پررنگ بدون نور، قلب قرمز بدون نور */
+#vipRow .gst svg{fill:#facc15;filter:none}
+#vipRow .gst em{color:#fff;text-shadow:none}
+#vipRow .gst div:nth-child(3) svg{fill:#ff3b4e;filter:none}
 #vipRow .gp{background:#22c55e;box-shadow:0 0 16px rgba(34,197,94,.9),0 0 30px rgba(34,197,94,.45)}
 #vipRow .gp svg{fill:#fff;filter:drop-shadow(0 0 3px rgba(255,255,255,.8))}
 #plistH .row .dots svg{fill:#c9a227;filter:none}
 
 /* =====================================================
    تبلت و کامپیوتر (فقط از ۶۰۱ پیکسل به بالا)
-   موبایل دقیقا بدون تغییر می‌ماند
    ===================================================== */
 @media (min-width:601px){
   .app{max-width:860px;padding-left:32px;padding-right:32px}
@@ -323,7 +314,7 @@ input,textarea{color:var(--ink)}
   .sec h2{font-size:22px}
   /* صفحه پخش */
   .sheet{padding:calc(env(safe-area-inset-top) + 34px) 32px 60px}
-  .sheet .in{max-width:580px}
+  .sheet .in{max-width:580px;padding:26px 26px 30px}
   .stage{height:380px;width:360px;margin:30px auto 0;padding-left:0}
   .stage .cfr{left:0;top:0;width:360px}
   .stage .vin{left:120px;top:44px;width:290px;height:290px}
@@ -339,7 +330,7 @@ input,textarea{color:var(--ink)}
   .pbox{max-width:400px}
 }
 
-/* کامپیوتر: دو ستون به‌صورت دیوار آجری (فضای خالی پر می‌شود) */
+/* کامپیوتر: همه بخش‌ها تمام‌عرض و زیر هم (یک ردیف) */
 @media (min-width:1025px){
   .app{max-width:1180px;padding-left:40px;padding-right:40px}
   h1{font-size:40px}
@@ -347,16 +338,10 @@ input,textarea{color:var(--ink)}
   .tx h3{font-size:30px}
   .cvw{width:180px;height:180px}
   .vn{width:150px;height:150px;right:-36px}
-  #pp.on,#pq.on{column-count:2;column-gap:28px;display:block}
-  #pp>.hero,#pq>.hero{column-span:all}
-  #pp>.box,#pq>.box{break-inside:avoid;width:100%;margin-top:26px}
-  #pp>.box:first-of-type,#pq>.box:first-of-type{margin-top:26px}
   .h-scroll{margin:0 -22px;padding:4px 22px 18px}
   .box .h-scroll{margin:0 -22px;padding:4px 22px 18px}
   .gc{flex:0 0 280px;height:320px}
   .fc{flex:0 0 300px;height:300px}
-  .cats{grid-template-columns:repeat(2,1fr)}
-  .cc:last-child:nth-child(3n+1){grid-column:span 2}
   .sheet .in{max-width:760px}
   .stage{height:420px;width:400px}
   .stage .cfr{width:400px}
@@ -368,7 +353,7 @@ input,textarea{color:var(--ink)}
 <body>
 <div class="app">
   <div class="top">
-    <div><h1 id="ttl">پادکست‌ها</h1><div class="pills"><i class="on" data-s="p"></i><i data-s="q"></i></div></div>
+    <div><h1 id="ttl">PlanLife</h1><div class="pills"><i class="on" data-s="p"></i><i data-s="q"></i></div></div>
     <div style="display:flex;gap:10px"><button class="sbtn" id="tg" aria-label="تم"></button><button class="sbtn" id="sbtn" aria-label="جستجو" data-ic="magnifying-glass.f"></button></div>
   </div>
   <div class="search" id="sbox"><input id="sin" placeholder="جستجو..."></div>
@@ -405,7 +390,7 @@ input,textarea{color:var(--ink)}
     <div class="box dk" style="--a:#7c5cff">
       <div class="bh">
         <span class="bi" data-ic="squares-four"></span>
-        <div class="bt"><h2>کل دسته‌بندی</h2><small>پک‌های کامل موضوعی</small></div>
+        <div class="bt"><h2>پکیج‌های کامل آموزشی</h2><small>پک‌های کامل موضوعی</small></div>
       </div>
       <div class="cats"></div>
     </div>
@@ -432,7 +417,7 @@ input,textarea{color:var(--ink)}
     <div class="box dk" style="--a:#7c5cff">
       <div class="bh">
         <span class="bi" data-ic="squares-four"></span>
-        <div class="bt"><h2>کل دسته‌بندی</h2><small>پک‌های کامل موضوعی</small></div>
+        <div class="bt"><h2>پکیج‌های کامل آموزشی</h2><small>پک‌های کامل موضوعی</small></div>
       </div>
       <div class="cats"></div>
     </div>
@@ -536,12 +521,6 @@ const IK={
 'hourglass-medium':`<path d="M180.92,88,128,128,74.67,88Z" opacity="0.2"/><path d="M200,75.64V40a16,16,0,0,0-16-16H72A16,16,0,0,0,56,40V76a16.07,16.07,0,0,0,6.4,12.8L114.67,128,62.4,167.2A16.07,16.07,0,0,0,56,180v36a16,16,0,0,0,16,16H184a16,16,0,0,0,16-16V180.36a16.09,16.09,0,0,0-6.35-12.77L141.27,128l52.38-39.59A16.09,16.09,0,0,0,200,75.64ZM72,40H184V75.64L178.23,80H77.33L72,76Zm56,78L98.67,96h58.4Zm56,98H72V180l48-36v24a8,8,0,0,0,16,0V144.08l48,36.28Z"/>`,
 'cube':`<path d="M128,129.09V232a8,8,0,0,1-3.84-1l-88-48.16a8,8,0,0,1-4.16-7V80.2a8,8,0,0,1,.7-3.27Z" opacity="0.2"/><path d="M223.68,66.15,135.68,18h0a15.88,15.88,0,0,0-15.36,0l-88,48.17a16,16,0,0,0-8.32,14v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,223.68,66.15ZM128,32h0l80.34,44L128,120,47.66,76ZM40,90l80,43.78v85.79L40,175.82Zm96,129.57V133.82L216,90v85.78Z"/>`,
 'shopping-bag-open':`<path d="M224,56V80H32V56a8,8,0,0,1,8-8H216A8,8,0,0,1,224,56Z" opacity="0.2"/><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V72H40V56Zm0,144H40V88H216V200Zm-40-88a48,48,0,0,1-96,0,8,8,0,0,1,16,0,32,32,0,0,0,64,0,8,8,0,0,1,16,0Z"/>`,
-'diamond':`<path d="M229.67,133.62l-96,96a7.94,7.94,0,0,1-11.24,0l-96-96a7.94,7.94,0,0,1,0-11.24l96.05-96a7.94,7.94,0,0,1,11.24,0l96,96.05A7.94,7.94,0,0,1,229.67,133.62Z" opacity="0.2"/><path d="M235.33,116.72,139.28,20.66a16,16,0,0,0-22.56,0l-96,96.06a16,16,0,0,0,0,22.56l96.05,96.06h0a16,16,0,0,0,22.56,0l96.05-96.06a16,16,0,0,0,0-22.56ZM128,224h0L32,128,128,32,224,128Z"/>`,
-'coins':`<path d="M240,132c0,19.88-35.82,36-80,36-19.6,0-37.56-3.17-51.47-8.44h0C146.76,156.85,176,142,176,124V96.72h0C212.52,100.06,240,114.58,240,132ZM176,84c0-19.88-35.82-36-80-36S16,64.12,16,84s35.82,36,80,36S176,103.88,176,84Z" opacity="0.2"/><path d="M184,89.57V84c0-25.08-37.83-44-88-44S8,58.92,8,84v40c0,20.89,26.25,37.49,64,42.46V172c0,25.08,37.83,44,88,44s88-18.92,88-44V132C248,111.3,222.58,94.68,184,89.57ZM232,132c0,13.22-30.79,28-72,28-3.73,0-7.43-.13-11.08-.37C170.49,151.77,184,139,184,124V105.74C213.87,110.19,232,122.27,232,132ZM72,150.25V126.46A183.74,183.74,0,0,0,96,128a183.74,183.74,0,0,0,24-1.54v23.79A163,163,0,0,1,96,152,163,163,0,0,1,72,150.25Zm96-40.32V124c0,8.39-12.41,17.4-32,22.87V123.5C148.91,120.37,159.84,115.71,168,109.93ZM96,56c41.21,0,72,14.78,72,28s-30.79,28-72,28S24,97.22,24,84,54.79,56,96,56ZM24,124V109.93c8.16,5.78,19.09,10.44,32,13.57v23.37C36.41,141.4,24,132.39,24,124Zm64,48v-4.17c2.63.1,5.29.17,8,.17,3.88,0,7.67-.13,11.39-.35A121.92,121.92,0,0,0,120,171.41v23.46C100.41,189.4,88,180.39,88,172Zm48,26.25V174.4a179.48,179.48,0,0,0,24,1.6,183.74,183.74,0,0,0,24-1.54v23.79a165.45,165.45,0,0,1-48,0Zm64-3.38V171.5c12.91-3.13,23.84-7.79,32-13.57V172C232,180.39,219.59,189.4,200,194.87Z"/>`,
-'medal':`<path d="M176,96a48,48,0,1,1-48-48A48,48,0,0,1,176,96Z" opacity="0.2"/><path d="M216,96A88,88,0,1,0,72,163.83V240a8,8,0,0,0,11.58,7.16L128,225l44.43,22.21A8.07,8.07,0,0,0,176,248a8,8,0,0,0,8-8V163.83A87.85,87.85,0,0,0,216,96ZM56,96a72,72,0,1,1,72,72A72.08,72.08,0,0,1,56,96ZM168,227.06l-36.43-18.21a8,8,0,0,0-7.16,0L88,227.06V174.37a87.89,87.89,0,0,0,80,0ZM128,152A56,56,0,1,0,72,96,56.06,56.06,0,0,0,128,152Zm0-96A40,40,0,1,1,88,96,40,40,0,0,1,128,56Z"/>`,
-'rocket-launch':`<path d="M184,120v61.65a8,8,0,0,1-2.34,5.65l-34.35,34.35a8,8,0,0,1-13.57-4.53L128,176ZM136,72H74.35a8,8,0,0,0-5.65,2.34L34.35,108.69a8,8,0,0,0,4.53,13.57L80,128ZM40,216c37.65,0,50.69-19.69,54.56-28.18L68.18,161.44C59.69,165.31,40,178.35,40,216Z" opacity="0.2"/><path d="M223.85,47.12a16,16,0,0,0-15-15c-12.58-.75-44.73.4-71.41,27.07L132.69,64H74.36A15.91,15.91,0,0,0,63,68.68L28.7,103a16,16,0,0,0,9.07,27.16l38.47,5.37,44.21,44.21,5.37,38.49a15.94,15.94,0,0,0,10.78,12.92,16.11,16.11,0,0,0,5.1.83A15.91,15.91,0,0,0,153,227.3L187.32,193A15.91,15.91,0,0,0,192,181.64V123.31l4.77-4.77C223.45,91.86,224.6,59.71,223.85,47.12ZM74.36,80h42.33L77.16,119.52,40,114.34Zm74.41-9.45a76.65,76.65,0,0,1,59.11-22.47,76.46,76.46,0,0,1-22.42,59.16L128,164.68,91.32,128ZM176,181.64,141.67,216l-5.19-37.17L176,139.31Zm-74.16,9.5C97.34,201,82.29,224,40,224a8,8,0,0,1-8-8c0-42.29,23-57.34,32.86-61.85a8,8,0,0,1,6.64,14.56c-6.43,2.93-20.62,12.36-23.12,38.91,26.55-2.5,36-16.69,38.91-23.12a8,8,0,1,1,14.56,6.64Z"/>`,
-'leaf':`<path d="M63.81,192.19c-47.89-79.81,16-159.62,151.64-151.64C223.43,176.23,143.62,240.08,63.81,192.19Z" opacity="0.2"/><path d="M223.45,40.07a8,8,0,0,0-7.52-7.52C139.8,28.08,78.82,51,52.82,94a87.09,87.09,0,0,0-12.76,49c.57,15.92,5.21,32,13.79,47.85l-19.51,19.5a8,8,0,0,0,11.32,11.32l19.5-19.51C81,210.73,97.09,215.37,113,215.94q1.67.06,3.33.06A86.93,86.93,0,0,0,162,203.18C205,177.18,227.93,116.21,223.45,40.07ZM153.75,189.5c-22.75,13.78-49.68,14-76.71.77l88.63-88.62a8,8,0,0,0-11.32-11.32L65.73,179c-13.19-27-13-54,.77-76.71,22.09-36.47,74.6-56.44,141.31-54.06C210.2,114.89,190.22,167.41,153.75,189.5Z"/>`,
-'code':`<path d="M240,128l-48,40H64L16,128,64,88H192Z" opacity="0.2"/><path d="M69.12,94.15,28.5,128l40.62,33.85a8,8,0,1,1-10.24,12.29l-48-40a8,8,0,0,1,0-12.29l48-40a8,8,0,0,1,10.24,12.3Zm176,27.7-48-40a8,8,0,1,0-10.24,12.3L227.5,128l-40.62,33.85a8,8,0,1,0,10.24,12.29l48-40a8,8,0,0,0,0-12.29ZM162.73,32.48a8,8,0,0,0-10.25,4.79l-64,176a8,8,0,0,0,4.79,10.26A8.14,8.14,0,0,0,96,224a8,8,0,0,0,7.52-5.27l64-176A8,8,0,0,0,162.73,32.48Z"/>`,
 'play-circle':`<path d="M128,32a96,96,0,1,0,96,96A96,96,0,0,0,128,32ZM108,168V88l64,40Z" opacity="0.2"/><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm48.24-94.78-64-40A8,8,0,0,0,100,88v80a8,8,0,0,0,12.24,6.78l64-40a8,8,0,0,0,0-13.56ZM116,153.57V102.43L156.91,128Z"/>`,
 'play.f':`<path d="M240,128a15.74,15.74,0,0,1-7.6,13.51L88.32,229.65a16,16,0,0,1-16.2.3A15.86,15.86,0,0,1,64,216.13V39.87a15.86,15.86,0,0,1,8.12-13.82,16,16,0,0,1,16.2.3L232.4,114.49A15.74,15.74,0,0,1,240,128Z"/>`,
 'pause.f':`<path d="M216,48V208a16,16,0,0,1-16,16H160a16,16,0,0,1-16-16V48a16,16,0,0,1,16-16h40A16,16,0,0,1,216,48ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Z"/>`,
@@ -589,7 +568,7 @@ function render(f=''){
 function section(s){
   document.querySelectorAll('.top .pills:first-of-type i,.app .pills i').forEach(i=>i.classList.toggle('on',i.dataset.s===s));
   $('pp').classList.toggle('on',s==='p');$('pq').classList.toggle('on',s==='q');
-  $('ttl').textContent=s==='p'?'پادکست‌ها':'سوال و جواب';
+  $('ttl').textContent=s==='p'?'PlanLife':'سوال و جواب';
 }
 document.querySelectorAll('.app .pills i').forEach(i=>i.onclick=()=>section(i.dataset.s));
 $('sbtn').onclick=()=>{$('sbox').classList.toggle('on');if($('sbox').classList.contains('on'))$('sin').focus()};
