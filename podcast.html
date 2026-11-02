@@ -625,11 +625,13 @@ function render(f=''){
   f=f.trim();
   const ps=P.map((p,i)=>[p,i]).filter(([p])=>!p.f&&(!f||(p.e+p.t).includes(f)));
   $('newList').innerHTML=P.map((p,i)=>p.f&&(!f||(p.e+p.t).includes(f))?`<div class="alb" onclick="play('p',${i})"><div class="ai"><img ${LZ} src="${p.c}" alt=""><span class="gpl">${ic('play.f')}</span></div><b>${p.e}</b><small>${p.t}</small></div>`:'').join('');
-  $('plist').innerHTML=ps.map(([p,i])=>`<div class="row ${mode==='p'&&idx===i?'cur':''}" onclick="play('p',${i})"><img ${LZ} src="${p.c}" alt=""><div class="t"><b>${p.e}</b><small>${p.t}</small></div><span class="dots">${ic(VIP?'play-circle':'lock-simple')}</span></div>`).join('')||'<p class="empty">نتیجه‌ای پیدا نشد</p>';
-  $('qlist').innerHTML=Q.map((q,i)=>[q,i]).filter(([q])=>!f||(q.q+q.t).includes(f)).map(([q,i])=>`<div class="row ${mode==='q'&&idx===i?'cur':''}" onclick="play('q',${i})"><div class="ic">${ic('question.f')}</div><div class="t"><b>${q.q}</b><small>${q.t}</small></div><span class="dots">${ic(VIP?'play-circle':'lock-simple')}</span></div>`).join('')||'<p class="empty">نتیجه‌ای پیدا نشد</p>';
+  $('plist').innerHTML=ps.map(([p,i])=>`<div class="row${mode==='p'&&idx===i?' cur':''}" data-k="p${i}" onclick="play('p',${i})"><img ${LZ} src="${p.c}" alt=""><div class="t"><b>${p.e}</b><small>${p.t}</small></div><span class="dots">${ic(VIP?'play-circle':'lock-simple')}</span></div>`).join('')||'<p class="empty">نتیجه‌ای پیدا نشد</p>';
+  $('qlist').innerHTML=Q.map((q,i)=>[q,i]).filter(([q])=>!f||(q.q+q.t).includes(f)).map(([q,i])=>`<div class="row${mode==='q'&&idx===i?' cur':''}" data-k="q${i}" onclick="play('q',${i})"><div class="ic">${ic('question.f')}</div><div class="t"><b>${q.q}</b><small>${q.t}</small></div><span class="dots">${ic(VIP?'play-circle':'lock-simple')}</span></div>`).join('')||'<p class="empty">نتیجه‌ای پیدا نشد</p>';
   $('vipRow').innerHTML=P.map((p,i)=>!p.f&&(!f||(p.e+p.t).includes(f))?card('p',i):'').join('');
   $('qRow').innerHTML=Q.map((q,i)=>!f||(q.q+q.t).includes(f)?card('q',i):'').join('');
 }
+/* فقط هایلایت ردیف در حال پخش را عوض می‌کند، بدون ساخت دوباره‌ی عکس‌ها */
+function markCur(){document.querySelectorAll('.row[data-k]').forEach(r=>r.classList.toggle('cur',r.dataset.k===mode+idx))}
 function section(s){
   document.querySelectorAll('.app .pills i').forEach(i=>i.classList.toggle('on',i.dataset.s===s));
   $('pp').classList.toggle('on',s==='p');$('pq').classList.toggle('on',s==='q');
@@ -670,7 +672,7 @@ function play(m,i){
   }
   $('mini').classList.add('on');$('sheet').classList.add('on');
   clearTimeout(cTimer);
-  cTimer=setTimeout(()=>{if(my!==tok)return;render($('sin').value);loadC()},500);
+  cTimer=setTimeout(()=>{if(my!==tok)return;markCur();loadC()},500);
 }
 function icons(p){
   document.querySelectorAll('.pi').forEach(s=>s.innerHTML=ic(p?'pause.f':'play.f'));
@@ -679,20 +681,16 @@ function icons(p){
 }
 au.preload='auto';
 
-/* پیش‌بارگذاری سبک ترک بعدی (فقط metadata) */
+/* پیش‌بارگذاری ترک بعدی غیرفعال شد تا پهنای باند فقط صرف ترک فعلی شود */
 const WM=new Map();
-function unwarm(){WM.forEach(a=>{try{a.removeAttribute('src');a.load()}catch(e){}});WM.clear()}
-function warm(u){if(!u||WM.has(u))return;const a=new Audio();a.preload='metadata';a.src=u;WM.set(u,a)}
-function warmItem(m,i){const it=(m==='p'?P:Q)[i];if(it&&it.s&&(it.f||VIP))warm(it.s)}
-function checkWarm(){
-  if(warmed||!au.duration||!au.buffered.length)return;
-  const end=au.buffered.end(au.buffered.length-1);
-  if(end-au.currentTime>20||end>=au.duration-1){warmed=true;warmItem(mode,idx+1)}
-}
+function unwarm(){}
+function warm(){}
+function warmItem(){}
+function checkWarm(){}
 au.onprogress=checkWarm;
 au.onloadedmetadata=()=>{$('tT').textContent=fmt(au.duration)};
 au.oncanplay=()=>{if(au.duration)$('tT').textContent=fmt(au.duration)};
-/* اتصال دوباره از همان ثانیه اگر قطع شد یا بیش از ۸ ثانیه گیر کرد (مفید برای VPN) */
+/* فقط در صورت خطای واقعی دوباره تلاش می‌کند (حداکثر ۳ بار) و از همان ثانیه ادامه می‌دهد */
 function recover(){
   if(!au.getAttribute('src'))return;
   if(retry>=3){$('tT').textContent='خطا در پخش';return}
@@ -701,11 +699,12 @@ function recover(){
   au.addEventListener('loadedmetadata',function f(){au.removeEventListener('loadedmetadata',f);if(t){try{au.currentTime=t}catch(e){}}au.play().catch(()=>{})});
 }
 au.onerror=recover;
-au.onwaiting=()=>{$('tT').textContent='…';ld('load');clearTimeout(wt);wt=setTimeout(()=>{if(au.readyState<3&&!au.paused)recover()},8000)};
-au.onplaying=()=>{clearTimeout(wt);if(au.duration)$('tT').textContent=fmt(au.duration);ld('done')};
+/* دیگر با گیر کردن چند ثانیه‌ای دانلود را از اول شروع نمی‌کنیم */
+au.onwaiting=()=>{$('tT').textContent='…';ld('load')};
+au.onplaying=()=>{if(au.duration)$('tT').textContent=fmt(au.duration);ld('done')};
 au.onplay=()=>icons(true);au.onpause=()=>icons(false);
 au.onended=()=>{if(!au.loop)step(1)};
-au.ontimeupdate=()=>{if(au.duration){setProg(au.currentTime/au.duration);$('cT').textContent=fmt(au.currentTime)}checkWarm()};
+au.ontimeupdate=()=>{if(au.duration){setProg(au.currentTime/au.duration);$('cT').textContent=fmt(au.currentTime)}};
 function step(d){const n=idx+d;if(n>=0&&n<list().length)play(mode,n)}
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-a]');if(!b)return;e.stopPropagation();
@@ -857,9 +856,6 @@ function go(n){
 function auto(){clearInterval(ht);ht=setInterval(()=>go(hc+1),4500)}
 buildHero();
 render();drawWave();
-
-/* آماده‌سازی اتصال به اولین ترک رایگان (فقط metadata) */
-setTimeout(()=>warm(P[0].s),1200);
 
 window.play=play;window.openPop=openPop;window.openPack=openPack;
 });
