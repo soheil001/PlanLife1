@@ -155,10 +155,8 @@ input,textarea{color:var(--ink)}
 .cc:before{content:'';position:absolute;left:-30%;right:-30%;top:18%;height:150px;background:radial-gradient(ellipse,var(--c),transparent 65%);opacity:.22;pointer-events:none}
 .ch{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800;line-height:1.5;padding-bottom:11px;border-bottom:1px solid rgba(255,255,255,.07);position:relative}
 .ch svg{width:20px;height:20px;flex-shrink:0;fill:var(--c)}
-.art{position:relative;height:128px;display:grid;place-items:center}
-.art:before{content:'';position:absolute;width:120px;height:120px;border-radius:50%;background:radial-gradient(var(--c),transparent 68%);opacity:.5;filter:blur(8px)}
-.art:after{content:'';position:absolute;bottom:12px;width:82%;height:30px;border-radius:10px;background:linear-gradient(#2b2f40,#151721);border-top:2px solid var(--c);box-shadow:0 0 22px var(--c)}
-.art span{position:relative;z-index:1;font-size:58px;margin-bottom:12px;filter:drop-shadow(0 0 16px var(--c)) drop-shadow(0 12px 12px rgba(0,0,0,.6));animation:fl 5s ease-in-out infinite}
+.art{position:relative;height:132px;margin:12px 0 6px}
+.art img{width:100%;height:100%;object-fit:cover;display:block;border-radius:22px;border:1px solid rgba(255,255,255,.14);box-shadow:0 14px 26px -8px var(--c),0 10px 18px -8px rgba(0,0,0,.6)}
 .ci{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;font-weight:700;margin:6px 0 12px;position:relative}
 .ci b{color:#59e08a}.ci i{font-style:normal;color:#6c7186;font-weight:600}
 .cb{position:relative;width:100%;height:42px;border-radius:21px;background:linear-gradient(#86e9a0,#3dbd69);color:#0b2a16;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 8px 18px rgba(61,189,105,.35)}
@@ -220,7 +218,6 @@ input,textarea{color:var(--ink)}
 .ico{width:1em;height:1em;fill:currentColor;stroke:none;display:block;flex-shrink:0}
 .pi{display:contents}
 .bi svg{width:23px;height:23px;fill:#fff;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28))}
-.art span svg{width:66px;height:66px;fill:var(--c)}
 .crown svg{width:100px;height:100px;fill:#fff}
 .bdg{display:inline-flex;align-items:center;gap:5px}
 .bdg svg{width:13px;height:13px;fill:#fff}
@@ -569,15 +566,15 @@ function login(){
 $('pok').onclick=login;$('pin').onkeydown=e=>{if(e.key==='Enter')login()};
 /* category packs — تعداد و مدت را ویرایش کن */
 const CATS=[
-['پک کامل پادکست‌های احساس لیاقت','diamond','#ffd24a',12,'۴ ساعت'],
-['پادکست‌های فراوانی ثروت','coins','#3ddc84',18,'۶ ساعت'],
-['پادکست‌های اعتماد به نفس','medal','#ff9a3c',15,'۵ ساعت'],
-['پادکست‌های رشد بیزینس','rocket-launch','#4aa8ff',10,'۳ ساعت'],
-['پادکست‌های حال خوب','leaf','#5ef0c4',20,'۷ ساعت'],
-['پادکست‌های کارت ذهن','brain','#c06bff',14,'۴ ساعت'],
-['پادکست‌های کدنویسی ذهن','code','#35e0ff',16,'۵ ساعت']];
+['پک کامل پادکست‌های احساس لیاقت',0,'#ffd24a',12,'۴ ساعت'],
+['پادکست‌های فراوانی ثروت',1,'#3ddc84',18,'۶ ساعت'],
+['پادکست‌های اعتماد به نفس',2,'#ff9a3c',15,'۵ ساعت'],
+['پادکست‌های رشد بیزینس',3,'#4aa8ff',10,'۳ ساعت'],
+['پادکست‌های حال خوب',4,'#5ef0c4',20,'۷ ساعت'],
+['پادکست‌های کارت ذهن',5,'#c06bff',14,'۴ ساعت'],
+['پادکست‌های کدنویسی ذهن',6,'#35e0ff',16,'۵ ساعت']];
 function buildCats(){
-  const h=CATS.map(c=>`<div class="cc" style="--c:${c[2]}"><div class="ch">${ic('cube')}${c[0]}</div><div class="art"><span>${ic(c[1])}</span></div><div class="ci"><span>تعداد: <b>${c[3].toLocaleString('fa-IR')}</b></span><i>مدت: ${c[4]}</i></div><button class="cb" onclick="VIP?document.getElementById('plist').scrollIntoView({behavior:'smooth'}):openPop()">${ic('shopping-bag-open')}مشاهده پک</button></div>`).join('');
+  const h=CATS.map(c=>`<div class="cc" style="--c:${c[2]}"><div class="ch">${ic('cube')}${c[0]}</div><div class="art"><img src="${P[c[1]].c}" alt=""></div><div class="ci"><span>تعداد: <b>${c[3].toLocaleString('fa-IR')}</b></span><i>مدت: ${c[4]}</i></div><button class="cb" onclick="VIP?document.getElementById('plist').scrollIntoView({behavior:'smooth'}):openPop()">${ic('shopping-bag-open')}مشاهده پک</button></div>`).join('');
   document.querySelectorAll('.cats').forEach(e=>e.innerHTML=h);
 }
 buildCats();buildFeat();
