@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#ffffff">
 <title>PlanLife - محتوای رایگان</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script>document.documentElement.dataset.t=(function(){var h=new Date().getHours();return h>=6&&h<18?'light':'dark'})()</script>
 <style>
 :root{--bg:#f6f7fb;--ink:#222326;--mut:#a3a8b3;--hair:#dfe2e8;--pg:#fff;--inv:#222326;--invt:#fff;--mini:#222326;--r:22px}[data-t=dark]{--bg:#26272d;--ink:#f2f3f5;--mut:#8b909b;--hair:#363740;--pg:#17181c;--inv:#f2f3f5;--invt:#17181c;--mini:#2d2e35}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -24,10 +25,28 @@ h1{font-size:30px;font-weight:900;letter-spacing:-.5px}
 .search.on{display:block}
 .search input{width:100%;border:0;background:var(--bg);border-radius:16px;padding:13px 16px;font:inherit;font-size:14px;outline:none}
 /* hero */
-.hero{position:relative;margin-top:22px;height:150px;border-radius:var(--r);overflow:hidden;box-shadow:0 14px 30px rgba(0,0,0,.12);cursor:pointer;background:var(--bg)}
-.hero img{width:100%;height:100%;object-fit:cover;display:block}
-.hero b{position:absolute;inset:auto 0 0 0;padding:34px 16px 12px;color:#fff;font-size:14px;background:linear-gradient(transparent,rgba(0,0,0,.6))}
-.hero b small{display:block;font-weight:400;opacity:.8;font-size:11.5px}
+/* hero slider */
+.hero{position:relative;margin-top:22px;height:214px;border-radius:30px;overflow:hidden;direction:ltr;box-shadow:0 24px 40px -14px rgba(70,40,150,.5);background:#222;touch-action:pan-y;user-select:none}
+.sl{position:absolute;inset:0;transition:transform .7s cubic-bezier(.32,.72,0,1),opacity .7s;overflow:hidden}
+.sl .bg{position:absolute;inset:-30px;width:calc(100% + 60px);height:calc(100% + 60px);object-fit:cover;filter:blur(26px) saturate(1.6) brightness(.8);transform:scale(1.1)}
+.shade{position:absolute;inset:0;background:linear-gradient(110deg,rgba(0,0,0,.05),rgba(0,0,0,.55))}
+.vp .shade{background:linear-gradient(135deg,#f6c453,#ff7a59 55%,#c13584)}
+.sc{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:22px 24px 30px;direction:rtl;color:#fff}
+.tx{flex:1;min-width:0;z-index:2}
+.bdg{display:inline-block;font-size:11px;font-weight:800;padding:4px 11px;border-radius:99px;background:rgba(255,255,255,.22);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.35)}
+.tx h3{font-size:21px;font-weight:900;line-height:1.45;margin:10px 0 2px;text-shadow:0 2px 12px rgba(0,0,0,.35);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tx small{font-size:12px;opacity:.88;display:block;line-height:1.6}
+.hp{margin-top:12px;display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 16px;border-radius:19px;background:#fff;color:#222;font-weight:800;font-size:13px;box-shadow:0 10px 20px rgba(0,0,0,.25)}
+.hp svg{width:16px;height:16px;fill:#222}
+.cvw{position:relative;width:126px;height:126px;flex-shrink:0;animation:fl 5s ease-in-out infinite}
+.cvw>img{position:relative;width:100%;height:100%;border-radius:26px;object-fit:cover;transform:rotate(-7deg);box-shadow:0 22px 34px rgba(0,0,0,.45);border:2px solid rgba(255,255,255,.5)}
+.vn{position:absolute;right:-24px;top:12px;width:104px;height:104px;border-radius:50%;background:radial-gradient(#666 0 14%,#111 15%);animation:sp 6s linear infinite}
+.crown{display:grid;place-items:center;font-size:84px;filter:drop-shadow(0 14px 18px rgba(0,0,0,.35))}
+.hd{position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:center;gap:5px;z-index:5;pointer-events:none}
+.hd i{height:6px;width:6px;border-radius:9px;background:rgba(255,255,255,.5);transition:.35s}
+.hd i.on{width:22px;background:#fff}
+@keyframes fl{50%{transform:translateY(-8px)}}
+@keyframes sp{to{transform:rotate(360deg)}}
 /* sections */
 .sec{display:flex;align-items:center;justify-content:space-between;margin:28px 0 14px}
 .sec h2{font-size:19px;font-weight:900}
@@ -113,6 +132,49 @@ input,textarea{color:var(--ink)}
 .pb.g{background:#22c55e;box-shadow:0 10px 20px rgba(34,197,94,.35)}
 .pb.y{background:#facc15;color:#2a2200;box-shadow:0 10px 20px rgba(250,204,21,.35)}
 .px{position:absolute;top:12px;left:16px;font-size:18px;color:var(--mut)}
+/* glass cards */
+.gc{position:relative;flex:0 0 230px;height:272px;border-radius:30px;overflow:hidden;cursor:pointer;box-shadow:0 18px 30px -10px rgba(40,40,120,.45);background:#333;color:#fff}
+.gc>img,.gb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.gb:after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 15%,rgba(255,255,255,.38),transparent 42%),radial-gradient(circle at 85% 70%,rgba(255,255,255,.22),transparent 45%)}
+.gs{position:absolute;inset:0;background:linear-gradient(transparent 30%,rgba(0,0,40,.6))}
+.gl{position:absolute;top:12px;left:12px;font-size:11px;font-weight:800;padding:5px 10px;border-radius:99px;background:rgba(255,255,255,.22);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.35)}
+.gt{position:absolute;right:16px;left:16px;bottom:84px;font-size:19px;font-weight:800;line-height:1.55;text-shadow:0 2px 10px rgba(0,0,0,.45);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.qa .gt{font-size:15px;-webkit-line-clamp:3}
+.gr{position:absolute;left:12px;right:12px;bottom:12px;display:flex;gap:10px;align-items:center}
+.gp{width:54px;height:54px;border-radius:18px;background:#f4f5ff;display:grid;place-items:center;flex-shrink:0;box-shadow:0 8px 18px rgba(0,0,0,.25)}
+.gp svg{width:22px;height:22px;fill:#222}
+.gst{flex:1;display:flex;height:54px;border-radius:18px;background:rgba(255,255,255,.2);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.32);box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
+.gst div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;position:relative}
+.gst div+div:before{content:'';position:absolute;right:0;top:14px;bottom:14px;width:1px;background:rgba(255,255,255,.4)}
+.gst svg{width:13px;height:13px;fill:#fff}
+.gst em{font-style:normal;font-size:10.5px;font-weight:700}
+/* category packs */
+.cats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding-bottom:10px}
+.cc{position:relative;border-radius:28px;padding:16px 14px 14px;background:linear-gradient(180deg,#1d2030,#13151e);border:1px solid rgba(255,255,255,.07);box-shadow:0 18px 30px -12px rgba(0,0,0,.55);color:#eef0f6;overflow:hidden}
+.cc:last-child:nth-child(odd){grid-column:span 2}
+.cc:before{content:'';position:absolute;left:-30%;right:-30%;top:18%;height:150px;background:radial-gradient(ellipse,var(--c),transparent 65%);opacity:.22;pointer-events:none}
+.ch{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800;line-height:1.5;padding-bottom:11px;border-bottom:1px solid rgba(255,255,255,.07);position:relative}
+.ch svg{width:17px;height:17px;flex-shrink:0;stroke:var(--c);fill:none;stroke-width:1.8;stroke-linejoin:round}
+.art{position:relative;height:128px;display:grid;place-items:center}
+.art:before{content:'';position:absolute;width:120px;height:120px;border-radius:50%;background:radial-gradient(var(--c),transparent 68%);opacity:.5;filter:blur(8px)}
+.art:after{content:'';position:absolute;bottom:12px;width:82%;height:30px;border-radius:10px;background:linear-gradient(#2b2f40,#151721);border-top:2px solid var(--c);box-shadow:0 0 22px var(--c)}
+.art span{position:relative;z-index:1;font-size:58px;margin-bottom:12px;filter:drop-shadow(0 0 16px var(--c)) drop-shadow(0 12px 12px rgba(0,0,0,.6));animation:fl 5s ease-in-out infinite}
+.ci{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;font-weight:700;margin:6px 0 12px;position:relative}
+.ci b{color:#59e08a}.ci i{font-style:normal;color:#6c7186;font-weight:600}
+.cb{position:relative;width:100%;height:42px;border-radius:21px;background:linear-gradient(#86e9a0,#3dbd69);color:#0b2a16;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 8px 18px rgba(61,189,105,.35)}
+.cb svg{width:15px;height:15px;stroke:#0b2a16;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* featured glass cards */
+.fc{position:relative;flex:0 0 240px;height:260px;border-radius:26px;overflow:hidden;cursor:pointer;box-shadow:0 16px 28px -10px rgba(20,30,90,.5);background:#222;color:#fff}
+.fc>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fo{position:absolute;top:10px;left:10px;font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:9px;background:#22c55e;color:#06260f;display:flex;align-items:center;gap:6px;box-shadow:0 0 14px rgba(34,197,94,.6)}
+.fo i{width:6px;height:6px;border-radius:50%;background:#06260f;animation:pu 1.4s infinite}
+@keyframes pu{50%{opacity:.25}}
+.fg{position:absolute;left:10px;right:10px;bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px;border-radius:20px;background:rgba(18,20,38,.4);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);border:1px solid rgba(255,255,255,.22)}
+.fg>div{min-width:0}
+.fg b{display:block;font-size:14px;font-weight:800;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fg small{font-size:11px;opacity:.8}
+.fb{width:46px;height:46px;border-radius:14px;background:linear-gradient(145deg,#5b95ff,#2f6fed);display:grid;place-items:center;flex-shrink:0;box-shadow:0 8px 18px rgba(47,111,237,.55),inset 0 1px 0 rgba(255,255,255,.4)}
+.fb svg{width:20px;height:20px;fill:#fff}
 </style>
 </head>
 <body>
@@ -128,12 +190,18 @@ input,textarea{color:var(--ink)}
     <div class="sec"><h2>رایگان‌ها</h2><a onclick="document.getElementById('plist').scrollIntoView({behavior:'smooth'})">Radio VIP ‹</a></div>
     <div class="h-scroll" id="newList"></div>
     <div class="sec" id="plistH"><h2>Radio VIP 👑</h2></div>
+    <div class="h-scroll" id="vipRow"></div>
     <div id="plist"></div>
+    <div class="sec"><h2>برگزیده‌ها 🔥</h2></div><div class="h-scroll fr"></div>
+    <div class="sec"><h2>کل دسته‌بندی</h2></div><div class="cats"></div>
   </div>
 
   <div class="panel" id="pq">
     <div class="sec" style="margin-top:26px"><h2>پاسخ به سوالات ذهنی شما</h2></div>
+    <div class="h-scroll" id="qRow"></div>
     <div id="qlist"></div>
+    <div class="sec"><h2>برگزیده‌ها 🔥</h2></div><div class="h-scroll fr"></div>
+    <div class="sec"><h2>کل دسته‌بندی</h2></div><div class="cats"></div>
   </div>
 </div>
 
@@ -208,6 +276,14 @@ const Q=[
 {id:104,t:"سوالات در حوزه اعتماد به نفس",q:"چطور اعتماد به نفسم رو بالا ببرم؟",s:""}];
 
 const $=id=>document.getElementById(id),au=$('au');
+/* آمار: [پخش، شنونده، لایک] — اعداد را اینجا ویرایش کن */
+const STATS={p1:[1240,986,412],p25:[2310,1754,689],p4:[1875,1420,533],p5:[964,731,298],q100:[1520,1198,455],q101:[812,640,221],q102:[2890,2210,974],q103:[1346,1067,390],q104:[903,711,267]};
+const GR=['linear-gradient(135deg,#4f46e5,#c026d3)','linear-gradient(135deg,#0ea5e9,#6366f1)','linear-gradient(135deg,#f43f5e,#f59e0b)','linear-gradient(135deg,#10b981,#0ea5e9)','linear-gradient(135deg,#7c3aed,#ec4899)'];
+const IC=['M8 5v14l11-7z','M12 1a9 9 0 0 0-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7a9 9 0 0 0-9-9z','M12 21s-7.5-4.7-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2 0 3.5 1 5.4 3 1.9-2 3.4-3 5.4-3 3.6 0 5.7 3.7 4.2 7.2C19.5 16.3 12 21 12 21z'];
+function card(m,i){
+  const isP=m==='p',it=(isP?P:Q)[i],st=STATS[m+it.id]||[0,0,0];
+  return `<div class="gc ${isP?'':'qa'}" onclick="play('${m}',${i})">${isP?`<img src="${it.c}" alt="">`:`<div class="gb" style="background:${GR[i%5]}"></div>`}<div class="gs"></div>${VIP?'':'<span class="gl">🔒 VIP</span>'}<b class="gt">${isP?it.e:it.q}</b><div class="gr"><span class="gp"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><div class="gst">${st.map((n,k)=>`<div><svg viewBox="0 0 24 24"><path d="${IC[k]}"/></svg><em>${n.toLocaleString('fa-IR')}</em></div>`).join('')}</div></div></div>`;
+}
 let mode='p',idx=-1,fav={};
 try{fav=JSON.parse(localStorage.getItem('pl_fav')||'{}')}catch(e){}
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -218,11 +294,11 @@ const list=()=>mode==='p'?P:Q;
 function render(f=''){
   f=f.trim();
   const ps=P.map((p,i)=>[p,i]).filter(([p])=>!p.f&&(!f||(p.e+p.t).includes(f)));
-  $('hero').innerHTML=`<img src="${P[0].c}" alt=""><b>${P[0].e}<small>${P[0].t}</small></b>`;
-  $('hero').onclick=()=>play('p',0);
   $('newList').innerHTML=P.map((p,i)=>p.f&&(!f||(p.e+p.t).includes(f))?`<div class="alb" onclick="play('p',${i})"><img src="${p.c}" alt=""><b>${p.e}</b><small>${p.t}</small></div>`:'').join('');
   $('plist').innerHTML=ps.map(([p,i])=>`<div class="row ${mode==='p'&&idx===i?'cur':''}" onclick="play('p',${i})"><img src="${p.c}" alt=""><div class="t"><b>${p.e}</b><small>${p.t}</small></div><span class="dots">${VIP?'••':'🔒'}</span></div>`).join('')||'<p class="empty">نتیجه‌ای پیدا نشد</p>';
   $('qlist').innerHTML=Q.map((q,i)=>[q,i]).filter(([q])=>!f||(q.q+q.t).includes(f)).map(([q,i])=>`<div class="row ${mode==='q'&&idx===i?'cur':''}" onclick="play('q',${i})"><div class="ic">؟</div><div class="t"><b>${q.q}</b><small>${q.t}</small></div><span class="dots">${VIP?'••':'🔒'}</span></div>`).join('')||'<p class="empty">نتیجه‌ای پیدا نشد</p>';
+  $('vipRow').innerHTML=P.map((p,i)=>!p.f&&(!f||(p.e+p.t).includes(f))?card('p',i):'').join('');
+  $('qRow').innerHTML=Q.map((q,i)=>!f||(q.q+q.t).includes(f)?card('q',i):'').join('');
 }
 function section(s){
   document.querySelectorAll('.top .pills:first-of-type i,.app .pills i').forEach(i=>i.classList.toggle('on',i.dataset.s===s));
@@ -319,9 +395,12 @@ $('send').onclick=async()=>{
 };
 
 /* theme */
-function setT(t){document.documentElement.dataset.t=t;$('tg').textContent=t==='dark'?'☀️':'🌙';try{localStorage.setItem('pl_theme',t)}catch(e){}}
-let t0='light';try{t0=localStorage.getItem('pl_theme')||'light'}catch(e){}
-setT(t0);$('tg').onclick=()=>setT(document.documentElement.dataset.t==='dark'?'light':'dark');
+const per=()=>{const h=new Date().getHours();return h>=6&&h<18?'d':'n'};
+function setT(t,man){document.documentElement.dataset.t=t;$('tg').textContent=t==='dark'?'☀️':'🌙';if(man){try{localStorage.setItem('pl_theme',JSON.stringify({t,p:per()}))}catch(e){}}}
+function autoT(){let m=null;try{m=JSON.parse(localStorage.getItem('pl_theme'))}catch(e){}setT(m&&m.p===per()?m.t:(per()==='d'?'light':'dark'))}
+let lp=per();autoT();
+$('tg').onclick=()=>setT(document.documentElement.dataset.t==='dark'?'light':'dark',1);
+setInterval(()=>{if(per()!==lp){lp=per();autoT()}},30000);
 /* VIP */
 const FREE=[102,101,0,24];P.forEach(p=>p.f=FREE.includes(p.id));Q.forEach(q=>q.f=0);
 const CODES=['48271','93615','20784','76539'];
@@ -338,6 +417,45 @@ function login(){
   }else $('perr').textContent='کد اشتراک نادرست است';
 }
 $('pok').onclick=login;$('pin').onkeydown=e=>{if(e.key==='Enter')login()};
+/* category packs — تعداد و مدت را ویرایش کن */
+const CATS=[
+['پک کامل پادکست‌های احساس لیاقت','💎','#ffd24a',12,'۴ ساعت'],
+['پادکست‌های فراوانی ثروت','💰','#3ddc84',18,'۶ ساعت'],
+['پادکست‌های اعتماد به نفس','🦁','#ff9a3c',15,'۵ ساعت'],
+['پادکست‌های رشد بیزینس','🚀','#4aa8ff',10,'۳ ساعت'],
+['پادکست‌های حال خوب','🌿','#5ef0c4',20,'۷ ساعت'],
+['پادکست‌های کارت ذهن','🧠','#c06bff',14,'۴ ساعت'],
+['پادکست‌های کدنویسی ذهن','💻','#35e0ff',16,'۵ ساعت']];
+function buildCats(){
+  const h=CATS.map(c=>`<div class="cc" style="--c:${c[2]}"><div class="ch"><svg viewBox="0 0 24 24"><path d="M12 2.5l8.500 4.800v9.400L12 21.500l-8.500-4.800V7.300zM12 12l8.500-4.700M12 12v9.500M12 12L3.500 7.300"/></svg>${c[0]}</div><div class="art"><span>${c[1]}</span></div><div class="ci"><span>تعداد: <b>${c[3].toLocaleString('fa-IR')}</b></span><i>مدت: ${c[4]}</i></div><button class="cb" onclick="VIP?document.getElementById('plist').scrollIntoView({behavior:'smooth'}):openPop()"><svg viewBox="0 0 24 24"><path d="M5 7h14l-1.200 12H6.200zM9 7a3 3 0 0 1 6 0"/></svg>مشاهده پک</button></div>`).join('');
+  document.querySelectorAll('.cats').forEach(e=>e.innerHTML=h);
+}
+buildCats();buildFeat();
+function buildFeat(){
+  const mk=(m,i)=>{const isP=m==='p',it=(isP?P:Q)[i],st=STATS[m+it.id],n=(st?st[1]:300+(it.id*97)%700).toLocaleString('fa-IR');
+    return `<div class="fc" onclick="play('${m}',${i})">${isP?`<img src="${it.c}" alt="">`:`<div class="gb" style="background:${GR[i%5]}"></div>`}<span class="fo"><i></i>${n} شنونده</span><div class="fg"><div><b>${isP?it.e:it.q}</b><small>${it.t}</small></div><span class="fb"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div></div>`};
+  document.querySelector('#pp .fr').innerHTML=P.map((_,i)=>mk('p',i)).join('');
+  document.querySelector('#pq .fr').innerHTML=Q.map((_,i)=>mk('q',i)).join('');
+}
+/* hero slider */
+let hc=0,ht,HN=0;
+function buildHero(){
+  const h=$('hero'),fr=P.filter(p=>p.f);HN=fr.length+1;
+  h.innerHTML=fr.map((p,k)=>`<div class="sl"><img class="bg" src="${p.c}" alt=""><div class="shade"></div><div class="sc"><div class="tx"><span class="bdg">🎁 رایگان</span><h3>${p.e}</h3><small>${p.t}</small><button class="hp" onclick="event.stopPropagation();play('p',${P.indexOf(p)})"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>پخش کن</button></div><div class="cvw"><i class="vn"></i><img src="${p.c}" alt=""></div></div></div>`).join('')
+  +`<div class="sl vp"><div class="shade"></div><div class="sc"><div class="tx"><span class="bdg">👑 اشتراکی</span><h3>Radio VIP</h3><small>همه پادکست‌ها و پاسخ‌ها با کد اشتراک</small><button class="hp" onclick="event.stopPropagation();openPop()">ورود با کد اشتراک</button></div><div class="cvw crown">👑</div></div></div>`
+  +`<div class="hd">${'<i></i>'.repeat(HN)}</div>`;
+  let sx=0,dn=false;
+  h.onpointerdown=e=>{dn=true;sx=e.clientX;clearInterval(ht)};
+  h.onpointerup=h.onpointercancel=e=>{if(!dn)return;dn=false;const d=e.clientX-sx;if(Math.abs(d)>40)go(hc+(d<0?1:-1));auto()};
+  go(0);auto();
+}
+function go(n){
+  hc=(n+HN)%HN;const m=Math.floor(HN/2);
+  document.querySelectorAll('#hero .sl').forEach((s,k)=>{const o=((k-hc+HN+m)%HN)-m;s.style.transform=`translateX(${o*100}%)`;s.style.opacity=Math.abs(o)>1?0:1;s.style.zIndex=o===0?2:1});
+  document.querySelectorAll('#hero .hd i').forEach((d,k)=>d.classList.toggle('on',k===hc));
+}
+function auto(){clearInterval(ht);ht=setInterval(()=>go(hc+1),4500)}
+buildHero();
 render();drawWave();
 </script>
 </body>
