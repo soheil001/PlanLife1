@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#ffffff">
 <link rel="preconnect" href="http://fs3.centraldnserver.com">
 <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="dns-prefetch" href="//fs3.centraldnserver.com">
 <title>PlanLife - محتوای رایگان</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -544,7 +546,7 @@ input,textarea{color:var(--ink)}
     <button class="send" id="send">ارسال نظر</button>
   </div>
 </div></div>
-<audio id="au"></audio>
+<audio id="au" preload="none" playsinline></audio>
 <div class="pop" id="pop"><div class="pbox">
   <button class="px" id="px" aria-label="بستن" data-ic="x"></button>
   <h3><span class="hi" data-ic="lock-simple"></span>محتوای Radio VIP</h3>
@@ -574,9 +576,12 @@ input,textarea{color:var(--ink)}
   <div class="ct"></div>
 </div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
 <script>
-const SB=supabase.createClient('https://hjzzvzxhrqovvducnxha.supabase.co','sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC');
+window.addEventListener('DOMContentLoaded',function(){ /* اجرا بعد از لود شدن supabase (defer) */
+let SB=null;
+function initSB(){if(SB)return SB;if(window.supabase){SB=supabase.createClient('https://hjzzvzxhrqovvducnxha.supabase.co','sb_publishable_VPBS3SSdITASRRIGaxtN3w_ufKOmzbC')}return SB}
+initSB();
 
 /* ============================================================
    دیتای سایت — هر بخش جدا. برای تغییر هر آیتم فقط همین قسمت رو ویرایش کن
@@ -681,9 +686,11 @@ document.querySelectorAll('[data-ic]').forEach(e=>e.innerHTML=ic(e.dataset.ic));
 const STATS={p1:[1240,986,412],p25:[2310,1754,689],p4:[1875,1420,533],p5:[964,731,298],q100:[1520,1198,455],q101:[812,640,221],q102:[2890,2210,974],q103:[1346,1067,390],q104:[903,711,267]};
 const GR=['linear-gradient(135deg,#4f46e5,#c026d3)','linear-gradient(135deg,#0ea5e9,#6366f1)','linear-gradient(135deg,#f43f5e,#f59e0b)','linear-gradient(135deg,#10b981,#0ea5e9)','linear-gradient(135deg,#7c3aed,#ec4899)'];
 const IC=['play.f','headphones.f','heart.f'];
+/* عکس‌های لیست‌ها lazy لود می‌شوند تا پهنای باند برای صدا آزاد بماند */
+const LZ='loading="lazy" decoding="async"';
 function card(m,i){
   const isP=m==='p',it=(isP?P:Q)[i],st=STATS[m+it.id]||[0,0,0];
-  return `<div class="gc ${isP?'':'qa'}" onclick="play('${m}',${i})">${isP?`<img src="${it.c}" alt="">`:`<div class="gb" style="background:${GR[i%5]}"></div>`}<div class="gs"></div>${VIP?'':`<span class="gl">${ic('lock-simple.f')}VIP</span>`}<b class="gt">${isP?it.e:it.q}</b><div class="gr"><span class="gp">${ic('play.f')}</span><div class="gst">${st.map((n,k)=>`<div>${ic(IC[k])}<em>${n.toLocaleString('fa-IR')}</em></div>`).join('')}</div></div></div>`;
+  return `<div class="gc ${isP?'':'qa'}" onclick="play('${m}',${i})">${isP?`<img ${LZ} src="${it.c}" alt="">`:`<div class="gb" style="background:${GR[i%5]}"></div>`}<div class="gs"></div>${VIP?'':`<span class="gl">${ic('lock-simple.f')}VIP</span>`}<b class="gt">${isP?it.e:it.q}</b><div class="gr"><span class="gp">${ic('play.f')}</span><div class="gst">${st.map((n,k)=>`<div>${ic(IC[k])}<em>${n.toLocaleString('fa-IR')}</em></div>`).join('')}</div></div></div>`;
 }
 let mode='p',idx=-1,fav={};
 try{fav=JSON.parse(localStorage.getItem('pl_fav')||'{}')}catch(e){}
@@ -695,8 +702,8 @@ const list=()=>mode==='p'?P:Q;
 function render(f=''){
   f=f.trim();
   const ps=P.map((p,i)=>[p,i]).filter(([p])=>!p.f&&(!f||(p.e+p.t).includes(f)));
-  $('newList').innerHTML=P.map((p,i)=>p.f&&(!f||(p.e+p.t).includes(f))?`<div class="alb" onclick="play('p',${i})"><div class="ai"><img src="${p.c}" alt=""><span class="gpl">${ic('play.f')}</span></div><b>${p.e}</b><small>${p.t}</small></div>`:'').join('');
-  $('plist').innerHTML=ps.map(([p,i])=>`<div class="row ${mode==='p'&&idx===i?'cur':''}" onclick="play('p',${i})"><img src="${p.c}" alt=""><div class="t"><b>${p.e}</b><small>${p.t}</small></div><span class="dots">${ic(VIP?'play-circle':'lock-simple')}</span></div>`).join('')||'<p class="empty">نتیجه‌ای پیدا نشد</p>';
+  $('newList').innerHTML=P.map((p,i)=>p.f&&(!f||(p.e+p.t).includes(f))?`<div class="alb" onclick="play('p',${i})"><div class="ai"><img ${LZ} src="${p.c}" alt=""><span class="gpl">${ic('play.f')}</span></div><b>${p.e}</b><small>${p.t}</small></div>`:'').join('');
+  $('plist').innerHTML=ps.map(([p,i])=>`<div class="row ${mode==='p'&&idx===i?'cur':''}" onclick="play('p',${i})"><img ${LZ} src="${p.c}" alt=""><div class="t"><b>${p.e}</b><small>${p.t}</small></div><span class="dots">${ic(VIP?'play-circle':'lock-simple')}</span></div>`).join('')||'<p class="empty">نتیجه‌ای پیدا نشد</p>';
   $('qlist').innerHTML=Q.map((q,i)=>[q,i]).filter(([q])=>!f||(q.q+q.t).includes(f)).map(([q,i])=>`<div class="row ${mode==='q'&&idx===i?'cur':''}" onclick="play('q',${i})"><div class="ic">${ic('question.f')}</div><div class="t"><b>${q.q}</b><small>${q.t}</small></div><span class="dots">${ic(VIP?'play-circle':'lock-simple')}</span></div>`).join('')||'<p class="empty">نتیجه‌ای پیدا نشد</p>';
   $('vipRow').innerHTML=P.map((p,i)=>!p.f&&(!f||(p.e+p.t).includes(f))?card('p',i):'').join('');
   $('qRow').innerHTML=Q.map((q,i)=>!f||(q.q+q.t).includes(f)?card('q',i):'').join('');
@@ -711,10 +718,17 @@ document.querySelectorAll('.app .pills i').forEach(i=>i.onclick=()=>section(i.da
 $('sbtn').onclick=()=>{$('sbox').classList.toggle('on');if($('sbox').classList.contains('on'))$('sin').focus()};
 $('sin').oninput=e=>render(e.target.value);
 
-/* play */
+/* ============================================================
+   پخش صدا — استریم تدریجی
+   - فقط ترک فعلی لود می‌شود و مرورگر با Range request به‌صورت تکه‌تکه می‌گیرد
+   - ترک بعدی فقط وقتی پیش‌بارگذاری می‌شود که ترک فعلی چند ثانیه جلوتر بافر شده باشد
+     و فقط metadata آن (نه کل فایل) تا پهنای باند صرف ترک فعلی شود
+   ============================================================ */
+let pend=null,tok=0,retry=0,warmed=false,cTimer=0;
 function play(m,i){
   if(!(m==='p'?P:Q)[i].f&&!VIP){pend=[m,i];openPop();return}
   mode=m;idx=i;const it=list()[i],isP=m==='p';
+  const my=++tok;
   $('in').classList.toggle('qmode',!isP);
   if(isP){
     $('cv').src=it.c;$('mImg').src=it.c;
@@ -726,9 +740,22 @@ function play(m,i){
   $('mImg').style.display=isP?'':'none';$('mPh').style.display=isP?'none':'';
   $('heart').classList.toggle('on',!!fav[m+it.id]);
   setProg(0);$('cT').textContent='0:00';$('tT').textContent='0:00';
-  if(it.s){au.src=it.s;au.play().catch(()=>{})}else{au.pause();au.removeAttribute('src');au.load();icons(false);$('tT').textContent='—'}
+
+  /* آزاد کردن هر اتصال پیش‌بارگذاری قبلی تا کل پهنای باند برای ترک جدید باشد */
+  unwarm();warmed=false;retry=0;
+  if(it.s){
+    $('tT').textContent='…';
+    au.preload='auto';
+    au.src=it.s;
+    const pr=au.play();if(pr&&pr.catch)pr.catch(()=>{});
+  }else{
+    au.pause();au.removeAttribute('src');au.load();icons(false);$('tT').textContent='—';
+  }
   $('mini').classList.add('on');$('sheet').classList.add('on');
-  render($('sin').value);loadC();
+
+  /* کارهای سنگین (رندر مجدد لیست‌ها + کامنت‌ها) بعد از شروع پخش تا درخواست صدا اول برود */
+  clearTimeout(cTimer);
+  cTimer=setTimeout(()=>{if(my!==tok)return;render($('sin').value);loadC()},500);
 }
 function icons(p){
   document.querySelectorAll('.pi').forEach(s=>s.innerHTML=ic(p?'pause.f':'play.f'));
@@ -736,21 +763,40 @@ function icons(p){
   $('sheet').classList.toggle('playing',p);
 }
 au.preload='auto';
-/* پیش‌بارگذاری ترک بعدی تا پخش بعدی فوری شروع شود */
+
+/* پیش‌بارگذاری سبک ترک بعدی (فقط metadata، نه کل فایل) */
 const WM=new Map();
-function warm(u){if(!u||WM.has(u))return;if(WM.size>=3)WM.delete(WM.keys().next().value);const a=new Audio();a.preload='auto';a.src=u;WM.set(u,a)}
+function unwarm(){WM.forEach(a=>{try{a.removeAttribute('src');a.load()}catch(e){}});WM.clear()}
+function warm(u){if(!u||WM.has(u))return;const a=new Audio();a.preload='metadata';a.src=u;WM.set(u,a)}
 function warmItem(m,i){const it=(m==='p'?P:Q)[i];if(it&&it.s&&(it.f||VIP))warm(it.s)}
-au.oncanplay=()=>{if(au.duration)$('tT').textContent=fmt(au.duration);warmItem(mode,idx+1)};
+/* وقتی ترک فعلی حداقل ۲۰ ثانیه جلوتر بافر شد، ترک بعدی را سبک آماده کن */
+function checkWarm(){
+  if(warmed||!au.duration||!au.buffered.length)return;
+  const end=au.buffered.end(au.buffered.length-1);
+  if(end-au.currentTime>20||end>=au.duration-1){warmed=true;warmItem(mode,idx+1)}
+}
+au.onprogress=checkWarm;
+au.onloadedmetadata=()=>{$('tT').textContent=fmt(au.duration)};
+au.oncanplay=()=>{if(au.duration)$('tT').textContent=fmt(au.duration)};
 au.onwaiting=()=>{$('tT').textContent='…'};
+au.onplaying=()=>{if(au.duration)$('tT').textContent=fmt(au.duration)};
 au.onplay=()=>icons(true);au.onpause=()=>icons(false);
 au.onended=()=>{if(!au.loop)step(1)};
-au.onloadedmetadata=()=>$('tT').textContent=fmt(au.duration);
-au.ontimeupdate=()=>{if(au.duration){setProg(au.currentTime/au.duration);$('cT').textContent=fmt(au.currentTime)}};
+au.ontimeupdate=()=>{if(au.duration){setProg(au.currentTime/au.duration);$('cT').textContent=fmt(au.currentTime)}checkWarm()};
+/* اگر اتصال قطع شد یا خطا داد، تا ۲ بار از همان نقطه دوباره تلاش کن */
+au.onerror=()=>{
+  if(!au.getAttribute('src'))return;
+  if(retry<2){
+    retry++;const t=au.currentTime||0;
+    au.load();
+    au.addEventListener('loadedmetadata',function f(){au.removeEventListener('loadedmetadata',f);if(t){try{au.currentTime=t}catch(e){}}au.play().catch(()=>{})});
+  }else{$('tT').textContent='خطا در پخش'}
+};
 function step(d){const n=idx+d;if(n>=0&&n<list().length)play(mode,n)}
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-a]');if(!b)return;e.stopPropagation();
   const a=b.dataset.a;
-  if(a==='toggle'){if(au.src)au.paused?au.play():au.pause()}else step(a==='next'?1:-1);
+  if(a==='toggle'){if(au.getAttribute('src'))au.paused?au.play():au.pause()}else step(a==='next'?1:-1);
 });
 $('mini').onclick=()=>$('sheet').classList.add('on');
 $('close').onclick=$('lst').onclick=()=>$('sheet').classList.remove('on');
@@ -808,6 +854,7 @@ const tbl=()=>mode==='p'?['comments','podcast_id']:['qa_comments','qa_id'];
 async function loadC(){
   const [t,k]=tbl();$('cl').innerHTML=`<p class="empty">${ic('hourglass-medium')}در حال بارگذاری...</p>`;
   try{
+    if(!initSB())throw new Error('sb');
     const {data,error}=await SB.from(t).select('*').eq(k,list()[idx].id).order('created_at',{ascending:false});
     if(error)throw error;showC(data||[]);
   }catch(e){$('cl').innerHTML='<p class="empty">خطا در دریافت نظرات</p>'}
@@ -821,6 +868,7 @@ $('send').onclick=async()=>{
   const name=$('cn').value.trim()||'ناشناس',[t,k]=tbl();
   $('send').disabled=true;
   try{
+    if(!initSB())throw new Error('sb');
     const {error}=await SB.from(t).insert([{[k]:list()[idx].id,name,text}]);
     if(error)throw error;$('ct').value='';$('cn').value='';await loadC();
   }catch(e){alert('ارسال نظر با خطا مواجه شد.')}
@@ -838,7 +886,7 @@ setInterval(()=>{if(per()!==lp){lp=per();autoT()}},30000);
 /* VIP */
 const CODES=['48271','93615','20784','76539'];
 const BUY_URL='#'; /* لینک صفحه خرید اشتراک */
-let VIP=false,pend=null;try{VIP=localStorage.getItem('pl_vip')==='1'}catch(e){}
+let VIP=false;try{VIP=localStorage.getItem('pl_vip')==='1'}catch(e){}
 const SV=(bg,svg)=>`<i style="background:${bg}">${svg}</i>`;
 const CTH=
 `<a href="https://t.me/planlifeir" target="_blank" rel="noopener">${SV('#229ed9','<svg viewBox="0 0 24 24"><path fill="#fff" d="M2.5 11.5l18-7.3c.9-.3 1.6.4 1.4 1.3l-3 14.4c-.2.9-1 1.1-1.7.7l-4.5-3.3-2.2 2.1c-.3.3-.5.5-1 .5l.3-4.7 8.6-7.8c.4-.3-.1-.5-.6-.2L7.5 13.4l-4.6-1.4c-1-.3-1-1-.4-1.5z"/></svg>')}<span>خرید از تلگرام</span><code>planlifeir</code></a>`+
@@ -866,13 +914,13 @@ function openPack(i){
   l?window.open(l,'_blank'):$('plist').scrollIntoView({behavior:'smooth'});
 }
 function buildCats(){
-  const h=PACKS.map((c,i)=>`<div class="cc" style="--c:${c.color}"><div class="ch">${ic('cube')}${c.name}</div><div class="art"><img src="${IMG+c.img}" alt=""></div><div class="ci"><span>تعداد: <b>${c.count.toLocaleString('fa-IR')}</b></span><i>مدت: ${c.duration}</i></div><button class="cb" onclick="openPack(${i})">${ic('shopping-bag-open')}مشاهده پک</button></div>`).join('');
+  const h=PACKS.map((c,i)=>`<div class="cc" style="--c:${c.color}"><div class="ch">${ic('cube')}${c.name}</div><div class="art"><img ${LZ} src="${IMG+c.img}" alt=""></div><div class="ci"><span>تعداد: <b>${c.count.toLocaleString('fa-IR')}</b></span><i>مدت: ${c.duration}</i></div><button class="cb" onclick="openPack(${i})">${ic('shopping-bag-open')}مشاهده پک</button></div>`).join('');
   document.querySelectorAll('.cats').forEach(e=>e.innerHTML=h);
 }
 buildCats();buildFeat();
 function buildFeat(){
   const mk=(m,i)=>{const isP=m==='p',it=(isP?P:Q)[i],st=STATS[m+it.id],n=(st?st[1]:300+(it.id*97)%700).toLocaleString('fa-IR');
-    return `<div class="fc" onclick="play('${m}',${i})">${isP?`<img src="${it.c}" alt="">`:`<div class="gb" style="background:${GR[i%5]}"></div>`}<span class="fo"><i></i>${n} شنونده</span><div class="fg"><div><b>${isP?it.e:it.q}</b><small>${it.t}</small></div><span class="fb">${ic('play.f')}</span></div></div>`};
+    return `<div class="fc" onclick="play('${m}',${i})">${isP?`<img ${LZ} src="${it.c}" alt="">`:`<div class="gb" style="background:${GR[i%5]}"></div>`}<span class="fo"><i></i>${n} شنونده</span><div class="fg"><div><b>${isP?it.e:it.q}</b><small>${it.t}</small></div><span class="fb">${ic('play.f')}</span></div></div>`};
   document.querySelector('#pp .fr').innerHTML=P.map((_,i)=>mk('p',i)).join('');
   document.querySelector('#pq .fr').innerHTML=Q.map((_,i)=>mk('q',i)).join('');
 }
@@ -880,7 +928,7 @@ function buildFeat(){
 let hc=0,ht,HN=0;
 function buildHero(){
   const h=$('hero'),fr=P.filter(p=>p.f);HN=fr.length+1;
-  h.innerHTML=fr.map((p,k)=>`<div class="sl"><img class="bg" src="${p.c}" alt=""><div class="shade"></div><div class="sc"><div class="tx"><span class="bdg">${ic('gift.f')}رایگان</span><h3>${p.e}</h3><small>${p.t}</small><button class="hp" onclick="event.stopPropagation();play('p',${P.indexOf(p)})">${ic('play.f')}پخش کن</button></div><div class="cvw"><i class="vn"></i><img src="${p.c}" alt=""></div></div></div>`).join('')
+  h.innerHTML=fr.map((p,k)=>`<div class="sl"><img class="bg" ${k?LZ:''} src="${p.c}" alt=""><div class="shade"></div><div class="sc"><div class="tx"><span class="bdg">${ic('gift.f')}رایگان</span><h3>${p.e}</h3><small>${p.t}</small><button class="hp" onclick="event.stopPropagation();play('p',${P.indexOf(p)})">${ic('play.f')}پخش کن</button></div><div class="cvw"><i class="vn"></i><img ${k?LZ:''} src="${p.c}" alt=""></div></div></div>`).join('')
   +`<div class="sl vp"><div class="shade"></div><div class="sc"><div class="tx"><span class="bdg">${ic('crown-simple.f')}اشتراکی</span><h3>Radio VIP</h3><small>همه پادکست‌ها و پاسخ‌ها با کد اشتراک</small><button class="hp" onclick="event.stopPropagation();openPop()">ورود با کد اشتراک</button></div><div class="cvw crown">${ic('crown')}</div></div></div>`
   +`<div class="hd">${'<i></i>'.repeat(HN)}</div>`;
   let sx=0,dn=false;
@@ -896,6 +944,10 @@ function go(n){
 function auto(){clearInterval(ht);ht=setInterval(()=>go(hc+1),4500)}
 buildHero();
 render();drawWave();
+
+/* چون کد داخل DOMContentLoaded است، توابعی که از onclick صدا زده می‌شوند باید global باشند */
+window.play=play;window.openPop=openPop;window.openPack=openPack;
+});
 </script>
 </body>
 </html>
